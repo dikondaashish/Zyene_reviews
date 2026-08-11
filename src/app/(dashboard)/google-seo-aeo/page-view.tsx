@@ -6,6 +6,11 @@ import { Button } from "@/components/ui/button";
 import { loadGoogleSeoAeoPageData } from "./load-google-seo-aeo-page-data";
 import { GoogleSeoAeoScoreAuditSection } from "./google-seo-aeo-score-audit-section";
 import { GoogleSeoAeoBottomSection } from "./google-seo-aeo-bottom-section";
+import { AeoVisibilitySection } from "./aeo-visibility-section";
+import { SearchConsoleSection } from "./search-console-section";
+import { ShareOfVoiceSection } from "./share-of-voice-section";
+import { DataExportsSection } from "./data-exports-section";
+import { GoogleSeoAeoSubnav } from "./google-seo-aeo-subnav";
 
 export default async function GoogleSeoAeoPage() {
     const data = await loadGoogleSeoAeoPageData();
@@ -40,8 +45,24 @@ export default async function GoogleSeoAeoPage() {
 
     return (
         <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
+            <GoogleSeoAeoSubnav active="/google-seo-aeo" />
             <GoogleSeoAeoScoreAuditSection content={data.content} />
+            {/*
+             * Omitted entirely when the business has never been sampled. An empty
+             * visibility card would read as "measured, and you are nowhere",
+             * which is the opposite of "we have not looked yet".
+             */}
+            {data.content.aeoVisibility ? (
+                <AeoVisibilitySection content={data.content.aeoVisibility} />
+            ) : null}
+            {data.content.shareOfVoice ? (
+                <ShareOfVoiceSection result={data.content.shareOfVoice} />
+            ) : null}
+            {data.content.searchConsole ? (
+                <SearchConsoleSection content={data.content.searchConsole} />
+            ) : null}
             <GoogleSeoAeoBottomSection content={data.content} />
+            <DataExportsSection />
         </div>
     );
 }

@@ -11,6 +11,7 @@ import type { AuthMemberOrgContext, GooglePlatformUpdatePayload } from "@/types/
 import { inngest } from "@/services/inngest/client";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Session, User } from "@supabase/supabase-js";
+import { fetchGoogleGrantedScopes } from "@/services/google/verify-granted-scopes";
 
 export async function runOAuthExistingUserLogin(params: {
     admin: SupabaseClient;
@@ -79,6 +80,13 @@ export async function runOAuthExistingUserLogin(params: {
             );
         }
 
+        // Observed, not assumed — see verify-granted-scopes.ts. Google's raw
+        // token response never reaches this flow, so this is the only way it
+        // learns whether the reconnect widened the grant (e.g. Search Console).
+        const grantedScopes = finalAccessToken
+            ? await fetchGoogleGrantedScopes(finalAccessToken)
+            : null;
+
         const { data: encAccess, error: encAccessError } = await admin.rpc("encrypt_token", {
             plaintext: finalAccessToken || "",
         });
@@ -106,6 +114,8 @@ export async function runOAuthExistingUserLogin(params: {
             if (encAccess) updatePayload.access_token = encAccess;
             // Only update refresh when Google returns one. Location is selected later.
             if (finalRefreshToken && encRefresh) updatePayload.refresh_token = encRefresh;
+            // Never overwrite a known grant with null — see verify-granted-scopes.ts.
+            if (grantedScopes) updatePayload.granted_scopes = grantedScopes;
 
             await admin.from("review_platforms").update(updatePayload).eq("id", platformData.id);
         } else if (encAccess) {
@@ -123,6 +133,7 @@ export async function runOAuthExistingUserLogin(params: {
                     google_location_id: null,
                     external_id: null,
                     external_url: null,
+                    ...(grantedScopes ? { granted_scopes: grantedScopes } : {}),
                 })
                 .select("id")
                 .single();

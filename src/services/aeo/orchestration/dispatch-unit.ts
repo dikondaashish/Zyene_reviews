@@ -1,22 +1,21 @@
-import type { AnswerEngineAdapter, AnswerEngineId, EngineLocale } from "../engines/engine-types";
-import { billableUnits } from "../engines/engine-types";
+import type {
+    AnswerEngineAdapter,
+    AnswerEngineId,
+    EngineLocale,
+    EngineSampleResult,
+} from "../engines/engine-types";
 import { getEngineDescriptor } from "../engines/engine-catalog";
-import type { ReservationStore, SampleStore, StepRunner } from "./ports";
+import { reconcileUnit } from "./reconcile-unit";
+import type { AnswerStore, BillingGateway, ReservationStore, SampleStore, StepRunner } from "./ports";
 
 /**
  * E-7: one unit of sampling work — a single (prompt × engine × attempt).
  *
- * Three separate steps, deliberately. Inngest memoizes a step that COMPLETES
- * and re-runs one that dies mid-flight, so where the boundaries fall decides
- * what a crash costs:
- *
- *   reserve | call | settle   a crash after the call replays only `settle`;
- *                             the engine is not called again.
- *   reserve+call | settle     a crash after the call replays the call too, and
- *                             the vendor charges twice.
- *
- * The second shape is the obvious-looking one — fewer round trips, one step for
- * "do the work" — and it is wrong for exactly this reason.
+ * Separate steps, deliberately: Inngest memoizes a step that COMPLETES and
+ * re-runs one that dies mid-flight, so where the boundaries fall decides what
+ * a crash costs — reserve|call|settle replays only settle after a crash;
+ * reserve+call|settle replays the call too and double-bills the vendor.
+ * bill-test (E-9) is its own step for the same reason, one level up.
  */
 
 export type DispatchInput = {
@@ -43,6 +42,13 @@ export type DispatchOutcome =
           duplicateRisk: boolean;
           /** Consumption beyond the claim. Non-zero means costMicroUsd is a floor. */
           overrunUnits: number;
+          /**
+           * The engine response, passed back so extraction can run downstream
+           * without re-reading it. Deliberately NOT interpreted here: this
+           * module handles money and crash safety, and nothing in it may decide
+           * whether a brand was visible.
+           */
+          result: EngineSampleResult;
       }
     | { kind: "deferred"; deferredUnits: number }
     | { kind: "skipped"; reason: string };
@@ -52,6 +58,10 @@ export type DispatchDeps = {
     adapter: AnswerEngineAdapter;
     reservations: ReservationStore;
     samples: SampleStore;
+    /** E-8. Required, not optional: an answer store nobody passes stores nothing. */
+    answers: AnswerStore;
+    /** E-9. Gates itself on isMeteredBillingLive(); safe to pass even when billing is off. */
+    billing: BillingGateway;
     now?: () => Date;
 };
 
@@ -59,7 +69,7 @@ export async function dispatchUnit(
     input: DispatchInput,
     deps: DispatchDeps
 ): Promise<DispatchOutcome> {
-    const { step, adapter, reservations, samples } = deps;
+    const { step, adapter, reservations, samples, answers, billing } = deps;
     const now = deps.now ?? (() => new Date());
     const descriptor = getEngineDescriptor(input.engineId);
     const idempotencyKey = `${input.runId}:${input.promptId}:${input.engineId}:${input.attempt}`;
@@ -122,45 +132,69 @@ export async function dispatchUnit(
     const result = called.sample;
     const duplicateRisk = called.dispatchAttempts > 1;
 
-    // STEP 3 — reconcile. Consumption and cost are different quantities: a call
-    // inside a free allowance consumes a unit and costs nothing.
-    //
-    // costUnits is adapter-reported and unbounded above, so it can exceed what
-    // we pessimistically claimed. The excess is split off rather than dropped:
-    // discarding it would tell the guard the bucket is less drained than it is,
-    // which is the self-amplifying undercount this ledger exists to prevent.
-    const consumed = billableUnits(result);
-    const settledUnits = Math.min(consumed, reservation.grantedUnits);
-    const overrunUnits = consumed - settledUnits;
-    const billed = reservation.kind === "granted" ? Math.min(reservation.billableUnits, consumed) : 0;
+    // STEP 3 — reconcile. The arithmetic lives in reconcileUnit, which is pure
+    // and tested directly: it decides what the customer is charged.
+    const { settledUnits, overrunUnits, billableUnits: billed, costMicroUsd } = reconcileUnit(
+        result,
+        {
+            grantedUnits: reservation.grantedUnits,
+            claimBillableUnits: reservation.kind === "granted" ? reservation.billableUnits : 0,
+        },
+        descriptor.cost.overageMicroUsd
+    );
 
-    const persisted = await step("persist-sample", async () =>
-        samples.persist({
+    // Upload and row insert share one step so the two cannot disagree across a
+    // crash: a completed step means the object and the pointer both exist, and a
+    // re-executed one overwrites the same deterministic path.
+    const persisted = await step("persist-sample", async () => {
+        const answerStoragePath = await answers.put({
+            organizationId: input.organizationId,
+            runId: input.runId,
+            promptId: input.promptId,
+            engineId: input.engineId,
+            attempt: input.attempt,
+            promptText: input.promptText,
+            locale: input.locale,
+            result,
+        });
+
+        return samples.persist({
             runId: input.runId,
             businessId: input.businessId,
             promptId: input.promptId,
             engineId: input.engineId,
             attempt: input.attempt,
             result,
-        })
-    );
+            answerStoragePath,
+        });
+    });
 
     await step("settle", async () =>
         reservations.settle(reservationId, {
             settledUnits,
             overrunUnits,
             billableUnits: billed,
-            costMicroUsd: billed > 0 ? billed * descriptor.cost.overageMicroUsd : 0,
+            costMicroUsd,
             at: now().toISOString(),
         })
     );
+
+    // E-9, separate step: what the vendor charged US just settled above; this
+    // is what WE charge the customer, and a crash here must never replay that
+    // settle. Only "ok" is billable — a vendor-billed failure is our cost.
+    if (result.status === "ok") {
+        await step("bill-test", () =>
+            billing.settleTest({ organizationId: input.organizationId, sampleId: persisted.sampleId })
+        );
+    }
 
     return {
         kind: "sampled",
         sampleId: persisted.sampleId,
         billableUnits: billed,
-        costMicroUsd: billed > 0 ? billed * descriptor.cost.overageMicroUsd : 0,
+        costMicroUsd,
         duplicateRisk,
         overrunUnits,
+        result,
     };
 }

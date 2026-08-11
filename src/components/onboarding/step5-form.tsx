@@ -29,7 +29,12 @@ export function Step5Form({
 
     return (
         <div className="text-center space-y-6 py-2">
-            <Step5FormCelebration firstName={firstName} businessName={businessName} googleConnected={googleConnected} />
+            <Step5FormCelebration
+                firstName={firstName}
+                businessName={businessName}
+                businessId={businessId}
+                googleConnected={googleConnected}
+            />
             <Step5FormCta isLoading={isLoading} isCompleting={isCompleting} onGoToDashboard={handleGoToDashboard} />
         </div>
     );

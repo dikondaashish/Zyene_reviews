@@ -34,6 +34,7 @@ export interface GooglePlatformUpdatePayload {
     sync_status: "active";
     updated_at: string;
     refresh_token?: string | null;
+    granted_scopes?: string;
 }
 
 export interface ReviewRequestExportRow {

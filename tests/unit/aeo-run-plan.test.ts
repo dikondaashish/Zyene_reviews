@@ -106,9 +106,9 @@ describe("the plan respects what the day has already spent", () => {
     }));
 
     it("clips the fan-out to the allowance instead of emitting doomed children", () => {
-        // 9,950 of Gemini's 10,000 daily units are gone; 200 prompts are wanted.
+        // 1,450 of Gemini's 1,500 daily units are gone; 200 prompts are wanted.
         const plan = planRun(
-            { ...INPUT, prompts: many, consumedByEngine: { gemini: 9_950 } },
+            { ...INPUT, prompts: many, consumedByEngine: { gemini: 1_450 } },
             registryWith("gemini")
         );
         expect(plan.dispatches).toHaveLength(50);
@@ -117,7 +117,7 @@ describe("the plan respects what the day has already spent", () => {
 
     it("emits nothing at all once the allowance is gone", () => {
         const plan = planRun(
-            { ...INPUT, prompts: many, consumedByEngine: { gemini: 10_000 } },
+            { ...INPUT, prompts: many, consumedByEngine: { gemini: 1_500 } },
             registryWith("gemini")
         );
         expect(plan.dispatches).toHaveLength(0);

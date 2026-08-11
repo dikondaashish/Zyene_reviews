@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 
 import { dispatchUnit, type DispatchInput } from "../../src/services/aeo/orchestration/dispatch-unit";
 import type {
+    AnswerStore,
+    AnswerStorePut,
+    BillingGateway,
     ReservationStore,
     ReserveOutcome,
     ReserveRequest,
@@ -10,7 +13,12 @@ import type {
 } from "../../src/services/aeo/orchestration/ports";
 import { FixtureEngineAdapter } from "../../src/services/aeo/engines/adapters/fixture-engine-adapter";
 import type { AnswerEngineAdapter } from "../../src/services/aeo/engines/engine-types";
-import { citationsUnavailable, okSample } from "../../src/services/aeo/engines/engine-result";
+import {
+    citationsUnavailable,
+    engineError,
+    failedSample,
+    okSample,
+} from "../../src/services/aeo/engines/engine-result";
 
 /**
  * Reproduces Inngest's `step.run` contract so crash behaviour can be asserted
@@ -126,6 +134,15 @@ class MemoryReservations implements ReservationStore {
         if (s.billableUnits > s.settledUnits + s.overrunUnits) {
             throw new Error("billable_units > total consumption");
         }
+        // aeo_quota_reservations_cost_requires_billable_units. Omitting this one
+        // is what let a paid engine settle 1 billable unit at zero cost through
+        // the whole suite and fail only against the real table, mid-run, with
+        // the vendor already called.
+        if ((s.billableUnits === 0) !== (s.costMicroUsd === 0)) {
+            throw new Error(
+                `cost_requires_billable_units: billable=${s.billableUnits} cost=${s.costMicroUsd}`
+            );
+        }
         row.state = "settled";
         row.settledUnits = s.settledUnits;
         row.overrunUnits = s.overrunUnits;
@@ -140,11 +157,51 @@ class MemoryReservations implements ReservationStore {
 
 class MemorySamples implements SampleStore {
     persisted: string[] = [];
-    async persist(input: { runId: string; promptId: string; engineId: string; attempt: number }) {
+    /** What the row recorded as its evidence pointer, keyed by unit. */
+    paths = new Map<string, string | null>();
+    async persist(input: {
+        runId: string;
+        promptId: string;
+        engineId: string;
+        attempt: number;
+        answerStoragePath: string | null;
+    }) {
         const key = `${input.runId}:${input.promptId}:${input.engineId}:${input.attempt}`;
         const already = this.persisted.includes(key);
-        if (!already) this.persisted.push(key);
+        if (!already) {
+            this.persisted.push(key);
+            this.paths.set(key, input.answerStoragePath);
+        }
         return { sampleId: key, alreadyPersisted: already };
+    }
+}
+
+/** E-8 double. `fail` models object storage being down while the DB is fine. */
+class MemoryAnswers implements AnswerStore {
+    objects = new Map<string, string>();
+    fail = false;
+    async put(input: AnswerStorePut): Promise<string | null> {
+        if (input.result.status !== "ok") return null;
+        if (this.fail) return null;
+        const path = `${input.organizationId}/${input.runId}/${input.promptId}__${input.engineId}__${input.attempt}.json`;
+        this.objects.set(path, JSON.stringify({
+            prompt: input.promptText,
+            answerText: input.result.answerText,
+        }));
+        return path;
+    }
+}
+
+/**
+ * E-9 double. Records every call rather than deciding anything itself — the
+ * real flag-gating (isMeteredBillingLive) lives in SupabaseBillingGateway and
+ * is tested there; this fake exists so dispatch-unit's crash tests can assert
+ * WHETHER and HOW OFTEN billing was called without needing a live database.
+ */
+class MemoryBilling implements BillingGateway {
+    calls: { organizationId: string; sampleId: string }[] = [];
+    async settleTest(input: { organizationId: string; sampleId: string }): Promise<void> {
+        this.calls.push(input);
     }
 }
 
@@ -167,9 +224,11 @@ function harness() {
     const adapter = new FixtureEngineAdapter({ id: "gemini", modelId: "gemini-2.5-pro" });
     const reservations = new MemoryReservations();
     const samples = new MemorySamples();
+    const answers = new MemoryAnswers();
+    const billing = new MemoryBilling();
     const go = () =>
-        inngest.run((step) => dispatchUnit(INPUT, { step, adapter, reservations, samples }));
-    return { inngest, adapter, reservations, samples, go };
+        inngest.run((step) => dispatchUnit(INPUT, { step, adapter, reservations, samples, answers, billing }));
+    return { inngest, adapter, reservations, samples, answers, billing, go };
 }
 
 describe("happy path", () => {
@@ -189,7 +248,16 @@ describe("happy path", () => {
             "call-engine",
             "persist-sample",
             "settle",
+            // E-9: only for a status "ok" sample — vendor cost settles first,
+            // since it is owed regardless of what we bill the customer.
+            "bill-test",
         ]);
+    });
+
+    it("bills the org for a status ok sample, exactly once", async () => {
+        const h = harness();
+        await h.go();
+        expect(h.billing.calls).toEqual([{ organizationId: "org-1", sampleId: expect.any(String) }]);
     });
 });
 
@@ -323,9 +391,11 @@ describe("a re-delivered event for finished work", () => {
         const adapter = new FixtureEngineAdapter({ id: "gemini", modelId: "gemini-2.5-pro" });
         const reservations = new MemoryReservations();
         const samples = new MemorySamples();
+        const answers = new MemoryAnswers();
+        const billing = new MemoryBilling();
         const once = () =>
             new FakeInngest().run((step) =>
-                dispatchUnit(INPUT, { step, adapter, reservations, samples })
+                dispatchUnit(INPUT, { step, adapter, reservations, samples, answers, billing })
             );
         const first = await once();
         const second = await once();
@@ -386,11 +456,15 @@ describe("the engine reports more units than were reserved", () => {
         const inngest = new FakeInngest();
         const reservations = new MemoryReservations();
         const samples = new MemorySamples();
+        const answers = new MemoryAnswers();
+        const billing = new MemoryBilling();
         const adapter = overReporting(units);
         return {
             reservations,
             go: () =>
-                inngest.run((step) => dispatchUnit(INPUT, { step, adapter, reservations, samples })),
+                inngest.run((step) =>
+                    dispatchUnit(INPUT, { step, adapter, reservations, samples, answers, billing })
+                ),
         };
     }
 
@@ -432,6 +506,136 @@ describe("the engine reports more units than were reserved", () => {
         const out = await h.go();
         if (out.kind === "sampled") expect(out.overrunUnits).toBe(0);
         expect([...h.reservations.rows.values()][0].overrunUnits).toBe(0);
+    });
+});
+
+describe("E-8 — the answer is kept as evidence", () => {
+    it("records where the answer was stored", async () => {
+        const h = harness();
+        await h.go();
+        const [key] = h.samples.persisted;
+        expect(h.samples.paths.get(key)).toMatch(/^org-1\/run-1\/prompt-1__gemini__1\.json$/);
+        expect(h.answers.objects.size).toBe(1);
+    });
+
+    it("stores the prompt with the answer, since half the evidence is the question", async () => {
+        const h = harness();
+        await h.go();
+        const stored = JSON.parse([...h.answers.objects.values()][0]) as { prompt: string };
+        expect(stored.prompt).toBe("best plumber in Austin");
+    });
+
+    it("keeps the sample when storage fails, and records no evidence rather than an empty answer", async () => {
+        // Losing the copy must not lose the observation: the vendor was already
+        // paid for it. NULL then means "no evidence retained" — which readers
+        // must distinguish from "the engine said nothing".
+        const h = harness();
+        h.answers.fail = true;
+        const out = await h.go();
+
+        expect(out.kind).toBe("sampled");
+        expect(h.samples.persisted).toHaveLength(1);
+        expect(h.samples.paths.get(h.samples.persisted[0])).toBeNull();
+    });
+
+    it("writes one object per unit however often the step replays", async () => {
+        // The path is derived from the unit, not from the sample id, so a
+        // re-executed step overwrites its own object instead of orphaning one.
+        const h = harness();
+        h.inngest.crashAfter = { stepId: "persist-sample", onAttempt: 1 };
+        await h.go();
+        expect(h.answers.objects.size).toBe(1);
+        expect(h.samples.persisted).toHaveLength(1);
+    });
+});
+
+describe("a vendor that charges nothing for a call it answered", () => {
+    /**
+     * Regression, found by the first real DataForSEO run rather than by this
+     * suite. DataForSEO rejected a malformed task, still replied on the wire —
+     * so the request counted as one consumed unit — and reported `cost: 0`.
+     *
+     * `google_serp` has no free allowance, so the reservation claimed 1 billable
+     * unit. Reading the reported cost through `??` treated the 0 as "no figure
+     * given", left the claim at 1, and produced billable=1 / cost=0: a row the
+     * ledger's CHECK constraint refuses. The settle threw, the run aborted with
+     * 19 of 25 units undispatched, and the reservation stayed `reserved` with
+     * the vendor already called.
+     */
+    class ZeroCostAdapter implements AnswerEngineAdapter {
+        readonly id = "google_serp" as const;
+        readonly modelId = "dataforseo/google-serp";
+        isConfigured() {
+            return true;
+        }
+        async sample() {
+            return failedSample({
+                modelId: this.modelId,
+                error: engineError("invalid_request", "40501: Invalid Field: 'location_name'."),
+                latencyMs: 697,
+                // The request left and came back, so a unit was consumed...
+                costUnits: 1,
+                // ...but DataForSEO billed nothing for rejecting it.
+                reportedCostMicroUsd: 0,
+            });
+        }
+    }
+
+    const PAID: DispatchInput = { ...INPUT, engineId: "google_serp" };
+
+    function paidHarness() {
+        const inngest = new FakeInngest();
+        const adapter = new ZeroCostAdapter();
+        const reservations = new MemoryReservations();
+        const samples = new MemorySamples();
+        const answers = new MemoryAnswers();
+        const billing = new MemoryBilling();
+        return {
+            reservations,
+            billing,
+            go: () =>
+                inngest.run((step) =>
+                    dispatchUnit(PAID, { step, adapter, reservations, samples, answers, billing })
+                ),
+        };
+    }
+
+    it("settles instead of throwing, so the rest of the run still dispatches", async () => {
+        const h = paidHarness();
+        const out = await h.go();
+        expect(out.kind).toBe("sampled");
+    });
+
+    it("never bills the customer for a call the vendor billed us for but that answered nothing", async () => {
+        // This IS the confirmed "one test" definition (2026-08-08): only
+        // status "ok" is a billable test. DataForSEO charging us for a
+        // rejected request is our cost to absorb, never passed through.
+        const h = paidHarness();
+        await h.go();
+        expect(h.billing.calls).toEqual([]);
+    });
+
+    it("bills nothing and leaves no reservation open", async () => {
+        const h = paidHarness();
+        await h.go();
+        const row = [...h.reservations.rows.values()][0];
+        expect(row.state).toBe("settled");
+        expect(row.billableUnits).toBe(0);
+        expect(row.costMicroUsd).toBe(0);
+    });
+
+    it("still counts the unit as consumed — quota was used even though money was not", async () => {
+        const h = paidHarness();
+        await h.go();
+        expect([...h.reservations.rows.values()][0].settledUnits).toBe(1);
+    });
+
+    it("does not silently substitute the catalog rate for a reported zero", async () => {
+        const h = paidHarness();
+        const out = await h.go();
+        // The catalog rate for google_serp is non-zero; charging it here would
+        // invent an invoice the vendor never sent.
+        expect(out.kind === "sampled" && out.costMicroUsd).toBe(0);
     });
 });
 

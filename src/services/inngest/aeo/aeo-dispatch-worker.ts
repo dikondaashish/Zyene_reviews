@@ -1,8 +1,12 @@
 import { inngest } from "@/services/inngest/client";
 import { engineRegistry } from "@/services/aeo/engines/engine-registry";
+import { registerAeoAdapters } from "@/services/aeo/engines/register-adapters";
 import type { AnswerEngineId } from "@/services/aeo/engines/engine-types";
 import { dispatchUnit } from "@/services/aeo/orchestration/dispatch-unit";
 import { getAeoStores } from "@/services/aeo/orchestration/store-factory";
+import { extractSample } from "@/services/aeo/extraction/extract-sample";
+import { SupabaseExtractionStore } from "@/services/aeo/extraction/supabase-extraction-store";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { isLiveSamplingEnabled } from "@/lib/features/aeo-surfaces";
 import { logger } from "@/lib/logger";
 
@@ -41,6 +45,11 @@ export const aeoDispatchWorker = inngest.createFunction(
             return { skipped: "live_sampling_disabled" as const };
         }
 
+        // After the gate, never before: registering an adapter is what makes an
+        // engine reachable, and there is no reason to do it in a process that
+        // has just declined to sample.
+        registerAeoAdapters();
+
         const data = event.data;
         const engineId = data.engineId as AnswerEngineId;
 
@@ -75,6 +84,8 @@ export const aeoDispatchWorker = inngest.createFunction(
                 adapter,
                 reservations: stores.reservations,
                 samples: stores.samples,
+                answers: stores.answers,
+                billing: stores.billing,
             }
         );
 
@@ -86,6 +97,19 @@ export const aeoDispatchWorker = inngest.createFunction(
                 { runId: data.runId, promptId: data.promptId, engineId, sampleId: outcome.sampleId },
                 "AEO dispatch may have been billed twice — reconcile against the vendor invoice"
             );
+        }
+
+        // Extraction runs in its own step, AFTER the sample is durable and the
+        // reservation is settled. It spends nothing and is re-runnable, so a
+        // failure here must never cost a sample that was already paid for —
+        // hence it is not folded into the dispatch steps.
+        if (outcome.kind === "sampled") {
+            await step.run("extract-mentions", async () => {
+                const extraction = new SupabaseExtractionStore(createAdminClient());
+                const context = await extraction.loadBrandContext(data.businessId);
+                const found = extractSample(outcome.result, context);
+                return extraction.persist(outcome.sampleId, data.businessId, found);
+            });
         }
 
         if (outcome.kind === "sampled" && outcome.overrunUnits > 0) {

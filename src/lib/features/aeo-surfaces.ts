@@ -58,3 +58,63 @@ const LIVE_SAMPLING_ENV_KEY = "AEO_LIVE_SAMPLING";
 export function isLiveSamplingEnabled(): boolean {
     return process.env[LIVE_SAMPLING_ENV_KEY]?.trim().toLowerCase() === "true";
 }
+
+const METERED_BILLING_ENV_KEY = "AEO_METERED_BILLING_LIVE";
+
+/**
+ * Whether a settled test may debit an org's AEO credit balance or charge
+ * Stripe overage (E-9).
+ *
+ * A THIRD gate alongside AEO_LIVE_SAMPLING and the Stripe price's own `active`
+ * flag — this one specifically is checked as the FIRST line of the billing
+ * step, before any database or Stripe call, so leaving it unset makes the
+ * step a true no-op rather than a query against tables a not-yet-applied
+ * migration hasn't created. Three independent things must all be true before
+ * a customer's card is ever touched: this flag, the credit-ledger migration
+ * applied, and the AEO Test Overage price active. None of them imply the
+ * others.
+ */
+export function isMeteredBillingLive(): boolean {
+    return process.env[METERED_BILLING_ENV_KEY]?.trim().toLowerCase() === "true";
+}
+
+const LIVE_CRAWLING_ENV_KEY = "AEO_LIVE_CRAWLING";
+
+/**
+ * Whether the E-3 scheduled crawler may fetch a real customer's site.
+ *
+ * Same fail-closed posture as isLiveSamplingEnabled(), for the equivalent
+ * reason on this surface: an unset or malformed value must never result in
+ * this app's crawler making real HTTP requests against a business's real
+ * domain. Checked first in the worker, before any robots.txt fetch.
+ */
+export function isLiveCrawlingEnabled(): boolean {
+    return process.env[LIVE_CRAWLING_ENV_KEY]?.trim().toLowerCase() === "true";
+}
+
+const LIVE_ALERTING_ENV_KEY = "AEO_LIVE_ALERTING";
+
+/**
+ * Whether F8 may create real aeo_alerts rows and send real digest emails.
+ *
+ * Same fail-closed posture as the other AEO live flags. An unset or
+ * malformed value must never result in a customer receiving an email about
+ * their AEO data — checked first in the alert worker, before any detection
+ * runs.
+ */
+export function isLiveAlertingEnabled(): boolean {
+    return process.env[LIVE_ALERTING_ENV_KEY]?.trim().toLowerCase() === "true";
+}
+
+const LIVE_CONTENT_BRIEFS_ENV_KEY = "AEO_LIVE_CONTENT_BRIEFS";
+
+/**
+ * Whether F6 may spend a real Gemini call generating a content brief.
+ *
+ * Same fail-closed posture as the other AEO live flags — this one guards
+ * real per-call cost (a Gemini generation, plus outbound fetches to
+ * whatever a citation points at), not just a display choice.
+ */
+export function isLiveContentBriefsEnabled(): boolean {
+    return process.env[LIVE_CONTENT_BRIEFS_ENV_KEY]?.trim().toLowerCase() === "true";
+}

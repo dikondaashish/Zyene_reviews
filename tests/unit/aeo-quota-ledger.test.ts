@@ -222,36 +222,36 @@ describe("crash recovery", () => {
 
 describe("consumedUnits feeds the budget guard", () => {
     const mixed: Reservation[] = [
-        settleReservation(openReservation({ ...base, units: 4_000 }), [ok(4_000)], { billableUnits: 0, costMicroUsd: 0 }, AT),
-        openReservation({ ...base, units: 3_000, promptId: "p2" }),
+        settleReservation(openReservation({ ...base, units: 600 }), [ok(600)], { billableUnits: 0, costMicroUsd: 0 }, AT),
+        openReservation({ ...base, units: 450, promptId: "p2" }),
     ];
 
     it("sums settled spend plus in-flight claims", () => {
-        expect(consumedUnits(mixed)).toBe(7_000);
+        expect(consumedUnits(mixed)).toBe(1_050);
     });
 
     // The bug this whole field exists to prevent: without alreadyUsedToday the
     // guard judges each dispatch against an empty day and leaks paid units.
     it("makes the guard respect what the day has already spent", () => {
-        const naive = planEngineBudget({ engineId: "gemini", requestedSamples: 4_000 });
+        const naive = planEngineBudget({ engineId: "gemini", requestedSamples: 600 });
         expect(naive.reason).toBe("within_free_allowance");
 
         const informed = planEngineBudget(
-            { engineId: "gemini", requestedSamples: 4_000 },
+            { engineId: "gemini", requestedSamples: 600 },
             { alreadyUsedToday: consumedUnits(mixed) }
         );
         expect(informed.reason).toBe("deferred_to_protect_allowance");
-        expect(informed.allowed).toBe(3_000); // 10,000 free - 7,000 consumed
+        expect(informed.allowed).toBe(450); // 1,500 free - 1,050 consumed
         expect(informed.billableUnits).toBe(0);
     });
 
     it("bills only past the remaining allowance when authorised", () => {
         const o = planEngineBudget(
-            { engineId: "gemini", requestedSamples: 4_000 },
-            { alreadyUsedToday: 9_000, overageAuthorised: true }
+            { engineId: "gemini", requestedSamples: 600 },
+            { alreadyUsedToday: 1_350, overageAuthorised: true }
         );
-        expect(o.billableUnits).toBe(3_000); // 1,000 free left, 3,000 charged
-        expect(o.costMicroUsd).toBe(3_000 * 35_000);
+        expect(o.billableUnits).toBe(450); // 150 free left, 450 charged
+        expect(o.costMicroUsd).toBe(450 * 35_000);
     });
 
     it("treats an exhausted day as zero remaining, not negative", () => {

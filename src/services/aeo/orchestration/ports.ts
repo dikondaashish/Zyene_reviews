@@ -124,7 +124,40 @@ export interface SampleStore {
         engineId: AnswerEngineId;
         attempt: number;
         result: EngineSampleResult;
+        /**
+         * Where the verbatim answer was stored, or null when none was — a failed
+         * upload, or a sample with no prose to store. Null must read downstream
+         * as "no evidence retained", never as "the engine said nothing".
+         */
+        answerStoragePath: string | null;
     }): Promise<{ sampleId: string; alreadyPersisted: boolean }>;
+}
+
+export type AnswerStorePut = {
+    organizationId: string;
+    runId: string;
+    promptId: string;
+    engineId: AnswerEngineId;
+    attempt: number;
+    /** Stored with the answer: the question is half of the evidence. */
+    promptText: string;
+    locale: EngineLocale;
+    result: EngineSampleResult;
+};
+
+/** E-8. Separate from SampleStore because object storage fails independently. */
+export interface AnswerStore {
+    put(input: AnswerStorePut): Promise<string | null>;
+}
+
+/**
+ * E-9. Everything a settled test needs to become a customer charge — credit
+ * ledger, Stripe, and the org lookup between them — collapsed into the one
+ * call dispatch-unit.ts makes. See services/aeo/billing/billing-gateway.ts
+ * for what is behind it; dispatch-unit.ts does not need to know.
+ */
+export interface BillingGateway {
+    settleTest(input: { organizationId: string; sampleId: string }): Promise<void>;
 }
 
 /**

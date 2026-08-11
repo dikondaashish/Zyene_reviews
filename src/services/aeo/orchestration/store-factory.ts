@@ -1,13 +1,17 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import type { ReservationStore, RunStore, SampleStore } from "./ports";
+import type { AnswerStore, BillingGateway, ReservationStore, RunStore, SampleStore } from "./ports";
 import { SupabaseReservationStore } from "./supabase-reservation-store";
 import { SupabaseRunStore } from "./supabase-run-store";
 import { SupabaseSampleStore } from "./supabase-sample-store";
+import { SupabaseAnswerStore } from "./supabase-answer-store";
+import { SupabaseBillingGateway } from "../billing/billing-gateway";
 
 export type AeoStores = {
     reservations: ReservationStore;
     runs: RunStore;
     samples: SampleStore;
+    answers: AnswerStore;
+    billing: BillingGateway;
 };
 
 /**
@@ -27,5 +31,7 @@ export function getAeoStores(): AeoStores {
         reservations: new SupabaseReservationStore(db),
         runs: new SupabaseRunStore(db),
         samples: new SupabaseSampleStore(db),
+        answers: new SupabaseAnswerStore(db),
+        billing: new SupabaseBillingGateway(db),
     };
 }

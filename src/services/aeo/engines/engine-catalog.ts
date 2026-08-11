@@ -1,40 +1,18 @@
 import type { AnswerEngineId } from "./engine-types";
+import type { EngineCost } from "./engine-cost";
+import { dailyCostMicroUsd, isCostMeterable } from "./engine-cost";
 
 /**
  * Static metadata for every engine we intend to sample, including ones not yet
  * implemented. The catalog is deliberately complete so the coverage panel (F1.10)
  * can tell a user "Claude: Phase 2" rather than silently omitting it.
  *
- * `cost.confidence` is not decoration: the credit ledger (E-5) must refuse to meter
- * an engine whose price we have not confirmed, so an unverified vendor cannot
- * quietly start billing. See the release plan §6.
+ * The cost model itself lives in engine-cost.ts; `cost.confidence` is not
+ * decoration, and resolveRunnable refuses to meter an engine whose price we have
+ * not confirmed. See the release plan §6.
  */
 
-export type EngineCostConfidence =
-    /** Contracted or published rate, confirmed in writing for `pinnedModelId`. */
-    | "verified"
-    /** Published list price, not yet contracted. */
-    | "estimated"
-    /** No reliable figure. Must not be enabled for paid runs. */
-    | "unverified";
-
-export type EngineCost = {
-    /**
-     * Cost per sample once the free allowance is exhausted, in micro-USD
-     * (millionths of a dollar) to keep integer math.
-     */
-    overageMicroUsd: number;
-    /**
-     * Samples per day at no charge, across the whole billing account — not per
-     * business. Zero means every sample bills.
-     *
-     * This is a DAILY bucket, which makes run scheduling a cost lever: bursting
-     * every account into one day forfeits the other six days of allowance. E-7
-     * must smooth runs across the week.
-     */
-    freePerDay: number;
-    confidence: EngineCostConfidence;
-};
+export type { EngineCost, EngineCostConfidence } from "./engine-cost";
 
 export type AnswerEngineDescriptor = {
     id: AnswerEngineId;
@@ -65,7 +43,13 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         vendor: "DataForSEO",
         phase: 1,
         pinnedModelId: null,
-        cost: { overageMicroUsd: 600, freePerDay: 0, confidence: "estimated" },
+        /**
+         * MEASURED $0.002/call live on 2026-08-07, correcting a $0.0006 estimate
+         * that understated spend 3.3×. DEPTH-COUPLED: the rate is for
+         * `organic/live/advanced` at the adapter's default depth 10, so raising
+         * that depth invalidates this figure and the budget guard with it.
+         */
+        cost: { overageMicroUsd: 2_000, freePerDay: 0, confidence: "verified" },
         supportsCitations: true,
         supportsCoordinate: true,
     },
@@ -76,7 +60,14 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         vendor: "DataForSEO",
         phase: 1,
         pinnedModelId: null,
-        cost: { overageMicroUsd: 600, freePerDay: 0, confidence: "estimated" },
+        /**
+         * MEASURED 2026-08-07 and NOT flat: $0.002 when Google returns no AI
+         * Overview, $0.004 when it does — `load_async_ai_overview` bills only
+         * when it yields one. The worst case is quoted deliberately, since a
+         * guard that plans at the cheaper rate would authorise a day it cannot
+         * afford on exactly the prompts that answer.
+         */
+        cost: { overageMicroUsd: 4_000, freePerDay: 0, confidence: "verified" },
         supportsCitations: true,
         supportsCoordinate: true,
     },
@@ -97,8 +88,15 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         surface: "answer_engine",
         vendor: "OpenAI",
         phase: 1,
-        pinnedModelId: null,
-        // Dominant variable cost: ~60% of module spend at planned volumes.
+        /** Responses API + hosted web_search. Pinned; the rate below is for this model. */
+        pinnedModelId: "gpt-4o",
+        /**
+         * Dominant variable cost: ~60% of module spend at planned volumes.
+         * ESTIMATE, and it stays one — OpenAI reports tokens, not money, so
+         * there is no invoice to reconcile against. The adapter deliberately
+         * does not synthesise one: the web_search fee is not itemised, so any
+         * derived figure would undercount.
+         */
         cost: { overageMicroUsd: 25_000, freePerDay: 0, confidence: "estimated" },
         supportsCitations: true,
         supportsCoordinate: false,
@@ -109,9 +107,21 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         surface: "answer_engine",
         vendor: "Perplexity",
         phase: 1,
-        pinnedModelId: null,
-        // Token cost plus a per-request search fee; best signal per dollar.
-        cost: { overageMicroUsd: 6_700, freePerDay: 0, confidence: "estimated" },
+        /**
+         * Sonar: the cheapest search-grounded Perplexity model, and the one the
+         * rate below was estimated from. Pinned for the same reason as Gemini —
+         * an adapter that picked its own model would be priced against a rate
+         * that does not cover it.
+         */
+        pinnedModelId: "sonar",
+        /**
+         * Token cost plus a per-request search fee; best signal per dollar.
+         * MEASURED: 5 live sonar calls on 2026-08-07 averaged $0.005396 (range
+         * $0.00530–$0.00553), replacing a $0.0067 estimate that ran ~24% high.
+         * The ledger still prefers Perplexity's per-request reported cost; this
+         * only drives planning and the budget projection the old value inflated.
+         */
+        cost: { overageMicroUsd: 5_400, freePerDay: 0, confidence: "verified" },
         supportsCitations: true,
         supportsCoordinate: false,
     },
@@ -122,21 +132,20 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         vendor: "Google Vertex",
         phase: 1,
         /**
-         * Pinned to 2.5 Pro on purpose, even though the rest of the app runs
-         * Gemini 3.x (see vertex-adapter.ts). Two reasons:
-         *
-         * 1. The written grounding quote covers 2.0/2.5 only. Calling a 3.x model
-         *    would price us against a rate that does not cover it.
-         * 2. Grounding fees dominate token fees in this workload. Pro's 10,000/day
-         *    free bucket is 6.7x Flash's 1,500/day, which more than offsets Pro's
-         *    higher token rate anywhere between ~420 and ~2,800 tracked businesses.
-         *
-         * Revisit if a Gemini 3 grounding rate is confirmed.
+         * 2.5 Flash, not 2.5 Pro and not the app-wide 3.x default. Two binding
+         * constraints: the written quote covers 2.0/2.5 only, and of those only
+         * 2.5 Flash is callable here — 2.5 Pro and 2.5 Flash-Lite both 404
+         * "no longer available to new users" despite being listed.
+         * Full account and the revised ceiling: release plan §15.
          */
-        pinnedModelId: "gemini-2.5-pro",
-        // Confirmed: 10,000 grounding prompts/day free, then $35 per 1,000.
-        // One grounding prompt may fan out to several search queries, billed once.
-        cost: { overageMicroUsd: 35_000, freePerDay: 10_000, confidence: "verified" },
+        pinnedModelId: "gemini-2.5-flash",
+        /**
+         * 2.0 Flash, 2.5 Flash and 2.5 Flash-Lite SHARE 1,500 free grounding
+         * prompts/day account-wide, then $35 per 1,000. One grounding prompt may
+         * fan out to several searches but bills once. Measured operational
+         * ceiling is 545 businesses, not the 700 an even split suggests — §15.
+         */
+        cost: { overageMicroUsd: 35_000, freePerDay: 1_500, confidence: "verified" },
         supportsCitations: true,
         supportsCoordinate: false,
     },
@@ -177,7 +186,7 @@ export function listEngineDescriptors(): AnswerEngineDescriptor[] {
  * a hard block: we will not bill a customer for a vendor whose rate we cannot state.
  */
 export function isMeterable(id: AnswerEngineId): boolean {
-    return CATALOG[id].cost.confidence !== "unverified";
+    return isCostMeterable(CATALOG[id].cost);
 }
 
 /**
@@ -187,7 +196,5 @@ export function isMeterable(id: AnswerEngineId): boolean {
  * so per-business apportionment must be done by the caller after this returns.
  */
 export function estimateDailyCostMicroUsd(id: AnswerEngineId, samplesPerDay: number): number {
-    const { freePerDay, overageMicroUsd } = CATALOG[id].cost;
-    const billable = Math.max(0, Math.floor(samplesPerDay) - freePerDay);
-    return billable * overageMicroUsd;
+    return dailyCostMicroUsd(CATALOG[id].cost, samplesPerDay);
 }

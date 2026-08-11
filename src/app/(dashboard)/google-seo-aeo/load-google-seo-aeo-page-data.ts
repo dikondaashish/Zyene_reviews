@@ -10,6 +10,9 @@ import { calcKeywordCoverage } from "./google-seo-aeo-audit-utils";
 import { buildGoogleSeoAeoAudits } from "./google-seo-aeo-build-audits";
 import type { GoogleSeoAeoContentProps } from "./google-seo-aeo-content-props";
 import { fetchGoogleSeoAeoSecondaryData } from "./google-seo-aeo-secondary-fetch";
+import { loadAeoVisibility } from "./load-aeo-visibility";
+import { loadSearchConsoleSection } from "./load-search-console-section";
+import { loadShareOfVoice } from "./load-share-of-voice";
 
 export type GoogleSeoAeoLoadResult =
     | { kind: "no-business" }
@@ -28,7 +31,7 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
 
     const { data: platform } = await supabase
         .from("review_platforms")
-        .select("id, platform, google_location_id")
+        .select("id, platform, google_location_id, granted_scopes")
         .eq("business_id", businessId)
         .eq("platform", "google")
         .maybeSingle();
@@ -126,6 +129,11 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
         | null;
 
     const secondary = await fetchGoogleSeoAeoSecondaryData(businessId, latestAiRun, latestHeatmapRun);
+    // Read through the caller's RLS-scoped client, not the admin one: the
+    // org-scoped policies on aeo_samples are the isolation boundary here.
+    const aeoVisibility = await loadAeoVisibility(supabase, businessId);
+    const searchConsole = await loadSearchConsoleSection(businessId, platform.id, platform.granted_scopes);
+    const shareOfVoice = await loadShareOfVoice(supabase, businessId);
 
     return {
         kind: "ok",
@@ -148,6 +156,9 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
             aiResults: secondary.aiResults,
             latestHeatmapRun,
             heatmapCells: secondary.heatmapCells,
+            aeoVisibility,
+            searchConsole,
+            shareOfVoice,
         },
     };
 }

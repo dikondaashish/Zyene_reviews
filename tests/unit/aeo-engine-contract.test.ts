@@ -90,18 +90,30 @@ describe("EngineRegistry.resolveRunnable", () => {
 });
 
 describe("engine cost model", () => {
-    it("pins Gemini to the model its grounding quote covers, not the app-wide default", () => {
-        // The rest of the app runs Gemini 3.x; the quote covers 2.0/2.5 only.
-        expect(getEngineDescriptor("gemini").pinnedModelId).toBe("gemini-2.5-pro");
+    it("pins Gemini to a model its grounding quote covers AND the project can call", () => {
+        // Two independent constraints, both binding:
+        //   - the quote covers the 2.0/2.5 generation only, so no 3.x model
+        //   - of those, only 2.5 Flash is callable here; 2.5 Pro and
+        //     2.5 Flash-Lite both 404 "no longer available to new users"
+        expect(getEngineDescriptor("gemini").pinnedModelId).toBe("gemini-2.5-flash");
     });
 
     it("charges nothing inside the free daily grounding allowance", () => {
-        expect(estimateDailyCostMicroUsd("gemini", 10_000)).toBe(0);
+        // 1,500/day, SHARED across 2.0 Flash / 2.5 Flash / 2.5 Flash-Lite.
+        expect(estimateDailyCostMicroUsd("gemini", 1_500)).toBe(0);
     });
 
     it("charges $35 per 1,000 only on grounding prompts past the allowance", () => {
-        // 11,000 samples => 1,000 billable => $35.00 => 35,000,000 micro-USD.
-        expect(estimateDailyCostMicroUsd("gemini", 11_000)).toBe(35_000_000);
+        // 2,500 samples => 1,000 billable => $35.00 => 35,000,000 micro-USD.
+        expect(estimateDailyCostMicroUsd("gemini", 2_500)).toBe(35_000_000);
+    });
+
+    it("does not still believe in the 2.5 Pro allowance", () => {
+        // Regression guard on the specific stale number. 10,000/day belonged to
+        // 2.5 Pro, which this project cannot call; leaving it in place would
+        // have authorised ~6.7x the free spend that actually exists.
+        expect(getEngineDescriptor("gemini").cost.freePerDay).toBe(1_500);
+        expect(estimateDailyCostMicroUsd("gemini", 10_000)).toBeGreaterThan(0);
     });
 
     it("bills engines with no free allowance from the first sample", () => {

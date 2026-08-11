@@ -82,13 +82,49 @@ describe("slot spreading (QA #49)", () => {
      * The assertion that actually protects money. Uniformity is a means; the end
      * is never crossing a vendor's free daily allowance by accident.
      */
-    it("keeps the busiest day's demand inside Gemini's free daily allowance", () => {
-        const PROMPTS_PER_BUSINESS = 15; // Professional tier
-        const busiestDay = Math.max(...slotLoadByDay(seededIds(700)));
-        const worstDayPrompts = busiestDay * PROMPTS_PER_BUSINESS;
-        const plan = planEngineBudget({ engineId: "gemini", requestedSamples: worstDayPrompts });
-        expect(plan.reason).toBe("within_free_allowance");
-        expect(plan.billableUnits).toBe(0);
+    /**
+     * The part of QA #49 that protects money: the BUSIEST day, not the average
+     * day, has to fit inside the free allowance.
+     *
+     * The distinction became load-bearing when Gemini was repinned from 2.5 Pro
+     * (10,000/day) to 2.5 Flash (1,500/day) — 2.5 Pro turned out to be
+     * uncallable on a new project. Under the old bucket there was ~5x headroom
+     * and the average-vs-busiest gap did not matter. Under 1,500/day it decides
+     * the answer: dividing evenly by 7 suggests 700 businesses fit, but hash
+     * assignment puts ~17% more than average on the heaviest day, so 700
+     * actually breaches. Measured safe figure is 545.
+     */
+    const PROMPTS_PER_BUSINESS = 15; // Professional tier
+    const MEASURED_CEILING = 545;
+
+    it("keeps the busiest day inside the allowance at the measured ceiling", () => {
+        // Several independent id sets, so this is a property of the assignment
+        // and not of one lucky set of business ids.
+        for (const seed of [0x9e37, 0x1234, 0xabcd, 0x5555, 0xf00d]) {
+            const busiestDay = Math.max(...slotLoadByDay(seededIds(MEASURED_CEILING, seed)));
+            const plan = planEngineBudget({
+                engineId: "gemini",
+                requestedSamples: busiestDay * PROMPTS_PER_BUSINESS,
+            });
+            expect(plan.reason).toBe("within_free_allowance");
+            expect(plan.billableUnits).toBe(0);
+        }
+    });
+
+    it("shows the naive average-based ceiling is too optimistic to use", () => {
+        // 1,500 x 7 / 15 = 700 by arithmetic. Smoothing is real but imperfect,
+        // so billing at 700 would start quietly. Asserted rather than left as a
+        // comment, because this is the number someone will reach for later.
+        const naive = Math.floor((1_500 * 7) / PROMPTS_PER_BUSINESS);
+        expect(naive).toBe(700);
+
+        const busiestDay = Math.max(...slotLoadByDay(seededIds(naive)));
+        const plan = planEngineBudget({
+            engineId: "gemini",
+            requestedSamples: busiestDay * PROMPTS_PER_BUSINESS,
+        });
+        expect(plan.reason).toBe("deferred_to_protect_allowance");
+        expect(MEASURED_CEILING).toBeLessThan(naive);
     });
 
     it("would breach the allowance if every business fired on one day", () => {
@@ -163,7 +199,7 @@ describe("nextRunAt — enrolment without a thundering herd (QA #53)", () => {
 
 describe("daily budget guard", () => {
     it("charges nothing inside Gemini's free grounding bucket", () => {
-        const o = planEngineBudget({ engineId: "gemini", requestedSamples: 10_000 });
+        const o = planEngineBudget({ engineId: "gemini", requestedSamples: 1_500 });
         expect(o.reason).toBe("within_free_allowance");
         expect(o.billableUnits).toBe(0);
         expect(o.costMicroUsd).toBe(0);
@@ -172,9 +208,9 @@ describe("daily budget guard", () => {
 
     // QA #51: the excess waits; zero billable requests are fired.
     it("defers past a free allowance and bills nothing when unauthorised", () => {
-        const o = planEngineBudget({ engineId: "gemini", requestedSamples: 11_000 });
+        const o = planEngineBudget({ engineId: "gemini", requestedSamples: 2_500 });
         expect(o.reason).toBe("deferred_to_protect_allowance");
-        expect(o.allowed).toBe(10_000);
+        expect(o.allowed).toBe(1_500);
         expect(o.deferred).toBe(1_000);
         expect(o.billableUnits).toBe(0);
         expect(o.costMicroUsd).toBe(0);
@@ -182,11 +218,11 @@ describe("daily budget guard", () => {
 
     it("spends past the allowance only when explicitly authorised", () => {
         const o = planEngineBudget(
-            { engineId: "gemini", requestedSamples: 11_000 },
+            { engineId: "gemini", requestedSamples: 2_500 },
             { overageAuthorised: true }
         );
         expect(o.reason).toBe("overage_authorised");
-        expect(o.allowed).toBe(11_000);
+        expect(o.allowed).toBe(2_500);
         expect(o.deferred).toBe(0);
         expect(o.billableUnits).toBe(1_000);
         // 1,000 x $0.035 = $35.00
@@ -220,7 +256,7 @@ describe("daily budget guard", () => {
  * edited to a wrong rate, these fail — a test that read the catalog would not.
  */
 describe("budget guard vs. the quote (real numbers)", () => {
-    const FREE_PER_DAY = 10_000;
+    const FREE_PER_DAY = 1_500;
     const USD_PER_1000 = 35;
     const PROMPTS = 15; // Professional tier
     const perDay = (businesses: number) => Math.floor((businesses * PROMPTS) / 7);
@@ -234,36 +270,44 @@ describe("budget guard vs. the quote (real numbers)", () => {
     }
 
     it.each([
+        [100, false, 0],
+        [400, false, 0],
         [700, false, 0],
-        [4_000, false, 0],
-        [4_667, false, 0],
-        [4_700, false, 0], // excess deferred, nothing billed
+        [750, false, 0], // excess deferred, nothing billed
     ])("smoothed %i businesses, authorised=%s costs $%d", (businesses, auth, expected) => {
         expect(usd(perDay(businesses), auth)).toBeCloseTo(expected, 9);
     });
 
     it("bills the authorised excess at exactly $35 per 1,000", () => {
-        for (const requested of [10_001, 10_500, 12_000, 20_000]) {
+        for (const requested of [1_501, 2_000, 5_000, 10_500]) {
             const hand = ((requested - FREE_PER_DAY) / 1000) * USD_PER_1000;
             expect(usd(requested, true)).toBeCloseTo(hand, 9);
         }
     });
 
-    it("puts the free-tier ceiling at 4,667 businesses", () => {
-        expect(perDay(4_667)).toBe(FREE_PER_DAY);
-        expect(planEngineBudget({ engineId: "gemini", requestedSamples: perDay(4_667) }).reason).toBe(
+    /**
+     * The ceiling under PERFECT smoothing — demand divided evenly by 7. Real
+     * slot assignment is hash-based and lumpier, so the operational ceiling is
+     * lower; that one is measured separately in the QA #49 test above. Both
+     * numbers are true and they are not interchangeable.
+     */
+    it("puts the perfectly-smoothed ceiling at 700 businesses", () => {
+        expect(perDay(700)).toBe(FREE_PER_DAY);
+        expect(planEngineBudget({ engineId: "gemini", requestedSamples: perDay(700) }).reason).toBe(
             "within_free_allowance"
         );
-        expect(planEngineBudget({ engineId: "gemini", requestedSamples: perDay(4_668) }).reason).toBe(
+        expect(planEngineBudget({ engineId: "gemini", requestedSamples: perDay(701) }).reason).toBe(
             "deferred_to_protect_allowance"
         );
     });
 
     it("prices the cost of bursting 700 businesses onto one day", () => {
-        // Smoothed this is free; bunched it is $17.50/day, ~$525/month, for
-        // identical work. This is the number E-10 exists to avoid paying.
+        // Smoothed this is free; bunched it is $315/day, ~$9,450/month, for
+        // identical work. This is the number E-10 exists to avoid paying — and
+        // it is 18x worse than under the 2.5 Pro allowance this used to assume,
+        // because a smaller free bucket makes bad scheduling cost more, not less.
         expect(usd(perDay(700), false)).toBe(0);
-        expect(usd(700 * PROMPTS, true)).toBeCloseTo(17.5, 9);
+        expect(usd(700 * PROMPTS, true)).toBeCloseTo(315, 9);
     });
 });
 

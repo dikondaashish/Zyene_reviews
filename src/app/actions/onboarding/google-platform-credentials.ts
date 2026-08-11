@@ -13,6 +13,8 @@ interface StoreCredentialsParams {
     googleReviewUrl: string | null;
     reviewCount: number;
     averageRating: number;
+    /** Verbatim from the token response. Undefined stays NULL — unknown, not "none". */
+    grantedScopes?: string;
 }
 
 type StoreCredentialsResult =
@@ -88,6 +90,16 @@ export async function storeGooglePlatformCredentials(
             total_reviews: params.reviewCount,
             average_rating: params.averageRating,
             sync_status: "active",
+            /*
+             * Taken verbatim from the token response, never inferred from which
+             * scopes we asked for: Google may grant fewer than requested, and an
+             * incremental Search Console consent widens the grant later.
+             *
+             * Left untouched when the response carried no `scope` — overwriting a
+             * known grant with NULL would turn "we observed these scopes" back
+             * into "unknown" on any refresh that happens to omit the field.
+             */
+            ...(params.grantedScopes ? { granted_scopes: params.grantedScopes } : {}),
             updated_at: new Date().toISOString(),
         },
         { onConflict: "business_id,platform" },

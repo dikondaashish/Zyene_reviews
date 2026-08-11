@@ -14,6 +14,76 @@ export type Database = {
   }
   public: {
     Tables: {
+      aeo_alerts: {
+        Row: {
+          alert_type: string
+          business_id: string
+          created_at: string
+          detail: string
+          digest_sent_at: string | null
+          engine_id: string | null
+          evidence: Json
+          id: string
+          muted_at: string | null
+          organization_id: string
+          prompt_id: string | null
+          severity: string
+          title: string
+        }
+        Insert: {
+          alert_type: string
+          business_id: string
+          created_at?: string
+          detail: string
+          digest_sent_at?: string | null
+          engine_id?: string | null
+          evidence?: Json
+          id?: string
+          muted_at?: string | null
+          organization_id: string
+          prompt_id?: string | null
+          severity: string
+          title: string
+        }
+        Update: {
+          alert_type?: string
+          business_id?: string
+          created_at?: string
+          detail?: string
+          digest_sent_at?: string | null
+          engine_id?: string | null
+          evidence?: Json
+          id?: string
+          muted_at?: string | null
+          organization_id?: string
+          prompt_id?: string | null
+          severity?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aeo_alerts_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aeo_alerts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aeo_alerts_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "aeo_prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       aeo_brand_mentions: {
         Row: {
           brand_kind: string
@@ -170,6 +240,149 @@ export type Database = {
             columns: ["competitor_id"]
             isOneToOne: false
             referencedRelation: "competitors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aeo_content_briefs: {
+        Row: {
+          business_id: string
+          cited_source_count: number
+          confidence: string
+          created_at: string
+          edit_items: Json
+          faq_html: string
+          faq_items: Json
+          faq_json_ld: string
+          has_owning_page: boolean
+          id: string
+          prompt_id: string | null
+          schema_patch_has_placeholders: boolean
+          schema_patch_json_ld: string
+          target_page_url: string | null
+        }
+        Insert: {
+          business_id: string
+          cited_source_count?: number
+          confidence: string
+          created_at?: string
+          edit_items?: Json
+          faq_html: string
+          faq_items?: Json
+          faq_json_ld: string
+          has_owning_page: boolean
+          id?: string
+          prompt_id?: string | null
+          schema_patch_has_placeholders: boolean
+          schema_patch_json_ld: string
+          target_page_url?: string | null
+        }
+        Update: {
+          business_id?: string
+          cited_source_count?: number
+          confidence?: string
+          created_at?: string
+          edit_items?: Json
+          faq_html?: string
+          faq_items?: Json
+          faq_json_ld?: string
+          has_owning_page?: boolean
+          id?: string
+          prompt_id?: string | null
+          schema_patch_has_placeholders?: boolean
+          schema_patch_json_ld?: string
+          target_page_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aeo_content_briefs_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aeo_content_briefs_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "aeo_prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aeo_credit_balances: {
+        Row: {
+          balance_micro_usd: number
+          cycle_reset_at: string
+          granted_micro_usd: number
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          balance_micro_usd: number
+          cycle_reset_at: string
+          granted_micro_usd: number
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          balance_micro_usd?: number
+          cycle_reset_at?: string
+          granted_micro_usd?: number
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aeo_credit_balances_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aeo_credit_ledger_entries: {
+        Row: {
+          amount_micro_usd: number
+          created_at: string
+          id: string
+          kind: string
+          organization_id: string
+          sample_id: string | null
+          stripe_invoice_item_id: string | null
+        }
+        Insert: {
+          amount_micro_usd: number
+          created_at?: string
+          id?: string
+          kind: string
+          organization_id: string
+          sample_id?: string | null
+          stripe_invoice_item_id?: string | null
+        }
+        Update: {
+          amount_micro_usd?: number
+          created_at?: string
+          id?: string
+          kind?: string
+          organization_id?: string
+          sample_id?: string | null
+          stripe_invoice_item_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aeo_credit_ledger_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aeo_credit_ledger_entries_sample_id_fkey"
+            columns: ["sample_id"]
+            isOneToOne: false
+            referencedRelation: "aeo_samples"
             referencedColumns: ["id"]
           },
         ]
@@ -1412,6 +1625,180 @@ export type Database = {
           },
         ]
       }
+      crawl_findings: {
+        Row: {
+          business_id: string
+          crawl_page_id: string | null
+          crawl_run_id: string
+          created_at: string
+          evidence: string
+          fix_instruction: string
+          id: string
+          page_url: string | null
+          rule: string
+          severity: string
+        }
+        Insert: {
+          business_id: string
+          crawl_page_id?: string | null
+          crawl_run_id: string
+          created_at?: string
+          evidence: string
+          fix_instruction: string
+          id?: string
+          page_url?: string | null
+          rule: string
+          severity: string
+        }
+        Update: {
+          business_id?: string
+          crawl_page_id?: string | null
+          crawl_run_id?: string
+          created_at?: string
+          evidence?: string
+          fix_instruction?: string
+          id?: string
+          page_url?: string | null
+          rule?: string
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crawl_findings_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crawl_findings_crawl_page_id_fkey"
+            columns: ["crawl_page_id"]
+            isOneToOne: false
+            referencedRelation: "crawl_pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crawl_findings_crawl_run_id_fkey"
+            columns: ["crawl_run_id"]
+            isOneToOne: false
+            referencedRelation: "crawl_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crawl_pages: {
+        Row: {
+          business_id: string
+          canonical_url: string | null
+          content_storage_path: string | null
+          crawl_run_id: string
+          fetch_error: string | null
+          fetched_at: string
+          h1_count: number | null
+          http_status: number | null
+          id: string
+          meta_robots: string | null
+          title: string | null
+          url: string
+          word_count: number | null
+        }
+        Insert: {
+          business_id: string
+          canonical_url?: string | null
+          content_storage_path?: string | null
+          crawl_run_id: string
+          fetch_error?: string | null
+          fetched_at?: string
+          h1_count?: number | null
+          http_status?: number | null
+          id?: string
+          meta_robots?: string | null
+          title?: string | null
+          url: string
+          word_count?: number | null
+        }
+        Update: {
+          business_id?: string
+          canonical_url?: string | null
+          content_storage_path?: string | null
+          crawl_run_id?: string
+          fetch_error?: string | null
+          fetched_at?: string
+          h1_count?: number | null
+          http_status?: number | null
+          id?: string
+          meta_robots?: string | null
+          title?: string | null
+          url?: string
+          word_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crawl_pages_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crawl_pages_crawl_run_id_fkey"
+            columns: ["crawl_run_id"]
+            isOneToOne: false
+            referencedRelation: "crawl_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crawl_runs: {
+        Row: {
+          business_id: string
+          completed_at: string | null
+          error_message: string | null
+          id: string
+          origin: string
+          page_cap: number
+          pages_crawled: number
+          pages_discovered: number
+          started_at: string
+          status: string
+          trigger: string
+        }
+        Insert: {
+          business_id: string
+          completed_at?: string | null
+          error_message?: string | null
+          id?: string
+          origin: string
+          page_cap: number
+          pages_crawled?: number
+          pages_discovered?: number
+          started_at?: string
+          status: string
+          trigger: string
+        }
+        Update: {
+          business_id?: string
+          completed_at?: string | null
+          error_message?: string | null
+          id?: string
+          origin?: string
+          page_cap?: number
+          pages_crawled?: number
+          pages_discovered?: number
+          started_at?: string
+          status?: string
+          trigger?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crawl_runs_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_contacts: {
         Row: {
           business_id: string
@@ -2607,6 +2994,7 @@ export type Database = {
           google_profile_health_score: number | null
           google_qa_synced_at: string | null
           google_qa_unavailable: boolean
+          granted_scopes: string | null
           id: string
           last_review_update_time: string | null
           last_synced_at: string | null
@@ -2637,6 +3025,7 @@ export type Database = {
           google_profile_health_score?: number | null
           google_qa_synced_at?: string | null
           google_qa_unavailable?: boolean
+          granted_scopes?: string | null
           id?: string
           last_review_update_time?: string | null
           last_synced_at?: string | null
@@ -2667,6 +3056,7 @@ export type Database = {
           google_profile_health_score?: number | null
           google_qa_synced_at?: string | null
           google_qa_unavailable?: boolean
+          granted_scopes?: string | null
           id?: string
           last_review_update_time?: string | null
           last_synced_at?: string | null
@@ -3124,6 +3514,19 @@ export type Database = {
         Args: { p_id: string; p_lock_duration?: string }
         Returns: boolean
       }
+      aeo_consume_credit: {
+        Args: {
+          p_organization_id: string
+          p_sample_id: string
+          p_test_cost_micro_usd: number
+        }
+        Returns: {
+          already_consumed: boolean
+          debited_micro_usd: number
+          overage_micro_usd: number
+          remaining_balance_micro_usd: number
+        }[]
+      }
       aeo_mark_dispatched: {
         Args: { p_at: string; p_reservation_id: string }
         Returns: number
@@ -3147,6 +3550,10 @@ export type Database = {
           outcome: string
           reservation_id: string
         }[]
+      }
+      aeo_reset_credit_grant: {
+        Args: { p_granted_micro_usd: number; p_organization_id: string }
+        Returns: undefined
       }
       bulk_add_customer_tags: {
         Args: { customer_ids: string[]; new_tags: string[] }
@@ -3177,6 +3584,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      mute_aeo_alert: { Args: { p_alert_id: string }; Returns: undefined }
       release_competitor_watch_lock: { Args: never; Returns: undefined }
     }
     Enums: {

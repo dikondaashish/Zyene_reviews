@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { pingReviewSyncHeartbeat } from "@/lib/monitoring/review-sync-heartbeat";
 import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
+import { RECURRING_SYNC_ELIGIBLE_STATUSES } from "@/services/google/recurring-sync-eligibility";
 
 export async function GET(request: Request) {
     try {
@@ -19,11 +20,15 @@ export async function GET(request: Request) {
 
         const admin = createAdminClient();
 
-        // 2. Fetch all active review platforms
+        // 2. Fetch every connected review platform.
+        // `idle` is the state finalizeGoogleSync leaves behind after a SUCCESSFUL sync, so
+        // filtering on `active` alone silently evicted each platform the moment it worked.
+        // See RECURRING_SYNC_ELIGIBLE_STATUSES. Overlap is prevented downstream by
+        // acquire_platform_lock + enforceSyncCooldown, not by this filter.
         const { data: platforms, error } = await admin
             .from("review_platforms")
             .select("id, platform")
-            .eq("sync_status", "active")
+            .in("sync_status", [...RECURRING_SYNC_ELIGIBLE_STATUSES])
             .in("platform", ["google", "yelp", "facebook"]);
 
         if (error) {
