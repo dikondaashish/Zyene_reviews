@@ -1,4 +1,6 @@
 import { logger } from "@/lib/logger";
+import { fetchWithTimeout } from "@/lib/http/fetch-with-timeout";
+
 const GRAPH_BASE_URL = "https://graph.facebook.com/v19.0";
 
 export function getAppId(): string {
@@ -43,7 +45,7 @@ export async function graphFetch<T>(options: GraphRequestOptions): Promise<T> {
         fetchOptions.body = JSON.stringify(options.body);
     }
 
-    const response = await fetch(url.toString(), fetchOptions);
+    const response = await fetchWithTimeout(url.toString(), fetchOptions);
 
     if (!response.ok) {
         const errorBody = await response.text();

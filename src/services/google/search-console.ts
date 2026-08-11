@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http/fetch-with-timeout";
 import { logger } from "@/lib/logger";
 import { grantIncludesSearchConsole } from "./oauth-scopes";
 
@@ -62,7 +63,7 @@ async function gscFetch<T>(
 
     let response: Response;
     try {
-        response = await fetch(`${API_BASE}${path}`, {
+        response = await fetchWithTimeout(`${API_BASE}${path}`, {
             ...init,
             headers: {
                 Authorization: `Bearer ${accessToken}`,

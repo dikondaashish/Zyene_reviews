@@ -11,6 +11,10 @@ const SKIP_BASENAMES = new Set([
   "report-generator.tsx",
   "report-generator-pdf.ts",
   "layout.tsx",
+  // Carries the root `viewport.themeColor` values that used to live in
+  // layout.tsx. Next.js requires literal colors there — a CSS variable in a
+  // theme-color meta tag is not resolvable by the browser chrome that reads it.
+  "layout-metadata.ts",
   "public-profile-editor.tsx",
   "send-competitor-alert-email.ts",
   "generate-qr.ts",

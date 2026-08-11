@@ -1,3 +1,4 @@
+import { fetchWithTimeout, HEARTBEAT_TIMEOUT_MS } from "@/lib/http/fetch-with-timeout";
 /**
  * Better Stack heartbeat for GET /api/cron/weekly-digest (and daily heartbeat at /api/cron/daily-digest).
  *
@@ -24,7 +25,7 @@ export async function pingWeeklyDigestHeartbeat(ok: boolean): Promise<void> {
     if (!base) return;
     const url = ok ? base : `${base}/fail`;
     try {
-        await fetch(url, { method: "GET", cache: "no-store" });
+        await fetchWithTimeout(url, { method: "GET", cache: "no-store" }, HEARTBEAT_TIMEOUT_MS);
     } catch {
         /* monitoring must not break cron */
     }

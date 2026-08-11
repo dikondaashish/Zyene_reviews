@@ -1,11 +1,9 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import {
-    Star, Bot, ShieldCheck, BarChart3, TrendingUp, Sparkles,
-    ArrowRight, Check, Globe, MessageSquare, QrCode, Users, Zap, Code2,
-} from "lucide-react";
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { INTEGRATIONS } from "./features-data";
+import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 
 export function FeaturesIntegrationsBarSection() {
     return (
@@ -20,12 +18,23 @@ export function FeaturesIntegrationsBarSection() {
                                 key={int.name}
                                 className="flex items-center gap-3 bg-card border border-border rounded-xl px-5 py-3 hover:shadow-sm transition-shadow"
                             >
-                                <div
-                                    className="rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0 size-8"
-                                    style={{ backgroundColor: int.color }}
-                                >
-                                    {int.letter}
-                                </div>
+                                {int.domain ? (
+                                    <Image
+                                        src={getBrandLogoUrl(int.domain)}
+                                        alt={`${int.name} logo`}
+                                        width={32}
+                                        height={32}
+                                        className="rounded-lg flex-shrink-0 size-8 object-contain"
+                                        unoptimized
+                                    />
+                                ) : (
+                                    <div
+                                        className="rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0 size-8"
+                                        style={{ backgroundColor: int.color }}
+                                    >
+                                        {int.letter}
+                                    </div>
+                                )}
                                 <span className="text-sm font-medium text-foreground">{int.name}</span>
                             </div>
                         ))}

@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http/fetch-with-timeout";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import {
@@ -13,7 +14,7 @@ export async function fetchSquarePayment(args: {
     accessToken: string;
 }): Promise<unknown> {
     const url = `${getSquareConnectBaseUrl()}/v2/payments/${encodeURIComponent(args.paymentId)}`;
-    const res = await fetch(url, {
+    const res = await fetchWithTimeout(url, {
         headers: {
             Authorization: `Bearer ${args.accessToken}`,
             Accept: "application/json",
@@ -34,7 +35,7 @@ export async function fetchSquareCustomer(args: {
     accessToken: string;
 }): Promise<unknown | null> {
     const url = `${getSquareConnectBaseUrl()}/v2/customers/${encodeURIComponent(args.customerId)}`;
-    const res = await fetch(url, {
+    const res = await fetchWithTimeout(url, {
         headers: {
             Authorization: `Bearer ${args.accessToken}`,
             Accept: "application/json",
@@ -62,7 +63,7 @@ export async function refreshSquareAccessToken(
     const appSecret = getSquareApplicationSecret();
     if (!appId || !appSecret) throw new Error("Square credentials missing");
 
-    const res = await fetch(`${getSquareConnectBaseUrl()}/oauth2/token`, {
+    const res = await fetchWithTimeout(`${getSquareConnectBaseUrl()}/oauth2/token`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({

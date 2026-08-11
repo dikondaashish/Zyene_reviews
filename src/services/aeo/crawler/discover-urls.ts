@@ -18,6 +18,38 @@ function extractLocs(xml: string): string[] {
 }
 
 /**
+ * Strip a single leading `www.` so an apex origin and its `www` host count as
+ * the same site. Real sitemaps routinely list one while `businesses.website`
+ * holds the other, and treating that as cross-origin would silently drop a
+ * site's entire URL set.
+ */
+function baseHost(host: string): string {
+    return host.toLowerCase().replace(/^www\./, "");
+}
+
+/**
+ * A sitemap `<loc>` is attacker-controlled input: it is whatever the crawled
+ * site chose to publish. Without this, a tenant could point
+ * `businesses.website` at a host they control and list
+ * `http://169.254.169.254/...` in its sitemap, and the crawler would fetch
+ * that internal address and store the response as page evidence they can read
+ * back. Link discovery already refuses cross-origin hrefs (`isSameOrigin`
+ * below); sitemap discovery must hold the same line.
+ *
+ * Scheme is pinned to http/https as well, so a `<loc>` cannot smuggle
+ * `file://` or similar past a host check that only compares hostnames.
+ */
+function isSameSite(url: string, origin: string): boolean {
+    try {
+        const parsed = new URL(url);
+        if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return false;
+        return baseHost(parsed.host) === baseHost(new URL(origin).host);
+    } catch {
+        return false;
+    }
+}
+
+/**
  * Sitemap discovery. Returns null when no sitemap exists at all (a 404, or
  * the fetch itself failing) — the caller's signal to fall back to link
  * discovery. An empty-but-present sitemap returns `[]`, which is NOT the same
@@ -33,14 +65,19 @@ export async function discoverUrlsViaSitemap(origin: string, fetchText: FetchTex
     const root = await fetchText(new URL("/sitemap.xml", origin).toString());
     if (!root || !root.ok) return null;
 
+    // Filtering happens after the null/empty distinction is settled: a sitemap
+    // that exists but lists only foreign URLs is still a sitemap, so it returns
+    // `[]` and must NOT fall back to link discovery.
     const isIndex = /<sitemapindex[\s>]/i.test(root.text);
-    if (!isIndex) return extractLocs(root.text);
+    if (!isIndex) return extractLocs(root.text).filter((u) => isSameSite(u, origin));
 
-    const childSitemapUrls = extractLocs(root.text);
+    // Child sitemaps are fetched, so they are filtered BEFORE the request goes
+    // out — not just on the way back.
+    const childSitemapUrls = extractLocs(root.text).filter((u) => isSameSite(u, origin));
     const pages: string[] = [];
     for (const childUrl of childSitemapUrls) {
         const child = await fetchText(childUrl);
-        if (child?.ok) pages.push(...extractLocs(child.text));
+        if (child?.ok) pages.push(...extractLocs(child.text).filter((u) => isSameSite(u, origin)));
     }
     return pages;
 }

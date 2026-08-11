@@ -3,6 +3,20 @@
 import { motion, AnimatePresence } from "framer-motion";
 import type { TourStep } from "@/lib/tours/dashboard-tour";
 import type { DashboardTourTargetRect } from "@/components/tours/dashboard-tour-types";
+import { spring } from "@/lib/motion/springs";
+
+/**
+ * Scale the tooltip out of the edge that faces its target, so the spatial
+ * relationship between the highlighted element and the panel stays obvious.
+ * A panel placed below its target grows downward from its own top edge.
+ */
+const TOOLTIP_ORIGIN: Record<string, string> = {
+    top: "bottom center",
+    bottom: "top center",
+    left: "center right",
+    right: "center left",
+    center: "center center",
+};
 
 export function DashboardTourTooltipPanel({
     tooltipRef,
@@ -41,15 +55,16 @@ export function DashboardTourTooltipPanel({
                 style={{
                     top: tooltipPos.top,
                     left: tooltipPos.left,
+                    transformOrigin:
+                        TOOLTIP_ORIGIN[tooltipPos.actualPlacement ?? "center"] ?? "center center",
                 }}
                 initial={{ opacity: 0, y: 10, scale: 0.96 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.96 }}
-                transition={{
-                    duration: 0.35,
-                    ease: [0.4, 0, 0.2, 1],
-                    delay: 0.05,
-                }}
+                // Leave along the path it arrived on. Exiting to -10 sent the panel
+                // out the opposite side from where it came in, which reads as a
+                // different element appearing rather than this one leaving.
+                exit={{ opacity: 0, y: 10, scale: 0.96 }}
+                transition={spring.snappy}
             >
                 {targetRect && tooltipPos.actualPlacement !== "center" && (
                     <div className={`tour-arrow tour-arrow-${tooltipPos.actualPlacement}`} />

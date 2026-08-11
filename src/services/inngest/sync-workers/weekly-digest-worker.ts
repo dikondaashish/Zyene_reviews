@@ -30,7 +30,12 @@ export const weeklyDigestWorker = inngest.createFunction(
     const { businessId } = event.data;
     const admin = createAdminClient();
 
-    await step.run("process-digest", async () => {
+    // Gathering is all reads, so it is safe to re-run on retry. Sending is not:
+    // it used to sit in this same step behind a Promise.all, so one failed
+    // recipient failed the step and the retry re-sent the digest to everyone who
+    // had already received it. The send now happens in its own per-recipient
+    // step below, which Inngest memoises individually.
+    const digest = await step.run("build-digest", async () => {
       const now = new Date();
       const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
@@ -41,7 +46,7 @@ export const weeklyDigestWorker = inngest.createFunction(
         .eq("id", businessId)
         .single();
 
-      if (!business) return;
+      if (!business) return null;
 
       const { data: reviews } = await admin
         .from("reviews")
@@ -49,7 +54,7 @@ export const weeklyDigestWorker = inngest.createFunction(
         .eq("business_id", businessId)
         .gte("created_at", weekAgo.toISOString());
 
-      if (!reviews || reviews.length === 0) return;
+      if (!reviews || reviews.length === 0) return null;
 
       // 2. Status & Stats
       const { count: pendingCount } = await admin
@@ -73,7 +78,7 @@ export const weeklyDigestWorker = inngest.createFunction(
         .select("user_id")
         .eq("organization_id", business.organization_id);
 
-      if (!members || members.length === 0) return;
+      if (!members || members.length === 0) return null;
 
       const userIds = members.map(m => m.user_id);
       const { data: prefs } = await admin
@@ -82,14 +87,17 @@ export const weeklyDigestWorker = inngest.createFunction(
         .eq("business_id", businessId)
         .in("user_id", userIds);
 
-      const recipients = prefs?.filter(p => {
-        const pTyped = p as { digest_enabled?: boolean; users: { email?: string } | null };
-        return pTyped.digest_enabled !== false && pTyped.users?.email;
-      }) || [];
+      const recipients = (prefs ?? [])
+        .map(p => p as { user_id: string; digest_enabled?: boolean; users: { email?: string } | null })
+        .filter(p => p.digest_enabled !== false && p.users?.email)
+        .map(p => ({ userId: p.user_id, email: p.users?.email as string }))
+        // Sorted so the per-recipient step ids below are stable across retries;
+        // Postgres does not promise row order without an ORDER BY, and an
+        // unstable id would defeat the memoisation this split exists for.
+        .sort((a, b) => a.userId.localeCompare(b.userId));
 
-      if (recipients.length === 0) return;
+      if (recipients.length === 0) return null;
 
-      // 4. Send Emails
       const emailHtml = weeklyDigestEmail({
         businessName: business.name,
         reviews: digestItems,
@@ -100,15 +108,23 @@ export const weeklyDigestWorker = inngest.createFunction(
         settingsUrl: `${process.env.NEXT_PUBLIC_APP_URL}/settings/notifications`
       });
 
-      await Promise.all(recipients.map(r => {
-        const rTyped = r as { users: { email: string } };
-        return sendEmail({
-          to: rTyped.users.email,
-          subject: `Weekly review summary for ${business.name}`,
-          html: emailHtml
-        });
-      }));
+      return { businessName: business.name, recipients, emailHtml };
     });
+
+    if (!digest) return;
+
+    // Sequential rather than Promise.all: these are per-recipient steps, and a
+    // burst of parallel sends is also the shape that trips Resend's rate limit.
+    // Step ids key on user id, not email — they surface in the Inngest UI.
+    for (const recipient of digest.recipients) {
+      await step.run(`send-digest-${recipient.userId}`, () =>
+        sendEmail({
+          to: recipient.email,
+          subject: `Weekly review summary for ${digest.businessName}`,
+          html: digest.emailHtml
+        })
+      );
+    }
   }
 );
 

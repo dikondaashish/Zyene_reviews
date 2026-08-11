@@ -39,19 +39,27 @@ if (existsSync(layoutPath)) {
 }
 
 const rootLayoutPath = path.join(process.cwd(), "src/app/layout.tsx");
-if (existsSync(rootLayoutPath)) {
-    const rootSrc = readFileSync(rootLayoutPath, "utf8");
-    if (
-        !rootSrc.includes("www.zyenereviews.com") &&
-        !rootSrc.includes("MARKETING_SITE_ORIGIN")
-    ) {
-        items.push({
-            id: "p0-domain",
-            severity: "error",
-            area: "phase0",
-            message: "metadataBase not set to canonical www marketing host (§0.3)",
-        });
-    }
+
+// Root metadata lives in layout-metadata.ts and is re-exported from layout.tsx,
+// so both files count as "where metadataBase is declared" — checking only the
+// layout would report a false error purely because the export moved.
+const rootMetadataPaths = [rootLayoutPath, path.join(process.cwd(), "src/app/layout-metadata.ts")];
+const rootMetadataSrc = rootMetadataPaths
+    .filter((p) => existsSync(p))
+    .map((p) => readFileSync(p, "utf8"))
+    .join("\n");
+
+if (
+    rootMetadataSrc.length > 0 &&
+    !rootMetadataSrc.includes("www.zyenereviews.com") &&
+    !rootMetadataSrc.includes("MARKETING_SITE_ORIGIN")
+) {
+    items.push({
+        id: "p0-domain",
+        severity: "error",
+        area: "phase0",
+        message: "metadataBase not set to canonical www marketing host (§0.3)",
+    });
 }
 
 // ── Phase 1 checks ──────────────────────────────────────────────────

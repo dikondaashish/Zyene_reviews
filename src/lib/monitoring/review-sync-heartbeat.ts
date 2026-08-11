@@ -1,3 +1,4 @@
+import { fetchWithTimeout, HEARTBEAT_TIMEOUT_MS } from "@/lib/http/fetch-with-timeout";
 /**
  * Better Stack (or compatible) heartbeat for the review sync pipeline.
  *
@@ -23,7 +24,7 @@ export async function pingReviewSyncHeartbeat(ok: boolean): Promise<void> {
     if (!base) return;
     const url = ok ? base : `${base}/fail`;
     try {
-        await fetch(url, { method: "GET", cache: "no-store" });
+        await fetchWithTimeout(url, { method: "GET", cache: "no-store" }, HEARTBEAT_TIMEOUT_MS);
     } catch {
         /* monitoring must not break sync */
     }

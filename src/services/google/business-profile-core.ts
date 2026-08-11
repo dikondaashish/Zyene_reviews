@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http/fetch-with-timeout";
 /** Shared types, endpoints, error shape, and retrying fetch for the GBP APIs. */
 import { logger } from "@/lib/logger";
 
@@ -77,7 +78,7 @@ export function createGoogleApiError(message: string, code?: string): GoogleApiE
 
 export async function fetchWithRetry(url: string, options: RequestInit, retries = 3, backoff = 2000): Promise<Response> {
     try {
-        const response = await fetch(url, options);
+        const response = await fetchWithTimeout(url, options);
 
         if (response.status === 429) {
             if (retries > 0) {

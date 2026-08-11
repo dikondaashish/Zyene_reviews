@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http/fetch-with-timeout";
 import { logger } from "@/lib/logger";
 
 /**
@@ -18,7 +19,7 @@ import { logger } from "@/lib/logger";
  */
 export async function fetchGoogleGrantedScopes(accessToken: string): Promise<string | null> {
     try {
-        const response = await fetch(
+        const response = await fetchWithTimeout(
             `https://oauth2.googleapis.com/tokeninfo?access_token=${encodeURIComponent(accessToken)}`
         );
         if (!response.ok) {

@@ -46,3 +46,34 @@ export const globalApiRateLimit = new Ratelimit({
     analytics: true,
     prefix: '@upstash/ratelimit/global',
 });
+
+// 6. Public, unauthenticated form submissions (contact, demo request, waitlist,
+// private feedback). These reach real inboxes and burn Resend quota, and there
+// is no account behind them to attribute abuse to.
+//
+// globalApiRateLimit already covers /api/*, but 150/min is a DDoS ceiling, not a
+// sane budget for a form a human fills in — that allowance is for an authenticated
+// dashboard firing many parallel fetches. 5 per 10 minutes per IP is generous for
+// a person and useless for a flooder.
+export const publicFormRateLimit = new Ratelimit({
+    redis: redis,
+    limiter: Ratelimit.slidingWindow(5, '10 m'),
+    analytics: true,
+    prefix: '@upstash/ratelimit/public-form',
+});
+
+/**
+ * Best-effort client IP for rate-limit keying, behind Vercel's proxy.
+ *
+ * `x-forwarded-for` is caller-spoofable in general; on Vercel the platform
+ * rewrites it, so the leftmost entry is the real client. Falls back to a shared
+ * "anonymous" bucket rather than failing open per-request — a request with no
+ * usable IP still gets counted, just alongside every other such request.
+ */
+export function clientIpFrom(request: Request): string {
+    return (
+        request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+        request.headers.get("x-real-ip") ||
+        "anonymous"
+    );
+}

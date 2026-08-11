@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http/fetch-with-timeout";
 import {
     normalizeCompetitorPlacesRating,
     normalizeCompetitorPlacesReviewCount,
@@ -20,7 +21,7 @@ export async function searchPublicPlaces(query: string): Promise<PublicPlaceSugg
     const apiKey = googleApiKey();
     if (!apiKey || query.trim().length < 2) return [];
 
-    const response = await fetch(PLACES_AUTOCOMPLETE_URL, {
+    const response = await fetchWithTimeout(PLACES_AUTOCOMPLETE_URL, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -79,7 +80,7 @@ export async function fetchPublicPlaceMetrics(placeId: string): Promise<PublicPl
     if (!apiKey) return null;
 
     const id = placeId.replace(/^places\//, "");
-    const response = await fetch(`${PLACES_DETAILS_BASE}/${id}`, {
+    const response = await fetchWithTimeout(`${PLACES_DETAILS_BASE}/${id}`, {
         headers: {
             "X-Goog-Api-Key": apiKey,
             "X-Goog-FieldMask": "id,displayName,rating,userRatingCount",

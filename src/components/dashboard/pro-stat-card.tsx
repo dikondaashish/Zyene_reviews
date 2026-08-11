@@ -5,6 +5,7 @@ import { MessageSquare, TrendingDown } from "lucide-react";
 
 import { AnimatedNumber } from "@/components/ui/animated-number";
 import { cn } from "@/lib/utils";
+import { spring } from "@/lib/motion/springs";
 import { PRO_STAT_CARD_ICON_MAP } from "./pro-stat-card-icon-map";
 import { ProStatCardRatingStarSlot, ProStatCardTrendUpGlyph } from "./pro-stat-card-rating-star";
 import type { ProStatCardProps } from "./pro-stat-card-types";
@@ -35,7 +36,7 @@ export function ProStatCard({
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay, ease: [0.23, 1, 0.32, 1] }}
+            transition={{ ...spring.default, delay }}
             className={cn(
                 "group relative overflow-hidden rounded-2xl border border-border/60 bg-card p-5 md:p-6 min-h-[180px]",
                 "transition-all duration-200 hover:border-primary/30 hover:shadow-sm",

@@ -9,6 +9,7 @@ import { MarketingHomeHowAndTestimonials } from "@/components/marketing/marketin
 import { MarketingHomeComparison } from "@/components/marketing/marketing-home/marketing-home-comparison";
 import { MarketingHomePricing } from "@/components/marketing/marketing-home/marketing-home-pricing";
 import { MarketingHomeClosing } from "@/components/marketing/marketing-home/marketing-home-closing";
+import { FeaturesIntegrationsBarSection } from "@/app/(marketing)/features/features-integrations-bar-section";
 
 export function MarketingHomeClient() {
     const { fadeInUp, staggerContainer, prefersReducedMotion } = useMarketingHomeMotion();
@@ -22,6 +23,7 @@ export function MarketingHomeClient() {
             <MarketingHomeFeatureAutomation {...props} />
             <MarketingHomeHowAndTestimonials {...props} />
             <MarketingHomeComparison {...props} />
+            <FeaturesIntegrationsBarSection />
             <MarketingHomePricing {...props} />
             <MarketingHomeClosing {...props} />
         </div>

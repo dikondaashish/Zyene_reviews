@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Lock, ShieldCheck, CheckCircle2, KeyRound } from "lucide-react";
 import { motion } from "framer-motion";
-import { CustomerLogoBar } from "@/components/marketing/social-proof";
+import { IllustrativeBrandsBar } from "@/components/marketing/social-proof-illustrative-brands-bar";
 
 import type { MarketingHomeMotionProps } from "@/components/marketing/marketing-home/marketing-home-motion-props";
 
@@ -16,17 +16,7 @@ export function MarketingHomeTrustStrip({
     return (
         <section className="w-full py-24 md:py-32 px-4">
             <div className="mx-auto max-w-[1200px]">
-                <motion.p
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
-                    variants={fadeInUp}
-                    className="text-xs uppercase tracking-widest text-muted-foreground font-medium text-center mb-8"
-                >
-                    Trusted by local businesses everywhere
-                </motion.p>
-
-                <CustomerLogoBar />
+                <IllustrativeBrandsBar />
 
                 <motion.div
                     initial="hidden"

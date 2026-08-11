@@ -5,6 +5,7 @@ export const INTEGRATIONS_A: IntegrationItem[] = [
         name: "Google Business Profile",
         color: "var(--brand-google)",
         letter: "G",
+        domain: "google.com",
         badge: null,
         status: "live",
         features: [
@@ -21,6 +22,7 @@ export const INTEGRATIONS_A: IntegrationItem[] = [
         name: "Facebook Reviews",
         color: "var(--brand-facebook)",
         letter: "f",
+        domain: "facebook.com",
         badge: null,
         status: "live",
         features: [
@@ -36,6 +38,7 @@ export const INTEGRATIONS_A: IntegrationItem[] = [
         name: "Yelp",
         color: "var(--brand-yelp)",
         letter: "Y",
+        domain: "yelp.com",
         badge: null,
         status: "live",
         features: [
@@ -51,6 +54,7 @@ export const INTEGRATIONS_A: IntegrationItem[] = [
         name: "Zapier",
         color: "var(--brand-zapier)",
         letter: "Z",
+        domain: "zapier.com",
         badge: null,
         status: "live",
         features: [
@@ -67,6 +71,7 @@ export const INTEGRATIONS_A: IntegrationItem[] = [
         name: "Square",
         color: "var(--brand-square)",
         letter: "S",
+        domain: "squareup.com",
         badge: null,
         status: "live",
         features: [

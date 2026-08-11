@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http/fetch-with-timeout";
 /** Google OAuth refresh-token exchange. */
 import { logger } from "@/lib/logger";
 
@@ -16,7 +17,7 @@ export async function refreshGoogleToken(refreshToken: string): Promise<GoogleTo
         throw new Error("Missing Google Client ID or Secret in environment variables");
     }
 
-    const response = await fetch("https://oauth2.googleapis.com/token", {
+    const response = await fetchWithTimeout("https://oauth2.googleapis.com/token", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({

@@ -28,6 +28,8 @@
   --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -80,6 +82,12 @@
   --accent-foreground: #201515;
   --destructive: oklch(0.6 0.2 25);
   --destructive-foreground: #ffffff;
+  /* Caution, not failure: quota approaching a limit, a medium-severity finding.
+     `--warning` is the tint (backgrounds, borders); `--warning-foreground` is
+     the text sitting on that tint, darkened here so it clears contrast on a
+     light surface. Replaces scattered `amber-500/amber-700` literals. */
+  --warning: oklch(0.75 0.15 70);
+  --warning-foreground: oklch(0.45 0.12 70);
   --border: #c5c0b1;
   --input: #c5c0b1;
   --ring: #ff4f00;
@@ -136,6 +144,30 @@
   --hero-grid-line: rgba(0, 0, 0, 0.07);
   --hero-grid-dot: rgba(0, 0, 0, 0.18);
   --hero-grid-glow: rgba(255, 79, 0, 0.05);
+
+  /* ---------------------------------------------------------------------
+   * Motion — Apple's damping/response model (see .claude/skills/apple-design).
+   * "Response" is how fast the value reaches target, NOT a fixed duration.
+   * Springs live in @/lib/motion/springs.ts; these are the CSS equivalents
+   * for non-gesture transitions (hover, focus, colour, press).
+   * ------------------------------------------------------------------ */
+  --motion-press: 100ms; /* press feedback must feel instant */
+  --motion-response-fast: 150ms;
+  --motion-response: 300ms; /* response 0.3 — default UI */
+  --motion-response-slow: 400ms; /* response 0.4 — larger repositioning */
+
+  /* Critically damped (damping 1.0) — graceful settle, no overshoot. Default. */
+  --motion-ease-damped: cubic-bezier(0.25, 1, 0.5, 1);
+  /* Under-damped (damping ~0.8) — reserve for momentum-driven gestures only. */
+  --motion-ease-momentum: cubic-bezier(0.34, 1.36, 0.64, 1);
+  /* Mirrored pair so a reversible transition returns along the path it left. */
+  --motion-ease-enter: cubic-bezier(0.25, 1, 0.5, 1);
+  --motion-ease-exit: cubic-bezier(0.5, 0, 0.75, 0);
+
+  /* Press affordance — scale is the only transform that reads as "pressed"
+   * without shifting layout or fighting the border-first elevation model. */
+  --motion-press-scale: 0.97;
+  --motion-press-scale-subtle: 0.985;
 }
 
 .dark {
@@ -158,6 +190,10 @@
   --accent-foreground: #fffefb;
   --destructive: oklch(0.55 0.18 25);
   --destructive-foreground: #ffffff;
+  /* Dark theme: the tint stays close, the text lightens to clear contrast on a
+     dark surface — mirroring the old `dark:text-amber-400` override. */
+  --warning: oklch(0.8 0.13 70);
+  --warning-foreground: oklch(0.85 0.12 80);
   --border: #4a4540;
   --input: #4a4540;
   --ring: #ff4f00;
@@ -206,11 +242,104 @@
     @apply bg-background text-foreground;
     font-family: var(--font-inter), Inter, Helvetica, Arial, sans-serif;
     overflow-x: clip;
+    /* Let the face pick the right optical size for its rendered size. */
+    font-optical-sizing: auto;
   }
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
+
+  /* Tracking and leading are size-specific — a single value is wrong somewhere.
+   * Large text reads too loose, so it tightens; body copy stays near 0.
+   * These are DEFAULTS in the base layer: any explicit `tracking-*`/`leading-*`
+   * utility on an element still wins, so existing call sites are untouched.
+   * Values follow docs/DESIGN.md §3 Hierarchy. */
+  h1 {
+    letter-spacing: -0.022em;
+    line-height: 1.05;
+  }
+  h2 {
+    letter-spacing: -0.018em;
+    line-height: 1.1;
+  }
+  h3 {
+    letter-spacing: -0.012em;
+    line-height: 1.2;
+  }
+  h4,
+  h5 {
+    letter-spacing: -0.008em;
+    line-height: 1.3;
+  }
+  /* Small text needs slightly POSITIVE tracking to stay legible. */
+  small,
+  .text-xs {
+    letter-spacing: 0.01em;
+  }
+
+  /* Feedback belongs on the press, not the release — waiting for `click` to
+   * show any response feels dead. This is a base-layer default so every button
+   * gets it (including the shadcn primitives, which are not edited directly);
+   * any explicit `active:*` utility on a component still overrides it.
+   * Opt out with `data-no-press` where a transform would fight the layout. */
+  button:not(:disabled):not([data-no-press]):active,
+  [role="button"]:not([aria-disabled="true"]):not([data-no-press]):active {
+    transform: scale(var(--motion-press-scale-subtle));
+  }
+  button:not([data-no-press]),
+  [role="button"]:not([data-no-press]) {
+    transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+    transition-duration: var(--motion-press);
+    transition-timing-function: var(--motion-ease-damped);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Accessibility — reduced motion / transparency / contrast.
+ * Reduced motion does not mean no feedback; it means a gentler, non-vestibular
+ * equivalent. Opacity and colour changes survive because they aid comprehension;
+ * travel, overshoot and looping motion do not.
+ * ------------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    /* Short cross-fade instead of an abrupt cut — still readable as feedback. */
+    transition-duration: 120ms !important;
+    transition-timing-function: linear !important;
+    /* Kill overshoot: no spring curve survives this. */
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  /* Decorative travel is removed outright rather than merely shortened. */
+  .motion-travel,
+  [data-motion="travel"] {
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  /* Frostier, not see-through: raise opacity and drop the blur entirely. */
+  .pro-card,
+  .material-chrome,
+  [class*="backdrop-blur"] {
+    backdrop-filter: none !important;
+    background-color: var(--card) !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  /* Near-solid surfaces with a defined, contrasting border. */
+  .pro-card,
+  .material-chrome,
+  [class*="backdrop-blur"] {
+    backdrop-filter: none !important;
+    background-color: var(--background) !important;
+    border-color: var(--foreground) !important;
+  }
+  :root {
+    --muted-foreground: var(--foreground);
   }
 }
 
@@ -221,12 +350,19 @@
   }
 
   .pro-hover {
-    @apply transition-colors duration-200 ease-out border border-transparent;
+    /* `transition-colors` alone never covered the hover lift, so the translate
+     * snapped. Transition the properties actually being changed. */
+    @apply border border-transparent;
+    transition-property: color, background-color, border-color, transform;
+    transition-duration: var(--motion-response-fast);
+    transition-timing-function: var(--motion-ease-damped);
     &:hover {
       @apply border-border -translate-y-px;
     }
+    /* Feedback belongs on the press, not the release. */
     &:active {
-      @apply translate-y-0;
+      transform: scale(var(--motion-press-scale-subtle));
+      transition-duration: var(--motion-press);
     }
   }
 
@@ -234,10 +370,38 @@
     @apply bg-card/80 backdrop-blur-xl border border-border rounded-2xl;
   }
 
+  /* Translucent chrome (nav/toolbars/sheets) — content scrolls underneath.
+   * Tagged so the reduced-transparency and high-contrast rules can solidify it.
+   * Do NOT hand-write `-webkit-backdrop-filter` here: Lightning CSS treats the
+   * unprefixed declaration as overridden by a later prefixed one and drops it,
+   * leaving only a prefix this browser does not support. Autoprefixing is
+   * already handled from the browserslist targets. */
+  .material-chrome {
+    background-color: color-mix(in srgb, var(--background) 72%, transparent);
+    backdrop-filter: blur(20px) saturate(180%);
+  }
+
   /* Primary CTA — border-first, Zapier orange (docs/DESIGN.md §4 Buttons) */
   .cta-button {
     @apply bg-primary text-primary-foreground border border-primary rounded-[4px] px-4 py-2.5 font-semibold
-           transition-colors duration-200 ease-out hover:brightness-95 active:brightness-90;
+           hover:brightness-95 active:brightness-90;
+    /* brightness is a filter and transform is a transform — neither is covered
+     * by `transition-colors`, which is what this used to declare. */
+    transition-property: color, background-color, border-color, filter, transform;
+    transition-duration: var(--motion-response-fast);
+    transition-timing-function: var(--motion-ease-damped);
+    &:active {
+      transform: scale(var(--motion-press-scale));
+      transition-duration: var(--motion-press);
+    }
+  }
+
+  /* Opt-in press affordance for any interactive element that isn't a CTA. */
+  .press-feedback {
+    transition: transform var(--motion-press) var(--motion-ease-damped);
+    &:active {
+      transform: scale(var(--motion-press-scale));
+    }
   }
 
   /* Professional Documentation Typography */

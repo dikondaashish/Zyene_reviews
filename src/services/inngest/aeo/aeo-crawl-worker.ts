@@ -7,16 +7,15 @@ import { PolitenessQueue } from "@/services/aeo/crawler/politeness-queue";
 import { pageCapForPlan } from "@/services/aeo/crawler/crawl-plan-budget";
 import { SupabaseCrawlStore } from "@/services/aeo/crawler/supabase-crawl-store";
 import { checkOriginIsPublic } from "@/services/aeo/crawler/ssrf-guard";
-import type { FetchText } from "@/services/aeo/crawler/discover-urls";
+import { createCrawlFetch } from "@/services/aeo/crawler/safe-fetch";
 
-const fetchText: FetchText = async (url) => {
-    try {
-        const response = await fetch(url, { headers: { "User-Agent": CRAWLER_USER_AGENT } });
-        return { ok: response.ok, status: response.status, text: await response.text() };
-    } catch {
-        return null;
-    }
-};
+/**
+ * Built per crawl rather than shared at module scope: the per-host SSRF verdict
+ * cache inside it should not outlive one run.
+ */
+function buildFetchText() {
+    return createCrawlFetch({ userAgent: CRAWLER_USER_AGENT });
+}
 
 /**
  * E-3 automation: one business's scheduled crawl.
@@ -65,7 +64,7 @@ export const aeoCrawlWorker = inngest.createFunction(
         try {
             const result = await crawlSite(
                 { origin, planId },
-                { fetchText, politeness: new PolitenessQueue() }
+                { fetchText: buildFetchText(), politeness: new PolitenessQueue() }
             );
 
             await step.run("persist-and-complete", () =>
