@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Store, Link2, Loader2 } from "lucide-react";
+import { Link2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { SquareCardConnected } from "@/components/integrations/square-card-connected";
+import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 
 const SQUARE_ERROR_MESSAGES: Record<string, string> = {
     denied: "Square authorization was denied.",
@@ -79,7 +81,14 @@ export function SquareCard({ businessId, connection, configured }: SquareCardPro
                 <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
                         <div className="flex size-10 items-center justify-center rounded-lg border border-foreground/15 bg-foreground/5">
-                            <Store className="size-5 text-foreground/70" />
+                            <Image
+                                src={getBrandLogoUrl("squareup.com")}
+                                alt="Square logo"
+                                width={20}
+                                height={20}
+                                className="size-5 object-contain"
+                                unoptimized
+                            />
                         </div>
                         <div>
                             <p className="text-base font-semibold">Square</p>

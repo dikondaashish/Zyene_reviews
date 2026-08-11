@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Copy, Check, Zap, ExternalLink, AlertTriangle } from "lucide-react";
+import { ArrowRight, Copy, Check, ExternalLink, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { getAppBaseUrl } from "@/config/env";
+import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 
 interface ZapierCardProps {
     /** Required so we can fall back to a friendly disabled state when the user hasn't generated a key yet. */
@@ -40,7 +42,14 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center rounded-lg bg-primary/10 border border-primary/20 size-10">
-                            <Zap className="text-primary size-5" />
+                            <Image
+                                src={getBrandLogoUrl("zapier.com")}
+                                alt="Zapier logo"
+                                width={20}
+                                height={20}
+                                className="size-5 object-contain"
+                                unoptimized
+                            />
                         </div>
                         <div>
                             <p className="font-semibold text-base">Zapier</p>
