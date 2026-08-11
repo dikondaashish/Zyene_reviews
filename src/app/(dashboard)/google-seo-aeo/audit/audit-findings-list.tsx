@@ -9,7 +9,7 @@ const SEVERITY_ORDER: CrawlFindingSeverity[] = ["critical", "high", "medium", "l
 const SEVERITY_STYLE: Record<CrawlFindingSeverity, string> = {
     critical: "bg-destructive/15 text-destructive border-0",
     high: "bg-chart-4/20 text-chart-4 border-0",
-    medium: "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-0",
+    medium: "bg-warning/15 text-warning-foreground border-0",
     low: "bg-muted text-muted-foreground border-0",
 };
 

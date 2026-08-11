@@ -32,7 +32,7 @@ export function QuotaMeterPanel({ meter }: { meter: QuotaMeterResult }) {
                 </div>
             )}
             {meter.projectedExceedsAllowance && (
-                <div className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-700 dark:text-amber-400">
+                <div className="flex items-start gap-2 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-xs text-warning-foreground">
                     <AlertTriangle className="size-4 shrink-0 mt-0.5" />
                     <span>
                         Projected to exceed your plan&apos;s monthly allowance. The difference bills
