@@ -72,6 +72,83 @@ describe("discoverUrlsViaSitemap", () => {
         ]);
     });
 
+    it("drops a <loc> pointing at another host — the SSRF vector, since the sitemap is attacker-controlled", async () => {
+        const fetchText = fakeFetch({
+            "https://example.com/sitemap.xml": {
+                ok: true,
+                text:
+                    "<urlset>" +
+                    "<url><loc>https://example.com/about</loc></url>" +
+                    "<url><loc>http://169.254.169.254/latest/meta-data/</loc></url>" +
+                    "<url><loc>http://localhost:3000/admin</loc></url>" +
+                    "<url><loc>https://evil.test/steal</loc></url>" +
+                    "</urlset>",
+            },
+        });
+        expect(await discoverUrlsViaSitemap("https://example.com", fetchText)).toEqual([
+            "https://example.com/about",
+        ]);
+    });
+
+    it("drops a non-http(s) <loc> so a scheme cannot be smuggled past a host check", async () => {
+        const fetchText = fakeFetch({
+            "https://example.com/sitemap.xml": {
+                ok: true,
+                text: "<urlset><url><loc>file:///etc/passwd</loc></url></urlset>",
+            },
+        });
+        expect(await discoverUrlsViaSitemap("https://example.com", fetchText)).toEqual([]);
+    });
+
+    it("still returns [] rather than null when every <loc> was foreign — a sitemap existed", async () => {
+        const fetchText = fakeFetch({
+            "https://example.com/sitemap.xml": {
+                ok: true,
+                text: "<urlset><url><loc>https://evil.test/a</loc></url></urlset>",
+            },
+        });
+        // null would send the caller into link discovery; [] correctly says
+        // "there is a sitemap, it just yielded nothing we will crawl".
+        expect(await discoverUrlsViaSitemap("https://example.com", fetchText)).toEqual([]);
+    });
+
+    it("never fetches a child sitemap on another host", async () => {
+        const requested: string[] = [];
+        const inner = fakeFetch({
+            "https://example.com/sitemap.xml": {
+                ok: true,
+                text:
+                    "<sitemapindex>" +
+                    "<sitemap><loc>https://evil.test/sitemap.xml</loc></sitemap>" +
+                    "<sitemap><loc>https://example.com/sitemap-pages.xml</loc></sitemap>" +
+                    "</sitemapindex>",
+            },
+            "https://example.com/sitemap-pages.xml": {
+                ok: true,
+                text: "<urlset><url><loc>https://example.com/</loc></url></urlset>",
+            },
+        });
+        const fetchText: FetchText = async (url) => {
+            requested.push(url);
+            return inner(url);
+        };
+        const urls = await discoverUrlsViaSitemap("https://example.com", fetchText);
+        expect(requested).not.toContain("https://evil.test/sitemap.xml");
+        expect(urls).toEqual(["https://example.com/"]);
+    });
+
+    it("treats www and apex as the same site, so a real sitemap is not thrown away", async () => {
+        const fetchText = fakeFetch({
+            "https://example.com/sitemap.xml": {
+                ok: true,
+                text: "<urlset><url><loc>https://www.example.com/about</loc></url></urlset>",
+            },
+        });
+        expect(await discoverUrlsViaSitemap("https://example.com", fetchText)).toEqual([
+            "https://www.example.com/about",
+        ]);
+    });
+
     it("matches the real shape of wolfpackkc.com's sitemap.xml (checked 2026-08-09)", async () => {
         const fetchText = fakeFetch({
             "https://wolfpackkc.com/sitemap.xml": {

@@ -39,19 +39,13 @@ if (existsSync(layoutPath)) {
 }
 
 const rootLayoutPath = path.join(process.cwd(), "src/app/layout.tsx");
-if (existsSync(rootLayoutPath)) {
-    const rootSrc = readFileSync(rootLayoutPath, "utf8");
-    if (
-        !rootSrc.includes("www.zyenereviews.com") &&
-        !rootSrc.includes("MARKETING_SITE_ORIGIN")
-    ) {
-        items.push({
-            id: "p0-domain",
-            severity: "error",
-            area: "phase0",
-            message: "metadataBase not set to canonical www marketing host (§0.3)",
-        });
-    }
+// metadataBase lives in layout-metadata.ts, re-exported from layout.tsx — check both.
+const rootMetadataSrc = [rootLayoutPath, path.join(process.cwd(), "src/app/layout-metadata.ts")]
+    .filter(existsSync)
+    .map((p) => readFileSync(p, "utf8"))
+    .join("\n");
+if (rootMetadataSrc && !rootMetadataSrc.includes("www.zyenereviews.com") && !rootMetadataSrc.includes("MARKETING_SITE_ORIGIN")) {
+    items.push({ id: "p0-domain", severity: "error", area: "phase0", message: "metadataBase not set to canonical www marketing host (§0.3)" });
 }
 
 // ── Phase 1 checks ──────────────────────────────────────────────────

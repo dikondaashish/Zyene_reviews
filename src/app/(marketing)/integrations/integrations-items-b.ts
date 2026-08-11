@@ -37,6 +37,7 @@ export const INTEGRATIONS_B: IntegrationItem[] = [
         name: "Clover POS",
         color: "var(--brand-clover)",
         letter: "C",
+        domain: "clover.com",
         badge: "Coming Soon",
         status: "soon",
         features: [
@@ -51,6 +52,7 @@ export const INTEGRATIONS_B: IntegrationItem[] = [
         name: "Toast POS",
         color: "var(--brand-toast)",
         letter: "T",
+        domain: "toasttab.com",
         badge: "Coming Soon",
         status: "soon",
         features: [

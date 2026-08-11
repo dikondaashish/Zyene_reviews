@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http/fetch-with-timeout";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import {
@@ -20,7 +21,7 @@ export async function fetchCloverPayment(args: {
         `/payments/${encodeURIComponent(args.paymentId)}` +
         `?expand=order,customer,tender`;
 
-    const res = await fetch(url, {
+    const res = await fetchWithTimeout(url, {
         headers: {
             Authorization: `Bearer ${args.accessToken}`,
             Accept: "application/json",
@@ -45,7 +46,7 @@ export async function fetchCloverCustomer(args: {
         `/customers/${encodeURIComponent(args.customerId)}` +
         `?expand=emailAddresses,phoneNumbers`;
 
-    const res = await fetch(url, {
+    const res = await fetchWithTimeout(url, {
         headers: {
             Authorization: `Bearer ${args.accessToken}`,
             Accept: "application/json",
@@ -71,7 +72,7 @@ export async function refreshCloverAccessToken(
     const appSecret = getCloverAppSecret();
     if (!appId || !appSecret) throw new Error("Clover credentials missing");
 
-    const res = await fetch(`${getCloverApiBaseUrl()}/oauth/v2/refresh`, {
+    const res = await fetchWithTimeout(`${getCloverApiBaseUrl()}/oauth/v2/refresh`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { pingIndexNow } from "@/lib/seo/indexnow";
 import { logger } from "@/lib/logger";
 import { z } from "zod";
+import { bearerMatches } from "@/lib/auth/constant-time-compare";
 
 const payloadSchema = z.object({
     urls: z.array(z.string().url()).min(1),
@@ -9,10 +10,7 @@ const payloadSchema = z.object({
 
 export async function POST(request: Request) {
     try {
-        const authHeader = request.headers.get("Authorization");
-        const cronSecret = process.env.CRON_SECRET;
-
-        if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+        if (!bearerMatches(request.headers.get("Authorization"), process.env.CRON_SECRET)) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 

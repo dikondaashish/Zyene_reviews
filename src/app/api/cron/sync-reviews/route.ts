@@ -73,9 +73,9 @@ export async function GET(request: Request) {
         // Final attempt to notify monitoring of failure
         await pingReviewSyncHeartbeat(false);
         
-        return NextResponse.json({ 
-            error: "Internal Server Error",
-            message: error instanceof Error ? error.message : "Unknown error"
-        }, { status: 500 });
+        // The message is logged and sent to Sentry above; echoing it back to the
+        // caller only widens what an unauthenticated prober could learn from a
+        // 500, and adds nothing for the scheduler, which just retries.
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

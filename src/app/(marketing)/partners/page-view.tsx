@@ -1,5 +1,6 @@
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { PartnersHeroSection } from "./partners-hero-section";
+import { PartnersLogosSection } from "./partners-logos-section";
 import { PartnersChannelsSection } from "./partners-channels-section";
 import { PartnersAgencyPerksSection } from "./partners-agency-perks-section";
 import { PartnersOutreachSection } from "./partners-outreach-section";
@@ -15,6 +16,7 @@ export default function PartnersPage() {
                             ]}
                         />
             <PartnersHeroSection />
+            <PartnersLogosSection />
             <PartnersChannelsSection />
             <PartnersAgencyPerksSection />
             <PartnersOutreachSection />

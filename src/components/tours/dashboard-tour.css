@@ -190,8 +190,18 @@
     font-weight: 600;
     cursor: pointer;
     border: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    /* `all` also transitions layout properties, which cannot be composited.
+     * Name only the properties that actually change. */
+    transition-property: color, background, background-color, border-color, box-shadow, transform;
+    transition-duration: var(--motion-response-fast);
+    transition-timing-function: var(--motion-ease-damped);
     letter-spacing: 0.01em;
+}
+
+/* Every button responds on press, not just the primary one. */
+.tour-btn:active {
+    transform: scale(var(--motion-press-scale));
+    transition-duration: var(--motion-press);
 }
 
 .tour-btn-skip {
@@ -233,7 +243,8 @@
 }
 
 .tour-btn-next:active {
-    transform: translateY(0);
+    /* Drop the hover lift and take the shared press scale in one transform. */
+    transform: translateY(0) scale(var(--motion-press-scale));
 }
 
 .tour-btn-finish {

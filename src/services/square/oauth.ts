@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http/fetch-with-timeout";
 import {
     getSquareApplicationId,
     getSquareApplicationSecret,
@@ -60,7 +61,7 @@ export async function exchangeSquareCodeForTokens(code: string): Promise<SquareT
         throw new Error("Square app credentials are not configured");
     }
 
-    const res = await fetch(`${getSquareConnectBaseUrl()}/oauth2/token`, {
+    const res = await fetchWithTimeout(`${getSquareConnectBaseUrl()}/oauth2/token`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({

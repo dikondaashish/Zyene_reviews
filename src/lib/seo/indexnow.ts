@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http/fetch-with-timeout";
 import { logger } from "@/lib/logger";
 
 const INDEXNOW_KEY = "b72e9354a8674d819712a48dc7b06b52";
@@ -24,7 +25,7 @@ export async function pingIndexNow(urls: string[]): Promise<boolean> {
             urlList: urls,
         };
 
-        const response = await fetch(INDEXNOW_ENDPOINT, {
+        const response = await fetchWithTimeout(INDEXNOW_ENDPOINT, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json; charset=utf-8",

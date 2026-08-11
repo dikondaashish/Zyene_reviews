@@ -92,6 +92,20 @@ export const PARTNERSHIP_CHANNELS: PartnershipChannel[] = [
     },
 ];
 
+export interface PartnerLogo {
+    name: string;
+    domain: string;
+}
+
+/** Named platforms from PARTNERSHIP_CHANNELS with a real, resolvable domain for logo display. */
+export const PARTNER_LOGOS: PartnerLogo[] = [
+    { name: "Square", domain: "squareup.com" },
+    { name: "Clover", domain: "clover.com" },
+    { name: "Toast", domain: "toasttab.com" },
+    { name: "Zapier", domain: "zapier.com" },
+    { name: "Google Workspace", domain: "google.com" },
+];
+
 export const AGENCY_PARTNER_PERKS = [
     "20% referral commission on first-year subscription revenue",
     "White-label review widgets (hide Zyene branding on Enterprise)",

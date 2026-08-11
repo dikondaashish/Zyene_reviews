@@ -85,12 +85,12 @@ const BASELINE = {
   "src/domains/ai/adapters/vertex-adapter.ts": { max: 217, why: "TODO: split" },
   "src/services/clover/process-payment-event.ts": { max: 215, why: "TODO: split" },
   "src/services/google/lodging-merge.ts": { max: 204, why: "TODO: split" },
-  "src/lib/growth/growth-blueprint-audit-run-part2.ts": { max: 201, why: "TODO: split" },
 
   // ── Layouts ───────────────────────────────────────────────────────────────
-  // Root layout carries providers, fonts, metadata and analytics; the nested
-  // ones carry nav config. Marginally over and highly stable in shape.
-  "src/app/layout.tsx": { max: 161, why: "root layout: providers + metadata" },
+  // Nested layouts carry nav config. Marginally over and highly stable in shape.
+  // (Root layout came off this list once metadata moved to layout-metadata.ts
+  // and the Meta Pixel to components/analytics/meta-pixel.tsx — it is under the
+  // 100-line page limit on its own now.)
   "src/app/(dashboard)/settings/layout.tsx": { max: 150, why: "layout nav config" },
   "src/app/(dashboard)/layout.tsx": { max: 102, why: "layout nav config" },
   "src/components/marketing/marketing-home/marketing-home-pricing.tsx": {

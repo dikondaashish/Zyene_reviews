@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http/fetch-with-timeout";
 import {
     getCloverAppId,
     getCloverAppSecret,
@@ -54,7 +55,7 @@ export async function exchangeCloverCodeForTokens(code: string): Promise<CloverT
         throw new Error("Clover app credentials are not configured");
     }
 
-    const res = await fetch(`${getCloverApiBaseUrl()}/oauth/v2/token`, {
+    const res = await fetchWithTimeout(`${getCloverApiBaseUrl()}/oauth/v2/token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

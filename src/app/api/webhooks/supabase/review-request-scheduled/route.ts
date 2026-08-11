@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 import { inngest } from "@/services/inngest/client";
+import { bearerMatches } from "@/lib/auth/constant-time-compare";
 
 /**
  * Optional: Supabase DB webhook target for scheduled review requests.
@@ -11,9 +12,7 @@ import { inngest } from "@/services/inngest/client";
  * `Authorization: Bearer <SUPABASE_WEBHOOK_SECRET>`
  */
 export async function POST(request: Request) {
-    const authHeader = request.headers.get("authorization");
-    const secret = process.env.SUPABASE_WEBHOOK_SECRET?.trim();
-    if (!secret || authHeader !== `Bearer ${secret}`) {
+    if (!bearerMatches(request.headers.get("authorization"), process.env.SUPABASE_WEBHOOK_SECRET?.trim())) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

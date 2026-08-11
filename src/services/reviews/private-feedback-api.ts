@@ -1,6 +1,7 @@
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { clientIpFrom, publicFormRateLimit } from "@/lib/auth/rate-limit";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
 import { categorizePrivateFeedback } from "@/domains/ai/services/ai-analysis-service";
 import { sendEmail } from "@/services/resend/send-email";
@@ -14,6 +15,22 @@ import {
 } from "./private-feedback-schema";
 
 export async function handlePrivateFeedbackPost(request: Request) {
+    // Public and unauthenticated: anyone with a capture link can POST here, and
+    // each accepted submission writes a row and can fan out to an alert plus a
+    // recovery email. Keyed per IP, ahead of any parsing or DB work.
+    try {
+        const { success } = await publicFormRateLimit.limit(clientIpFrom(request));
+        if (!success) {
+            return NextResponse.json(
+                { error: "Too many submissions. Please try again in a few minutes." },
+                { status: 429 }
+            );
+        }
+    } catch (err) {
+        logger.error({ err }, "[private-feedback] rate limit check failed");
+        return NextResponse.json({ error: "Unable to submit right now." }, { status: 503 });
+    }
+
     try {
         const body = await request.json();
         const parsed = privateFeedbackSchema.safeParse(body);

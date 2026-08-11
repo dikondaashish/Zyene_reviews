@@ -1,5 +1,7 @@
 import { Webhook } from "svix";
 
+import { bearerMatches } from "@/lib/auth/constant-time-compare";
+
 export type ResendEvent = {
     type?: string;
     created_at?: string;
@@ -43,5 +45,5 @@ export function verifyResendWebhook(rawPayload: string, request: Request): boole
     }
 
     const authHeader = request.headers.get("authorization");
-    return authHeader === `Bearer ${secret}`;
+    return bearerMatches(authHeader, secret);
 }
