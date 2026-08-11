@@ -15,7 +15,7 @@ import {
     PERFORMANCE_METRICS_BATCH_SIZE,
 } from "./constants";
 import * as Sentry from "@sentry/nextjs";
-import { captureGoogleServiceException, isGoogleConfigurationError } from "./api-error";
+import { reportGoogleSyncFailure } from "./sync-failure-report";
 
 export interface PerformanceSyncResult {
     success: boolean;
@@ -185,16 +185,7 @@ export async function syncGooglePerformanceForPlatform(
             emptyDailySeries: flat.length === 0,
         };
     } catch (e: unknown) {
-        const msg = e instanceof Error ? e.message : String(e);
-        if (isGoogleConfigurationError(e)) {
-            logger.warn(
-                { api: e.apiName, statusCode: e.statusCode, googleStatus: e.googleStatus },
-                "[PerformanceSync] Google API configuration required"
-            );
-            return { success: false, dailyRowsUpserted: 0, keywordRowsUpserted: 0, error: msg };
-        }
-        logger.error({ err: msg }, "[PerformanceSync] failed:");
-        captureGoogleServiceException(e);
+        const msg = reportGoogleSyncFailure("[PerformanceSync]", e);
         return { success: false, dailyRowsUpserted: 0, keywordRowsUpserted: 0, error: msg };
     }
 }
