@@ -85,7 +85,6 @@ const BASELINE = {
   "src/domains/ai/adapters/vertex-adapter.ts": { max: 217, why: "TODO: split" },
   "src/services/clover/process-payment-event.ts": { max: 215, why: "TODO: split" },
   "src/services/google/lodging-merge.ts": { max: 204, why: "TODO: split" },
-  "src/lib/growth/growth-blueprint-audit-run-part2.ts": { max: 201, why: "TODO: split" },
 
   // ── Layouts ───────────────────────────────────────────────────────────────
   // Nested layouts carry nav config. Marginally over and highly stable in shape.
