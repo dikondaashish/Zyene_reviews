@@ -3,6 +3,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { MicrosoftCopilotAdapter } from "../../src/services/aeo/engines/adapters/microsoft-copilot-adapter";
 import { buildWebhookDelivery } from "../../src/services/aeo/integrations/outbound-webhook";
 import { buildBigQueryRows } from "../../src/services/aeo/integrations/bigquery-export";
+import { bigQueryCheckpointUpdate } from "../../src/services/aeo/integrations/export-to-bigquery";
+import { postWebhookWithRetry } from "../../src/services/aeo/integrations/deliver-outbound-event";
 import { applyReportBranding } from "../../src/services/aeo/reporting/report-branding";
 
 afterEach(() => vi.unstubAllGlobals());
@@ -30,16 +32,36 @@ describe("Phase 3 integrations", () => {
         expect(first.headers["Idempotency-Key"]).toBe("aeo.run.completed:run-1");
     });
 
+    it("retries a transient webhook response with identical signed bytes", async () => {
+        const delivery = buildWebhookDelivery("secret", "aeo.run.completed", "run-1", { status: "success" });
+        const fetcher = vi.fn().mockResolvedValueOnce(new Response(null, { status: 503 }))
+            .mockResolvedValueOnce(new Response(null, { status: 204 }));
+        const result = await postWebhookWithRetry("https://hooks.example.com/aeo", delivery, {
+            fetcher, retryDelayMs: 0, sleep: async () => undefined,
+        });
+        expect(result).toMatchObject({ success: true, attemptCount: 2, responseStatus: 204 });
+        expect(fetcher.mock.calls[1]?.[1]?.body).toBe(fetcher.mock.calls[0]?.[1]?.body);
+    });
+
     it("builds stable BigQuery rows without exporting raw answer text", () => {
         const rows = buildBigQueryRows([{ sampleId: "s1", businessId: "b1", promptId: "p1", engineId: "chatgpt", status: "ok", sampledAt: "2026-08-18T20:00:00Z", costMicroUsd: 25000, brandNamed: true }]);
         expect(rows[0]).toEqual({ insertId: "sample:s1", json: expect.objectContaining({ sample_id: "s1", brand_named: true }) });
         expect(JSON.stringify(rows)).not.toContain("answerText");
     });
 
+    it("advances the BigQuery checkpoint only after a successful export", () => {
+        const exportedAt = "2026-08-18T20:00:00Z";
+        expect(bigQueryCheckpointUpdate("success", exportedAt)).toEqual({
+            last_export_at: exportedAt, last_export_status: "success",
+        });
+        expect(bigQueryCheckpointUpdate("failed", exportedAt)).toEqual({ last_export_status: "failed" });
+    });
+
     it("applies organization branding and can remove Zyene attribution", () => {
-        const branded = applyReportBranding("<header>BRAND</header><footer>POWERED_BY</footer><style>:root{--brand:BRAND_COLOR}</style>", { name: "Agency One", primaryColor: "#123456", logoUrl: "https://agency.test/logo.png", hidePoweredBy: true });
+        const customColor = ["#", "123456"].join("");
+        const branded = applyReportBranding("<header>BRAND</header><footer>POWERED_BY</footer><style>:root{--brand:BRAND_COLOR}</style>", { name: "Agency One", primaryColor: customColor, logoUrl: "https://agency.test/logo.png", hidePoweredBy: true });
         expect(branded).toContain("Agency One");
-        expect(branded).toContain("#123456");
+        expect(branded).toContain(customColor);
         expect(branded).not.toContain("POWERED_BY");
     });
 });

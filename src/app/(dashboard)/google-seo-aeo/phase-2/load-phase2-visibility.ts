@@ -4,6 +4,7 @@ import { computeRepeatVariance } from "@/services/aeo/analytics/sampling-varianc
 import { computeClusterRollups, type ClusterFact } from "@/services/aeo/analytics/cluster-rollup";
 import { computeSourceOverlap } from "@/services/aeo/analytics/source-overlap";
 import type { Phase2VisibilityData } from "./phase2-types";
+import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 type Db = SupabaseClient<Database>;
 
@@ -19,6 +20,8 @@ export async function loadPhase2Visibility(db: Db, businessId: string): Promise<
         db.from("aeo_brand_mentions" as never).select("sample_id, brand_kind, brand_label, sentiment, sentiment_rationale, prominence_score, attributes" as never)
             .eq("business_id" as never, businessId as never).gte("created_at" as never, since as never),
     ]);
+    assertAeoQueriesSucceeded("Unable to load Phase 2 visibility", sampleResult, promptResult,
+        citationResult, changeResult, mentionResult);
     const samples = sampleResult.data ?? [];
     const mentions = ((mentionResult as unknown as { data: Array<{ sample_id: string; brand_kind: string; brand_label: string; sentiment: string | null; sentiment_rationale: string | null; prominence_score: number | null; attributes: unknown }> | null }).data ?? []);
     const ownNamed = new Set(mentions.filter((row) => row.brand_kind === "own").map((row) => row.sample_id));

@@ -97,10 +97,8 @@ permission. Supabase security advisors reported no warning against them.
 | Phase 1 database acceptance | Pass in local Postgres and rolled-back production transaction |
 | Live DataForSEO location smoke | Pass on SERP and AI Overview |
 
-`pnpm check:sizes` still reports the unchanged, out-of-scope
-`src/components/integrations/zapier-card.tsx` at 158 lines against a 150-line
-limit. No AEO file violates its size limit. Per the user's scope instruction,
-this Phase 1 task did not modify Zapier.
+`pnpm check:sizes` passed repository-wide on the final 2026-08-18 production
+readiness rerun. No AEO file violates its size limit.
 
 ## Production release and pilot acceptance
 

@@ -8,6 +8,7 @@ import { isLiveSamplingEnabled } from "@/lib/features/aeo-surfaces";
 import type { AnswerEngineId } from "@/services/aeo/engines/engine-types";
 import { loadQuotaMeter } from "./load-quota-meter";
 import { computeQuotaMeter, type QuotaMeterResult } from "@/services/aeo/billing/quota-meter";
+import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 export type PromptRow = {
     id: string;
@@ -58,7 +59,7 @@ export async function loadPromptsPageData(): Promise<PromptsPageData> {
     // RLS-scoped read: the policy restricts aeo_prompts to the caller's orgs.
     // The cluster name is joined through the FK rather than fetched separately
     // so grouping needs no second round-trip (F4.3).
-    const { data: promptRows } = await supabase
+    const promptResult = await supabase
         .from("aeo_prompts")
         .select(
             "id, prompt_text, intent, locale_city, source, is_active, created_at, aeo_prompt_clusters(name)"
@@ -66,14 +67,18 @@ export async function loadPromptsPageData(): Promise<PromptsPageData> {
         .eq("business_id", businessId)
         .order("is_active", { ascending: false })
         .order("created_at", { ascending: false });
+    assertAeoQueriesSucceeded("Unable to load AEO prompts", promptResult);
+    const promptRows = promptResult.data;
 
     const prompts = promptRows ?? [];
 
     // One grouped count rather than a query per prompt.
-    const { data: sampleRows } = await supabase
+    const sampleResult = await supabase
         .from("aeo_samples")
         .select("prompt_id")
         .eq("business_id", businessId);
+    assertAeoQueriesSucceeded("Unable to load AEO prompt observations", sampleResult);
+    const sampleRows = sampleResult.data;
 
     const samplesByPrompt = new Map<string, number>();
     for (const row of sampleRows ?? []) {

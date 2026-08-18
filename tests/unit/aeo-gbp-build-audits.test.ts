@@ -51,7 +51,7 @@ describe("buildGoogleSeoAeoAudits — F5.10 acceptance", () => {
         expect(audits.filter((a) => a.status === "pending")).toEqual([]);
     });
 
-    it("keeps no stand-in signal behind any scored row (criterion #29a)", () => {
+    it("keeps no stand-in signal behind any scored row (criterion 29a)", () => {
         const { audits } = buildGoogleSeoAeoAudits({ ...BASE_INPUT, gbpSignals: HEALTHY_SIGNALS });
 
         for (const audit of audits) {

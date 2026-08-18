@@ -100,8 +100,7 @@ owns the normal production aliases, including `app.zyenereviews.com`.
 - `pnpm test`: 125 files, 1,065 tests passed.
 - `pnpm build`: pass on exact commit; Phase 2 pages and APIs included.
 - Changed-file ESLint: pass.
-- Phase 2 files satisfy repository size limits. The repository-wide size check
-  still reports the pre-existing unrelated `zapier-card.tsx` at 158/150 lines.
+- Phase 2 files and the repository-wide size ratchet pass.
 - The unrelated user deletions of the Facebook sync route and dashboard cache
   helper were excluded from every commit, build archive, and deployment.
 
@@ -114,4 +113,6 @@ keys, report recipients, and public API credentials are created only when a
 customer supplies or requests them; the release does not fabricate external
 destinations or secrets.
 
-**Phase 2 status: 100% complete. Phase 3 remains not started.**
+**Phase 2 status: 100% complete.** Phase 3 was subsequently implemented and
+its current activation status is recorded in
+`docs/AEO_PRODUCTION_READINESS_2026-08-18.md`.

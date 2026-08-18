@@ -106,3 +106,9 @@ are valid product states, not missing implementations. A valid Google OAuth
 client secret is still required for Wolfpack to populate F2.6/F5.11 with Google
 data, and a licensed delegated Microsoft token is required to activate the
 explicitly gated Copilot beta adapter.
+
+The cross-phase production audit later hardened outbound retries, BigQuery
+checkpointing, dashboard/report query failure handling, and foreign-key
+indexes. Its final operational verdict supersedes only the activation wording,
+not the 11/11 implementation count; see
+`docs/AEO_PRODUCTION_READINESS_2026-08-18.md`.

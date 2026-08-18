@@ -60,12 +60,19 @@ async function exportIntegration(db: Admin, businessId: string, integration: Int
     return rows.length;
 }
 
+export function bigQueryCheckpointUpdate(status: "success" | "failed", exportedAt: string) {
+    return status === "success"
+        ? { last_export_at: exportedAt, last_export_status: status }
+        : { last_export_status: status };
+}
+
 export async function exportBusinessToBigQuery(db: Admin, input: { organizationId: string; businessId: string }) {
     const result = await db.from("aeo_bigquery_integrations" as never)
         .select("id, project_id, dataset_id, table_id, credentials_ciphertext, last_export_at" as never)
         .eq("organization_id" as never, input.organizationId).eq("enabled" as never, true)
         .or(`business_id.eq.${input.businessId},business_id.is.null`);
-    if (result.error) return { exported: 0, skipped: "not_configured" as const };
+    if (result.error) throw new Error(`BigQuery integration load failed: ${result.error.message}`);
+    if (!result.data?.length) return { exported: 0, skipped: "not_configured" as const };
     let exported = 0;
     for (const integration of (result.data ?? []) as unknown as Integration[]) {
         let status: "success" | "failed" = "success";
@@ -73,13 +80,17 @@ export async function exportBusinessToBigQuery(db: Admin, input: { organizationI
         let rowCount = 0;
         try { rowCount = await exportIntegration(db, input.businessId, integration); exported += rowCount; }
         catch (error) { status = "failed"; errorMessage = error instanceof Error ? error.message.slice(0, 500) : String(error); }
-        await Promise.all([
+        const completedAt = new Date().toISOString();
+        const [runWrite, checkpointWrite] = await Promise.all([
             db.from("aeo_bigquery_export_runs" as never).insert({ integration_id: integration.id,
                 organization_id: input.organizationId, business_id: input.businessId, row_count: rowCount,
                 status, error_message: errorMessage } as never),
-            db.from("aeo_bigquery_integrations" as never).update({ last_export_at: new Date().toISOString(),
-                last_export_status: status } as never).eq("id" as never, integration.id),
+            db.from("aeo_bigquery_integrations" as never)
+                .update(bigQueryCheckpointUpdate(status, completedAt) as never).eq("id" as never, integration.id),
         ]);
+        if (runWrite.error || checkpointWrite.error) {
+            throw new Error(`BigQuery export state write failed: ${runWrite.error?.message ?? checkpointWrite.error?.message}`);
+        }
     }
     return { exported };
 }

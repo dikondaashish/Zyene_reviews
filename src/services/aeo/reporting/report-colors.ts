@@ -1,0 +1,1 @@
+export const DEFAULT_AEO_REPORT_COLOR = "#2563EB";

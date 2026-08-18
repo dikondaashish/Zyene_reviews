@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
+import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 export type LatestBrief = {
     id: string;
@@ -26,7 +27,7 @@ export async function loadLatestBrief(
     businessId: string,
     promptId: string
 ): Promise<LatestBrief | null> {
-    const { data } = await db
+    const result = await db
         .from("aeo_content_briefs")
         .select("*" as never)
         .eq("business_id", businessId)
@@ -34,6 +35,8 @@ export async function loadLatestBrief(
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
+    assertAeoQueriesSucceeded("Unable to load latest AEO content brief", result);
+    const data = result.data;
 
     if (!data) return null;
     const row = data as unknown as Record<string, unknown>;

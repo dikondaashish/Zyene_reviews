@@ -1,10 +1,11 @@
 import { jsPDF } from "jspdf";
 import type { AeoReportModel } from "./report-model";
 import { percent } from "./report-model";
+import { DEFAULT_AEO_REPORT_COLOR } from "./report-colors";
 
 export function renderAeoReportPdf(model: AeoReportModel): Uint8Array {
     const pdf = new jsPDF({ unit: "pt", format: "letter" });
-    const color = model.brandColor && /^#[0-9a-f]{6}$/i.test(model.brandColor) ? model.brandColor : "#0f766e";
+    const color = model.brandColor && /^#[0-9a-f]{6}$/i.test(model.brandColor) ? model.brandColor : DEFAULT_AEO_REPORT_COLOR;
     pdf.setTextColor(color);
     pdf.setFontSize(12);
     if (model.brandLogoDataUrl) {

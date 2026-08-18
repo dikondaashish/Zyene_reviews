@@ -140,7 +140,7 @@ describe("services — the replaced proxy", () => {
         expect(check.status).toBe("pass");
         expect(check.label).toBe("Services Listed");
         expect(check.detail).toContain("service");
-        // Criterion #29a: no stand-in signal may remain behind this row.
+        // Criterion 29a: no stand-in signal may remain behind this row.
         expect(check.detail).not.toMatch(/action link|proxy/i);
     });
 

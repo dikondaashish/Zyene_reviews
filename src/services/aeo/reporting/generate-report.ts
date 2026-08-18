@@ -4,6 +4,7 @@ import { renderAeoReportHtml } from "./report-html";
 import { renderAeoReportPdf } from "./report-pdf";
 import type { AeoReportModel } from "./report-model";
 import { checkOriginIsPublic } from "@/services/aeo/crawler/ssrf-guard";
+import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 type Admin = SupabaseClient<Database>;
 type DateRange = { start: string; end: string };
@@ -19,7 +20,8 @@ export async function buildAeoReportModel(db: Admin, businessId: string, range: 
             .eq("crawl_runs.business_id", businessId).gte("crawl_runs.started_at", `${range.start}T00:00:00.000Z`)
             .lte("crawl_runs.started_at", `${range.end}T23:59:59.999Z`),
     ]);
-    if (business.error || sampleResult.error) throw new Error("Unable to load AEO report inputs");
+    assertAeoQueriesSucceeded("Unable to load AEO report inputs", business, sampleResult, citations, findings);
+    if (!business.data) throw new Error("Unable to load AEO report business");
     const organization = await db.from("organizations" as never)
         .select("name, logo_url, primary_color, hide_powered_by, aeo_sender_domain, aeo_sender_domain_status" as never)
         .eq("id" as never, business.data.organization_id).single() as unknown as { data: {
@@ -49,6 +51,7 @@ export async function buildAeoReportModel(db: Admin, businessId: string, range: 
     const ownNamed = new Set((mentions.data ?? []).filter((row) => row.brand_kind === "own" && !row.cited_only).map((row) => row.sample_id));
     const promptIds = [...new Set(successful.map((row) => row.prompt_id).filter((id): id is string => Boolean(id)))];
     const prompts = promptIds.length ? await db.from("aeo_prompts").select("id, prompt_text").in("id", promptIds) : { data: [], error: null };
+    if (prompts.error) throw new Error(`Unable to load report prompts: ${prompts.error.message}`);
     const promptNames = new Map((prompts.data ?? []).map((row) => [row.id, row.prompt_text]));
     const aggregates = new Map<string, { prompt: string; named: number; samples: number }>();
     for (const sample of successful) {
@@ -94,6 +97,9 @@ export async function generateStoredAeoReport(db: Admin, input: {
         period_start: input.range.start, period_end: input.range.end, format: "pdf", storage_path: path, html,
         recipients: input.recipients ?? [], delivery_status: "generated",
     } as never).select("id" as never).single() as unknown as { data: { id: string } | null; error: { message: string } | null };
-    if (insert.error || !insert.data) throw new Error(`Report insert failed: ${insert.error?.message ?? "missing row"}`);
+    if (insert.error || !insert.data) {
+        await db.storage.from("aeo-reports").remove([path]);
+        throw new Error(`Report insert failed: ${insert.error?.message ?? "missing row"}`);
+    }
     return { reportId: insert.data.id, path, html, pdf, model };
 }

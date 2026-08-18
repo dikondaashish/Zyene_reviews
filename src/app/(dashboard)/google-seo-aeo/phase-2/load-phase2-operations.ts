@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { findUncitedRelevantPages } from "@/services/aeo/analytics/uncited-page-gaps";
 import type { Phase2OperationsData } from "./phase2-types";
+import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 type Db = SupabaseClient<Database>;
 type RowResult<T> = { data: T[] | null };
@@ -22,6 +23,8 @@ export async function loadPhase2Operations(db: Db, businessId: string, organizat
         db.from("aeo_alert_channels" as never).select("id, name, channel_type, enabled, last_delivery_status" as never).eq("organization_id" as never, organizationId as never).order("created_at" as never, { ascending: false }),
         db.from("aeo_crawler_log_sources" as never).select("id, name, source, key_prefix, last_received_at" as never).eq("organization_id" as never, organizationId as never).order("created_at" as never, { ascending: false }),
     ]);
+    assertAeoQueriesSucceeded("Unable to load Phase 2 operations", pages, prompts, citations, diagnosticsRaw,
+        logsRaw, reviewsRaw, recsRaw, reportsRaw, schedulesRaw, keysRaw, channelsRaw, logSourcesRaw);
     const diagnostics = (diagnosticsRaw as unknown as RowResult<{ url: string; js_delta_ratio: number | null; lcp_ms: number | null; cls: number | null; inp_ms: number | null; index_status: string | null }>).data ?? [];
     const logRows = (logsRaw as unknown as RowResult<{ crawler: string; occurred_at: string }>).data ?? [];
     const hitMap = new Map<string, { count: number; latest: string }>();
@@ -35,10 +38,13 @@ export async function loadPhase2Operations(db: Db, businessId: string, organizat
         citedUrls: new Set((citations.data ?? []).map((row) => row.normalized_url)),
     }).slice(0, 30);
     const businesses = await db.from("businesses").select("id, name").eq("organization_id", organizationId);
+    assertAeoQueriesSucceeded("Unable to load Phase 2 organization rollup", businesses);
     const businessIds = (businesses.data ?? []).map((row) => row.id);
-    const samples = businessIds.length ? await db.from("aeo_samples").select("id, business_id, status").in("business_id", businessIds).eq("is_estimated", false).gte("sampled_at", since) : { data: [] };
+    const samples = businessIds.length ? await db.from("aeo_samples").select("id, business_id, status").in("business_id", businessIds).eq("is_estimated", false).gte("sampled_at", since) : { data: [], error: null };
+    assertAeoQueriesSucceeded("Unable to load Phase 2 rollup samples", samples);
     const successfulIds = (samples.data ?? []).filter((row) => row.status === "ok").map((row) => row.id);
-    const mentions = successfulIds.length ? await db.from("aeo_brand_mentions").select("sample_id").eq("brand_kind", "own").eq("cited_only", false).in("sample_id", successfulIds) : { data: [] };
+    const mentions = successfulIds.length ? await db.from("aeo_brand_mentions").select("sample_id").eq("brand_kind", "own").eq("cited_only", false).in("sample_id", successfulIds) : { data: [], error: null };
+    assertAeoQueriesSucceeded("Unable to load Phase 2 rollup mentions", mentions);
     const named = new Set((mentions.data ?? []).map((row) => row.sample_id));
     const orgRollup = (businesses.data ?? []).map((business) => {
         const rows = (samples.data ?? []).filter((sample) => sample.business_id === business.id && sample.status === "ok");

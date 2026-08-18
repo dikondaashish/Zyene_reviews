@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { DEFAULT_AEO_REPORT_COLOR } from "@/services/aeo/reporting/report-colors";
 import { checkSenderDomain, createPhase3Webhook, saveBigQuery, saveWhiteLabel } from "./phase3-actions";
 
 type Branding = { name: string; logo_url: string | null; primary_color: string; hide_powered_by: boolean;
@@ -18,7 +19,7 @@ export function Phase3ConfigPanels({ branding, webhookCount, bigQueryCount }: {
                 <CardContent className="space-y-3"><form action={saveWhiteLabel} className="grid gap-2">
                     <Input name="name" required defaultValue={branding?.name ?? ""} placeholder="Agency name" />
                     <Input name="logoUrl" type="url" defaultValue={branding?.logo_url ?? ""} placeholder="https://.../logo.png" />
-                    <label className="flex items-center gap-2 text-sm">Color <Input className="w-24" name="color" type="color" defaultValue={branding?.primary_color ?? "#0f766e"} /></label>
+                    <label className="flex items-center gap-2 text-sm">Color <Input className="w-24" name="color" type="color" defaultValue={branding?.primary_color ?? DEFAULT_AEO_REPORT_COLOR} /></label>
                     <Input name="senderDomain" defaultValue={branding?.aeo_sender_domain ?? ""} placeholder="reports.example.com" />
                     <label className="flex items-center gap-2 text-sm"><input name="hidePoweredBy" type="checkbox" defaultChecked={branding?.hide_powered_by} /> Remove powered by</label>
                     <Button type="submit">Save branding</Button>

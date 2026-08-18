@@ -9,6 +9,7 @@ import {
 } from "@/services/aeo/reporting/prompt-trend";
 import type { AnswerEngineId } from "@/services/aeo/engines/engine-types";
 import { loadLatestBrief, type LatestBrief } from "./load-latest-brief";
+import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 const TREND_WEEKS = 12;
 
@@ -53,34 +54,40 @@ export async function loadPromptDetail(promptId: string): Promise<PromptDetailDa
 
     // RLS-scoped: aeo_prompts' own policy is what actually enforces this
     // prompt belongs to the caller's business, not the eq() below.
-    const { data: prompt } = await supabase
+    const promptResult = await supabase
         .from("aeo_prompts")
         .select("id, prompt_text, business_id")
         .eq("id", promptId)
         .eq("business_id", businessId)
         .maybeSingle();
+    assertAeoQueriesSucceeded("Unable to load AEO prompt", promptResult);
+    const prompt = promptResult.data;
 
     if (!prompt) return { kind: "not-found" };
 
     const weeks = recentWeekStarts(TREND_WEEKS, new Date());
     const windowStart = `${weeks[0]}T00:00:00.000Z`;
 
-    const { data: samples } = await supabase
+    const sampleResult = await supabase
         .from("aeo_samples")
         .select("id, engine_id, status, sampled_at, answer_storage_path")
         .eq("prompt_id", promptId)
         .gte("sampled_at", windowStart)
         .order("sampled_at", { ascending: false });
+    assertAeoQueriesSucceeded("Unable to load AEO prompt samples", sampleResult);
+    const samples = sampleResult.data;
 
     const sampleRows = samples ?? [];
 
-    const { data: mentions } = sampleRows.length
+    const mentionResult = sampleRows.length
         ? await supabase
               .from("aeo_brand_mentions")
               .select("sample_id, brand_kind, brand_label, cited_only")
               .in("sample_id", sampleRows.map((s) => s.id))
               .eq("cited_only", false)
-        : { data: [] };
+        : { data: [], error: null };
+    assertAeoQueriesSucceeded("Unable to load AEO prompt mentions", mentionResult);
+    const mentions = mentionResult.data;
 
     const ownNamedBySample = new Set(
         (mentions ?? []).filter((m) => m.brand_kind === "own").map((m) => m.sample_id)

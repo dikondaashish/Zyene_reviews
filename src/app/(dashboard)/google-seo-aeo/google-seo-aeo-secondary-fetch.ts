@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { areEstimatedAeoSurfacesEnabled } from "@/lib/features/aeo-surfaces";
+import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 export async function fetchGoogleSeoAeoSecondaryData(
     businessId: string,
@@ -18,7 +19,7 @@ export async function fetchGoogleSeoAeoSecondaryData(
                   .eq("run_id", latestAiRun.id)
                   .order("model", { ascending: true })
                   .limit(20)
-            : Promise.resolve({ data: null }),
+            : Promise.resolve({ data: null, error: null }),
         wantsEstimated && latestHeatmapRun
             ? supabase
                   .from("google_seo_heatmap_cells")
@@ -26,7 +27,7 @@ export async function fetchGoogleSeoAeoSecondaryData(
                   .eq("run_id", latestHeatmapRun.id)
                   .order("visibility_score", { ascending: false })
                   .limit(30)
-            : Promise.resolve({ data: null }),
+            : Promise.resolve({ data: null, error: null }),
         supabase
             .from("competitors")
             .select("id, name, average_rating, total_reviews, google_url")
@@ -34,6 +35,8 @@ export async function fetchGoogleSeoAeoSecondaryData(
             .order("average_rating", { ascending: false })
             .limit(3),
     ]);
+    assertAeoQueriesSucceeded("Unable to load Google SEO/AEO secondary data",
+        aiResultsRes, heatmapCellsRes, competitorsRes);
 
     return {
         aiResults: aiResultsRes.data || [],

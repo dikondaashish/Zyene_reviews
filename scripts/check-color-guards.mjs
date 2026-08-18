@@ -29,6 +29,11 @@ const SKIP_BASENAMES = new Set([
   "qr-code-branded-print-html.ts",
   "qr-code-branded-print.ts",
   "use-public-profile-editor-qr-share.ts",
+  // Standalone HTML/PDF artifacts and their shared input color cannot resolve
+  // application CSS variables when rendered outside the dashboard.
+  "report-colors.ts",
+  "report-html.ts",
+  "report-pdf.ts",
 ]);
 
 const TAILWIND_PALETTE_RE =

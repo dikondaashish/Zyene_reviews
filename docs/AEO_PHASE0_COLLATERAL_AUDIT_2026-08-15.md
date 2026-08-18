@@ -121,9 +121,8 @@ worktree and all interleaved Phase 1 changes were left untouched.
 - `pnpm lint` — passed with zero errors; existing repository warnings remain.
 - `npx react-doctor@latest --verbose --diff` — 100/100, no findings across 13
   changed React files.
-- `pnpm check:sizes` — the Phase 0 files are within their configured caps, but
-  the repository-wide command remains red on the unchanged
-  `src/components/integrations/zapier-card.tsx` (158 lines, 150-line limit).
+- `pnpm check:sizes` — passed repository-wide on the 2026-08-18 production
+  readiness rerun.
 
 ## Boundary and closeout
 

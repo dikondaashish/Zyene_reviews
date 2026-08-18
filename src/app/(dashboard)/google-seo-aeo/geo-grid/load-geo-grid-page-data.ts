@@ -4,6 +4,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { isLiveSamplingEnabled } from "@/lib/features/aeo-surfaces";
 import { maxGeoGridSizeForPlan, type GeoGridSize } from "@/services/aeo/geo-grid/geo-grid-plan";
+import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 export type GeoGridPoint = {
     row: number;
@@ -54,21 +55,25 @@ export async function loadGeoGridPageData(): Promise<GeoGridPageData> {
     const { businessId, business, organization } = await getActiveBusinessId();
     if (!businessId || !business) return { kind: "no-business" };
 
-    const { data: runRow } = await supabase
+    const runResult = await supabase
         .from("aeo_geo_grid_runs")
         .select("id, keyword, grid_size, spacing_meters, status, error_message, created_at, completed_at, estimated_cost_micro_usd, actual_cost_micro_usd")
         .eq("business_id", businessId)
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
+    assertAeoQueriesSucceeded("Unable to load AEO geo-grid run", runResult);
+    const runRow = runResult.data;
 
     let latestRun: GeoGridRun | null = null;
 
     if (runRow) {
-        const { data: pointRows } = await supabase
+        const pointResult = await supabase
             .from("aeo_geo_grid_points")
             .select("grid_row, grid_col, rank_position, search_status, top_competitors")
             .eq("run_id", runRow.id);
+        assertAeoQueriesSucceeded("Unable to load AEO geo-grid points", pointResult);
+        const pointRows = pointResult.data;
 
         const points = (pointRows ?? []).map((p) => ({
             row: p.grid_row,

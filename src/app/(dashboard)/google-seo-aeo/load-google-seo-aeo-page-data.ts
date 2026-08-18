@@ -14,6 +14,7 @@ import { fetchGoogleSeoAeoSecondaryData } from "./google-seo-aeo-secondary-fetch
 import { loadAeoVisibility } from "./load-aeo-visibility";
 import { loadSearchConsoleSection } from "./load-search-console-section";
 import { loadShareOfVoice } from "./load-share-of-voice";
+import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 export type GoogleSeoAeoLoadResult =
     | { kind: "no-business" }
@@ -30,12 +31,14 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
     const { businessId, business } = await getActiveBusinessId();
     if (!businessId || !business) return { kind: "no-business" };
 
-    const { data: platform } = await supabase
+    const platformResult = await supabase
         .from("review_platforms")
         .select("id, platform, google_location_id, google_account_id, granted_scopes")
         .eq("business_id", businessId)
         .eq("platform", "google")
         .maybeSingle();
+    assertAeoQueriesSucceeded("Unable to load Google platform connection", platformResult);
+    const platform = platformResult.data;
 
     if (!platform?.id) return { kind: "no-platform" };
 
@@ -90,6 +93,8 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
             "[Google SEO/AEO] review count fetch failed:"
         );
     }
+    assertAeoQueriesSucceeded("Unable to load Google SEO/AEO measurements", google30TotalRes,
+        google30RespondedRes, aiRunRes, heatmapRunRes);
 
     // One location read serves both the description check and the three
     // location-backed GBP checks (services, descriptions, service area).

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { isLiveAlertingEnabled } from "@/lib/features/aeo-surfaces";
+import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 const ALERTS_LOOKBACK_DAYS = 90;
 
@@ -30,12 +31,14 @@ export async function loadAlertsPageData(): Promise<AlertsPageData> {
     if (!businessId || !business) return { kind: "no-business" };
 
     const lookback = new Date(Date.now() - ALERTS_LOOKBACK_DAYS * 86_400_000).toISOString();
-    const { data: rows } = await supabase
+    const result = await supabase
         .from("aeo_alerts")
         .select("id, alert_type, severity, title, detail, created_at, muted_at")
         .eq("business_id", businessId)
         .gte("created_at", lookback)
         .order("created_at", { ascending: false });
+    assertAeoQueriesSucceeded("Unable to load AEO alerts", result);
+    const rows = result.data;
 
     return {
         kind: "ok",

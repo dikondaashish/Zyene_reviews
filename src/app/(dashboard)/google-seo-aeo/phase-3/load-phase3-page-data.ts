@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 type Rows<T> = { data: T[] | null };
 type Row<T> = { data: T | null };
@@ -25,6 +26,7 @@ export async function loadPhase3PageData() {
         db.from("aeo_bigquery_integrations" as never).select("id, project_id, dataset_id, table_id, enabled, last_export_status" as never).eq("organization_id" as never, organizationId),
         db.from("aeo_anomaly_evaluations" as never).select("eligible, anomalous, history_days, evaluated_date" as never).eq("business_id" as never, businessId).order("evaluated_date" as never, { ascending: false }).limit(1).maybeSingle(),
     ]);
+    assertAeoQueriesSucceeded("Unable to load Phase 3 dashboard", ...results);
     const org = (results[0] as unknown as Row<{ name: string; logo_url: string | null; primary_color: string; hide_powered_by: boolean; aeo_sender_domain: string | null; aeo_sender_domain_status: string }>).data;
     return { kind: "ok" as const, businessId, organizationId, businessName: context.business.name ?? "Business",
         branding: org, volatility: ((results[1] as unknown as Rows<unknown>).data ?? []),
