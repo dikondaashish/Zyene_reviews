@@ -61,7 +61,15 @@ export class DataForSeoClaudeAdapter implements AnswerEngineAdapter {
             response = await fetch(ENDPOINT, {
                 method: "POST",
                 headers: { Authorization: dataForSeoAuthHeader(this.login, this.password), "Content-Type": "application/json" },
-                body: JSON.stringify([{ user_prompt: request.prompt.slice(0, 500), model_name: this.modelId, max_output_tokens: 1200, temperature: 0, web_search: true, force_web_search: true, ...localeFields(request) }]),
+                body: JSON.stringify([{
+                    user_prompt: request.prompt.slice(0, 500),
+                    system_message: "Always use web search before answering. Cite the sources you used.",
+                    model_name: this.modelId,
+                    max_output_tokens: 1200,
+                    temperature: 0,
+                    web_search: true,
+                    ...localeFields(request),
+                }]),
                 signal: abort,
             });
         } catch (error) {
@@ -90,7 +98,7 @@ export class DataForSeoClaudeAdapter implements AnswerEngineAdapter {
 
 function localeFields(request: EngineSampleRequest): Record<string, string> {
     const country = request.locale.country.toUpperCase();
-    return { ...(country.length === 2 ? { web_search_country_iso_code: country } : {}), ...(request.locale.city ? { web_search_city: request.locale.city } : {}) };
+    return country.length === 2 ? { web_search_country_iso_code: country } : {};
 }
 
 function dedupeSources(items: { title?: string; url?: string }[]): { title: string | null; url: string }[] {

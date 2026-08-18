@@ -81,6 +81,23 @@ async function sampleWith(locale: EngineSampleRequest["locale"]) {
 }
 
 describe("the location DataForSEO is actually sent", () => {
+    it("does not send organic SERP depth to Google AI Mode", async () => {
+        const adapter = new DataForSeoSerpAdapter({
+            engineId: "google_ai_mode",
+            login: "u",
+            password: "p",
+            depth: 20,
+        });
+        await adapter.sample({
+            prompt: "best bbq",
+            locale: { country: "US", language: "en" },
+            attempt: 1,
+        });
+
+        expect(sentBody().depth).toBeUndefined();
+        expect(fetchMock.mock.calls[0]?.[0]).toContain("/serp/google/ai_mode/live/advanced");
+    });
+
     it("qualifies a city with its region and country", async () => {
         const body = await sampleWith({
             country: "US",

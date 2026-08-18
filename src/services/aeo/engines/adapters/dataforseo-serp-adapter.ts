@@ -112,7 +112,7 @@ export class DataForSeoSerpAdapter implements AnswerEngineAdapter {
             {
                 keyword: request.prompt,
                 language_code: request.locale.language || "en",
-                depth: this.depth,
+                ...(this.id === "google_ai_mode" ? {} : { depth: this.depth }),
                 ...location,
                 // Only requested for the AI Overview surface: it costs more and
                 // there is no reason to pay for it on a plain SERP sample.

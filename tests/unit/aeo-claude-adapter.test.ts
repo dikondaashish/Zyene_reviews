@@ -18,7 +18,7 @@ describe("Claude web-search adapter", () => {
             tasks: [{
                 status_code: 20000,
                 result: [{
-                    model_name: "claude-3-5-haiku-20241022",
+                    model_name: "claude-haiku-4-5-20251001",
                     items: [{
                         type: "message",
                         sections: [{
@@ -37,7 +37,7 @@ describe("Claude web-search adapter", () => {
 
         expect(result.status).toBe("ok");
         if (result.status !== "ok") return;
-        expect(result.modelId).toBe("claude-3-5-haiku-20241022");
+        expect(result.modelId).toBe("claude-haiku-4-5-20251001");
         expect(result.reportedCostMicroUsd).toBe(14_200);
         expect(result.citations.items[0]?.url).toBe("https://radiant.example/");
 
@@ -45,10 +45,11 @@ describe("Claude web-search adapter", () => {
         const payload = JSON.parse(String(init.body))[0];
         expect(payload).toMatchObject({
             web_search: true,
-            force_web_search: true,
+            system_message: "Always use web search before answering. Cite the sources you used.",
             web_search_country_iso_code: "US",
-            web_search_city: "Austin",
         });
+        expect(payload.force_web_search).toBeUndefined();
+        expect(payload.web_search_city).toBeUndefined();
     });
 
     it("does not turn an upstream failure into a negative brand observation", async () => {

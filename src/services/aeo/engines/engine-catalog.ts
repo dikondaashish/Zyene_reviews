@@ -152,7 +152,7 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         surface: "answer_engine",
         vendor: "DataForSEO / Anthropic",
         phase: 2,
-        pinnedModelId: "claude-3-5-haiku-20241022",
+        pinnedModelId: "claude-haiku-4-5-20251001",
         // Conservative plan rate. DataForSEO returns task cost including the
         // Anthropic token/search charge, which is authoritative at settlement.
         cost: { overageMicroUsd: 25_000, freePerDay: 0, confidence: "estimated" },
