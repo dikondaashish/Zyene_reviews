@@ -17,6 +17,7 @@ interface SendEmailProps {
     replyTo?: string | string[];
     /** Custom MIME headers (e.g. Importance, Auto-Submitted). */
     headers?: Record<string, string>;
+    attachments?: Array<{ filename: string; content: string }>;
 }
 
 /**
@@ -63,7 +64,7 @@ export function buildFromLine(input: {
     return `${safeName} <${mailbox}>`;
 }
 
-export async function sendEmail({ to, subject, html, text, from, replyTo, headers }: SendEmailProps) {
+export async function sendEmail({ to, subject, html, text, from, replyTo, headers, attachments }: SendEmailProps) {
     const apiKey = process.env.RESEND_API_KEY?.trim();
     if (!apiKey) {
         logger.error("Resend API Key missing");
@@ -86,6 +87,7 @@ export async function sendEmail({ to, subject, html, text, from, replyTo, header
             subject,
             html,
             ...(text ? { text } : {}),
+            ...(attachments?.length ? { attachments } : {}),
             ...replyToPayload,
             ...headersPayload,
         });

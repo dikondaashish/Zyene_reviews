@@ -10,6 +10,7 @@ import { computeAnswerabilitySignals } from "../crawler/answerability";
 import { validateSchemaBlocks } from "../crawler/schema-validator";
 import { isIdentityType } from "../crawler/schema-validator";
 import { SupabaseBriefStore } from "./supabase-brief-store";
+import { mineReviewThemes } from "./review-mining";
 
 type Admin = SupabaseClient<Database>;
 
@@ -66,10 +67,12 @@ export async function generateAndStoreBrief(
     const mapping = mapPromptToPage(prompt.prompt_text, pageSummaries);
 
     let ownStructure: OwnPageStructure = null;
+    let ownPageExcerpt: string | null = null;
     if (mapping.hasOwner) {
         const matchedRow = (pageRows ?? []).find((p) => p.url === mapping.url);
         const html = matchedRow?.content_storage_path ? await store.loadPageHtml(matchedRow.content_storage_path) : null;
         if (html) {
+            ownPageExcerpt = html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 1200) || null;
             const answerability = computeAnswerabilitySignals(html);
             const schema = validateSchemaBlocks(html);
             ownStructure = {
@@ -104,6 +107,9 @@ export async function generateAndStoreBrief(
     const citedForGap = citedResults.map((r) => (r.ok ? { ok: true as const, structure: r.structure } : { ok: false as const }));
 
     const gap = analyzeCitationGap(ownStructure, citedForGap);
+    const { data: reviewRows } = await db.from("reviews").select("text").eq("business_id", input.businessId)
+        .not("text", "is", null).order("review_date", { ascending: false }).limit(200);
+    const reviewInsights = mineReviewThemes((reviewRows ?? []).flatMap((row) => typeof row.text === "string" ? [row.text] : []));
 
     // --- Gemini: the qualitative edit checklist + FAQ copy ---
     let generated;
@@ -113,7 +119,8 @@ export async function generateAndStoreBrief(
             businessName: business.name ?? "this business",
             gap,
             citedSources: citedForGap,
-            ownPageExcerpt: null,
+            ownPageExcerpt,
+            reviewInsights,
         });
     } catch {
         return { ok: false, reason: "generation_failed" };
@@ -145,6 +152,9 @@ export async function generateAndStoreBrief(
         schemaPatchHasPlaceholders: schemaPatchHasPlaceholders(facts),
         confidence: gap.allSourcesUnreachable ? "low" : "high",
         citedSourceCount: citedUrls.length,
+        rewriteBefore: generated.rewriteBefore,
+        rewriteAfter: generated.rewriteAfter,
+        reviewInsights,
     });
 
     return { ok: true, briefId: result.id };

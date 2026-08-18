@@ -10,7 +10,9 @@ export type AlertType =
     | "run_failure"
     | "citation_lost"
     | "citation_gained"
-    | "rank_drop";
+    | "rank_drop"
+    | "competitor_overtake"
+    | "negative_sentiment_spike";
 export type AlertSeverity = "critical" | "high" | "medium" | "low";
 
 /**
@@ -31,6 +33,8 @@ const COOLDOWN_DAYS: Record<AlertType, number> = {
     citation_lost: 6,
     citation_gained: 6,
     rank_drop: 6,
+    competitor_overtake: 6,
+    negative_sentiment_spike: 6,
 };
 
 export type NewAlertInput = {

@@ -35,12 +35,11 @@ describe("EngineRegistry availability", () => {
         expect(registry.describe("perplexity").state).toBe("not_configured");
     });
 
-    it("withholds a fully wired engine whose pricing is unconfirmed", () => {
+    it("allows Claude through the metered DataForSEO endpoint", () => {
         const registry = new EngineRegistry();
         registry.register(adapter("claude"));
-        // Anthropic rates are not contracted yet; being wired is not enough.
-        expect(isMeterable("claude")).toBe(false);
-        expect(registry.describe("claude").state).toBe("pricing_unconfirmed");
+        expect(isMeterable("claude")).toBe(true);
+        expect(registry.describe("claude").state).toBe("available");
     });
 
     it("allows Gemini now that its grounding rate is confirmed", () => {
@@ -63,15 +62,15 @@ describe("EngineRegistry availability", () => {
 });
 
 describe("EngineRegistry.resolveRunnable", () => {
-    it("keeps priced engines and withholds unpriced ones from the same request", () => {
+    it("keeps both priced engines in the same request", () => {
         const registry = new EngineRegistry();
         registry.register(adapter("google_serp"));
         registry.register(adapter("claude"));
 
         const { runnable, withheld } = registry.resolveRunnable(["google_serp", "claude"]);
 
-        expect(runnable.map((a) => a.id)).toEqual(["google_serp"]);
-        expect(withheld.map((w) => w.state)).toEqual(["pricing_unconfirmed"]);
+        expect(runnable.map((a) => a.id)).toEqual(["google_serp", "claude"]);
+        expect(withheld).toEqual([]);
     });
 
     it("never returns an adapter that was never registered", () => {

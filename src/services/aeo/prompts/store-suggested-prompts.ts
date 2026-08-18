@@ -13,6 +13,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/lib/db/supabase/database.types";
 import { promptDedupeKey, type PromptSuggestion } from "./suggest-prompts";
+import { classifyPrompt } from "@/services/aeo/analytics/prompt-intent";
 
 type Admin = SupabaseClient<Database>;
 
@@ -85,9 +86,12 @@ export async function storeSuggestedPrompts(
             business_id: businessId,
             prompt_text: s.promptText,
             intent: s.intent,
+            funnel_stage: classifyPrompt(s.promptText, []).funnelStage,
             locale_city: s.localeCity,
             cluster_id: clusterIds.get(s.clusterName) ?? null,
             source: "suggested",
+            source_query: s.sourceQuery ?? null,
+            discovery_score: s.discoveryScore ?? null,
             is_active: false,
         })),
         { count: "exact" }

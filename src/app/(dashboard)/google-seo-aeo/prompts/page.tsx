@@ -86,7 +86,7 @@ export default async function AeoPromptsPage() {
                     </Card>
                 </div>
 
-                <PromptsSidebar engines={data.engines} quotaMeter={data.quotaMeter} />
+                <PromptsSidebar engines={data.engines} quotaMeter={data.quotaMeter} businessId={data.businessId} activePrompts={data.activeCount} liveSamplingEnabled={data.liveSamplingEnabled} />
             </div>
         </div>
     );

@@ -20,13 +20,8 @@ export type AnswerEngineDescriptor = {
     /** Answer engines produce prose; search surfaces produce ranked results. */
     surface: "answer_engine" | "search";
     vendor: string;
-    /** Rollout phase from the release plan roadmap. */
     phase: 1 | 2 | 3;
-    /**
-     * The exact model `cost` was quoted for. Adapters must call this model and no
-     * other — inheriting an app-wide default would price us against a rate that
-     * does not cover it. Null for vendor-proxied surfaces with no model choice.
-     */
+    /** Exact model the quoted cost covers; null for vendor-proxied surfaces. */
     pinnedModelId: string | null;
     cost: EngineCost;
     /** Whether the engine exposes source URLs at all (drives EngineCitations). */
@@ -78,7 +73,9 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         vendor: "DataForSEO",
         phase: 2,
         pinnedModelId: null,
-        cost: { overageMicroUsd: 1_200, freePerDay: 0, confidence: "estimated" },
+        // DataForSEO reports the task cost on every response. The estimate is a
+        // planning ceiling; settlement always uses the returned invoice amount.
+        cost: { overageMicroUsd: 4_000, freePerDay: 0, confidence: "estimated" },
         supportsCitations: true,
         supportsCoordinate: true,
     },
@@ -153,10 +150,12 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         id: "claude",
         label: "Claude",
         surface: "answer_engine",
-        vendor: "Anthropic",
+        vendor: "DataForSEO / Anthropic",
         phase: 2,
-        pinnedModelId: null,
-        cost: { overageMicroUsd: 12_000, freePerDay: 0, confidence: "unverified" },
+        pinnedModelId: "claude-3-5-haiku-20241022",
+        // Conservative plan rate. DataForSEO returns task cost including the
+        // Anthropic token/search charge, which is authoritative at settlement.
+        cost: { overageMicroUsd: 25_000, freePerDay: 0, confidence: "estimated" },
         supportsCitations: true,
         supportsCoordinate: false,
     },

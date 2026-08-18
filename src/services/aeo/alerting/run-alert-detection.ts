@@ -1,4 +1,3 @@
-import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { SupabaseAlertStore } from "./alert-store";
@@ -6,6 +5,8 @@ import { detectVisibilityAlerts, groupByPromptEngine, type VisibilitySampleFact 
 import { detectNewTechnicalAlerts, findingKey, type FindingLike } from "./detect-technical-alerts";
 import { detectCitationChanges, detectRankMovement, safely } from "./run-citation-rank-detection";
 import type { AnswerEngineId } from "../engines/engine-types";
+import { refreshRecommendations } from "@/services/aeo/content-briefs/refresh-recommendations";
+import { runCompetitiveAlertDetection } from "./run-competitive-alert-detection";
 
 type Admin = SupabaseClient<Database>;
 
@@ -81,6 +82,8 @@ export async function runAlertDetectionForBusiness(
             });
             if (result) created += 1;
         }
+
+        created += await runCompetitiveAlertDetection(db, store, input, rows, okSampleIds);
     }
 
     // F8.2/F8.3 depend on migration 20260818154353 (the citation_lost /
@@ -176,5 +179,6 @@ export async function runAlertDetectionForBusiness(
         if (result) created += 1;
     }
 
+    await refreshRecommendations(db, input.businessId);
     return { created };
 }

@@ -17,6 +17,9 @@ export type PersistBriefInput = {
     schemaPatchHasPlaceholders: boolean;
     confidence: "high" | "low";
     citedSourceCount: number;
+    rewriteBefore: string;
+    rewriteAfter: string;
+    reviewInsights: unknown[];
 };
 
 /** Reads through the caller's admin client — generation is server-action-gated, not client-writable. */
@@ -39,6 +42,9 @@ export class SupabaseBriefStore {
                 schema_patch_has_placeholders: input.schemaPatchHasPlaceholders,
                 confidence: input.confidence,
                 cited_source_count: input.citedSourceCount,
+                rewrite_before: input.rewriteBefore,
+                rewrite_after: input.rewriteAfter,
+                review_insights: input.reviewInsights as unknown as Json,
             })
             .select("id")
             .single();

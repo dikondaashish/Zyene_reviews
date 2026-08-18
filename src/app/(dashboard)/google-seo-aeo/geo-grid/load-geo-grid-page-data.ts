@@ -11,6 +11,7 @@ export type GeoGridPoint = {
     /** Null means "searched, not found in the local pack" — never rendered as a rank. */
     rankPosition: number | null;
     searchStatus: "searched" | "failed";
+    topCompetitors: { position: number; name: string; placeId: string | null }[];
 };
 
 export type GeoGridRun = {
@@ -66,7 +67,7 @@ export async function loadGeoGridPageData(): Promise<GeoGridPageData> {
     if (runRow) {
         const { data: pointRows } = await supabase
             .from("aeo_geo_grid_points")
-            .select("grid_row, grid_col, rank_position, search_status")
+            .select("grid_row, grid_col, rank_position, search_status, top_competitors")
             .eq("run_id", runRow.id);
 
         const points = (pointRows ?? []).map((p) => ({
@@ -74,6 +75,7 @@ export async function loadGeoGridPageData(): Promise<GeoGridPageData> {
             col: p.grid_col,
             rankPosition: p.rank_position,
             searchStatus: p.search_status as "searched" | "failed",
+            topCompetitors: (p.top_competitors ?? []) as GeoGridPoint["topCompetitors"],
         }));
 
         const searched = points.filter((p) => p.searchStatus === "searched");

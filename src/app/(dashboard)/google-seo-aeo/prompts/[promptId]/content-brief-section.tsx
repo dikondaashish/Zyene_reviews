@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { generateContentBriefNow } from "./generate-brief-action";
 import type { LatestBrief } from "./load-latest-brief";
+import { ContentRewriteDiff } from "./content-rewrite-diff";
 
 function CopyButton({ text, label }: { text: string; label: string }) {
     return (
@@ -64,7 +65,7 @@ export function ContentBriefSection({
                         </Badge>
                         <span className="text-xs text-muted-foreground">
                             Based on {brief.citedSourceCount} cited source{brief.citedSourceCount === 1 ? "" : "s"} ·{" "}
-                            {new Date(brief.createdAt).toLocaleString()}
+                            {brief.createdLabel}
                         </span>
                     </div>
 
@@ -83,12 +84,14 @@ export function ContentBriefSection({
                         </p>
                     </div>
 
+                    <ContentRewriteDiff before={brief.rewriteBefore} after={brief.rewriteAfter} reviewInsights={brief.reviewInsights} />
+
                     {brief.editItems.length > 0 && (
                         <div>
                             <p className="text-sm font-medium mb-1.5">Edit checklist</p>
                             <ul className="space-y-1.5">
-                                {brief.editItems.map((item, i) => (
-                                    <li key={i} className="text-sm">
+                                {brief.editItems.map((item) => (
+                                    <li key={`${item.category}:${item.description}`} className="text-sm">
                                         <span className="text-xs font-medium uppercase text-muted-foreground">
                                             {item.category}
                                         </span>{" "}
@@ -109,8 +112,8 @@ export function ContentBriefSection({
                                 </div>
                             </div>
                             <ul className="mt-1.5 space-y-2">
-                                {brief.faqItems.map((item, i) => (
-                                    <li key={i} className="text-sm">
+                                {brief.faqItems.map((item) => (
+                                    <li key={item.question} className="text-sm">
                                         <p className="font-medium">{item.question}</p>
                                         <p className="text-muted-foreground">{item.answer}</p>
                                     </li>

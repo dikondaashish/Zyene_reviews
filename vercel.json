@@ -35,6 +35,10 @@
     {
       "path": "/api/cron/aeo-alert-digest",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/aeo-report-scheduler",
+      "schedule": "0 11 * * *"
     }
   ]
 }

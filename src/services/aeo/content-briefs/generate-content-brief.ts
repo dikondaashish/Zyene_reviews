@@ -32,8 +32,10 @@ const contentBriefSchema: Schema = {
             },
             description: "0-6 FAQ pairs answering the prompt directly, only if the gap analysis calls for FAQ content.",
         },
+        rewrite_before: { type: SchemaType.STRING, description: "Exact current excerpt being improved, or empty when no page exists." },
+        rewrite_after: { type: SchemaType.STRING, description: "Paste-ready improved replacement, preserving facts and using placeholders for unknown claims." },
     },
-    required: ["edit_items", "faq_items"],
+    required: ["edit_items", "faq_items", "rewrite_before", "rewrite_after"],
 };
 
 export type ContentBriefInput = {
@@ -42,6 +44,7 @@ export type ContentBriefInput = {
     gap: CitationGap;
     citedSources: readonly { ok: boolean; structure?: CitedSourceStructure }[];
     ownPageExcerpt: string | null;
+    reviewInsights: readonly { theme: string; mentions: number; examples: string[] }[];
 };
 
 function buildPrompt(input: ContentBriefInput): string {
@@ -73,11 +76,14 @@ function buildPrompt(input: ContentBriefInput): string {
             ? `Our current page's existing content:\n${input.ownPageExcerpt.slice(0, 800)}`
             : "We have no existing page that owns this question yet.",
         "",
+        `Recurring customer review themes (measured from the review corpus): ${JSON.stringify(input.reviewInsights)}`,
+        "",
         "CRITICAL RULES:",
         "- Do NOT state specific facts about this business (prices, hours, response times, certifications, awards, staff names, guarantees) unless they appear above.",
         "- Where a specific fact would strengthen an answer but was not provided, write a placeholder like {{insert your average response time}} instead of inventing one.",
         "- Every edit item must be concrete and actionable, never generic ('add more content', 'improve SEO').",
         "- FAQ answers must be genuinely useful, self-contained answers — not teasers pointing elsewhere.",
+        "- rewrite_before must quote only the supplied current excerpt; rewrite_after must be a paste-ready improvement and may use the measured review themes without inventing claims.",
         "- Output ONLY raw JSON matching the schema. No markdown, no code fences.",
     ].join("\n");
 }

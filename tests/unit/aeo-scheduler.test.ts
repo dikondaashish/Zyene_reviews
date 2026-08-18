@@ -237,11 +237,11 @@ describe("daily budget guard", () => {
         expect(o.costMicroUsd).toBe(40 * 25_000);
     });
 
-    it("withholds an engine whose pricing is unconfirmed", () => {
+    it("meters Claude through the priced DataForSEO endpoint", () => {
         const o = planEngineBudget({ engineId: "claude", requestedSamples: 100 });
-        expect(o.reason).toBe("engine_not_meterable");
-        expect(o.allowed).toBe(0);
-        expect(o.billableUnits).toBe(0);
+        expect(o.reason).toBe("no_free_allowance");
+        expect(o.allowed).toBe(100);
+        expect(o.billableUnits).toBe(100);
     });
 
     it("clamps negative and fractional demand", () => {
@@ -323,13 +323,13 @@ describe("planDailyBudget aggregate", () => {
         expect(plan.map((o) => o.reason)).toEqual([
             "deferred_to_protect_allowance",
             "no_free_allowance",
-            "engine_not_meterable",
+            "no_free_allowance",
         ]);
     });
 
     it("totals only what is actually billable", () => {
-        // Gemini deferred (0) + ChatGPT 100 x 25,000 + Claude withheld (0).
-        expect(totalCostMicroUsd(planDailyBudget(demands))).toBe(100 * 25_000);
+        // Gemini deferred (0) + ChatGPT 100 x 25,000 + Claude 50 x 25,000.
+        expect(totalCostMicroUsd(planDailyBudget(demands))).toBe(150 * 25_000);
     });
 
     it("reports deferred work so the scheduler re-offers it next slot", () => {

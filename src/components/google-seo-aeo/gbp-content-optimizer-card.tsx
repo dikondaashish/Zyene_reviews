@@ -29,6 +29,7 @@ export function GbpContentOptimizerCard({
     const [pending, setPending] = React.useState<"services" | "posts" | null>(null);
     const [services, setServices] = React.useState<ServiceDraft[]>([]);
     const [posts, setPosts] = React.useState<PostDraft[]>([]);
+    const [publishingIndex, setPublishingIndex] = React.useState<number | null>(null);
 
     async function generate(surface: "services" | "posts") {
         setPending(surface);
@@ -52,6 +53,18 @@ export function GbpContentOptimizerCard({
         }
     }
 
+    async function publishPost(post: PostDraft, index: number) {
+        if (!window.confirm("Publish this post to your live Google Business Profile now?")) return;
+        setPublishingIndex(index);
+        try {
+            const response = await fetch("/api/google/local-posts", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId, summary: post.summary, topicType: post.topicType }) });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error ?? "Publish failed");
+            toast.success("Post published to Google.");
+        } catch (error) { toast.error(error instanceof Error ? error.message : "Publish failed"); }
+        finally { setPublishingIndex(null); }
+    }
+
     return (
         <Card>
             <CardHeader>
@@ -59,7 +72,7 @@ export function GbpContentOptimizerCard({
                 <CardDescription>
                     Drafts built from your real Google category and the services you already list.
                     Anything we cannot verify comes back as a <code>{"{{placeholder}}"}</code> for you
-                    to fill — nothing is published to Google.
+                    to fill. Publishing always requires a separate confirmation.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -98,12 +111,13 @@ export function GbpContentOptimizerCard({
                 {posts.length > 0 ? (
                     <ul className="space-y-3">
                         {posts.map((post, index) => (
-                            <li key={index} className="rounded-lg border p-3">
+                            <li key={`${post.topicType}:${post.summary}`} className="rounded-lg border p-3">
                                 <Badge variant="secondary" className="text-xs">
                                     {post.topicType}
                                 </Badge>
                                 <p className="mt-2 text-sm">{post.summary}</p>
                                 <p className="text-muted-foreground mt-1 text-xs">{post.rationale}</p>
+                                <Button className="mt-2" size="sm" onClick={() => publishPost(post, index)} disabled={publishingIndex !== null}>{publishingIndex === index ? "Publishing…" : "Publish to Google"}</Button>
                             </li>
                         ))}
                     </ul>

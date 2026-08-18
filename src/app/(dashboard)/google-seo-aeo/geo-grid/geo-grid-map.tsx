@@ -28,9 +28,8 @@ export function GeoGridMap({ size, points }: { size: number; points: GeoGridPoin
             <div
                 className="grid gap-1"
                 style={{ gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))` }}
-                role="table"
-                aria-label={`${size} by ${size} local rank grid`}
             >
+                <span className="sr-only">{size} by {size} local rank grid</span>
                 {rows.map((row) =>
                     cols.map((col) => {
                         const point = byCell.get(`${row}:${col}`);
@@ -38,12 +37,13 @@ export function GeoGridMap({ size, points }: { size: number; points: GeoGridPoin
                         const isCenter = row === center && col === center;
                         const label =
                             !searched ? "-" : point?.rankPosition === null ? "NF" : String(point?.rankPosition);
+                        const competitors = point?.topCompetitors.map((item) => `${item.position}. ${item.name}`).join(", ");
                         const title =
                             !searched
                                 ? "Not searched"
                                 : point.rankPosition === null
                                   ? "Searched — not in the local pack here"
-                                  : `Rank ${point.rankPosition}`;
+                                  : `Rank ${point.rankPosition}${competitors ? ` · Ahead here: ${competitors}` : ""}`;
 
                         return (
                             <div
@@ -60,6 +60,8 @@ export function GeoGridMap({ size, points }: { size: number; points: GeoGridPoin
                     })
                 )}
             </div>
+
+            <CompetitorOverlay points={points} />
 
             <div className="text-muted-foreground flex flex-wrap items-center gap-3 text-xs">
                 <span className="flex items-center gap-1">
@@ -81,4 +83,12 @@ export function GeoGridMap({ size, points }: { size: number; points: GeoGridPoin
             </div>
         </div>
     );
+}
+
+function CompetitorOverlay({ points }: { points: GeoGridPoint[] }) {
+    const cells = new Map<string, number>();
+    for (const point of points) for (const competitor of point.topCompetitors) cells.set(competitor.name, (cells.get(competitor.name) ?? 0) + 1);
+    const leaders = [...cells].sort((a, b) => b[1] - a[1]).slice(0, 8);
+    if (!leaders.length) return null;
+    return <div><p className="text-sm font-medium">Competitor overlay</p><div className="mt-2 flex flex-wrap gap-2">{leaders.map(([name, count]) => <span key={name} className="rounded border px-2 py-1 text-xs">{name} · {count} cells</span>)}</div></div>;
 }

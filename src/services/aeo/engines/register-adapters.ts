@@ -3,6 +3,7 @@ import { GeminiEngineAdapter } from "./adapters/gemini-engine-adapter";
 import { PerplexityEngineAdapter } from "./adapters/perplexity-engine-adapter";
 import { ChatGptEngineAdapter } from "./adapters/chatgpt-engine-adapter";
 import { DataForSeoSerpAdapter } from "./adapters/dataforseo-serp-adapter";
+import { DataForSeoClaudeAdapter } from "./adapters/dataforseo-claude-adapter";
 
 /**
  * Registers the real, billable adapters.
@@ -44,6 +45,8 @@ export function registerAeoAdapters(): void {
     // meterable because AI Overview costs more than a plain SERP.
     engineRegistry.register(new DataForSeoSerpAdapter({ engineId: "google_serp" }));
     engineRegistry.register(new DataForSeoSerpAdapter({ engineId: "google_ai_overview" }));
+    engineRegistry.register(new DataForSeoSerpAdapter({ engineId: "google_ai_mode" }));
+    engineRegistry.register(new DataForSeoClaudeAdapter());
 }
 
 /** Test seam — lets a suite start from a known-empty registry. */

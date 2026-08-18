@@ -27,6 +27,8 @@ export type PromptSuggestion = {
     localeCity: string | null;
     /** F4.3 — the cluster this suggestion is filed under. */
     clusterName: string;
+    sourceQuery?: string | null;
+    discoveryScore?: number | null;
 };
 
 export type SuggestPromptsInput = {

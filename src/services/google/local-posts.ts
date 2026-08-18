@@ -99,3 +99,20 @@ export async function listAllLocalPosts(
 
     return all;
 }
+
+export async function createLocalPost(
+    accessToken: string,
+    accountId: string,
+    googleLocationId: string,
+    input: { summary: string; topicType: string }
+): Promise<GoogleLocalPost> {
+    const locationId = requireGoogleLocationId(googleLocationId, API_NAME);
+    const url = `${BASE}/accounts/${encodeURIComponent(accountId)}/locations/${encodeURIComponent(locationId)}/localPosts`;
+    const response = await fetchWithRetry(url, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ languageCode: "en-US", summary: input.summary, topicType: input.topicType }),
+    });
+    if (!response.ok) throw createGoogleServiceError(API_NAME, response.status, await response.text());
+    return response.json() as Promise<GoogleLocalPost>;
+}

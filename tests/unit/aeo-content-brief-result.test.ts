@@ -7,11 +7,13 @@ describe("parseContentBriefPayload", () => {
         { category: "content", description: "Compare the two services named on the current page." },
         { category: "schema", description: "Add FAQPage JSON-LD for the proposed questions." },
     ];
+    const rewrite = { rewrite_before: "Old paragraph", rewrite_after: "Improved direct-answer paragraph" };
 
     it("parses a well-formed payload", () => {
         const result = parseContentBriefPayload({
             edit_items: edits,
             faq_items: [{ question: "Do you deliver?", answer: "Yes, within 5 miles." }],
+            ...rewrite,
         });
         expect(result.editItems).toEqual(edits);
         expect(result.faqItems).toEqual([{ question: "Do you deliver?", answer: "Yes, within 5 miles." }]);
@@ -39,7 +41,7 @@ describe("parseContentBriefPayload", () => {
             description: `Add page-specific supporting detail number ${i} to the target section.`,
         }));
         const faq_items = Array.from({ length: 20 }, (_, i) => ({ question: `q${i}`, answer: "a" }));
-        const result = parseContentBriefPayload({ edit_items, faq_items });
+        const result = parseContentBriefPayload({ edit_items, faq_items, ...rewrite });
         expect(result.editItems).toHaveLength(10);
         expect(result.faqItems).toHaveLength(8);
     });

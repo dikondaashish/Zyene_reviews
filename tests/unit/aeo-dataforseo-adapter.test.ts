@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { classifyDataForSeoStatus } from "../../src/services/aeo/engines/adapters/dataforseo-client";
 import {
+    aiModeSample,
     aiOverviewSample,
     serpSample,
 } from "../../src/services/aeo/engines/adapters/dataforseo-sample";
@@ -113,6 +114,33 @@ describe("AI Overview", () => {
         expect(pending.status).toBe("no_answer");
         if (pending.status !== "no_answer") return;
         expect(pending.reason).toContain("asynchronously");
+    });
+});
+
+describe("Google AI Mode", () => {
+    it("stores the generated answer and only its cited references", () => {
+        const result = aiModeSample(
+            [{
+                type: "ai_overview",
+                items: [{ text: "Radiant Plumbing is frequently recommended." }],
+                references: [{ url: "https://example.com/radiant", title: "Local guide" }],
+            }],
+            { ...CTX, modelId: "dataforseo/google-ai-mode" }
+        );
+
+        if (!isObservation(result)) throw new Error("expected observation");
+        expect(result.answerText).toContain("Radiant Plumbing");
+        expect(result.citations.items).toEqual([{
+            url: "https://example.com/radiant",
+            title: "Local guide",
+            ordinal: 1,
+        }]);
+    });
+
+    it("keeps an empty AI Mode response out of visibility denominators", () => {
+        const result = aiModeSample([], { ...CTX, modelId: "dataforseo/google-ai-mode" });
+        expect(result.status).toBe("no_answer");
+        expect(isObservation(result)).toBe(false);
     });
 });
 

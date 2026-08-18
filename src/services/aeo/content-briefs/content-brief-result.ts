@@ -1,6 +1,8 @@
 export type ContentBriefResult = {
     editItems: Array<{ category: string; description: string }>;
     faqItems: Array<{ question: string; answer: string }>;
+    rewriteBefore: string;
+    rewriteAfter: string;
 };
 
 /** Same defensive-parse shape as market-positioning-brief-result.ts — never trust the model's JSON to match the schema exactly. */
@@ -33,10 +35,13 @@ export function parseContentBriefPayload(parsed: unknown): ContentBriefResult {
               }, [])
               .slice(0, 8)
         : [];
+    const rewriteBefore = String(o.rewrite_before ?? "").trim();
+    const rewriteAfter = String(o.rewrite_after ?? "").trim();
 
     if (editItems.length < 3) {
         throw new Error("Model must return at least three concrete edit items");
     }
 
-    return { editItems, faqItems };
+    if (!rewriteAfter) throw new Error("Model must return a concrete rewrite suggestion");
+    return { editItems, faqItems, rewriteBefore, rewriteAfter };
 }

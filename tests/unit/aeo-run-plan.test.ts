@@ -62,16 +62,13 @@ describe("engines are withheld before they are costed", () => {
         expect(plan.withheld.map((w) => w.state)).toEqual(["not_implemented"]);
     });
 
-    it("withholds an unpriced engine even when it is fully wired", () => {
-        // claude is catalogued with confidence "unverified". A registered,
-        // configured adapter is not enough — an unquoted vendor must not be
-        // able to start billing, which is the guarantee resolveRunnable makes.
+    it("allows the priced Phase 2 Claude adapter", () => {
         const plan = planRun(
             { ...INPUT, requestedEngines: ["claude"] },
             registryWith("claude")
         );
-        expect(plan.dispatches).toHaveLength(0);
-        expect(plan.withheld.map((w) => w.state)).toEqual(["pricing_unconfirmed"]);
+        expect(plan.dispatches).toHaveLength(PROMPTS.length);
+        expect(plan.withheld).toEqual([]);
     });
 
     it("never costs a withheld engine", () => {
@@ -79,7 +76,7 @@ describe("engines are withheld before they are costed", () => {
             { ...INPUT, requestedEngines: ["gemini", "claude"] },
             registryWith("gemini", "claude")
         );
-        expect(plan.budgets.map((b) => b.engineId)).toEqual(["gemini"]);
+        expect(plan.budgets.map((b) => b.engineId)).toEqual(["gemini", "claude"]);
     });
 
     it("withholds an unconfigured adapter", () => {

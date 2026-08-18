@@ -4,6 +4,7 @@ import { isLiveAlertingEnabled } from "@/lib/features/aeo-surfaces";
 import { SupabaseAlertStore } from "@/services/aeo/alerting/alert-store";
 import { aeoAlertDigestEmail, type AeoAlertDigestItem } from "@/services/resend/templates/aeo-alert-digest-email";
 import { sendEmail } from "@/services/resend/send-email";
+import { deliverAlertChannel } from "@/services/aeo/alerting/deliver-alert-channel";
 
 /** F8's "alert storm" edge case: cap what goes IN the email, link to the rest. */
 const MAX_ALERTS_PER_EMAIL = 10;
@@ -35,21 +36,17 @@ export const aeoAlertDigestWorker = inngest.createFunction(
                 .from("organization_members")
                 .select("user_id")
                 .eq("organization_id", business.organization_id);
-            if (!members || members.length === 0) return null;
-
-            const { data: prefs } = await admin
+            const { data: prefs } = members?.length ? await admin
                 .from("notification_preferences")
                 .select("*, users(email)")
                 .eq("business_id", businessId)
-                .in("user_id", members.map((m) => m.user_id));
+                .in("user_id", members.map((m) => m.user_id)) : { data: [] };
 
             const recipients = (prefs ?? [])
                 .map((p) => p as { user_id: string; digest_enabled?: boolean; users: { email?: string } | null })
                 .filter((p) => p.digest_enabled !== false && p.users?.email)
                 .map((p) => ({ userId: p.user_id, email: p.users?.email as string }))
                 .sort((a, b) => a.userId.localeCompare(b.userId));
-
-            if (recipients.length === 0) return null;
 
             const appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? "https://app.zyenereviews.com").replace(/\/$/, "");
             const items: AeoAlertDigestItem[] = alerts.slice(0, MAX_ALERTS_PER_EMAIL).map((a) => ({
@@ -68,10 +65,12 @@ export const aeoAlertDigestWorker = inngest.createFunction(
             });
 
             return {
+                organizationId: business.organization_id,
                 businessName: business.name,
                 recipients,
                 emailHtml,
                 alertIds: alerts.map((a) => a.id),
+                alerts,
             };
         });
 
@@ -85,6 +84,28 @@ export const aeoAlertDigestWorker = inngest.createFunction(
                     html: digest.emailHtml,
                 })
             );
+        }
+
+        const channels = await step.run("load-alert-channels", async () => {
+            const result = await admin.from("aeo_alert_channels" as never)
+                .select("id, channel_type, endpoint_ciphertext, signing_secret_ciphertext" as never)
+                .eq("organization_id" as never, digest.organizationId as never)
+                .eq("enabled" as never, true as never)
+                .or(`business_id.is.null,business_id.eq.${businessId}` as never) as unknown as {
+                    data: { id: string; channel_type: "slack" | "webhook"; endpoint_ciphertext: string; signing_secret_ciphertext: string | null }[] | null;
+                };
+            return result.data ?? [];
+        });
+        for (const channel of channels) {
+            await step.run(`deliver-channel-${channel.id}`, async () => {
+                try {
+                    await deliverAlertChannel(channel, digest.alerts.slice(0, MAX_ALERTS_PER_EMAIL));
+                    await admin.from("aeo_alert_channels" as never).update({ last_delivery_at: new Date().toISOString(), last_delivery_status: "success" } as never).eq("id" as never, channel.id as never);
+                } catch (error) {
+                    await admin.from("aeo_alert_channels" as never).update({ last_delivery_at: new Date().toISOString(), last_delivery_status: "failed" } as never).eq("id" as never, channel.id as never);
+                    throw error;
+                }
+            });
         }
 
         // Marked sent only after every recipient's step above has run —

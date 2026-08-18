@@ -67,15 +67,21 @@ export const aeoCrawlWorker = inngest.createFunction(
                 { fetchText: buildFetchText(), politeness: new PolitenessQueue() }
             );
 
-            await step.run("persist-and-complete", () =>
+            const diagnosticPages = await step.run("persist-and-complete", () =>
                 store.persistAndComplete({ runId, businessId, organizationId, result })
             );
+
+            await step.sendEvent("fan-out-page-diagnostics", diagnosticPages.map((page) => ({
+                name: "aeo/page-diagnostic.requested" as const,
+                data: { ...page, businessId, organizationId },
+            })));
 
             return {
                 runId,
                 pagesCrawled: result.coverage.crawled,
                 pagesDiscovered: result.coverage.discovered,
                 findings: result.findings.length,
+                diagnosticsQueued: diagnosticPages.length,
             };
         } catch (error) {
             logger.error({ err: error, businessId, runId }, "[AEO crawler] scheduled crawl failed");

@@ -95,3 +95,40 @@ export function aiOverviewSample(
         ...ctx.cost,
     });
 }
+
+/** AI Mode returns the same evidence shape as an AI Overview on its own endpoint. */
+export function aiModeSample(
+    items: readonly DataForSeoItem[],
+    ctx: ShapeContext
+): EngineSampleResult {
+    const answer = items.find((item) => item.type === "ai_overview");
+    if (!answer) {
+        return noAnswerSample({
+            modelId: ctx.modelId,
+            reason: "Google AI Mode returned no generated answer",
+            latencyMs: ctx.latencyMs,
+            costUnits: ctx.costUnits,
+            ...ctx.cost,
+        });
+    }
+
+    const { text, sources } = serializeAiOverview(answer);
+    if (!text) {
+        return noAnswerSample({
+            modelId: ctx.modelId,
+            reason: "Google AI Mode returned an empty generated answer",
+            latencyMs: ctx.latencyMs,
+            costUnits: ctx.costUnits,
+            ...ctx.cost,
+        });
+    }
+
+    return okSample({
+        modelId: ctx.modelId,
+        answerText: text,
+        citations: citationsPresent(sources),
+        latencyMs: ctx.latencyMs,
+        costUnits: ctx.costUnits,
+        ...ctx.cost,
+    });
+}

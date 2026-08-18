@@ -11,9 +11,8 @@ import { reportedCost, usdToMicroUsd } from "./adapter-support";
 import {
     callDataForSeo,
     classifyDataForSeoStatus,
-    type DataForSeoItem,
 } from "./dataforseo-client";
-import { aiOverviewSample, serpSample } from "./dataforseo-sample";
+import { aiModeSample, aiOverviewSample, serpSample } from "./dataforseo-sample";
 
 /**
  * Google Search and Google AI Overview, via DataForSEO.
@@ -37,7 +36,7 @@ import { aiOverviewSample, serpSample } from "./dataforseo-sample";
 const DEFAULT_TIMEOUT_MS = 120_000;
 
 export type DataForSeoAdapterOptions = {
-    engineId?: Extract<AnswerEngineId, "google_serp" | "google_ai_overview">;
+    engineId?: Extract<AnswerEngineId, "google_serp" | "google_ai_overview" | "google_ai_mode">;
     login?: string;
     password?: string;
     timeoutMs?: number;
@@ -46,13 +45,15 @@ export type DataForSeoAdapterOptions = {
 };
 
 export class DataForSeoSerpAdapter implements AnswerEngineAdapter {
-    readonly id: Extract<AnswerEngineId, "google_serp" | "google_ai_overview">;
+    readonly id: Extract<AnswerEngineId, "google_serp" | "google_ai_overview" | "google_ai_mode">;
     /**
      * No model: this is a vendor-proxied search surface with nothing to pin.
      * The vendor is recorded instead, so a stored sample still says what
      * produced it — QA #1 requires a non-empty identifier on every sample.
      */
-    readonly modelId = "dataforseo/google-serp";
+    get modelId(): string {
+        return this.id === "google_ai_mode" ? "dataforseo/google-ai-mode" : "dataforseo/google-serp";
+    }
 
     private readonly login: string | null;
     private readonly password: string | null;
@@ -105,7 +106,9 @@ export class DataForSeoSerpAdapter implements AnswerEngineAdapter {
         const abort = signal ? AbortSignal.any([signal, timeout]) : timeout;
 
         const call = await callDataForSeo(
-            "/serp/google/organic/live/advanced",
+            this.id === "google_ai_mode"
+                ? "/serp/google/ai_mode/live/advanced"
+                : "/serp/google/organic/live/advanced",
             {
                 keyword: request.prompt,
                 language_code: request.locale.language || "en",
@@ -143,9 +146,8 @@ export class DataForSeoSerpAdapter implements AnswerEngineAdapter {
         const items = call.result?.items ?? [];
 
         const shaped = { modelId: this.modelId, latencyMs: elapsed(), costUnits, cost };
-        return this.id === "google_ai_overview"
-            ? aiOverviewSample(items, shaped)
-            : serpSample(items, shaped);
+        if (this.id === "google_ai_mode") return aiModeSample(items, shaped);
+        return this.id === "google_ai_overview" ? aiOverviewSample(items, shaped) : serpSample(items, shaped);
     }
 
 }

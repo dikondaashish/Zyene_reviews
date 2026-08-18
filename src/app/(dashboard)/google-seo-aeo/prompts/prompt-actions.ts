@@ -8,6 +8,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { activePromptLimitForPlan } from "@/services/aeo/prompts/prompt-plan-limit";
+import { classifyPrompt } from "@/services/aeo/analytics/prompt-intent";
 
 /**
  * Prompt library (F4.1–F4.3).
@@ -75,10 +76,12 @@ export async function createPrompt(input: unknown): Promise<PromptActionResult> 
     const auth = await authorize(supabase, user.id, parsed.data.businessId);
     if (!auth.ok) return auth;
 
+    const classification = classifyPrompt(parsed.data.promptText, []);
     const { error } = await auth.admin.from("aeo_prompts").insert({
         business_id: parsed.data.businessId,
         prompt_text: parsed.data.promptText,
-        intent: parsed.data.intent,
+        intent: parsed.data.intent ?? classification.intent,
+        funnel_stage: classification.funnelStage,
         locale_city: parsed.data.localeCity,
         source: "manual",
         // Created inactive, always. Enrolling a prompt into paid runs is a

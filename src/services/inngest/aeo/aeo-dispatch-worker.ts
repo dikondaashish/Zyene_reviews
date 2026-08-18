@@ -6,6 +6,9 @@ import { dispatchUnit } from "@/services/aeo/orchestration/dispatch-unit";
 import { getAeoStores } from "@/services/aeo/orchestration/store-factory";
 import { extractSample } from "@/services/aeo/extraction/extract-sample";
 import { SupabaseExtractionStore } from "@/services/aeo/extraction/supabase-extraction-store";
+import { Phase2ExtractionStore } from "@/services/aeo/extraction/phase2-extraction-store";
+import { analyzeMentions } from "@/services/aeo/analytics/mention-analyzer";
+import { isObservation } from "@/services/aeo/engines/engine-types";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { isLiveSamplingEnabled } from "@/lib/features/aeo-surfaces";
 import { logger } from "@/lib/logger";
@@ -104,12 +107,32 @@ export const aeoDispatchWorker = inngest.createFunction(
         // failure here must never cost a sample that was already paid for —
         // hence it is not folded into the dispatch steps.
         if (outcome.kind === "sampled") {
-            await step.run("extract-mentions", async () => {
+            const extracted = await step.run("extract-mentions", async () => {
                 const extraction = new SupabaseExtractionStore(createAdminClient());
                 const context = await extraction.loadBrandContext(data.businessId);
                 const found = extractSample(outcome.result, context);
-                return extraction.persist(outcome.sampleId, data.businessId, found);
+                const persisted = await extraction.persist(outcome.sampleId, data.businessId, found);
+                return { found, persisted };
             });
+
+            if (isObservation(outcome.result)) {
+                const observedResult = outcome.result;
+                const analyses = await step.run("analyze-mentions", () => analyzeMentions({
+                    answerText: observedResult.answerText,
+                    brandLabels: extracted.found.mentions.map((mention) => mention.label),
+                }));
+                await step.run("persist-phase2-extraction", () => new Phase2ExtractionStore(
+                    createAdminClient()
+                ).persist({
+                    sampleId: outcome.sampleId,
+                    businessId: data.businessId,
+                    promptId: data.promptId,
+                    engineId,
+                    result: observedResult,
+                    extraction: extracted.found,
+                    analyses,
+                }));
+            }
         }
 
         if (outcome.kind === "sampled" && outcome.overrunUnits > 0) {

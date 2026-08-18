@@ -11,13 +11,16 @@ import { getValidGoogleToken } from "@/services/google/sync-service";
 import { getGoogleLocation } from "@/services/google/listing-information";
 import { suggestPrompts } from "@/services/aeo/prompts/suggest-prompts";
 import { storeSuggestedPrompts } from "@/services/aeo/prompts/store-suggested-prompts";
+import { discoverPromptsFromDemand, type DemandQuery } from "@/services/aeo/prompts/discover-prompts";
+import { getGoogleSearchKeywords } from "@/services/google/performance-queries";
+import { loadSearchConsoleSection } from "../load-search-console-section";
 
 /**
  * F4.2 — fills the prompt library from the business's real Google category and
  * city. Creates nothing active, so it spends no quota (criterion #21).
  */
 
-const schema = z.object({ businessId: z.string().uuid() });
+const schema = z.object({ businessId: z.uuid() });
 
 export type SuggestPromptsResult =
     | { ok: true; inserted: number; skipped: number }
@@ -44,7 +47,7 @@ export async function generateSuggestedPrompts(input: unknown): Promise<SuggestP
 
     const { data: platform } = await supabase
         .from("review_platforms")
-        .select("id, google_location_id")
+        .select("id, google_location_id, granted_scopes")
         .eq("business_id", parsed.data.businessId)
         .eq("platform", "google")
         .maybeSingle();
@@ -74,15 +77,35 @@ export async function generateSuggestedPrompts(input: unknown): Promise<SuggestP
         };
     }
 
+    const admin = createAdminClient();
     const suggestions = suggestPrompts({
         businessName: business?.name ?? "",
         category,
         city,
     });
 
+    const demand: DemandQuery[] = [];
+    const gbpKeywords = await getGoogleSearchKeywords(admin, parsed.data.businessId, 15);
+    const maxGbp = Math.max(1, ...gbpKeywords.map((row) => row.impressions));
+    demand.push(...gbpKeywords.map((row) => ({ query: row.keyword, score: row.impressions / maxGbp, source: "gbp" as const })));
+    if (platform?.id) {
+        const gsc = await loadSearchConsoleSection(parsed.data.businessId, platform.id, platform.granted_scopes);
+        if (gsc?.kind === "ok") {
+            const maxGsc = Math.max(1, ...gsc.queries.map((row) => row.impressions));
+            demand.push(...gsc.queries.map((row) => ({ query: row.query, score: row.impressions / maxGsc, source: "gsc" as const })));
+        }
+    }
+    try {
+        suggestions.push(...await discoverPromptsFromDemand({
+            businessName: business?.name ?? "", category, city, queries: demand,
+        }));
+    } catch (error) {
+        logger.warn({ err: error }, "[AEO] real-demand prompt expansion failed; keeping deterministic suggestions");
+    }
+
     try {
         const result = await storeSuggestedPrompts(
-            createAdminClient(),
+            admin,
             parsed.data.businessId,
             suggestions
         );

@@ -7,6 +7,8 @@ import type {
     AeoCrawlRequestedEvent,
     AeoDispatchRequestedEvent,
     AeoGeoGridRequestedEvent,
+    AeoPageDiagnosticRequestedEvent,
+    AeoReportRequestedEvent,
     AeoRunRequestedEvent,
 } from "./aeo/aeo-events";
 
@@ -168,6 +170,8 @@ type Events = {
     "aeo/credit-reset.requested": AeoCreditResetRequestedEvent;
     "aeo/crawl.requested": AeoCrawlRequestedEvent;
     "aeo/alert-check.requested": AeoAlertCheckRequestedEvent;
+    "aeo/page-diagnostic.requested": AeoPageDiagnosticRequestedEvent;
+    "aeo/report.requested": AeoReportRequestedEvent;
     "cron/aeo-alert-digest.business": AeoAlertDigestEvent;
 };
 

@@ -76,7 +76,7 @@ export class SupabaseCrawlStore {
         businessId: string;
         organizationId: string;
         result: CrawlSiteResult;
-    }): Promise<void> {
+    }): Promise<{ pageId: string; url: string }[]> {
         const pageIdByUrl = new Map<string, string>();
 
         for (const page of input.result.pages) {
@@ -141,6 +141,7 @@ export class SupabaseCrawlStore {
             .eq("id", input.runId);
 
         if (error) throw new Error(`crawl_runs completion update failed: ${error.message}`);
+        return [...pageIdByUrl.entries()].map(([url, pageId]) => ({ pageId, url }));
     }
 
     async failRun(runId: string, errorMessage: string): Promise<void> {

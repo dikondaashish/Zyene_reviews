@@ -89,6 +89,19 @@ export type AeoAlertCheckRequestedEvent = {
     };
 };
 
+export type AeoPageDiagnosticRequestedEvent = {
+    data: {
+        pageId: string;
+        url: string;
+        businessId: string;
+        organizationId: string;
+    };
+};
+
+export type AeoReportRequestedEvent = {
+    data: { scheduleId: string };
+};
+
 /**
  * PRD-5 geo-grid. One event per grid run; the worker fans out internally
  * because a grid is size^2 BILLED requests and the concurrency limit has to

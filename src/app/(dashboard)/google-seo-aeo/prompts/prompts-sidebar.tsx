@@ -3,8 +3,9 @@ import { EngineCoveragePanel } from "./engine-coverage-panel";
 import { QuotaMeterPanel } from "./quota-meter-panel";
 import type { EngineCoverage } from "./load-prompts-page-data";
 import type { QuotaMeterResult } from "@/services/aeo/billing/quota-meter";
+import { RunSamplingControl } from "./run-sampling-control";
 
-export function PromptsSidebar({ engines, quotaMeter }: { engines: EngineCoverage[]; quotaMeter: QuotaMeterResult }) {
+export function PromptsSidebar({ engines, quotaMeter, businessId, activePrompts, liveSamplingEnabled }: { engines: EngineCoverage[]; quotaMeter: QuotaMeterResult; businessId: string; activePrompts: number; liveSamplingEnabled: boolean }) {
     return (
         <div className="space-y-6 lg:col-span-1">
             <Card>
@@ -26,6 +27,7 @@ export function PromptsSidebar({ engines, quotaMeter }: { engines: EngineCoverag
                 </CardHeader>
                 <CardContent>
                     <QuotaMeterPanel meter={quotaMeter} />
+                    <RunSamplingControl businessId={businessId} activePrompts={activePrompts} enabled={liveSamplingEnabled} />
                 </CardContent>
             </Card>
         </div>
