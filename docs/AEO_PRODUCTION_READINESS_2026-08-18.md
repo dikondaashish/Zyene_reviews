@@ -6,7 +6,7 @@
 
 **Pilot:** Wolfpack BBQ & Burgers (`9fa5eb9e-a7cb-4d6f-bd2c-0308703cf0c7`)
 
-**Decision:** Engineering release approved; controlled rollout remains required
+**Decision:** Engineering release deployed; controlled rollout remains required
 
 This record cross-checks the release-plan requirements against the codebase,
 tests, production Supabase state, production environment, and prior acceptance
@@ -51,6 +51,15 @@ for an AEO/crawl table.
 | React Doctor | 93/100; only low-risk iteration/formatter/style diagnostics |
 | Supabase migration | Applied successfully |
 | Supabase RLS/policy check | 44/44 tables |
+| GitHub CI | Run `32195971423` passed every canonical gate |
+| Production deployment | Commit `60efe4d2`, Vercel `dpl_5gUSpzPJofxD4CRXFnLf6dnXySyW`, `READY` |
+| Post-deploy durable job | Event `01M0BJH9CQH0KQF8FT3AXCNFWC`, final Inngest HTTP 200 |
+
+The post-deploy job wrote fresh production evidence at 23:15-23:16 UTC for
+answer volatility, prompt demand, `llms.txt`, and NAP consistency. Anonymous
+Phase 2/3 dashboard requests redirected to authentication, all four tested AEO
+cron routes rejected unsigned requests with HTTP 401, and the marketing alias
+resolved successfully with HTTP 200.
 
 ## Controlled Activation
 
@@ -75,7 +84,7 @@ prerequisites, not missing feature implementations.
 
 ## Go-Live Decision
 
-Approve the audited release for production deployment and continued Wolfpack
-pilot use. Do not claim that every Phase 3 provider integration is live, and do
+The audited release is live for continued Wolfpack pilot use. Do not claim that
+every Phase 3 provider integration is live, and do
 not enable customer-wide crawl, alert, or content-generation flags until their
 operational owners approve the external traffic, email, and spend blast radius.
