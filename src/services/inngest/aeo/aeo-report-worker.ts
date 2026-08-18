@@ -25,11 +25,13 @@ export const aeoReportWorker = inngest.createFunction(
         }));
         for (const [index, recipient] of schedule.recipients.entries()) {
             await step.run(`send-report-${index}`, async () => {
+                const stored = await admin.storage.from("aeo-reports").download(report.path);
+                if (stored.error) throw new Error(`Stored report unavailable: ${stored.error.message}`);
                 const sent = await sendEmail({
                     to: recipient,
                     subject: `${report.model.businessName} AI visibility report`,
                     html: report.html,
-                    attachments: [{ filename: `${report.model.businessName.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-aeo-report.pdf`, content: Buffer.from(report.pdf).toString("base64") }],
+                    attachments: [{ filename: `${report.model.businessName.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-aeo-report.pdf`, content: Buffer.from(await stored.data.arrayBuffer()).toString("base64") }],
                 });
                 if (!sent.sent) throw new Error(sent.error ?? "Report email was not accepted");
                 return sent;
