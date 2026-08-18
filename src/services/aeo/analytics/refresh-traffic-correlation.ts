@@ -19,7 +19,12 @@ export async function refreshCitationTrafficCorrelation(db: Admin, businessId: s
     const end = new Date(Date.now() - 2 * 86_400_000);
     const start = new Date(end.getTime() - 89 * 86_400_000);
     const date = (value: Date) => value.toISOString().slice(0, 10);
-    const { accessToken } = await getValidGoogleToken(platform.id);
+    let accessToken: string | null;
+    try {
+        ({ accessToken } = await getValidGoogleToken(platform.id));
+    } catch {
+        return { skipped: "google_token_unavailable" as const };
+    }
     if (!accessToken) return { skipped: "google_token_unavailable" as const };
     const gsc = await fetchSearchConsolePageDays(accessToken, platform.granted_scopes, {
         siteUrl: website, startDate: date(start), endDate: date(end), rowLimit: 25_000,
