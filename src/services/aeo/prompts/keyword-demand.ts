@@ -1,9 +1,9 @@
 type KeywordInfo = { search_volume?: number; monthly_searches?: unknown[] };
 type History = { year?: number; month?: number; keyword_info?: KeywordInfo };
 type Item = { keyword?: string; keyword_info?: KeywordInfo; history?: History[] };
-type Envelope = { cost?: number; tasks?: { status_code?: number; cost?: number; result?: { items?: Item[] }[] }[] };
+export type KeywordDemandEnvelope = { cost?: number; tasks?: { status_code?: number; cost?: number; result?: { items?: Item[] }[] }[] };
 
-export function parseKeywordDemandResponse(payload: Envelope, capturedAt: string) {
+export function parseKeywordDemandResponse(payload: KeywordDemandEnvelope, capturedAt: string) {
     const task = payload.tasks?.[0];
     if (task?.status_code !== 20000) return [];
     const costMicroUsd = Math.round((task.cost ?? payload.cost ?? 0) * 1_000_000);
