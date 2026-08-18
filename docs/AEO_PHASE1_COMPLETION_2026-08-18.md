@@ -2,7 +2,7 @@
 
 **Completed:** 2026-08-18
 **Production project:** `snielpllhrppdqzkzjwf` (`Zyene Reviews`, healthy)
-**Status:** Phase 1 engineering and production-schema acceptance complete
+**Status:** Phase 1 is 100% complete and production-accepted
 
 This record supersedes the pending-work sections in the 2026-08-11 AEO
 handoffs. It reports only work that was checked in code, tests, or production.
@@ -73,7 +73,7 @@ After migration:
 | Samples with positive cost | 30 |
 | Legitimate zero-cost/released samples | 31 |
 | Quota-ledger buckets | 6 |
-| Active prompts | 0 |
+| Active prompts at migration acceptance | 0 |
 
 A production transaction then proved all three database invariants and rolled
 back every smoke-test write:
@@ -102,14 +102,28 @@ permission. Supabase security advisors reported no warning against them.
 limit. No AEO file violates its size limit. Per the user's scope instruction,
 this Phase 1 task did not modify Zapier.
 
-## Release boundary
+## Production release and pilot acceptance
 
-No arbitrary customer prompt was activated, no customer website was crawled,
-and no customer geo-grid was manufactured merely to make production row counts
-nonzero. Those actions create customer-visible data and vendor spend, so they
-remain deliberate product operations after a business and keyword are chosen.
-They are not missing Phase 1 implementation.
+The reviewed Phase 1 release was committed as `c29821af`, pushed to `main`, and
+deployed successfully to Vercel production as
+`dpl_EXxEmk2rWoyWC4TwJRfutRetqh94`.
 
-At the time this completion audit was written, the release had not yet been
-committed or deployed. Preserve unrelated user changes and stage Phase 1 files
-explicitly when preparing the release.
+Wolfpack BBQ & Burgers (`9fa5eb9e-a7cb-4d6f-bd2c-0308703cf0c7`) was selected
+as the bounded pilot. Customer-wide crawl and alert flags remained off.
+
+| Pilot operation | Production result |
+|---|---|
+| Active prompt | `best barbecue restaurant in Kansas City` |
+| Fresh five-engine sampling run | `06d6f996-6b53-413d-98ec-1477be154b2b`, success |
+| Engines persisted | 5 distinct engines; 4 `ok`, 1 observed `no_answer`, 0 failed |
+| Evidence persisted | 4 answer objects, 41 citations, 4 brand mentions |
+| Sampling cost | 34,350 micro-USD in samples and settled reservations |
+| Sampling accounting | 5 reservations, 5 settlements, 5 matching per-engine costs |
+| Crawl | `bb5f58e3-fa4b-4fb8-83b8-56f3ab076d1e`, 10/10 pages, success |
+| Alert detection | Completed; 0 evidence-backed alerts met a threshold |
+| Geo-grid | `feb0a087-459e-4ba3-bdf5-d32f8ad8ed42`, 25/25 cells, success |
+| Geo-grid cost | 50,000 micro-USD, settled exactly once |
+
+Every fresh sampling row is authoritative (`is_estimated=false`). The parent
+run was closed as `success` only after a guarded production check confirmed
+exactly five samples, no failed samples, and five settled reservations.
