@@ -2,6 +2,10 @@
 **Written 2026-08-11 by auditing the live database and the actual files on disk.**
 **Updated 2026-08-15:** Phase 0 repository collateral audit completed; see
 `docs/AEO_PHASE0_COLLATERAL_AUDIT_2026-08-15.md`.
+**Updated 2026-08-18:** Phases 1 and 2 completed and accepted in production;
+see `docs/AEO_PHASE1_COMPLETION_2026-08-18.md` and
+`docs/AEO_PHASE2_COMPLETION_2026-08-18.md`. Those completion records supersede
+historical status and defect notes below.
 
 > **How to trust this document.** Every claim is tagged:
 > **[DB]** verified by querying production Supabase · **[CODE]** verified by reading the file ·
@@ -44,8 +48,8 @@ substitute or scope it out; **never pretend the substitute is the original spec.
 | Phase | Name | Timeline | Effort | Status |
 |---|---|---|---|---|
 | **0** | Integrity remediation | Week 1–2 | 3 EW | ✅ **COMPLETE** — verified [DB] |
-| **1** | Usable at launch | Week 3–14 | ~46 EW | 🟠 **~90% — 4 defects block it** |
-| **2** | Competitive parity | Week 15–24 | ~34 EW | ⬜ **NOT STARTED** (correct) |
+| **1** | Usable at launch | Week 3–14 | ~46 EW | ✅ **COMPLETE** - production accepted 2026-08-18 |
+| **2** | Competitive parity | Week 15–24 | ~34 EW | ✅ **COMPLETE** - 31/31 items, production accepted 2026-08-18 |
 | **3** | Differentiation | Week 25–34 | ~30 EW | ⬜ **NOT STARTED** (correct) |
 
 ### ⚠️ A documentation error you should know about
@@ -156,15 +160,19 @@ the certification boundary recorded in the collateral audit.
 
 ---
 
-## PART D — PHASE 1: USABLE AT LAUNCH 🟠 ~90%
+## PART D — PHASE 1: USABLE AT LAUNCH ✅ COMPLETE
+
+> **Current status (2026-08-18):** The audit snapshot below is retained for
+> provenance, but its blockers were resolved. Production acceptance is recorded
+> in `docs/AEO_PHASE1_COMPLETION_2026-08-18.md`.
 
 **Exit criterion [DOC §5]:** *"the page contains zero estimated numbers and five
 real engines."*
 
-**Where that stands:** ✅ five real engines exist and have produced real samples
+**Historical standing on 2026-08-11:** ✅ five real engines exist and produced real samples
 **[DB]**. ✅ zero estimated numbers on the AEO surfaces **[DB]** — legacy
 fabricated surfaces sit behind an unset flag. ❌ **but four defects block launch**
-(Part E).
+(Part E). These defects are resolved in the 2026-08-18 completion record above.
 
 ### D.1 [DB] Production data — proof of what actually runs
 
@@ -607,9 +615,12 @@ tests missed: schema subtype recognition, and CSS leaking into a content excerpt
 
 ---
 
-## PART I — PHASE 2 ⬜ NOT STARTED (correct — do not build unless asked)
+## PART I — PHASE 2 ✅ COMPLETE
 
-**Week 15–24 · ~34 EW.** 24 P2 features [DOC §5].
+**Completed and production-accepted 2026-08-18.** The roadmap summary says 24
+items, but the explicit list contains 31 feature IDs. All 31 are complete. Full
+implementation and acceptance evidence is in
+`docs/AEO_PHASE2_COMPLETION_2026-08-18.md`.
 
 | Pillar | Items |
 |---|---|
@@ -622,13 +633,10 @@ tests missed: schema subtype recognition, and CSS leaking into a content excerpt
 | 7 | F7.3 PDF/HTML reports · F7.4 scheduled email reports · F7.6 public REST API (L) · F7.9 multi-location rollup |
 | 8 | F8.5 competitor overtake · F8.6 negative sentiment spike · F8.7 Slack/webhook channels |
 
-**Note:** **F1.13 (repeat sampling) is the missing input F8.8 was specced
-against.** When Phase 2 lands it, revisit the z-test substitution in
-`alerting/significance.ts`.
-
-**Strategic note [DOC §9.1 Q1]:** geo-grid (F1.12), GBP audit (F5.10), and
-review-corpus features (F2.8, F6.7) are described as **the moat** — nobody else
-has the customer's review corpus. F2.8 and F6.7 are the Phase 2 half of that.
+Production proof includes a successful 21/21 seven-engine repeated sampling run,
+exact cost reconciliation at 182,567 micro-USD, persisted citation/review
+analysis, a successful ten-page crawl, generated private PDF report, and alert
+and recommendation evaluation. Global customer-wide flags were not changed.
 
 ---
 
@@ -657,16 +665,8 @@ There are currently **2 days** of samples (2026-08-07 → 08-08).
 
 ## PART K — ONE-PARAGRAPH SUMMARY
 
-Phase 0 is genuinely complete and the integrity boundary is verified working in
-production — 112 fabricated legacy rows stamped estimated, 61 real samples
-stamped measured. Phase 1 is roughly 90% built: all five engines are real and
-have produced live data, and every pillar has shipped code, but **four defects
-block launch** — cost capture writes zero while metered billing is live,
-DataForSEO fails on roughly half its calls, geo-grid has no event sender, and a
-migration on disk is unapplied. Phases 2 and 3 are correctly untouched. The
-single most urgent action is **committing two agents' interleaved uncommitted
-work and applying migration `20260811140000`**, because unapplied schema plus
-uncommitted code plus live money flags is the combination most likely to cause
-real customer damage. The only thing I personally completed and verified this
-session is F5.10 (typecheck clean, 970/970 tests, build green, react-doctor
-100/100) — and even that has not yet been run against a live Google account.
+Phase 0 is complete and its integrity boundary remains intact. Phase 1 is
+complete and production-accepted. Phase 2 is complete across all 31 explicit
+roadmap IDs and production-accepted with the Wolfpack pilot; see the dated
+completion records for immutable IDs, costs, migrations, tests, and deployment
+evidence. Phase 3 is the only remaining rollout phase and is not started.

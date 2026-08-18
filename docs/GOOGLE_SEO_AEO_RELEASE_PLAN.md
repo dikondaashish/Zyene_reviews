@@ -443,6 +443,11 @@ Assumes **2 senior fullstack engineers + 1 designer (0.5) + 1 PM (0.5)**. Effort
 
 ### Phase 2 — Competitive parity (Week 15–24 · ~34 EW)
 
+**Implementation status 2026-08-18: COMPLETE.** All 31 explicit feature IDs
+below are implemented, migrated, deployed, and production-accepted. See
+`docs/AEO_PHASE2_COMPLETION_2026-08-18.md` for evidence and immutable run,
+report, migration, commit, and deployment identifiers.
+
 F1.4 AI Mode · F1.8 Claude · F1.11 geo/locale scoping · F1.13 repeat sampling · F2.4 uncited-page gaps · F2.7 AI crawler logs (L) · F2.8 review-corpus citations · F2.9 citation history · F3.3 sentiment · F3.4 prominence · F3.5 source overlap · F3.8 attribute extraction · F3.9 grid competitor overlay · F4.4 intent classification · F4.6 cluster SoV · F4.7 prompt discovery · F5.5 JS-render delta (L) · F5.6 CWV · F5.7 GSC indexation · F6.3 rewrite diffs · F6.7 review-mining briefs · F6.8 freshness queue · F6.9 impact tracking · F6.10 GBP one-click publish · F7.3 PDF · F7.4 scheduled reports · F7.6 public API (L) · F7.9 multi-location rollup · F8.5, F8.6, F8.7 (Slack/webhook)
 
 ### Phase 3 — Differentiation (Week 25–34 · ~30 EW)
