@@ -12,6 +12,7 @@ import { isObservation } from "@/services/aeo/engines/engine-types";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { isLiveSamplingEnabled } from "@/lib/features/aeo-surfaces";
 import { logger } from "@/lib/logger";
+import { deliverOutboundEvent } from "@/services/aeo/integrations/deliver-outbound-event";
 
 /**
  * E-7 child: one (prompt x engine x attempt).
@@ -140,6 +141,32 @@ export const aeoDispatchWorker = inngest.createFunction(
                 { runId: data.runId, engineId, overrunUnits: outcome.overrunUnits },
                 "AEO engine consumed more units than reserved; recorded cost is a floor"
             );
+        }
+
+        if (outcome.kind === "sampled") {
+            const completion = await step.run("deliver-run-completed-webhooks", async () => {
+                const admin = createAdminClient();
+                const runResult = await admin.from("aeo_runs" as never)
+                    .select("id, status, completed_at, completed_samples, expected_samples" as never)
+                    .eq("id" as never, data.runId).maybeSingle();
+                const run = runResult.data as unknown as { id: string; status: string; completed_at: string | null;
+                    completed_samples: number; expected_samples: number } | null;
+                if (!run?.completed_at || !["success", "partial", "failed"].includes(run.status)) {
+                    return { completed: false, delivered: 0, failed: 0 };
+                }
+                const delivery = await deliverOutboundEvent(admin, {
+                    organizationId: data.organizationId, businessId: data.businessId,
+                    event: "aeo.run.completed", sourceId: run.id,
+                    data: { id: run.id, status: run.status, completedAt: run.completed_at,
+                        completedSamples: run.completed_samples, expectedSamples: run.expected_samples },
+                });
+                return { completed: true, ...delivery };
+            });
+            if (completion.completed) {
+                await step.sendEvent("queue-phase3-refresh", { name: "aeo/phase3.refresh.requested", data: {
+                    businessId: data.businessId, organizationId: data.organizationId, trigger: "run_completed" as const,
+                } });
+            }
         }
 
         return outcome;

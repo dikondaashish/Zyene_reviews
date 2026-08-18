@@ -3,13 +3,14 @@ import type { Database } from "@/lib/db/supabase/database.types";
 import { renderAeoReportHtml } from "./report-html";
 import { renderAeoReportPdf } from "./report-pdf";
 import type { AeoReportModel } from "./report-model";
+import { checkOriginIsPublic } from "@/services/aeo/crawler/ssrf-guard";
 
 type Admin = SupabaseClient<Database>;
 type DateRange = { start: string; end: string };
 
 export async function buildAeoReportModel(db: Admin, businessId: string, range: DateRange): Promise<AeoReportModel> {
     const [business, sampleResult, citations, findings] = await Promise.all([
-        db.from("businesses").select("name").eq("id", businessId).single(),
+        db.from("businesses").select("name, organization_id").eq("id", businessId).single(),
         db.from("aeo_samples").select("id, prompt_id, status, is_estimated").eq("business_id", businessId)
             .gte("sampled_at", `${range.start}T00:00:00.000Z`).lte("sampled_at", `${range.end}T23:59:59.999Z`),
         db.from("aeo_citations").select("classification").eq("business_id", businessId)
@@ -19,6 +20,26 @@ export async function buildAeoReportModel(db: Admin, businessId: string, range: 
             .lte("crawl_runs.started_at", `${range.end}T23:59:59.999Z`),
     ]);
     if (business.error || sampleResult.error) throw new Error("Unable to load AEO report inputs");
+    const organization = await db.from("organizations" as never)
+        .select("name, logo_url, primary_color, hide_powered_by, aeo_sender_domain, aeo_sender_domain_status" as never)
+        .eq("id" as never, business.data.organization_id).single() as unknown as { data: {
+            name: string; logo_url: string | null; primary_color: string; hide_powered_by: boolean;
+            aeo_sender_domain: string | null; aeo_sender_domain_status: string;
+        } | null; error: { message: string } | null };
+    if (organization.error || !organization.data) throw new Error("Unable to load report branding");
+    let brandLogoDataUrl: string | null = null;
+    if (organization.data.logo_url) {
+        const safety = await checkOriginIsPublic(organization.data.logo_url);
+        if (safety.safe) try {
+            const response = await fetch(organization.data.logo_url, { redirect: "error", signal: AbortSignal.timeout(8_000) });
+            if (!response.ok) throw new Error(`Logo returned HTTP ${response.status}`);
+            const mime = response.headers.get("content-type")?.split(";")[0] ?? "";
+            const bytes = Buffer.from(await response.arrayBuffer());
+            if (/^image\/(png|jpe?g)$/.test(mime) && bytes.length <= 2_000_000) {
+                brandLogoDataUrl = `data:${mime};base64,${bytes.toString("base64")}`;
+            }
+        } catch { /* Report still carries the agency name and color. */ }
+    }
     const real = (sampleResult.data ?? []).filter((row) => !row.is_estimated);
     const successful = real.filter((row) => row.status === "ok");
     const ids = successful.map((row) => row.id);
@@ -38,7 +59,13 @@ export async function buildAeoReportModel(db: Admin, businessId: string, range: 
         aggregates.set(sample.prompt_id, row);
     }
     return {
-        brandName: "Zyene Reviews",
+        brandName: organization.data.name,
+        brandColor: organization.data.primary_color,
+        brandLogoUrl: organization.data.logo_url,
+        brandLogoDataUrl,
+        hidePoweredBy: organization.data.hide_powered_by,
+        senderDomain: organization.data.aeo_sender_domain,
+        senderDomainVerified: organization.data.aeo_sender_domain_status === "verified",
         businessName: business.data.name ?? "Business",
         periodStart: range.start,
         periodEnd: range.end,

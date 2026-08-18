@@ -47,7 +47,7 @@ export type GscQueryRow = {
     position: number;
 };
 
-async function gscFetch<T>(
+export async function gscFetch<T>(
     path: string,
     accessToken: string,
     grantedScopes: string | null,
@@ -130,6 +130,7 @@ export type GscQueryOptions = {
     rowLimit?: number;
 };
 
+
 /**
  * Top queries for a property.
  *
@@ -169,6 +170,7 @@ export async function fetchSearchConsoleQueries(
         })).filter((row) => row.query.length > 0),
     };
 }
+
 
 /** Human-readable reason, for surfacing in the UI rather than a raw status. */
 export function describeGscFailure(reason: Exclude<GscOutcome<never>, { ok: true }>["reason"]): string {

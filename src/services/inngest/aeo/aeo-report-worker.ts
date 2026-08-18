@@ -29,6 +29,9 @@ export const aeoReportWorker = inngest.createFunction(
                 if (stored.error) throw new Error(`Stored report unavailable: ${stored.error.message}`);
                 const sent = await sendEmail({
                     to: recipient,
+                    ...(report.model.senderDomainVerified && report.model.senderDomain
+                        ? { from: `${report.model.brandName.replace(/["<>]/g, "")} <reports@${report.model.senderDomain}>` }
+                        : {}),
                     subject: `${report.model.businessName} AI visibility report`,
                     html: report.html,
                     attachments: [{ filename: `${report.model.businessName.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-aeo-report.pdf`, content: Buffer.from(await stored.data.arrayBuffer()).toString("base64") }],

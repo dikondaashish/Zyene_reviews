@@ -163,15 +163,16 @@ const CATALOG: Readonly<Record<AnswerEngineId, AnswerEngineDescriptor>> = {
         id: "copilot",
         label: "Copilot",
         surface: "answer_engine",
-        vendor: "TBD",
+        vendor: "Microsoft Graph",
         phase: 3,
-        pinnedModelId: null,
-        cost: { overageMicroUsd: 0, freePerDay: 0, confidence: "unverified" },
+        pinnedModelId: "microsoft-365-copilot-chat-beta",
+        // The API is included with a licensed delegated Microsoft 365 Copilot
+        // user. Microsoft's documented ceiling is 200 requests/user/hour.
+        cost: { overageMicroUsd: 0, freePerDay: 4_800, confidence: "verified" },
         supportsCitations: true,
         supportsCoordinate: false,
     },
 } as const;
-
 export function getEngineDescriptor(id: AnswerEngineId): AnswerEngineDescriptor {
     return CATALOG[id];
 }

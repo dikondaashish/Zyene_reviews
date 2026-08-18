@@ -42,14 +42,8 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center rounded-lg bg-primary/10 border border-primary/20 size-10">
-                            <Image
-                                src={getBrandLogoUrl("zapier.com")}
-                                alt="Zapier logo"
-                                width={20}
-                                height={20}
-                                className="size-5 object-contain"
-                                unoptimized
-                            />
+                            <Image src={getBrandLogoUrl("zapier.com")} alt="Zapier logo" width={20} height={20}
+                                className="size-5 object-contain" unoptimized />
                         </div>
                         <div>
                             <p className="font-semibold text-base">Zapier</p>
@@ -81,11 +75,12 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
                 )}
 
                 <div>
-                    <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1.5 block">
+                    <label htmlFor="zapier-webhook-url" className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1.5 block">
                         Webhook URL
                     </label>
                     <div className="flex gap-2">
                         <Input
+                            id="zapier-webhook-url"
                             value={webhookUrl}
                             readOnly
                             className="font-mono text-xs bg-muted/50"
@@ -133,21 +128,14 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
             </CardContent>
             <CardFooter className="flex flex-col gap-2 pt-0 sm:flex-row">
                 <Button asChild size="sm" className="w-full sm:flex-1">
-                    <Link
-                        href="/settings/integrations/zapier"
-                        className="inline-flex items-center justify-center"
-                    >
+                    <Link href="/settings/integrations/zapier" className="inline-flex items-center justify-center">
                         Full setup guide
                         <ArrowRight className="ml-2 size-3.5" />
                     </Link>
                 </Button>
                 <Button asChild variant="outline" size="sm" className="w-full sm:flex-1">
-                    <a
-                        href="https://zapier.com/apps/webhook/integrations"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center"
-                    >
+                    <a href="https://zapier.com/apps/webhook/integrations" target="_blank"
+                        rel="noopener noreferrer" className="inline-flex items-center justify-center">
                         <ExternalLink className="mr-2 size-3.5" />
                         Open Zapier
                     </a>

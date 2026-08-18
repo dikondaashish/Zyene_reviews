@@ -31,6 +31,7 @@ import { aeoAlertWorker } from "@/services/inngest/aeo/aeo-alert-worker";
 import { aeoAlertDigestWorker } from "@/services/inngest/aeo/aeo-alert-digest-worker";
 import { aeoPageDiagnosticWorker } from "@/services/inngest/aeo/aeo-page-diagnostic-worker";
 import { aeoReportWorker } from "@/services/inngest/aeo/aeo-report-worker";
+import { aeoPhase3RefreshWorker } from "@/services/inngest/aeo/aeo-phase3-refresh-worker";
 
 /**
  * Inngest registers the callback URL it will use to invoke functions. On Vercel,
@@ -84,6 +85,7 @@ export const { GET, POST, PUT } = serve({
         aeoCrawlWorker,
         aeoPageDiagnosticWorker,
         aeoReportWorker,
+        aeoPhase3RefreshWorker,
         // F8: both refuse to run unless AEO_LIVE_ALERTING is exactly "true", so
         // registering them here does not by itself alert or email anyone.
         // Nothing sends either event yet — see aeo-alert-scheduler/route.ts and

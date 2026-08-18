@@ -8,6 +8,7 @@ import type {
     AeoDispatchRequestedEvent,
     AeoGeoGridRequestedEvent,
     AeoPageDiagnosticRequestedEvent,
+    AeoPhase3RefreshRequestedEvent,
     AeoReportRequestedEvent,
     AeoRunRequestedEvent,
 } from "./aeo/aeo-events";
@@ -172,6 +173,7 @@ type Events = {
     "aeo/alert-check.requested": AeoAlertCheckRequestedEvent;
     "aeo/page-diagnostic.requested": AeoPageDiagnosticRequestedEvent;
     "aeo/report.requested": AeoReportRequestedEvent;
+    "aeo/phase3.refresh.requested": AeoPhase3RefreshRequestedEvent;
     "cron/aeo-alert-digest.business": AeoAlertDigestEvent;
 };
 

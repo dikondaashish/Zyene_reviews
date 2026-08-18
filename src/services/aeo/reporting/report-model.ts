@@ -1,5 +1,11 @@
 export type AeoReportModel = {
     brandName: string;
+    brandColor?: string;
+    brandLogoUrl?: string | null;
+    brandLogoDataUrl?: string | null;
+    hidePoweredBy?: boolean;
+    senderDomain?: string | null;
+    senderDomainVerified?: boolean;
     businessName: string;
     periodStart: string;
     periodEnd: string;

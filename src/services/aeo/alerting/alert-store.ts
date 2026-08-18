@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/lib/db/supabase/database.types";
+import { deliverOutboundEvent } from "@/services/aeo/integrations/deliver-outbound-event";
 
 type Admin = SupabaseClient<Database>;
 
@@ -12,7 +13,8 @@ export type AlertType =
     | "citation_gained"
     | "rank_drop"
     | "competitor_overtake"
-    | "negative_sentiment_spike";
+    | "negative_sentiment_spike"
+    | "statistical_anomaly";
 export type AlertSeverity = "critical" | "high" | "medium" | "low";
 
 /**
@@ -35,6 +37,7 @@ const COOLDOWN_DAYS: Record<AlertType, number> = {
     rank_drop: 6,
     competitor_overtake: 6,
     negative_sentiment_spike: 6,
+    statistical_anomaly: 6,
 };
 
 export type NewAlertInput = {
@@ -99,6 +102,12 @@ export class SupabaseAlertStore {
             .single();
 
         if (error) throw new Error(`aeo_alerts insert failed: ${error.message}`);
+        await deliverOutboundEvent(this.db, {
+            organizationId: input.organizationId, businessId: input.businessId,
+            event: "aeo.alert.created", sourceId: data.id,
+            data: { id: data.id, type: input.alertType, severity: input.severity,
+                title: input.title, createdAt: new Date().toISOString() },
+        });
         return { id: data.id };
     }
 

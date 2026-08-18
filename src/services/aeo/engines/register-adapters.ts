@@ -4,6 +4,7 @@ import { PerplexityEngineAdapter } from "./adapters/perplexity-engine-adapter";
 import { ChatGptEngineAdapter } from "./adapters/chatgpt-engine-adapter";
 import { DataForSeoSerpAdapter } from "./adapters/dataforseo-serp-adapter";
 import { DataForSeoClaudeAdapter } from "./adapters/dataforseo-claude-adapter";
+import { MicrosoftCopilotAdapter } from "./adapters/microsoft-copilot-adapter";
 
 /**
  * Registers the real, billable adapters.
@@ -47,6 +48,10 @@ export function registerAeoAdapters(): void {
     engineRegistry.register(new DataForSeoSerpAdapter({ engineId: "google_ai_overview" }));
     engineRegistry.register(new DataForSeoSerpAdapter({ engineId: "google_ai_mode" }));
     engineRegistry.register(new DataForSeoClaudeAdapter());
+    // Microsoft documents this API as preview and delegated-only. The adapter
+    // therefore also requires AEO_ENABLE_COPILOT_PREVIEW=true; registration
+    // alone can never make it runnable.
+    engineRegistry.register(new MicrosoftCopilotAdapter());
 }
 
 /** Test seam — lets a suite start from a known-empty registry. */

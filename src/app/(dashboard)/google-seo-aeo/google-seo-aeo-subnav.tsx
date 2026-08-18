@@ -8,6 +8,7 @@ const TABS = [
     { href: "/google-seo-aeo/audit", label: "Technical audit" },
     { href: "/google-seo-aeo/alerts", label: "Alerts" },
     { href: "/google-seo-aeo/phase-2", label: "Competitive insights" },
+    { href: "/google-seo-aeo/phase-3", label: "Differentiation" },
 ] as const;
 
 /** Shared across every google-seo-aeo page — none of them linked to each other before this. */

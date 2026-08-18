@@ -4,9 +4,13 @@ import { percent } from "./report-model";
 
 export function renderAeoReportPdf(model: AeoReportModel): Uint8Array {
     const pdf = new jsPDF({ unit: "pt", format: "letter" });
-    pdf.setTextColor(15, 118, 110);
+    const color = model.brandColor && /^#[0-9a-f]{6}$/i.test(model.brandColor) ? model.brandColor : "#0f766e";
+    pdf.setTextColor(color);
     pdf.setFontSize(12);
-    pdf.text(model.brandName, 48, 48);
+    if (model.brandLogoDataUrl) {
+        const format = model.brandLogoDataUrl.startsWith("data:image/png") ? "PNG" : "JPEG";
+        pdf.addImage(model.brandLogoDataUrl, format, 48, 28, 120, 40, undefined, "FAST");
+    } else pdf.text(model.brandName, 48, 48);
     pdf.setTextColor(23, 32, 42);
     pdf.setFontSize(24);
     pdf.text(`${model.businessName} AI visibility report`, 48, 80, { maxWidth: 510 });
@@ -38,5 +42,6 @@ export function renderAeoReportPdf(model: AeoReportModel): Uint8Array {
     if (model.topPrompts.length === 0) pdf.text("No measured prompts in this period.", 48, y);
     pdf.setFontSize(8); pdf.setTextColor(123, 135, 148);
     pdf.text("Measured from stored answer-engine samples. Failed and estimated samples are excluded.", 48, 742);
+    if (!model.hidePoweredBy) pdf.text("Powered by Zyene Reviews", 564, 742, { align: "right" });
     return new Uint8Array(pdf.output("arraybuffer"));
 }

@@ -102,6 +102,10 @@ export type AeoReportRequestedEvent = {
     data: { scheduleId: string };
 };
 
+export type AeoPhase3RefreshRequestedEvent = {
+    data: { businessId: string; organizationId: string; trigger: "run_completed" | "manual" };
+};
+
 /**
  * PRD-5 geo-grid. One event per grid run; the worker fans out internally
  * because a grid is size^2 BILLED requests and the concurrency limit has to
