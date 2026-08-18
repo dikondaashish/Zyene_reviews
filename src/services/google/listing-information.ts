@@ -14,6 +14,17 @@ export const LOCATION_READ_MASK = [
     "categories",
     "storefrontAddress",
     "metadata",
+    // Read for the GBP audit (F5.10). Both are top-level Location fields; a
+    // readMask that omits them makes Google return them absent rather than
+    // error, which is indistinguishable from a business that has none — so
+    // leaving them out would have the audit report "no services" for every
+    // customer.
+    "serviceItems",
+    "serviceArea",
+    // Centre point for the geo-grid (F1.12). Google's own coordinate for the
+    // listing is the only defensible centre — geocoding the address ourselves
+    // would put the grid somewhere Google does not think the business is.
+    "latlng",
 ].join(",");
 
 export interface GoogleLocationPhoneNumbers {
@@ -28,6 +39,38 @@ export interface GoogleLocationRegularHours {
     periods?: Array<{ openDay?: string; openTime?: unknown; closeDay?: string; closeTime?: unknown }>;
 }
 
+/** A label carries the merchant-authored name and optional description. */
+export interface GoogleServiceLabel {
+    displayName?: string;
+    description?: string;
+    languageCode?: string;
+}
+
+/**
+ * One offered service. Google models these as a union: `structuredServiceItem`
+ * for services picked from its taxonomy, `freeFormServiceItem` for ones the
+ * merchant typed. Descriptions live in a different place on each.
+ */
+export interface GoogleServiceItem {
+    price?: { currencyCode?: string; units?: string; nanos?: number };
+    structuredServiceItem?: { serviceTypeId?: string; description?: string };
+    freeFormServiceItem?: { category?: string; label?: GoogleServiceLabel };
+}
+
+/**
+ * Where a service-area business operates. Google's v1 model is a set of place
+ * ids (max 20), not a radius — the older radius-based model does not exist on
+ * this API.
+ */
+export interface GoogleServiceArea {
+    businessType?:
+        | "BUSINESS_TYPE_UNSPECIFIED"
+        | "CUSTOMER_LOCATION_ONLY"
+        | "CUSTOMER_AND_BUSINESS_LOCATION";
+    places?: { placeInfos?: Array<{ placeName?: string; placeId?: string }> };
+    regionCode?: string;
+}
+
 export interface GoogleLocationFull {
     name?: string;
     title?: string;
@@ -35,6 +78,10 @@ export interface GoogleLocationFull {
     phoneNumbers?: GoogleLocationPhoneNumbers;
     profile?: GoogleLocationProfile;
     regularHours?: GoogleLocationRegularHours;
+    serviceItems?: GoogleServiceItem[];
+    serviceArea?: GoogleServiceArea;
+    /** Google's coordinate for the listing. Absent on unverified locations. */
+    latlng?: { latitude?: number; longitude?: number };
     categories?: { primaryCategory?: { displayName?: string; name?: string } };
     storefrontAddress?: {
         addressLines?: string[];

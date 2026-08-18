@@ -8,6 +8,7 @@ import { loadPromptsPageData } from "./load-prompts-page-data";
 import { PromptCreateForm } from "./prompt-create-form";
 import { PromptList } from "./prompt-list";
 import { PromptsSidebar } from "./prompts-sidebar";
+import { SuggestPromptsButton } from "./suggest-prompts-button";
 import { GoogleSeoAeoSubnav } from "../google-seo-aeo-subnav";
 
 export default async function AeoPromptsPage() {
@@ -67,11 +68,14 @@ export default async function AeoPromptsPage() {
                                     {data.activeCount} of {data.prompts.length} active
                                 </span>
                             </CardTitle>
-                            <Button variant="outline" size="sm" asChild>
-                                <a href="/api/aeo/prompts/export" target="_blank" rel="noopener noreferrer">
-                                    <Download className="mr-2 size-4" /> CSV
-                                </a>
-                            </Button>
+                            <div className="flex shrink-0 flex-wrap items-center gap-2">
+                                <SuggestPromptsButton businessId={data.businessId} />
+                                <Button variant="outline" size="sm" asChild>
+                                    <a href="/api/aeo/prompts/export" target="_blank" rel="noopener noreferrer">
+                                        <Download className="mr-2 size-4" /> CSV
+                                    </a>
+                                </Button>
+                            </div>
                         </CardHeader>
                         <CardContent>
                             <PromptList

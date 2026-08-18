@@ -78,7 +78,7 @@ export const PILLARS = [
         iconBg: "bg-sync-action/10",
         iconColor: "text-sync-action",
         title: "Local SEO Dashboard",
-        tagline: "Optimize your Google Business Profile to rank higher",
+        tagline: "Understand and improve your Google Business Profile",
         bullets: [
             "Google Business Profile keyword performance tracking",
             "Keyword insights: what customers search to find you",

@@ -4,6 +4,7 @@ import { runGeoGrid } from "@/services/aeo/geo-grid/geo-grid-runner";
 import { SupabaseGeoGridStore } from "@/services/aeo/geo-grid/supabase-geo-grid-store";
 import { isLiveSamplingEnabled } from "@/lib/features/aeo-surfaces";
 import { logger } from "@/lib/logger";
+import { SupabaseReservationStore } from "@/services/aeo/orchestration/supabase-reservation-store";
 
 /**
  * PRD-5 geo-grid worker.
@@ -38,18 +39,39 @@ export const aeoGeoGridWorker = inngest.createFunction(
         }
 
         const data = event.data;
+        const admin = createAdminClient();
         const login = process.env.DATAFORSEO_LOGIN?.trim();
         const password = process.env.DATAFORSEO_PASSWORD?.trim();
 
         if (!login || !password) {
             logger.warn({ businessId: data.businessId }, "AEO geo-grid refused: DataForSEO not configured");
+            await markRunFailed(data.runId, "DataForSEO is not configured.");
             return { skipped: "dataforseo_not_configured" as const };
         }
 
-        // The whole grid is one step. Splitting search from persist would mean a
-        // crash after searching had paid for every cell and stored none of it.
-        const persisted = await step.run("run-and-persist-grid", async () => {
-            const outcome = await runGeoGrid(
+        const reservations = new SupabaseReservationStore(admin);
+        const reservation = await step.run("reserve-grid", () =>
+            reservations.reserve({
+                idempotencyKey: `geo-grid:${data.runId}`,
+                organizationId: data.organizationId,
+                engineId: "google_serp",
+                usageDate: new Date().toISOString().slice(0, 10),
+                requestedUnits: data.gridSize * data.gridSize,
+                freePerDay: 0,
+                overageAuthorised: false,
+            })
+        );
+        if (reservation.kind === "deferred") {
+            await markRunFailed(data.runId, "Geo-grid quota could not be reserved.");
+            return { skipped: "quota_deferred" as const };
+        }
+        if (reservation.kind === "existing" && reservation.alreadySettled) {
+            return { skipped: "already_settled" as const };
+        }
+
+        const outcome = await step.run("run-grid", async () => {
+            await reservations.markDispatched(reservation.reservationId, new Date().toISOString());
+            return runGeoGrid(
                 {
                     centerLat: data.centerLat,
                     centerLng: data.centerLng,
@@ -58,18 +80,17 @@ export const aeoGeoGridWorker = inngest.createFunction(
                     keyword: data.keyword,
                     languageCode: data.languageCode,
                     aliases: await loadBusinessAliases(data.businessId),
+                    placeId: data.placeId,
                 },
                 { login, password }
             );
+        });
 
-            const store = new SupabaseGeoGridStore(createAdminClient());
-            const written = await store.persist({
+        const persisted = await step.run("persist-grid", async () => {
+            const store = new SupabaseGeoGridStore(admin);
+            const written = await store.complete({
+                runId: data.runId,
                 businessId: data.businessId,
-                keyword: data.keyword,
-                gridSize: data.gridSize,
-                spacingMeters: data.spacingMeters,
-                centerLat: data.centerLat,
-                centerLng: data.centerLng,
                 outcome,
             });
 
@@ -85,11 +106,31 @@ export const aeoGeoGridWorker = inngest.createFunction(
             };
         });
 
+        await step.run("settle-grid", () =>
+            reservations.settle(reservation.reservationId, {
+                settledUnits: Math.min(outcome.billedRequests, reservation.grantedUnits),
+                overrunUnits: Math.max(0, outcome.billedRequests - reservation.grantedUnits),
+                billableUnits: outcome.costMicroUsd > 0 ? outcome.billedRequests : 0,
+                costMicroUsd: outcome.costMicroUsd,
+                at: new Date().toISOString(),
+            })
+        );
+
         if (persisted.failedCells > 0) {
             logger.warn(
                 { businessId: data.businessId, runId: persisted.runId, failedCells: persisted.failedCells },
                 "AEO geo-grid completed with unsearched cells — coverage excludes them"
             );
+        }
+        if (outcome.costMicroUsd > 0) {
+            const variance = Math.abs(outcome.costMicroUsd - data.estimatedCostMicroUsd)
+                / data.estimatedCostMicroUsd;
+            if (variance > 0.05) {
+                logger.warn(
+                    { runId: data.runId, estimated: data.estimatedCostMicroUsd, actual: outcome.costMicroUsd },
+                    "AEO geo-grid provider cost varied by more than five percent"
+                );
+            }
         }
 
         return persisted;
@@ -111,4 +152,11 @@ async function loadBusinessAliases(businessId: string): Promise<string[]> {
         .single();
 
     return data?.name ? [data.name] : [];
+}
+
+async function markRunFailed(runId: string, message: string): Promise<void> {
+    await createAdminClient()
+        .from("aeo_geo_grid_runs")
+        .update({ status: "failed", error_message: message, completed_at: new Date().toISOString() })
+        .eq("id", runId);
 }

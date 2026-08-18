@@ -19,6 +19,8 @@ export type PromptRow = {
     createdAt: string;
     /** Observations recorded for this prompt so far. */
     sampleCount: number;
+    /** F4.3 cluster name, or null for prompts filed under none. */
+    clusterName: string | null;
 };
 
 export type EngineCoverage = {
@@ -54,9 +56,13 @@ export async function loadPromptsPageData(): Promise<PromptsPageData> {
     if (!businessId || !business) return { kind: "no-business" };
 
     // RLS-scoped read: the policy restricts aeo_prompts to the caller's orgs.
+    // The cluster name is joined through the FK rather than fetched separately
+    // so grouping needs no second round-trip (F4.3).
     const { data: promptRows } = await supabase
         .from("aeo_prompts")
-        .select("id, prompt_text, intent, locale_city, source, is_active, created_at")
+        .select(
+            "id, prompt_text, intent, locale_city, source, is_active, created_at, aeo_prompt_clusters(name)"
+        )
         .eq("business_id", businessId)
         .order("is_active", { ascending: false })
         .order("created_at", { ascending: false });
@@ -107,6 +113,7 @@ export async function loadPromptsPageData(): Promise<PromptsPageData> {
             isActive: row.is_active,
             createdAt: row.created_at,
             sampleCount: samplesByPrompt.get(row.id) ?? 0,
+            clusterName: row.aeo_prompt_clusters?.name ?? null,
         })),
         activeCount,
         engines,

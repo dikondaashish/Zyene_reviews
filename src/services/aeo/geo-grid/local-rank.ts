@@ -18,6 +18,7 @@ export type LocalPackEntry = {
     /** 1-based position within the local pack. */
     position: number;
     title: string;
+    placeId: string | null;
     rating: number | null;
     reviews: number | null;
 };
@@ -25,20 +26,22 @@ export type LocalPackEntry = {
 export type LocalRankResult = {
     /** Null when the business did not appear at all. */
     rankPosition: number | null;
+    placeIdFound: string | null;
     /** Everyone Google did list, in order — the competitive picture at this point. */
-    topCompetitors: { position: number; name: string }[];
+    topCompetitors: { position: number; name: string; placeId: string | null }[];
     /** How many local-pack slots Google returned here. */
     packSize: number;
 };
 
 export function readLocalPack(items: readonly DataForSeoItem[]): LocalPackEntry[] {
     return items
-        .filter((item) => item.type === "local_pack")
+        .filter((item) => item.type === "local_pack" || item.type === "maps_search")
         .map((item, index) => ({
             // rank_group is the position within the pack; fall back to arrival
             // order when the vendor omits it.
             position: item.rank_group ?? index + 1,
             title: item.title?.trim() ?? "",
+            placeId: item.place_id?.trim() || null,
             rating: item.rating?.value ?? null,
             reviews: item.rating?.votes_count ?? null,
         }))
@@ -60,6 +63,7 @@ export function readLocalPack(items: readonly DataForSeoItem[]): LocalPackEntry[
 export function findLocalRank(
     entries: readonly LocalPackEntry[],
     aliases: readonly string[],
+    expectedPlaceId?: string | null,
     topN = 3
 ): LocalRankResult {
     const needles = aliases
@@ -69,24 +73,29 @@ export function findLocalRank(
         .filter((alias) => alias.length >= 3);
 
     let rankPosition: number | null = null;
+    let placeIdFound: string | null = null;
 
     for (const entry of entries) {
         const title = normalizeForMatch(entry.title).trim();
-        const hit = needles.some(
-            (needle) => title === needle || title.includes(needle) || needle.includes(title)
-        );
+        const hit = expectedPlaceId
+            ? entry.placeId === expectedPlaceId
+            : needles.some(
+                  (needle) => title === needle || title.includes(needle) || needle.includes(title)
+              );
         if (hit) {
             // First (best) position wins if a business somehow lists twice.
             rankPosition = rankPosition === null ? entry.position : Math.min(rankPosition, entry.position);
+            placeIdFound = entry.placeId;
         }
     }
 
     return {
         rankPosition,
+        placeIdFound,
         topCompetitors: entries
             .filter((entry) => entry.position !== rankPosition)
             .slice(0, topN)
-            .map((entry) => ({ position: entry.position, name: entry.title })),
+            .map((entry) => ({ position: entry.position, name: entry.title, placeId: entry.placeId })),
         packSize: entries.length,
     };
 }

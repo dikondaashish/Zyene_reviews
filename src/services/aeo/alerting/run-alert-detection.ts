@@ -1,8 +1,10 @@
+import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { SupabaseAlertStore } from "./alert-store";
 import { detectVisibilityAlerts, groupByPromptEngine, type VisibilitySampleFact } from "./detect-visibility-alerts";
 import { detectNewTechnicalAlerts, findingKey, type FindingLike } from "./detect-technical-alerts";
+import { detectCitationChanges, detectRankMovement, safely } from "./run-citation-rank-detection";
 import type { AnswerEngineId } from "../engines/engine-types";
 
 type Admin = SupabaseClient<Database>;
@@ -80,6 +82,14 @@ export async function runAlertDetectionForBusiness(
             if (result) created += 1;
         }
     }
+
+    // F8.2/F8.3 depend on migration 20260818154353 (the citation_lost /
+    // citation_gained / rank_drop alert types and the page_url column). Isolated
+    // so that on a deployment where that migration has not been applied these
+    // two degrade to "no citation or rank alerts" instead of aborting the run
+    // and taking F8.1 and F8.4 — which need no new schema — down with them.
+    created += await safely("citation", () => detectCitationChanges(db, store, input));
+    created += await safely("rank", () => detectRankMovement(db, store, input));
 
     // --- F8.4: newly-appeared technical blockers ---
     const { data: runRows } = await db

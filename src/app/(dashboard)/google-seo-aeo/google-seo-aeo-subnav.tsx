@@ -4,11 +4,12 @@ import { cn } from "@/lib/utils";
 const TABS = [
     { href: "/google-seo-aeo", label: "Overview" },
     { href: "/google-seo-aeo/prompts", label: "Prompts" },
+    { href: "/google-seo-aeo/geo-grid", label: "Geo-grid" },
     { href: "/google-seo-aeo/audit", label: "Technical audit" },
     { href: "/google-seo-aeo/alerts", label: "Alerts" },
 ] as const;
 
-/** Shared across all four google-seo-aeo pages — none of them linked to each other before this. */
+/** Shared across every google-seo-aeo page — none of them linked to each other before this. */
 export function GoogleSeoAeoSubnav({ active }: { active: (typeof TABS)[number]["href"] }) {
     return (
         <nav className="flex gap-1 border-b border-border">

@@ -5,14 +5,21 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RunAuditControls } from "@/components/google-seo-aeo/run-audit-controls";
 import { areEstimatedAeoSurfacesEnabled } from "@/lib/features/aeo-surfaces";
-import { getAuditFixAction } from "./google-seo-aeo-audit-utils";
+import { getAuditFixAction, isScoredAudit, type AuditStatus } from "./google-seo-aeo-audit-utils";
 import type { GoogleSeoAeoContentProps } from "./google-seo-aeo-content-props";
 
+/** Why a row carries no score. Distinct wording per cause, never a blanket one. */
+const UNSCORED_LABEL: Partial<Record<AuditStatus, string>> = {
+    pending: "Not built yet",
+    unavailable: "No data from Google",
+    "not-applicable": "Does not apply",
+};
+
 export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoAeoContentProps }) {
-    // Unmeasured checks are listed separately: showing them beside real pass/fail
+    // Unscored checks are listed separately: showing them beside real pass/fail
     // rows with a Fix button implies we audited something we never looked at.
-    const measured = content.audits.filter((a) => a.status !== "pending");
-    const unmeasured = content.audits.filter((a) => a.status === "pending");
+    const measured = content.audits.filter(isScoredAudit);
+    const unmeasured = content.audits.filter((a) => !isScoredAudit(a));
 
     return (
         <>
@@ -37,7 +44,7 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
                         {content.googleCountLive.toLocaleString()} reviews (visible in Zyene)
                         {" · "}
                         Scored on {content.measuredCount} of {content.audits.length} checks
-                        {unmeasured.length > 0 ? ` · ${unmeasured.length} not yet measured` : ""}.
+                        {unmeasured.length > 0 ? ` · ${unmeasured.length} not scored` : ""}.
                     </CardDescription>
                 </CardHeader>
             </Card>
@@ -83,17 +90,24 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
             {unmeasured.length > 0 ? (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Not yet measured</CardTitle>
+                        <CardTitle>Not scored</CardTitle>
                         <CardDescription>
-                            These checks are not implemented yet, so they are excluded from your score. They are
-                            listed here so the audit is not mistaken for full coverage.
+                            These checks are excluded from your score, each for the reason shown. They are listed
+                            here so the audit is not mistaken for full coverage.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2">
                         {unmeasured.map((a) => (
-                            <div key={a.id} className="flex items-center gap-2 rounded-lg border border-dashed p-3">
-                                <span className="border-muted-foreground/40 inline-flex size-4 shrink-0 rounded-full border" />
-                                <p className="text-muted-foreground text-sm">{a.label}</p>
+                            <div
+                                key={a.id}
+                                className="flex flex-col gap-1 rounded-lg border border-dashed p-3"
+                            >
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <span className="border-muted-foreground/40 inline-flex size-4 shrink-0 rounded-full border" />
+                                    <p className="text-sm font-medium">{a.label}</p>
+                                    <Badge variant="outline">{UNSCORED_LABEL[a.status] ?? "Not scored"}</Badge>
+                                </div>
+                                <p className="text-muted-foreground pl-6 text-xs">{a.detail}</p>
                             </div>
                         ))}
                     </CardContent>

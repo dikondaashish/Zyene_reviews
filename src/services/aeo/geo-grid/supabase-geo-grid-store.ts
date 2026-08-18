@@ -14,40 +14,31 @@ type Admin = SupabaseClient<Database>;
 export class SupabaseGeoGridStore {
     constructor(private readonly db: Admin) {}
 
-    async persist(input: {
+    async complete(input: {
+        runId: string;
         businessId: string;
-        keyword: string;
-        gridSize: 5 | 7 | 9;
-        spacingMeters: number;
-        centerLat: number;
-        centerLng: number;
         outcome: GeoGridOutcome;
     }): Promise<{ runId: string; points: number }> {
-        const { data: run, error: runError } = await this.db
+        const { error: runError } = await this.db
             .from("aeo_geo_grid_runs")
-            .insert({
-                business_id: input.businessId,
-                keyword: input.keyword,
-                grid_size: input.gridSize,
-                spacing_meters: input.spacingMeters,
-                center_lat: input.centerLat,
-                center_lng: input.centerLng,
+            .update({
                 status: input.outcome.status,
-                is_estimated: false,
+                actual_cost_micro_usd: input.outcome.costMicroUsd,
+                billed_units: input.outcome.billedRequests,
                 error_message:
                     input.outcome.failedCells > 0
                         ? `${input.outcome.failedCells} of ${input.outcome.cells.length} cells failed to search`
                         : null,
                 completed_at: new Date().toISOString(),
             })
-            .select("id")
-            .single();
+            .eq("id", input.runId)
+            .eq("business_id", input.businessId);
 
-        if (runError) throw new Error(`geo grid run insert failed: ${runError.message}`);
+        if (runError) throw new Error(`geo grid run update failed: ${runError.message}`);
 
-        const { error: pointsError } = await this.db.from("aeo_geo_grid_points").insert(
+        const { error: pointsError } = await this.db.from("aeo_geo_grid_points").upsert(
             input.outcome.cells.map((cell) => ({
-                run_id: run.id,
+                run_id: input.runId,
                 business_id: input.businessId,
                 grid_row: cell.row,
                 grid_col: cell.col,
@@ -62,13 +53,16 @@ export class SupabaseGeoGridStore {
                  * "mediocre here".
                  */
                 rank_position: cell.rankPosition,
-                place_id_found: null,
+                place_id_found: cell.placeIdFound,
                 top_competitors: cell.topCompetitors,
-            }))
+                search_status: cell.error === null ? "searched" : "failed",
+                error_message: cell.error,
+            })),
+            { onConflict: "run_id,grid_row,grid_col" }
         );
 
         if (pointsError) throw new Error(`geo grid points insert failed: ${pointsError.message}`);
 
-        return { runId: run.id, points: input.outcome.cells.length };
+        return { runId: input.runId, points: input.outcome.cells.length };
     }
 }

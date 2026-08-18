@@ -15,11 +15,9 @@ export interface Solution {
 }
 
 export interface UseCase {
-    ownerName: string;
-    ownerContext: string;
-    challengeBefore: string;
-    actionTaken: string;
-    resultAfter: string;
+    startingPoint: string;
+    workflow: string;
+    measures: string;
 }
 
 export interface IndustryData {
@@ -37,8 +35,6 @@ export interface IndustryData {
     painPoints: PainPoint[];
     solutions: Solution[];
     useCase: UseCase;
-    useCaseQuote: string;
-    useCaseHighlights: string[];
     ctaJoinCopy: string;
     imagePath: string;
 }
@@ -82,14 +78,10 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "Track nearby competitors", description: "See exactly how your star rating, review volume, and response rate compares to the restaurants around you — and identify where you're winning or falling behind." },
         ],
         useCase: {
-            ownerName: "Marco",
-            ownerContext: "owner of a 3-location Italian restaurant group in Austin, TX",
-            challengeBefore: "Marco was getting 3–4 new Google reviews a week across all 3 locations but responding to fewer than 1 in 5. Two locations had dropped below 4.3 stars after a rough few weeks. His team didn't have time to monitor reviews across Google, Yelp, and Facebook separately.",
-            actionTaken: "Marco connected all 3 locations to Zyene in under 10 minutes. He turned on the Negative Feedback Shield for all locations and set up AI auto-reply for 4-star and 5-star reviews. He started sending review requests via QR codes at the table.",
-            resultAfter: "Within 60 days, all 3 locations were above 4.6 stars. Review volume tripled. His team now spends 20 minutes a week on reputation management instead of 3 hours — and 8 unhappy customers were privately resolved before they could write public reviews.",
+            startingPoint: "A restaurant group monitors several review platforms separately, responds inconsistently, and cannot compare locations from one view.",
+            workflow: "Connect each location, centralize review alerts, create a response workflow, and offer every customer a consistent way to share feedback.",
+            measures: "Track request delivery, genuine review volume, rating distribution, response coverage, and response time by location. Results depend on customer volume and experience.",
         },
-        useCaseQuote: "Within 60 days, all 3 locations went from below 4.3 to above 4.6 stars. We now spend 20 minutes a week on reputation instead of 3 hours.",
-        useCaseHighlights: ["4.3 → 4.6 stars", "3× review volume", "8 bad reviews prevented"],
         ctaJoinCopy: "Join other restaurant owners on Zyene",
         imagePath: "/images/industries/restaurants.png",
     },
@@ -132,14 +124,10 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "Monitor every platform in one inbox", description: "Track your reviews across Google, Healthgrades context, and Facebook — from one dashboard. Identify which of your associates receives the best patient feedback." },
         ],
         useCase: {
-            ownerName: "Dr. Priya",
-            ownerContext: "owner of a 2-location dental practice in Phoenix, AZ",
-            challengeBefore: "Dr. Priya's practices had been open for 4 years but had only 31 Google reviews combined. A competitor 2 miles away had 340 reviews and was consistently outranking her in Google Maps searches for 'dentist near me'.",
-            actionTaken: "She connected both locations to Zyene and set up automated SMS review requests to send 3 hours after each checkout. She activated the Negative Feedback Shield and enabled AI auto-reply for all 4 and 5-star reviews.",
-            resultAfter: "In 90 days, both locations had 80+ new reviews. Dr. Priya's main location moved from the 4th result to the 2nd result for 'dentist near me' in her neighborhood. Three billing complaints were privately resolved through the Shield before going public.",
+            startingPoint: "A dental group has uneven review coverage across locations and no shared process for requests, replies, or billing-related feedback.",
+            workflow: "Connect both locations, send policy-compliant requests after visits, route feedback to the responsible team, and review AI-assisted drafts before publishing.",
+            measures: "Track consented request delivery, new review volume, response time, unresolved feedback, and location-level trends. Do not attribute ranking changes to reviews alone.",
         },
-        useCaseQuote: "In 90 days, both locations had 80+ new reviews. We moved from the 4th to the 2nd result for 'dentist near me' in our neighborhood.",
-        useCaseHighlights: ["31 → 160+ reviews", "#4 → #2 on Google Maps", "3 billing disputes resolved privately"],
         ctaJoinCopy: "Join other dental practices on Zyene",
         imagePath: "/images/industries/dental.png",
     },
@@ -182,14 +170,10 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "See how you compare to the shop down the street", description: "Track up to 10 nearby competitors. See their star rating, review volume, and response rate — and identify exactly what's driving customers to choose them over you." },
         ],
         useCase: {
-            ownerName: "Carlos",
-            ownerContext: "owner of an independent auto repair shop in Dallas, TX",
-            challengeBefore: "Carlos's shop had 4.1 stars on Google from 45 reviews. A national chain opened half a mile away and quickly accumulated 200+ reviews. Carlos was losing first-time customers who were comparing him on Google and choosing the chain.",
-            actionTaken: "Carlos started sending SMS review requests after every completed repair using Zyene. He activated the Negative Feedback Shield and competitor tracking for the chain and two other nearby shops.",
-            resultAfter: "In 4 months, his review count grew from 45 to 180 with a 4.8-star average. He outranked the chain for 'auto repair near me' in his zip code. Two estimate-dispute complaints were privately resolved through the Shield.",
+            startingPoint: "An independent shop has a smaller public review footprint than nearby chains and handles estimate disputes without a consistent follow-up process.",
+            workflow: "Send the same honest review request after completed repairs, centralize alerts, respond to feedback, and monitor public competitor rating and volume changes.",
+            measures: "Track delivery, response coverage, review volume, rating distribution, and issue-resolution time. Local position must be measured separately and is not a promised outcome.",
         },
-        useCaseQuote: "In 4 months, my review count grew from 45 to 180 with a 4.8-star average. I outranked the chain for 'auto repair near me' in my zip code.",
-        useCaseHighlights: ["45 → 180 reviews", "4.8-star average", "2 disputes resolved privately"],
         ctaJoinCopy: "Join other auto repair shops on Zyene",
         imagePath: "/images/industries/auto-repair.png",
     },
@@ -232,14 +216,10 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "Stay ahead of nearby salons", description: "The competitor tracker monitors nearby salons and spas. Know when a competitor is getting more reviews than you — and respond before it affects your bookings." },
         ],
         useCase: {
-            ownerName: "Jasmine",
-            ownerContext: "owner of a boutique hair salon in Chicago, IL",
-            challengeBefore: "Jasmine's salon had 4.3 stars from 28 reviews after 3 years in business. She was losing new client bookings to a newer salon nearby that had 150 reviews and a 4.8-star average. Jasmine knew her service was better, but her online presence didn't reflect it.",
-            actionTaken: "She connected her salon to Zyene and set up automated SMS review requests to send 2 hours after each appointment. She activated the Negative Feedback Shield and turned on AI auto-reply for 5-star reviews.",
-            resultAfter: "In 6 weeks, Jasmine's review count jumped from 28 to 94. Her rating climbed to 4.8 stars. Bookings from Google increased by 40%. Two clients who were disappointed with their color were privately resolved and both rebooked.",
+            startingPoint: "A salon relies on occasional organic reviews and has no consistent workflow for appointment follow-up or service-recovery feedback.",
+            workflow: "Send policy-compliant follow-ups after appointments, centralize new-review alerts, and give staff a clear process for editing and approving reply drafts.",
+            measures: "Track request delivery, new review volume, response time, rebooking, and feedback resolution. Booking or rating lift must be measured from the salon's own data.",
         },
-        useCaseQuote: "In 6 weeks, my review count jumped from 28 to 94. My rating climbed to 4.8 stars and bookings from Google increased by 40%.",
-        useCaseHighlights: ["28 → 94 reviews", "4.8-star rating", "+40% Google bookings"],
         ctaJoinCopy: "Join other salon and spa owners on Zyene",
         imagePath: "/images/industries/salons.png",
     },
@@ -267,7 +247,7 @@ export const INDUSTRIES: IndustryData[] = [
             {
                 stat: "Seasonal spikes",
                 title: "Your busiest seasons need the freshest reviews",
-                description: "HVAC businesses need strong reviews before summer and winter. Plumbers need them before the holiday season. Reviews older than 3 months carry less weight with Google's local ranking algorithm.",
+                description: "HVAC businesses need strong reviews before summer and winter. Plumbers need them before the holiday season. Recent reviews give customers a more current picture of the service they can expect.",
             },
             {
                 stat: "Pricing disputes",
@@ -282,14 +262,10 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "Win seasonal search ranking battles", description: "Track competitor review volume and freshness across your service area. Stay ahead before peak season hits by proactively collecting reviews during quieter months." },
         ],
         useCase: {
-            ownerName: "Dave",
-            ownerContext: "owner of a residential HVAC company serving the Denver metro area",
-            challengeBefore: "Dave's company had 4.2 stars from 52 Google reviews built up over 6 years. His team was doing great work but no one was asking for reviews. Going into summer, three large HVAC competitors in his area all had 200+ reviews and were ranking above him in Google Maps.",
-            actionTaken: "Dave integrated Zyene with his field service software via Zapier, triggering a review request 1 hour after each job was closed out. He activated the Negative Feedback Shield and competitor tracking.",
-            resultAfter: "In 90 days, his review count grew from 52 to 210 with a 4.8-star rating. He ranked in the top 3 on Google Maps for 'HVAC near me' in his area for the first time. Two pricing disputes were resolved privately through the Shield.",
+            startingPoint: "A home-services team completes many jobs but asks for reviews inconsistently and notices pricing complaints only after they become public.",
+            workflow: "Connect the job-completion workflow, send consented follow-ups, centralize feedback, and compare public review trends with nearby providers before peak season.",
+            measures: "Track request delivery, review volume, rating distribution, response time, and resolved service issues. Maps position depends on relevance, distance, and broader prominence signals.",
         },
-        useCaseQuote: "In 90 days, my review count grew from 52 to 210 with a 4.8-star rating. I ranked in the top 3 on Google Maps for the first time.",
-        useCaseHighlights: ["52 → 210 reviews", "Top 3 on Google Maps", "2 pricing disputes resolved"],
         ctaJoinCopy: "Join other home services professionals on Zyene",
         imagePath: "/images/industries/home-services.png",
     },
@@ -332,14 +308,10 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "Monitor all platforms from one dashboard", description: "Track your Google, Facebook, and other review platforms from one inbox. Set up instant alerts so your team can respond within hours — not days." },
         ],
         useCase: {
-            ownerName: "Dr. Amir",
-            ownerContext: "family practice physician with 2 locations in the suburbs of Atlanta, GA",
-            challengeBefore: "Dr. Amir had 3.9 stars across both locations combined from inconsistent, mostly negative reviews about wait times. Insurance patients were choosing competitors with better-looking Google profiles. His team had no system for monitoring or responding to reviews.",
-            actionTaken: "He connected both practices to Zyene and set up post-visit SMS review requests. The Negative Feedback Shield was activated. His front desk team now gets alerts and uses AI reply suggestions to respond within 24 hours.",
-            resultAfter: "In 4 months, both locations climbed above 4.5 stars. New patient appointments increased by 22%. Six wait-time complaints were privately resolved through the Shield before going public.",
+            startingPoint: "A medical group has inconsistent location-level review monitoring and no reliable handoff for wait-time or front-desk feedback.",
+            workflow: "Use consented post-visit requests, centralize alerts, route operational feedback internally, and require staff review of privacy-aware reply drafts.",
+            measures: "Track request delivery, response coverage, time to resolution, and location trends without exposing patient information or promising appointment growth.",
         },
-        useCaseQuote: "In 4 months, both locations climbed above 4.5 stars. New patient appointments increased by 22%. Six complaints were resolved before going public.",
-        useCaseHighlights: ["3.9 → 4.5+ stars", "+22% new patients", "6 complaints resolved privately"],
         ctaJoinCopy: "Join other medical practices on Zyene",
         imagePath: "/images/industries/medical.png",
     },
@@ -351,7 +323,7 @@ export const INDUSTRIES: IndustryData[] = [
         nameSingular: "Hotel",
         ownerTitle: "hotel owner",
         heroHeadline: "Review Management Built for Hotels & Hospitality",
-        heroSub: "Hotels and hospitality businesses use Zyene Reviews to respond to guests faster, protect their reputation, and rank higher on Google Maps.",
+        heroSub: "Hotels and hospitality businesses use Zyene Reviews to respond to guests faster, protect their reputation, and strengthen their Google Maps presence.",
         emoji: "🏨",
         accentColor: "indigo",
         metaTitle: "Hotel Review Management",
@@ -382,14 +354,10 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "Track your competitive set", description: "Monitor the review volume, rating, and response rate of your competitive set — nearby hotels in the same class — and stay ahead of them in Google Maps ranking." },
         ],
         useCase: {
-            ownerName: "Sarah",
-            ownerContext: "general manager of a 60-room boutique hotel in Nashville, TN",
-            challengeBefore: "Sarah's hotel had 4.2 stars on Google from 145 reviews. Two newer boutique hotels nearby both had 4.7+ stars and were consistently outranking her in Google Maps and appearing higher on Google Hotel Search. Her team was only responding to about 1 in 5 reviews.",
-            actionTaken: "Sarah connected the hotel to Zyene and turned on AI auto-reply for all 4-star and 5-star reviews. She set up automated post-checkout email review requests. The Negative Feedback Shield was activated for room complaints.",
-            resultAfter: "In 45 days, response rate went from 20% to 98%. The hotel's rating climbed to 4.6 stars and monthly review volume tripled. Direct bookings from Google increased by 18%. Five room complaints were privately resolved before being posted publicly.",
+            startingPoint: "A hotel team responds inconsistently across review channels and lacks a shared process for post-stay requests and room complaints.",
+            workflow: "Centralize alerts, send consented post-checkout follow-ups, assign complaints, and review AI-assisted responses before they are published.",
+            measures: "Track response coverage, response time, genuine review volume, issue resolution, and direct bookings in separate systems. No booking lift is assumed.",
         },
-        useCaseQuote: "In 45 days, our response rate went from 20% to 98%. Our rating climbed to 4.6 stars and direct bookings from Google increased by 18%.",
-        useCaseHighlights: ["20% → 98% response rate", "4.6-star rating", "+18% direct bookings"],
         ctaJoinCopy: "Join other hotels and hospitality businesses on Zyene",
         imagePath: "/images/industries/hotels.png",
     },
@@ -432,14 +400,10 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "Track competitor gyms in your area", description: "See how nearby gyms compare on review volume and rating. Know when a competitor is gaining on you — and stay ahead with a proactive review collection strategy." },
         ],
         useCase: {
-            ownerName: "Tyler",
-            ownerContext: "owner of a boutique CrossFit-style gym in Seattle, WA",
-            challengeBefore: "Tyler's gym had 4.3 stars from 41 reviews after 3 years. A large franchise gym opened nearby with a marketing budget Tyler couldn't match. The franchise quickly accumulated 300+ reviews and was consistently outranking Tyler's gym for 'gym near me' searches.",
-            actionTaken: "Tyler set up Zyene to send automated review requests 24 hours after every new member's first class. He activated the Negative Feedback Shield for cancellation requests and competitor tracking for the franchise gym.",
-            resultAfter: "In 5 months, Tyler's review count grew from 41 to 210 with a 4.9-star average. His gym outranked the franchise for 'CrossFit near me' in his neighborhood. Five cancellation complaints were privately resolved through the Shield, and 3 of those members stayed.",
+            startingPoint: "A fitness studio competes with a larger franchise and has no consistent process for first-visit feedback, replies, or cancellation issues.",
+            workflow: "Send the same honest follow-up after eligible visits, centralize alerts, route billing concerns, and monitor public competitor review trends.",
+            measures: "Track request delivery, response coverage, genuine review volume, cancellations resolved, and local position independently. No ranking or retention result is promised.",
         },
-        useCaseQuote: "In 5 months, my review count grew from 41 to 210 with a 4.9-star average. I outranked the franchise for 'CrossFit near me' in my neighborhood.",
-        useCaseHighlights: ["41 → 210 reviews", "4.9-star average", "5 cancellations resolved, 3 stayed"],
         ctaJoinCopy: "Join other gym and fitness studio owners on Zyene",
         imagePath: "/images/industries/fitness.png",
     },

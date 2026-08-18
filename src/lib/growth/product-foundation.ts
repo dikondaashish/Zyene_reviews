@@ -38,8 +38,8 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
     {
         number: 5,
         name: "Local SEO & GBP Optimization",
-        value: "GBP performance, keywords, SEO audit, AI description optimizer, AI visibility (beta).",
-        whyTheyPay: "Rank higher in Maps and AI search.",
+        value: "GBP performance, keywords, SEO audit, and AI-assisted description optimization.",
+        whyTheyPay: "Understand Search and Maps performance and improve the profile details you control.",
     },
     {
         number: 6,
@@ -142,7 +142,6 @@ export const MARKET_COMPARISON_CAPABILITIES = [
     { capability: "Negative Feedback Shield", zyene: true, birdeye: "Surveys only", podium: false, nicejob: false },
     { capability: "Competitor tracking", zyene: true, birdeye: "Dominate tier", podium: false, nicejob: "Pro only" },
     { capability: "GBP SEO dashboard", zyene: true, birdeye: true, podium: "Limited", nicejob: false },
-    { capability: "AI visibility audit", zyene: "Beta", birdeye: false, podium: false, nicejob: false },
     { capability: "Developer API", zyene: "Included", birdeye: "Enterprise", podium: "Enterprise", nicejob: false },
     { capability: "Annual contract required", zyene: false, birdeye: true, podium: true, nicejob: false },
 ] as const;

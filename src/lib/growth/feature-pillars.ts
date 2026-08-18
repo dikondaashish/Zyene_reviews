@@ -95,7 +95,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
     {
         slug: "local-seo",
         title: "Local SEO Dashboard",
-        tagline: "Optimize your Google Business Profile to rank higher",
+        tagline: "Understand and improve your Google Business Profile",
         metaTitle: "Local SEO Dashboard",
         metaDescription:
             "GBP keyword performance, search insights, and actionable SEO fixes — included on Starter, not locked behind enterprise tiers.",

@@ -335,7 +335,7 @@ Effort: **XS** ≤2d · **S** 3–5d · **M** 1.5–2.5w · **L** 3–5w · **XL
 |---|---|---|---|
 | Google Business Profile API | Categories, services, photos, posts, Q&A, performance keywords | ✅ In place (`src/services/google/`) | Quota; already managed |
 | Google Places API (New) | Competitor discovery, Place ID identity, local-pack matching | ✅ In place (`external-metrics.ts`) | Per-call cost |
-| **Google Search Console API** | Query data, indexation status, CTR/position baseline | ❌ **Build (E-2)** — new OAuth scope + consent screen change | Scope addition may require Google re-verification; start early |
+| **Google Search Console API** | Query data, indexation status, CTR/position baseline | ✅ **Built (E-2)** — incremental OAuth + sync service | Console verified 2026-08-15: both Search Console scopes configured; Google reports no additional data-access verification required |
 | **SERP/AI Overview provider** (DataForSEO, SerpApi, Serper, or equivalent) | Classic SERP rank, local pack, AI Overview text + sources, geo-grid | ❌ **Procure (Q3)** | Single-vendor dependency; abstract behind an interface from day one |
 | **OpenAI API** | ChatGPT sampling (web-search tool) | ❌ Procure | API ≠ consumer ChatGPT (no memory/personalization); disclose |
 | **Anthropic API** | Claude sampling (web search tool) | ❌ Procure (P2) | Same caveat |
@@ -376,7 +376,7 @@ Effort: **XS** ≤2d · **S** 3–5d · **M** 1.5–2.5w · **L** 3–5w · **XL
 | SERP/AIO vendor | Price change, outage, or shutdown | Adapter interface (E-1); qualify a second vendor before Phase 1 GA; cache aggressively |
 | LLM provider ToS | Scraping consumer UIs is prohibited; API-only is the compliant path | API-only, no consumer-UI automation, and disclose the API-vs-product difference in F7.10 |
 | Model deprecation | A tracked model is retired, breaking trend continuity | Store `model_id` on every sample; annotate trend lines at changeover; never silently substitute |
-| Google OAuth scope expansion (GSC) | Verification delay blocks Phase 1 | Submit scope change in week 1, before the code is ready |
+| Google OAuth scope expansion (GSC) | Verification delay could block Phase 1 | Closed 2026-08-15: scopes are configured and Google reports no additional data-access verification required |
 | Gemini extraction drift | Silent accuracy regression | E-6 eval harness gates every prompt/model change in CI |
 
 ### 4.5 E-10 — Sampling scheduler (weekly smoothing + daily budget guard)
@@ -409,8 +409,8 @@ Assumes **2 senior fullstack engineers + 1 designer (0.5) + 1 PM (0.5)**. Effort
 | PRD-10: flag off / relabel simulated AI-visibility + heatmap | S |
 | Mark existing rows `is_estimated`; exclude from all outputs | XS |
 | Remove or implement the 6 `pending` audit rows (interim: hide) | S |
-| Audit marketing/sales collateral for claims this page cannot back | XS |
-| Kick off Google OAuth scope change for GSC (long lead time) | XS |
+| Audit marketing/sales collateral for claims this page cannot back | XS — **complete 2026-08-15**; see `AEO_PHASE0_COLLATERAL_AUDIT_2026-08-15.md` |
+| Kick off Google OAuth scope change for GSC (long lead time) | XS — **complete**; code present and Google Cloud status verified 2026-08-15 |
 
 ### Phase 1 — Usable at launch (Week 3–14 · ~46 EW)
 
@@ -645,14 +645,14 @@ Each criterion is pass/fail and independently verifiable. Test IDs map to the fe
 
 | # | Risk | Severity | Mitigation |
 |---|---|---|---|
-| R1 | **Existing fabricated data has already been shown to paying customers** and possibly cited in our own marketing | Critical | Phase 0 remediation; audit collateral; decide on customer notification (Q6) |
+| R1 | **Existing fabricated data has already been shown to paying customers** and possibly cited in our own marketing | Critical | **Closed in Phase 0:** surfaces gated, provenance applied, customers contacted per Q6, repository collateral audited 2026-08-15 |
 | R2 | **Unit economics** (§6) — resolved to metered add-on; Gemini grounding rate now confirmed | Medium | Metered add-on decided (Q2); E-5 + E-9 remain Phase 1 gates. Gemini priced and unblocked (§6.4). Scheduling exposure **promoted out of this row into E-10** (§4.5) on 2026-08-05 — it is now a tracked build item on the Phase 1 critical path with its own acceptance criteria (#49–54), not a risk we are carrying. |
 | R3 | LLM API answers ≠ what consumers see in ChatGPT/Gemini apps (no memory, no personalization, different retrieval) | High | Disclose in F7.10; market as "engine sampling", never "what your customer saw"; never automate consumer UIs (ToS) |
 | R4 | Sampling noise generates false alerts and destroys trust a second time | High | F1.13 repeat sampling + F8.8 significance gating, both required before alerts go live |
 | R5 | SERP/AIO vendor concentration (price hike, shutdown, blocking) | High | E-1 adapter abstraction; qualify a second vendor pre-GA |
 | R6 | Scope is ~78 EW for Phase 1 + 2 against a small team | High | Phase 1 is already cut to the minimum honest product; if the team is smaller than assumed, cut engines (ship Perplexity + Gemini + AIO only) before cutting integrity work |
 | R7 | Crawler IP reputation / getting blocked by customer WAFs | Medium | Documented user-agent, verifiable IP range, published crawler docs page, per-host politeness |
-| R8 | GSC OAuth scope expansion requires Google re-verification | Medium | Submit in Phase 0 week 1 |
+| R8 | GSC OAuth scope expansion may require Google re-verification | Medium | **Closed 2026-08-15:** configured scopes appear under non-sensitive data access; Verification Center says additional data-access verification is not required |
 | R9 | Extraction model drift silently degrades accuracy | Medium | E-6 eval harness in CI, gating every prompt/model change |
 | R10 | Competitor feature velocity — these five ship monthly | Medium | Re-baseline the matrix at each phase boundary; our moat is GBP + review data, not feature count |
 | R11 | Multi-location AEO reporting is unsolved by competitors *because* it is hard (identity disambiguation across locations) | Medium | Phase 2 (F7.9), after single-location identity matching is proven |
@@ -670,7 +670,7 @@ Each criterion is pass/fail and independently verifiable. Test IDs map to the fe
 | **Q2** | Pricing & gating | **Credit-metered add-on**, base allowance on Professional | E-5 + F4.9 locked into Phase 1. Meter by (prompt × engine × run) with **per-engine weighting**, not prompt count (§6.2 finding 3). Stripe metered-billing SKUs are a new Phase 1 dependency — not in the current `STRIPE_*` env set. |
 | **Q3** | Paid data budget & vendors | **Approved; vendors recommended in §6.1** | Primary: **DataForSEO** (standard queue, `load_async_ai_overview`, Maps `location_coordinate` for the grid). Secondary qualified behind E-1: **SerpApi**. Engines: Perplexity Sonar + OpenAI Responses/web_search + Vertex Gemini in Phase 1; Anthropic in Phase 2. **Vertex grounding quote received 2026-08-05** — 10,000 prompts/day free on 2.5 Pro, then $35/1,000; Gemini pinned to `gemini-2.5-pro` and unblocked (§6.4). DataForSEO, OpenAI and Perplexity rates remain list-price estimates pending contracts. |
 | **Q4** | Team & deadline | **2 senior fullstack + 0.5 design + 0.5 PM; Phase 1 in 12 weeks after Phase 0** | Roadmap in §5 stands unchanged. |
-| **Q6** | Customer notification for the simulated data | **No separate written notice** | The 5 affected accounts were contacted by phone and updated on 2026-08-05, the same day the gate shipped. Recorded as reported by the product owner; not independently verified from this side. Closes the last Phase 0 open item. See §9.1 for what this unblocks. |
+| **Q6** | Customer notification for the simulated data | **No separate written notice** | The 5 affected accounts were contacted by phone and updated on 2026-08-05, the same day the gate shipped. Recorded as reported by the product owner; not independently verified from this side. The separate repository collateral audit closed on 2026-08-15. |
 
 ### 9.2 Still open
 
@@ -709,8 +709,8 @@ Integrity remediation is complete. `pnpm typecheck` clean, 233/233 tests pass, `
 
 - **No data purge.** Estimated rows are marked, not deleted, pending the Q6 decision on customer notification. Purge is a one-line follow-up once that is settled.
 - **Geo-grid schema** (`lat`, `lng`, `grid_row`, `grid_col`, `place_id_found`) is Phase 1 / PRD-5, not Phase 0.
-- **Marketing collateral audit** is a content task, not a code change — still open, and it is on the Phase 0 checklist in §5.
-- **GSC OAuth scope change** must be submitted by a human with Google Cloud console access. Long lead time; start now.
+- **Marketing collateral audit completed 2026-08-15.** Unsupported AI visibility product positioning, AI Overview causation, and undisclosed ranking formulas were removed or qualified. Evidence and scope: `docs/AEO_PHASE0_COLLATERAL_AUDIT_2026-08-15.md`.
+- **GSC OAuth scope readiness verified 2026-08-15.** `webmasters` and `webmasters.readonly` are configured in Google Auth Platform data access; the Verification Center reports no additional data-access verification is required. Product code requests only `webmasters.readonly` through incremental consent.
 
 ### 10.1 Production migration applied — 2026-08-05
 
@@ -892,7 +892,7 @@ A scripted version of step 2 is not currently buildable: it needs a direct Postg
 
 **Decision: no separate written notice.** The 5 affected accounts were contacted by phone and updated the same day the gate shipped. Recorded as reported by the product owner; not independently verified from the engineering side.
 
-This closes the last open Phase 0 item. Phase 0 is complete: gate shipped and verified in production, provenance columns applied, 112 rows marked, affected customers spoken to.
+This closed the customer-notification item: gate shipped and verified in production, provenance columns applied, 112 rows marked, and affected customers spoken to. The remaining repository collateral audit was completed on 2026-08-15, making Phase 0 complete within the repository boundary.
 
 ### What this unblocks, and a recommendation against doing it
 

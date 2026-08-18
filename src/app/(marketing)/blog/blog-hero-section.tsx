@@ -15,7 +15,7 @@ export function BlogHeroSection() {
                         Review management &amp; local SEO<br />for business owners
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-2xl">
-                        Practical guides to get more Google reviews, respond professionally, rank higher in local search, and protect your reputation.
+                        Practical guides to get more Google reviews, respond professionally, strengthen local search fundamentals, and protect your reputation.
                     </p>
                 </div>
             </section>

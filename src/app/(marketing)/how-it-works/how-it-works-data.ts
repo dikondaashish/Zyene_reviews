@@ -84,9 +84,9 @@ export const STEPS = [
         iconColor: "text-sync-action",
         accentColor: "border-l-sync-action",
         title: "Grow",
-        headline: "Track results, beat competitors, rank higher on Google",
+        headline: "Track results, compare competitors, improve your Google presence",
         description:
-            "Your analytics dashboard tracks review volume, average rating, response rate, and keyword performance over time. The competitor tracker shows how you compare to nearby businesses. The Local SEO dashboard highlights exactly which keywords customers use to find you — and how to improve your ranking.",
+            "Your analytics dashboard tracks review volume, average rating, response rate, and keyword performance over time. The competitor tracker shows how you compare to nearby businesses. The Local SEO dashboard highlights the search terms customers use to find you and the profile details you can improve.",
         bullets: [
             "Review growth charts and rating trend lines",
             "Competitor ranking comparison by location",

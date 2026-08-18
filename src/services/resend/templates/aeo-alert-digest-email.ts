@@ -2,6 +2,7 @@ export interface AeoAlertDigestItem {
     severity: "critical" | "high" | "medium" | "low";
     title: string;
     detail: string;
+    evidenceUrl: string;
 }
 
 interface AeoAlertDigestProps {
@@ -40,6 +41,9 @@ export function aeoAlertDigestEmail({
                 </table>
                 <p style="margin: 4px 0 0; font-size: 15px; font-weight: 600; color: #18181b;">${alert.title}</p>
                 <p style="margin: 4px 0 0; font-size: 14px; line-height: 1.5; color: #52525b;">${alert.detail}</p>
+                <p style="margin: 8px 0 0; font-size: 13px;">
+                    <a href="${alert.evidenceUrl}" style="color: #2563eb; text-decoration: underline;">View evidence</a>
+                </p>
             </div>`
         )
         .join("");

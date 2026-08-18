@@ -43,7 +43,7 @@ export type ReserveRequest = {
     requestedUnits: number;
     freePerDay: number;
     overageAuthorised: boolean;
-    runId: string;
+    runId?: string;
 };
 
 export interface ReservationStore {
@@ -124,6 +124,7 @@ export interface SampleStore {
         engineId: AnswerEngineId;
         attempt: number;
         result: EngineSampleResult;
+        costMicroUsd: number;
         /**
          * Where the verbatim answer was stored, or null when none was — a failed
          * upload, or a sample with no prose to store. Null must read downstream

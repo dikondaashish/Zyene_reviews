@@ -3,7 +3,14 @@ import type { Database, Json } from "@/lib/db/supabase/database.types";
 
 type Admin = SupabaseClient<Database>;
 
-export type AlertType = "visibility_drop" | "visibility_gain" | "technical_blocker" | "run_failure";
+export type AlertType =
+    | "visibility_drop"
+    | "visibility_gain"
+    | "technical_blocker"
+    | "run_failure"
+    | "citation_lost"
+    | "citation_gained"
+    | "rank_drop";
 export type AlertSeverity = "critical" | "high" | "medium" | "low";
 
 /**
@@ -18,6 +25,12 @@ const COOLDOWN_DAYS: Record<AlertType, number> = {
     visibility_gain: 6,
     technical_blocker: 3,
     run_failure: 1,
+    // Citations and local rank are measured on the same weekly cadence as
+    // visibility, so they share its 6-day window: long enough that one weekly
+    // cycle cannot fire the same alert twice.
+    citation_lost: 6,
+    citation_gained: 6,
+    rank_drop: 6,
 };
 
 export type NewAlertInput = {
@@ -27,6 +40,8 @@ export type NewAlertInput = {
     severity: AlertSeverity;
     promptId: string | null;
     engineId: string | null;
+    /** Set only for per-URL alerts (F8.2); null for everything else. */
+    pageUrl?: string | null;
     title: string;
     detail: string;
     evidence: Json;
@@ -48,6 +63,10 @@ export class SupabaseAlertStore {
         // SQL NULL != NULL — .eq(x, null) matches nothing, so a null key needs .is().
         query = input.promptId === null ? query.is("prompt_id", null) : query.eq("prompt_id", input.promptId);
         query = input.engineId === null ? query.is("engine_id", null) : query.eq("engine_id", input.engineId);
+        // Part of the cooldown identity: without it, one page losing a citation
+        // would suppress the alert for every other page for six days.
+        const pageUrl = input.pageUrl ?? null;
+        query = pageUrl === null ? query.is("page_url", null) : query.eq("page_url", pageUrl);
 
         const { data, error } = await query.maybeSingle();
         if (error) throw new Error(`wasRecentlyFired check failed: ${error.message}`);
@@ -67,6 +86,7 @@ export class SupabaseAlertStore {
                 severity: input.severity,
                 prompt_id: input.promptId,
                 engine_id: input.engineId,
+                page_url: input.pageUrl ?? null,
                 title: input.title,
                 detail: input.detail,
                 evidence: input.evidence,

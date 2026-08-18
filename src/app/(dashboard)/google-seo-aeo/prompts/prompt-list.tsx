@@ -32,7 +32,12 @@ export function PromptList({
         const result = await setPromptActive({ promptId: prompt.id, isActive: !prompt.isActive });
         setPending(null);
         if (!result.ok) {
-            toast.error(result.error);
+            toast.error(result.error, result.upgradeHref ? {
+                action: {
+                    label: "Upgrade",
+                    onClick: () => window.location.assign(result.upgradeHref as string),
+                },
+            } : undefined);
             return;
         }
         toast.success(
@@ -57,19 +62,70 @@ export function PromptList({
         return (
             <p className="py-8 text-center text-sm text-muted-foreground">
                 No prompts yet. Add the questions a customer would actually ask an AI assistant
-                when looking for a business like yours.
+                when looking for a business like yours, or generate a starting set from your
+                Google category.
             </p>
         );
     }
 
+    // F4.3: grouped by cluster, with ungrouped prompts last so a manually typed
+    // prompt is never hidden above a fold of generated ones.
+    const groups = new Map<string, PromptRow[]>();
+    for (const prompt of prompts) {
+        const key = prompt.clusterName ?? UNGROUPED;
+        const bucket = groups.get(key);
+        if (bucket) bucket.push(prompt);
+        else groups.set(key, [prompt]);
+    }
+    const ordered = [...groups.entries()].sort(([a], [b]) =>
+        a === UNGROUPED ? 1 : b === UNGROUPED ? -1 : a.localeCompare(b)
+    );
+
+    return (
+        <div className="space-y-6">
+            {ordered.map(([clusterName, rows]) => (
+                <section key={clusterName}>
+                    {groups.size > 1 ? (
+                        <h3 className="text-muted-foreground mb-1 text-xs font-semibold tracking-wide uppercase">
+                            {clusterName}
+                            <span className="ml-2 font-normal normal-case">
+                                {rows.filter((r) => r.isActive).length} of {rows.length} active
+                            </span>
+                        </h3>
+                    ) : null}
+                    <PromptRows
+                        rows={rows}
+                        pending={pending}
+                        onToggle={toggle}
+                        onRemove={remove}
+                    />
+                </section>
+            ))}
+        </div>
+    );
+}
+
+const UNGROUPED = "Ungrouped";
+
+function PromptRows({
+    rows,
+    pending,
+    onToggle,
+    onRemove,
+}: {
+    rows: PromptRow[];
+    pending: string | null;
+    onToggle: (prompt: PromptRow) => void;
+    onRemove: (prompt: PromptRow) => void;
+}) {
     return (
         <ul className="divide-y">
-            {prompts.map((prompt) => (
+            {rows.map((prompt) => (
                 <li key={prompt.id} className="flex items-start gap-4 py-4">
                     <Switch
                         checked={prompt.isActive}
                         disabled={pending === prompt.id}
-                        onCheckedChange={() => toggle(prompt)}
+                        onCheckedChange={() => onToggle(prompt)}
                         aria-label={prompt.isActive ? "Pause prompt" : "Activate prompt"}
                     />
 
@@ -110,7 +166,7 @@ export function PromptList({
                         variant="ghost"
                         size="sm"
                         disabled={pending === prompt.id}
-                        onClick={() => remove(prompt)}
+                        onClick={() => onRemove(prompt)}
                         aria-label="Delete prompt"
                     >
                         <Trash2 className="h-4 w-4" />

@@ -15,8 +15,14 @@ const AEO_ELIGIBLE_PLAN_IDS = Object.keys(PLAN_CREDIT_GRANTS_MICRO_USD);
  * against data that already exists; there is no external call to spread
  * load against, so there is nothing E-10's slot mechanism would protect.
  *
- * NOT registered with Vercel Cron and AEO_LIVE_ALERTING is unset — same
- * two-gate posture as E-3's crawler before it goes live.
+ * Registered daily at 09:00 UTC — after the 1–8 UTC sampling window closes,
+ * so detection reads the night's fresh samples rather than racing them. The
+ * digest runs an hour later, at 10:00, giving detection room to finish before
+ * anything is emailed.
+ *
+ * AEO_LIVE_ALERTING remains the separate gate, checked inside the alert
+ * worker: with it unset this cron fans out events that create no alerts and
+ * send no email.
  */
 export async function GET(request: Request) {
     if (!isAuthorizedCronRequest(request)) {

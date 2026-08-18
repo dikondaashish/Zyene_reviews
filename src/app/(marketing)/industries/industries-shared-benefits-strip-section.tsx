@@ -19,7 +19,7 @@ const BENEFITS = [
     {
         icon: MapPin,
         title: "Local SEO Dashboard",
-        desc: "GBP keyword performance data to rank higher on Google Maps.",
+        desc: "GBP keyword performance data and profile guidance for Google Maps.",
     },
 ] as const;
 

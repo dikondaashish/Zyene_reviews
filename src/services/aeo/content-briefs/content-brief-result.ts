@@ -34,8 +34,8 @@ export function parseContentBriefPayload(parsed: unknown): ContentBriefResult {
               .slice(0, 8)
         : [];
 
-    if (editItems.length === 0 && faqItems.length === 0) {
-        throw new Error("Model returned no usable edit items or FAQ items");
+    if (editItems.length < 3) {
+        throw new Error("Model must return at least three concrete edit items");
     }
 
     return { editItems, faqItems };

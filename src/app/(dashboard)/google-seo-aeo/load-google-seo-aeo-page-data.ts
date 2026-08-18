@@ -4,7 +4,8 @@ import { redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { getGoogleSearchKeywords, getGooglePerformanceTotals } from "@/services/google/performance-queries";
 import { getValidGoogleToken } from "@/services/google/sync-service";
-import { getGoogleLocation } from "@/services/google/listing-information";
+import { getGoogleLocation, type GoogleLocationFull } from "@/services/google/listing-information";
+import { fetchGbpAuditSignals } from "@/services/aeo/technical-audit/fetch-gbp-audit-signals";
 import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
 import { calcKeywordCoverage } from "./google-seo-aeo-audit-utils";
 import { buildGoogleSeoAeoAudits } from "./google-seo-aeo-build-audits";
@@ -31,7 +32,7 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
 
     const { data: platform } = await supabase
         .from("review_platforms")
-        .select("id, platform, google_location_id, granted_scopes")
+        .select("id, platform, google_location_id, google_account_id, granted_scopes")
         .eq("business_id", businessId)
         .eq("platform", "google")
         .maybeSingle();
@@ -42,7 +43,7 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
     const start30 = new Date(now);
     start30.setDate(start30.getDate() - 29);
 
-    const [visibleRollupMap, perfTotals, keywords, google30TotalRes, google30RespondedRes, placeActionsRes, aiRunRes, heatmapRunRes] =
+    const [visibleRollupMap, perfTotals, keywords, google30TotalRes, google30RespondedRes, aiRunRes, heatmapRunRes] =
         await Promise.all([
             fetchVisibleReviewRollupsByBusinessIds(supabase, [businessId]),
             getGooglePerformanceTotals(supabase, businessId, start30, now),
@@ -62,10 +63,6 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
                 .eq("is_visible", true)
                 .eq("response_status", "responded")
                 .gte("review_date", start30.toISOString()),
-            supabase
-                .from("gbp_place_action_links")
-                .select("id", { count: "exact", head: true })
-                .eq("business_id", businessId),
             supabase.from("google_seo_ai_visibility_runs")
                 .select("id, query, status, created_at")
                 .eq("business_id", businessId)
@@ -94,16 +91,27 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
         );
     }
 
-    let listingDescription = "";
+    // One location read serves both the description check and the three
+    // location-backed GBP checks (services, descriptions, service area).
+    let googleAccessToken: string | null = null;
+    let googleLocation: GoogleLocationFull | null = null;
     try {
         const { accessToken } = await getValidGoogleToken(platform.id);
+        googleAccessToken = accessToken ?? null;
         if (accessToken && platform.google_location_id) {
-            const loc = await getGoogleLocation(accessToken, platform.google_location_id);
-            listingDescription = loc.profile?.description?.trim() || "";
+            googleLocation = await getGoogleLocation(accessToken, platform.google_location_id);
         }
     } catch {
-        // Non-fatal for MVP: keep description empty and fail this check.
+        // Non-fatal: the GBP checks report `unavailable` rather than failing.
     }
+    const listingDescription = googleLocation?.profile?.description?.trim() || "";
+
+    const gbpSignals = await fetchGbpAuditSignals({
+        accessToken: googleAccessToken,
+        accountId: platform.google_account_id,
+        locationId: platform.google_location_id,
+        location: googleLocation,
+    });
 
     const topKeywordList = keywords.slice(0, 12).reduce<string[]>((acc, k) => {
         if (k.keyword) acc.push(k.keyword);
@@ -118,7 +126,8 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
         replyRate,
         responded30dCount,
         perfTotals,
-        actionLinkCount: placeActionsRes.count ?? 0,
+        gbpSignals,
+        topKeywords: topKeywordList,
     });
 
     const latestAiRun = aiRunRes.data as
@@ -128,12 +137,16 @@ export async function loadGoogleSeoAeoPageData(): Promise<GoogleSeoAeoLoadResult
         | { id: string; keyword: string; status: string; created_at: string }
         | null;
 
-    const secondary = await fetchGoogleSeoAeoSecondaryData(businessId, latestAiRun, latestHeatmapRun);
-    // Read through the caller's RLS-scoped client, not the admin one: the
-    // org-scoped policies on aeo_samples are the isolation boundary here.
-    const aeoVisibility = await loadAeoVisibility(supabase, businessId);
-    const searchConsole = await loadSearchConsoleSection(businessId, platform.id, platform.granted_scopes);
-    const shareOfVoice = await loadShareOfVoice(supabase, businessId);
+    // These four share no data, so they run together rather than stacking four
+    // round-trips on top of the Google calls above.
+    const [secondary, aeoVisibility, searchConsole, shareOfVoice] = await Promise.all([
+        fetchGoogleSeoAeoSecondaryData(businessId, latestAiRun, latestHeatmapRun),
+        // Read through the caller's RLS-scoped client, not the admin one: the
+        // org-scoped policies on aeo_samples are the isolation boundary here.
+        loadAeoVisibility(supabase, businessId),
+        loadSearchConsoleSection(businessId, platform.id, platform.granted_scopes),
+        loadShareOfVoice(supabase, businessId),
+    ]);
 
     return {
         kind: "ok",

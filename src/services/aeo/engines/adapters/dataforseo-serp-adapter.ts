@@ -151,12 +151,9 @@ export class DataForSeoSerpAdapter implements AnswerEngineAdapter {
 }
 
 /**
- * DataForSEO takes either a coordinate or a named location, and a coordinate is
- * what the geo-grid needs. Falls back to a name, then to the country, so a
- * missing city degrades to a wider sample rather than an error.
- */
-/**
  * DataForSEO takes exactly one location field, and is strict about its shape.
+ *
+ * A coordinate wins when present — that is what the geo-grid (F1.12) supplies.
  *
  * `location_name` must be fully qualified — "Kansas City,Missouri,United States".
  * The bare city this used to send is rejected with 40501, so every Google sample

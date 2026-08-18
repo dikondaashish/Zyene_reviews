@@ -16,14 +16,15 @@ import { loadDueCrawlBusinesses } from "@/services/aeo/scheduler/load-due-crawl-
  * This route decides WHO is due; aeoCrawlWorker decides whether it may
  * actually run (isLiveCrawlingEnabled()) and does the crawling.
  *
- * NOT registered with Vercel Cron and AEO_LIVE_CRAWLING is unset, so this
- * route is reachable but nothing calls it, and even a stray manual call
- * would fan out events the worker refuses to act on. Both are separate,
- * deliberate steps — same posture E-10's own scheduler had before its
- * registration, and E-9's metered billing had before AEO_METERED_BILLING_LIVE
- * was flipped. Going live means real HTTP requests against real customer
- * domains; that decision belongs to whoever flips both switches, not to this
- * commit.
+ * Registered in vercel.json on the same `0 1-8 * * *` band as the sampling
+ * scheduler, because crawl-slot.ts draws its hour from the same 1–8 UTC
+ * window — a narrower band would strand every business whose slot fell
+ * outside it, silently and permanently.
+ *
+ * Registration is NOT the same as going live. AEO_LIVE_CRAWLING remains the
+ * gate, checked inside aeoCrawlWorker: with it unset this cron fans out
+ * events the worker refuses to act on, so no customer domain is ever
+ * fetched. Two switches, deliberately independent.
  */
 export async function GET(request: Request) {
     if (!isAuthorizedCronRequest(request)) {

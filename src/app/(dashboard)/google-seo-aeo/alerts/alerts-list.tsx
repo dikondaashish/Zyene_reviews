@@ -15,6 +15,12 @@ const SEVERITY_STYLE: Record<string, string> = {
     low: "bg-muted text-muted-foreground border-0",
 };
 
+const ALERT_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "UTC",
+});
+
 export function AlertsList({ alerts }: { alerts: AlertRow[] }) {
     const [mutingId, setMutingId] = React.useState<string | null>(null);
     const [locallyMuted, setLocallyMuted] = React.useState<Set<string>>(new Set());
@@ -44,16 +50,19 @@ export function AlertsList({ alerts }: { alerts: AlertRow[] }) {
             {alerts.map((alert) => {
                 const muted = alert.mutedAt !== null || locallyMuted.has(alert.id);
                 return (
-                    <li key={alert.id} className="flex items-start gap-3 py-4">
+                    <li id={`alert-${alert.id}`} key={alert.id} className="flex scroll-mt-24 items-start gap-3 py-4">
                         <Badge className={SEVERITY_STYLE[alert.severity] ?? SEVERITY_STYLE.low}>
                             {alert.severity}
                         </Badge>
                         <div className="min-w-0 flex-1">
                             <p className="text-sm font-medium">{alert.title}</p>
                             <p className="mt-0.5 text-sm text-muted-foreground">{alert.detail}</p>
-                            <p className="mt-1 text-xs text-muted-foreground">
-                                {new Date(alert.createdAt).toLocaleString()}
-                            </p>
+                            <time
+                                className="mt-1 block text-xs text-muted-foreground"
+                                dateTime={alert.createdAt}
+                            >
+                                {ALERT_DATE_FORMATTER.format(new Date(alert.createdAt))} UTC
+                            </time>
                         </div>
                         {!muted ? (
                             <Button

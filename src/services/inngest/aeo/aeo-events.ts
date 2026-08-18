@@ -96,13 +96,16 @@ export type AeoAlertCheckRequestedEvent = {
  */
 export type AeoGeoGridRequestedEvent = {
     data: {
+        runId: string;
         businessId: string;
+        organizationId: string;
         keyword: string;
         gridSize: 5 | 7 | 9;
         spacingMeters: number;
         centerLat: number;
         centerLng: number;
+        placeId: string;
+        estimatedCostMicroUsd: number;
         languageCode?: string;
     };
 };
-

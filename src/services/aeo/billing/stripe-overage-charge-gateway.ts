@@ -3,7 +3,15 @@ import { logger } from "@/lib/logger";
 import { stripe } from "@/services/stripe/client";
 import type { OverageChargeGateway, OverageChargeResult } from "./ports";
 
-/** price_1U2HMAIiQQIaqDALvgvid1Us — "AEO Test Overage", created inactive 2026-08-08. */
+/**
+ * price_1U2HMAIiQQIaqDALvgvid1Us — "AEO Test Overage", $2.50 one-time.
+ *
+ * Created inactive on 2026-08-08; verified ACTIVE in livemode on 2026-08-11.
+ * It is no longer a gate. The only remaining switch in front of a real charge
+ * is AEO_METERED_BILLING_LIVE, plus billTest()'s own refusal to bill an org
+ * that has no credit-grant history. Anyone reasoning about billing safety from
+ * this comment should count one gate here, not two.
+ */
 export const AEO_OVERAGE_PRICE_ID = "price_1U2HMAIiQQIaqDALvgvid1Us";
 
 /**

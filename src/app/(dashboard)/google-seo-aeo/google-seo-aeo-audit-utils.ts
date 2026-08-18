@@ -1,9 +1,25 @@
+/**
+ * `pending` means we never built the check. `unavailable` means we built it,
+ * asked Google, and got nothing back this load. `not-applicable` means the
+ * check was run and genuinely does not apply to this business — a storefront
+ * that never travels to customers has no service area to declare.
+ *
+ * The three are kept distinct because only `pending` is a gap in the product;
+ * the other two are real audit outcomes. None of them count toward the score.
+ */
+export type AuditStatus = "pass" | "fail" | "pending" | "unavailable" | "not-applicable";
+
 export type AuditItem = {
     id: string;
     label: string;
-    status: "pass" | "fail" | "pending";
+    status: AuditStatus;
     detail: string;
 };
+
+/** Only pass/fail rows are scored; everything else is reported separately. */
+export function isScoredAudit(item: AuditItem): boolean {
+    return item.status === "pass" || item.status === "fail";
+}
 
 export type AuditFixAction = {
     href: string;

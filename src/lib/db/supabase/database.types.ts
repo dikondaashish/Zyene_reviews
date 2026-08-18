@@ -26,6 +26,7 @@ export type Database = {
           id: string
           muted_at: string | null
           organization_id: string
+          page_url: string | null
           prompt_id: string | null
           severity: string
           title: string
@@ -41,6 +42,7 @@ export type Database = {
           id?: string
           muted_at?: string | null
           organization_id: string
+          page_url?: string | null
           prompt_id?: string | null
           severity: string
           title: string
@@ -56,6 +58,7 @@ export type Database = {
           id?: string
           muted_at?: string | null
           organization_id?: string
+          page_url?: string | null
           prompt_id?: string | null
           severity?: string
           title?: string
@@ -391,6 +394,7 @@ export type Database = {
         Row: {
           business_id: string
           created_at: string
+          error_message: string | null
           grid_col: number
           grid_row: number
           id: string
@@ -399,11 +403,13 @@ export type Database = {
           place_id_found: string | null
           rank_position: number | null
           run_id: string
+          search_status: string
           top_competitors: Json
         }
         Insert: {
           business_id: string
           created_at?: string
+          error_message?: string | null
           grid_col: number
           grid_row: number
           id?: string
@@ -412,11 +418,13 @@ export type Database = {
           place_id_found?: string | null
           rank_position?: number | null
           run_id: string
+          search_status?: string
           top_competitors?: Json
         }
         Update: {
           business_id?: string
           created_at?: string
+          error_message?: string | null
           grid_col?: number
           grid_row?: number
           id?: string
@@ -425,6 +433,7 @@ export type Database = {
           place_id_found?: string | null
           rank_position?: number | null
           run_id?: string
+          search_status?: string
           top_competitors?: Json
         }
         Relationships: [
@@ -446,44 +455,56 @@ export type Database = {
       }
       aeo_geo_grid_runs: {
         Row: {
+          actual_cost_micro_usd: number | null
+          billed_units: number
           business_id: string
           center_lat: number
           center_lng: number
           completed_at: string | null
           created_at: string
           error_message: string | null
+          estimated_cost_micro_usd: number
           grid_size: number
           id: string
           is_estimated: boolean
           keyword: string
+          requested_units: number
           spacing_meters: number
           status: string
         }
         Insert: {
+          actual_cost_micro_usd?: number | null
+          billed_units?: number
           business_id: string
           center_lat: number
           center_lng: number
           completed_at?: string | null
           created_at?: string
           error_message?: string | null
+          estimated_cost_micro_usd?: number
           grid_size: number
           id?: string
           is_estimated?: boolean
           keyword: string
+          requested_units?: number
           spacing_meters: number
           status?: string
         }
         Update: {
+          actual_cost_micro_usd?: number | null
+          billed_units?: number
           business_id?: string
           center_lat?: number
           center_lng?: number
           completed_at?: string | null
           created_at?: string
           error_message?: string | null
+          estimated_cost_micro_usd?: number
           grid_size?: number
           id?: string
           is_estimated?: boolean
           keyword?: string
+          requested_units?: number
           spacing_meters?: number
           status?: string
         }
@@ -3553,6 +3574,18 @@ export type Database = {
       }
       aeo_reset_credit_grant: {
         Args: { p_granted_micro_usd: number; p_organization_id: string }
+        Returns: undefined
+      }
+      apply_aeo_quota_ledger_delta: {
+        Args: {
+          p_billable_delta: number
+          p_cost_delta: number
+          p_engine_id: string
+          p_organization_id: string
+          p_overage_override: boolean
+          p_sampled_delta: number
+          p_usage_date: string
+        }
         Returns: undefined
       }
       bulk_add_customer_tags: {

@@ -50,7 +50,7 @@ export function PromptHeadToHead({ rows }: { rows: HeadToHeadRow[] }) {
                 </thead>
                 <tbody>
                     {rows.map((row) => (
-                        <tr key={row.sampleId} className="border-b last:border-0">
+                        <tr id={`engine-${row.engineId}`} key={row.sampleId} className="border-b last:border-0 scroll-mt-24">
                             <td className="py-2 capitalize">{row.engineId.replace(/_/g, " ")}</td>
                             <td className="py-2">
                                 {row.status !== "ok" ? (

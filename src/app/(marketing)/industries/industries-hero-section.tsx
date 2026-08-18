@@ -17,7 +17,7 @@ export function IndustriesHeroSection() {
                         <span className="text-primary">for your industry</span>
                     </h1>
                     <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">
-                        Every industry has unique challenges when it comes to online reputation. Zyene is tailored to help local businesses in each vertical grow their reviews, protect their reputation, and rank higher on Google Maps.
+                        Every industry has unique challenges when it comes to online reputation. Zyene helps local businesses grow their reviews, protect their reputation, and strengthen their presence on Google Maps.
                     </p>
                     <p className="text-sm text-muted-foreground mb-10">
                         <Link href="/es/industries" className="text-primary hover:underline font-medium">

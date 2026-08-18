@@ -159,18 +159,21 @@ class MemorySamples implements SampleStore {
     persisted: string[] = [];
     /** What the row recorded as its evidence pointer, keyed by unit. */
     paths = new Map<string, string | null>();
+    costs = new Map<string, number>();
     async persist(input: {
         runId: string;
         promptId: string;
         engineId: string;
         attempt: number;
         answerStoragePath: string | null;
+        costMicroUsd: number;
     }) {
         const key = `${input.runId}:${input.promptId}:${input.engineId}:${input.attempt}`;
         const already = this.persisted.includes(key);
         if (!already) {
             this.persisted.push(key);
             this.paths.set(key, input.answerStoragePath);
+            this.costs.set(key, input.costMicroUsd);
         }
         return { sampleId: key, alreadyPersisted: already };
     }
@@ -636,6 +639,45 @@ describe("a vendor that charges nothing for a call it answered", () => {
         // The catalog rate for google_serp is non-zero; charging it here would
         // invent an invoice the vendor never sent.
         expect(out.kind === "sampled" && out.costMicroUsd).toBe(0);
+    });
+});
+
+describe("sample cost evidence", () => {
+    it("persists the measured vendor cost on the sample row", async () => {
+        const adapter: AnswerEngineAdapter = {
+            id: "google_serp",
+            modelId: "dataforseo/google-serp",
+            isConfigured: () => true,
+            sample: async () =>
+                okSample({
+                    modelId: "dataforseo/google-serp",
+                    answerText: "A real SERP",
+                    citations: citationsUnavailable(),
+                    latencyMs: 20,
+                    costUnits: 1,
+                    reportedCostMicroUsd: 2_300,
+                }),
+        };
+        const inngest = new FakeInngest();
+        const samples = new MemorySamples();
+        const reservations = new MemoryReservations();
+
+        await inngest.run((step) =>
+            dispatchUnit(
+                { ...INPUT, engineId: "google_serp" },
+                {
+                    step,
+                    adapter,
+                    samples,
+                    reservations,
+                    answers: new MemoryAnswers(),
+                    billing: new MemoryBilling(),
+                }
+            )
+        );
+
+        const [key] = samples.persisted;
+        expect(samples.costs.get(key)).toBe(2_300);
     });
 });
 

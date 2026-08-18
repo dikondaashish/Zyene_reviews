@@ -1,9 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
-import { getValidGoogleToken } from "@/services/google/sync-service";
-import { getGoogleLocation } from "@/services/google/listing-information";
-import { computeGbpCompleteness, type GbpCompletenessResult } from "@/services/aeo/technical-audit/gbp-completeness";
 import { classifyFindingImpact, type FindingImpact } from "@/services/aeo/crawler/finding-prompt-linkage";
 import { isLiveCrawlingEnabled } from "@/lib/features/aeo-surfaces";
 import type { CrawlFindingRule, CrawlFindingSeverity } from "@/services/aeo/crawler/crawl-findings";
@@ -40,7 +37,6 @@ export type AuditPageData =
           liveCrawlingEnabled: boolean;
           latestRun: AuditRun | null;
           findings: AuditFinding[];
-          gbpCompleteness: GbpCompletenessResult;
       };
 
 export async function loadAuditPageData(): Promise<AuditPageData> {
@@ -138,23 +134,6 @@ export async function loadAuditPageData(): Promise<AuditPageData> {
         }));
     }
 
-    const { data: platform } = await supabase
-        .from("review_platforms")
-        .select("id, google_location_id")
-        .eq("business_id", businessId)
-        .eq("platform", "google")
-        .maybeSingle();
-
-    let gbpLocation = null;
-    if (platform?.id && platform.google_location_id) {
-        try {
-            const { accessToken } = await getValidGoogleToken(platform.id);
-            if (accessToken) gbpLocation = await getGoogleLocation(accessToken, platform.google_location_id);
-        } catch {
-            // gbpLocation stays null — computeGbpCompleteness reports unable_to_verify.
-        }
-    }
-
     return {
         kind: "ok",
         businessId,
@@ -162,6 +141,5 @@ export async function loadAuditPageData(): Promise<AuditPageData> {
         liveCrawlingEnabled: isLiveCrawlingEnabled(),
         latestRun,
         findings,
-        gbpCompleteness: computeGbpCompleteness(gbpLocation),
     };
 }

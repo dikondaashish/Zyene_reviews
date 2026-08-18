@@ -26,6 +26,7 @@ export type GeoGridOutcome = {
     averageRank: number | null;
     foundCells: number;
     totalCells: number;
+    searchedCells: number;
     coveragePercent: number;
     /** Cells whose search failed. These are NOT counted as "not found". */
     failedCells: number;
@@ -39,6 +40,8 @@ export type GeoGridInput = GridSpec & {
     languageCode?: string;
     /** Names the business is listed under. */
     aliases: readonly string[];
+    /** Google Business Profile metadata.placeId; authoritative identity. */
+    placeId: string;
     /** Bounds concurrent vendor calls; DataForSEO rate-limits per account. */
     concurrency?: number;
 };
@@ -70,13 +73,13 @@ export async function runGeoGrid(
             const point = points[index];
 
             const call = await callDataForSeo(
-                "/serp/google/organic/live/advanced",
+                "/serp/google/maps/live/advanced",
                 {
                     keyword: input.keyword,
                     language_code: input.languageCode ?? "en",
                     // The whole point of the grid: search FROM this coordinate.
-                    location_coordinate: `${point.lat},${point.lng}`,
-                    depth: 10,
+                    location_coordinate: `${point.lat},${point.lng},15z`,
+                    depth: 20,
                 },
                 { login: deps.login, password: deps.password },
                 deps.signal ?? AbortSignal.timeout(120_000)
@@ -94,6 +97,7 @@ export async function runGeoGrid(
                 cells[index] = {
                     ...point,
                     rankPosition: null,
+                    placeIdFound: null,
                     topCompetitors: [],
                     packSize: 0,
                     error: call.error ?? kind,
@@ -102,7 +106,11 @@ export async function runGeoGrid(
             }
 
             const pack = readLocalPack(call.result?.items ?? []);
-            cells[index] = { ...point, ...findLocalRank(pack, input.aliases), error: null };
+            cells[index] = {
+                ...point,
+                ...findLocalRank(pack, input.aliases, input.placeId),
+                error: null,
+            };
         }
     }
 
@@ -119,6 +127,8 @@ export async function runGeoGrid(
     return {
         cells,
         ...coverage,
+        totalCells: cells.length,
+        searchedCells: coverage.totalCells,
         failedCells,
         billedRequests,
         costMicroUsd,

@@ -25,6 +25,7 @@ export class SupabaseSampleStore implements SampleStore {
         engineId: AnswerEngineId;
         attempt: number;
         result: EngineSampleResult;
+        costMicroUsd: number;
         answerStoragePath: string | null;
     }): Promise<{ sampleId: string; alreadyPersisted: boolean }> {
         // A retried step must not create a second sample for the same unit.
@@ -53,6 +54,7 @@ export class SupabaseSampleStore implements SampleStore {
                 model_id: result.modelId,
                 status: result.status,
                 latency_ms: result.latencyMs,
+                cost_micro_usd: input.costMicroUsd,
                 // Written by the orchestrator from a real engine call, so never
                 // estimated. The column exists so a future heuristic source
                 // cannot be mistaken for this one.

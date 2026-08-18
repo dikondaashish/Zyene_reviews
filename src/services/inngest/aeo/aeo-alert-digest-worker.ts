@@ -51,18 +51,20 @@ export const aeoAlertDigestWorker = inngest.createFunction(
 
             if (recipients.length === 0) return null;
 
+            const appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? "https://app.zyenereviews.com").replace(/\/$/, "");
             const items: AeoAlertDigestItem[] = alerts.slice(0, MAX_ALERTS_PER_EMAIL).map((a) => ({
                 severity: a.severity as AeoAlertDigestItem["severity"],
                 title: a.title,
                 detail: a.detail,
+                evidenceUrl: alertEvidenceUrl(appUrl, a),
             }));
 
             const emailHtml = aeoAlertDigestEmail({
                 businessName: business.name ?? "your business",
                 alerts: items,
                 totalCount: alerts.length,
-                dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/google-seo-aeo`,
-                settingsUrl: `${process.env.NEXT_PUBLIC_APP_URL}/settings/notifications`,
+                dashboardUrl: `${appUrl}/google-seo-aeo/alerts`,
+                settingsUrl: `${appUrl}/settings/notifications`,
             });
 
             return {
@@ -93,3 +95,16 @@ export const aeoAlertDigestWorker = inngest.createFunction(
         return { sent: true, alertCount: digest.alertIds.length, recipientCount: digest.recipients.length };
     }
 );
+
+function alertEvidenceUrl(
+    appUrl: string,
+    alert: { id: string; alert_type: string; prompt_id: string | null; engine_id: string | null }
+): string {
+    if (alert.prompt_id) {
+        const engine = alert.engine_id ? `#engine-${encodeURIComponent(alert.engine_id)}` : "#evidence";
+        return `${appUrl}/google-seo-aeo/prompts/${alert.prompt_id}${engine}`;
+    }
+    if (alert.alert_type === "technical_blocker") return `${appUrl}/google-seo-aeo/audit`;
+    if (alert.alert_type === "rank_drop") return `${appUrl}/google-seo-aeo/geo-grid`;
+    return `${appUrl}/google-seo-aeo/alerts#alert-${alert.id}`;
+}

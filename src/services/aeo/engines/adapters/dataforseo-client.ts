@@ -17,6 +17,7 @@ export type DataForSeoItem = {
     snippet?: string;
     url?: string;
     domain?: string;
+    place_id?: string;
     /** local_pack entries carry these instead of url/domain. */
     rating?: { value?: number; votes_count?: number };
     /** ai_overview carries nested items and references. */

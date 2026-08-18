@@ -12,7 +12,7 @@ export const post1: BlogPost = {
     pillar: "google-reviews",
     pillarLabel: "Google Reviews",
     publishedAt: "2026-03-10",
-    dateModified: "2026-05-24",
+    dateModified: "2026-08-15",
     readMinutes: 8,
     author: { name: "Marcus Webb", role: "Local SEO Strategist" },
     metaTitle: "How to Get 50 Google Reviews in 30 Days",
@@ -27,7 +27,7 @@ export const post1: BlogPost = {
     faqs: [
         {
             question: "How many Google reviews do local businesses need to rank well?",
-            answer: "There is no fixed number, but many local businesses see stronger Google Maps visibility once they pass roughly 50 reviews with steady recency and owner responses. Below that, competitors with more volume often win Prominence even with similar star ratings.",
+            answer: "Google publishes no review-count threshold for ranking well. Review count and positive ratings can help local ranking, but relevance, distance, links, and other prominence signals also matter. Use fifty as an operating goal, not an algorithmic cutoff.",
         },
         {
             question: "What is a realistic conversion rate for review request SMS?",
@@ -48,14 +48,14 @@ export const post1: BlogPost = {
     ],
     body: [
         { type: "p", text: "Most local businesses accumulate reviews the same way — by accident. A happy customer happens to leave one. You get 1 or 2 a month if you're lucky. At that pace, reaching 50 reviews takes 2–4 years." },
-        { type: "p", text: "But 50 reviews isn't just a vanity milestone. It's the threshold where Google's local ranking algorithm starts giving your business significantly more prominence in map searches. Below it, you're competing with one hand tied behind your back." },
+        { type: "p", text: "Fifty reviews is a useful operating milestone because it requires a repeatable request process and gives prospective customers more experiences to evaluate. Google publishes no review-count threshold that unlocks a ranking change." },
         { type: "p", text: "Here is a proven, 30-day playbook to get from wherever you are today to 50 reviews — without gaming the system, without fake reviews, and without annoying your customers." },
         { type: "h2", text: "Why 50 Reviews Is a Threshold, Not Just a Number" },
         {
             type: "summary",
-            text: "Google Maps Prominence—driven by review count, ratings, recency, and owner replies—often improves once a profile reaches about 50 reviews. Consumer trust also jumps in that range, so the milestone affects both rankings and click-through from local search and AI summaries.",
+            text: "Google says review count and positive ratings can help local ranking, but it publishes no fifty-review threshold. Treat fifty as a practical process goal that builds a broader evidence base for customers, not as a guaranteed ranking trigger.",
         },
-        { type: "p", text: "Google uses three primary factors to rank local businesses in Maps: Relevance, Proximity, and Prominence. Reviews — their quantity, recency, and the presence of owner responses — directly feed into Prominence. Businesses with 50+ reviews typically appear in local 3-pack results at a significantly higher rate than businesses with fewer than 20." },
+        { type: "p", text: "Google describes local ranking in terms of relevance, distance, and prominence. It specifically says review count and positive ratings can help local ranking, while keeping the full weighting of those and other signals confidential." },
         { type: "p", text: "Beyond ranking, consumer behavior shifts dramatically around review count. Studies show that trust peaks at around 40–50 reviews and plateaus after 100. A business with 50 fresh reviews is perceived as credible by the large majority of consumers — similar to one with 500 reviews." },
         { type: "h2", text: "The Real Reason You Don't Have 50 Reviews Yet" },
         {
@@ -138,11 +138,11 @@ export const post2: BlogPost = {
     pillar: "google-reviews",
     pillarLabel: "Google Reviews",
     publishedAt: "2026-03-17",
-    dateModified: "2026-05-24",
+    dateModified: "2026-08-15",
     readMinutes: 7,
     author: { name: "Zyene Reviews Team", role: "Editorial" },
     metaTitle: "Why Google Reviews Matter More Than Ever in 2026",
-    metaDescription: "Google Reviews in 2026: how they impact local search rankings, AI Overviews, consumer trust, and revenue. A data-driven guide for local business owners.",
+    metaDescription: "Google Reviews in 2026: how they support local search visibility, customer trust, and better reputation operations for local businesses.",
     keywords: ["why google reviews matter", "google reviews 2026", "google reviews local seo", "google reviews importance"],
     relatedSlugs: ["how-to-get-50-google-reviews-in-30-days", "how-reviews-impact-local-map-pack-ranking", "birdeye-pricing-breakdown-2026"],
     internalLinks: [
@@ -153,7 +153,7 @@ export const post2: BlogPost = {
     faqs: [
         {
             question: "Do Google Reviews still matter for local SEO in 2026?",
-            answer: "Yes. Reviews feed Prominence in Google's local ranking model, influence AI Overview summaries for local queries, and shape whether searchers click your listing. For most owner-operated businesses, an active review profile is as important as accurate hours and categories on Google Business Profile.",
+            answer: "Yes. Google says review count and positive ratings can help local ranking, and reviews help customers evaluate a business. They are one part of prominence alongside links, articles, directories, and other information Google has about the business.",
         },
         {
             question: "How many Google reviews does a local business need?",
@@ -161,11 +161,11 @@ export const post2: BlogPost = {
         },
         {
             question: "Does responding to Google reviews help rankings?",
-            answer: "Google treats owner responses as an engagement signal on your Business Profile. Public replies also reassure shoppers reading one-star reviews. Aim to respond to every review, ideally within forty-eight hours and faster on negative feedback.",
+            answer: "Google recommends helpful replies because they show that you value customer feedback and can help your profile stand out. Google does not publish response rate as a separate ranking factor. Reply promptly because customers read the exchange, not to chase an undisclosed algorithm score.",
         },
         {
             question: "How do reviews affect Google AI Overviews for local searches?",
-            answer: "For queries like best dentist near me, Google's AI synthesis weighs review volume, ratings, and response activity alongside your profile data. Businesses with thin or stale review profiles are less likely to be summarized at the top of the results page.",
+            answer: "Google does not publish a review-specific weighting for AI Overviews. Its official guidance says normal SEO fundamentals still apply, Business Profile information should stay current, and inclusion is never guaranteed. Reviews remain useful customer evidence, but they are not a documented shortcut into an AI Overview.",
         },
         {
             question: "Can Zyene Reviews help manage all of this in one place?",
@@ -173,23 +173,23 @@ export const post2: BlogPost = {
         },
     ],
     body: [
-        { type: "p", text: "In 2022, Google Reviews were a useful marketing tool. In 2024, they became a ranking factor. In 2026, they are business infrastructure — as fundamental as your phone number or your hours of operation. If you don't actively manage your Google review profile, you are actively losing customers." },
+        { type: "p", text: "Google Reviews are both public customer evidence and one input into local prominence. Managing them consistently helps prospective customers evaluate your business and keeps your Business Profile useful, but no review tactic guarantees a particular search position." },
         { type: "p", text: "Here's what's changed and why it matters more now than it ever has." },
-        { type: "h2", text: "Google Reviews Now Power AI Overviews" },
+        { type: "h2", text: "Reviews Still Matter as Search Adds AI Features" },
         {
             type: "summary",
-            text: "Local AI Overviews lean heavily on Google Reviews—count, rating, recency, and whether you reply. Strong profiles can earn visibility above traditional blue links; weak ones rarely get quoted when someone asks for the best option nearby.",
+            text: "Google publishes no review-specific weighting for AI Overviews. Its guidance is to keep using sound SEO fundamentals and accurate Business Profile information; reviews support customer trust, but they do not guarantee inclusion in an AI response.",
         },
-        { type: "p", text: "One of the biggest changes in 2025–2026 was the expansion of Google's AI Overviews for local search queries. When someone searches 'best Italian restaurant near me' or 'dentist in Austin TX', Google's AI synthesizes information from multiple sources — and Google Reviews are among the most heavily weighted inputs." },
-        { type: "p", text: "Businesses with more reviews, higher ratings, and active owner responses are significantly more likely to appear in AI Overview summaries. This is free, high-visibility placement at the very top of the search results page — but it's only accessible to businesses with strong review profiles." },
+        { type: "p", text: "AI Overviews and AI Mode can surface links from multiple searches and sources. Google says there are no special optimization requirements beyond established Search fundamentals, including indexable, helpful content and accurate Business Profile information." },
+        { type: "p", text: "A healthy review profile still helps people assess your business wherever the profile appears. Keep the facts and reviews current, then measure actual Search Console traffic and manually inspect relevant AI results instead of assuming reviews caused inclusion." },
         { type: "h2", text: "The Local 3-Pack: Your Revenue Engine" },
         {
             type: "summary",
-            text: "The Maps 3-Pack captures a large share of local search clicks. Relevance and proximity are partly fixed; Prominence—driven by reviews and brand signals—is where owner-operators can still move the needle without buying ads.",
+            text: "The Maps 3-Pack can be an important discovery surface. Google says local results mainly depend on relevance, distance, and prominence; review count and positive ratings can help, but no single input determines placement.",
         },
-        { type: "p", text: "Google Maps' Local 3-Pack — the three business results that appear with a map in local search results — captures 44% of all clicks on local search result pages. Being in the 3-pack for your primary keywords is worth more than any paid ad campaign for most local businesses." },
-        { type: "p", text: "Google uses three factors to determine 3-pack rankings: Relevance (does your business match what they searched?), Proximity (how close are you?), and Prominence (how well-known and well-reviewed are you?). Reviews directly impact Prominence — and unlike Proximity, which you can't control, Prominence is entirely within your influence." },
-        { type: "tip", text: "A business with 80 reviews and a 4.6-star rating will typically outrank a closer competitor with 15 reviews and a 4.8-star rating in Google Maps. Review quantity matters as much as quality — up to a point." },
+        { type: "p", text: "Google Maps' Local 3-Pack presents three nearby businesses for a local query. Its value varies by market and query, so evaluate it with your own Business Profile performance and Search Console data rather than a universal click-share claim." },
+        { type: "p", text: "Google describes the main local ranking factors as relevance, distance, and prominence. Prominence can reflect reviews, ratings, links, articles, directories, and offline recognition, so it is only partly under a business owner's control." },
+        { type: "tip", text: "More reviews and positive ratings can help local ranking, but Google publishes no formula that lets review count override distance or relevance. Compare your own profile with nearby results instead of relying on a universal threshold." },
         { type: "h2", text: "Consumer Psychology: The Numbers Behind Reviews" },
         {
             type: "summary",
@@ -203,7 +203,7 @@ export const post2: BlogPost = {
                 ["A 1-star increase on Yelp leads to a 5–9% revenue increase", "Harvard Business School"],
                 ["53% of customers expect businesses to reply to reviews within a week", "ReviewTrackers"],
                 ["Only 13% of consumers will use a business with a 1–2 star rating", "BrightLocal"],
-                ["Reviews are the #1 local ranking factor in the Google Maps 3-pack", "Whitespark Local Ranking Factors"],
+                ["Review count and positive ratings can help local ranking", "Google Business Profile Help"],
             ],
         }},
         { type: "h2", text: "The Trust Gap: New vs. Established Businesses" },
@@ -213,19 +213,19 @@ export const post2: BlogPost = {
         },
         { type: "p", text: "One of the most underappreciated advantages of reviews is that they level the playing field between new businesses and established ones. A 2-year-old restaurant with 200 Google reviews can outcompete a 20-year-old institution with 30 reviews in terms of new customer acquisition." },
         { type: "p", text: "At the same time, this creates an urgent problem for new businesses: until you've built a review base, you're invisible to the majority of potential customers who are searching online. The faster you build your review profile, the faster you close the trust gap." },
-        { type: "h2", text: "Review Recency: Google's Freshness Signal" },
+        { type: "h2", text: "Review Recency and Customer Confidence" },
         {
             type: "summary",
-            text: "Google favors profiles that keep earning new reviews, not museums of feedback from years ago. Treat review collection as ongoing operations—roughly five to ten new reviews per month is a sensible baseline for many single-location businesses.",
+            text: "Recent reviews give customers a current view of the business. Treat collection as an ongoing operation, but set a pace that matches real customer volume rather than claiming a published Google freshness threshold.",
         },
-        { type: "p", text: "Having 200 reviews that are all 3 years old is less valuable than having 80 reviews with 30 in the last 90 days. Google's algorithm gives extra weight to recent reviews because they reflect the current state of your business — and because active businesses with new reviews signal to Google that they're worth promoting." },
+        { type: "p", text: "A profile whose reviews all describe service from years ago gives prospective customers less current evidence than one receiving steady, genuine feedback. Google does not publish a ninety-day review-weighting rule, so recency should be presented as a customer-trust and operating-health measure." },
         { type: "p", text: "This is why review management isn't a 'get to 50 and stop' project. It's an ongoing operation. Aim for a minimum of 5–10 new reviews per month to maintain freshness." },
-        { type: "h2", text: "Response Rate: The Overlooked Ranking Signal" },
+        { type: "h2", text: "Response Rate: A Customer Trust Signal" },
         {
             type: "summary",
             text: "Replying to reviews signals an actively managed Business Profile and shows prospects how you handle criticism. A thoughtful answer to a three-star review often persuades more buyers than another generic five-star thank-you.",
         },
-        { type: "p", text: "Google has confirmed that responding to reviews is a signal in their local ranking algorithm. A business that responds to 80% of its reviews is seen as more engaged and trustworthy than one that never responds — even if the number of reviews is similar." },
+        { type: "p", text: "Google recommends helpful replies because they show that a business values customer feedback and can help the profile stand out. It does not publish response rate as a separate ranking factor, so measure replies by customer coverage and response time rather than an invented ranking benefit." },
         { type: "p", text: "Beyond the algorithmic benefit, responses serve a practical purpose: they're public messages that show potential customers how you handle feedback. A gracious, specific response to a 3-star review often does more to convert a hesitant visitor than five more 5-star reviews." },
         { type: "tip", text: "Aim to respond to 100% of your reviews — positive and negative. For 5-star reviews, a short thank-you that mentions a specific detail is better than a generic 'Thanks for the 5 stars!'. For negative reviews, the 3-part framework works best: Acknowledge, Apologize, Offer to resolve." },
         { type: "h2", text: "What This Means for Your Business Today" },

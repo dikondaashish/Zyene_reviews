@@ -131,7 +131,6 @@ export async function dispatchUnit(
 
     const result = called.sample;
     const duplicateRisk = called.dispatchAttempts > 1;
-
     // STEP 3 — reconcile. The arithmetic lives in reconcileUnit, which is pure
     // and tested directly: it decides what the customer is charged.
     const { settledUnits, overrunUnits, billableUnits: billed, costMicroUsd } = reconcileUnit(
@@ -165,6 +164,7 @@ export async function dispatchUnit(
             engineId: input.engineId,
             attempt: input.attempt,
             result,
+            costMicroUsd,
             answerStoragePath,
         });
     });

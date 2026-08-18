@@ -2,6 +2,7 @@ import { ExternalLink } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DescriptionOptimizerCard } from "@/components/google-seo-aeo/description-optimizer-card";
+import { GbpContentOptimizerCard } from "@/components/google-seo-aeo/gbp-content-optimizer-card";
 import { EstimatedAeoSurfaces } from "@/components/google-seo-aeo/estimated-aeo-surfaces";
 import { areEstimatedAeoSurfacesEnabled } from "@/lib/features/aeo-surfaces";
 import type { GoogleSeoAeoContentProps } from "./google-seo-aeo-content-props";
@@ -13,6 +14,14 @@ export function GoogleSeoAeoBottomSection({ content }: { content: GoogleSeoAeoCo
                 <DescriptionOptimizerCard
                     businessId={content.businessId}
                     currentDescription={content.listingDescription}
+                    topKeywords={content.topKeywordList}
+                />
+            </div>
+
+            {/* F6.6 — the same optimizer idea extended past the description. */}
+            <div id="gbp-content-optimizer">
+                <GbpContentOptimizerCard
+                    businessId={content.businessId}
                     topKeywords={content.topKeywordList}
                 />
             </div>

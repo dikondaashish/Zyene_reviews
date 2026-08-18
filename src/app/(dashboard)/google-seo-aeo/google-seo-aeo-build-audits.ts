@@ -1,4 +1,6 @@
-import type { AuditItem } from "./google-seo-aeo-audit-utils";
+import { buildGbpAuditChecks } from "@/services/aeo/technical-audit/gbp-audit-checks";
+import type { GbpAuditSignals } from "@/services/aeo/technical-audit/gbp-audit-signals";
+import { isScoredAudit, type AuditItem } from "./google-seo-aeo-audit-utils";
 
 export function buildGoogleSeoAeoAudits(input: {
     listingDescription: string;
@@ -9,9 +11,12 @@ export function buildGoogleSeoAeoAudits(input: {
     replyRate: number;
     responded30dCount: number;
     perfTotals: { profileViews?: number; rawRowCount?: number } | null;
-    actionLinkCount: number;
+    /** Real Google Business Profile data behind the six GBP checks (F5.10). */
+    gbpSignals: GbpAuditSignals;
+    /** Tracked search keywords, used to score post keyword coverage. */
+    topKeywords: string[];
+    now?: Date;
 }): { audits: AuditItem[]; score: number; measuredCount: number } {
-    const auditMinServicesTarget = 25;
     const audits: AuditItem[] = [
         {
             id: "business-description",
@@ -50,49 +55,14 @@ export function buildGoogleSeoAeoAudits(input: {
                     : "fail",
             detail: `${input.perfTotals?.profileViews?.toLocaleString() || 0} profile views`,
         },
-        {
-            id: "images",
-            label: "# of Images",
-            status: "pending",
-            detail: "Not measured yet (Google media audit pending implementation).",
-        },
-        {
-            id: "post-frequency",
-            label: "Post Frequency",
-            status: "pending",
-            detail: "Not measured yet (Google posts audit pending implementation).",
-        },
-        {
-            id: "post-keywords",
-            label: "Post Keyword Optimization",
-            status: "pending",
-            detail: "Not measured yet (post keyword parsing pending implementation).",
-        },
-        {
-            id: "services-list",
-            label: "Action Links Coverage (proxy)",
-            status: input.actionLinkCount >= auditMinServicesTarget ? "pass" : "fail",
-            detail: `Detected ${input.actionLinkCount} place action links (proxy signal). Target: ${auditMinServicesTarget}+`,
-        },
-        {
-            id: "service-descriptions",
-            label: "Service Descriptions",
-            status: "pending",
-            detail: "Not measured yet (service description sync pending implementation).",
-        },
-        {
-            id: "service-area",
-            label: "Service Area",
-            status: "pending",
-            detail: "Not measured yet (service area distance audit pending implementation).",
-        },
+        ...buildGbpAuditChecks(input.gbpSignals, { keywords: input.topKeywords, now: input.now }),
     ];
 
-    const measured = audits.filter((a) => a.status !== "pending");
+    const scored = audits.filter(isScoredAudit);
     const score =
-        measured.length === 0
+        scored.length === 0
             ? 0
-            : Math.round((measured.filter((a) => a.status === "pass").length / measured.length) * 100);
+            : Math.round((scored.filter((a) => a.status === "pass").length / scored.length) * 100);
 
-    return { audits, score, measuredCount: measured.length };
+    return { audits, score, measuredCount: scored.length };
 }

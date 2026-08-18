@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { loadAuditPageData } from "./load-audit-page-data";
 import { AuditRunControls } from "./audit-run-controls";
 import { AuditFindingsList } from "./audit-findings-list";
-import { GbpCompletenessSection } from "../gbp-completeness-section";
 import { GoogleSeoAeoSubnav } from "../google-seo-aeo-subnav";
 
 export default async function TechnicalAuditPage() {
@@ -56,8 +55,6 @@ export default async function TechnicalAuditPage() {
                 latestRun={data.latestRun}
                 liveCrawlingEnabled={data.liveCrawlingEnabled}
             />
-
-            <GbpCompletenessSection result={data.gbpCompleteness} />
 
             <Card>
                 <CardHeader>
