@@ -86,6 +86,7 @@ export const aeoRunPlanner = inngest.createFunction(
                     businessId,
                     trigger,
                     scheduledFor: event.data.scheduledFor ?? null,
+                    expectedSamples: 0,
                 })
             );
             await step.run("close-empty-run", () =>
@@ -103,6 +104,7 @@ export const aeoRunPlanner = inngest.createFunction(
                 businessId,
                 trigger,
                 scheduledFor: event.data.scheduledFor ?? null,
+                expectedSamples: plan.dispatches.length,
             })
         );
 

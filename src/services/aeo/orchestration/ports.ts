@@ -107,6 +107,7 @@ export interface RunStore {
         businessId: string;
         trigger: "scheduled" | "manual" | "backfill";
         scheduledFor: string | null;
+        expectedSamples: number;
     }): Promise<{ runId: string }>;
 
     completeRun(

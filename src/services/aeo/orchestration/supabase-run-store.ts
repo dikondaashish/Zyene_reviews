@@ -88,6 +88,7 @@ export class SupabaseRunStore implements RunStore {
         businessId: string;
         trigger: "scheduled" | "manual" | "backfill";
         scheduledFor: string | null;
+        expectedSamples: number;
     }): Promise<{ runId: string }> {
         const { data, error } = await this.db
             .from("aeo_runs")
@@ -96,7 +97,8 @@ export class SupabaseRunStore implements RunStore {
                 trigger: input.trigger,
                 scheduled_for: input.scheduledFor,
                 status: "running",
-            })
+                expected_samples: input.expectedSamples,
+            } as never)
             .select("id")
             .single();
 

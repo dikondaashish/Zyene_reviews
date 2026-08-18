@@ -35,7 +35,7 @@ export const aeoDispatchWorker = inngest.createFunction(
          */
         concurrency: {
             key: "event.data.organizationId + '-' + event.data.engineId",
-            limit: 4,
+            limit: 1,
         },
         // Retries are safe by construction: the reservation is idempotent on
         // (runId, promptId, engineId, attempt) and a completed call step is
