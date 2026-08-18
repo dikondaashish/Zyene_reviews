@@ -36,13 +36,21 @@ export function parsePageSpeedResult(payload: PsiPayload): PageSpeedDiagnostic {
     };
 }
 
-export async function fetchPageSpeed(url: string, apiKey = process.env.GOOGLE_API_KEY): Promise<PageSpeedDiagnostic> {
+async function requestPageSpeed(url: string, apiKey?: string): Promise<Response> {
     const endpoint = new URL("https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed");
     endpoint.searchParams.set("url", url);
     endpoint.searchParams.set("strategy", "mobile");
     endpoint.searchParams.append("category", "performance");
     if (apiKey?.trim()) endpoint.searchParams.set("key", apiKey.trim());
-    const response = await fetch(endpoint, { signal: AbortSignal.timeout(90_000) });
+    return fetch(endpoint, { signal: AbortSignal.timeout(90_000) });
+}
+
+export async function fetchPageSpeed(url: string, apiKey = process.env.GOOGLE_API_KEY): Promise<PageSpeedDiagnostic> {
+    const configuredKey = apiKey?.trim();
+    let response = await requestPageSpeed(url, configuredKey);
+    if (response.status === 403 && configuredKey) {
+        response = await requestPageSpeed(url);
+    }
     if (!response.ok) throw new Error(`PageSpeed HTTP ${response.status}: ${(await response.text()).slice(0, 300)}`);
     return parsePageSpeedResult(await response.json() as PsiPayload);
 }

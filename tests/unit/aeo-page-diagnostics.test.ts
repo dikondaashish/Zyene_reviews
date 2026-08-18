@@ -1,7 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { computeRenderingDelta } from "../../src/services/aeo/technical-audit/rendering-delta";
-import { parsePageSpeedResult } from "../../src/services/aeo/technical-audit/pagespeed";
+import { fetchPageSpeed, parsePageSpeedResult } from "../../src/services/aeo/technical-audit/pagespeed";
 import { classifyIndexStatus } from "../../src/services/google/url-inspection";
 
 describe("JS rendering delta", () => {
@@ -18,6 +18,8 @@ describe("JS rendering delta", () => {
 });
 
 describe("PageSpeed and CrUX parsing", () => {
+    afterEach(() => vi.unstubAllGlobals());
+
     it("prefers field CWV and keeps Lighthouse performance score", () => {
         const parsed = parsePageSpeedResult({
             loadingExperience: { metrics: {
@@ -28,6 +30,25 @@ describe("PageSpeed and CrUX parsing", () => {
             lighthouseResult: { categories: { performance: { score: 0.91 } }, audits: {} },
         });
         expect(parsed).toMatchObject({ lcpMs: 2100, cls: 0.12, inpMs: 180, performanceScore: 91, basis: "field" });
+    });
+
+    it("retries without a restricted API key after a 403", async () => {
+        const fetchMock = vi.fn()
+            .mockResolvedValueOnce(new Response("restricted", { status: 403 }))
+            .mockResolvedValueOnce(new Response(JSON.stringify({
+                lighthouseResult: {
+                    categories: { performance: { score: 0.87 } },
+                    audits: {},
+                },
+            }), { status: 200 }));
+        vi.stubGlobal("fetch", fetchMock);
+
+        const result = await fetchPageSpeed("https://example.com/", "restricted-key");
+
+        expect(result).toMatchObject({ performanceScore: 87, basis: "lab" });
+        expect(fetchMock).toHaveBeenCalledTimes(2);
+        expect(String(fetchMock.mock.calls[0]?.[0])).toContain("key=restricted-key");
+        expect(String(fetchMock.mock.calls[1]?.[0])).not.toContain("key=");
     });
 });
 
