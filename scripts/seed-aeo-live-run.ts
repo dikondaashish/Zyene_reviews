@@ -134,14 +134,11 @@ async function main() {
     const prompts = await runs.loadActivePrompts(businessId);
     const consumed = await runs.consumedTodayByEngine(biz.organization_id, usageDate);
 
-    // Plan against a throwaway run id first, so a dry run leaves no aeo_runs row.
-    const { runId } = confirmed
-        ? await runs.createRun({ businessId, trigger: "manual", scheduledFor: null })
-        : { runId: "00000000-0000-0000-0000-000000000000" };
-
-    const plan = planRun(
+    // Plan against a throwaway id first so the run records the exact number of
+    // children that can actually execute after availability and budget gates.
+    const draft = planRun(
         {
-            runId,
+            runId: "00000000-0000-0000-0000-000000000000",
             businessId,
             organizationId: biz.organization_id,
             usageDate,
@@ -151,6 +148,18 @@ async function main() {
         },
         engineRegistry
     );
+    const { runId } = confirmed
+        ? await runs.createRun({
+            businessId,
+            trigger: "manual",
+            scheduledFor: null,
+            expectedSamples: draft.dispatches.length,
+        })
+        : { runId: "00000000-0000-0000-0000-000000000000" };
+    const plan = {
+        ...draft,
+        dispatches: draft.dispatches.map((dispatch) => ({ ...dispatch, runId })),
+    };
 
     for (const w of plan.withheld) {
         console.log(`WITHHELD ${w.descriptor.id.padEnd(20)} ${w.state}`);

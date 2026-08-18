@@ -82,7 +82,12 @@ async function main() {
     const consumed = await runs.consumedTodayByEngine(organizationId, USAGE_DATE);
     check("consumedTodayByEngine starts empty", Object.keys(consumed).length === 0, JSON.stringify(consumed));
 
-    const { runId } = await runs.createRun({ businessId, trigger: "manual", scheduledFor: null });
+    const { runId } = await runs.createRun({
+        businessId,
+        trigger: "manual",
+        scheduledFor: null,
+        expectedSamples: 2,
+    });
     check("createRun returns an id", Boolean(runId), runId);
 
     const plan = planRun(
