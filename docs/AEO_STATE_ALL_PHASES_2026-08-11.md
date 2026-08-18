@@ -2,9 +2,10 @@
 **Written 2026-08-11 by auditing the live database and the actual files on disk.**
 **Updated 2026-08-15:** Phase 0 repository collateral audit completed; see
 `docs/AEO_PHASE0_COLLATERAL_AUDIT_2026-08-15.md`.
-**Updated 2026-08-18:** Phases 1 and 2 completed and accepted in production;
-see `docs/AEO_PHASE1_COMPLETION_2026-08-18.md` and
-`docs/AEO_PHASE2_COMPLETION_2026-08-18.md`. Those completion records supersede
+**Updated 2026-08-18:** Phases 1, 2, and 3 completed and accepted in production;
+see `docs/AEO_PHASE1_COMPLETION_2026-08-18.md`,
+`docs/AEO_PHASE2_COMPLETION_2026-08-18.md`, and
+`docs/AEO_PHASE3_COMPLETION_2026-08-18.md`. Those completion records supersede
 historical status and defect notes below.
 
 > **How to trust this document.** Every claim is tagged:
@@ -50,7 +51,7 @@ substitute or scope it out; **never pretend the substitute is the original spec.
 | **0** | Integrity remediation | Week 1–2 | 3 EW | ✅ **COMPLETE** — verified [DB] |
 | **1** | Usable at launch | Week 3–14 | ~46 EW | ✅ **COMPLETE** - production accepted 2026-08-18 |
 | **2** | Competitive parity | Week 15–24 | ~34 EW | ✅ **COMPLETE** - 31/31 items, production accepted 2026-08-18 |
-| **3** | Differentiation | Week 25–34 | ~30 EW | ⬜ **NOT STARTED** (correct) |
+| **3** | Differentiation | Week 25–34 | ~30 EW | ✅ **COMPLETE** - 11/11 items, production accepted 2026-08-18 |
 
 ### ⚠️ A documentation error you should know about
 
@@ -640,9 +641,14 @@ and recommendation evaluation. Global customer-wide flags were not changed.
 
 ---
 
-## PART J — PHASE 3 ⬜ NOT STARTED (correct — do not build unless asked)
+## PART J — PHASE 3 ✅ COMPLETE
 
 **Week 25–34 · ~30 EW.** 11 P3 features [DOC §5].
+
+> **Current status (2026-08-18):** All 11 items below are implemented,
+> migrated, deployed, and production-accepted with Wolfpack. Exact commit,
+> deployment, schema, event, data, conditional-state, and quality evidence is
+> recorded in `docs/AEO_PHASE3_COMPLETION_2026-08-18.md`.
 
 | ID | Feature | Effort |
 |---|---|---|
@@ -658,15 +664,16 @@ and recommendation evaluation. Global customer-wide flags were not changed.
 | F7.8 | Looker Studio / BigQuery export | L |
 | F8.9 | Statistical anomaly detection | M |
 
-**F8.9 note [DOC]:** only credible once there are **≥90 days of history**. **[DB]**
-There are currently **2 days** of samples (2026-08-07 → 08-08).
+**F8.9 note [DOC]:** only credible once there are **≥90 days of history**.
+The implementation enforces that rule; Wolfpack's production evaluation is
+stored as ineligible with 2 history days rather than producing a premature
+anomaly claim. [DB]
 
 ---
 
 ## PART K — ONE-PARAGRAPH SUMMARY
 
-Phase 0 is complete and its integrity boundary remains intact. Phase 1 is
-complete and production-accepted. Phase 2 is complete across all 31 explicit
-roadmap IDs and production-accepted with the Wolfpack pilot; see the dated
-completion records for immutable IDs, costs, migrations, tests, and deployment
-evidence. Phase 3 is the only remaining rollout phase and is not started.
+All four rollout phases are complete. Phase 0's integrity boundary remains
+intact, and Phases 1, 2, and 3 are production-accepted with the Wolfpack pilot.
+See the dated completion records for immutable IDs, costs, migrations, tests,
+deployment evidence, and honest unavailable/configuration-gated states.
