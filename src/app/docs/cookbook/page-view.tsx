@@ -54,14 +54,15 @@ export default function DocsCookbookPage() {
 
                         <h2 id="zapier-webhook">Zapier / generic webhook</h2>
                         <p>
-                            Same engine as <code>/api/v1/requests/send</code>, but accepts the API key as a
-                            query string so Zapier&apos;s &quot;Webhooks by Zapier&quot; action works without a
-                            custom header. Field aliases (<code>name</code>, <code>email</code>,{" "}
+                            Same engine as <code>/api/v1/requests/send</code>. Send the key in an
+                            <code> Authorization: Bearer</code> header; credentials in URLs are rejected.
+                            Field aliases (<code>name</code>, <code>email</code>,{" "}
                             <code>phone</code>) keep mappings simple.
                         </p>
                         <DocCodeBlock
                             language="bash"
-                            code={`curl -X POST "${base}/api/webhooks/generic?key=zy_..." \\
+                            code={`curl -X POST "${base}/api/webhooks/generic" \\
+  -H "Authorization: Bearer zy_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{
     "name": "Alex",

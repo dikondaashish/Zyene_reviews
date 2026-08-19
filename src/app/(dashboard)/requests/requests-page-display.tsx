@@ -1,11 +1,15 @@
 import { MessageSquare, Mail, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { isCompletedRequest } from "@/lib/metrics/business-metrics";
 
 export function formatReviewRequestContact(req: {
     customer_phone?: string | null;
     customer_email?: string | null;
 }) {
-    return [req.customer_phone, req.customer_email].filter(Boolean).join(" · ") || ", ";
+    return (
+        [req.customer_phone, req.customer_email].filter(Boolean).join(" · ") ||
+        ", "
+    );
 }
 
 export function reviewRequestChannelCell(channel: string | null | undefined) {
@@ -15,7 +19,9 @@ export function reviewRequestChannelCell(channel: string | null | undefined) {
             <div className="flex items-center gap-1.5">
                 <MessageSquare className="shrink-0 text-muted-foreground size-3" />
                 <Mail className="shrink-0 text-muted-foreground size-3" />
-                <span className="text-xs font-medium uppercase text-muted-foreground">Both</span>
+                <span className="text-xs font-medium uppercase text-muted-foreground">
+                    Both
+                </span>
             </div>
         );
     }
@@ -40,12 +46,7 @@ export function requestFlowCompleted(req: {
     completed_at?: string | null;
     status?: string | null;
 }) {
-    return !!(
-        req.review_left ||
-        req.completed_at ||
-        req.status === "completed" ||
-        req.status === "feedback_left"
-    );
+    return isCompletedRequest(req);
 }
 
 export function getRequestStatusBadge(
@@ -55,12 +56,13 @@ export function getRequestStatusBadge(
         email_status?: string | null;
         sms_status?: string | null;
     },
-    converted: boolean
+    converted: boolean,
 ) {
     if (converted) {
         return (
             <Badge className="bg-chart-4/15 text-chart-4 hover:bg-chart-4/15 border-chart-4/35">
-                <Star className="mr-1 fill-chart-4 text-chart-4 size-3" /> Review Left
+                <Star className="mr-1 fill-chart-4 text-chart-4 size-3" />{" "}
+                Review Left
             </Badge>
         );
     }
@@ -71,15 +73,31 @@ export function getRequestStatusBadge(
     const s = req.sms_status;
 
     if (status === "queued") {
-        return <Badge variant="secondary" className="bg-muted text-muted-foreground">Queued</Badge>;
+        return (
+            <Badge
+                variant="secondary"
+                className="bg-muted text-muted-foreground"
+            >
+                Queued
+            </Badge>
+        );
     }
     if (status === "processing" || status === "sending") {
-        return <Badge variant="secondary" className="bg-muted text-muted-foreground">Processing</Badge>;
+        return (
+            <Badge
+                variant="secondary"
+                className="bg-muted text-muted-foreground"
+            >
+                Processing
+            </Badge>
+        );
     }
 
     if (ch === "both" && (e || s)) {
-        const emailLabel = e === "sent" ? "Email ✓" : e === "failed" ? "Email ✗" : null;
-        const smsLabel = s === "sent" ? "SMS ✓" : s === "failed" ? "SMS ✗" : null;
+        const emailLabel =
+            e === "sent" ? "Email ✓" : e === "failed" ? "Email ✗" : null;
+        const smsLabel =
+            s === "sent" ? "SMS ✓" : s === "failed" ? "SMS ✗" : null;
         const allOk = e === "sent" && s === "sent";
         const allFailed = e === "failed" && s === "failed";
 
@@ -132,11 +150,23 @@ export function getRequestStatusBadge(
 
     switch (status) {
         case "sent":
-            return <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/20">Sent</Badge>;
+            return (
+                <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/20">
+                    Sent
+                </Badge>
+            );
         case "delivered":
-            return <Badge className="bg-chart-2/15 text-chart-2 hover:bg-chart-2/15 border-chart-2/30">Delivered</Badge>;
+            return (
+                <Badge className="bg-chart-2/15 text-chart-2 hover:bg-chart-2/15 border-chart-2/30">
+                    Delivered
+                </Badge>
+            );
         case "clicked":
-            return <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/30">Clicked</Badge>;
+            return (
+                <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/30">
+                    Clicked
+                </Badge>
+            );
         case "failed":
             return <Badge variant="destructive">Failed</Badge>;
         default:

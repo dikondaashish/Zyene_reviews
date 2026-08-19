@@ -10,6 +10,7 @@ import { WidgetUpgradeCard } from "@/components/integrations/widget-upgrade-card
 import { IntegrationsSectionHeader, IntegrationsStatusBadge } from "./integrations-section-header";
 import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 import type { IntegrationsPageData } from "./load-integrations-page-data";
+import type { PublicApiKey } from "@/lib/api-keys/credentials";
 
 type OkData = Extract<IntegrationsPageData, { kind: "ok" }>;
 
@@ -21,7 +22,7 @@ export function IntegrationsPosAutomationSection({
     squareConnection,
     squareConfigured,
 }: {
-    apiKey: string | null;
+    apiKey: PublicApiKey | null;
     businessId: string;
     cloverConnection: CloverConnectionSummary;
     cloverConfigured: boolean;
@@ -61,7 +62,7 @@ export function IntegrationsPosAutomationSection({
                     }
                     accentColor="bg-primary"
                 />
-                <ZapierCard apiKey={apiKey} />
+                <ZapierCard hasApiKey={Boolean(apiKey)} />
             </div>
         </section>
     );
@@ -77,7 +78,11 @@ export function IntegrationsDeveloperApiSection({ data }: { data: OkData }) {
                 badge={data.apiKey ? <IntegrationsStatusBadge count={1} label="key active" /> : undefined}
             />
             <div className="max-w-2xl">
-                <DeveloperApiCard businessId={data.business.id} apiKey={data.apiKey} />
+                <DeveloperApiCard
+                    businessId={data.business.id}
+                    apiKey={data.apiKey}
+                    canManage={data.canManageApiKeys}
+                />
             </div>
         </section>
     );

@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { getAppBaseUrl } from "@/config/env";
+import { canManageApiKeys } from "@/lib/api-keys/scopes";
+import { loadActiveApiKeySummary } from "@/services/api-keys/manage-api-keys";
 
 export async function loadZapierPageData() {
     const { business } = await getActiveBusinessId();
@@ -10,22 +12,23 @@ export async function loadZapierPageData() {
     }
 
     const supabase = await createClient();
-    const { data: apiPlatform } = await supabase
-        .from("review_platforms")
-        .select("external_id, sync_status")
+    const { data: { user } } = await supabase.auth.getUser();
+    const [apiKey, member] = await Promise.all([
+        loadActiveApiKeySummary(supabase, business.id, "review_requests:write"),
+        supabase
+        .from("business_members")
+        .select("role")
         .eq("business_id", business.id)
-        .eq("platform", "api")
-        .maybeSingle();
-
-    const apiKey =
-        apiPlatform?.sync_status === "active" && apiPlatform?.external_id
-            ? apiPlatform.external_id
-            : null;
+        .eq("user_id", user?.id ?? "")
+        .eq("status", "active")
+        .maybeSingle(),
+    ]);
 
     return {
         kind: "ok" as const,
         business,
         apiKey,
+        canManageApiKeys: canManageApiKeys(member.data?.role),
         appBaseUrl: getAppBaseUrl(),
     };
 }

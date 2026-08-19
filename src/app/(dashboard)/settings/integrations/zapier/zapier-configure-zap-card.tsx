@@ -60,12 +60,14 @@ export function ZapierConfigureZapCard() {
                     />
                     <SetupStep
                         index={4}
-                        title="Paste the webhook URL"
+                        title="Paste the URL and add authentication"
                         body={
                             <>
-                                Use the URL from the panel above ,  it already contains your API
-                                key. Set <span className="font-medium">Payload Type</span> to{" "}
-                                <span className="font-mono">json</span>.
+                                Use the URL from the panel above and set{" "}
+                                <span className="font-medium">Payload Type</span> to{" "}
+                                <span className="font-mono">json</span>. Under Headers, add{" "}
+                                <span className="font-mono">Authorization</span> with value{" "}
+                                <span className="font-mono">Bearer YOUR_API_KEY</span>.
                             </>
                         }
                     />

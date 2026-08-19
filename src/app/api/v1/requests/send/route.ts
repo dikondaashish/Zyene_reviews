@@ -16,7 +16,7 @@ export async function OPTIONS() {
 }
 
 export async function POST(req: NextRequest) {
-    const auth = await authenticateApiKey(req);
+    const auth = await authenticateApiKey(req, "review_requests:write");
     if (!auth.ok) return auth.response;
 
     const json = await req.json().catch(() => null);

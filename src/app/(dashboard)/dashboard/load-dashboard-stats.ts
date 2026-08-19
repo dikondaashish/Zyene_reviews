@@ -28,7 +28,7 @@ export async function loadDashboardStats(
         return { stats, visibleReviewRollup };
     }
 
-    const cacheKey = `dashboard:stats:${auth.business.id}`;
+    const cacheKey = `dashboard:stats:v2:${auth.business.id}`;
     let cachedStatsRaw: unknown = null;
     try {
         const { redis } = await import("@/lib/db/redis");
@@ -38,15 +38,31 @@ export async function loadDashboardStats(
     }
 
     if (cachedStatsRaw) {
-        const cached = await loadDashboardStatsFromCache(auth, stats, cachedStatsRaw);
+        const cached = await loadDashboardStatsFromCache(
+            auth,
+            stats,
+            cachedStatsRaw,
+        );
         if (cached.errorElement) {
-            return { stats: cached.stats, visibleReviewRollup, errorElement: cached.errorElement };
+            return {
+                stats: cached.stats,
+                visibleReviewRollup,
+                errorElement: cached.errorElement,
+            };
         }
     } else {
         const results = await runDashboardStatsQueries(auth);
-        const processed = processDashboardStatsQueryResults(auth, stats, results);
+        const processed = processDashboardStatsQueryResults(
+            auth,
+            stats,
+            results,
+        );
         if (processed.errorElement) {
-            return { stats: processed.stats, visibleReviewRollup, errorElement: processed.errorElement };
+            return {
+                stats: processed.stats,
+                visibleReviewRollup,
+                errorElement: processed.errorElement,
+            };
         }
         await cacheDashboardStats(auth.business.id, stats);
     }

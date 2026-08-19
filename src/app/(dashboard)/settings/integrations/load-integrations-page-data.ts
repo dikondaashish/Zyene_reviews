@@ -6,6 +6,9 @@ import { isCloverConfigured } from "@/services/clover/config";
 import { isSquareConfigured } from "@/services/square/config";
 import type { CloverConnectionSummary } from "@/components/integrations/clover-card";
 import type { SquareConnectionSummary } from "@/components/integrations/square-card";
+import type { PublicApiKey } from "@/lib/api-keys/credentials";
+import { canManageApiKeys } from "@/lib/api-keys/scopes";
+import { loadActiveApiKeySummary } from "@/services/api-keys/manage-api-keys";
 
 export type VisibleReviewRollup = {
     totalVisible?: number;
@@ -32,7 +35,8 @@ export type IntegrationsPageData =
           googlePlatform: Record<string, unknown> | undefined;
           yelpPlatform: Record<string, unknown> | undefined;
           facebookPlatform: Record<string, unknown> | undefined;
-          apiKey: string | null;
+          apiKey: PublicApiKey | null;
+          canManageApiKeys: boolean;
           connectedCount: number;
           canUsePublicWidget: boolean;
           totalReviews: number;
@@ -55,9 +59,6 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
     const googlePlatform = platforms.find((p) => p.platform === "google");
     const yelpPlatform = platforms.find((p) => p.platform === "yelp");
     const facebookPlatform = platforms.find((p) => p.platform === "facebook");
-    const apiPlatform = platforms.find((p) => p.platform === "api");
-    const apiKey = (apiPlatform?.external_id as string | undefined) || null;
-
     const connectedPlatforms = [googlePlatform, yelpPlatform, facebookPlatform].filter((p) => !!p);
     const canUsePublicWidget = planAllowsPublicReviewWidget(
         (organization as { plan?: string | null; plan_status?: string | null } | null)?.plan ?? null,
@@ -66,7 +67,8 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
     const connectedCount = connectedPlatforms.length;
 
     const supabase = await createClient();
-    const [visibleRollupMap, cloverResult, squareResult, squareLastEventResult] =
+    const { data: { user } } = await supabase.auth.getUser();
+    const [visibleRollupMap, cloverResult, squareResult, squareLastEventResult, apiKey, member] =
         await Promise.all([
             fetchVisibleReviewRollupsByBusinessIds(supabase, [business.id]),
             supabase
@@ -86,6 +88,14 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
                 .eq("business_id", business.id)
                 .order("created_at", { ascending: false })
                 .limit(1)
+                .maybeSingle(),
+            loadActiveApiKeySummary(supabase, business.id, "review_requests:write"),
+            supabase
+                .from("business_members")
+                .select("role")
+                .eq("business_id", business.id)
+                .eq("user_id", user?.id ?? "")
+                .eq("status", "active")
                 .maybeSingle(),
         ]);
     const visibleRollup = visibleRollupMap.get(business.id);
@@ -130,6 +140,7 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
         yelpPlatform,
         facebookPlatform,
         apiKey,
+        canManageApiKeys: canManageApiKeys(member.data?.role),
         connectedCount,
         canUsePublicWidget,
         totalReviews,

@@ -25,9 +25,13 @@ export async function cacheDashboardStats(
     };
     try {
         const { redis } = await import("@/lib/db/redis");
-        await redis.set(`dashboard:stats:${businessId}`, JSON.stringify(statsToCache), {
-            ex: 300,
-        });
+        await redis.set(
+            `dashboard:stats:v2:${businessId}`,
+            JSON.stringify(statsToCache),
+            {
+                ex: 300,
+            },
+        );
     } catch (e) {
         logger.error({ err: e }, "Redis set error:");
     }

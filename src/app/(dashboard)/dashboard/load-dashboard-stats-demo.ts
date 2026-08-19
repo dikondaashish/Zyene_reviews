@@ -28,8 +28,23 @@ export function applyDashboardStatsDemo(
     const visibleReviewRollup: VisibleReviewRollup = {
         totalReviewRows: DASHBOARD_DEMO_DATA.total_reviews,
         totalVisible: DASHBOARD_DEMO_DATA.total_reviews,
+        respondedVisible:
+            DASHBOARD_DEMO_DATA.total_reviews -
+            DASHBOARD_DEMO_DATA.pendingCount,
         pendingVisible: DASHBOARD_DEMO_DATA.pendingCount,
+        responseRateVisible: DASHBOARD_DEMO_DATA.responseRate,
         averageRatingVisible: DASHBOARD_DEMO_DATA.average_rating,
+        positiveVisible: Math.round(
+            (DASHBOARD_DEMO_DATA.positivePercent / 100) *
+                DASHBOARD_DEMO_DATA.total_reviews,
+        ),
+        neutralVisible: 0,
+        negativeVisible: Math.round(
+            (DASHBOARD_DEMO_DATA.negativePercent / 100) *
+                DASHBOARD_DEMO_DATA.total_reviews,
+        ),
+        positiveRateVisible: DASHBOARD_DEMO_DATA.positivePercent,
+        negativeRateVisible: DASHBOARD_DEMO_DATA.negativePercent,
         googleRowCount: DASHBOARD_DEMO_DATA.total_reviews,
         googleVisibleCount: DASHBOARD_DEMO_DATA.total_reviews,
         googleAverageRating: DASHBOARD_DEMO_DATA.average_rating,

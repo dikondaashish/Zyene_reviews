@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 import { computeZyenePlatformAnalyticsAggregates } from "@/components/analytics/zyene-platform-analytics-compute-aggregates";
 import { computeZyenePlatformAnalyticsBase } from "@/components/analytics/zyene-platform-analytics-compute-base";
@@ -14,14 +14,21 @@ import { ZyenePlatformPrivateFeedbackCard } from "@/components/analytics/zyene-p
 import { ZyenePlatformRatingDistributionCard } from "@/components/analytics/zyene-platform-rating-distribution-card";
 import { ZyenePlatformReviewRequestFunnelCard } from "@/components/analytics/zyene-platform-review-request-funnel-card";
 
+const subscribeToHydration = () => () => undefined;
+const isHydrated = () => true;
+const isServer = () => false;
+
 export function ZyenePlatformAnalytics({
     requests,
     previousRequests,
     privateFeedback,
     dateRange,
 }: ZyenePlatformAnalyticsProps) {
-    const [mounted, setMounted] = useState(false);
-    useEffect(() => setMounted(true), []);
+    const mounted = useSyncExternalStore(
+        subscribeToHydration,
+        isHydrated,
+        isServer,
+    );
 
     const base = computeZyenePlatformAnalyticsBase(requests, previousRequests);
     const aggregates = computeZyenePlatformAnalyticsAggregates(base);
@@ -41,6 +48,7 @@ export function ZyenePlatformAnalytics({
                 prevAllSourceClicked={base.prevAllSourceClicked}
                 allSourceClickRate={base.allSourceClickRate}
                 totalSent={base.totalSent}
+                prevSent={base.prevSent}
                 allSourcePostedToGoogle={base.allSourcePostedToGoogle}
                 allSourceConversionRate={base.allSourceConversionRate}
                 prevAllSourcePostedToGoogle={base.prevAllSourcePostedToGoogle}
@@ -48,12 +56,18 @@ export function ZyenePlatformAnalytics({
                 prevAllSourceAvgRating={base.prevAllSourceAvgRating}
                 allSourceRatingsGivenLength={base.allSourceRatingsGiven.length}
                 allSourceLowRatingsLength={base.allSourceLowRatings.length}
-                prevAllSourceLowRatingsLength={base.prevAllSourceLowRatings.length}
+                prevAllSourceLowRatingsLength={
+                    base.prevAllSourceLowRatings.length
+                }
             />
 
             <div className="grid gap-6 lg:grid-cols-5">
-                <ZyenePlatformDailyActivityCard dailyData={aggregates.dailyData} />
-                <ZyenePlatformChannelPerformanceCard channelData={aggregates.channelData} />
+                <ZyenePlatformDailyActivityCard
+                    dailyData={aggregates.dailyData}
+                />
+                <ZyenePlatformChannelPerformanceCard
+                    channelData={aggregates.channelData}
+                />
             </div>
 
             <div className="grid gap-6 lg:grid-cols-2">
@@ -61,7 +75,9 @@ export function ZyenePlatformAnalytics({
                     ratingDist={aggregates.ratingDist}
                     maxRatingCount={aggregates.maxRatingCount}
                     ratingColors={aggregates.ratingColors}
-                    allSourceRatingsGivenLength={base.allSourceRatingsGiven.length}
+                    allSourceRatingsGivenLength={
+                        base.allSourceRatingsGiven.length
+                    }
                 />
                 <ZyenePlatformPopularTagsCard
                     popularTags={aggregates.popularTags}
@@ -74,7 +90,9 @@ export function ZyenePlatformAnalytics({
                     lowRatingEntries={aggregates.lowRatingEntries}
                     lowRatingsLength={base.lowRatings.length}
                 />
-                <ZyenePlatformPrivateFeedbackCard privateFeedback={privateFeedback} />
+                <ZyenePlatformPrivateFeedbackCard
+                    privateFeedback={privateFeedback}
+                />
             </div>
         </div>
     );

@@ -12,8 +12,11 @@ export async function loadDashboardStatsFromCache(
 ): Promise<{ stats: DashboardStatsState; errorElement?: ReactElement }> {
     const { supabase, user, business, useDemoData, visibleReviewRollup } = auth;
 
-    const parsed =
-        (typeof cachedStatsRaw === "string" ? JSON.parse(cachedStatsRaw) : cachedStatsRaw) as DashboardCachedStats;
+    const parsed = (
+        typeof cachedStatsRaw === "string"
+            ? JSON.parse(cachedStatsRaw)
+            : cachedStatsRaw
+    ) as DashboardCachedStats;
 
     stats.responseRate = parsed.responseRate || 0;
     stats.pendingCount = parsed.pendingCount || 0;
@@ -33,23 +36,14 @@ export async function loadDashboardStatsFromCache(
 
     if (!useDemoData && visibleReviewRollup) {
         stats.pendingCount = visibleReviewRollup.pendingVisible;
-        const { count: respondedVisible, error: respondedVisibleErr } = await supabase
-            .from("reviews")
-            .select("*", { count: "exact", head: true })
-            .eq("business_id", business.id)
-            .eq("is_visible", true)
-            .eq("response_status", "responded");
-        if (respondedVisibleErr) {
-            logger.error(
-                { err: respondedVisibleErr },
-                "[Dashboard page] Visible responded count failed:",
-            );
-        } else {
-            stats.responseRate =
-                visibleReviewRollup.totalVisible > 0
-                    ? ((respondedVisible ?? 0) / visibleReviewRollup.totalVisible) * 100
-                    : 0;
-        }
+        stats.responseRate = visibleReviewRollup.responseRateVisible;
+        const ratedReviews =
+            visibleReviewRollup.positiveVisible +
+            visibleReviewRollup.neutralVisible +
+            visibleReviewRollup.negativeVisible;
+        stats.hasSentimentData = ratedReviews > 0;
+        stats.positivePercent = visibleReviewRollup.positiveRateVisible;
+        stats.negativePercent = visibleReviewRollup.negativeRateVisible;
     }
 
     const [customerCountCached, notificationPrefsCached] = await Promise.all([

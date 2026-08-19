@@ -6,6 +6,10 @@ import { refreshGoogleToken } from "@/services/google/business-profile";
 import { TOKEN_EXPIRY_BUFFER_MS } from "@/services/google/constants";
 import type { GooglePlatformWithTokens } from "@/types/google-sync";
 import type { AdminClient } from "./helpers";
+import {
+    GooglePlatformLookupError,
+    GooglePlatformNotFoundError,
+} from "./errors";
 
 export async function getValidGoogleToken(
     platformId: string
@@ -17,12 +21,14 @@ export async function getValidGoogleToken(
         .from("review_platforms")
         .select("*")
         .eq("id", platformId)
-        .single();
+        .maybeSingle();
 
-    if (platformError || !platform) {
-        logger.error({ err: platformError }, `[Token] Fetch failed for ${platformId}:`);
-        const msg = platformError?.message ? `, error=${platformError.message}` : "";
-        throw new Error(`Platform not found: id=${platformId}${msg}`);
+    if (platformError) {
+        logger.warn({ err: platformError, platformId }, "[Token] Platform lookup failed");
+        throw new GooglePlatformLookupError({ cause: platformError });
+    }
+    if (!platform) {
+        throw new GooglePlatformNotFoundError();
     }
 
     // 2. Decrypt tokens via RPC (More robust than inline select)
@@ -145,10 +151,13 @@ export async function forceRefreshGoogleAccessToken(
         .from("review_platforms")
         .select("*")
         .eq("id", platformId)
-        .single();
+        .maybeSingle();
 
-    if (platformError || !platform) {
-        throw new Error(`Platform not found: id=${platformId}`);
+    if (platformError) {
+        throw new GooglePlatformLookupError({ cause: platformError });
+    }
+    if (!platform) {
+        throw new GooglePlatformNotFoundError();
     }
 
     let refreshToken: string | null = null;
@@ -164,4 +173,3 @@ export async function forceRefreshGoogleAccessToken(
 
     return refreshPlatformAccessToken(admin, platformId, refreshToken, { ...platform });
 }
-

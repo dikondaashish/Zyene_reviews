@@ -28,7 +28,7 @@ export function ZapierHowItWorksCard() {
                     icon={Link2}
                     iconWrapClass="bg-chart-2/15 text-chart-2 ring-chart-2/25"
                     title="Zapier sends customer details to Zyene"
-                    description="Map the customer's name, phone, and/or email into the JSON body. The webhook URL has your API key built in."
+                    description="Map the customer's details into JSON and authenticate with a Bearer API key header. The URL never contains the secret."
                 />
                 <HowItWorksStep
                     index={3}

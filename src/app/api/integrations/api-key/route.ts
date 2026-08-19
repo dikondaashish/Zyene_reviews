@@ -1,60 +1,71 @@
-import { createHash, randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createClient } from "@/lib/db/supabase/server";
-import { createAdminClient } from "@/lib/db/supabase/admin";
-import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 
-const scope = z.enum(["prompts:read", "results:read", "citations:read", "scores:read"]);
-const requestSchema = z.object({
+import { API_KEY_SCOPES, DEVELOPER_API_SCOPES } from "@/lib/api-keys/scopes";
+import {
+    authorizeApiKeyManagement,
+    createManagedApiKey,
+    findApiKeyForManagement,
+    revokeManagedApiKey,
+    rotateManagedApiKey,
+} from "@/services/api-keys/manage-api-keys";
+
+const scopeSchema = z.enum(API_KEY_SCOPES);
+const createSchema = z.object({
     businessId: z.uuid(),
-    name: z.string().trim().min(1).max(100).default("AEO API"),
-    scopes: z.array(scope).min(1).max(4).default(["prompts:read", "results:read", "citations:read", "scores:read"]),
+    name: z.string().trim().min(1).max(100).default("Developer API"),
+    scopes: z.array(scopeSchema).min(1).max(API_KEY_SCOPES.length).default(DEVELOPER_API_SCOPES),
     rateLimitPerMinute: z.number().int().min(1).max(600).default(60),
 });
+const keySchema = z.object({ keyId: z.uuid() });
+
+function authorizationError(status: 401 | 403) {
+    return NextResponse.json(
+        { error: status === 401 ? "Unauthorized" : "Only business owners and admins can manage API keys" },
+        { status },
+    );
+}
+
+function oneTimeSecretResponse(body: unknown, status = 200) {
+    return NextResponse.json(body, {
+        status,
+        headers: { "Cache-Control": "no-store", Pragma: "no-cache" },
+    });
+}
 
 export async function POST(req: Request) {
-    try {
-        const supabase = await createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        const parsed = requestSchema.safeParse(await req.json());
-        if (!parsed.success) return NextResponse.json({ error: "Invalid API key request" }, { status: 400 });
-        const input = parsed.data;
-        if (!(await userCanAccessBusiness(supabase, user.id, input.businessId))) {
-            return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-        }
-        const admin = createAdminClient();
-        const business = await admin.from("businesses").select("organization_id").eq("id", input.businessId).single();
-        if (business.error) return NextResponse.json({ error: "Business not found" }, { status: 404 });
-        const apiKey = `zyaeo_${randomBytes(32).toString("hex")}`;
-        const written = await admin.from("aeo_public_api_keys" as never).insert({
-            organization_id: business.data.organization_id,
-            business_id: input.businessId,
-            name: input.name,
-            key_prefix: apiKey.slice(0, 14),
-            key_hash: createHash("sha256").update(apiKey).digest("hex"),
-            scopes: input.scopes,
-            rate_limit_per_minute: input.rateLimitPerMinute,
-        } as never);
-        if (written.error) return NextResponse.json({ error: "Failed to create API key" }, { status: 500 });
-        return NextResponse.json({ apiKey, name: input.name, scopes: input.scopes });
-    } catch {
-        return NextResponse.json({ error: "Failed to create API key" }, { status: 500 });
-    }
+    const parsed = createSchema.safeParse(await req.json().catch(() => null));
+    if (!parsed.success) return NextResponse.json({ error: "Invalid API key request" }, { status: 400 });
+    const auth = await authorizeApiKeyManagement(parsed.data.businessId);
+    if (!auth.ok) return authorizationError(auth.status);
+    const created = await createManagedApiKey({
+        ...parsed.data,
+        actorUserId: auth.user.id,
+    });
+    if (!created) return NextResponse.json({ error: "Failed to create API key" }, { status: 500 });
+    return oneTimeSecretResponse(created, 201);
+}
+
+export async function PATCH(req: Request) {
+    const parsed = keySchema.safeParse(await req.json().catch(() => null));
+    if (!parsed.success) return NextResponse.json({ error: "Invalid API key" }, { status: 400 });
+    const oldKey = await findApiKeyForManagement(parsed.data.keyId);
+    if (!oldKey?.business_id) return NextResponse.json({ error: "API key not found" }, { status: 404 });
+    const auth = await authorizeApiKeyManagement(oldKey.business_id);
+    if (!auth.ok) return authorizationError(auth.status);
+    const rotated = await rotateManagedApiKey(oldKey, auth.user.id);
+    if (!rotated) return NextResponse.json({ error: "Unable to rotate API key" }, { status: 500 });
+    return oneTimeSecretResponse(rotated);
 }
 
 export async function DELETE(req: Request) {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    const parsed = z.object({ keyId: z.uuid() }).safeParse(await req.json());
+    const parsed = keySchema.safeParse(await req.json().catch(() => null));
     if (!parsed.success) return NextResponse.json({ error: "Invalid API key" }, { status: 400 });
-    const visible = await supabase.from("aeo_public_api_keys" as never).select("id" as never)
-        .eq("id" as never, parsed.data.keyId as never).maybeSingle() as unknown as { data: { id: string } | null };
-    if (!visible.data) return NextResponse.json({ error: "API key not found" }, { status: 404 });
-    const result = await createAdminClient().from("aeo_public_api_keys" as never)
-        .update({ revoked_at: new Date().toISOString() } as never).eq("id" as never, parsed.data.keyId as never);
-    if (result.error) return NextResponse.json({ error: "Unable to revoke API key" }, { status: 500 });
+    const key = await findApiKeyForManagement(parsed.data.keyId);
+    if (!key?.business_id) return NextResponse.json({ error: "API key not found" }, { status: 404 });
+    const auth = await authorizeApiKeyManagement(key.business_id);
+    if (!auth.ok) return authorizationError(auth.status);
+    const revoked = await revokeManagedApiKey(key.id, auth.user.id, "manual");
+    if (!revoked) return NextResponse.json({ error: "Unable to revoke API key" }, { status: 500 });
     return NextResponse.json({ revoked: true });
 }

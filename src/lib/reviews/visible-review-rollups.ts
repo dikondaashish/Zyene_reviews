@@ -1,18 +1,24 @@
 import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
+import { calculateReviewMetrics } from "@/lib/metrics/business-metrics";
 import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 
 export type VisibleReviewRollup = {
-    /** All `reviews` rows stored for this business (includes `is_visible = false`). For diagnostics only; use `totalVisible` in UI. */
+    /** All stored rows, including hidden rows. Diagnostics only. */
     totalReviewRows: number;
-    /** All platforms, `reviews.is_visible = true` only — use for dashboards and “reviews in Zyene” style copy. */
+    /** Canonical review metrics use `is_visible = true` across every connected platform. */
     totalVisible: number;
+    respondedVisible: number;
     pendingVisible: number;
+    responseRateVisible: number;
     averageRatingVisible: number;
-    /** Google rows stored (sync volume). */
+    positiveVisible: number;
+    neutralVisible: number;
+    negativeVisible: number;
+    positiveRateVisible: number;
+    negativeRateVisible: number;
     googleRowCount: number;
-    /** Subset `platform = 'google'` and visible. */
     googleVisibleCount: number;
     googleAverageRating: number;
     facebookRowCount: number;
@@ -27,8 +33,15 @@ export function emptyVisibleReviewRollup(): VisibleReviewRollup {
     return {
         totalReviewRows: 0,
         totalVisible: 0,
+        respondedVisible: 0,
         pendingVisible: 0,
+        responseRateVisible: 0,
         averageRatingVisible: 0,
+        positiveVisible: 0,
+        neutralVisible: 0,
+        negativeVisible: 0,
+        positiveRateVisible: 0,
+        negativeRateVisible: 0,
         googleRowCount: 0,
         googleVisibleCount: 0,
         googleAverageRating: 0,
@@ -45,132 +58,95 @@ const PAGE_SIZE = 1000;
 
 type ReviewRollupRow = Pick<
     Database["public"]["Tables"]["reviews"]["Row"],
-    "business_id" | "rating" | "response_status" | "platform" | "is_visible"
+    | "business_id"
+    | "rating"
+    | "response_status"
+    | "responded_at"
+    | "platform"
+    | "is_visible"
 >;
 
-/**
- * Aggregates review counts/ratings per business from `reviews`.
- * Uses pagination because PostgREST caps each response at ~1000 rows — a single `.select()`
- * would under-count businesses with more reviews.
- */
+function platformRollup(rows: ReviewRollupRow[], platform: string) {
+    const platformRows = rows.filter((row) => row.platform === platform);
+    const metrics = calculateReviewMetrics(
+        platformRows.filter((row) => row.is_visible === true),
+    );
+    return { rowCount: platformRows.length, metrics };
+}
+
+/** Loads every review row so PostgREST's page cap can never under-count dashboard metrics. */
 export async function fetchVisibleReviewRollupsByBusinessIds(
     supabase: SupabaseClient<Database>,
-    businessIds: string[]
+    businessIds: string[],
 ): Promise<Map<string, VisibleReviewRollup>> {
-    const map = new Map<string, VisibleReviewRollup>();
-    for (const id of businessIds) {
-        map.set(id, emptyVisibleReviewRollup());
-    }
+    const map = new Map(
+        businessIds.map((id) => [id, emptyVisibleReviewRollup()]),
+    );
     if (businessIds.length === 0) return map;
 
-    type Acc = {
-        totalRows: number;
-        count: number;
-        sum: number;
-        pending: number;
-        googleRows: number;
-        gCount: number;
-        gSum: number;
-        facebookRows: number;
-        fbCount: number;
-        fbSum: number;
-        yelpRows: number;
-        yelpCount: number;
-        yelpSum: number;
-    };
-    const accum = new Map<string, Acc>();
-    for (const id of businessIds) {
-        accum.set(id, {
-            totalRows: 0,
-            count: 0,
-            sum: 0,
-            pending: 0,
-            googleRows: 0,
-            gCount: 0,
-            gSum: 0,
-            facebookRows: 0,
-            fbCount: 0,
-            fbSum: 0,
-            yelpRows: 0,
-            yelpCount: 0,
-            yelpSum: 0,
-        });
-    }
+    const { data: allRows, error } =
+        await fetchAllReviewRowsPaginated<ReviewRollupRow>(
+            PAGE_SIZE,
+            (from, to) =>
+                supabase
+                    .from("reviews")
+                    .select(
+                        "business_id, rating, response_status, responded_at, platform, is_visible",
+                    )
+                    .in("business_id", businessIds)
+                    .order("id", { ascending: true })
+                    .range(from, to),
+        );
 
-    const { data: allRows, error: pagesError } = await fetchAllReviewRowsPaginated<ReviewRollupRow>(
-        PAGE_SIZE,
-        (from, to) =>
-            supabase
-                .from("reviews")
-                .select("business_id, rating, response_status, platform, is_visible")
-                .in("business_id", businessIds)
-                .order("id", { ascending: true })
-                .range(from, to)
-    );
-
-    if (pagesError) {
-        logger.error({ err: pagesError }, "[visible-review-rollups] paginated fetch failed:");
+    if (error) {
+        logger.error(
+            { err: error },
+            "[visible-review-rollups] paginated fetch failed:",
+        );
         return map;
     }
 
+    const rowsByBusiness = new Map(
+        businessIds.map((id) => [id, [] as ReviewRollupRow[]]),
+    );
     for (const row of allRows) {
-        const bid = row.business_id;
-        const bucket = accum.get(bid);
-        if (!bucket) continue;
-
-        bucket.totalRows += 1;
-
-        const platform = row.platform;
-        if (platform === "google") {
-            bucket.googleRows += 1;
-        } else if (platform === "facebook") {
-            bucket.facebookRows += 1;
-        } else if (platform === "yelp") {
-            bucket.yelpRows += 1;
-        }
-
-        const visible = row.is_visible === true;
-        if (!visible) continue;
-
-        const rating = Number(row.rating ?? 0);
-        bucket.count += 1;
-        bucket.sum += rating;
-        if (row.response_status === "pending") {
-            bucket.pending += 1;
-        }
-
-        if (platform === "google") {
-            bucket.gCount += 1;
-            bucket.gSum += rating;
-        } else if (platform === "facebook") {
-            bucket.fbCount += 1;
-            bucket.fbSum += rating;
-        } else if (platform === "yelp") {
-            bucket.yelpCount += 1;
-            bucket.yelpSum += rating;
-        }
+        rowsByBusiness.get(row.business_id)?.push(row);
     }
 
     for (const id of businessIds) {
-        const a = accum.get(id)!;
-        const avgAll = a.count > 0 ? parseFloat((a.sum / a.count).toFixed(1)) : 0;
-        const avgG = a.gCount > 0 ? parseFloat((a.gSum / a.gCount).toFixed(1)) : 0;
-        const avgFb = a.fbCount > 0 ? parseFloat((a.fbSum / a.fbCount).toFixed(1)) : 0;
-        const avgY = a.yelpCount > 0 ? parseFloat((a.yelpSum / a.yelpCount).toFixed(1)) : 0;
+        const rows = rowsByBusiness.get(id) ?? [];
+        const all = calculateReviewMetrics(
+            rows.filter((row) => row.is_visible === true),
+        );
+        const google = platformRollup(rows, "google");
+        const facebook = platformRollup(rows, "facebook");
+        const yelp = platformRollup(rows, "yelp");
+
         map.set(id, {
-            totalReviewRows: a.totalRows,
-            totalVisible: a.count,
-            pendingVisible: a.pending,
-            averageRatingVisible: avgAll,
-            googleRowCount: a.googleRows,
-            googleVisibleCount: a.gCount,
-            googleAverageRating: avgG,
-            facebookRowCount: a.facebookRows,
-            facebookVisibleCount: a.fbCount,
-            facebookAverageRating: avgFb,
-            yelpRowCount: a.yelpRows,
-            yelpVisibleCount: a.yelpCount,
-            yelpAverageRating: avgY,
+            totalReviewRows: rows.length,
+            totalVisible: all.totalReviews,
+            respondedVisible: all.respondedReviews,
+            pendingVisible: all.pendingReviews,
+            responseRateVisible: all.responseRate,
+            averageRatingVisible: Number(all.averageRating.toFixed(1)),
+            positiveVisible: all.positiveReviews,
+            neutralVisible: all.neutralReviews,
+            negativeVisible: all.negativeReviews,
+            positiveRateVisible: all.positiveRate,
+            negativeRateVisible: all.negativeRate,
+            googleRowCount: google.rowCount,
+            googleVisibleCount: google.metrics.totalReviews,
+            googleAverageRating: Number(
+                google.metrics.averageRating.toFixed(1),
+            ),
+            facebookRowCount: facebook.rowCount,
+            facebookVisibleCount: facebook.metrics.totalReviews,
+            facebookAverageRating: Number(
+                facebook.metrics.averageRating.toFixed(1),
+            ),
+            yelpRowCount: yelp.rowCount,
+            yelpVisibleCount: yelp.metrics.totalReviews,
+            yelpAverageRating: Number(yelp.metrics.averageRating.toFixed(1)),
         });
     }
     return map;

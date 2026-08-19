@@ -1,3 +1,5 @@
-import PageView from "./page-view";
+import { redirect } from "next/navigation";
 
-export default PageView;
+export default function LegacyReviewRequestsPage() {
+  redirect("/requests");
+}

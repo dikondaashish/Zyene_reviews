@@ -35,6 +35,7 @@ export function ApiContentSection() {
                             Create or rotate a key under{" "}
                             <strong>Integrations → Developer API</strong> in the dashboard. Send it on every request as{" "}
                             <code>X-API-Key: zy_…</code> or <code>Authorization: Bearer zy_…</code>.
+                            Each endpoint enforces the scope listed below.
                         </p>
                         <p className="text-sm text-muted-foreground">
                             <strong>Postman / curl without Origin:</strong> If you see <code>403 Forbidden</code> on{" "}

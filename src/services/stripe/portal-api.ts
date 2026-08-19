@@ -1,19 +1,11 @@
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
-import { createAdminClient } from "@/lib/db/supabase/admin";
 import { stripe } from "@/services/stripe/client";
 import * as Sentry from "@sentry/nextjs";
 import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
-
-interface OrgMemberWithRole {
-  role: string;
-  organizations: {
-    id: string;
-    stripe_customer_id: string | null;
-  } | null;
-}
+import { loadActiveBillingMember } from "@/lib/billing/active-billing-member";
 
 export async function handleBillingPortal() {
   const supabase = await createClient();
@@ -27,29 +19,36 @@ export async function handleBillingPortal() {
   }
 
   try {
-    const admin = createAdminClient();
-    const { data: member } = await admin
-      .from("organization_members")
-      .select("organization_id, role, organizations(*)")
-      .eq("user_id", user.id)
-      .single();
+    const activeMembership = await loadActiveBillingMember(user.id);
+    if (activeMembership.kind === "no-active-organization") {
+      return apiError("No active organization found", {
+        status: 404,
+        code: "NOT_FOUND",
+      });
+    }
+    const { admin, member } = activeMembership;
 
     if (!member) {
-      return apiError("No organization found", { status: 404, code: "NOT_FOUND" });
+      return apiError("No organization found", {
+        status: 404,
+        code: "NOT_FOUND",
+      });
     }
 
-    const memberTyped = member as unknown as OrgMemberWithRole;
-    const memberRole = memberTyped.role || "";
+    const memberRole = member.role || "";
     if (!isOrganizationOwnerRole(memberRole)) {
-      return apiError(
-        "You don't have permission to manage billing. Contact your organization owner.",
-        { status: 403, code: "FORBIDDEN" }
-      );
+      return apiError("You don't have permission to manage billing. Contact your organization owner.", {
+        status: 403,
+        code: "FORBIDDEN",
+      });
     }
 
-    const org = memberTyped.organizations;
+    const org = member.organizations;
     if (!org) {
-      return apiError("Organization lookup failed", { status: 404, code: "NOT_FOUND" });
+      return apiError("Organization lookup failed", {
+        status: 404,
+        code: "NOT_FOUND",
+      });
     }
 
     if (!org.stripe_customer_id) {
@@ -60,9 +59,7 @@ export async function handleBillingPortal() {
     }
 
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-    const dashboardUrl = rootDomain.includes("localhost")
-      ? `http://${rootDomain}`
-      : `https://app.${rootDomain}`;
+    const dashboardUrl = rootDomain.includes("localhost") ? `http://${rootDomain}` : `https://app.${rootDomain}`;
 
     try {
       await stripe.customers.retrieve(org.stripe_customer_id);
@@ -74,7 +71,10 @@ export async function handleBillingPortal() {
 
       if (stripeErrorCode === "resource_missing") {
         logger.error(
-          { stripeCustomerId: org.stripe_customer_id, organizationId: member.organization_id },
+          {
+            stripeCustomerId: org.stripe_customer_id,
+            organizationId: member.organization_id,
+          },
           "Stale Stripe customer ID, clearing",
         );
         await admin
@@ -101,7 +101,10 @@ export async function handleBillingPortal() {
     Sentry.captureException(error, { tags: { route: "billing-portal" } });
     const apiErr = toApiError(error);
     if (error instanceof ApiRouteError) {
-      return apiError(apiErr.message, { status: apiErr.status, code: apiErr.code });
+      return apiError(apiErr.message, {
+        status: apiErr.status,
+        code: apiErr.code,
+      });
     }
     return apiError("Failed to open billing portal. Please try again.", {
       status: 500,

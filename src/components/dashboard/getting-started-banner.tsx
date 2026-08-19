@@ -12,6 +12,7 @@ interface GettingStartedBannerProps {
   customerCount: number;
   requestSent: boolean;
   notificationsConfigured: boolean;
+  canConfigureNotifications: boolean;
 }
 
 export function GettingStartedBanner({
@@ -19,6 +20,7 @@ export function GettingStartedBanner({
   customerCount,
   requestSent,
   notificationsConfigured,
+  canConfigureNotifications,
 }: GettingStartedBannerProps) {
   const [mounted, setMounted] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
@@ -33,10 +35,30 @@ export function GettingStartedBanner({
   if (!mounted || isDismissed) return null;
 
   const items = [
-    { label: "Connect Google Business Profile", done: googleConnected, href: "/settings/integrations" },
-    { label: "Add your first customer", done: customerCount > 0, href: "/customers" },
-    { label: "Send your first review request", done: requestSent, href: "/requests" },
-    { label: "Set up notification preferences", done: notificationsConfigured, href: "/settings/notifications" },
+    {
+      label: "Connect Google Business Profile",
+      done: googleConnected,
+      href: "/settings/integrations",
+    },
+    {
+      label: "Add your first customer",
+      done: customerCount > 0,
+      href: "/customers",
+    },
+    {
+      label: "Send your first review request",
+      done: requestSent,
+      href: "/requests",
+    },
+    ...(canConfigureNotifications
+      ? [
+          {
+            label: "Set up notification preferences",
+            done: notificationsConfigured,
+            href: "/settings/notifications",
+          },
+        ]
+      : []),
   ];
 
   const completedCount = items.filter((item) => item.done).length;
@@ -62,7 +84,7 @@ export function GettingStartedBanner({
             variant="outline"
             size="sm"
             onClick={startTour}
-            className="h-8 gap-2 rounded-lg border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary transition-all text-xs font-semibold"
+            className="h-8 gap-2 rounded-lg border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary transition-colors text-xs font-semibold"
           >
             <HelpCircle className="size-3.5" />
             Take a quick tour
@@ -83,13 +105,11 @@ export function GettingStartedBanner({
           <span className="text-muted-foreground">
             Progress: {completedCount} of {items.length}
           </span>
-          <span className="text-primary">
-            {Math.round(completionPercent)}%
-          </span>
+          <span className="text-primary">{Math.round(completionPercent)}%</span>
         </div>
         <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-primary transition-all duration-500 ease-out"
+          <div
+            className="h-full bg-primary transition-[width] duration-500 ease-out"
             style={{ width: `${completionPercent}%` }}
           />
         </div>
@@ -98,15 +118,16 @@ export function GettingStartedBanner({
       {/* Checklist Items */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {items.map((item, index) => (
-          <Link key={index} href={item.href}>
+          <Link key={item.href} href={item.href}>
             <div
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all border ${item.done
-                ? "bg-chart-2/5 border-chart-2/30 text-chart-2 dark:text-chart-2"
-                : "bg-background border-border hover:border-primary/30 pro-hover"
-                }`}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors border ${
+                item.done
+                  ? "bg-chart-2/5 border-chart-2/30 text-chart-2 dark:text-chart-2"
+                  : "bg-background border-border hover:border-primary/30 pro-hover"
+              }`}
             >
               <div
-                className={`shrink-0 rounded-full border-2 flex items-center justify-center transition-all ${item.done ? "border-chart-2 bg-chart-2" : "border-border bg-background" } size-6`}
+                className={`shrink-0 rounded-full border-2 flex items-center justify-center transition-colors ${item.done ? "border-chart-2 bg-chart-2" : "border-border bg-background"} size-6`}
               >
                 {item.done ? (
                   <Check className="text-primary-foreground size-4" />
@@ -114,9 +135,7 @@ export function GettingStartedBanner({
                   <span className="text-[10px] font-bold text-muted-foreground">{index + 1}</span>
                 )}
               </div>
-              <span className={`text-sm font-semibold truncate ${!item.done && "text-foreground"}`}>
-                {item.label}
-              </span>
+              <span className={`text-sm font-semibold truncate ${!item.done && "text-foreground"}`}>{item.label}</span>
             </div>
           </Link>
         ))}

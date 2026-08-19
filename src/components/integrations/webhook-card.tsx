@@ -9,21 +9,15 @@ import { toast } from "sonner";
 import { getAppBaseUrl } from "@/config/env";
 
 interface WebhookCardProps {
-    apiKey?: string | null;
+    hasApiKey?: boolean;
 }
 
-export function WebhookCard({ apiKey }: WebhookCardProps) {
+export function WebhookCard({ hasApiKey = false }: WebhookCardProps) {
     const [copied, setCopied] = useState(false);
     const apiBase = getAppBaseUrl();
-    const webhookUrl = apiKey
-        ? `${apiBase}/api/webhooks/generic?key=${apiKey}`
-        : `${apiBase}/api/webhooks/generic?key=YOUR_API_KEY`;
+    const webhookUrl = `${apiBase}/api/webhooks/generic`;
 
     const handleCopy = () => {
-        if (!apiKey) {
-            toast.info("Generate an API key first in the Developer API card.");
-            return;
-        }
         navigator.clipboard.writeText(webhookUrl);
         setCopied(true);
         toast.success("Webhook URL copied to clipboard");
@@ -58,18 +52,18 @@ export function WebhookCard({ apiKey }: WebhookCardProps) {
                 </div>
             </CardHeader>
             <CardContent className="space-y-4">
-                {!apiKey && (
+                {!hasApiKey && (
                     <div className="flex items-start gap-2 rounded-md border border-chart-4/35 bg-chart-4/12 p-3 text-xs text-chart-4">
                         <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
                         <p>
                             Generate an API key in the <span className="font-medium">Developer API</span>{" "}
-                            card &mdash; the webhook URL is signed by it.
+                            card and send it in the Authorization Bearer header.
                         </p>
                     </div>
                 )}
                 <div className="flex gap-2">
                     <Input value={webhookUrl} readOnly className="font-mono text-xs" />
-                    <Button variant="outline" size="icon" onClick={handleCopy} disabled={!apiKey}>
+                    <Button variant="outline" size="icon" onClick={handleCopy}>
                         {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     </Button>
                 </div>
@@ -79,7 +73,7 @@ export function WebhookCard({ apiKey }: WebhookCardProps) {
                     <code className="font-mono text-xs">
                         {`{ "name": "Customer Name", "email": "customer@email.com", "phone": "+15551234567", "channel": "both" }`}
                     </code>
-                    .
+                    , with <code className="font-mono text-xs">Authorization: Bearer YOUR_API_KEY</code>.
                 </p>
             </CardContent>
         </Card>

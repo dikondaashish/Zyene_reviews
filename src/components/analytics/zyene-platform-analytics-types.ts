@@ -6,6 +6,8 @@ export interface ReviewRequest {
     campaign_id: string | null;
     created_at: string;
     sent_at: string | null;
+    email_status?: string | null;
+    sms_status?: string | null;
     delivered_at: string | null;
     opened_at: string | null;
     clicked_at: string | null;

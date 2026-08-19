@@ -1,14 +1,16 @@
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
-import { getValidGoogleToken } from "@/services/google/sync-service";
+import {
+    getValidGoogleToken,
+    GooglePlatformAccessError,
+} from "@/services/google/sync-service";
 import { getGoogleLocation } from "@/services/google/listing-information";
 import { computeProfileHealth } from "@/services/google/profile-health";
-import { syncGoogleListingProfileForPlatform } from "@/services/google/phase3-sync";
 import { type NextRequest } from "next/server";
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
-import { logger } from "@/lib/logger";
 import { publicListingPayload } from "./listing-payload";
+import { persistGoogleListingSnapshot } from "./listing-persistence";
 
 export async function handleGoogleListingGet(request: NextRequest) {
     try {
@@ -30,7 +32,13 @@ export async function handleGoogleListingGet(request: NextRequest) {
             .eq("platform", "google")
             .maybeSingle();
 
-        if (error || !platform?.google_location_id) {
+        if (error) {
+            throw new ApiRouteError("Google connection is temporarily unavailable. Please try again.", {
+                status: 503,
+                code: "GOOGLE_CONNECTION_UNAVAILABLE",
+            });
+        }
+        if (!platform?.google_location_id) {
             throw new ApiRouteError("Google not connected", { status: 404, code: "GOOGLE_NOT_CONNECTED" });
         }
 
@@ -42,26 +50,12 @@ export async function handleGoogleListingGet(request: NextRequest) {
         const loc = await getGoogleLocation(accessToken, platform.google_location_id);
         const profileHealth = computeProfileHealth(loc);
 
-        try {
-            await supabase
-                .from("businesses")
-                .update({
-                    phone: loc.phoneNumbers?.primaryPhone || null,
-                    address_line1: loc.storefrontAddress?.addressLines?.join(", ") || null,
-                    city: loc.storefrontAddress?.locality || null,
-                    state: loc.storefrontAddress?.administrativeArea || null,
-                    zip: loc.storefrontAddress?.postalCode || null,
-                    website: loc.websiteUri || null,
-                    updated_at: new Date().toISOString(),
-                })
-                .eq("id", businessId);
-        } catch (persistErr) {
-            logger.error({ err: persistErr }, "[Google Listing] Failed to persist data to businesses table:");
-        }
-
-        syncGoogleListingProfileForPlatform(platform.id).catch((err) =>
-            logger.error({ err }, "[Google Listing] background profile sync failed"),
-        );
+        await persistGoogleListingSnapshot(supabase, {
+            businessId,
+            platformId: platform.id,
+            location: loc,
+            profileHealthScore: profileHealth.score,
+        });
 
         return apiOk({
             listing: publicListingPayload(loc),
@@ -70,7 +64,9 @@ export async function handleGoogleListingGet(request: NextRequest) {
             lastSyncedAt: platform.google_listing_synced_at,
         });
     } catch (e: unknown) {
-        const normalized = toApiError(e);
+        const normalized = e instanceof GooglePlatformAccessError
+            ? { message: e.message, status: e.status, code: e.code }
+            : toApiError(e);
         return apiError(normalized.message, {
             status: normalized.status || 400,
             code: normalized.code,

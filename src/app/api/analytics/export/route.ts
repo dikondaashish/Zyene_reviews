@@ -4,11 +4,14 @@ import { NextResponse } from "next/server";
 import Papa from "papaparse";
 import { getAnalyticsPeriods } from "@/lib/analytics/date-range";
 import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
+import { calculateReviewMetrics } from "@/lib/metrics/business-metrics";
 
 export async function GET(request: Request) {
     const supabase = await createClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
         return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -19,7 +22,8 @@ export async function GET(request: Request) {
 
     const { business } = await getActiveBusinessId();
 
-    if (!business) return new NextResponse("No business found", { status: 403 });
+    if (!business)
+        return new NextResponse("No business found", { status: 403 });
 
     const { currentStart, currentEnd } = getAnalyticsPeriods(range);
 
@@ -38,35 +42,43 @@ export async function GET(request: Request) {
             q = q.eq("platform", platform);
         }
 
-        return q.order("review_date", { ascending: true }).order("id", { ascending: true }).range(from, to);
+        return q
+            .order("review_date", { ascending: true })
+            .order("id", { ascending: true })
+            .range(from, to);
     };
 
-    const { data: reviews, error: reviewsError } = await fetchAllReviewRowsPaginated(1000, fetchReviewsPage);
+    const { data: reviews, error: reviewsError } =
+        await fetchAllReviewRowsPaginated(1000, fetchReviewsPage);
 
     if (reviewsError) {
-        return new NextResponse("Failed to load reviews for export", { status: 500 });
+        return new NextResponse("Failed to load reviews for export", {
+            status: 500,
+        });
     }
 
     // Aggregate Daily Trends for the CSV
-    const dateMap = new Map<string, { Date: string; "Avg Rating": number; "Review Count": number; "Positive": number; "Neutral": number; "Negative": number }>();
+    const dateMap = new Map<string, Array<{ rating: number | null }>>();
 
     (reviews || []).forEach((r) => {
         const sourceDate = r.review_date || r.created_at;
         const date = new Date(sourceDate).toISOString().split("T")[0];
-        if (!dateMap.has(date)) {
-            dateMap.set(date, { Date: date, "Avg Rating": 0, "Review Count": 0, Positive: 0, Neutral: 0, Negative: 0 });
-        }
-        const entry = dateMap.get(date)!;
-        entry["Avg Rating"] = (entry["Avg Rating"] * entry["Review Count"] + (r.rating || 0)) / (entry["Review Count"] + 1);
-        entry["Review Count"] += 1;
-
-        const rating = r.rating || 0;
-        if (rating >= 4) entry.Positive++;
-        else if (rating === 3) entry.Neutral++;
-        else entry.Negative++;
+        const dayRows = dateMap.get(date) ?? [];
+        dayRows.push(r);
+        dateMap.set(date, dayRows);
     });
 
-    const trendRows = Array.from(dateMap.values());
+    const trendRows = Array.from(dateMap.entries()).map(([date, dayRows]) => {
+        const metrics = calculateReviewMetrics(dayRows);
+        return {
+            Date: date,
+            "Avg Rating": metrics.averageRating,
+            "Review Count": metrics.totalReviews,
+            "Positive (4-5 stars)": metrics.positiveReviews,
+            "Neutral (3 stars)": metrics.neutralReviews,
+            "Negative (1-2 stars)": metrics.negativeReviews,
+        };
+    });
 
     // Generate CSV
     const csvData = Papa.unparse(trendRows);
@@ -77,7 +89,7 @@ export async function GET(request: Request) {
         status: 200,
         headers: {
             "Content-Type": "text/csv; charset=utf-8",
-            "Content-Disposition": `attachment; filename="${filename}"`
-        }
+            "Content-Disposition": `attachment; filename="${filename}"`,
+        },
     });
 }

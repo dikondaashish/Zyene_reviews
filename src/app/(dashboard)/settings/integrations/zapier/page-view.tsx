@@ -35,6 +35,7 @@ export default async function ZapierIntegrationPage() {
                 appBaseUrl={data.appBaseUrl}
                 apiKey={data.apiKey}
                 businessId={data.business.id}
+                canManageApiKeys={data.canManageApiKeys}
             >
                 <ZapierPartnerTilesCard />
             </ZapierSetupClient>

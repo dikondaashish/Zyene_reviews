@@ -22,6 +22,12 @@ export {
   forceRefreshGoogleAccessToken,
 } from "./tokens";
 
+export {
+  GooglePlatformAccessError,
+  GooglePlatformLookupError,
+  GooglePlatformNotFoundError,
+} from "./errors";
+
 export { bootstrapGoogleReviewsForPlatform } from "./bootstrap";
 
 export { prepareGoogleSync } from "./prepare-sync";

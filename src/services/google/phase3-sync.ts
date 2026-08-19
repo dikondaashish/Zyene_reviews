@@ -1,6 +1,6 @@
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { getValidGoogleToken } from "./sync-service";
+import { getValidGoogleToken, GooglePlatformAccessError } from "./sync-service";
 import { getGoogleLocation } from "./listing-information";
 import { computeProfileHealth } from "./profile-health";
 import * as Sentry from "@sentry/nextjs";
@@ -48,8 +48,15 @@ export async function syncGoogleListingProfileForPlatform(platformId: string): P
         return { success: true, profileHealthScore: score };
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        logger.error({ err: msg }, "[Phase3] Listing / profile health sync failed:");
-        Sentry.captureException(e);
+        if (e instanceof GooglePlatformAccessError) {
+            // Missing/deleted connections and transient database reads are
+            // expected operational states. The next scheduled sync can retry;
+            // reporting them as application exceptions creates false alarms.
+            logger.warn({ code: e.code }, "[Phase3] Google connection unavailable");
+        } else {
+            logger.error({ err: msg }, "[Phase3] Listing / profile health sync failed:");
+            Sentry.captureException(e);
+        }
         return { success: false, error: msg };
     }
 }

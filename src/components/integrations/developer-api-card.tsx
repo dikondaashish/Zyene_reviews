@@ -9,13 +9,15 @@ import { DeveloperApiCardEndpointsList } from "./developer-api-card-endpoints-li
 import { DeveloperApiCardFooter } from "./developer-api-card-footer";
 import { DeveloperApiCardKeySection } from "./developer-api-card-key-section";
 import { useDeveloperApiCard } from "./use-developer-api-card";
+import type { PublicApiKey } from "@/lib/api-keys/credentials";
 
 interface DeveloperApiCardProps {
     businessId: string;
-    apiKey?: string | null;
+    apiKey: PublicApiKey | null;
+    canManage: boolean;
 }
 
-export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperApiCardProps) {
+export function DeveloperApiCard({ businessId, apiKey: initialKey, canManage }: DeveloperApiCardProps) {
     const d = useDeveloperApiCard(businessId, initialKey);
 
     return (
@@ -34,7 +36,7 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
                             </p>
                         </div>
                     </div>
-                    {d.apiKey && (
+                    {d.apiKey && !d.apiKey.revokedAt && (
                         <Badge className="bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2 border-0 text-xs">
                             Active
                         </Badge>
@@ -44,13 +46,13 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
             <CardContent className="space-y-4 pb-3">
                 <DeveloperApiCardKeySection
                     apiKey={d.apiKey}
-                    maskedKey={d.maskedKey}
-                    showKey={d.showKey}
-                    onToggleShowKey={() => d.setShowKey(!d.showKey)}
+                    newSecret={d.newSecret}
                     copied={d.copied}
                     onCopy={d.handleCopy}
-                    isGenerating={d.isGenerating}
-                    onGenerate={d.handleGenerate}
+                    pending={d.pending}
+                    canManage={canManage}
+                    onDismiss={d.dismissSecret}
+                    onCreate={d.handleCreate}
                 />
                 <DeveloperApiCardBaseUrlSection
                     apiBase={d.apiBase}
@@ -60,7 +62,13 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey }: DeveloperAp
                 <DeveloperApiCardEndpointsList />
             </CardContent>
             <CardFooter className="flex flex-col gap-3 border-t bg-muted/5 pt-4 sm:flex-row sm:items-center sm:justify-between">
-                <DeveloperApiCardFooter hasApiKey={!!d.apiKey} onRegenerate={d.handleGenerate} />
+                <DeveloperApiCardFooter
+                    hasApiKey={Boolean(d.apiKey)}
+                    canManage={canManage}
+                    pending={d.pending}
+                    onRotate={d.handleRotate}
+                    onRevoke={d.handleRevoke}
+                />
             </CardFooter>
         </Card>
     );

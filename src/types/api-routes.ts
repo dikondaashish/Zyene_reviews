@@ -40,6 +40,9 @@ export interface GooglePlatformUpdatePayload {
 export interface ReviewRequestExportRow {
     created_at: string;
     sent_at?: string | null;
+    delivered_at?: string | null;
+    clicked_at?: string | null;
+    campaign_id?: string | null;
     customer_name?: string | null;
     customer_phone?: string | null;
     customer_email?: string | null;

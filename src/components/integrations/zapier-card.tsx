@@ -13,22 +13,15 @@ import { getAppBaseUrl } from "@/config/env";
 import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 
 interface ZapierCardProps {
-    /** Required so we can fall back to a friendly disabled state when the user hasn't generated a key yet. */
-    apiKey?: string | null;
+    hasApiKey: boolean;
 }
 
-export function ZapierCard({ apiKey }: ZapierCardProps) {
+export function ZapierCard({ hasApiKey }: ZapierCardProps) {
     const [copied, setCopied] = useState(false);
     const apiBase = getAppBaseUrl();
-    const webhookUrl = apiKey
-        ? `${apiBase}/api/webhooks/generic?key=${apiKey}`
-        : `${apiBase}/api/webhooks/generic?key=YOUR_API_KEY`;
+    const webhookUrl = `${apiBase}/api/webhooks/generic`;
 
     const handleCopy = () => {
-        if (!apiKey) {
-            toast.info("Generate an API key first in the Developer API card below.");
-            return;
-        }
         navigator.clipboard.writeText(webhookUrl);
         setCopied(true);
         toast.success("Webhook URL copied to clipboard");
@@ -54,22 +47,22 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
                     </div>
                     <Badge
                         className={
-                            apiKey
+                            hasApiKey
                                 ? "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2 gap-1 border-0 text-xs"
                                 : "bg-muted text-muted-foreground gap-1 border-0 text-xs"
                         }
                     >
-                        {apiKey ? "Available" : "Needs API key"}
+                        {hasApiKey ? "Available" : "Needs API key"}
                     </Badge>
                 </div>
             </CardHeader>
             <CardContent className="space-y-3 pb-3">
-                {!apiKey && (
+                {!hasApiKey && (
                     <div className="flex items-start gap-2 rounded-md border border-chart-4/35 bg-chart-4/12 p-3 text-xs text-chart-4">
                         <AlertTriangle className="shrink-0 mt-0.5 size-3.5" />
                         <p>
                             Generate an API key in the <span className="font-medium">Developer API</span>{" "}
-                            section below first &mdash; the webhook URL is signed by it.
+                            section below first, then save it in Zapier as a Bearer header.
                         </p>
                     </div>
                 )}
@@ -90,7 +83,6 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
                             size="icon"
                             className="shrink-0"
                             onClick={handleCopy}
-                            disabled={!apiKey}
                         >
                             {copied ? (
                                 <Check className="text-chart-2 size-4" />
@@ -109,7 +101,11 @@ export function ZapierCard({ apiKey }: ZapierCardProps) {
                     </p>
                     <p>3. Paste the URL above into the Webhook field.</p>
                     <p>
-                        4. Send JSON with <span className="font-mono">name</span>,{" "}
+                        4. Add <span className="font-mono">Authorization</span> with value{" "}
+                        <span className="font-mono">Bearer YOUR_API_KEY</span> under Headers.
+                    </p>
+                    <p>
+                        5. Send JSON with <span className="font-mono">name</span>,{" "}
                         <span className="font-mono">email</span>, and/or{" "}
                         <span className="font-mono">phone</span>. Optional:{" "}
                         <span className="font-mono">channel</span> = sms | email | both | link.

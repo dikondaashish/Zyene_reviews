@@ -1,4 +1,5 @@
 import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
+import { loadReviewRequestMetrics } from "@/lib/metrics/load-review-request-metrics";
 import type { DashboardAuthContext } from "./load-dashboard-auth";
 
 export async function runDashboardStatsQueries(auth: DashboardAuthContext) {
@@ -10,18 +11,6 @@ export async function runDashboardStatsQueries(auth: DashboardAuthContext) {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
     return Promise.all([
-        supabase
-            .from("reviews")
-            .select("*", { count: "exact", head: true })
-            .eq("business_id", business.id)
-            .eq("is_visible", true)
-            .eq("response_status", "responded"),
-        supabase
-            .from("reviews")
-            .select("*", { count: "exact", head: true })
-            .eq("business_id", business.id)
-            .eq("is_visible", true)
-            .eq("response_status", "pending"),
         supabase
             .from("reviews")
             .select("*")
@@ -69,39 +58,8 @@ export async function runDashboardStatsQueries(auth: DashboardAuthContext) {
                 .order("id", { ascending: true })
                 .range(from, to),
         ),
-        supabase
-            .from("reviews")
-            .select("*", { count: "exact", head: true })
-            .eq("business_id", business.id)
-            .eq("is_visible", true)
-            .eq("sentiment", "positive"),
-        supabase
-            .from("reviews")
-            .select("*", { count: "exact", head: true })
-            .eq("business_id", business.id)
-            .eq("is_visible", true)
-            .in("sentiment", ["negative", "mixed"]),
-        supabase
-            .from("reviews")
-            .select("*", { count: "exact", head: true })
-            .eq("business_id", business.id)
-            .eq("is_visible", true)
-            .not("sentiment", "is", null),
-        supabase
-            .from("review_requests")
-            .select("*", { count: "exact", head: true })
-            .eq("business_id", business.id)
-            .in("status", ["completed", "feedback_left"]),
-        supabase
-            .from("review_requests")
-            .select("*", { count: "exact", head: true })
-            .eq("business_id", business.id)
-            .not("status", "eq", "queued"),
-        supabase
-            .from("review_requests")
-            .select("*", { count: "exact", head: true })
-            .eq("business_id", business.id)
-            .gte("created_at", startOfThisMonth.toISOString()),
+        loadReviewRequestMetrics(supabase, business.id),
+        loadReviewRequestMetrics(supabase, business.id, startOfThisMonth),
         supabase
             .from("reviews")
             .select("*", { count: "exact", head: true })
@@ -121,4 +79,6 @@ export async function runDashboardStatsQueries(auth: DashboardAuthContext) {
     ] as const);
 }
 
-export type DashboardStatsQueryResults = Awaited<ReturnType<typeof runDashboardStatsQueries>>;
+export type DashboardStatsQueryResults = Awaited<
+    ReturnType<typeof runDashboardStatsQueries>
+>;

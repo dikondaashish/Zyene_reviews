@@ -1,9 +1,4 @@
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Send, CheckCircle2, MousePointerClick, Star } from "lucide-react";
 
 export function RequestsStatsSection({
@@ -26,7 +21,9 @@ export function RequestsStatsSection({
         <div className="mb-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             <Card className="border-l-4 border-l-primary">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Total Sent</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                        Total Sent
+                    </CardTitle>
                     <Send className="text-primary size-4" />
                 </CardHeader>
                 <CardContent>
@@ -34,39 +31,60 @@ export function RequestsStatsSection({
                     <p className="text-xs text-muted-foreground">
                         {stats.emailSent} email · {stats.smsSent} SMS
                         {stats.totalFailed > 0 ? (
-                            <span className="text-destructive"> · {stats.totalFailed} failed</span>
+                            <span className="text-destructive">
+                                {" "}
+                                · {stats.totalFailed} failed
+                            </span>
                         ) : null}
                     </p>
                 </CardContent>
             </Card>
             <Card className="border-l-4 border-l-emerald-500">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Delivery Rate</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                        Delivery Rate
+                    </CardTitle>
                     <CheckCircle2 className="text-chart-2 size-4" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">{stats.deliveryRate.toFixed(1)}%</div>
-                    <p className="text-xs text-muted-foreground">{stats.delivered} delivered</p>
+                    <div className="text-2xl font-bold">
+                        {stats.deliveryRate.toFixed(1)}%
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                        {stats.delivered} of {stats.totalSent} sent
+                    </p>
                 </CardContent>
             </Card>
             <Card className="border-l-4 border-l-amber-600">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Click Rate</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                        Click Rate
+                    </CardTitle>
                     <MousePointerClick className="text-chart-4 size-4" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">{stats.clickRate.toFixed(1)}%</div>
-                    <p className="text-xs text-muted-foreground">{stats.clicked} clicks</p>
+                    <div className="text-2xl font-bold">
+                        {stats.clickRate.toFixed(1)}%
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                        {stats.clicked} of {stats.totalSent} sent
+                    </p>
                 </CardContent>
             </Card>
             <Card className="border-l-4 border-l-yellow-500">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Review Conversion</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                        Review Conversion
+                    </CardTitle>
                     <Star className="text-chart-4 size-4" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">{stats.conversionRate.toFixed(1)}%</div>
-                    <p className="text-xs text-muted-foreground">{stats.reviews} completed</p>
+                    <div className="text-2xl font-bold">
+                        {stats.conversionRate.toFixed(1)}%
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                        {stats.reviews} of {stats.totalSent} sent
+                    </p>
                 </CardContent>
             </Card>
         </div>

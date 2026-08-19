@@ -4,11 +4,14 @@ import { ZapierHowItWorksCard } from "./zapier-how-it-works-card";
 import { ZapierWebhookUrlCard } from "./zapier-webhook-url-card";
 import { ZapierConfigureZapCard } from "./zapier-configure-zap-card";
 import { ZapierHelpFooterCard } from "./zapier-help-footer-card";
+import { DeveloperApiCard } from "@/components/integrations/developer-api-card";
+import type { PublicApiKey } from "@/lib/api-keys/credentials";
 
 interface ZapierSetupClientProps {
     appBaseUrl: string;
-    apiKey: string | null;
+    apiKey: PublicApiKey | null;
     businessId: string;
+    canManageApiKeys: boolean;
     children?: ReactNode;
 }
 
@@ -16,6 +19,7 @@ export function ZapierSetupClient({
     appBaseUrl,
     apiKey,
     businessId,
+    canManageApiKeys,
     children,
 }: ZapierSetupClientProps) {
     return (
@@ -23,9 +27,13 @@ export function ZapierSetupClient({
             <ZapierHowItWorksCard />
 
             <div className="space-y-6 lg:col-span-3">
+                <DeveloperApiCard
+                    businessId={businessId}
+                    apiKey={apiKey}
+                    canManage={canManageApiKeys}
+                />
                 <ZapierWebhookUrlCard
                     appBaseUrl={appBaseUrl}
-                    apiKey={apiKey}
                     businessId={businessId}
                 />
                 <ZapierConfigureZapCard />

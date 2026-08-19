@@ -1,17 +1,20 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { loadPromptDetail } from "./load-prompt-detail";
 import { PromptTrendChart } from "./prompt-trend-chart";
 import { PromptHeadToHead } from "./prompt-head-to-head";
 import { ContentBriefSection } from "./content-brief-section";
+import { promptDetailRedirect } from "@/services/aeo/prompt-detail-navigation";
 
 export default async function PromptDetailPage({ params }: { params: Promise<{ promptId: string }> }) {
     const { promptId } = await params;
     const data = await loadPromptDetail(promptId);
 
-    if (data.kind === "not-found") notFound();
+    if (data.kind === "not-found") {
+        redirect(promptDetailRedirect(data) ?? "/google-seo-aeo/prompts");
+    }
 
     return (
         <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">

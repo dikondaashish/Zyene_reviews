@@ -8,7 +8,7 @@ export async function OPTIONS() {
 }
 
 export async function GET(req: NextRequest) {
-    const auth = await authenticateApiKey(req);
+    const auth = await authenticateApiKey(req, "reviews:read");
     if (!auth.ok) return auth.response;
 
     const sp = req.nextUrl.searchParams;

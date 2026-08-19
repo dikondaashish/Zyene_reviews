@@ -52,38 +52,74 @@ const BASELINE = {
   "src/lib/content/blog-posts-month2.ts": { max: 456, why: "content dataset" },
   "src/lib/content/blog-posts-month3.ts": { max: 430, why: "content dataset" },
   "src/lib/content/resource-data.ts": { max: 505, why: "content dataset" },
-  "src/lib/comparisons/competitor-data.ts": { max: 455, why: "content dataset" },
+  "src/lib/comparisons/competitor-data.ts": {
+    max: 455,
+    why: "content dataset",
+  },
   "src/lib/industries/industry-data.ts": { max: 454, why: "content dataset" },
-  "src/lib/social-proof/case-study-data.ts": { max: 229, why: "content dataset" },
+  "src/lib/social-proof/case-study-data.ts": {
+    max: 229,
+    why: "content dataset",
+  },
   "src/lib/growth/kpi-definitions.ts": { max: 225, why: "content dataset" },
-  "src/lib/growth/implementation-matrix.ts": { max: 242, why: "content dataset" },
+  "src/lib/growth/implementation-matrix.ts": {
+    max: 242,
+    why: "content dataset",
+  },
   "src/lib/review-flow/tag-display.ts": { max: 239, why: "content dataset" },
 
   // ── SEO surface ───────────────────────────────────────────────────────────
   // sitemap.ts is one flat route manifest; splitting it hides what is indexed.
   // Its real risk is a missing route, which tests/unit/sitemap-coverage.test.ts
   // now guards instead.
-  "src/app/sitemap.ts": { max: 311, why: "route manifest, covered by sitemap-coverage test" },
+  "src/app/sitemap.ts": {
+    max: 311,
+    why: "route manifest, covered by sitemap-coverage test",
+  },
   "src/lib/growth/page-inventory.ts": { max: 286, why: "route manifest" },
 
   // ── Logic still owed a split ──────────────────────────────────────────────
   // Ranked by churn x size when the guard landed. Work top-down.
-  "src/lib/analytics/build-analytics-range-payload.ts": { max: 351, why: "TODO: split" },
+  "src/lib/analytics/build-analytics-range-payload.ts": {
+    max: 351,
+    why: "TODO: split",
+  },
   "src/lib/growth/kpi-metrics.ts": { max: 397, why: "TODO: split" },
-  "src/app/(dashboard)/competitors/add-competitor-dialog.tsx": { max: 326, why: "TODO: split" },
+  "src/app/(dashboard)/competitors/add-competitor-dialog.tsx": {
+    max: 326,
+    why: "TODO: split",
+  },
   "src/app/actions/onboarding/flow.ts": { max: 317, why: "TODO: split" },
   "src/services/customers/customers-api.ts": { max: 309, why: "TODO: split" },
   "src/app/actions/competitor.ts": { max: 301, why: "TODO: split" },
-  "src/services/google/location-selector-api.ts": { max: 258, why: "TODO: split" },
+  "src/services/google/location-selector-api.ts": {
+    max: 258,
+    why: "TODO: split",
+  },
   "src/services/stripe/checkout-api.ts": { max: 251, why: "TODO: split" },
-  "src/services/competitors/external-metrics.ts": { max: 241, why: "TODO: split" },
+  "src/services/competitors/external-metrics.ts": {
+    max: 241,
+    why: "TODO: split",
+  },
   "src/app/actions/onboarding/business.ts": { max: 241, why: "TODO: split" },
-  "src/lib/auth/accept-business-invitation.ts": { max: 239, why: "TODO: split" },
+  "src/lib/auth/accept-business-invitation.ts": {
+    max: 239,
+    why: "TODO: split",
+  },
   "src/services/team/team-member-api.ts": { max: 235, why: "TODO: split" },
-  "src/services/google/performance-queries.ts": { max: 234, why: "TODO: split" },
-  "src/types/components.ts": { max: 220, why: "TODO: split shared prop types by domain" },
+  "src/services/google/performance-queries.ts": {
+    max: 234,
+    why: "TODO: split",
+  },
+  "src/types/components.ts": {
+    max: 220,
+    why: "TODO: split shared prop types by domain",
+  },
   "src/domains/ai/adapters/vertex-adapter.ts": { max: 217, why: "TODO: split" },
-  "src/services/clover/process-payment-event.ts": { max: 215, why: "TODO: split" },
+  "src/services/clover/process-payment-event.ts": {
+    max: 215,
+    why: "TODO: split",
+  },
   "src/services/google/lodging-merge.ts": { max: 204, why: "TODO: split" },
 
   // ── Layouts ───────────────────────────────────────────────────────────────
@@ -91,8 +127,6 @@ const BASELINE = {
   // (Root layout came off this list once metadata moved to layout-metadata.ts
   // and the Meta Pixel to components/analytics/meta-pixel.tsx — it is under the
   // 100-line page limit on its own now.)
-  "src/app/(dashboard)/settings/layout.tsx": { max: 150, why: "layout nav config" },
-  "src/app/(dashboard)/layout.tsx": { max: 102, why: "layout nav config" },
   "src/components/marketing/marketing-home/marketing-home-pricing.tsx": {
     max: 154,
     why: "pricing table markup",
@@ -112,7 +146,11 @@ function countLines(full) {
 
 function categoryFor(rel) {
   if (/^src\/app\/api\/.*\/route\.ts$/.test(rel)) return "api";
-  if (/^src\/app\/.*\/(page|layout)\.tsx$/.test(rel) || rel === "src/app/layout.tsx") return "page";
+  if (
+    /^src\/app\/.*\/(page|layout)\.tsx$/.test(rel) ||
+    rel === "src/app/layout.tsx"
+  )
+    return "page";
   if (rel.startsWith("src/components/")) return "component";
   return "lib";
 }
@@ -169,30 +207,46 @@ let failed = false;
 
 if (overLimit.length > 0) {
   failed = true;
-  console.error("File size guard failed — these exceed the AGENTS.md §2 limit:\n");
+  console.error(
+    "File size guard failed — these exceed the AGENTS.md §2 limit:\n",
+  );
   for (const v of overLimit) {
-    console.error(`  ${v.rel}\n    ${v.lines} lines, limit ${v.limit} (${v.category})`);
+    console.error(
+      `  ${v.rel}\n    ${v.lines} lines, limit ${v.limit} (${v.category})`,
+    );
   }
-  console.error("\nSplit the file, or add it to BASELINE in scripts/check-file-sizes.mjs with a reason.\n");
+  console.error(
+    "\nSplit the file, or add it to BASELINE in scripts/check-file-sizes.mjs with a reason.\n",
+  );
 }
 
 if (grown.length > 0) {
   failed = true;
   console.error("File size guard failed — these grandfathered files grew:\n");
   for (const v of grown) {
-    console.error(`  ${v.rel}\n    ${v.lines} lines, was ${v.was}, limit ${v.limit}`);
+    console.error(
+      `  ${v.rel}\n    ${v.lines} lines, was ${v.was}, limit ${v.limit}`,
+    );
   }
-  console.error("\nExisting debt may shrink but not grow. Split the file instead.\n");
+  console.error(
+    "\nExisting debt may shrink but not grow. Split the file instead.\n",
+  );
 }
 
 if (stale.length > 0) {
   failed = true;
-  console.error("File size guard failed — these are now within limits (or deleted):\n");
+  console.error(
+    "File size guard failed — these are now within limits (or deleted):\n",
+  );
   for (const rel of stale) console.error(`  ${rel}`);
-  console.error("\nRemove them from BASELINE in scripts/check-file-sizes.mjs.\n");
+  console.error(
+    "\nRemove them from BASELINE in scripts/check-file-sizes.mjs.\n",
+  );
 }
 
 if (failed) process.exit(1);
 
 const remaining = Object.keys(BASELINE).length;
-console.log(`OK: no file over its limit. ${remaining} grandfathered in BASELINE (ratcheted, cannot grow).`);
+console.log(
+  `OK: no file over its limit. ${remaining} grandfathered in BASELINE (ratcheted, cannot grow).`,
+);

@@ -4,65 +4,88 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { getAppBaseUrl } from "@/config/env";
+import type { PublicApiKey } from "@/lib/api-keys/credentials";
+import { DEVELOPER_API_SCOPES } from "@/lib/api-keys/scopes";
 
-export function useDeveloperApiCard(businessId: string, initialKey?: string | null) {
-    const [apiKey, setApiKey] = useState(initialKey || null);
+type KeyResponse = { apiKey: string; key: PublicApiKey; error?: string };
+
+export function useDeveloperApiCard(businessId: string, initialKey: PublicApiKey | null) {
+    const [apiKey, setApiKey] = useState(initialKey);
+    const [newSecret, setNewSecret] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
     const [baseCopied, setBaseCopied] = useState(false);
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [showKey, setShowKey] = useState(false);
-
+    const [pending, setPending] = useState(false);
     const apiBase = getAppBaseUrl();
 
-    const handleCopy = () => {
-        if (!apiKey) return;
-        navigator.clipboard.writeText(apiKey);
-        setCopied(true);
-        toast.success("API key copied to clipboard");
-        setTimeout(() => setCopied(false), 2000);
-    };
-
-    const handleCopyBaseUrl = () => {
-        navigator.clipboard.writeText(apiBase);
-        setBaseCopied(true);
-        toast.success("API base URL copied");
-        setTimeout(() => setBaseCopied(false), 2000);
-    };
-
-    const handleGenerate = async () => {
-        setIsGenerating(true);
+    async function writeKey(method: "POST" | "PATCH") {
+        setPending(true);
         try {
-            const res = await fetch("/api/integrations/api-key", {
-                method: "POST",
+            const body = method === "POST"
+                ? { businessId, name: "Developer API", scopes: DEVELOPER_API_SCOPES }
+                : { keyId: apiKey?.id };
+            const response = await fetch("/api/integrations/api-key", {
+                method,
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ businessId }),
+                body: JSON.stringify(body),
             });
-            if (!res.ok) throw new Error("Failed");
-            const data = await res.json();
-            setApiKey(data.apiKey);
-            toast.success(apiKey ? "API key regenerated" : "API key generated");
-        } catch {
-            toast.error("Failed to generate API key");
+            const result = await response.json() as KeyResponse;
+            if (!response.ok) throw new Error(result.error || "API key operation failed");
+            setApiKey(result.key);
+            setNewSecret(result.apiKey);
+            toast.success(method === "POST" ? "API key created" : "API key rotated");
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : "API key operation failed");
         } finally {
-            setIsGenerating(false);
+            setPending(false);
         }
-    };
+    }
 
-    const maskedKey = apiKey
-        ? `zy_${apiKey.slice(3, 7)}${"•".repeat(24)}${apiKey.slice(-4)}`
-        : null;
+    async function handleRevoke() {
+        if (!apiKey) return;
+        setPending(true);
+        try {
+            const response = await fetch("/api/integrations/api-key", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ keyId: apiKey.id }),
+            });
+            if (!response.ok) throw new Error("Unable to revoke API key");
+            setApiKey(null);
+            setNewSecret(null);
+            toast.success("API key revoked");
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : "Unable to revoke API key");
+        } finally {
+            setPending(false);
+        }
+    }
+
+    async function copy(value: string, success: string) {
+        await navigator.clipboard.writeText(value);
+        toast.success(success);
+    }
 
     return {
         apiKey,
         apiBase,
+        newSecret,
         copied,
         baseCopied,
-        isGenerating,
-        showKey,
-        setShowKey,
-        maskedKey,
-        handleCopy,
-        handleCopyBaseUrl,
-        handleGenerate,
+        pending,
+        dismissSecret: () => setNewSecret(null),
+        handleCreate: () => writeKey("POST"),
+        handleRotate: () => writeKey("PATCH"),
+        handleRevoke,
+        handleCopy: async () => {
+            if (!newSecret) return;
+            await copy(newSecret, "API key copied");
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        },
+        handleCopyBaseUrl: async () => {
+            await copy(apiBase, "API base URL copied");
+            setBaseCopied(true);
+            setTimeout(() => setBaseCopied(false), 2000);
+        },
     };
 }

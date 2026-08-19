@@ -76,6 +76,15 @@ export function createGoogleApiError(message: string, code?: string): GoogleApiE
     return error;
 }
 
+async function bufferResponseBody(response: Response): Promise<Response> {
+    const body = await response.arrayBuffer();
+    return new Response(body.byteLength > 0 ? body : null, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+    });
+}
+
 export async function fetchWithRetry(url: string, options: RequestInit, retries = 3, backoff = 2000): Promise<Response> {
     try {
         const response = await fetchWithTimeout(url, options);
@@ -92,7 +101,11 @@ export async function fetchWithRetry(url: string, options: RequestInit, retries 
             }
         }
 
-        return response;
+        // Consume the body while the request deadline is still inside this
+        // retry boundary. A fetch can resolve after receiving 200 headers and
+        // then time out while reading the body; returning the live response
+        // used to let that TimeoutError escape without a retry.
+        return await bufferResponseBody(response);
     } catch (error) {
         if (retries > 0) {
             const jitter = Math.random() * backoff;
