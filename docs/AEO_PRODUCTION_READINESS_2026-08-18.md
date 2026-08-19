@@ -72,12 +72,16 @@ side effect of code deployment.
 Two Phase 3 provider-backed paths cannot be called operational without external
 authorization:
 
-- The configured Google OAuth client currently returns `invalid_client`, so
-  citation/traffic correlation and Google-backed NAP comparisons remain honest
-  unavailable states until the Google client credential is corrected and the
-  account reconnects.
-- Microsoft 365 Copilot Chat requires a licensed delegated access token. The
-  preview flag and token remain absent, so the adapter correctly stays gated.
+- The production Google OAuth client is configured correctly and refresh-token
+  exchange succeeds. Wolfpack's connected Google profile now powers NAP
+  comparisons, but Wolfpack has not granted the incremental Search Console
+  read-only scope required for citation/traffic correlation. The Zyene business
+  has granted that scope and the API successfully lists its Search Console
+  properties.
+- Microsoft 365 Copilot Chat requires a delegated work-or-school account with a
+  Microsoft 365 Copilot add-on license and the required Graph permissions. The
+  preview flag and delegated token remain absent, so the adapter correctly stays
+  gated; a personal `live.com` identity cannot satisfy this requirement.
 
 No code change can manufacture either authorization. These are activation
 prerequisites, not missing feature implementations.

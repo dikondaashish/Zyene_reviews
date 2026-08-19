@@ -16,11 +16,11 @@ customer configuration or data that does not exist.
 |---|---|---|
 | F1.9 | Copilot sampling | Microsoft 365 Copilot Chat beta adapter registered with an explicit preview flag, delegated-token requirement, zero-cost catalog entry, and provider throttle. It never substitutes fabricated output when the preview entitlement is absent. |
 | F1.14 | Answer volatility | Answer and citation volatility persisted per prompt and engine. Wolfpack has fresh rows for 6 measured engines. |
-| F2.6 | Citation to organic traffic correlation | GSC page/day join, eligibility calculation, interpretation, persistence, and dashboard state shipped. Wolfpack currently records `google_token_unavailable` because the existing production Google OAuth client returns `invalid_client`; no correlation is fabricated. |
+| F2.6 | Citation to organic traffic correlation | GSC page/day join, eligibility calculation, interpretation, persistence, and dashboard state shipped. The production Google OAuth client and token refresh were verified healthy on 2026-08-18. Wolfpack has not granted the incremental Search Console read-only scope, so it correctly has no correlation row; no correlation is fabricated. |
 | F3.7 | Competitor page tracking | Cited competitor pages are fetched through the SSRF guard, content-hashed, snapshotted, and diffed. Wolfpack currently has no qualifying competitor citation URLs, so the accepted result is 0 snapshots and 0 changes. |
 | F4.8 | Prompt demand estimates | DataForSEO historical keyword demand is location-scoped and cost-attributed. The provider omitted Wolfpack's long-tail prompt, so a durable `null` estimate was stored at 0 micro-USD instead of pretending the keyword has zero demand. |
 | F5.9 | `llms.txt` audit | Presence, HTTP status, syntax validity, content hash, and issues are persisted. Wolfpack correctly records `https://wolfpackkc.com/llms.txt` as HTTP 404, absent, and invalid. |
-| F5.11 | NAP consistency | Connected-profile observations and name/address/phone match states are persisted with provenance. Wolfpack's Google observation is stored with unknown comparisons while its OAuth token is unavailable. |
+| F5.11 | NAP consistency | Connected-profile observations and name/address/phone match states are persisted with provenance. Wolfpack's refreshed Google observation records name and phone matches with an address mismatch, all backed by the connected profile. |
 | F7.5 | White-label | Organization logo, primary color, powered-by removal, sender-domain status, report generation, and dashboard controls are wired. Wolfpack retains the organization's explicit default configuration. |
 | F7.7 | Outbound webhooks | Tenant-scoped encrypted endpoint configuration, signed deliveries, retries, delivery history, and alert/run-complete producers are shipped. Wolfpack has no configured endpoint, so no delivery is invented. |
 | F7.8 | BigQuery export | Tenant-scoped encrypted service-account configuration and real BigQuery REST/JWT export are shipped; raw answer text is excluded. Wolfpack has no configured integration, so the accepted export state is 0. |
@@ -66,9 +66,9 @@ index informational notices before normal customer traffic accumulates.
 - Volatility: 6 rows (`chatgpt`, `claude`, `gemini`, `google_ai_mode`, `google_serp`, `perplexity`)
 - Prompt demand: 1 durable row, `monthly_search_volume = null`, `provider = dataforseo`, `provider_cost_micro_usd = 0`
 - `llms.txt`: HTTP 404, `present = false`, `valid = false`, issue `missing_or_unreachable`
-- NAP: 1 connected-platform observation with explicit unknown match states
+- NAP: 1 Google connected-platform observation with `name_matches = true`, `address_matches = false`, and `phone_matches = true`
 - Anomaly: `eligible = false`, `anomalous = false`, `history_days = 2`
-- Citation/traffic correlations: 0 while the existing Google OAuth client is unavailable
+- Citation/traffic correlations: 0 because Wolfpack has not granted the incremental Search Console read-only scope
 - Competitor page snapshots/changes: 0/0 because no qualifying cited competitor page exists
 - Webhook endpoints/deliveries: 0/0 because none is configured
 - BigQuery integrations/export runs: 0/0 because none is configured
@@ -102,10 +102,10 @@ provides the post-commit compile/build gate.
 
 Phase 3 engineering scope is complete at 11/11 and the production orchestration
 path is accepted. The empty, unavailable, and history-gated pilot states above
-are valid product states, not missing implementations. A valid Google OAuth
-client secret is still required for Wolfpack to populate F2.6/F5.11 with Google
-data, and a licensed delegated Microsoft token is required to activate the
-explicitly gated Copilot beta adapter.
+are valid product states, not missing implementations. Wolfpack must grant the
+incremental Search Console read-only scope to populate F2.6; F5.11 already has
+fresh connected-profile data. A licensed delegated Microsoft token is required
+to activate the explicitly gated Copilot beta adapter.
 
 The cross-phase production audit later hardened outbound retries, BigQuery
 checkpointing, dashboard/report query failure handling, and foreign-key

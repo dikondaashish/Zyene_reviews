@@ -27,9 +27,6 @@ const DIRECT_ANSWER_WORD_WINDOW = 150;
 const DIRECT_ANSWER_MIN_WORDS = 15;
 const DIRECT_ANSWER_MAX_WORDS = 70;
 
-/** Paragraphs this long or longer read as a wall of text, not a chunk an engine can lift cleanly. */
-const LONG_PARAGRAPH_WORD_THRESHOLD = 200;
-
 function decodeEntities(text: string): string {
     return text
         .replace(/&amp;/g, "&")

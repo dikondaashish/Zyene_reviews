@@ -1,15 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import type { EngineTrend } from "./load-prompt-detail";
 
 const LINE_COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
+const subscribeToClientReady = () => () => {};
+const clientReadySnapshot = () => true;
+const serverReadySnapshot = () => false;
 
 /** F4.5: one prompt's visibility rate per engine, week over week. Gaps (null) render as broken lines, never interpolated. */
 export function PromptTrendChart({ trend, weeks }: { trend: EngineTrend[]; weeks: string[] }) {
-    const [mounted, setMounted] = useState(false);
-    useEffect(() => setMounted(true), []);
+    const mounted = useSyncExternalStore(subscribeToClientReady, clientReadySnapshot, serverReadySnapshot);
 
     if (trend.length === 0) {
         return (

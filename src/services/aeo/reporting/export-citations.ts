@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import Papa from "papaparse";
 
 /** F7.2: every citation an engine gave for one of this business's samples. */
-export async function handleCitationsExport(request: Request) {
+export async function handleCitationsExport() {
     const supabase = await createClient();
     const {
         data: { user },

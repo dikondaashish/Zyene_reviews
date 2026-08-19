@@ -1,5 +1,5 @@
 
-export const TeamInviteEmail = (inviteLink: string, inviterName: string, organizationName: string) => `
+export const teamInviteEmail = (inviteLink: string, inviterName: string, organizationName: string) => `
 <!DOCTYPE html>
 <html>
 <head>

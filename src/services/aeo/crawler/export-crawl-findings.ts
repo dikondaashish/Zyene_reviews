@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import Papa from "papaparse";
 
 /** F7.2: every F5.2/F5.3 crawl finding recorded for this business. */
-export async function handleCrawlFindingsExport(request: Request) {
+export async function handleCrawlFindingsExport() {
     const supabase = await createClient();
     const {
         data: { user },

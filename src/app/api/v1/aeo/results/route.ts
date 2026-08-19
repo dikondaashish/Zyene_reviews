@@ -1,7 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { z } from "zod";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { authorizeAeoScope, corsPreflight, withCors } from "@/app/api/v1/_lib/auth";
 import { parsePage } from "@/app/api/v1/aeo/_lib/query";
+import { ANSWER_ENGINE_IDS } from "@/services/aeo/engines/engine-types";
+
+const engineSchema = z.enum(ANSWER_ENGINE_IDS);
 
 export async function OPTIONS() { return corsPreflight(); }
 
@@ -14,7 +18,13 @@ export async function GET(req: NextRequest) {
         .select("id, run_id, prompt_id, engine_id, model_id, status, citations_availability, no_answer_reason, error_kind, attempt, latency_ms, cost_micro_usd, is_estimated, sampled_at", { count: "exact" })
         .eq("business_id", auth.businessId);
     const engine = req.nextUrl.searchParams.get("engine");
-    if (engine) query = query.eq("engine_id", engine);
+    if (engine) {
+        const parsedEngine = engineSchema.safeParse(engine);
+        if (!parsedEngine.success) {
+            return withCors(NextResponse.json({ success: false, error: "Invalid engine" }, { status: 400 }));
+        }
+        query = query.eq("engine_id", parsedEngine.data);
+    }
     const result = await query.order("sampled_at", { ascending: false }).range(page.from, page.to);
     if (result.error) return withCors(NextResponse.json({ success: false, error: "Failed to fetch AEO results" }, { status: 500 }));
     return withCors(NextResponse.json({ success: true, data: { page: page.page, limit: page.limit, total: result.count ?? 0, results: result.data ?? [] } }));

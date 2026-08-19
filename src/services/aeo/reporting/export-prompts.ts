@@ -6,7 +6,7 @@ import Papa from "papaparse";
 import { MIN_OBSERVATIONS } from "./visibility-metrics";
 
 /** F7.2: every prompt, its config, and its 30-day visibility — one row per prompt. */
-export async function handlePromptsExport(request: Request) {
+export async function handlePromptsExport() {
     const supabase = await createClient();
     const {
         data: { user },

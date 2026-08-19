@@ -1203,7 +1203,7 @@ Team management allows organization owners and admins to invite new members and 
 1. Validates that inviter is owner or admin
 2. Checks plan limit for team members
 3. Creates `invitations` record with `status: "pending"`, `expires_at: 7 days`
-4. Sends invitation email via Resend using `TeamInviteEmail` template
+4. Sends invitation email via Resend using the `teamInviteEmail` template
 5. Invitation link: `{APP_URL}/signup?invitation={id}`
 
 #### `PATCH /api/team/[id]`

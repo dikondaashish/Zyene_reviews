@@ -1,6 +1,6 @@
 import { sendEmail } from '../src/services/resend/send-email';
 import { welcomeEmail } from '../src/services/resend/templates/welcome-email';
-import { TeamInviteEmail } from '../src/services/resend/templates/team-invite-email';
+import { teamInviteEmail } from '../src/services/resend/templates/team-invite-email';
 import { reviewAlertEmail } from '../src/services/resend/templates/review-alert-email';
 import { reviewRequestEmail } from '../src/services/resend/templates/review-request-email';
 import { weeklyDigestEmail } from '../src/services/resend/templates/weekly-digest-email';
@@ -35,7 +35,7 @@ async function runTest() {
         {
             name: 'Team Invite',
             subject: 'Join Zyene Team',
-            html: TeamInviteEmail(
+            html: teamInviteEmail(
                 `${appUrl}/signup?invite=test-token`,
                 'Ashish (Admin)',
                 'Zyene Reviews'

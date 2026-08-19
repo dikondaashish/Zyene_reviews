@@ -1,5 +1,5 @@
 import { sendEmail } from "@/services/resend/send-email";
-import { TeamInviteEmail } from "@/services/resend/templates/team-invite-email";
+import { teamInviteEmail } from "@/services/resend/templates/team-invite-email";
 import { getAuthSiteUrl } from "@/lib/routing/platform-routes";
 
 export function buildTeamInviteSignupLink(inviteToken: string): string {
@@ -30,7 +30,7 @@ export async function deliverTeamInviteEmail(args: {
     const sendResult = await sendEmail({
         to: args.to,
         subject: `Join ${args.orgName} on Zyene Reviews`,
-        html: TeamInviteEmail(inviteLink, args.inviterName, args.orgName),
+        html: teamInviteEmail(inviteLink, args.inviterName, args.orgName),
         text: emailText,
     });
 
