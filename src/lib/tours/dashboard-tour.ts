@@ -41,10 +41,10 @@ export const dashboardTourSteps: TourStep[] = [
     },
     {
         target: "tour-recent-reviews",
-        title: "Recent Actions",
+        title: "Review Spotlight",
         description:
-            "Your latest reviews appear here for quick action. Respond, analyze sentiment, and stay on top of feedback with ease.",
-        placement: "top",
+            "Your latest Google reviews show up here. Open any card to reply, or jump to the inbox to manage all of them.",
+        placement: "right",
         icon: "message-square",
     },
     {

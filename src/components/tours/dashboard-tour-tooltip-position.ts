@@ -1,62 +1,134 @@
 import type { TourStep } from "@/lib/tours/dashboard-tour";
 import type { DashboardTourTargetRect } from "@/components/tours/dashboard-tour-types";
-import { DASHBOARD_TOUR_SPOTLIGHT_PADDING, DASHBOARD_TOUR_TOOLTIP_GAP } from "@/components/tours/dashboard-tour-constants";
+import {
+    DASHBOARD_TOUR_SPOTLIGHT_PADDING,
+    DASHBOARD_TOUR_TOOLTIP_GAP,
+    DASHBOARD_TOUR_VIEWPORT_EDGE,
+} from "@/components/tours/dashboard-tour-constants";
+
+export type TourTooltipPosition = {
+    top: number;
+    left: number;
+    actualPlacement: TourStep["placement"];
+    arrowOffset: number;
+};
+
+type Placement = TourStep["placement"];
+
+const FALLBACKS: Record<Placement, Placement[]> = {
+    right: ["right", "left", "bottom", "top", "center"],
+    left: ["left", "right", "bottom", "top", "center"],
+    bottom: ["bottom", "top", "right", "left", "center"],
+    top: ["top", "bottom", "right", "left", "center"],
+    center: ["center"],
+};
+
+function rawPosition(
+    rect: DashboardTourTargetRect,
+    placement: Placement,
+    tooltipWidth: number,
+    tooltipHeight: number,
+): { top: number; left: number } {
+    const gap = DASHBOARD_TOUR_TOOLTIP_GAP + DASHBOARD_TOUR_SPOTLIGHT_PADDING;
+    switch (placement) {
+        case "right":
+            return {
+                top: rect.top + rect.height / 2 - tooltipHeight / 2,
+                left: rect.left + rect.width + gap,
+            };
+        case "left":
+            return {
+                top: rect.top + rect.height / 2 - tooltipHeight / 2,
+                left: rect.left - tooltipWidth - gap,
+            };
+        case "bottom":
+            return {
+                top: rect.top + rect.height + gap,
+                left: rect.left + rect.width / 2 - tooltipWidth / 2,
+            };
+        case "top":
+            return {
+                top: rect.top - tooltipHeight - gap,
+                left: rect.left + rect.width / 2 - tooltipWidth / 2,
+            };
+        default:
+            return {
+                top: window.innerHeight / 2 - tooltipHeight / 2,
+                left: window.innerWidth / 2 - tooltipWidth / 2,
+            };
+    }
+}
+
+function fits(top: number, left: number, tooltipWidth: number, tooltipHeight: number) {
+    const edge = DASHBOARD_TOUR_VIEWPORT_EDGE;
+    return (
+        left >= edge &&
+        top >= edge &&
+        left + tooltipWidth <= window.innerWidth - edge &&
+        top + tooltipHeight <= window.innerHeight - edge
+    );
+}
+
+function placementFromGeometry(
+    rect: DashboardTourTargetRect,
+    left: number,
+    top: number,
+    tooltipWidth: number,
+    tooltipHeight: number,
+): Placement {
+    const dx = left + tooltipWidth / 2 - (rect.left + rect.width / 2);
+    const dy = top + tooltipHeight / 2 - (rect.top + rect.height / 2);
+    if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return "center";
+    if (Math.abs(dx) > Math.abs(dy)) return dx > 0 ? "right" : "left";
+    return dy > 0 ? "bottom" : "top";
+}
+
+function arrowOffset(
+    rect: DashboardTourTargetRect,
+    left: number,
+    top: number,
+    tooltipWidth: number,
+    tooltipHeight: number,
+    placement: Placement,
+): number {
+    const min = 18;
+    if (placement === "left" || placement === "right") {
+        const raw = rect.top + rect.height / 2 - top;
+        return Math.max(min, Math.min(raw, tooltipHeight - min));
+    }
+    const raw = rect.left + rect.width / 2 - left;
+    return Math.max(min, Math.min(raw, tooltipWidth - min));
+}
 
 export function getDashboardTourTooltipPosition(
     rect: DashboardTourTargetRect,
-    placement: TourStep["placement"],
+    placement: Placement,
     tooltipWidth: number,
-    tooltipHeight: number
-): { top: number; left: number; actualPlacement: TourStep["placement"] } {
-    const viewportW = window.innerWidth;
-    const viewportH = window.innerHeight;
-
-    let top = 0;
-    let left = 0;
+    tooltipHeight: number,
+): TourTooltipPosition {
+    const edge = DASHBOARD_TOUR_VIEWPORT_EDGE;
+    let chosen = rawPosition(rect, placement, tooltipWidth, tooltipHeight);
     let actualPlacement = placement;
 
-    switch (placement) {
-        case "right":
-            top = rect.top + rect.height / 2 - tooltipHeight / 2;
-            left = rect.left + rect.width + DASHBOARD_TOUR_TOOLTIP_GAP + DASHBOARD_TOUR_SPOTLIGHT_PADDING;
-            if (left + tooltipWidth > viewportW - 16) {
-                actualPlacement = "bottom";
-                top = rect.top + rect.height + DASHBOARD_TOUR_TOOLTIP_GAP + DASHBOARD_TOUR_SPOTLIGHT_PADDING;
-                left = rect.left + rect.width / 2 - tooltipWidth / 2;
-            }
+    for (const candidate of FALLBACKS[placement]) {
+        const pos = rawPosition(rect, candidate, tooltipWidth, tooltipHeight);
+        if (candidate === "center" || fits(pos.top, pos.left, tooltipWidth, tooltipHeight)) {
+            chosen = pos;
+            actualPlacement = candidate;
             break;
-        case "left":
-            top = rect.top + rect.height / 2 - tooltipHeight / 2;
-            left = rect.left - tooltipWidth - DASHBOARD_TOUR_TOOLTIP_GAP - DASHBOARD_TOUR_SPOTLIGHT_PADDING;
-            if (left < 16) {
-                actualPlacement = "bottom";
-                top = rect.top + rect.height + DASHBOARD_TOUR_TOOLTIP_GAP + DASHBOARD_TOUR_SPOTLIGHT_PADDING;
-                left = rect.left + rect.width / 2 - tooltipWidth / 2;
-            }
-            break;
-        case "bottom":
-            top = rect.top + rect.height + DASHBOARD_TOUR_TOOLTIP_GAP + DASHBOARD_TOUR_SPOTLIGHT_PADDING;
-            left = rect.left + rect.width / 2 - tooltipWidth / 2;
-            break;
-        case "top":
-            top = rect.top - tooltipHeight - DASHBOARD_TOUR_TOOLTIP_GAP - DASHBOARD_TOUR_SPOTLIGHT_PADDING;
-            left = rect.left + rect.width / 2 - tooltipWidth / 2;
-            if (top < 16) {
-                actualPlacement = "bottom";
-                top = rect.top + rect.height + DASHBOARD_TOUR_TOOLTIP_GAP + DASHBOARD_TOUR_SPOTLIGHT_PADDING;
-            }
-            break;
-        case "center":
-            top = viewportH / 2 - tooltipHeight / 2;
-            left = viewportW / 2 - tooltipWidth / 2;
-            break;
-        default:
-            top = viewportH / 2 - tooltipHeight / 2;
-            left = viewportW / 2 - tooltipWidth / 2;
+        }
     }
 
-    left = Math.max(16, Math.min(left, viewportW - tooltipWidth - 16));
-    top = Math.max(16, Math.min(top, viewportH - tooltipHeight - 16));
+    const left = Math.max(edge, Math.min(chosen.left, window.innerWidth - tooltipWidth - edge));
+    const top = Math.max(edge, Math.min(chosen.top, window.innerHeight - tooltipHeight - edge));
+    if (actualPlacement !== "center") {
+        actualPlacement = placementFromGeometry(rect, left, top, tooltipWidth, tooltipHeight);
+    }
 
-    return { top, left, actualPlacement };
+    return {
+        top,
+        left,
+        actualPlacement,
+        arrowOffset: arrowOffset(rect, left, top, tooltipWidth, tooltipHeight, actualPlacement),
+    };
 }

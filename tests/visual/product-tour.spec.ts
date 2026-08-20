@@ -35,8 +35,8 @@ test.describe("Dashboard Product Tour", () => {
     // Advance to Step 3
     await page.click(".tour-btn-next");
 
-    // STEP 3: Recent Actions
-    await expect(tooltip.locator(".tour-tooltip-title")).toHaveText("Recent Actions");
+    // STEP 3: Review Spotlight
+    await expect(tooltip.locator(".tour-tooltip-title")).toHaveText("Review Spotlight");
     await expect(tooltip.locator(".tour-tooltip-icon")).toHaveAttribute("data-tour-icon", "message-square");
     await expect(tooltip.locator(".tour-tooltip-step-counter")).toHaveText("3/6");
 
@@ -95,15 +95,10 @@ test.describe("Dashboard Product Tour", () => {
     await expect(page.locator(".tour-tooltip")).not.toBeVisible();
   });
   
-  test("should automatically scroll to target elements", async ({ page }) => {
-    // Step 3 is "Recent Actions" which is usually at the bottom of the dashboard
-    await page.click(".tour-btn-next"); // to 2
-    await page.click(".tour-btn-next"); // to 3
-    
-    // Verify that the page has scrolled (scrollY > 0)
-    const scrollY = await page.evaluate(() => window.scrollY);
-    // On a standard desktop viewport, step 3 will likely require some scrolling
-    // We can't guarantee scrollY > 0 if the screen is huge, but we can verify visibility
+    test("should automatically scroll to target elements", async ({ page }) => {
+    await page.click(".tour-btn-next");
+    await page.click(".tour-btn-next");
+
     const target = page.locator("[data-tour-target='tour-recent-reviews']");
     await expect(target).toBeInViewport();
   });

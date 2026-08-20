@@ -22,7 +22,7 @@ export function DashboardViewBottomRow({
 }: Props) {
     return (
         <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
-            <div className="min-w-0 flex flex-col overflow-hidden" data-tour-target="tour-recent-reviews">
+            <div className="min-w-0 flex flex-col self-start overflow-hidden" data-tour-target="tour-recent-reviews">
                 {recentReviews.length > 0 ? (
                     <div className="flex-1 flex flex-col">
                         <DashboardAnimatedReviewCardsLazy

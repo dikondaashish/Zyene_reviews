@@ -31,7 +31,12 @@ export function DashboardTourTooltipPanel({
 }: {
     tooltipRef: React.RefObject<HTMLDivElement | null>;
     currentStep: number;
-    tooltipPos: { top: number; left: number; actualPlacement: TourStep["placement"] | "center" };
+    tooltipPos: {
+        top: number;
+        left: number;
+        actualPlacement: TourStep["placement"] | "center";
+        arrowOffset: number;
+    };
     targetRect: DashboardTourTargetRect | null;
     step: TourStep;
     steps: TourStep[];
@@ -63,7 +68,15 @@ export function DashboardTourTooltipPanel({
                 transition={spring.snappy}
             >
                 {targetRect && tooltipPos.actualPlacement !== "center" && (
-                    <div className={`tour-arrow tour-arrow-${tooltipPos.actualPlacement}`} />
+                    <div
+                        className={`tour-arrow tour-arrow-${tooltipPos.actualPlacement}`}
+                        style={
+                            tooltipPos.actualPlacement === "left" ||
+                            tooltipPos.actualPlacement === "right"
+                                ? { top: tooltipPos.arrowOffset }
+                                : { left: tooltipPos.arrowOffset }
+                        }
+                    />
                 )}
 
                 <div className="tour-tooltip-card">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
     completeTour as completeTourAction,
     getTourStatus,
@@ -9,12 +9,16 @@ import {
 } from "@/app/actions/tour";
 import type { DashboardTourContextValue } from "@/components/tours/dashboard-tour-context";
 
+const TOUR_PAGE = "/dashboard";
+
 export function useDashboardTourState(): DashboardTourContextValue {
     const [runTour, setRunTour] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    const [dismissed, setDismissed] = useState(false);
     const searchParams = useSearchParams();
     const pathname = usePathname();
+    const router = useRouter();
 
     useEffect(() => {
         let cancelled = false;
@@ -22,11 +26,24 @@ export function useDashboardTourState(): DashboardTourContextValue {
 
         const checkTourStatus = async () => {
             try {
+                if (pathname !== TOUR_PAGE) {
+                    if (!cancelled) {
+                        setRunTour(false);
+                        setIsLoading(false);
+                    }
+                    return;
+                }
+
                 const forceTour = searchParams.get("tour") === "true";
 
-                if (!cancelled && forceTour) {
-                    setRunTour(true);
-                    setIsLoading(false);
+                if (forceTour) {
+                    if (!cancelled) {
+                        if (!dismissed) {
+                            setCurrentStep(0);
+                            setRunTour(true);
+                        }
+                        setIsLoading(false);
+                    }
                     return;
                 }
 
@@ -35,6 +52,7 @@ export function useDashboardTourState(): DashboardTourContextValue {
                 if (!cancelled && !hasCompleted) {
                     tourDelayTimer = setTimeout(() => {
                         if (!cancelled) {
+                            setCurrentStep(0);
                             setRunTour(true);
                         }
                     }, 500);
@@ -54,22 +72,27 @@ export function useDashboardTourState(): DashboardTourContextValue {
                 clearTimeout(tourDelayTimer);
             }
         };
-    }, [pathname, searchParams]);
+    }, [pathname, searchParams, dismissed]);
 
     const completeTour = useCallback(async () => {
+        setDismissed(true);
         setRunTour(false);
         setCurrentStep(0);
         try {
             await completeTourAction();
         } catch {
         }
-    }, []);
+        if (searchParams.get("tour") === "true") {
+            router.replace(TOUR_PAGE);
+        }
+    }, [router, searchParams]);
 
     const startTour = useCallback(async () => {
         try {
             await resetTourAction();
         } catch {
         }
+        setDismissed(false);
         setCurrentStep(0);
         setRunTour(true);
     }, []);
