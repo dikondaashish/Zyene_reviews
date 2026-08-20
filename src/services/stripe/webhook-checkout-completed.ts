@@ -7,6 +7,9 @@ import { getPlanByPriceId, type PlanLimits } from "@/services/stripe/plans";
 import { sendEmail } from "@/services/resend/send-email";
 import { subscriptionSuccessEmail } from "@/services/resend/templates/subscription-success-email";
 
+import { isNfcCheckoutSession } from "@/lib/nfc/checkout-session";
+import { fulfillNfcCheckout } from "@/services/nfc/fulfill-checkout";
+
 import { planLimitsToOrganizationColumns } from "./webhook-plan-columns";
 import type { WebhookAdminClient } from "./webhook-types";
 
@@ -67,6 +70,17 @@ export async function handleCheckoutSessionCompleted(
     supabase: WebhookAdminClient,
 ) {
     const session = event.data.object as Stripe.Checkout.Session;
+
+    if (isNfcCheckoutSession(session)) {
+        await fulfillNfcCheckout(session, supabase);
+        return;
+    }
+
+    if (!session.subscription) {
+        logger.info({ sessionId: session.id }, "Ignoring non-subscription checkout session");
+        return;
+    }
+
     const customerId = session.customer as string;
     const subscriptionId = session.subscription as string;
     const organizationId = session.metadata?.organization_id;
