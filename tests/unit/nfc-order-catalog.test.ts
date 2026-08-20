@@ -30,6 +30,17 @@ describe("NFC catalog", () => {
         expect(clampNfcQuantity(21)).toBe(20);
         expect(nfcOrderTotals(3, "expedited").totalCents).toBe(999 * 3 + 999);
     });
+
+    it("scales the line total when quantity changes", () => {
+        expect(nfcOrderTotals(1, "standard").subtotalCents).toBe(999);
+        expect(nfcOrderTotals(11, "standard")).toEqual({
+            quantity: 11,
+            subtotalCents: 10989,
+            shippingCents: 499,
+            totalCents: 11488,
+        });
+        expect(formatUsdFromCents(10989)).toBe("$109.89");
+    });
 });
 
 describe("NFC checkout session parsing", () => {
@@ -76,5 +87,23 @@ describe("NFC order dialog trigger", () => {
         expect(source).not.toContain('target="_blank"');
         expect(source).toContain("NfcOrderDialog");
         expect(source).toContain("order.setOpen(true)");
+    });
+
+    it("binds product and cart to the same quantity", () => {
+        const hook = fs.readFileSync(
+            path.join(process.cwd(), "src/components/dashboard/use-nfc-order.ts"),
+            "utf8",
+        );
+        const dialog = fs.readFileSync(
+            path.join(process.cwd(), "src/components/dashboard/nfc-order-dialog.tsx"),
+            "utf8",
+        );
+        const product = fs.readFileSync(
+            path.join(process.cwd(), "src/components/dashboard/nfc-order-product.tsx"),
+            "utf8",
+        );
+        expect(hook).not.toContain("cartQty");
+        expect(dialog).toContain("quantity={order.quantity}");
+        expect(product).toContain("nfcOrderTotals(quantity");
     });
 });

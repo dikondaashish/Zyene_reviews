@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { NFC_CARD, formatUsdFromCents } from "@/lib/nfc/catalog";
+import { NFC_CARD, formatUsdFromCents, nfcOrderTotals } from "@/lib/nfc/catalog";
 
 export function NfcOrderProduct({
     businessName,
@@ -33,8 +33,12 @@ export function NfcOrderProduct({
                     <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                         {NFC_CARD.description} We&apos;ll program it for {businessName}.
                     </p>
-                    <p className="mt-2 text-lg font-semibold tracking-tight text-foreground">
-                        {formatUsdFromCents(NFC_CARD.unitAmountCents)}
+                    <p className="mt-2 text-lg font-semibold tracking-tight text-foreground tabular-nums">
+                        {formatUsdFromCents(nfcOrderTotals(quantity, "standard").subtotalCents)}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                        {formatUsdFromCents(NFC_CARD.unitAmountCents)} each
+                        {quantity > 1 ? ` × ${quantity}` : ""}
                     </p>
                 </div>
             </div>

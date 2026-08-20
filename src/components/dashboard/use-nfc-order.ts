@@ -7,30 +7,30 @@ import { clampNfcQuantity, NFC_CARD } from "@/lib/nfc/catalog";
 
 export function useNfcOrder() {
     const [open, setOpen] = useState(false);
-    const [quantity, setQuantity] = useState(1);
-    const [cartQty, setCartQty] = useState(0);
+    const [quantity, setQuantityState] = useState(1);
+    const [inCart, setInCart] = useState(false);
     const [shippingId, setShippingId] = useState<NfcShippingId>("standard");
     const [checkingOut, setCheckingOut] = useState(false);
 
+    function setQuantity(next: number) {
+        setQuantityState(clampNfcQuantity(next));
+    }
+
     function addToCart() {
-        setCartQty((prev) => clampNfcQuantity(prev + quantity));
+        setInCart(true);
         toast.success("Added to cart", {
             description: `${quantity === 1 ? "1 NFC card" : `${quantity} NFC cards`} ready to ship.`,
         });
     }
 
-    function setCartQuantity(next: number) {
-        setCartQty(clampNfcQuantity(next));
-    }
-
     async function checkout() {
-        if (cartQty < NFC_CARD.minQty) return;
+        if (!inCart || quantity < NFC_CARD.minQty) return;
         setCheckingOut(true);
         try {
             const response = await fetch("/api/nfc/checkout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ quantity: cartQty, shippingId }),
+                body: JSON.stringify({ quantity, shippingId }),
             });
             const json = (await response.json()) as {
                 success?: boolean;
@@ -53,9 +53,8 @@ export function useNfcOrder() {
         open,
         setOpen,
         quantity,
-        setQuantity: (next: number) => setQuantity(clampNfcQuantity(next)),
-        cartQty,
-        setCartQuantity,
+        setQuantity,
+        inCart,
         shippingId,
         setShippingId,
         checkingOut,

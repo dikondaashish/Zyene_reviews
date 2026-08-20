@@ -42,9 +42,9 @@ export function NfcOrderDialog({
                     onAddToCart={order.addToCart}
                 />
 
-                {order.cartQty > 0 ? (
+                {order.inCart ? (
                     <NfcOrderCart
-                        quantity={order.cartQty}
+                        quantity={order.quantity}
                         shippingId={order.shippingId}
                         checkingOut={order.checkingOut}
                         onShippingChange={order.setShippingId}
