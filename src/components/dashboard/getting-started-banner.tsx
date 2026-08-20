@@ -64,6 +64,8 @@ export function GettingStartedBanner({
   const completedCount = items.filter((item) => item.done).length;
   const completionPercent = (completedCount / items.length) * 100;
 
+  if (items.length > 0 && completedCount === items.length) return null;
+
   const handleDismiss = () => {
     localStorage.setItem("getting-started-dismissed", "true");
     setIsDismissed(true);

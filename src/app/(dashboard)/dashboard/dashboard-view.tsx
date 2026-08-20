@@ -1,6 +1,10 @@
 import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { GettingStartedBanner } from "@/components/dashboard/getting-started-banner";
+import {
+  hasSentReviewRequest,
+  shouldShowGettingStartedBanner,
+} from "@/components/dashboard/getting-started-visibility";
 import { SmartInsightsCard } from "@/components/dashboard/smart-insights-card";
 import { DashboardQrCodeLazy } from "@/components/dashboard/dashboard-ssr-false-blocks";
 import { DashboardViewBottomRow } from "./dashboard-view-bottom-row";
@@ -17,15 +21,19 @@ export function DashboardView(props: DashboardViewProps) {
     user,
     dict,
     business,
-    organization,
     useDemoData,
     isGoogleConnected,
     customerCount,
     notificationsConfigured,
     canConfigureNotifications = true,
     requestsThisMonth,
+    hasEngagementData,
     displayTotalReviews,
   } = props;
+  const requestSent = hasSentReviewRequest({
+    hasEngagementData,
+    requestsThisMonth,
+  });
 
   return (
     <div className="flex min-w-0 w-full flex-col gap-6 overflow-x-hidden">
@@ -38,15 +46,15 @@ export function DashboardView(props: DashboardViewProps) {
 
       <DashboardViewHeader user={user} dict={dict} business={business} />
 
-      {(!organization?.onboarding_completed ||
-        !isGoogleConnected ||
-        customerCount === 0 ||
-        (canConfigureNotifications && !notificationsConfigured)) && (
+      {shouldShowGettingStartedBanner({
+        isGoogleConnected,
+        hasSentReviewRequest: requestSent,
+      }) && (
         <div className="mt-2">
           <GettingStartedBanner
             googleConnected={isGoogleConnected}
             customerCount={customerCount}
-            requestSent={requestsThisMonth > 0}
+            requestSent={requestSent}
             notificationsConfigured={notificationsConfigured}
             canConfigureNotifications={canConfigureNotifications}
           />
