@@ -17,11 +17,11 @@ export function NfcOrderProduct({
 }) {
     return (
         <div className="flex h-full flex-col">
-            <div className="grid flex-1 sm:grid-cols-[1.05fr_1fr]">
-                <div className="border-b border-border/60 bg-secondary/40 p-4 sm:border-r sm:border-b-0">
+            <div className="grid flex-1 sm:grid-cols-2">
+                <div className="border-b border-border/60 bg-secondary/40 p-5 sm:border-r sm:border-b-0 sm:p-6">
                     <NfcOrderMedia />
                 </div>
-                <div className="p-4 sm:p-5">
+                <div className="p-5 sm:p-6">
                     <NfcOrderDetails
                         businessName={businessName}
                         quantity={quantity}

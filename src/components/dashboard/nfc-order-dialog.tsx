@@ -29,7 +29,7 @@ export function NfcOrderDialog({
         <Dialog open={order.open} onOpenChange={order.setOpen}>
             <DialogContent
                 showCloseButton={false}
-                className="gap-0 overflow-hidden rounded-2xl border-border/70 p-0 shadow-xl sm:max-w-3xl"
+                className="gap-0 overflow-hidden rounded-2xl border-border/70 p-0 shadow-xl sm:max-w-5xl"
             >
                 <DialogHeader className="sr-only">
                     <DialogTitle>Order an NFC review stand</DialogTitle>

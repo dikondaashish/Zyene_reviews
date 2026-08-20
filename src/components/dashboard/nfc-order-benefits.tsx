@@ -22,7 +22,7 @@ export function NfcOrderBenefits() {
     return (
         <section
             aria-label="Included with Zyene Reviews"
-            className="border-t border-border/60 bg-secondary/30 px-4 py-3.5 sm:px-5"
+            className="border-t border-border/60 bg-secondary/30 px-5 py-4 sm:px-6"
         >
             <p className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
                 Included with Zyene Reviews

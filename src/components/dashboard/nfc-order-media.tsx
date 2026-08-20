@@ -40,7 +40,7 @@ export function NfcOrderMedia() {
                         src={slide.src}
                         alt={`${NFC_CARD.name} photo ${index}`}
                         fill
-                        sizes="(max-width: 640px) 90vw, 380px"
+                        sizes="(max-width: 640px) 90vw, 480px"
                         className="object-contain"
                         priority={index === 1}
                     />
@@ -75,7 +75,7 @@ export function NfcOrderMedia() {
                         aria-pressed={itemIndex === index}
                         aria-label={item.isVideo ? "Show product video" : `Show photo ${itemIndex}`}
                         onClick={() => setIndex(itemIndex)}
-                        className={`relative size-10 shrink-0 overflow-hidden rounded-lg border transition-transform duration-150 ease-out active:scale-[0.94] ${
+                        className={`relative size-11 shrink-0 overflow-hidden rounded-lg border transition-transform duration-150 ease-out active:scale-[0.94] ${
                             itemIndex === index
                                 ? "border-primary ring-2 ring-primary/25"
                                 : "border-border/60 opacity-80 hover:opacity-100"
