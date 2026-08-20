@@ -9,6 +9,7 @@ import {
     Ban,
     RotateCcw,
     Trash2,
+    Merge,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,12 +33,14 @@ export function CustomerActionsDropdown({
     onEditName,
     onSendRequest,
     onDelete,
+    onMerge,
     setOptedOut,
 }: {
     customer: Customer;
     onEditName: () => void;
     onSendRequest: () => void;
     onDelete: () => void;
+    onMerge: () => void;
     setOptedOut: (customer: Customer, value: boolean) => void;
 }) {
     return (
@@ -60,6 +63,10 @@ export function CustomerActionsDropdown({
                             <Eye className="mr-2 size-4" />
                             View details
                         </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={onMerge}>
+                        <Merge className="mr-2 size-4" />
+                        Merge duplicate
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     {customer.is_opted_out ? (

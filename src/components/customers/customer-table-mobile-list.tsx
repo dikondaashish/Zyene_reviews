@@ -13,6 +13,7 @@ export function CustomerTableMobileList({
     setEditingNameId,
     onSendRequest,
     setDeleteTarget,
+    setMergeTarget,
     setOptedOut,
     handleRowNavigate,
 }: {
@@ -23,6 +24,7 @@ export function CustomerTableMobileList({
     setEditingNameId: (id: string | null) => void;
     onSendRequest?: (customer: Customer) => void;
     setDeleteTarget: (customer: Customer | null) => void;
+    setMergeTarget: (customer: Customer | null) => void;
     setOptedOut: (customer: Customer, value: boolean) => void | Promise<void>;
     handleRowNavigate: (e: React.MouseEvent, customerId: string) => void;
 }) {
@@ -38,6 +40,7 @@ export function CustomerTableMobileList({
                         setEditingNameId={setEditingNameId}
                         onSendRequest={onSendRequest}
                         setDeleteTarget={setDeleteTarget}
+                        setMergeTarget={setMergeTarget}
                         setOptedOut={setOptedOut}
                         onNavigate={handleRowNavigate}
                         onActivate={(id) => router.push(`/customers/${id}`)}

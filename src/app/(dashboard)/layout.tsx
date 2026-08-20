@@ -50,7 +50,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
       businesses={businesses}
       allBusinesses={allBusinesses}
       activeBusinessId={activeBusinessId}
-      activeBusiness={activeBusiness}
     />
   );
 

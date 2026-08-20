@@ -60,8 +60,7 @@ export function AnalyticsPageClient({
                 setRange={setRange}
             />
 
-            <MilestoneCelebration currentCount={d.stats.totalReviews} type="reviews" isDemo={isDemo} />
-            <MilestoneCelebration currentCount={d.stats.avgRating} type="rating" isDemo={isDemo} />
+            <MilestoneCelebration businessId={businessId} isDemo={isDemo} />
 
             {isDemo && <DemoModeBanner className="mb-2" />}
 

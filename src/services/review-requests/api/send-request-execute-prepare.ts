@@ -4,7 +4,10 @@ import type { User } from "@supabase/supabase-js";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import * as Sentry from "@sentry/nextjs";
 import { apiError } from "@/app/api/_shared/responses";
-import { normalizePhone } from "./send-request-phone";
+import {
+    normalizeCustomerEmail,
+    normalizeCustomerPhone,
+} from "@/lib/customers/identity";
 
 export type SendRequestPrepared = {
     supabase: SupabaseClient;
@@ -83,8 +86,8 @@ export async function prepareExecuteSendReviewRequest(params: {
         }
     }
 
-    const phoneNorm = normalizePhone(customerPhone || "");
-    const emailNorm = (customerEmail || "").trim() || null;
+    const phoneNorm = normalizeCustomerPhone(customerPhone);
+    const emailNorm = normalizeCustomerEmail(customerEmail);
     const frequencyCapDays =
         (business as { review_request_frequency_cap_days?: number | null }).review_request_frequency_cap_days ?? 30;
 

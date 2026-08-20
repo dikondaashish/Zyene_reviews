@@ -14,6 +14,7 @@ export interface BuildCustomerTableColumnsParams {
     setOptedOut: (customer: Customer, value: boolean) => void | Promise<void>;
     onSendRequest?: (customer: Customer) => void;
     setDeleteTarget: (customer: Customer | null) => void;
+    setMergeTarget: (customer: Customer | null) => void;
 }
 
 export function buildCustomerTableColumns(params: BuildCustomerTableColumnsParams): ColumnDef<Customer>[] {
@@ -29,7 +30,8 @@ export function buildCustomerTableColumns(params: BuildCustomerTableColumnsParam
             params.setEditingNameId,
             params.setOptedOut,
             params.onSendRequest,
-            params.setDeleteTarget
+            params.setDeleteTarget,
+            params.setMergeTarget
         ),
     ];
 }

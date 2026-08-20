@@ -17,6 +17,7 @@ import { CustomerDeleteDialog } from "@/components/customers/customer-delete-dia
 import { CustomerTableDesktop } from "@/components/customers/customer-table-desktop";
 import { CustomerTableMobileList } from "@/components/customers/customer-table-mobile-list";
 import { CustomerTablePagination } from "@/components/customers/customer-table-pagination";
+import { CustomerMergeDialog } from "@/components/customers/customer-merge-dialog";
 import { useCustomerTableMutations } from "@/components/customers/use-customer-table-mutations";
 import type { Customer, CustomerTableProps } from "@/components/customers/customer-table-types";
 
@@ -29,6 +30,7 @@ export function CustomerTable({
     onCustomerUpdated,
     onSendRequest,
     onSelectionChange,
+    onCustomersMerged,
 }: CustomerTableProps) {
     const router = useRouter();
     const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -36,6 +38,7 @@ export function CustomerTable({
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
     const [deleteTarget, setDeleteTarget] = React.useState<Customer | null>(null);
+    const [mergeTarget, setMergeTarget] = React.useState<Customer | null>(null);
 
     const { editingNameId, setEditingNameId, saveName, saveTags, setOptedOut } =
         useCustomerTableMutations(businessId, onCustomerUpdated);
@@ -76,8 +79,9 @@ export function CustomerTable({
                 setOptedOut,
                 onSendRequest,
                 setDeleteTarget,
+                setMergeTarget,
             }),
-        [editingNameId, onSendRequest, saveName, saveTags, setOptedOut, showVisitsSpend]
+        [editingNameId, onSendRequest, saveName, saveTags, setEditingNameId, setOptedOut, showVisitsSpend]
     );
 
     const table = useReactTable({
@@ -110,6 +114,7 @@ export function CustomerTable({
                 setEditingNameId={setEditingNameId}
                 onSendRequest={onSendRequest}
                 setDeleteTarget={setDeleteTarget}
+                setMergeTarget={setMergeTarget}
                 setOptedOut={setOptedOut}
                 handleRowNavigate={handleRowNavigate}
             />
@@ -128,6 +133,16 @@ export function CustomerTable({
                         onDelete(deleteTarget.id);
                     }
                     setDeleteTarget(null);
+                }}
+            />
+            <CustomerMergeDialog
+                businessId={businessId}
+                primary={mergeTarget}
+                customers={data}
+                onOpenChange={(open) => !open && setMergeTarget(null)}
+                onMerged={(customer, removedCustomerId) => {
+                    onCustomersMerged?.(customer, removedCustomerId);
+                    setMergeTarget(null);
                 }}
             />
         </div>

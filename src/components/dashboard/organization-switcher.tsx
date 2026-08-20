@@ -85,7 +85,7 @@ export function OrganizationSwitcher({
                 className="w-[min(20rem,calc(100vw-1rem))] min-w-[12rem] sm:w-[220px]"
                 align="start"
             >
-                <DropdownMenuLabel>Switch Organization</DropdownMenuLabel>
+                <DropdownMenuLabel>Organization</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {organizations.map((org) => (
                     <DropdownMenuItem

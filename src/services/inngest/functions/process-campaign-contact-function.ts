@@ -2,6 +2,7 @@ import { inngest } from "../client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
 import { primaryChannelFromMethods, type DripChannel } from "@/lib/campaigns/drip-phase1";
+import { bumpCustomerAfterSend } from "@/lib/review-requests/bump-after-send";
 
 export const processCampaignContact = inngest.createFunction(
     {
@@ -175,12 +176,18 @@ export const processCampaignContact = inngest.createFunction(
                 })
                 .eq("id", requestRecord.id);
 
-            // Atomic frequency cap tracking via RPC
-            if (contact.phone) {
-                await supabase.rpc("increment_customer_requests", {
-                    p_business_id: businessId,
-                    p_phone: contact.phone,
-                });
+            if (sendResult.sendStatus === "sent") {
+                await bumpCustomerAfterSend(
+                    supabase,
+                    businessId,
+                    contact.name,
+                    contact.phone ?? null,
+                    contact.email ?? null,
+                    {
+                        phone: sendResult.contactMethods.includes("sms"),
+                        email: sendResult.contactMethods.includes("email"),
+                    },
+                );
             }
         });
 

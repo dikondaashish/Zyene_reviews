@@ -48,6 +48,18 @@ export function useCustomerManagementActions(params: {
         [loadStats, setCustomers]
     );
 
+    const handleCustomersMerged = useCallback(
+        (merged: Customer, removedCustomerId: string) => {
+            setCustomers((previous) => previous
+                .filter((customer) => customer.id !== removedCustomerId)
+                .map((customer) => customer.id === merged.id ? { ...customer, ...merged } : customer));
+            setSelectedIds((previous) => previous.filter((id) => id !== removedCustomerId));
+            void loadStats();
+            router.refresh();
+        },
+        [loadStats, router, setCustomers, setSelectedIds]
+    );
+
     const sendRequestToCustomer = useCallback(
         async (customer: Customer) => {
             if (!businessId) return;
@@ -121,6 +133,7 @@ export function useCustomerManagementActions(params: {
     return {
         handleBulkAction,
         handleCustomerUpdated,
+        handleCustomersMerged,
         sendRequestToCustomer,
         handleDelete,
         onBulkSendCampaign,

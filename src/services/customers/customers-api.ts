@@ -6,6 +6,8 @@ import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
 import { customerMatchesSearch } from "@/lib/customers/search-match";
 import { enrichCustomersWithReviewLinkage } from "@/lib/customers/review-linkage";
+import { upsertCustomerByIdentity } from "@/services/customers/customer-identity-store";
+import { patchCustomerRecord } from "@/services/customers/patch-customer-record";
 
 const createCustomerSchema = z.object({
     businessId: z.string().uuid(),
@@ -87,29 +89,15 @@ export async function createCustomer(request: NextRequest) {
             return apiError("You don't have access to this business", { status: 403, details: requestId });
         }
 
-        // Insert customer with conflict resolution (upsert)
-        const { data, error } = await supabase
-            .from("customers")
-            .upsert({
-                business_id: businessId,
-                first_name: firstName || null,
-                last_name: lastName || null,
-                email: email || null,
-                phone: phone || null,
-                tags: tags || [],
-                notes: notes || null,
-                updated_at: new Date().toISOString(),
-            }, {
-                onConflict: 'business_id,email',
-                ignoreDuplicates: false // We want to update in case of re-import
-            })
-            .select()
-            .single();
-
-        if (error) {
-            logger.error({ err: error }, "Supabase error:");
-            return apiError(error.message || "Failed to save customer", { status: 400, details: requestId });
-        }
+        const data = await upsertCustomerByIdentity(supabase, {
+            businessId,
+            firstName,
+            lastName,
+            email,
+            phone,
+            tags,
+            notes,
+        });
 
         return apiOk(data, { status: 201 });
     } catch (error: unknown) {
@@ -265,43 +253,15 @@ export async function patchCustomer(request: NextRequest) {
             is_opted_out,
         } = parsed.data;
 
-        const updates: {
-            first_name?: string;
-            last_name?: string;
-            email?: string;
-            phone?: string;
-            tags?: string[];
-            notes?: string | null;
-            is_opted_out?: boolean;
-            updated_at: string;
-        } = {
-            updated_at: new Date().toISOString(),
-        };
-
-        if (firstName !== undefined || first_name !== undefined) updates.first_name = firstName ?? first_name;
-        if (lastName !== undefined || last_name !== undefined) updates.last_name = lastName ?? last_name;
-        if (email !== undefined) updates.email = email;
-        if (phone !== undefined) updates.phone = phone;
-        if (tags !== undefined) updates.tags = tags;
-        if (notes !== undefined) updates.notes = notes;
-        if (is_opted_out !== undefined) updates.is_opted_out = is_opted_out;
-
         const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
         if (!allowed) {
             return apiError("You don't have access to this business", { status: 403, details: requestId });
         }
 
-        const { data, error } = await supabase
-            .from("customers")
-            .update(updates)
-            .eq("id", id)
-            .eq("business_id", businessId)
-            .select()
-            .single();
-
-        if (error) throw error;
-
-        return apiOk(data);
+        return apiOk(await patchCustomerRecord(supabase, {
+            id, businessId, firstName, lastName, first_name, last_name,
+            email, phone, tags, notes, is_opted_out,
+        }));
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "An unexpected error occurred";
         return apiError(message, { status: 500, details: requestId });

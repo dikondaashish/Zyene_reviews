@@ -65,7 +65,7 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
                 className="w-[min(20rem,calc(100vw-1rem))] min-w-[12rem] sm:w-[220px]"
                 align="start"
             >
-                <DropdownMenuLabel>Switch Business</DropdownMenuLabel>
+                <DropdownMenuLabel>Business</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {businesses.length > 0 ? (
                     businesses.map((biz) => (

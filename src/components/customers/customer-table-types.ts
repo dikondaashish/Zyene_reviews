@@ -23,6 +23,7 @@ export interface CustomerTableProps {
     onCustomerUpdated?: (customer: Customer) => void;
     onSendRequest?: (customer: Customer) => void;
     onSelectionChange?: (selectedIds: string[]) => void;
+    onCustomersMerged?: (customer: Customer, removedCustomerId: string) => void;
 }
 
 const TAG_PILL_CLASSES = [

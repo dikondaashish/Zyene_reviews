@@ -22,6 +22,7 @@ export function CustomerManagementListRegion({
     onCustomerUpdated,
     onSendRequest,
     onSelectionChange,
+    onCustomersMerged,
 }: {
     businessId: string;
     isLoading: boolean;
@@ -39,6 +40,7 @@ export function CustomerManagementListRegion({
     onCustomerUpdated: (c: Customer) => void;
     onSendRequest: (c: Customer) => void;
     onSelectionChange: (ids: string[]) => void;
+    onCustomersMerged: (customer: Customer, removedCustomerId: string) => void;
 }) {
     if (isLoading) {
         return (
@@ -110,6 +112,7 @@ export function CustomerManagementListRegion({
             onCustomerUpdated={onCustomerUpdated}
             onSendRequest={onSendRequest}
             onSelectionChange={onSelectionChange}
+            onCustomersMerged={onCustomersMerged}
         />
     );
 }

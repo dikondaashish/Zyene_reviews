@@ -13,7 +13,8 @@ export function customerTableMetricColumns(
     setEditingNameId: (id: string | null) => void,
     setOptedOut: (customer: Customer, value: boolean) => void | Promise<void>,
     onSendRequest: ((customer: Customer) => void) | undefined,
-    setDeleteTarget: (customer: Customer | null) => void
+    setDeleteTarget: (customer: Customer | null) => void,
+    setMergeTarget: (customer: Customer | null) => void
 ): ColumnDef<Customer>[] {
     const cols: ColumnDef<Customer>[] = [];
 
@@ -100,6 +101,7 @@ export function customerTableMetricColumns(
                         onEditName={() => setEditingNameId(customer.id)}
                         onSendRequest={() => onSendRequest?.(customer)}
                         onDelete={() => setDeleteTarget(customer)}
+                        onMerge={() => setMergeTarget(customer)}
                         setOptedOut={setOptedOut}
                     />
                 );

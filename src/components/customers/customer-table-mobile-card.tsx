@@ -21,6 +21,7 @@ export function CustomerTableMobileCard({
     setEditingNameId,
     onSendRequest,
     setDeleteTarget,
+    setMergeTarget,
     setOptedOut,
     onNavigate,
     onActivate,
@@ -31,6 +32,7 @@ export function CustomerTableMobileCard({
     setEditingNameId: (id: string | null) => void;
     onSendRequest?: (customer: Customer) => void;
     setDeleteTarget: (customer: Customer | null) => void;
+    setMergeTarget: (customer: Customer | null) => void;
     setOptedOut: (customer: Customer, value: boolean) => void | Promise<void>;
     onNavigate: (e: React.MouseEvent, customerId: string) => void;
     onActivate: (customerId: string) => void;
@@ -109,6 +111,7 @@ export function CustomerTableMobileCard({
                             onEditName={() => setEditingNameId(customer.id)}
                             onSendRequest={() => onSendRequest?.(customer)}
                             onDelete={() => setDeleteTarget(customer)}
+                            onMerge={() => setMergeTarget(customer)}
                             setOptedOut={setOptedOut}
                         />
                     </div>

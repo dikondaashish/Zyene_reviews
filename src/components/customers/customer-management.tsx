@@ -71,6 +71,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                 onCustomerUpdated={cm.handleCustomerUpdated}
                 onSendRequest={cm.sendRequestToCustomer}
                 onSelectionChange={cm.setSelectedIds}
+                onCustomersMerged={cm.handleCustomersMerged}
             />
 
             <CustomerManagementDialogs

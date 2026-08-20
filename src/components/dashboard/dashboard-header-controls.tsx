@@ -15,7 +15,6 @@ type DashboardHeaderControlsProps = {
     businesses: BusinessContextBusiness[]
     allBusinesses: BusinessContextBusiness[]
     activeBusinessId: string | null
-    activeBusiness: BusinessContextBusiness | null
 }
 
 function defaultBusinessIdForOrg(
@@ -35,7 +34,6 @@ export function DashboardHeaderControls({
     businesses,
     allBusinesses,
     activeBusinessId,
-    activeBusiness,
 }: DashboardHeaderControlsProps) {
     const orgSwitcherItems = organizations.map((org) => ({
         id: org.id,
@@ -46,31 +44,33 @@ export function DashboardHeaderControls({
     return (
         <div className="flex flex-1 items-center justify-between gap-2 min-w-0 lg:gap-3">
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2 lg:gap-2">
-                    <OrganizationSwitcher
-                        organizations={orgSwitcherItems}
-                        activeOrganizationId={organization?.id ?? null}
-                    />
-                    <BusinessSwitcher
-                        businesses={businesses.map((b) => ({
-                            id: b.id,
-                            name: b.name || "Business",
-                            status: b.status || "active",
-                        }))}
-                        activeBusinessId={activeBusinessId}
-                        maxBusinesses={organization?.max_businesses || 1}
-                    />
+                <div className="flex min-w-0 flex-1 items-end gap-1.5 sm:gap-2 lg:gap-2">
+                    <div className="hidden min-w-0 flex-col gap-1 sm:flex">
+                        <span className="px-0.5 text-[11px] font-medium text-muted-foreground">
+                            Organization
+                        </span>
+                        <OrganizationSwitcher
+                            organizations={orgSwitcherItems}
+                            activeOrganizationId={organization?.id ?? null}
+                        />
+                    </div>
+                    <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-none">
+                        <span className="px-0.5 text-[11px] font-medium text-muted-foreground">
+                            Business
+                        </span>
+                        <BusinessSwitcher
+                            businesses={businesses.map((b) => ({
+                                id: b.id,
+                                name: b.name || "Business",
+                                status: b.status || "active",
+                            }))}
+                            activeBusinessId={activeBusinessId}
+                            maxBusinesses={organization?.max_businesses || 1}
+                        />
+                    </div>
                 </div>
-                {activeBusiness?.name ? (
-                    <p
-                        className="hidden text-[11px] text-muted-foreground truncate pl-0.5 md:block max-w-[min(42vw,380px)] lg:max-w-[480px]"
-                        title={`Dashboard actions apply to ${activeBusiness.name}`}
-                    >
-                        <span className="text-muted-foreground/80">Scope: </span>
-                        {activeBusiness.name}
-                    </p>
-                ) : businesses.length === 0 ? (
-                    <p className="hidden text-[11px] text-primary md:block pl-0.5">
+                {businesses.length === 0 ? (
+                    <p className="hidden px-0.5 text-[11px] text-primary md:block">
                         Add a business to use reviews, integrations, and team features.
                     </p>
                 ) : null}

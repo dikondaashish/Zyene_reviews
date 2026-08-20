@@ -30,10 +30,8 @@ export function DashboardView(props: DashboardViewProps) {
   return (
     <div className="flex min-w-0 w-full flex-col gap-6 overflow-x-hidden">
       <MilestoneCelebration
-        currentCount={displayTotalReviews}
-        type="reviews"
+        businessId={business.id}
         isDemo={useDemoData}
-        scopeKey={business.id || "default"}
       />
 
       {useDemoData && <DemoModeBanner className="mb-2" />}
