@@ -15,43 +15,43 @@ import {
 } from "@/lib/nfc/checkout-session";
 
 describe("NFC catalog", () => {
-    it("sells the PVC NFC tap and QR review stand", () => {
+    it("sells the Google NFC tap and QR review stand", () => {
         expect(NFC_CARD.id).toBe("nfc-review-stand");
         expect(NFC_CARD.name).toBe("NFC Review Stand");
+        expect(NFC_CARD.unitAmountCents).toBe(499);
         expect(NFC_CARD.imageSrc).toBe("/nfc/review-stand.jpg");
-        expect(NFC_CARD.videoSrc).toBe("/nfc/review-stand.mp4");
+        expect("videoSrc" in NFC_CARD).toBe(false);
         expect(nfcItemLabel(1)).toBe("1 NFC stand");
         expect(nfcItemLabel(3)).toBe("3 NFC stands");
         expect(fs.existsSync(path.join(process.cwd(), "public/nfc/review-stand.jpg"))).toBe(true);
-        expect(fs.existsSync(path.join(process.cwd(), "public/nfc/review-stand.mp4"))).toBe(true);
+        expect(fs.existsSync(path.join(process.cwd(), "public/nfc/review-stand.mp4"))).toBe(false);
     });
 
-    it("prices one stand at $9.99 plus standard shipping", () => {
-        expect(NFC_CARD.unitAmountCents).toBe(999);
+    it("prices one stand at $4.99 plus $4.99 standard shipping", () => {
         expect(nfcOrderTotals(1, "standard")).toEqual({
             quantity: 1,
-            subtotalCents: 999,
+            subtotalCents: 499,
             shippingCents: 499,
-            totalCents: 1498,
+            totalCents: 998,
         });
-        expect(formatUsdFromCents(1498)).toBe("$14.98");
+        expect(formatUsdFromCents(998)).toBe("$9.98");
     });
 
     it("clamps quantity to 1–20", () => {
         expect(clampNfcQuantity(0)).toBe(1);
         expect(clampNfcQuantity(21)).toBe(20);
-        expect(nfcOrderTotals(3, "expedited").totalCents).toBe(999 * 3 + 999);
+        expect(nfcOrderTotals(3, "expedited").totalCents).toBe(499 * 3 + 699);
     });
 
     it("scales the line total when quantity changes", () => {
-        expect(nfcOrderTotals(1, "standard").subtotalCents).toBe(999);
+        expect(nfcOrderTotals(1, "standard").subtotalCents).toBe(499);
         expect(nfcOrderTotals(11, "standard")).toEqual({
             quantity: 11,
-            subtotalCents: 10989,
+            subtotalCents: 5489,
             shippingCents: 499,
-            totalCents: 11488,
+            totalCents: 5988,
         });
-        expect(formatUsdFromCents(10989)).toBe("$109.89");
+        expect(formatUsdFromCents(5489)).toBe("$54.89");
     });
 });
 

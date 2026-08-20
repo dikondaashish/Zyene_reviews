@@ -2,12 +2,11 @@ export const NFC_CARD = {
     id: "nfc-review-stand",
     name: "NFC Review Stand",
     description:
-        "Customers tap NFC or scan the QR code to leave a Google review. Durable PVC stand, programmed for your location.",
-    unitAmountCents: 999,
+        "Customers tap NFC or scan the QR code to leave a Google review. No app required.",
+    unitAmountCents: 499,
     minQty: 1,
     maxQty: 20,
     imageSrc: "/nfc/review-stand.jpg",
-    videoSrc: "/nfc/review-stand.mp4",
     noun: { one: "stand", other: "stands" },
 } as const;
 
@@ -21,7 +20,7 @@ export const NFC_SHIPPING = {
     expedited: {
         id: "expedited",
         name: "Expedited shipping",
-        amountCents: 999,
+        amountCents: 699,
         estimate: "2–3 business days",
     },
 } as const;
