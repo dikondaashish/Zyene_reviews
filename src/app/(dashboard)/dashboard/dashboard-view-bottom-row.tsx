@@ -1,28 +1,13 @@
 import { MessageSquare } from "lucide-react";
-import { NeedsAttention } from "@/components/dashboard/needs-attention";
 import { DashboardAnimatedReviewCardsLazy } from "@/components/dashboard/dashboard-ssr-false-blocks";
-import { mapAttentionRows } from "./helpers";
 import type { DashboardViewProps } from "./types";
 
-type Props = Pick<
-    DashboardViewProps,
-    | "dict"
-    | "recentReviews"
-    | "attentionReviews"
-    | "planAllowsAiReplies"
-    | "useDemoData"
->;
+type Props = Pick<DashboardViewProps, "dict" | "recentReviews">;
 
-export function DashboardViewBottomRow({
-    dict,
-    recentReviews,
-    attentionReviews,
-    planAllowsAiReplies,
-    useDemoData,
-}: Props) {
+export function DashboardViewBottomRow({ dict, recentReviews }: Props) {
     return (
-        <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
-            <div className="min-w-0 flex flex-col overflow-hidden" data-tour-target="tour-recent-reviews">
+        <div className="min-w-0" data-tour-target="tour-recent-reviews">
+            <div className="flex min-w-0 flex-col overflow-hidden">
                 {recentReviews.length > 0 ? (
                     <div className="flex-1 flex flex-col">
                         <DashboardAnimatedReviewCardsLazy
@@ -59,42 +44,6 @@ export function DashboardViewBottomRow({
                         </p>
                     </div>
                 )}
-            </div>
-
-            <div className="min-w-0 overflow-hidden" data-tour-target="tour-needs-attention">
-                <NeedsAttention
-                    reviews={mapAttentionRows(
-                        attentionReviews.filter(
-                            (r) => (r.response_status ?? "pending") === "pending",
-                        ),
-                    )}
-                    viewAllHref="/reviews?status=needs_response&sort=lowest"
-                    planAllowsAiReplies={planAllowsAiReplies}
-                    isDemo={useDemoData}
-                    copy={{
-                        title: dict.dashboard.needs_attention_title,
-                        subtitleZero: dict.dashboard.needs_attention_subtitle_zero,
-                        subtitleOne: dict.dashboard.needs_attention_subtitle_one,
-                        subtitleMany: dict.dashboard.needs_attention_subtitle_many,
-                        viewAll: dict.dashboard.needs_attention_view_all,
-                        yourReplyLabel: dict.dashboard.needs_attention_your_reply_label,
-                        sentToGoogle: dict.dashboard.needs_attention_sent_saved,
-                        draftWithAi: dict.dashboard.needs_attention_draft_ai,
-                        drafting: dict.dashboard.needs_attention_drafting,
-                        writeYourOwn: dict.dashboard.needs_attention_write_own,
-                        regenerate: dict.dashboard.needs_attention_regenerate,
-                        adjustTone: dict.dashboard.needs_attention_adjust_tone,
-                        toneProfessional: dict.dashboard.needs_attention_tone_professional,
-                        toneFriendly: dict.dashboard.needs_attention_tone_friendly,
-                        toneConcise: dict.dashboard.needs_attention_tone_concise,
-                        sendReply: dict.dashboard.needs_attention_send,
-                        sent: dict.dashboard.needs_attention_sent,
-                        urgencyLabel: dict.dashboard.needs_attention_urgency,
-                        emptyTitle: dict.dashboard.needs_attention_empty_title,
-                        emptyDescription: dict.dashboard.needs_attention_empty_desc,
-                        demoSendHint: dict.dashboard.needs_attention_demo_send_hint,
-                    }}
-                />
             </div>
         </div>
     );
