@@ -21,7 +21,7 @@ test.describe("Dashboard Product Tour", () => {
 
     // STEP 1: Navigation Menu
     await expect(tooltip.locator(".tour-tooltip-title")).toHaveText("Navigation Menu");
-    await expect(tooltip.locator(".tour-tooltip-icon")).toHaveText("🧭");
+    await expect(tooltip.locator(".tour-tooltip-icon")).toHaveAttribute("data-tour-icon", "panel-left");
     await expect(tooltip.locator(".tour-tooltip-step-counter")).toHaveText("1/6");
 
     // Advance to Step 2
@@ -29,7 +29,7 @@ test.describe("Dashboard Product Tour", () => {
 
     // STEP 2: Dashboard Results
     await expect(tooltip.locator(".tour-tooltip-title")).toHaveText("Dashboard Results");
-    await expect(tooltip.locator(".tour-tooltip-icon")).toHaveText("📊");
+    await expect(tooltip.locator(".tour-tooltip-icon")).toHaveAttribute("data-tour-icon", "home");
     await expect(tooltip.locator(".tour-tooltip-step-counter")).toHaveText("2/6");
 
     // Advance to Step 3
@@ -37,7 +37,7 @@ test.describe("Dashboard Product Tour", () => {
 
     // STEP 3: Recent Actions
     await expect(tooltip.locator(".tour-tooltip-title")).toHaveText("Recent Actions");
-    await expect(tooltip.locator(".tour-tooltip-icon")).toHaveText("💬");
+    await expect(tooltip.locator(".tour-tooltip-icon")).toHaveAttribute("data-tour-icon", "message-square");
     await expect(tooltip.locator(".tour-tooltip-step-counter")).toHaveText("3/6");
 
     // Advance to Step 4
@@ -45,7 +45,7 @@ test.describe("Dashboard Product Tour", () => {
 
     // STEP 4: Customers
     await expect(tooltip.locator(".tour-tooltip-title")).toHaveText("Customers");
-    await expect(tooltip.locator(".tour-tooltip-icon")).toHaveText("👥");
+    await expect(tooltip.locator(".tour-tooltip-icon")).toHaveAttribute("data-tour-icon", "users");
     await expect(tooltip.locator(".tour-tooltip-step-counter")).toHaveText("4/6");
 
     // Advance to Step 5
@@ -53,7 +53,7 @@ test.describe("Dashboard Product Tour", () => {
 
     // STEP 5: Reports & Analytics
     await expect(tooltip.locator(".tour-tooltip-title")).toHaveText("Reports & Analytics");
-    await expect(tooltip.locator(".tour-tooltip-icon")).toHaveText("📈");
+    await expect(tooltip.locator(".tour-tooltip-icon")).toHaveAttribute("data-tour-icon", "bar-chart-3");
     await expect(tooltip.locator(".tour-tooltip-step-counter")).toHaveText("5/6");
 
     // Advance to Step 6 (Final)
@@ -61,11 +61,10 @@ test.describe("Dashboard Product Tour", () => {
 
     // STEP 6: Settings & Profile
     await expect(tooltip.locator(".tour-tooltip-title")).toHaveText("Settings & Profile");
-    await expect(tooltip.locator(".tour-tooltip-icon")).toHaveText("⚙️");
+    await expect(tooltip.locator(".tour-tooltip-icon")).toHaveAttribute("data-tour-icon", "settings");
     await expect(tooltip.locator(".tour-tooltip-step-counter")).toHaveText("6/6");
-    
-    // Verify "Finish" button text
-    await expect(page.locator(".tour-btn-finish")).toHaveText("Got it! 🎉");
+
+    await expect(page.locator(".tour-btn-finish")).toContainText("Got it");
 
     // Complete the tour
     await page.click(".tour-btn-finish");

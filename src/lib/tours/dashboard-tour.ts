@@ -1,14 +1,25 @@
 /**
- * Dashboard tour configuration for first-time users
- * Guides users through key features of the dashboard
+ * Dashboard tour configuration for first-time users.
+ * Icon keys map to the same Lucide icons used in the sidebar.
  */
 
+export const TOUR_STEP_ICONS = [
+    "panel-left",
+    "home",
+    "message-square",
+    "users",
+    "bar-chart-3",
+    "settings",
+] as const;
+
+export type TourStepIcon = (typeof TOUR_STEP_ICONS)[number];
+
 export interface TourStep {
-    target: string; // data-tour-target attribute value
+    target: string;
     title: string;
     description: string;
     placement: "top" | "bottom" | "left" | "right" | "center";
-    icon: string; // Emoji icon for the step header
+    icon: TourStepIcon;
 }
 
 export const dashboardTourSteps: TourStep[] = [
@@ -18,7 +29,7 @@ export const dashboardTourSteps: TourStep[] = [
         description:
             "Browse all sections from here — Reviews, Campaigns, Customers, Analytics, Integrations, and more. Everything is one click away.",
         placement: "right",
-        icon: "🧭",
+        icon: "panel-left",
     },
     {
         target: "tour-stats",
@@ -26,7 +37,7 @@ export const dashboardTourSteps: TourStep[] = [
         description:
             "Your key metrics at a glance — total reviews, average rating, response rate, and pending reviews. These update in real-time.",
         placement: "bottom",
-        icon: "📊",
+        icon: "home",
     },
     {
         target: "tour-recent-reviews",
@@ -34,7 +45,7 @@ export const dashboardTourSteps: TourStep[] = [
         description:
             "Your latest reviews appear here for quick action. Respond, analyze sentiment, and stay on top of feedback with ease.",
         placement: "top",
-        icon: "💬",
+        icon: "message-square",
     },
     {
         target: "tour-customers-nav",
@@ -42,7 +53,7 @@ export const dashboardTourSteps: TourStep[] = [
         description:
             "Manage your customer database, import contacts, and send personalized review requests via email or SMS.",
         placement: "right",
-        icon: "👥",
+        icon: "users",
     },
     {
         target: "tour-analytics-nav",
@@ -50,7 +61,7 @@ export const dashboardTourSteps: TourStep[] = [
         description:
             "Track review trends, customer sentiment, engagement rates, and performance analytics over time.",
         placement: "right",
-        icon: "📈",
+        icon: "bar-chart-3",
     },
     {
         target: "tour-settings-nav",
@@ -58,6 +69,6 @@ export const dashboardTourSteps: TourStep[] = [
         description:
             "Configure your profile, business info, notifications, billing, and team members all in one place.",
         placement: "right",
-        icon: "⚙️",
+        icon: "settings",
     },
 ];
