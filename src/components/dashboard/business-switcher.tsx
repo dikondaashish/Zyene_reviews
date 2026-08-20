@@ -8,6 +8,7 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -64,6 +65,8 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
                 className="w-[min(20rem,calc(100vw-1rem))] min-w-[12rem] sm:w-[220px]"
                 align="start"
             >
+                <DropdownMenuLabel>Business</DropdownMenuLabel>
+                <DropdownMenuSeparator />
                 {businesses.length > 0 ? (
                     businesses.map((biz) => (
                         <DropdownMenuItem

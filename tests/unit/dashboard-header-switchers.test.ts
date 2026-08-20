@@ -14,7 +14,7 @@ describe("dashboard header switchers", () => {
         expect(header).not.toContain(">Business<");
     });
 
-    it("does not repeat Organization/Business titles inside the dropdown menus", () => {
+    it("keeps Organization/Business labels inside the dropdown menus", () => {
         const orgSwitcher = fs.readFileSync(
             path.join(root, "src/components/dashboard/organization-switcher.tsx"),
             "utf8",
@@ -23,7 +23,7 @@ describe("dashboard header switchers", () => {
             path.join(root, "src/components/dashboard/business-switcher.tsx"),
             "utf8",
         );
-        expect(orgSwitcher).not.toContain("DropdownMenuLabel");
-        expect(businessSwitcher).not.toContain("DropdownMenuLabel");
+        expect(orgSwitcher).toContain("<DropdownMenuLabel>Organization</DropdownMenuLabel>");
+        expect(businessSwitcher).toContain("<DropdownMenuLabel>Business</DropdownMenuLabel>");
     });
 });
