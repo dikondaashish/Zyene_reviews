@@ -100,10 +100,10 @@ describe("NFC order dialog trigger", () => {
             "utf8",
         );
         expect(source).not.toContain("zyenereviews.com/nfc-cards");
-        expect(source).not.toContain("google-nfc-card-design.png");
+        expect(source).toContain("google-nfc-card-design.png");
+        expect(source).not.toContain("NFC_CARD.imageSrc");
         expect(source).not.toContain('target="_blank"');
         expect(source).toContain("NfcOrderDialog");
-        expect(source).toContain("NFC_CARD.imageSrc");
         expect(source).toContain("order.setOpen(true)");
     });
 
