@@ -6,6 +6,7 @@ import { BusinessContextEmptyState } from "@/components/dashboard/business-conte
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { UsersRound } from "lucide-react";
 import { enrichCustomersWithReviewLinkage } from "@/lib/customers/review-linkage";
+import { dedupeCustomersByIdentity } from "@/lib/customers/dedupe-by-identity";
 
 export default async function CustomersPage() {
     const { businessId, businesses } = await getActiveBusinessId();
@@ -42,7 +43,9 @@ export default async function CustomersPage() {
         );
     }
 
-    const initialCustomers = await enrichCustomersWithReviewLinkage(supabase, businessId, rawCustomers || []);
+    const initialCustomers = dedupeCustomersByIdentity(
+        await enrichCustomersWithReviewLinkage(supabase, businessId, rawCustomers || []),
+    );
 
     return (
         <div className="mx-auto min-w-0 max-w-[1200px] overflow-x-hidden px-4 py-4 sm:px-5 sm:py-6 lg:px-6">

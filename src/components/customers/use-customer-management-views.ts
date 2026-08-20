@@ -3,6 +3,11 @@
 import { useMemo } from "react";
 import type { Customer } from "@/components/customers/customer-table";
 import type { SmartSegmentTab } from "@/components/customers/customer-segment-tabs";
+import { dedupeCustomersByIdentity } from "@/lib/customers/dedupe-by-identity";
+import {
+    computeCustomerManagementMetrics,
+    recentCustomerWindow,
+} from "@/lib/customers/segment-counts";
 import {
     emptySegmentCounts,
     type CustomerManagementStats,
@@ -16,14 +21,28 @@ export function useCustomerManagementViews(
     isLoading: boolean,
     stats: CustomerManagementStats | null
 ) {
-    const since30 = useMemo(() => {
-        const d = new Date();
-        d.setDate(d.getDate() - 30);
-        return d;
-    }, []);
+    const since30 = useMemo(() => recentCustomerWindow(), []);
+
+    const uniqueCustomers = useMemo(
+        () => dedupeCustomersByIdentity(customers),
+        [customers],
+    );
+
+    const derivedStats = useMemo(
+        () => computeCustomerManagementMetrics(uniqueCustomers),
+        [uniqueCustomers],
+    );
+
+    const resolvedStats = useMemo<CustomerManagementStats | null>(() => {
+        if (!stats) return derivedStats;
+        if (stats.segmentCounts.all === 0 && uniqueCustomers.length > 0) {
+            return derivedStats;
+        }
+        return stats;
+    }, [stats, derivedStats, uniqueCustomers.length]);
 
     const displayedCustomers = useMemo(() => {
-        const list = customers;
+        const list = uniqueCustomers;
         switch (smartTab) {
             case "never_reviewed":
                 return list.filter((c) => (c.total_requests_sent ?? 0) > 0 && !c.has_linked_review);
@@ -42,7 +61,7 @@ export function useCustomerManagementViews(
             default:
                 return list;
         }
-    }, [customers, smartTab, since30]);
+    }, [uniqueCustomers, smartTab, since30]);
 
     const allTagsForFilter = useMemo(() => {
         const set = new Set<string>();
@@ -65,16 +84,17 @@ export function useCustomerManagementViews(
     );
 
     const bulkSendBlocked = selectedIds.length > 0 && selectedEligibleForSend === 0;
-    const segmentCountsForTabs = stats?.segmentCounts ?? emptySegmentCounts;
+    const segmentCountsForTabs = resolvedStats?.segmentCounts ?? emptySegmentCounts;
     const listEmpty = !isLoading && displayedCustomers.length === 0;
-    const filteredEmpty = listEmpty && customers.length > 0;
-    const databaseEmpty = listEmpty && customers.length === 0;
+    const filteredEmpty = listEmpty && uniqueCustomers.length > 0;
+    const databaseEmpty = listEmpty && uniqueCustomers.length === 0;
 
     return {
         displayedCustomers,
         allTagsForFilter,
         bulkSendBlocked,
         segmentCountsForTabs,
+        resolvedStats,
         listEmpty,
         filteredEmpty,
         databaseEmpty,

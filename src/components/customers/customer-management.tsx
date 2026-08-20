@@ -26,7 +26,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                 isExporting={cm.isExporting}
             />
 
-            <CustomerManagementStatsGrid stats={cm.stats} />
+            <CustomerManagementStatsGrid stats={cm.resolvedStats} />
 
             <CustomerManagementFilterToolbar
                 searchQuery={cm.search}

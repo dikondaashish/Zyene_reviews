@@ -8,7 +8,6 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -85,8 +84,6 @@ export function OrganizationSwitcher({
                 className="w-[min(20rem,calc(100vw-1rem))] min-w-[12rem] sm:w-[220px]"
                 align="start"
             >
-                <DropdownMenuLabel>Organization</DropdownMenuLabel>
-                <DropdownMenuSeparator />
                 {organizations.map((org) => (
                     <DropdownMenuItem
                         key={org.id}

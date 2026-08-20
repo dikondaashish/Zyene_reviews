@@ -2,66 +2,14 @@ import { createClient } from "@/lib/db/supabase/server";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { type NextRequest } from "next/server";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
+import { dedupeCustomersByIdentity } from "@/lib/customers/dedupe-by-identity";
 import {
-    customerHasLinkedReviewFromRows,
-    fetchReviewLeftRows,
-    type ReviewRequestContact,
-} from "@/lib/customers/review-linkage";
+    computeCustomerManagementMetrics,
+    type CustomerSegmentInput,
+} from "@/lib/customers/segment-counts";
+import { enrichCustomersWithReviewLinkage } from "@/lib/customers/review-linkage";
 
-type CustomerRow = {
-    id: string;
-    email: string | null;
-    phone: string | null;
-    total_requests_sent: number | null;
-    created_at: string;
-    last_request_sent_at: string | null;
-    is_opted_out: boolean;
-};
-
-function isRecent(c: CustomerRow, since: Date): boolean {
-    const created = new Date(c.created_at).getTime();
-    const lastReq = c.last_request_sent_at ? new Date(c.last_request_sent_at).getTime() : 0;
-    return created >= since.getTime() || lastReq >= since.getTime();
-}
-
-function normPhoneOrEmail(c: { email: string | null; phone: string | null }): boolean {
-    const e = (c.email ?? "").trim();
-    const p = (c.phone ?? "").trim();
-    return Boolean(e) || Boolean(p);
-}
-
-function computeSegmentCounts(
-    customers: CustomerRow[],
-    leftRows: ReviewRequestContact[],
-    since30: Date
-) {
-    let never_reviewed = 0;
-    let already_reviewed = 0;
-    let recent = 0;
-    let no_contact = 0;
-    let opted_out = 0;
-
-    for (const c of customers) {
-        if (c.is_opted_out) opted_out++;
-        const hasReq = (c.total_requests_sent ?? 0) > 0;
-        const hasReview = customerHasLinkedReviewFromRows(c, leftRows);
-        const noInfo = !normPhoneOrEmail(c);
-
-        if (noInfo) no_contact++;
-        if (hasReq && !hasReview) never_reviewed++;
-        if (hasReview) already_reviewed++;
-        if (isRecent(c, since30)) recent++;
-    }
-
-    return {
-        all: customers.length,
-        never_reviewed,
-        already_reviewed,
-        recent,
-        no_contact,
-        opted_out,
-    };
-}
+type CustomerRow = CustomerSegmentInput & { id: string };
 
 export async function handleCustomersStats(request: NextRequest) {
     try {
@@ -87,33 +35,15 @@ export async function handleCustomersStats(request: NextRequest) {
             .eq("business_id", businessId);
 
         if (custErr) throw custErr;
-        const rows = (customers ?? []) as CustomerRow[];
 
-        const leftRows = await fetchReviewLeftRows(supabase, businessId);
+        const enriched = await enrichCustomersWithReviewLinkage(
+            supabase,
+            businessId,
+            (customers ?? []) as CustomerRow[],
+        );
+        const uniqueCustomers = dedupeCustomersByIdentity(enriched);
 
-        const since30 = new Date();
-        since30.setDate(since30.getDate() - 30);
-
-        const segmentCounts = computeSegmentCounts(rows, leftRows, since30);
-
-        const totalCustomers = rows.length;
-        const sumRequests = rows.reduce((acc, c) => acc + (c.total_requests_sent ?? 0), 0);
-        const avgRequestsSent = totalCustomers > 0 ? sumRequests / totalCustomers : 0;
-
-        const withRequest = rows.filter((c) => (c.total_requests_sent ?? 0) > 0);
-        const withRequestAndReview = withRequest.filter((c) => customerHasLinkedReviewFromRows(c, leftRows));
-        const reviewConversionPercent =
-            withRequest.length > 0 ? (withRequestAndReview.length / withRequest.length) * 100 : 0;
-
-        const neverReviewedCount = withRequest.filter((c) => !customerHasLinkedReviewFromRows(c, leftRows)).length;
-
-        return apiOk({
-            totalCustomers,
-            reviewConversionPercent: Math.round(reviewConversionPercent * 10) / 10,
-            neverReviewedCount,
-            avgRequestsSent: Math.round(avgRequestsSent * 10) / 10,
-            segmentCounts,
-        });
+        return apiOk(computeCustomerManagementMetrics(uniqueCustomers));
     } catch (e: unknown) {
         const message = e instanceof Error ? e.message : "An unexpected error occurred";
         return apiError(message, { status: 500 });

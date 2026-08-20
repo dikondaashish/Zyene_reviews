@@ -5,6 +5,7 @@ import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
 import { customerMatchesSearch } from "@/lib/customers/search-match";
+import { dedupeCustomersByIdentity } from "@/lib/customers/dedupe-by-identity";
 import { enrichCustomersWithReviewLinkage } from "@/lib/customers/review-linkage";
 import { upsertCustomerByIdentity } from "@/services/customers/customer-identity-store";
 import { patchCustomerRecord } from "@/services/customers/patch-customer-record";
@@ -147,8 +148,9 @@ export async function listCustomers(request: NextRequest) {
             if (error) throw error;
             const filtered = (candidates || []).filter((row) => customerMatchesSearch(row, searchRaw));
             const enrichedFiltered = await enrichCustomersWithReviewLinkage(supabase, businessId, filtered);
-            const total = enrichedFiltered.length;
-            const pageRows = enrichedFiltered.slice(from, Math.min(to + 1, enrichedFiltered.length));
+            const deduped = dedupeCustomersByIdentity(enrichedFiltered);
+            const total = deduped.length;
+            const pageRows = deduped.slice(from, Math.min(to + 1, deduped.length));
             return apiOk(
                 {
                     customers: pageRows,
@@ -164,18 +166,19 @@ export async function listCustomers(request: NextRequest) {
             );
         }
 
-        const { data, count, error } = await query
-            .order("created_at", { ascending: false })
-            .range(from, to);
+        const { data, error } = await query.order("created_at", { ascending: false });
 
         if (error) throw error;
 
-        const enriched = await enrichCustomersWithReviewLinkage(supabase, businessId, data || []);
-
+        const enriched = dedupeCustomersByIdentity(
+            await enrichCustomersWithReviewLinkage(supabase, businessId, data || []),
+        );
+        const total = enriched.length;
+        const pageRows = enriched.slice(from, Math.min(to + 1, total));
         return apiOk(
             {
-                customers: enriched,
-                total: count,
+                customers: pageRows,
+                total,
                 page,
                 limit,
             },

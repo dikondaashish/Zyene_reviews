@@ -44,20 +44,14 @@ export function DashboardHeaderControls({
     return (
         <div className="flex flex-1 items-center justify-between gap-2 min-w-0 lg:gap-3">
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <div className="flex min-w-0 flex-1 items-end gap-1.5 sm:gap-2 lg:gap-2">
-                    <div className="hidden min-w-0 flex-col gap-1 sm:flex">
-                        <span className="px-0.5 text-[11px] font-medium text-muted-foreground">
-                            Organization
-                        </span>
+                <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2 lg:gap-2">
+                    <div className="hidden min-w-0 sm:block">
                         <OrganizationSwitcher
                             organizations={orgSwitcherItems}
                             activeOrganizationId={organization?.id ?? null}
                         />
                     </div>
-                    <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-none">
-                        <span className="px-0.5 text-[11px] font-medium text-muted-foreground">
-                            Business
-                        </span>
+                    <div className="min-w-0 flex-1 sm:flex-none">
                         <BusinessSwitcher
                             businesses={businesses.map((b) => ({
                                 id: b.id,
