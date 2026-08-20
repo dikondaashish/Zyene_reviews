@@ -1,3 +1,18 @@
+const NFC_IMAGES = [
+    "/nfc/review-stand.jpg",
+    "/nfc/review-stand-2.jpg",
+    "/nfc/review-stand-3.jpg",
+    "/nfc/review-stand-4.jpg",
+    "/nfc/review-stand-5.jpg",
+    "/nfc/review-stand-6.jpg",
+    "/nfc/review-stand-7.jpg",
+    "/nfc/review-stand-8.jpg",
+    "/nfc/review-stand-9.jpg",
+    "/nfc/review-stand-10.jpg",
+    "/nfc/review-stand-11.jpg",
+    "/nfc/review-stand-12.jpg",
+] as const;
+
 export const NFC_CARD = {
     id: "nfc-review-stand",
     name: "NFC Review Stand",
@@ -6,7 +21,9 @@ export const NFC_CARD = {
     unitAmountCents: 499,
     minQty: 1,
     maxQty: 20,
-    imageSrc: "/nfc/review-stand.jpg",
+    imageSrc: NFC_IMAGES[0],
+    imageSrcs: NFC_IMAGES,
+    videoSrc: "/nfc/review-stand.mp4",
     noun: { one: "stand", other: "stands" },
 } as const;
 

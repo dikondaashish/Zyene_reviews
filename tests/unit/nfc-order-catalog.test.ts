@@ -20,11 +20,15 @@ describe("NFC catalog", () => {
         expect(NFC_CARD.name).toBe("NFC Review Stand");
         expect(NFC_CARD.unitAmountCents).toBe(499);
         expect(NFC_CARD.imageSrc).toBe("/nfc/review-stand.jpg");
-        expect("videoSrc" in NFC_CARD).toBe(false);
+        expect(NFC_CARD.videoSrc).toBe("/nfc/review-stand.mp4");
+        expect(NFC_CARD.imageSrcs).toHaveLength(12);
+        expect(NFC_CARD.imageSrcs[0]).toBe(NFC_CARD.imageSrc);
         expect(nfcItemLabel(1)).toBe("1 NFC stand");
         expect(nfcItemLabel(3)).toBe("3 NFC stands");
-        expect(fs.existsSync(path.join(process.cwd(), "public/nfc/review-stand.jpg"))).toBe(true);
-        expect(fs.existsSync(path.join(process.cwd(), "public/nfc/review-stand.mp4"))).toBe(false);
+        for (const src of NFC_CARD.imageSrcs) {
+            expect(fs.existsSync(path.join(process.cwd(), `public${src}`))).toBe(true);
+        }
+        expect(fs.existsSync(path.join(process.cwd(), "public/nfc/review-stand.mp4"))).toBe(true);
     });
 
     it("prices one stand at $4.99 plus $4.99 standard shipping", () => {
