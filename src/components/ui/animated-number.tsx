@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { useMotionValue, useSpring } from "framer-motion"
+import { useInView, useMotionValue, useSpring } from "framer-motion"
 
 interface AnimatedNumberProps {
   value: number
@@ -9,18 +9,6 @@ interface AnimatedNumberProps {
   precision?: number
   prefix?: string
   suffix?: string
-}
-
-function formatAnimatedNumber(
-  value: number,
-  precision: number,
-  prefix: string,
-  suffix: string,
-): string {
-  return `${prefix}${value.toLocaleString(undefined, {
-    minimumFractionDigits: precision,
-    maximumFractionDigits: precision,
-  })}${suffix}`
 }
 
 export function AnimatedNumber({
@@ -31,35 +19,36 @@ export function AnimatedNumber({
   suffix = "",
 }: AnimatedNumberProps) {
   const ref = useRef<HTMLSpanElement>(null)
-  const motionValue = useMotionValue(value)
+  const motionValue = useMotionValue(0)
   const springValue = useSpring(motionValue, {
     damping: 30,
     stiffness: 100,
   })
-  const previousValue = useRef(value)
+  const isInView = useInView(ref, { once: true, margin: "0px" })
 
   useEffect(() => {
-    if (previousValue.current === value) return
-    previousValue.current = value
-    motionValue.set(value)
-  }, [motionValue, value])
+    if (isInView) {
+      motionValue.set(value)
+    }
+  }, [motionValue, value, isInView])
 
   useEffect(() => {
     return springValue.on("change", (latest) => {
       if (ref.current) {
-        ref.current.textContent = formatAnimatedNumber(
-          latest,
-          precision,
-          prefix,
-          suffix,
-        )
+        ref.current.textContent = `${prefix}${latest.toLocaleString(undefined, {
+          minimumFractionDigits: precision,
+          maximumFractionDigits: precision,
+        })}${suffix}`
       }
     })
   }, [springValue, precision, prefix, suffix])
 
   return (
-    <span ref={ref} className={className}>
-      {formatAnimatedNumber(value, precision, prefix, suffix)}
+    <span
+      ref={ref}
+      className={className}
+    >
+      {prefix}0{suffix}
     </span>
   )
 }

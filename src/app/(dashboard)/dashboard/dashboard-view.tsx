@@ -13,7 +13,7 @@ import { DashboardViewExtendedStats } from "./dashboard-view-extended-stats";
 import { DashboardViewGoogleHealth } from "./dashboard-view-google-health";
 import { DashboardViewGooglePerformance } from "./dashboard-view-google-performance";
 import { DashboardViewHeader } from "./dashboard-view-header";
-import { DashboardViewPriority } from "./dashboard-view-priority";
+import { DashboardViewStatCards } from "./dashboard-view-stat-cards";
 import type { DashboardViewProps } from "./types";
 
 export function DashboardView(props: DashboardViewProps) {
@@ -28,6 +28,7 @@ export function DashboardView(props: DashboardViewProps) {
     canConfigureNotifications = true,
     requestsThisMonth,
     hasEngagementData,
+    displayTotalReviews,
   } = props;
   const requestSent = hasSentReviewRequest({
     hasEngagementData,
@@ -44,8 +45,6 @@ export function DashboardView(props: DashboardViewProps) {
       {useDemoData && <DemoModeBanner className="mb-2" />}
 
       <DashboardViewHeader user={user} dict={dict} business={business} />
-
-      <DashboardViewPriority {...props} />
 
       {shouldShowGettingStartedBanner({
         isGoogleConnected,
@@ -88,6 +87,7 @@ export function DashboardView(props: DashboardViewProps) {
         </div>
       </div>
 
+      <DashboardViewStatCards {...props} />
       <DashboardViewGoogleHealth {...props} />
       <DashboardViewGooglePerformance {...props} />
       <DashboardViewExtendedStats {...props} />
