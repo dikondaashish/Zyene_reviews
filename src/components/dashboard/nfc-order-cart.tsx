@@ -1,9 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { ChevronLeft, Lock } from "lucide-react";
+import { NfcOrderShipping } from "@/components/dashboard/nfc-order-shipping";
 import {
     NFC_CARD,
-    NFC_SHIPPING,
     formatUsdFromCents,
     nfcItemLabel,
     nfcOrderTotals,
@@ -11,6 +12,7 @@ import {
 } from "@/lib/nfc/catalog";
 
 export function NfcOrderCart({
+    businessName,
     quantity,
     shippingId,
     checkingOut,
@@ -18,6 +20,7 @@ export function NfcOrderCart({
     onShippingChange,
     onCheckout,
 }: {
+    businessName: string;
     quantity: number;
     shippingId: NfcShippingId;
     checkingOut: boolean;
@@ -25,81 +28,69 @@ export function NfcOrderCart({
     onShippingChange: (id: NfcShippingId) => void;
     onCheckout: () => void;
 }) {
-    const totals = nfcOrderTotals(quantity, shippingId);
+    const subtotal = nfcOrderTotals(quantity, shippingId).subtotalCents;
 
     return (
-        <div className="space-y-4">
-            <div className="flex items-baseline justify-between gap-3">
-                <div>
-                    <p className="text-base font-semibold text-foreground">Cart</p>
-                    <p className="text-xs text-muted-foreground">
-                        {nfcItemLabel(quantity)} · ships to US & Canada
+        <div className="flex h-full flex-col">
+            <div className="grid flex-1 sm:grid-cols-[1.05fr_1fr]">
+                <div className="border-b border-border/60 bg-secondary/40 p-4 sm:border-r sm:border-b-0">
+                    <button
+                        type="button"
+                        className="-ml-1 inline-flex items-center gap-1 rounded-full px-1 py-0.5 text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+                        onClick={onBack}
+                    >
+                        <ChevronLeft className="size-3.5" aria-hidden />
+                        Back to stand
+                    </button>
+
+                    <p className="mt-2.5 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
+                        Your order
+                    </p>
+
+                    <div className="mt-2 flex gap-3 rounded-xl border border-border/60 bg-background p-3">
+                        <div className="relative size-14 shrink-0 overflow-hidden rounded-lg border border-border/60">
+                            <Image
+                                src={NFC_CARD.imageSrc}
+                                alt=""
+                                fill
+                                sizes="56px"
+                                className="object-cover"
+                            />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                            <p className="text-[13px] font-semibold text-foreground">
+                                {NFC_CARD.name}
+                            </p>
+                            <p className="mt-0.5 text-[11px] text-muted-foreground">
+                                {nfcItemLabel(quantity)} ·{" "}
+                                {formatUsdFromCents(NFC_CARD.unitAmountCents)} each
+                            </p>
+                            <p className="mt-1 text-[13px] font-medium tabular-nums">
+                                {formatUsdFromCents(subtotal)}
+                            </p>
+                        </div>
+                    </div>
+
+                    <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
+                        Linked to the {businessName} review page before it ships. Delivers to the US
+                        and Canada.
                     </p>
                 </div>
-                <p className="text-sm font-medium tabular-nums">
-                    {formatUsdFromCents(totals.subtotalCents)}
-                </p>
+
+                <div className="p-4 sm:p-5">
+                    <NfcOrderShipping
+                        quantity={quantity}
+                        shippingId={shippingId}
+                        checkingOut={checkingOut}
+                        onShippingChange={onShippingChange}
+                        onCheckout={onCheckout}
+                    />
+                </div>
             </div>
 
-            <fieldset className="space-y-2">
-                <legend className="text-xs font-medium text-muted-foreground">Shipping</legend>
-                {(Object.keys(NFC_SHIPPING) as NfcShippingId[]).map((id) => {
-                    const option = NFC_SHIPPING[id];
-                    const selected = shippingId === id;
-                    return (
-                        <label
-                            key={id}
-                            className={`flex cursor-pointer items-center justify-between gap-3 rounded-xl border px-3 py-2.5 transition-[border-color,background-color] duration-150 ${
-                                selected
-                                    ? "border-primary bg-primary/5"
-                                    : "border-border/70 bg-background"
-                            }`}
-                        >
-                            <span className="flex items-center gap-2">
-                                <input
-                                    type="radio"
-                                    name="nfc-shipping"
-                                    className="accent-primary"
-                                    checked={selected}
-                                    onChange={() => onShippingChange(id)}
-                                />
-                                <span>
-                                    <span className="block text-sm font-medium">{option.name}</span>
-                                    <span className="text-xs text-muted-foreground">{option.estimate}</span>
-                                </span>
-                            </span>
-                            <span className="text-sm tabular-nums">
-                                {formatUsdFromCents(option.amountCents)}
-                            </span>
-                        </label>
-                    );
-                })}
-            </fieldset>
-
-            <div className="flex items-center justify-between border-t border-border/60 pt-3">
-                <p className="text-sm font-semibold">Total</p>
-                <p className="text-base font-semibold tabular-nums">
-                    {formatUsdFromCents(totals.totalCents)}
-                </p>
-            </div>
-
-            <Button
-                type="button"
-                className="h-11 w-full rounded-full transition-transform duration-150 ease-out active:scale-[0.97]"
-                disabled={checkingOut || quantity < NFC_CARD.minQty}
-                onClick={onCheckout}
-            >
-                {checkingOut ? "Redirecting to Stripe…" : "Pay with Stripe"}
-            </Button>
-            <button
-                type="button"
-                className="mx-auto block text-xs text-muted-foreground underline-offset-4 hover:underline"
-                onClick={onBack}
-            >
-                Back to stand
-            </button>
-            <p className="text-center text-[11px] leading-relaxed text-muted-foreground">
-                Card details are entered on Stripe. Address is collected at checkout.
+            <p className="flex items-center justify-center gap-1.5 border-t border-border/60 bg-secondary/30 px-4 py-3 text-[11px] text-muted-foreground">
+                <Lock className="size-3" aria-hidden />
+                Card details and shipping address are collected on Stripe&apos;s secure checkout.
             </p>
         </div>
     );

@@ -120,10 +120,15 @@ describe("NFC order dialog trigger", () => {
             path.join(process.cwd(), "src/components/dashboard/nfc-order-product.tsx"),
             "utf8",
         );
+        const details = fs.readFileSync(
+            path.join(process.cwd(), "src/components/dashboard/nfc-order-details.tsx"),
+            "utf8",
+        );
         expect(hook).not.toContain("cartQty");
         expect(dialog).toContain("quantity={order.quantity}");
-        expect(product).toContain("nfcOrderTotals(quantity");
+        expect(details).toContain("nfcOrderTotals(quantity");
         expect(product).toContain("NfcOrderMedia");
+        expect(product).toContain("NfcOrderDetails");
         expect(product).toContain("NfcOrderBenefits");
         expect(dialog).toContain("Order an NFC review stand");
         expect(dialog).toContain("onBack={order.backToProduct}");
