@@ -131,26 +131,34 @@ Run the **`seo`** skill before committing marketing changes (see §5).
 
 ## 4. Before finishing any task
 
-Do **not** mark work complete until all applicable checks pass:
+GitHub CI already runs the full `typecheck` + all tests + `pnpm build`. Do **not** repeat that locally after every small change — a production webpack build takes several minutes and is the usual stall.
+
+**Default (most tasks):**
 
 ```bash
-pnpm typecheck   # must pass
-pnpm test        # must pass
-pnpm build       # must pass
+pnpm verify:fast
+pnpm exec vitest run tests/unit/<touched-file>.test.ts   # only tests for files you changed
 ```
 
-Additional gates:
+**Also run locally when the change can break the app compile or CI:**
 
-| Check | How |
-|-------|-----|
-| React quality | `npx react-doctor@latest --verbose --diff` on changed files (see **react-doctor** skill) |
-| File sizes | `pnpm check:sizes` (also runs in CI) |
-| Sitemap coverage | New marketing page? `pnpm test` fails if it is indexable and missing from `sitemap.ts` |
-| Client logging | No new `console.log` in `"use client"` files |
-| Secrets | No API keys, tokens, or passwords in code, migrations, or commits |
-| Marketing SEO | Run **seo** or **on-page-seo-auditor** when touching `(marketing)/` |
+| Change | Extra check |
+|--------|-------------|
+| Routes, `next.config`, env, middleware, API contracts | `pnpm build` |
+| Shared catalog/lib used by many tests | `pnpm test` |
+| New marketing URL | `pnpm test` (sitemap coverage) |
+| Human asked for a full check, or a release | `pnpm verify && pnpm build` |
 
-If a check fails, fix it before reporting done.
+**Skip unless it applies:**
+
+| Check | When |
+|-------|------|
+| `npx react-doctor@latest --verbose --diff` | Component structure/hooks changed — not copy, images, or catalog data |
+| `pnpm check:sizes` | Included in `verify:fast` |
+| SEO skills | Touching `(marketing)/` |
+| `pnpm clean` | Local `.next` is huge or typecheck/build is unusually slow |
+
+If a check you **did** run fails, fix it before reporting done.
 
 ---
 
@@ -259,9 +267,11 @@ Refresh Vercel skills: `pnpm run skills:vercel`. Cursor rules index: `.cursor/ru
 
 ```bash
 pnpm dev              # local dev
-pnpm typecheck        # TypeScript
-pnpm test             # Vitest
-pnpm build            # production build
+pnpm verify:fast      # typecheck + file-size guard (default after a task)
+pnpm verify           # typecheck + full Vitest + file-size guard
+pnpm test             # all Vitest tests
+pnpm build            # production webpack build (CI / release)
+pnpm clean            # delete .next and tool caches
 pnpm lint             # ESLint
 pnpm cursorrules:install   # refresh .cursor/rules from awesome-cursorrules
 pnpm skills:vercel         # refresh Vercel agent skills

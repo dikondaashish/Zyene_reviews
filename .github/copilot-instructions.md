@@ -37,11 +37,7 @@ Routes: `(marketing)/`, `(dashboard)/`, `api/`, `r/[slug]`, `w/[slug]`. Active b
 
 ## Before finishing
 
-```bash
-pnpm typecheck && pnpm test && pnpm build
-```
-
-Also: `npx react-doctor@latest --verbose --diff` on React changes; respect file line limits; no secrets in code.
+Follow **[AGENTS.md §4](../AGENTS.md#4-before-finishing-any-task)**. Default: `pnpm verify:fast` plus only the Vitest file for the change. Skip `pnpm build` and the full test suite unless routes, `next.config`, APIs, or shared lib changed — CI already runs them. React-doctor only when component structure/hooks changed.
 
 ## Priority skills (`.agents/skills/<name>/SKILL.md`)
 

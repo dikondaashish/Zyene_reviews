@@ -1,0 +1,21 @@
+---
+description: Skip full production builds after small changes; CI already runs them
+alwaysApply: true
+---
+
+# Fast local verify
+
+Do not run `pnpm build` or the full `pnpm test` suite after copy, asset, catalog, or single-component edits. That webpack build takes several minutes and is why sessions stall.
+
+Default after a task:
+
+```bash
+pnpm verify:fast
+pnpm exec vitest run tests/unit/<touched-file>.test.ts
+```
+
+Run `pnpm build` only for routes, `next.config`, env, middleware, API contracts, a release, or when the user asks. Run all tests only when a shared lib could break many files.
+
+Skip `npx react-doctor` for images, copy, and data. Use it when component structure or hooks changed.
+
+If typecheck or build is unusually slow, run `pnpm clean` (local `.next` can grow to multiple GB). GitHub CI still typechecks, tests, and builds every push to `main`.

@@ -12,10 +12,14 @@
 
 ## Before you finish
 
+Follow **[AGENTS.md §4](./AGENTS.md#4-before-finishing-any-task)**. Default:
+
 ```bash
-pnpm typecheck && pnpm test && pnpm build
-npx react-doctor@latest --verbose --diff   # if React/UI changed
+pnpm verify:fast
+pnpm exec vitest run tests/unit/<touched-file>.test.ts
 ```
+
+Do **not** run `pnpm build` or the full `pnpm test` suite unless the change can break compile/CI (routes, `next.config`, APIs, shared lib) or the user asked for a full check. GitHub CI already builds. React-doctor only when component structure/hooks changed.
 
 ## Skills
 

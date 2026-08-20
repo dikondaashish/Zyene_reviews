@@ -38,12 +38,7 @@ See also `.cursor/rules/seo.mdc`.
 
 ## 4. Before finishing any task
 
-```bash
-pnpm typecheck && pnpm test && pnpm build
-npx react-doctor@latest --verbose --diff   # when React/UI changed
-```
-
-Check file sizes, no client `console.log`, no hardcoded secrets. Marketing changes: use **seo** or **on-page-seo-auditor** skills.
+Follow **[AGENTS.md §4](../../AGENTS.md#4-before-finishing-any-task)**. Default: `pnpm verify:fast` plus only the Vitest file for the change. Skip `pnpm build` and the full test suite unless routes, `next.config`, APIs, or shared lib changed. React-doctor only when component structure/hooks changed. Marketing: **seo** or **on-page-seo-auditor**.
 
 ## 5. Skills
 

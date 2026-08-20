@@ -6,17 +6,14 @@
 
 ## Always-on checklist (Antigravity agent)
 
-Before marking any implementation task **done**, run in the project root:
+Before marking any implementation task **done**, follow **[AGENTS.md §4](./AGENTS.md#4-before-finishing-any-task)**. Default:
 
 ```bash
-pnpm typecheck && pnpm test && pnpm build
+pnpm verify:fast
+pnpm exec vitest run tests/unit/<touched-file>.test.ts
 ```
 
-When React/UI files changed:
-
-```bash
-npx react-doctor@latest --verbose --diff
-```
+Skip `pnpm build` and the full test suite unless routes, `next.config`, APIs, or shared lib changed. React-doctor only when component structure/hooks changed.
 
 ## Skills location
 

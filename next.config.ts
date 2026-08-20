@@ -47,6 +47,8 @@ const nextConfig: NextConfig = {
 
 import { withSentryConfig } from "@sentry/nextjs";
 
+const isDeploy = Boolean(process.env.CI || process.env.VERCEL);
+
 export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options
@@ -54,14 +56,14 @@ export default withSentryConfig(nextConfig, {
   org: "zyene",
   project: "zyene-reviews",
 
-  // Only print logs for uploading source maps in CI
-  silent: !process.env.CI,
+  // Source-map upload is for Vercel/CI. Skip it on local builds.
+  silent: !isDeploy,
 
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
   // Upload a larger set of source maps for prettier stack traces (increases build time)
-  widenClientFileUpload: true,
+  widenClientFileUpload: isDeploy,
 
   // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
   // This can increase your server load as well as your hosting bill.
@@ -71,7 +73,7 @@ export default withSentryConfig(nextConfig, {
 
   // Hides source maps from generated client bundles
   sourcemaps: {
-    disable: false,
+    disable: !isDeploy,
   },
 
 });

@@ -4,8 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "clean": "rm -rf .next .turbo node_modules/.cache tsconfig.tsbuildinfo",
     "build": "NODE_OPTIONS=--max-old-space-size=4096 next build --webpack",
     "start": "next start",
+    "verify": "pnpm typecheck && pnpm test && pnpm check:sizes",
+    "verify:fast": "pnpm typecheck && pnpm check:sizes",
     "lint": "eslint",
     "check:colors": "node scripts/check-color-guards.mjs",
     "check:sizes": "node scripts/check-file-sizes.mjs",

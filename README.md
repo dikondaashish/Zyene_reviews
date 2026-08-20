@@ -341,6 +341,9 @@ For production, secrets live in the hosting provider (e.g. Vercel) environment s
 | Command | Purpose |
 |---------|---------|
 | `pnpm dev` | Local development server |
+| `pnpm clean` | Delete `.next` and tool caches if typecheck/build is slow |
+| `pnpm verify:fast` | Typecheck + file-size guard (default after small edits) |
+| `pnpm verify` | Typecheck + full Vitest + file-size guard |
 | `pnpm build` | Production build (required in CI) |
 | `pnpm start` | Run production build locally |
 | `pnpm typecheck` | `tsc --noEmit` — run before every PR |
