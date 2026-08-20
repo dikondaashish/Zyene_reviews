@@ -3,14 +3,22 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import type { NfcShippingId } from "@/lib/nfc/catalog";
-import { clampNfcQuantity, NFC_CARD, nfcItemLabel } from "@/lib/nfc/catalog";
+import { clampNfcQuantity, NFC_CARD } from "@/lib/nfc/catalog";
 
 export function useNfcOrder() {
-    const [open, setOpen] = useState(false);
+    const [open, setOpenState] = useState(false);
     const [quantity, setQuantityState] = useState(1);
     const [inCart, setInCart] = useState(false);
     const [shippingId, setShippingId] = useState<NfcShippingId>("standard");
     const [checkingOut, setCheckingOut] = useState(false);
+
+    function setOpen(next: boolean) {
+        setOpenState(next);
+        if (!next) {
+            setInCart(false);
+            setCheckingOut(false);
+        }
+    }
 
     function setQuantity(next: number) {
         setQuantityState(clampNfcQuantity(next));
@@ -18,9 +26,10 @@ export function useNfcOrder() {
 
     function addToCart() {
         setInCart(true);
-        toast.success("Added to cart", {
-            description: `${nfcItemLabel(quantity)} ready to ship.`,
-        });
+    }
+
+    function backToProduct() {
+        setInCart(false);
     }
 
     async function checkout() {
@@ -59,6 +68,7 @@ export function useNfcOrder() {
         setShippingId,
         checkingOut,
         addToCart,
+        backToProduct,
         checkout,
     };
 }

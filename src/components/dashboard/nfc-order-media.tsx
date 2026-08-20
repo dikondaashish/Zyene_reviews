@@ -5,8 +5,8 @@ import Image from "next/image";
 import { NFC_CARD } from "@/lib/nfc/catalog";
 
 function thumbClass(active: boolean) {
-    return `relative h-14 w-11 shrink-0 overflow-hidden rounded-lg border transition-[transform,box-shadow] duration-150 ease-out active:scale-[0.97] ${
-        active ? "border-primary ring-2 ring-primary/30" : "border-border"
+    return `relative aspect-square overflow-hidden rounded-md border transition-transform duration-150 ease-out active:scale-[0.97] ${
+        active ? "border-primary ring-1 ring-primary/30" : "border-border"
     }`;
 }
 
@@ -16,7 +16,7 @@ export function NfcOrderMedia() {
 
     return (
         <div className="space-y-2">
-            <div className="relative aspect-square max-h-[280px] w-full overflow-hidden rounded-2xl bg-muted">
+            <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-muted">
                 {selected === "video" ? (
                     <video
                         src={NFC_CARD.videoSrc}
@@ -33,13 +33,13 @@ export function NfcOrderMedia() {
                         src={photoSrc}
                         alt={NFC_CARD.name}
                         fill
-                        sizes="(max-width: 448px) 100vw, 448px"
+                        sizes="(max-width: 640px) 90vw, 280px"
                         className="object-contain"
                         priority={selected === 0}
                     />
                 )}
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-1">
+            <div className="grid grid-cols-7 gap-1">
                 <button
                     type="button"
                     aria-pressed={selected === "video"}
@@ -47,8 +47,8 @@ export function NfcOrderMedia() {
                     onClick={() => setSelected("video")}
                     className={thumbClass(selected === "video")}
                 >
-                    <Image src={NFC_CARD.imageSrc} alt="" fill sizes="44px" className="object-cover" />
-                    <span className="absolute inset-0 flex items-center justify-center bg-black/35 text-[10px] font-semibold text-white">
+                    <Image src={NFC_CARD.imageSrc} alt="" fill sizes="36px" className="object-cover" />
+                    <span className="absolute inset-0 flex items-center justify-center bg-black/40 text-[8px] font-semibold text-white">
                         Video
                     </span>
                 </button>
@@ -61,7 +61,7 @@ export function NfcOrderMedia() {
                         onClick={() => setSelected(index)}
                         className={thumbClass(selected === index)}
                     >
-                        <Image src={src} alt="" fill sizes="44px" className="object-cover" />
+                        <Image src={src} alt="" fill sizes="36px" className="object-cover" />
                     </button>
                 ))}
             </div>

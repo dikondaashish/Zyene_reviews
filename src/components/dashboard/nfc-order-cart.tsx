@@ -14,22 +14,24 @@ export function NfcOrderCart({
     quantity,
     shippingId,
     checkingOut,
+    onBack,
     onShippingChange,
     onCheckout,
 }: {
     quantity: number;
     shippingId: NfcShippingId;
     checkingOut: boolean;
+    onBack: () => void;
     onShippingChange: (id: NfcShippingId) => void;
     onCheckout: () => void;
 }) {
     const totals = nfcOrderTotals(quantity, shippingId);
 
     return (
-        <div className="space-y-4 rounded-2xl border border-border/70 bg-card p-4">
+        <div className="space-y-4">
             <div className="flex items-baseline justify-between gap-3">
                 <div>
-                    <p className="text-sm font-semibold text-foreground">Cart</p>
+                    <p className="text-base font-semibold text-foreground">Cart</p>
                     <p className="text-xs text-muted-foreground">
                         {nfcItemLabel(quantity)} · ships to US & Canada
                     </p>
@@ -89,6 +91,13 @@ export function NfcOrderCart({
             >
                 {checkingOut ? "Redirecting to Stripe…" : "Pay with Stripe"}
             </Button>
+            <button
+                type="button"
+                className="mx-auto block text-xs text-muted-foreground underline-offset-4 hover:underline"
+                onClick={onBack}
+            >
+                Back to stand
+            </button>
             <p className="text-center text-[11px] leading-relaxed text-muted-foreground">
                 Card details are entered on Stripe. Address is collected at checkout.
             </p>
