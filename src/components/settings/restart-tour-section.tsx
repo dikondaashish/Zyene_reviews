@@ -2,24 +2,24 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { resetTour } from "@/app/actions/tour";
+import { useDashboardTour } from "@/components/tours/dashboard-tour-provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RotateCcw, Loader2 } from "lucide-react";
 
-/**
- * Settings section to restart the product tour
- */
 export function RestartTourSection() {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+    const { startTour } = useDashboardTour();
 
     const handleRestart = async () => {
         setIsLoading(true);
         try {
-            await resetTour();
+            await startTour();
             router.push("/dashboard?tour=true");
-        } catch (error) {
+        } catch {
+            router.push("/dashboard?tour=true");
+        } finally {
             setIsLoading(false);
         }
     };
@@ -37,8 +37,9 @@ export function RestartTourSection() {
             </CardHeader>
             <CardContent>
                 <Button
+                    type="button"
                     variant="outline"
-                    onClick={handleRestart}
+                    onClick={() => void handleRestart()}
                     disabled={isLoading}
                     className="gap-2"
                 >

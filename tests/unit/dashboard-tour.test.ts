@@ -48,6 +48,16 @@ describe("dashboard product tour", () => {
         }
     });
 
+    it("starts the in-layout tour from Settings instead of only changing the URL", () => {
+        const source = fs.readFileSync(
+            path.join(process.cwd(), "src/components/settings/restart-tour-section.tsx"),
+            "utf8",
+        );
+        expect(source).toContain("startTour()");
+        expect(source).toContain("/dashboard?tour=true");
+        expect(source).toContain("useDashboardTour");
+    });
+
     it("points each step at markup that exists in the dashboard", () => {
         const markup = MARKUP_FILES.map((file) =>
             fs.readFileSync(path.join(process.cwd(), file), "utf8"),

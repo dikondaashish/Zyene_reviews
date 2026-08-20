@@ -59,6 +59,5 @@ export async function resetTour(): Promise<{ success: boolean }> {
         .update({ has_completed_tour: false, updated_at: new Date().toISOString() })
         .eq("id", user.id);
 
-    revalidatePath("/", "layout");
     return { success: !error };
 }
