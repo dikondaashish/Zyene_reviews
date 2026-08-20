@@ -23,15 +23,15 @@ export function NfcOrderDialog({
 }) {
     return (
         <Dialog open={order.open} onOpenChange={order.setOpen}>
-            <DialogContent className="max-w-md gap-5 rounded-2xl sm:max-w-md">
+            <DialogContent className="max-w-md gap-5 rounded-2xl sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle className="font-serif text-2xl tracking-tight">
-                        Order an NFC card
+                        Order an NFC review stand
                     </DialogTitle>
                     <DialogDescription>
                         {formatUsdFromCents(NFC_CARD.unitAmountCents)} plus shipping from{" "}
-                        {formatUsdFromCents(NFC_SHIPPING.standard.amountCents)}. Tap-to-review
-                        cards ship programmed for this location.
+                        {formatUsdFromCents(NFC_SHIPPING.standard.amountCents)}. NFC tap and QR
+                        stand, set up for this location.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -52,7 +52,7 @@ export function NfcOrderDialog({
                     />
                 ) : (
                     <p className="text-xs text-muted-foreground">
-                        Add a card to your cart to choose shipping and pay.
+                        Add a stand to your cart to choose shipping and pay.
                     </p>
                 )}
             </DialogContent>

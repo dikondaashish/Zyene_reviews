@@ -1,11 +1,14 @@
 export const NFC_CARD = {
-    id: "google-nfc-card",
-    name: "Google Review NFC Card",
-    description: "Customers tap their phone to leave a Google review.",
+    id: "nfc-review-stand",
+    name: "NFC Review Stand",
+    description:
+        "Customers tap NFC or scan the QR code to leave a Google review. Durable PVC stand, programmed for your location.",
     unitAmountCents: 999,
     minQty: 1,
     maxQty: 20,
-    imageSrc: "/google-nfc-card-design.png",
+    imageSrc: "/nfc/review-stand.jpg",
+    videoSrc: "/nfc/review-stand.mp4",
+    noun: { one: "stand", other: "stands" },
 } as const;
 
 export const NFC_SHIPPING = {
@@ -48,9 +51,16 @@ export function nfcOrderTotals(quantity: number, shippingId: NfcShippingId) {
     };
 }
 
+const USD_FORMATTER = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+});
+
 export function formatUsdFromCents(cents: number): string {
-    return new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-    }).format(cents / 100);
+    return USD_FORMATTER.format(cents / 100);
+}
+
+export function nfcItemLabel(quantity: number): string {
+    const qty = clampNfcQuantity(quantity);
+    return qty === 1 ? `1 NFC ${NFC_CARD.noun.one}` : `${qty} NFC ${NFC_CARD.noun.other}`;
 }

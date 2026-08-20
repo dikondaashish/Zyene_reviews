@@ -4,6 +4,7 @@ import Image from "next/image";
 import { CUSTOMER_PORTAL_GOOGLE_G_SVG } from "@/components/dashboard/customer-portal-card-constants";
 import { NfcOrderDialog } from "@/components/dashboard/nfc-order-dialog";
 import { useNfcOrder } from "@/components/dashboard/use-nfc-order";
+import { NFC_CARD } from "@/lib/nfc/catalog";
 
 export function CustomerPortalCardNfcUpsell({ businessName }: { businessName: string }) {
     const order = useNfcOrder();
@@ -30,10 +31,10 @@ export function CustomerPortalCardNfcUpsell({ businessName }: { businessName: st
                 <div className="relative z-10 flex flex-1 flex-col justify-center gap-3.5">
                     <div className="space-y-1">
                         <h4 className="text-[18px] leading-tight font-bold tracking-tight text-white">
-                            Get more reviews with an NFC card!
+                            Get more reviews with an NFC stand!
                         </h4>
                         <p className="max-w-[240px] text-[12px] leading-snug font-medium text-white/80">
-                            Customers can simply tap their phone to it to leave you a review.
+                            Customers tap NFC or scan the QR code to leave you a Google review.
                         </p>
                     </div>
                     <span className="flex w-fit items-center justify-center rounded-[10px] bg-white px-5 py-1.5 text-[13px] font-bold text-[rgb(0,82,204)] transition-[box-shadow,transform] duration-150 ease-out group-hover:shadow-lg">
@@ -41,32 +42,14 @@ export function CustomerPortalCardNfcUpsell({ businessName }: { businessName: st
                     </span>
                 </div>
 
-                <div className="pointer-events-none relative hidden h-28 w-40 shrink-0 items-center justify-end pr-1 select-none md:flex">
-                    <div className="absolute top-[28px] right-[76px] h-[90px] w-[62px] rotate-[-28deg] scale-[0.9] opacity-20 blur-[0.4px]">
+                <div className="pointer-events-none relative hidden h-28 w-28 shrink-0 md:block">
+                    <div className="absolute inset-0 overflow-hidden rounded-xl shadow-[0_15px_35px_rgba(0,0,0,0.25)] ring-1 ring-white/25 transition-transform duration-500 group-hover:scale-[1.03]">
                         <Image
-                            src="/google-nfc-card-design.png"
-                            alt=""
+                            src={NFC_CARD.imageSrc}
+                            alt={NFC_CARD.name}
                             fill
-                            sizes="62px"
-                            className="size-full rounded-lg object-contain shadow-2xl"
-                        />
-                    </div>
-                    <div className="absolute top-[36px] right-[4px] h-[90px] w-[62px] rotate-[22deg] scale-[0.95] opacity-40 blur-[0.2px]">
-                        <Image
-                            src="/google-nfc-card-design.png"
-                            alt=""
-                            fill
-                            sizes="62px"
-                            className="size-full rounded-lg object-contain shadow-2xl"
-                        />
-                    </div>
-                    <div className="absolute top-[0px] right-[20px] z-20 h-[106px] w-[74px] rotate-[-6deg] transition-transform duration-500 group-hover:rotate-[-4deg] group-hover:scale-[1.02]">
-                        <Image
-                            src="/google-nfc-card-design.png"
-                            alt="Google Review NFC card"
-                            fill
-                            sizes="74px"
-                            className="size-full rounded-[8px] object-contain shadow-[0_15px_35px_rgba(0,0,0,0.25)]"
+                            sizes="112px"
+                            className="object-cover"
                         />
                     </div>
                 </div>

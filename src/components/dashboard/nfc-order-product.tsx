@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { Minus, Plus } from "lucide-react";
+import { NfcOrderMedia } from "@/components/dashboard/nfc-order-media";
 import { Button } from "@/components/ui/button";
 import { NFC_CARD, formatUsdFromCents, nfcOrderTotals } from "@/lib/nfc/catalog";
 
@@ -18,29 +18,19 @@ export function NfcOrderProduct({
 }) {
     return (
         <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
-            <div className="flex gap-4">
-                <div className="relative h-[112px] w-[80px] shrink-0 overflow-hidden rounded-xl bg-[rgb(0,82,204)] shadow-sm">
-                    <Image
-                        src={NFC_CARD.imageSrc}
-                        alt={NFC_CARD.name}
-                        fill
-                        sizes="80px"
-                        className="object-contain p-1.5"
-                    />
-                </div>
-                <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-foreground">{NFC_CARD.name}</p>
-                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                        {NFC_CARD.description} We&apos;ll program it for {businessName}.
-                    </p>
-                    <p className="mt-2 text-lg font-semibold tracking-tight text-foreground tabular-nums">
-                        {formatUsdFromCents(nfcOrderTotals(quantity, "standard").subtotalCents)}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                        {formatUsdFromCents(NFC_CARD.unitAmountCents)} each
-                        {quantity > 1 ? ` × ${quantity}` : ""}
-                    </p>
-                </div>
+            <NfcOrderMedia />
+            <div className="mt-4 min-w-0">
+                <p className="text-sm font-semibold text-foreground">{NFC_CARD.name}</p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                    {NFC_CARD.description} We&apos;ll set the review link for {businessName}.
+                </p>
+                <p className="mt-2 text-lg font-semibold tracking-tight text-foreground tabular-nums">
+                    {formatUsdFromCents(nfcOrderTotals(quantity, "standard").subtotalCents)}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                    {formatUsdFromCents(NFC_CARD.unitAmountCents)} each
+                    {quantity > 1 ? ` × ${quantity}` : ""}
+                </p>
             </div>
 
             <div className="mt-4 flex items-center justify-between gap-3">

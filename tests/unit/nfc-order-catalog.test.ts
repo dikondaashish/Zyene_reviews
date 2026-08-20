@@ -5,6 +5,7 @@ import {
     clampNfcQuantity,
     formatUsdFromCents,
     NFC_CARD,
+    nfcItemLabel,
     nfcOrderTotals,
 } from "@/lib/nfc/catalog";
 import {
@@ -14,7 +15,18 @@ import {
 } from "@/lib/nfc/checkout-session";
 
 describe("NFC catalog", () => {
-    it("prices one card at $9.99 plus standard shipping", () => {
+    it("sells the PVC NFC tap and QR review stand", () => {
+        expect(NFC_CARD.id).toBe("nfc-review-stand");
+        expect(NFC_CARD.name).toBe("NFC Review Stand");
+        expect(NFC_CARD.imageSrc).toBe("/nfc/review-stand.jpg");
+        expect(NFC_CARD.videoSrc).toBe("/nfc/review-stand.mp4");
+        expect(nfcItemLabel(1)).toBe("1 NFC stand");
+        expect(nfcItemLabel(3)).toBe("3 NFC stands");
+        expect(fs.existsSync(path.join(process.cwd(), "public/nfc/review-stand.jpg"))).toBe(true);
+        expect(fs.existsSync(path.join(process.cwd(), "public/nfc/review-stand.mp4"))).toBe(true);
+    });
+
+    it("prices one stand at $9.99 plus standard shipping", () => {
         expect(NFC_CARD.unitAmountCents).toBe(999);
         expect(nfcOrderTotals(1, "standard")).toEqual({
             quantity: 1,
@@ -84,8 +96,10 @@ describe("NFC order dialog trigger", () => {
             "utf8",
         );
         expect(source).not.toContain("zyenereviews.com/nfc-cards");
+        expect(source).not.toContain("google-nfc-card-design.png");
         expect(source).not.toContain('target="_blank"');
         expect(source).toContain("NfcOrderDialog");
+        expect(source).toContain("NFC_CARD.imageSrc");
         expect(source).toContain("order.setOpen(true)");
     });
 
@@ -105,5 +119,7 @@ describe("NFC order dialog trigger", () => {
         expect(hook).not.toContain("cartQty");
         expect(dialog).toContain("quantity={order.quantity}");
         expect(product).toContain("nfcOrderTotals(quantity");
+        expect(product).toContain("NfcOrderMedia");
+        expect(dialog).toContain("Order an NFC review stand");
     });
 });

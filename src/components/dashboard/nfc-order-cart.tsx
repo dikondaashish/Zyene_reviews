@@ -5,6 +5,7 @@ import {
     NFC_CARD,
     NFC_SHIPPING,
     formatUsdFromCents,
+    nfcItemLabel,
     nfcOrderTotals,
     type NfcShippingId,
 } from "@/lib/nfc/catalog";
@@ -30,7 +31,7 @@ export function NfcOrderCart({
                 <div>
                     <p className="text-sm font-semibold text-foreground">Cart</p>
                     <p className="text-xs text-muted-foreground">
-                        {quantity} {quantity === 1 ? "card" : "cards"} · ships to US & Canada
+                        {nfcItemLabel(quantity)} · ships to US & Canada
                     </p>
                 </div>
                 <p className="text-sm font-medium tabular-nums">

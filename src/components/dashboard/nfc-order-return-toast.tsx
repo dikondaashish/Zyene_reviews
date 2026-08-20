@@ -13,12 +13,12 @@ export function NfcOrderReturnToast() {
         if (nfc !== "success" && nfc !== "canceled") return;
 
         if (nfc === "success") {
-            toast.success("NFC card order placed", {
+            toast.success("NFC stand order placed", {
                 description: "Stripe confirmed payment. We’ll ship to the address you entered.",
             });
         } else {
             toast.info("Checkout canceled", {
-                description: "No charge was made. You can order the NFC card anytime.",
+                description: "No charge was made. You can order the NFC stand anytime.",
             });
         }
 

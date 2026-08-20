@@ -82,7 +82,7 @@ export async function handleNfcCheckout(request: Request) {
                         unit_amount: NFC_CARD.unitAmountCents,
                         product_data: {
                             name: NFC_CARD.name,
-                            description: `Programmed for ${business?.name || "your location"}. ${NFC_CARD.description}`,
+                            description: `Review link set for ${business?.name || "your location"}. ${NFC_CARD.description}`,
                             images: [`${appUrl}${NFC_CARD.imageSrc}`],
                         },
                     },
