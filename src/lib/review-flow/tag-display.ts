@@ -36,6 +36,7 @@ export const TAG_EMOJI_PICKER = [
 
 const CATEGORY_FALLBACK_EMOJI: Record<string, string> = {
     restaurant: "🍽️",
+    ice_cream: "🍦",
     cafe: "☕",
     bar: "🍸",
     salon: "💇",
@@ -77,6 +78,13 @@ const LABEL_EMOJI_MAP: Record<string, string> = {
     ambiance: "✨",
     atmosphere: "✨",
     food: "🍽️",
+    flavor: "🍦",
+    taste: "🍦",
+    "mix-ins": "🧁",
+    "mix ins": "🧁",
+    "made fresh": "❄️",
+    scoops: "🍨",
+    size: "🍨",
     expertise: "🧠",
     honesty: "🤝",
     selection: "🛍️",

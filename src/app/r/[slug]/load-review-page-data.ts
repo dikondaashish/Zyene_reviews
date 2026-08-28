@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
 import { recordReviewPageOpen } from "./record-review-page-open";
+import { googleMapsSearchUrl, resolveReviewPageGoogle } from "./resolve-review-page-google";
 import { REVIEW_PAGE_BUSINESS_SELECT } from "./review-page-select";
 import type { ReviewPageBusiness, ReviewPageData } from "./review-page-types";
 
@@ -28,14 +29,25 @@ export async function loadReviewPageData(
         return { kind: "subscription", businessName: business.name };
     }
 
-    const { data: platform, error: platformError } = await supabase
+    const { data: platform } = await supabase
         .from("review_platforms")
         .select("external_url")
         .eq("business_id", business.id)
         .eq("platform", "google")
+        .limit(1)
         .maybeSingle();
 
-    if (!platform || platformError) {
+    const { connected, googleUrl } = resolveReviewPageGoogle({
+        googleReviewUrl: business.google_review_url,
+        platform,
+        mapsFallbackUrl: googleMapsSearchUrl(business.name, [
+            (business as { address_line1?: string | null }).address_line1,
+            (business as { city?: string | null }).city,
+            (business as { state?: string | null }).state,
+        ]),
+    });
+
+    if (!connected) {
         return { kind: "platform", businessName: business.name };
     }
 
@@ -61,7 +73,7 @@ export async function loadReviewPageData(
     return {
         kind: "ok",
         business: business as ReviewPageBusiness,
-        googleUrl: business.google_review_url ?? platform?.external_url ?? undefined,
+        googleUrl,
         requestId: resolvedRequestId,
         reviewPageBackgroundColor,
         ratingStyle,

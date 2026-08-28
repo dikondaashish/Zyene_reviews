@@ -1,6 +1,7 @@
 /** Default review-flow tag pills per business category (emoji + label). */
 export const CATEGORY_TAGS: Record<string, string[]> = {
     restaurant: ["🍽️ Food", "👨‍🍳 Service", "✨ Ambiance", "💰 Prices", "🍕 Portions", "⚡ Speed", "🧹 Cleanliness", "📋 Menu Variety"],
+    ice_cream: ["🍦 Flavor", "🧁 Mix-ins", "❄️ Made Fresh", "👨‍🍳 Service", "✨ Atmosphere", "💰 Prices", "⚡ Speed", "🧹 Cleanliness"],
     cafe: ["☕ Coffee", "🍰 Food", "✨ Ambiance", "👨‍🍳 Service", "💰 Prices", "📶 Wi-Fi", "💺 Seating"],
     bar: ["🍸 Drinks", "🎵 Atmosphere", "👨‍🍳 Service", "🎶 Music", "💰 Prices", "🍕 Food", "👥 Crowd"],
     salon: ["💇 Service", "✨ Skill", "🧹 Cleanliness", "💆 Ambiance", "💰 Prices", "🧴 Products", "😌 Relaxation"],

@@ -34,6 +34,14 @@ describe("tag-display", () => {
         expect(tags[0]).toMatch(/^[^\s]+\s/);
     });
 
+    it("ice cream shops get flavor and mix-in tags instead of restaurant food", () => {
+        const tags = resolveReviewFlowTags(null, "ice_cream");
+        expect(tags).toContain("🍦 Flavor");
+        expect(tags).toContain("🧁 Mix-ins");
+        expect(tags).toContain("❄️ Made Fresh");
+        expect(tags.some((t) => t.includes("Food") || t.includes("Portions"))).toBe(false);
+    });
+
     it("resolveReviewFlowTags auto-icons custom plain tags", () => {
         const tags = resolveReviewFlowTags(["Friendly", "Cleanliness"], "service");
         expect(tags).toContain("🤝 Friendly");

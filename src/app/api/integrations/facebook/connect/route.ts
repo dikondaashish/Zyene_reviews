@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { createClient } from "@/lib/db/supabase/server";
 import { getAppId } from "@/services/facebook/client";
+
+const connectQuerySchema = z.object({ businessId: z.string().uuid() });
 
 /**
  * GET: Redirects user to Facebook OAuth login.
@@ -17,12 +21,23 @@ export async function GET(request: Request) {
     }
 
     const { searchParams } = new URL(request.url);
-    const businessId = searchParams.get("businessId");
-
-    if (!businessId) {
+    const parsed = connectQuerySchema.safeParse({ businessId: searchParams.get("businessId") });
+    if (!parsed.success) {
         return NextResponse.json(
             { error: "businessId is required" },
             { status: 400 }
+        );
+    }
+    const { businessId } = parsed.data;
+
+    if (!(await userCanAccessBusiness(supabase, user.id, businessId))) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    if (!process.env.FACEBOOK_APP_ID) {
+        return NextResponse.json(
+            { error: "Facebook integration is temporarily unavailable." },
+            { status: 503 }
         );
     }
 

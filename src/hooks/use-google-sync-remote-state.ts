@@ -58,31 +58,35 @@ export function useGoogleSyncRemoteState({
     }, [initialAverageRating])
 
     const fetchStatus = useCallback(async () => {
-        const url = businessId
-            ? `/api/sync/google?businessId=${encodeURIComponent(businessId)}`
-            : "/api/sync/google"
-        const res = await fetch(url)
-        if (!res.ok) return
-        const body = (await res.json()) as {
-            success?: boolean
-            data?: {
-                sync_status?: string
-                last_synced_at?: string | null
-                locked_until?: string | null
-                sync_stale?: boolean
-                total_reviews?: number
-                average_rating?: number | null
+        try {
+            const url = businessId
+                ? `/api/sync/google?businessId=${encodeURIComponent(businessId)}`
+                : "/api/sync/google"
+            const res = await fetch(url)
+            if (!res.ok) return
+            const body = (await res.json()) as {
+                success?: boolean
+                data?: {
+                    sync_status?: string
+                    last_synced_at?: string | null
+                    locked_until?: string | null
+                    sync_stale?: boolean
+                    total_reviews?: number
+                    average_rating?: number | null
+                }
             }
-        }
-        const data = body.data
-        if (!data) return
-        setRemoteStatus(data.sync_status ?? null)
-        setLastSyncedAt(data.last_synced_at ?? null)
-        setLockedUntil(data.locked_until ?? null)
-        setSyncStale(Boolean(data.sync_stale))
-        if (typeof data.total_reviews === "number") setTotalReviews(data.total_reviews)
-        if (data.average_rating != null && !Number.isNaN(Number(data.average_rating))) {
-            setAverageRating(Number(data.average_rating))
+            const data = body.data
+            if (!data) return
+            setRemoteStatus(data.sync_status ?? null)
+            setLastSyncedAt(data.last_synced_at ?? null)
+            setLockedUntil(data.locked_until ?? null)
+            setSyncStale(Boolean(data.sync_stale))
+            if (typeof data.total_reviews === "number") setTotalReviews(data.total_reviews)
+            if (data.average_rating != null && !Number.isNaN(Number(data.average_rating))) {
+                setAverageRating(Number(data.average_rating))
+            }
+        } catch {
+            // A failed background status poll must not become an unhandled client rejection.
         }
     }, [businessId])
 
