@@ -1,38 +1,40 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { handleFacebookSyncPost } from "@/services/facebook/sync-facebook-api";
-
-const mockRequireUser = vi.fn();
-const mockGetFacebookPlatformForUser = vi.fn();
-const mockSyncFacebookReviewsForPlatform = vi.fn();
-const mockSyncRateLimit = { limit: vi.fn() };
+const mocks = vi.hoisted(() => ({
+    requireUser: vi.fn(),
+    getFacebookPlatformForUser: vi.fn(),
+    syncFacebookReviewsForPlatform: vi.fn(),
+    syncRateLimit: { limit: vi.fn() },
+}));
 
 vi.mock("@/app/api/_shared/auth", () => ({
-    requireUser: () => mockRequireUser(),
+    requireUser: () => mocks.requireUser(),
 }));
 
 vi.mock("@/services/facebook/sync-facebook-platform", () => ({
-    getFacebookPlatformForUser: (...args: unknown[]) => mockGetFacebookPlatformForUser(...args),
+    getFacebookPlatformForUser: (...args: unknown[]) => mocks.getFacebookPlatformForUser(...args),
 }));
 
 vi.mock("@/services/facebook/sync-service", () => ({
-    syncFacebookReviewsForPlatform: (...args: unknown[]) => mockSyncFacebookReviewsForPlatform(...args),
+    syncFacebookReviewsForPlatform: (...args: unknown[]) => mocks.syncFacebookReviewsForPlatform(...args),
 }));
 
 vi.mock("@/lib/auth/rate-limit", () => ({
-    syncRateLimit: mockSyncRateLimit,
+    syncRateLimit: mocks.syncRateLimit,
 }));
+
+import { handleFacebookSyncPost } from "@/services/facebook/sync-facebook-api";
 
 describe("handleFacebookSyncPost", () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        mockRequireUser.mockResolvedValue({ supabase: {}, user: { id: "user-1" } });
-        mockSyncRateLimit.limit.mockResolvedValue({ success: true });
-        mockGetFacebookPlatformForUser.mockResolvedValue({
+        mocks.requireUser.mockResolvedValue({ supabase: {}, user: { id: "user-1" } });
+        mocks.syncRateLimit.limit.mockResolvedValue({ success: true });
+        mocks.getFacebookPlatformForUser.mockResolvedValue({
             businessId: "business-1",
             platform: { id: "platform-1", platform: "facebook", sync_status: "active", last_synced_at: null },
         });
-        mockSyncFacebookReviewsForPlatform.mockResolvedValue({
+        mocks.syncFacebookReviewsForPlatform.mockResolvedValue({
             success: true,
             total: 3,
             analyzed: 3,
@@ -49,8 +51,8 @@ describe("handleFacebookSyncPost", () => {
         );
         const body = await response.json();
 
-        expect(mockGetFacebookPlatformForUser).toHaveBeenCalledWith({}, "business-1");
-        expect(mockSyncFacebookReviewsForPlatform).toHaveBeenCalledWith("platform-1");
+        expect(mocks.getFacebookPlatformForUser).toHaveBeenCalledWith({}, "business-1");
+        expect(mocks.syncFacebookReviewsForPlatform).toHaveBeenCalledWith("platform-1");
         expect(response.status).toBe(200);
         expect(body).toEqual({
             success: true,
