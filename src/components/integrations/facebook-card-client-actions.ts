@@ -1,22 +1,13 @@
 import { toast } from "sonner";
+import { postFacebookReviewSync } from "@/components/integrations/facebook-card-sync-api";
 
 type AppRouterLike = { refresh: () => void };
 
-export async function runFacebookReviewsSync(router: AppRouterLike): Promise<void> {
-    const res = await fetch("/api/cron/sync-reviews", {
-        headers: { host: "localhost" },
-    });
-    const data = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-        const msg = data.error || "Sync failed";
-        const details = data.details;
-        toast.error(msg, { description: details });
-        return;
+export async function runFacebookReviewsSync(router: AppRouterLike, businessId: string): Promise<void> {
+    const result = await postFacebookReviewSync(businessId);
+    if (result.ok) {
+        router.refresh();
     }
-
-    toast.success("Facebook reviews synced!");
-    router.refresh();
 }
 
 export async function disconnectFacebookIntegration(businessId: string, router: AppRouterLike): Promise<void> {

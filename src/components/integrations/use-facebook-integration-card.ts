@@ -105,7 +105,7 @@ export function useFacebookIntegrationCard({
     async function handleSync() {
         setSyncing(true);
         try {
-            await runFacebookReviewsSync(router);
+            await runFacebookReviewsSync(router, businessId);
         } catch (err: unknown) {
             toast.error(err instanceof Error ? err.message : "Sync failed. Please try again.");
         } finally {
