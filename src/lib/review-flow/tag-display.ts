@@ -1,4 +1,5 @@
 import { getDefaultTagsForCategory } from "./category-tags";
+import { CATEGORY_FALLBACK_EMOJI, LABEL_EMOJI_MAP } from "./tag-emoji-maps";
 import { MAX_CUSTOM_TAG_LENGTH } from "./tags-for-ai";
 
 export type ReviewTagItem = {
@@ -33,73 +34,6 @@ export const TAG_EMOJI_PICKER = [
     "📋",
     "❤️",
 ] as const;
-
-const CATEGORY_FALLBACK_EMOJI: Record<string, string> = {
-    restaurant: "🍽️",
-    ice_cream: "🍦",
-    cafe: "☕",
-    bar: "🍸",
-    salon: "💇",
-    spa: "💆",
-    gym: "🏋️",
-    fitness: "💪",
-    medical: "🏥",
-    dental: "🦷",
-    retail: "🛍️",
-    auto: "🚗",
-    hotel: "🛏️",
-    service: "🛠️",
-    smoke: "🌿",
-    other: "⭐",
-};
-
-/** Normalized label → emoji for common owner-entered plain-text tags */
-const LABEL_EMOJI_MAP: Record<string, string> = {
-    professional: "👔",
-    friendly: "🤝",
-    cleanliness: "🧹",
-    clean: "🧹",
-    "before & after photos": "📸",
-    "before and after photos": "📸",
-    "healthier home": "🏠",
-    "fast & reliable": "⚡",
-    "fast and reliable": "⚡",
-    "fast service": "⚡",
-    speed: "⚡",
-    timeliness: "⏰",
-    "wait time": "⏰",
-    quality: "⭐",
-    service: "👨‍💼",
-    staff: "👥",
-    communication: "💬",
-    value: "💰",
-    prices: "💰",
-    price: "💰",
-    ambiance: "✨",
-    atmosphere: "✨",
-    food: "🍽️",
-    flavor: "🍦",
-    taste: "🍦",
-    "mix-ins": "🧁",
-    "mix ins": "🧁",
-    "made fresh": "❄️",
-    scoops: "🍨",
-    size: "🍨",
-    expertise: "🧠",
-    honesty: "🤝",
-    selection: "🛍️",
-    experience: "🎯",
-    care: "❤️",
-    comfort: "😌",
-    skill: "✨",
-    equipment: "🏋️",
-    trainers: "👨‍🏫",
-    room: "🛏️",
-    location: "📍",
-    portions: "🍕",
-    drinks: "🍸",
-    coffee: "☕",
-};
 
 function normalizeLabel(label: string): string {
     return label.trim().toLowerCase().replace(/\s+/g, " ");

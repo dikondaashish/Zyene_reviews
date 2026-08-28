@@ -66,7 +66,6 @@ const BASELINE = {
     max: 242,
     why: "content dataset",
   },
-  "src/lib/review-flow/tag-display.ts": { max: 239, why: "content dataset" },
 
   // ── SEO surface ───────────────────────────────────────────────────────────
   // sitemap.ts is one flat route manifest; splitting it hides what is indexed.
