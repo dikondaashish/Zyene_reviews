@@ -1,12 +1,7 @@
-import type { Metadata } from "next";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-    ENTERPRISE_COMPARISON_ROWS,
-    ENTERPRISE_SLA_BULLETS,
-    ENTERPRISE_VALUE_PROPS,
-    ENTERPRISE_SALES_EMAIL,
-} from "@/lib/enterprise/enterprise-data";
+import { ENTERPRISE_SALES_EMAIL } from "@/lib/enterprise/enterprise-data";
 
 export function EnterpriseSection6Section() {
     return (
@@ -17,9 +12,9 @@ export function EnterpriseSection6Section() {
                         Our sales team handles inbound from this page, <Link href="/demo" className="text-primary underline">/demo</Link>, and{" "}
                         {ENTERPRISE_SALES_EMAIL}.
                     </p>
-                    <Link href="/demo">
-                        <Button size="lg">Schedule a demo</Button>
-                    </Link>
+                    <Button size="lg" asChild>
+                        <Link href="/demo">Schedule a demo</Link>
+                    </Button>
                 </div>
             </section>
     );

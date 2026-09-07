@@ -1,96 +1,27 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import {
-    Star, Bot, ShieldCheck, BarChart3, TrendingUp, Sparkles,
-    ArrowRight, Check, Globe, MessageSquare, QrCode, Users, Zap, Code2,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { CustomerLogoBar, TestimonialGrid } from "@/components/marketing/social-proof";
+import { ArrowRight, Check } from "lucide-react";
 import { PlatformPillarsSection } from "@/components/marketing/platform-pillars-section";
-import { SIGNUP_URL } from "@/config/env";
-import { PILLARS } from "./features-data";
+import { PILLARS } from "@/app/(marketing)/features/features-data";
 
 export function FeaturesFeaturePillarsSection() {
     return (
         <>
-        <section className="py-6 bg-background">
-                {PILLARS.map((pillar, i) => {
-                    const Icon = pillar.icon;
-                    const isEven = i % 2 === 0;
-                    return (
-                        <div
-                            key={pillar.id}
-                            id={pillar.id}
-                            className={`py-20 px-4 scroll-mt-20 ${isEven ? "bg-background" : "bg-muted/40"} ${pillar.highlight ? "border-y border-primary/20" : ""}`}
-                        >
-                            <div className={`container mx-auto max-w-6xl grid lg:grid-cols-2 gap-16 items-center ${isEven ? "" : "lg:grid-flow-dense"}`}>
-                                {/* Text */}
-                                <div className={isEven ? "" : "lg:col-start-2"}>
-                                    <div className={`inline-flex items-center gap-2 ${pillar.iconBg} ${pillar.iconColor} text-xs font-bold px-4 py-2 rounded-full border border-current/20 mb-4`}>
-                                        <Icon className="size-3.5" />
-                                        {pillar.title}
-                                    </div>
-                                    {pillar.highlight && (
-                                        <div className="inline-flex items-center gap-1 ml-2 mb-4 bg-primary/10 text-primary text-[11px] font-bold px-3 py-1 rounded-full border border-primary/20">
-                                            <Sparkles className="size-3.5" aria-hidden="true" /> Unique to Zyene
-                                        </div>
-                                    )}
-                                    <h2 className="text-4xl font-bold text-foreground mb-3 leading-tight">{pillar.title}</h2>
-                                    <p className="text-lg text-muted-foreground mb-8">{pillar.tagline}</p>
-                                    <ul className="space-y-3 mb-8">
-                                        {pillar.bullets.map((b) => (
-                                            <li key={b} className="flex items-start gap-3">
-                                                <Check className="text-primary shrink-0 mt-0.5 size-5" />
-                                                <span className="text-muted-foreground">{b}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <div className="flex flex-wrap items-center gap-4">
-                                        <Link href={pillar.cta.href === "/signup" ? SIGNUP_URL : pillar.cta.href}>
-                                            <Button variant={pillar.highlight ? "default" : "outline"} className="gap-2">
-                                                {pillar.cta.label} <ArrowRight className="size-4" />
-                                            </Button>
-                                        </Link>
-                                        <Link
-                                            href={`/features/${pillar.id}`}
-                                            className="text-sm font-medium text-primary hover:underline"
-                                        >
-                                            Feature page →
-                                        </Link>
-                                    </div>
-                                </div>
-
-                                {/* Visual block */}
-                                <div className={isEven ? "" : "lg:col-start-1 lg:row-start-1"}>
-                                    <div className={`rounded-2xl border ${pillar.highlight ? "border-primary/30 bg-primary/5" : "border-border bg-card"} p-8 h-72 flex items-center justify-center relative overflow-hidden`}>
-                                        <div className={`absolute inset-0 ${pillar.iconBg} opacity-30`} />
-                                        <div className="relative flex flex-col items-center gap-4 text-center">
-                                            <div className={`${pillar.iconBg} p-5 rounded-2xl`}>
-                                                <Icon className={`${pillar.iconColor} size-12`} />
-                                            </div>
-                                            <p className="text-sm font-semibold text-foreground">{pillar.tagline}</p>
-                                            <div className="flex gap-1 mt-1">
-                                                {[1, 2, 3, 4, 5].map((s) => (
-                                                    <Star
-                                                        key={s}
-                                                        className={`${pillar.id === "review-monitoring" || pillar.id === "review-collection" || pillar.id === "analytics" ? "fill-chart-4 text-chart-4" : "text-muted-foreground/20"} size-4`}
-                                                    />
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    );
-                })}
+            <section className="marketing-section">
+                <div className="marketing-container">
+                    <div className="marketing-section-heading"><h2>Everything has its place.<br />And a purpose.</h2><p>Explore the tools that help you collect, understand, and act on customer feedback.</p></div>
+                    <div className="grid grid-cols-1 gap-x-16 md:grid-cols-2">
+                        {PILLARS.map(pillar => (
+                            <article key={pillar.id} id={pillar.id} className="border-t border-border py-8">
+                                <h3 className="mb-3 text-2xl font-semibold">{pillar.title}</h3>
+                                <p className="mb-5 text-muted-foreground">{pillar.tagline}</p>
+                                <ul className="mb-6 space-y-3 text-sm text-muted-foreground">{pillar.bullets.map(bullet => <li key={bullet} className="flex items-start gap-2"><Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />{bullet}</li>)}</ul>
+                                <Link href={`/features/${pillar.id}`} className="inline-flex items-center gap-2 text-sm font-semibold text-primary">Explore {pillar.title.toLowerCase()}<ArrowRight className="size-4" aria-hidden="true" /></Link>
+                            </article>
+                        ))}
+                    </div>
+                </div>
             </section>
-
             <PlatformPillarsSection />
-
-            <CustomerLogoBar title="Features trusted by local businesses nationwide" />
-
-            <TestimonialGrid limit={3} title="Built for businesses like yours" />
         </>
     );
 }

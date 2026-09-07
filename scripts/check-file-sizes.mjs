@@ -126,10 +126,6 @@ const BASELINE = {
   // (Root layout came off this list once metadata moved to layout-metadata.ts
   // and the Meta Pixel to components/analytics/meta-pixel.tsx — it is under the
   // 100-line page limit on its own now.)
-  "src/components/marketing/marketing-home/marketing-home-pricing.tsx": {
-    max: 154,
-    why: "pricing table markup",
-  },
 };
 
 /** Newline count, matching `wc -l` (a trailing newline does not add a line). */

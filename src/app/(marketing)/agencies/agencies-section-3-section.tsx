@@ -1,19 +1,8 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import {
-    ArrowRight,
-    Handshake,
-    Palette,
-    LayoutDashboard,
-    Check,
-    Mail,
-} from "lucide-react";
+
+
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-    AGENCY_DASHBOARD_ROADMAP,
-    AGENCY_PRICING_TIERS,
-    WHITE_LABEL_FEATURES,
-} from "@/lib/enterprise/agency-pricing-data";
+import { AGENCY_PRICING_TIERS } from "@/lib/enterprise/agency-pricing-data";
 import { PARTNER_CONTACT_EMAIL } from "@/lib/campaign-content/partnerships-data";
 
 export function AgenciesSection3Section() {
@@ -42,13 +31,13 @@ export function AgenciesSection3Section() {
                                         </li>
                                     ))}
                                 </ul>
-                                <a
+                                <Button variant="outline" className="w-full" asChild>
+                                    <a
                                     href={`mailto:${PARTNER_CONTACT_EMAIL}?subject=${encodeURIComponent(tier.cta)}`}
                                 >
-                                    <Button variant="outline" className="w-full">
                                         {tier.cta}
-                                    </Button>
-                                </a>
+                                    </a>
+                                </Button>
                             </article>
                         ))}
                     </div>

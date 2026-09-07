@@ -1,81 +1,41 @@
 "use client";
 
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 import { MarketingHeaderAuth } from "@/components/marketing/marketing-header-auth";
-import {
-    PRODUCT_LINKS,
-    RESOURCES_LINKS,
-    SOLUTIONS_LINKS,
-    type MarketingNavLink,
-} from "./marketing-layout-nav-data";
+import { PRODUCT_LINKS, RESOURCES_LINKS, SOLUTIONS_LINKS } from "@/app/(marketing)/marketing-layout-nav-data";
 
-function MobileNavSection({
-    title,
-    links,
-    onNavigate,
-}: {
-    title: string;
-    links: MarketingNavLink[];
-    onNavigate: () => void;
-}) {
-    return (
-        <>
-            <p className="px-2 py-1.5 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
-                {title}
-            </p>
-            {links.map((item) => (
-                <Link
-                    key={item.href}
-                    href={item.href}
-                    className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2"
-                    onClick={onNavigate}
-                >
-                    {item.label}
-                </Link>
-            ))}
-        </>
-    );
-}
-
-export function MarketingLayoutMobileNav({
-    loginUrl,
-    signupUrl,
-    onNavigate,
-}: {
+export function MarketingLayoutMobileNav({ loginUrl, signupUrl, onNavigate }: {
     loginUrl: string;
     signupUrl: string;
     onNavigate: () => void;
 }) {
     return (
-        <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-0.5">
-            <MobileNavSection title="Product" links={PRODUCT_LINKS} onNavigate={onNavigate} />
-            <div className="pt-1 border-t border-border/50 mt-1" />
-            <MobileNavSection title="Solutions" links={SOLUTIONS_LINKS} onNavigate={onNavigate} />
-            <div className="pt-1 border-t border-border/50 mt-1" />
-            <MobileNavSection title="Resources" links={RESOURCES_LINKS} onNavigate={onNavigate} />
-            <div className="pt-1 border-t border-border/50 mt-1" />
-            <Link
-                href="/about"
-                className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2"
-                onClick={onNavigate}
-            >
-                About
-            </Link>
-            <Link
-                href="/contact"
-                className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2"
-                onClick={onNavigate}
-            >
-                Contact
-            </Link>
-            <div className="pt-1 border-t border-border/50 mt-1">
-                <MarketingHeaderAuth
-                    loginUrl={loginUrl}
-                    signupUrl={signupUrl}
-                    variant="mobile"
-                    onNavigate={onNavigate}
-                />
+        <nav id="marketing-mobile-nav" aria-label="Main navigation" className="lg:hidden max-h-[calc(100dvh-76px)] overflow-y-auto border-t border-border bg-background px-5 pb-6">
+            {[
+                { title: "Product", links: PRODUCT_LINKS },
+                { title: "Solutions", links: SOLUTIONS_LINKS },
+                { title: "Resources", links: RESOURCES_LINKS },
+            ].map(({ title, links }) => (
+                <details key={title} className="group border-b border-border">
+                    <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between font-semibold [&::-webkit-details-marker]:hidden">
+                        {title}<ChevronDown className="size-4 transition-transform group-open:rotate-180" aria-hidden="true" />
+                    </summary>
+                    <div className="pb-3">
+                        {links.map((item) => (
+                            <Link key={item.href} href={item.href} onClick={onNavigate} className="block rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
+                                {item.label}
+                            </Link>
+                        ))}
+                    </div>
+                </details>
+            ))}
+            <div className="grid grid-cols-2 gap-x-4 py-3">
+                {[["Pricing", "/pricing"], ["Book a demo", "/demo"], ["About us", "/about"], ["Contact", "/contact"]].map(([label, href]) => (
+                    <Link key={href} href={href} onClick={onNavigate} className="py-3 text-sm font-medium">{label}</Link>
+                ))}
             </div>
-        </div>
+            <MarketingHeaderAuth loginUrl={loginUrl} signupUrl={signupUrl} variant="mobile" onNavigate={onNavigate} />
+        </nav>
     );
 }

@@ -111,22 +111,22 @@ export function IndustriesIndustryPricingReminderSection({ data }: { data: Indus
                             </ul>
 
                             {plan.name === "Enterprise" ? (
-                                <a href={ENTERPRISE_SALES_HREF}>
-                                    <Button className="w-full gap-2" variant="outline">
+                                <Button className="w-full gap-2" variant="outline" asChild>
+                                    <a href={ENTERPRISE_SALES_HREF}>
                                         Contact Sales
                                         <ArrowRight className="size-4" />
-                                    </Button>
-                                </a>
+                                    </a>
+                                </Button>
                             ) : (
-                                <Link href={plan.highlighted ? SIGNUP_URL : "/pricing"}>
-                                    <Button
+                                <Button
                                         className="w-full gap-2"
                                         variant={plan.highlighted ? "default" : "outline"}
-                                    >
+                                     asChild>
+                                    <Link href={SIGNUP_URL}>
                                         Start Free Trial
                                         <ArrowRight className="size-4" />
-                                    </Button>
-                                </Link>
+                                    </Link>
+                                </Button>
                             )}
                         </div>
                     ))}

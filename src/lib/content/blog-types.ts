@@ -79,4 +79,6 @@ export interface BlogPost {
     faqs?: BlogFaq[];
     /** ISO date when content was last substantively updated (Article dateModified). */
     dateModified?: string;
+    /** Concept-specific editorial image used by cards, article pages, and schema. */
+    image?: ContentImage;
 }

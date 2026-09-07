@@ -88,14 +88,14 @@ export function ContentRenderer({ sections }: { sections: ContentSection[] }) {
                         return (
                             <div key={sectionKey} className="rounded-xl border border-primary/30 bg-primary/5 px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                 <p className="text-sm font-semibold text-foreground">{section.ctaLabel}</p>
-                                <Link
+                                <Button size="sm" className="gap-2 rounded-lg" asChild>
+                                    <Link
                                     href={section.ctaHref === "/signup" || !section.ctaHref ? SIGNUP_URL : section.ctaHref}
                                     className="shrink-0"
                                 >
-                                    <Button size="sm" className="gap-2 rounded-lg">
                                         Get Started <ArrowRight className="size-3.5" />
-                                    </Button>
-                                </Link>
+                                    </Link>
+                                </Button>
                             </div>
                         );
                     case "image":

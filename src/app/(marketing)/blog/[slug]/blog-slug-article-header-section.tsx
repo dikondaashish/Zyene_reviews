@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Clock, ChevronRight } from "lucide-react";
 import { PILLAR_LABELS, PILLAR_COLORS } from "@/lib/content/blog-data";
 import type { BlogPost } from "@/lib/content/blog-types";
@@ -52,6 +53,21 @@ export function BlogSlugArticleHeaderSection({ post }: { post: BlogPost }) {
                             </div>
                         </div>
                     </div>
+                    {post.image ? (
+                        <figure className="mt-8 overflow-hidden rounded-2xl border border-border bg-muted/30">
+                            <Image
+                                src={post.image.src}
+                                alt={post.image.alt}
+                                width={post.image.width}
+                                height={post.image.height}
+                                priority
+                                className="aspect-video w-full object-cover"
+                            />
+                            <figcaption className="border-t border-border px-4 py-3 text-xs leading-relaxed text-muted-foreground">
+                                {post.image.caption}
+                            </figcaption>
+                        </figure>
+                    ) : null}
                 </div>
             </header>
     );

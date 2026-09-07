@@ -54,27 +54,3 @@ export const RESOURCES_LINKS: MarketingNavLink[] = [
     { href: "/case-studies", label: "Case Studies", icon: Award, desc: "Before/after results from local businesses" },
     { href: "/partners", label: "Partners", icon: Handshake, desc: "Agencies, POS integrations, and co-marketing" },
 ];
-
-export const MARKETING_PREFETCH_HREFS = [
-    "/docs",
-    "/about",
-    "/contact",
-    "/help",
-    "/privacy",
-    "/terms",
-    "/data-retention",
-    "/security",
-    "/case-studies",
-    "/partners",
-    "/agencies",
-    "/newsletter",
-    "/pricing",
-    "/features",
-    "/how-it-works",
-    "/integrations",
-    "/industries",
-    "/compare",
-    "/blog",
-    "/resources",
-    "/help",
-] as const;

@@ -1,9 +1,6 @@
-import type { Metadata } from "next";
+
 import Link from "next/link";
-import {
-    Star, Bot, ShieldCheck, BarChart3, TrendingUp, Sparkles,
-    ArrowRight, Check, Globe, MessageSquare, QrCode, Users, Zap, Code2,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SIGNUP_URL } from "@/config/env";
 
@@ -16,11 +13,11 @@ export function FeaturesFinalCtaSection() {
                         Starting at $29.99/mo - no annual contracts, no add-ons, no surprises.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <Link href={SIGNUP_URL}>
-                            <Button size="lg" className="px-10 py-7 text-[1.05rem] font-semibold rounded-xl">
+                        <Button size="lg" className="px-10 py-7 text-[1.05rem] font-semibold rounded-xl" asChild>
+                            <Link href={SIGNUP_URL}>
                                 Start Your Free Trial <ArrowRight className="ml-2 size-5" />
-                            </Button>
-                        </Link>
+                            </Link>
+                        </Button>
                         <Link href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
                             View full pricing →
                         </Link>

@@ -1,6 +1,5 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { PILLARS } from "./features-data";
+import { PILLARS } from "@/app/(marketing)/features/features-data";
 
 export function FeaturesQuickFeatureGridSection() {
     return (
@@ -15,8 +14,8 @@ export function FeaturesQuickFeatureGridSection() {
                                     href={`/features/${pillar.id}`}
                                     className="flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-card border border-transparent hover:border-border transition-all text-center group"
                                 >
-                                    <div className={`${pillar.iconBg} p-3 rounded-xl`}>
-                                        <Icon className={`${pillar.iconColor} size-5`} />
+                                    <div className={"bg-primary/10 p-2 rounded-lg"}>
+                                        <Icon className={"text-primary size-5"} />
                                     </div>
                                     <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors leading-tight">{pillar.title.split("&")[0].trim()}</span>
                                 </Link>

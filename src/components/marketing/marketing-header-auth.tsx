@@ -44,22 +44,22 @@ export function MarketingHeaderAuth({
     if (dashboardUrl) {
         if (variant === "mobile") {
             return (
-                <Link href={dashboardUrl} className="block mt-2 px-2" onClick={onNavigate}>
-                    <Button className="w-full rounded-md gap-2">
+                <Button className="w-full rounded-md gap-2" asChild>
+                    <Link href={dashboardUrl} className="block mt-2 px-2" onClick={onNavigate}>
                         <LayoutDashboard className="size-4" />
                         Dashboard
-                    </Button>
-                </Link>
+                    </Link>
+                </Button>
             );
         }
 
         return (
-            <Link href={dashboardUrl}>
-                <Button className="rounded-md px-5 ml-1 gap-2">
+            <Button className="rounded-md px-5 ml-1 gap-2" asChild>
+                <Link href={dashboardUrl}>
                     <LayoutDashboard className="size-4" />
                     Dashboard
-                </Button>
-            </Link>
+                </Link>
+            </Button>
         );
     }
 
@@ -73,11 +73,11 @@ export function MarketingHeaderAuth({
                 >
                     Log In
                 </Link>
-                <Link href={signupUrl} className="block mt-2 px-2" onClick={onNavigate}>
-                    <Button className="w-full rounded-md">
+                <Button className="w-full rounded-md" asChild>
+                    <Link href={signupUrl} className="block mt-2 px-2" onClick={onNavigate}>
                         Start Free Trial <ArrowRight className="ml-2 size-4" />
-                    </Button>
-                </Link>
+                    </Link>
+                </Button>
             </>
         );
     }
@@ -87,11 +87,11 @@ export function MarketingHeaderAuth({
             <Link href={loginUrl} className="px-3 py-2 rounded-md hover:bg-accent hover:text-foreground transition-colors">
                 Log In
             </Link>
-            <Link href={signupUrl}>
-                <Button className="rounded-md px-5 ml-1">
+            <Button className="rounded-md px-5 ml-1" asChild>
+                <Link href={signupUrl}>
                     Start Free Trial <ArrowRight className="ml-2 size-4" />
-                </Button>
-            </Link>
+                </Link>
+            </Button>
         </>
     );
 }

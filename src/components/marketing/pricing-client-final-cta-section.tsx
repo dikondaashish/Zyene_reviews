@@ -19,11 +19,11 @@ export function PricingClientFinalCtaSection({ signupUrl }: PricingClientFinalCt
                     Cancel before the trial ends and you won&apos;t be charged.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <Link href={signupUrl}>
-                        <Button size="lg" className="px-10 py-7 text-[1.05rem] font-semibold rounded-xl">
+                    <Button size="lg" className="px-10 py-7 text-[1.05rem] font-semibold rounded-xl" asChild>
+                        <Link href={signupUrl}>
                             Start Your Free Trial <ArrowRight className="ml-2 size-5" />
-                        </Button>
-                    </Link>
+                        </Link>
+                    </Button>
                     <a
                         href="mailto:sales@zyenereviews.com?subject=Pricing%20Question"
                         className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"

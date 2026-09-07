@@ -1,116 +1,34 @@
-"use client";
-
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { ArrowRight, Plus } from "lucide-react";
 import { SIGNUP_URL } from "@/config/env";
-import { MarketingHomeFaqItem } from "@/components/marketing/marketing-home/marketing-home-faq-item";
+import { HOME_FAQS } from "@/components/marketing/marketing-home/home-faqs";
 
-import type { MarketingHomeMotionProps } from "@/components/marketing/marketing-home/marketing-home-motion-props";
-import { getPlatformStats } from "@/lib/social-proof/social-proof-data";
-
-const { businessCountFormatted } = getPlatformStats();
-
-const STATS = [
-    { value: businessCountFormatted, label: "Businesses" },
-    { value: "50k+", label: "Reviews managed" },
-    { value: "4.9", label: "Avg rating" },
-    { value: "< 15 min", label: "Response time" },
-];
-
-export function MarketingHomeClosing({ fadeInUp }: MarketingHomeMotionProps) {
+export function MarketingHomeClosing() {
     return (
         <>
-            {/* Stats Bar */}
-            <section className="w-full py-16 px-4 bg-muted/40 border-y border-border">
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
-                    variants={fadeInUp}
-                    className="mx-auto max-w-[1200px] grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
-                >
-                    {STATS.map(({ value, label }) => (
-                        <div key={label}>
-                            <p className="text-4xl md:text-5xl font-bold text-foreground">{value}</p>
-                            <p className="text-sm text-muted-foreground uppercase tracking-wide mt-2">{label}</p>
-                        </div>
-                    ))}
-                </motion.div>
-            </section>
-
-            {/* FAQ */}
-            <section className="w-full py-24 md:py-32 px-4">
-                <div className="mx-auto max-w-3xl">
-                    <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-100px" }}
-                        variants={fadeInUp}
-                        className="text-center mb-12"
-                    >
-                        <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-foreground">
-                            Frequently asked questions
-                        </h2>
-                    </motion.div>
-                    <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-100px" }}
-                        variants={fadeInUp}
-                    >
-                        <MarketingHomeFaqItem
-                            question="How does the 7-day free trial work?"
-                            answer="Sign up for Starter or Professional and get full access to every feature for 7 days. Cancel before the trial ends and you won't be charged."
-                        />
-                        <MarketingHomeFaqItem
-                            question="How do review requests work?"
-                            answer="You can send review requests via email, SMS, or a shareable link. Each request directs your customer to your custom review page where they can leave feedback or be guided to Google, Yelp, or Facebook."
-                        />
-                        <MarketingHomeFaqItem
-                            question="Does Zyene post AI replies directly to Google?"
-                            answer="Zyene generates AI-powered reply suggestions in one click. You can review, edit, and post them to Google. The Auto commenter feature can post replies automatically on your behalf."
-                        />
-                        <MarketingHomeFaqItem
-                            question="Can I manage multiple locations?"
-                            answer="Yes. The Professional plan supports up to 3 locations with independent limits per location. Enterprise plans offer unlimited locations."
-                        />
-                        <MarketingHomeFaqItem
-                            question="What happens to negative feedback?"
-                            answer="Customers who rate 4-5 stars are guided to leave a public review. Those who rate 1-3 stars are directed to a private feedback form so you can resolve the issue before it goes public."
-                        />
-                        <MarketingHomeFaqItem
-                            question="Can I cancel anytime?"
-                            answer="Yes. Cancel your subscription anytime from your billing settings. No contracts, no hidden fees."
-                        />
-                    </motion.div>
+            <section className="marketing-section border-t border-border">
+                <div className="marketing-container grid grid-cols-1 gap-8 md:grid-cols-[0.8fr_1.2fr] md:gap-20">
+                    <div>
+                        <h2 className="mb-5 text-4xl">A few things<br />you might be wondering.</h2>
+                        <p className="text-muted-foreground">Need a hand choosing?<br /><Link href="/contact" className="font-semibold text-primary underline underline-offset-4">Talk to our team.</Link></p>
+                    </div>
+                    <div>
+                        {HOME_FAQS.map(({ question, answer }) => (
+                            <details key={question} className="group border-b border-border first:border-t">
+                                <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-5 py-5 text-base font-medium [&::-webkit-details-marker]:hidden">
+                                    {question}<Plus className="size-5 shrink-0 transition-transform group-open:rotate-45" aria-hidden="true" />
+                                </summary>
+                                <p className="pb-6 pr-8 text-sm leading-7 text-muted-foreground">{answer}</p>
+                            </details>
+                        ))}
+                    </div>
                 </div>
             </section>
-
-            {/* Final CTA */}
-            <section className="w-full py-24 md:py-32 px-4 bg-foreground">
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
-                    variants={fadeInUp}
-                    className="mx-auto max-w-3xl text-center"
-                >
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-background leading-tight mb-6">
-                        Ready to grow your reviews?
-                    </h2>
-                    <p className="text-lg text-background/70 mb-10 max-w-xl mx-auto">
-                        Keep review alerts, requests, private feedback, and replies in one workspace.
-                    </p>
-                    <Link href={SIGNUP_URL}>
-                        <Button
-                            size="lg"
-                            className="rounded-md px-8 py-3 font-medium bg-background text-foreground hover:bg-background/90 transition-colors"
-                        >
-                            Start Your Free Trial
-                        </Button>
-                    </Link>
-                </motion.div>
+            <section className="w-full bg-[var(--brand-wash)] py-16 md:py-20">
+                <div className="marketing-container flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+                    <div><h2 className="mb-4 max-w-2xl text-4xl md:text-5xl">Your next great review<br />starts here.</h2><p className="text-muted-foreground">You take care of your customers. We’ll help you stay on top of their feedback.</p></div>
+                    <Link href={SIGNUP_URL} className="marketing-button shrink-0">Start your free trial <ArrowRight className="size-4" aria-hidden="true" /></Link>
+                </div>
             </section>
         </>
     );

@@ -1,15 +1,7 @@
 import { getEnterprisePlan } from "@/services/stripe/plans";
-import type { Metadata } from "next";
+
 import Link from "next/link";
-import {
-    ArrowRight,
-    Building2,
-    Check,
-    Shield,
-    Users,
-    Sparkles,
-    FileText,
-} from "lucide-react";
+import { Check, Users, Sparkles, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function EnterpriseSection5Section({ enterprisePlan }: { enterprisePlan: NonNullable<ReturnType<typeof getEnterprisePlan>> }) {
@@ -43,11 +35,11 @@ export function EnterpriseSection5Section({ enterprisePlan }: { enterprisePlan: 
                         <p className="text-sm text-muted-foreground mb-6">
                             Request the latest PDF/Notion export from sales when you book a demo.
                         </p>
-                        <Link href="/demo">
-                            <Button className="w-full gap-2">
+                        <Button className="w-full gap-2" asChild>
+                            <Link href="/demo">
                                 <Sparkles className="size-4" /> Request demo + sales deck
-                            </Button>
-                        </Link>
+                            </Link>
+                        </Button>
                         <Link href="/security" className="block mt-4 text-sm text-primary hover:underline text-center">
                             Security &amp; trust center →
                         </Link>

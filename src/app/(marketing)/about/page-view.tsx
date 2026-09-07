@@ -1,17 +1,12 @@
-import { AboutHeroImageSection } from "./about-hero-image-section";
-import { AboutMissionSection } from "./about-mission-section";
-import { AboutProductSection } from "./about-product-section";
+import { LandingHero } from "@/components/marketing/landing-hero";
+import { AboutMissionSection } from "@/app/(marketing)/about/about-mission-section";
+import { AboutProductSection } from "@/app/(marketing)/about/about-product-section";
 
 export default function AboutPage() {
     return (
-        <div className="min-h-screen bg-background py-24 text-foreground">
-            <div className="container mx-auto px-4 sm:px-8 max-w-4xl">
-                <AboutHeroImageSection />
-                <div className="bg-card p-8 md:p-16 rounded-lg border border-border">
-                    <AboutMissionSection />
-                    <AboutProductSection />
-                </div>
-            </div>
-        </div>
+        <>
+            <LandingHero eyebrow="About Zyene Reviews" title="For the people behind local business." description="You put care into every customer experience. We build the tools that help your reputation reflect it." image={{ src: "/marketing/about/team-collaboration.png", alt: "A team collaborating on business software" }} />
+            <section className="marketing-section"><div className="marketing-container max-w-5xl"><AboutMissionSection /><AboutProductSection /></div></section>
+        </>
     );
 }

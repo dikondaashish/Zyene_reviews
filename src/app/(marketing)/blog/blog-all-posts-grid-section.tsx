@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Clock } from "lucide-react";
 import { BLOG_POSTS, PILLAR_LABELS, PILLAR_COLORS } from "@/lib/content/blog-data";
 import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
@@ -11,6 +12,15 @@ export function BlogAllPostsGridSection({ posts }: { posts: typeof BLOG_POSTS })
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {posts.map((post) => (
                             <Link key={post.slug} href={`/blog/${post.slug}`} className="group bg-card border border-border rounded-2xl p-6 hover:border-primary/40 hover:shadow-md transition-all flex flex-col">
+                                {post.image ? (
+                                    <Image
+                                        src={post.image.src}
+                                        alt={post.image.alt}
+                                        width={640}
+                                        height={360}
+                                        className="mb-5 aspect-video w-full rounded-xl object-cover"
+                                    />
+                                ) : null}
                                 <div className={`inline-flex items-center self-start gap-1 text-xs font-bold px-2.5 py-1 rounded-full border mb-3 ${PILLAR_COLORS[post.pillar]}`}>
                                     {PILLAR_LABELS[post.pillar]}
                                 </div>

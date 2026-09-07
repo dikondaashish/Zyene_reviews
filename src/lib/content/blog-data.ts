@@ -13,6 +13,7 @@ export type {
     BlogFaq,
 } from "./blog-types";
 export { DEFAULT_BLOG_AUTHOR, resolveBlogAuthor, blogAuthorInitials } from "./blog-authors";
+export { BLOG_IMAGES, getBlogImage } from "./blog-images";
 import type { ContentPillar, BlogPost } from "./blog-types";
 
 import { post1, post2, post3, post4 } from "./blog-posts-month1";
@@ -21,17 +22,23 @@ import { post9, post10, post11, post12 } from "./blog-posts-month3";
 import { post13 } from "./blog-posts-shield";
 import { post14 } from "./blog-posts-ai-visibility";
 import { post15 } from "./blog-posts-positive-reviews";
+import { BLOG_IMAGES } from "./blog-images";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Export
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const BLOG_POSTS: BlogPost[] = [
+const RAW_BLOG_POSTS: BlogPost[] = [
     post1, post2, post3, post4,
     post5, post6, post7, post8,
     post9, post10, post11, post12,
     post13, post14, post15,
 ];
+
+export const BLOG_POSTS: BlogPost[] = RAW_BLOG_POSTS.map((post) => ({
+    ...post,
+    image: BLOG_IMAGES[post.slug],
+}));
 
 export const BLOG_POST_MAP: Record<string, BlogPost> = Object.fromEntries(
     BLOG_POSTS.map((p) => [p.slug, p])

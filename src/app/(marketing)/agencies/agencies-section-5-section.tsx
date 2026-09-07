@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -10,9 +10,9 @@ export function AgenciesSection5Section() {
                         Also exploring POS, Zapier, and association partnerships? See the full{" "}
                         <Link href="/partners" className="text-primary underline">partners page</Link>.
                     </p>
-                    <Link href="/enterprise">
-                        <Button variant="outline">Enterprise for 16+ locations</Button>
-                    </Link>
+                    <Button variant="outline" asChild>
+                        <Link href="/enterprise">Enterprise for 16+ locations</Link>
+                    </Button>
                 </div>
             </section>
     );

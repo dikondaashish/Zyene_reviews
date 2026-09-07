@@ -1,44 +1,20 @@
 "use client";
 
-export function BillingToggle({
-    interval,
-    onChange,
-}: {
+export function BillingToggle({ interval, onChange }: {
     interval: "month" | "year";
-    onChange: (v: "month" | "year") => void;
+    onChange: (value: "month" | "year") => void;
 }) {
     return (
-        <div className="flex items-center justify-center gap-4">
-            <span
-                className={`text-sm font-medium transition-colors ${
-                    interval === "month" ? "text-foreground" : "text-muted-foreground"
-                }`}
-            >
-                Monthly
-            </span>
-            <button
-                type="button"
-                onClick={() => onChange(interval === "month" ? "year" : "month")}
-                className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-                    interval === "year" ? "bg-primary" : "bg-muted-foreground/30"
-                }`}
-                aria-pressed={interval === "year"}
-                aria-label="Toggle billing interval"
-            >
-                <span
-                    className={`inline-block transform rounded-full bg-white shadow-sm transition-transform ${ interval === "year" ? "translate-x-8" : "translate-x-1" } size-5`}
-                />
-            </button>
-            <span
-                className={`text-sm font-medium transition-colors ${
-                    interval === "year" ? "text-foreground" : "text-muted-foreground"
-                }`}
-            >
-                Annual
-                <span className="ml-2 inline-block rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-bold text-primary border border-primary/20">
-                    Save 17%
-                </span>
-            </span>
-        </div>
+        <fieldset className="shrink-0">
+            <legend className="mb-2 text-sm font-medium">Billing period</legend>
+            <div className="inline-flex rounded-xl border border-border bg-muted p-1">
+                {([{ value: "month", label: "Monthly" }, { value: "year", label: "Yearly · Save 17%" }] as const).map(({ value, label }) => (
+                    <label key={value} className="cursor-pointer">
+                        <input type="radio" name="billing-period" value={value} checked={interval === value} onChange={() => onChange(value)} className="peer sr-only" />
+                        <span className="block rounded-lg px-4 py-3 text-sm font-medium text-muted-foreground transition-colors peer-checked:bg-card peer-checked:text-foreground peer-checked:shadow-sm peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary">{label}</span>
+                    </label>
+                ))}
+            </div>
+        </fieldset>
     );
 }

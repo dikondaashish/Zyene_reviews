@@ -1,36 +1,13 @@
-import Link from "next/link";
-import { ArrowRight, Code2, Zap } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SIGNUP_URL } from "@/config/env";
+import { LandingHero } from "@/components/marketing/landing-hero";
 
 export function IntegrationsHeroSection() {
     return (
-        <section className="pt-24 pb-20 px-4 text-center bg-background">
-            <div className="container mx-auto max-w-4xl">
-                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20 mb-6">
-                    <Zap className="size-3.5" />
-                    Integrations
-                </div>
-                <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-foreground mb-6 leading-[1.05]">
-                    Connects with the tools<br />
-                    <span className="text-primary">you already use</span>
-                </h1>
-                <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-                    Connect Google Business Profile, supported review platforms, Zapier, Square, and the REST API to the workflow you already use.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link href={SIGNUP_URL}>
-                        <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">
-                            Start Free Trial <ArrowRight className="ml-2 size-4" />
-                        </Button>
-                    </Link>
-                    <Link href="/docs/api">
-                        <Button size="lg" variant="outline" className="px-8 py-6 text-base font-semibold rounded-xl gap-2">
-                            <Code2 className="size-4" /> API Documentation
-                        </Button>
-                    </Link>
-                </div>
-            </div>
-        </section>
+        <LandingHero
+            eyebrow="Keep your tools. Connect your reviews."
+            title="Less switching. More connected."
+            description="Connect your review platforms and business tools, and keep customer feedback moving through the workflow you already use."
+            primary={{ label: "Start free trial", href: "/signup" }}
+            secondary={{ label: "API documentation", href: "/docs/api" }}
+        />
     );
 }

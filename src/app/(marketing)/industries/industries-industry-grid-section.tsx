@@ -6,7 +6,7 @@ import { IndustryIcon } from "@/lib/industries/industry-icons";
 
 export function IndustriesIndustryGridSection() {
     return (
-        <section className="py-20 px-4 bg-muted border-t border-border">
+        <section id="industry-grid" className="py-20 px-4 bg-muted border-t border-border">
             <div className="container mx-auto max-w-6xl">
                 <h2 className="text-3xl font-bold text-foreground text-center mb-3">Choose your industry</h2>
                 <p className="text-muted-foreground text-center mb-12 max-w-xl mx-auto">

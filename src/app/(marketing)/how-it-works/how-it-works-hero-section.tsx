@@ -1,41 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import {
-    Link2, Bell, Megaphone, TrendingUp, ArrowRight, Check,
-    Star, Sparkles, ShieldCheck, BarChart3,
-} from "lucide-react";
-import { STEPS } from "./how-it-works-data";
+import { LandingHero } from "@/components/marketing/landing-hero";
+import { STEPS } from "@/app/(marketing)/how-it-works/how-it-works-data";
 
 export function HowItWorksHeroSection() {
     return (
-        <section className="pt-24 pb-20 px-4 text-center bg-background">
-                <div className="container mx-auto max-w-4xl">
-                    <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20 mb-6">
-                        <Sparkles className="size-3.5" />
-                        How It Works
-                    </div>
-                    <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-foreground mb-6 leading-[1.05]">
-                        Get your first review<br />
-                        <span className="text-primary">within 24 hours</span>
-                    </h1>
-                    <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-                        Four steps, no tech skills required. Most local businesses are up and running in under 10 minutes.
-                    </p>
-
-                    {/* Step Navigator */}
-                    <div className="flex flex-wrap justify-center gap-3 mb-6">
-                        {STEPS.map((s) => (
-                            <a
-                                key={s.step}
-                                href={`#step-${s.step}`}
-                                className="flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-card hover:border-primary hover:text-primary text-sm font-medium text-muted-foreground transition-all"
-                            >
-                                <span className="text-primary font-bold">{s.step}</span>
-                                {s.title}
-                            </a>
-                        ))}
-                    </div>
-                </div>
-            </section>
+        <LandingHero
+            eyebrow="From setup to your next review"
+            title="A simpler routine for your reputation."
+            description="Connect your business, invite customer feedback, and keep the conversation going. Here’s how it all works."
+            primary={{ label: "Start free trial", href: "/signup" }}
+            secondary={{ label: "Book a demo", href: "/demo" }}
+        >
+            <nav aria-label="Steps to get started" className="mt-7 flex flex-wrap gap-3">
+                {STEPS.map(step => <Link key={step.step} href={`#step-${step.step}`} className="rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium hover:border-primary"><span className="mr-2 text-primary">{step.step}</span>{step.title}</Link>)}
+            </nav>
+        </LandingHero>
     );
 }

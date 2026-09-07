@@ -102,22 +102,8 @@ export const post13: BlogPost = {
         { type: "h2", text: "What You See in Zyene Reviews" },
         {
             type: "summary",
-            text: "Screenshots below are marketing examples only - they are not live customer dashboards, verified outcomes, or proof that Shield changed any business’s rating.",
+            text: "The editorial photo above illustrates the human side of private feedback: listen carefully, respond quickly, and use the product workflow to keep the next step organized.",
         },
-        { type: "image", image: {
-            src: "/marketing/home/alert-robert-hayes.png",
-            alt: "Example Zyene Reviews alert UI for feedback that needs follow-up",
-            width: 640,
-            height: 240,
-            caption: "Example alert UI (marketing asset only - not a real customer notification or result).",
-        }},
-        { type: "image", image: {
-            src: "/marketing/home/alert-emily-carter.png",
-            alt: "Example Zyene Reviews alert UI for new review activity",
-            width: 640,
-            height: 240,
-            caption: "Example alert UI (marketing asset only - not a real customer notification or result). See /features/review-collection for product detail.",
-        }},
         { type: "p", text: "Private submissions are stored for your team to read and act on - similar to handling a direct complaint, tied to the same fair review campaign you use for public review assistance." },
         { type: "h2", text: "How This Differs From Basic Review Requests" },
         {

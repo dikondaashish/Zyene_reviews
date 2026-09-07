@@ -7,9 +7,9 @@ import {
     PRODUCT_LINKS,
     RESOURCES_LINKS,
     SOLUTIONS_LINKS,
-} from "./marketing-layout-nav-data";
-import type { MarketingNavMenu } from "./marketing-layout-nav-types";
-import { MarketingLayoutNavDropdown } from "./marketing-layout-nav-dropdown";
+} from "@/app/(marketing)/marketing-layout-nav-data";
+import type { MarketingNavMenu } from "@/app/(marketing)/marketing-layout-nav-types";
+import { MarketingLayoutNavDropdown } from "@/app/(marketing)/marketing-layout-nav-dropdown";
 
 export const MarketingLayoutDesktopNav = forwardRef<
     HTMLDivElement,
@@ -17,18 +17,18 @@ export const MarketingLayoutDesktopNav = forwardRef<
         loginUrl: string;
         signupUrl: string;
         openMenu: MarketingNavMenu | null;
-        onOpenMenu: (menu: MarketingNavMenu) => void;
         onToggleMenu: (menu: MarketingNavMenu) => void;
         onCloseMenu: () => void;
     }
 >(function MarketingLayoutDesktopNav(
-    { loginUrl, signupUrl, openMenu, onOpenMenu, onToggleMenu, onCloseMenu },
+    { loginUrl, signupUrl, openMenu, onToggleMenu, onCloseMenu },
     ref
 ) {
     return (
         <nav
+            aria-label="Main navigation"
             ref={ref}
-            className="hidden md:flex items-center gap-1 text-sm font-medium text-muted-foreground"
+            className="hidden lg:flex items-center gap-1 whitespace-nowrap text-sm font-medium text-muted-foreground"
         >
             <MarketingLayoutNavDropdown
                 label="Product"
@@ -36,7 +36,6 @@ export const MarketingLayoutDesktopNav = forwardRef<
                 links={PRODUCT_LINKS}
                 columns={2}
                 open={openMenu === "product"}
-                onOpen={() => onOpenMenu("product")}
                 onToggle={() => onToggleMenu("product")}
                 onClose={onCloseMenu}
             />
@@ -45,7 +44,6 @@ export const MarketingLayoutDesktopNav = forwardRef<
                 menu="solutions"
                 links={SOLUTIONS_LINKS}
                 open={openMenu === "solutions"}
-                onOpen={() => onOpenMenu("solutions")}
                 onToggle={() => onToggleMenu("solutions")}
                 onClose={onCloseMenu}
             />
@@ -54,23 +52,14 @@ export const MarketingLayoutDesktopNav = forwardRef<
                 menu="resources"
                 links={RESOURCES_LINKS}
                 open={openMenu === "resources"}
-                onOpen={() => onOpenMenu("resources")}
                 onToggle={() => onToggleMenu("resources")}
                 onClose={onCloseMenu}
             />
-            <Link
-                href="/about"
-                className="px-3 py-2 rounded-md hover:bg-accent hover:text-foreground transition-colors"
-                onMouseEnter={onCloseMenu}
-            >
-                About
+            <Link href="/pricing" className="px-3 py-3 rounded-md hover:bg-accent hover:text-foreground transition-colors" onClick={onCloseMenu}>
+                Pricing
             </Link>
-            <Link
-                href="/contact"
-                className="px-3 py-2 rounded-md hover:bg-accent hover:text-foreground transition-colors"
-                onMouseEnter={onCloseMenu}
-            >
-                Contact
+            <Link href="/demo" className="px-3 py-3 rounded-md hover:bg-accent hover:text-foreground transition-colors" onClick={onCloseMenu}>
+                Book a demo
             </Link>
             <div className="mx-2 h-5 w-px bg-border" />
             <MarketingHeaderAuth loginUrl={loginUrl} signupUrl={signupUrl} />

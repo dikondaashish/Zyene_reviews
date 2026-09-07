@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Clock, Sparkles } from "lucide-react";
 import { PILLAR_LABELS, PILLAR_COLORS } from "@/lib/content/blog-data";
 import type { BlogPost } from "@/lib/content/blog-types";
@@ -40,9 +41,15 @@ export function BlogFeaturedPostSection({ featured }: { featured: BlogPost }) {
                                 </div>
                             </div>
                             <div className="shrink-0 self-center">
-                                <div className="bg-primary/10 border border-primary/20 rounded-2xl p-8 flex items-center justify-center">
-                                    <ArrowRight className="text-primary group-hover:translate-x-1 transition-transform size-10" />
-                                </div>
+                                {featured.image ? (
+                                    <Image
+                                        src={featured.image.src}
+                                        alt={featured.image.alt}
+                                        width={640}
+                                        height={360}
+                                        className="h-44 w-72 rounded-2xl object-cover"
+                                    />
+                                ) : <ArrowRight className="text-primary group-hover:translate-x-1 transition-transform size-10" />}
                             </div>
                         </div>
                     </Link>

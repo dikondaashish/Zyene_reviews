@@ -85,11 +85,11 @@ export function HelpArticleView({
                                         Our support team is available Mon-Fri, 9am-6pm EST.
                                     </p>
                                 </div>
-                                <a href="mailto:support@zyenereviews.com" className="shrink-0">
-                                    <Button variant="outline" size="sm" className="gap-2 rounded-lg">
+                                <Button variant="outline" size="sm" className="gap-2 rounded-lg" asChild>
+                                    <a href="mailto:support@zyenereviews.com" className="shrink-0">
                                         Email Support <ArrowRight className="size-3.5" />
-                                    </Button>
-                                </a>
+                                    </a>
+                                </Button>
                             </div>
                         </article>
 
@@ -99,11 +99,11 @@ export function HelpArticleView({
                                 <p className="text-xs text-muted-foreground mb-4">
                                     Start with a 7-day free trial. Full access to all features.
                                 </p>
-                                <Link href={SIGNUP_URL}>
-                                    <Button size="sm" className="w-full gap-2">
+                                <Button size="sm" className="w-full gap-2" asChild>
+                                    <Link href={SIGNUP_URL}>
                                         Start Free Trial <ArrowRight className="size-3.5" />
-                                    </Button>
-                                </Link>
+                                    </Link>
+                                </Button>
                             </div>
 
                             {relatedArticles.length > 0 && (

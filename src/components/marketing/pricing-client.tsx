@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Plan } from "@/services/stripe/plans";
-import { CustomerLogoBar, TestimonialGrid } from "@/components/marketing/social-proof";
+import { TestimonialGrid } from "@/components/marketing/social-proof";
 import { PricingClientHeroSection } from "./pricing-client-hero-section";
 import { PricingClientPlansSection } from "./pricing-client-plans-section";
 import { PricingClientLocationScaleSection } from "./pricing-client-location-scale-section";
@@ -35,7 +35,6 @@ export function PricingPageClient({
     return (
         <div className="flex flex-col w-full">
             <PricingClientHeroSection interval={interval} onIntervalChange={setInterval} />
-            <CustomerLogoBar title="Trusted by local businesses on every plan" />
             <PricingClientPlansSection starter={starter} pro={pro} enterprise={enterprise} signupUrl={signupUrl} />
             <PricingClientLocationScaleSection />
             <PricingClientComparisonSection />

@@ -39,11 +39,11 @@ export function FeaturesIntegrationsBarSection() {
                             </div>
                         ))}
                     </div>
-                    <Link href="/integrations">
-                        <Button variant="outline" className="gap-2">
+                    <Button variant="outline" className="gap-2" asChild>
+                        <Link href="/integrations">
                             See all integrations <ArrowRight className="size-4" />
-                        </Button>
-                    </Link>
+                        </Link>
+                    </Button>
                 </div>
             </section>
     );

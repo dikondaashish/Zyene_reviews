@@ -1,138 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { Check, Zap, Crown, ShieldCheck, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { PLANS, type Plan } from "@/services/stripe/plans";
+import { Check, ArrowRight } from "lucide-react";
+import type { Plan } from "@/services/stripe/plans";
 
-function strikethroughMonthlyPrice(plan: Plan): string | null {
-    if (plan.interval === "year") {
-        const monthlyId = plan.id.replace("_yearly", "_monthly");
-        const monthlyPlan = PLANS.find((p) => p.id === monthlyId);
-        return monthlyPlan?.price != null ? monthlyPlan.price.toFixed(2) : null;
-    }
-    return plan.originalPrice != null ? plan.originalPrice.toFixed(2) : null;
-}
-
-export function PricingClientPlanCard({
-    plan,
-    isPopular,
-    signupUrl,
-}: {
+export function PricingClientPlanCard({ plan, isPopular, signupUrl }: {
     plan: Plan;
     isPopular: boolean;
     signupUrl: string;
 }) {
-    const isEnterprise = plan.id === "enterprise";
-    const monthlyEquivalent =
-        plan.interval === "year" && plan.price ? (plan.price / 12).toFixed(2) : plan.price?.toFixed(2);
-
-    const strikethroughPrice = strikethroughMonthlyPrice(plan);
-
-    if (isPopular) {
-        return (
-            <div className="relative bg-[color:var(--marketing-footer-bg)] text-[color:var(--marketing-footer-fg)] border-2 border-primary rounded-2xl p-8 flex flex-col">
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-bold px-5 py-1 rounded-full whitespace-nowrap">
-                    Most Popular
-                </div>
-                <div className="flex items-center gap-2 mb-1">
-                    <Crown className="text-primary size-5" />
-                    <h3 className="text-xl font-bold">{plan.name}</h3>
-                </div>
-                <p className="text-sm text-[color:var(--marketing-footer-muted)] mb-6">
-                    For growing multi-location businesses
-                </p>
-                <div className="mb-1">
-                    {strikethroughPrice && (
-                        <span className="text-base line-through text-[color:var(--marketing-footer-muted)] mr-2">
-                            ${strikethroughPrice}
-                        </span>
-                    )}
-                    <span className="text-5xl font-bold">${monthlyEquivalent}</span>
-                    <span className="text-[color:var(--marketing-footer-muted)] ml-1 text-sm">/mo</span>
-                </div>
-                {plan.interval === "year" && (
-                    <p className="text-xs text-[color:var(--marketing-footer-muted)] mb-1">
-                        Billed ${plan.price?.toFixed(2)}/year
-                    </p>
-                )}
-                <p className="text-sm text-primary font-semibold mb-6">7-day free trial, cancel anytime, no charge</p>
-                <ul className="space-y-2.5 text-sm text-[color:var(--marketing-footer-list)] flex-1 mb-8">
-                    {plan.features.map((f) => (
-                        <li key={f} className="flex items-start gap-2">
-                            <Check className="text-primary shrink-0 mt-0.5 size-4" />
-                            {f}
-                        </li>
-                    ))}
-                </ul>
-                <Link href={signupUrl}>
-                    <Button className="w-full rounded-lg py-6 font-semibold text-base">
-                        Start 7-day free trial <ArrowRight className="ml-2 size-4" />
-                    </Button>
-                </Link>
-            </div>
-        );
-    }
-
-    if (isEnterprise) {
-        return (
-            <div className="bg-card border border-border rounded-2xl p-8 flex flex-col">
-                <div className="flex items-center gap-2 mb-1">
-                    <ShieldCheck className="text-primary size-5" />
-                    <h3 className="text-xl font-bold text-foreground">{plan.name}</h3>
-                </div>
-                <p className="text-sm text-muted-foreground mb-6">For large organizations with custom needs</p>
-                <div className="mb-6">
-                    <span className="text-5xl font-bold text-foreground">Custom</span>
-                </div>
-                <ul className="space-y-2.5 text-sm text-muted-foreground flex-1 mb-8">
-                    {plan.features.map((f) => (
-                        <li key={f} className="flex items-start gap-2">
-                            <Check className="text-primary shrink-0 mt-0.5 size-4" />
-                            {f}
-                        </li>
-                    ))}
-                </ul>
-                <a href="mailto:sales@zyenereviews.com?subject=Enterprise%20Plan%20Inquiry">
-                    <Button variant="outline" className="w-full rounded-lg py-6 font-semibold text-base">
-                        Contact Sales
-                    </Button>
-                </a>
-            </div>
-        );
-    }
-
+    const enterprise = plan.id === "enterprise";
+    const monthlyPrice = plan.interval === "year" && plan.price ? plan.price / 12 : plan.price;
+    const description = enterprise ? "For teams with custom needs" : isPopular ? "For growing businesses and teams" : "For your first business location";
     return (
-        <div className="bg-card border border-border rounded-2xl p-8 flex flex-col">
-            <div className="flex items-center gap-2 mb-1">
-                <Zap className="text-primary size-5" />
-                <h3 className="text-xl font-bold text-foreground">{plan.name}</h3>
-            </div>
-            <p className="text-sm text-muted-foreground mb-6">Perfect for single-location businesses</p>
-            <div className="mb-1">
-                {strikethroughPrice && (
-                    <span className="text-base line-through text-muted-foreground mr-2">${strikethroughPrice}</span>
-                )}
-                <span className="text-5xl font-bold text-foreground">${monthlyEquivalent}</span>
-                <span className="text-muted-foreground ml-1 text-sm">/mo</span>
-            </div>
-            {plan.interval === "year" && (
-                <p className="text-xs text-muted-foreground mb-1">Billed ${plan.price?.toFixed(2)}/year</p>
-            )}
-            <p className="text-sm text-primary font-semibold mb-6">7-day free trial, cancel anytime, no charge</p>
-            <ul className="space-y-2.5 text-sm text-muted-foreground flex-1 mb-8">
-                {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2">
-                        <Check className="text-primary shrink-0 mt-0.5 size-4" />
-                        {f}
-                    </li>
-                ))}
+        <article className={`relative flex flex-col rounded-2xl border p-6 lg:p-8 ${isPopular ? "border-primary bg-[var(--brand-wash)]" : "border-border bg-card"}`}>
+            {isPopular && <p className="absolute -top-3 left-6 rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">Room to grow</p>}
+            <h2 className="mb-2 text-2xl font-semibold">{plan.name}</h2>
+            <p className="mb-7 text-sm text-muted-foreground">{description}</p>
+            <p className="mb-2 flex flex-wrap items-baseline gap-1.5"><span className="text-[42px] leading-tight font-semibold tracking-tight">{enterprise ? "Let’s talk" : `$${monthlyPrice?.toFixed(2)}`}</span>{!enterprise && <span className="text-sm text-muted-foreground">/month</span>}</p>
+            <p className="mb-6 min-h-6 text-sm text-muted-foreground">{enterprise ? "A plan built around your business" : plan.interval === "year" ? `$${plan.price?.toFixed(2)} billed yearly` : "Billed monthly. Cancel anytime."}</p>
+            <Link href={enterprise ? "/demo" : signupUrl} className={`marketing-button mb-7 w-full ${isPopular ? "" : "marketing-button-secondary"}`}>{enterprise ? "Talk to sales" : "Start 7-day free trial"}<ArrowRight className="size-4" aria-hidden="true" /></Link>
+            <ul className="space-y-3 border-t border-border pt-6 text-sm text-muted-foreground">
+                {plan.features.map(feature => <li key={feature} className="flex items-start gap-2.5"><Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" /><span>{feature.replace(" (public review link flow, step 3)", "")}</span></li>)}
             </ul>
-            <Link href={signupUrl}>
-                <Button className="w-full rounded-lg py-6 font-semibold text-base">
-                    Start 7-day free trial <ArrowRight className="ml-2 size-4" />
-                </Button>
-            </Link>
-        </div>
+        </article>
     );
 }

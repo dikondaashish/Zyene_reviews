@@ -1,15 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { FeatureAvailability as CellIcon } from "@/components/marketing/feature-availability";
 import { COMPARISON_ROWS } from "./pricing-client-constants";
-
-function CellIcon({ value }: { value: boolean | string }) {
-    if (value === true) return <Check className="text-primary mx-auto size-5" />;
-    if (value === false)
-        return <span className="text-muted-foreground/40 text-xl mx-auto block text-center">,</span>;
-    return <span className="text-xs text-muted-foreground text-center block">{value}</span>;
-}
 
 export function PricingClientComparisonSection() {
     return (
@@ -19,8 +12,8 @@ export function PricingClientComparisonSection() {
                 <p className="text-muted-foreground text-center mb-10">
                     Enterprise features at owner-operator pricing - no annual contracts required.
                 </p>
-                <div className="overflow-x-auto rounded-xl border border-border bg-card">
-                    <table className="w-full text-sm text-left border-collapse">
+                <div role="region" aria-label="Platform feature comparison" tabIndex={0} className="overflow-x-auto rounded-xl border border-border bg-card">
+                    <table className="min-w-[640px] w-full text-sm text-left border-collapse">
                         <thead>
                             <tr className="bg-muted">
                                 <th className="px-5 py-4 font-semibold text-muted-foreground border-b border-r border-border w-[35%]">
@@ -49,9 +42,9 @@ export function PricingClientComparisonSection() {
                             </tr>
                         </thead>
                         <tbody>
-                            {COMPARISON_ROWS.map((row, i) => (
+                            {COMPARISON_ROWS.map((row) => (
                                 <tr
-                                    key={i}
+                                    key={row.feature}
                                     className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors"
                                 >
                                     <td className="px-5 py-3.5 font-medium text-foreground border-r border-border">

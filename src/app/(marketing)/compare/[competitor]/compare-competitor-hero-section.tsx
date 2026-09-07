@@ -1,75 +1,34 @@
+import Link from "next/link";
+import { LandingHero } from "@/components/marketing/landing-hero";
 import { MarketingGeoSummary } from "@/components/marketing/marketing-geo-summary";
 import type { CompetitorData } from "@/lib/comparisons/competitor-data";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { SIGNUP_URL } from "@/config/env";
-import { ArrowRight, Check, X, ChevronRight, Sparkles, ShieldCheck } from "lucide-react";
 
 export function CompareCompetitorHeroSection({ data }: { data: CompetitorData }) {
     return (
-        <section className="pt-24 pb-20 px-4 bg-background">
-                <div className="container mx-auto max-w-4xl text-center">
-                    {/* Breadcrumb */}
-                    <nav className="flex items-center justify-center gap-2 text-xs text-muted-foreground mb-6">
-                        <Link href="/compare" className="hover:text-primary transition-colors">Compare</Link>
-                        <ChevronRight className="size-3.5" />
-                        <span className="text-foreground font-medium">Zyene Reviews vs {data.name}</span>
-                    </nav>
-
-                    <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20 mb-6">
-                        <Sparkles className="size-3.5" />
-                        Honest Comparison - 2026
-                    </div>
-                    <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-foreground mb-5 leading-[1.05]">
-                        Zyene Reviews<br />
-                        <span className="text-primary">vs {data.name}</span>
-                    </h1>
-                    <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">{data.heroSub}</p>
-                    {data.openingSummary ? (
-                        <div className="max-w-2xl mx-auto mb-8 text-left space-y-4">
-                            <MarketingGeoSummary>{data.openingSummary}</MarketingGeoSummary>
-                            {data.deepDiveLink ? (
-                                <p className="text-sm text-center">
-                                    <Link
-                                        href={data.deepDiveLink.href}
-                                        className="font-medium text-primary hover:underline inline-flex items-center gap-1"
-                                    >
-                                        {data.deepDiveLink.label}
-                                        <ArrowRight className="size-3.5" aria-hidden />
-                                    </Link>
-                                </p>
-                            ) : null}
-                        </div>
-                    ) : null}
-
-                    {/* Quick price callout */}
-                    <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mb-10">
-                        <div className="text-center">
-                            <div className="text-5xl font-black text-primary">$29.99</div>
-                            <div className="text-sm text-muted-foreground mt-1">Zyene Reviews / month</div>
-                            <div className="text-xs text-muted-foreground">No annual contract</div>
-                        </div>
-                        <div className="text-3xl font-bold text-muted-foreground/30">vs</div>
-                        <div className="text-center">
-                            <div className="text-5xl font-black text-muted-foreground">{data.price}</div>
-                            <div className="text-sm text-muted-foreground mt-1">{data.name} / month</div>
-                            <div className="text-xs text-muted-foreground">{data.contractRequired ? "Annual contract required" : "No annual contract"}</div>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link href={SIGNUP_URL}>
-                            <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">
-                                Try Zyene Reviews Free for 7 Days <ArrowRight className="ml-2 size-4" />
-                            </Button>
-                        </Link>
-                        <Link href="/pricing">
-                            <Button size="lg" variant="outline" className="px-8 py-6 text-base font-semibold rounded-xl">
-                                See Full Pricing
-                            </Button>
-                        </Link>
-                    </div>
+        <>
+            <LandingHero
+                eyebrow="Compare your options"
+                title={`Zyene Reviews vs ${data.name}`}
+                description={data.heroSub}
+                primary={{ label: "Try Zyene free for 7 days", href: "/signup" }}
+                secondary={{ label: "Explore Zyene pricing", href: "/pricing" }}
+            >
+                <Link href="/compare" className="underline underline-offset-4">All comparisons</Link>
+            </LandingHero>
+            <section className="marketing-container grid grid-cols-1 gap-8 py-12 md:grid-cols-2 md:gap-16">
+                <div>
+                    <h2 className="mb-5 text-2xl">Starting price at a glance</h2>
+                    <dl className="divide-y divide-border">
+                        <div className="flex items-baseline justify-between gap-5 py-4"><dt>Zyene Reviews</dt><dd className="text-xl font-semibold">$29.99<span className="text-sm font-normal text-muted-foreground"> /mo</span></dd></div>
+                        <div className="flex items-baseline justify-between gap-5 py-4"><dt>{data.name}</dt><dd className="text-xl font-semibold">{data.price}<span className="text-sm font-normal text-muted-foreground"> /mo</span></dd></div>
+                    </dl>
+                    <p className="mt-3 text-sm text-muted-foreground">Zyene has no annual contract. {data.contractRequired ? `${data.name} requires an annual contract.` : `${data.name} offers a monthly option.`}</p>
+                </div>
+                <div>
+                    {data.openingSummary && <MarketingGeoSummary>{data.openingSummary}</MarketingGeoSummary>}
+                    {data.deepDiveLink && <Link href={data.deepDiveLink.href} className="mt-4 inline-block text-sm font-semibold text-primary underline underline-offset-4">{data.deepDiveLink.label}</Link>}
                 </div>
             </section>
+        </>
     );
 }

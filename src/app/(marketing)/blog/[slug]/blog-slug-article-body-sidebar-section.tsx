@@ -1,8 +1,7 @@
-import { BLOG_POST_MAP, PILLAR_LABELS } from "@/lib/content/blog-data";
-import type { BlogPost } from "@/lib/content/blog-data";
-import type { Metadata } from "next";
+import { BLOG_POST_MAP } from "@/lib/content/blog-data";
+
 import Link from "next/link";
-import { ArrowRight, ArrowLeft, Clock, ChevronRight } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BlogSlugFaqSection } from "@/components/marketing/blog-slug-faq-section";
 import { ContentRenderer } from "@/components/marketing/content-renderer";
@@ -10,9 +9,7 @@ import { SIGNUP_URL } from "@/config/env";
 
 // ─── Static Generation ────────────────────────────────────────────────────────
 
-
 // ─── Metadata ─────────────────────────────────────────────────────────────────
-
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -51,11 +48,11 @@ export function BlogSlugArticleBodySidebarSection({ post, relatedPosts }: { post
                             <div className="mt-12 bg-primary/5 border border-primary/20 rounded-2xl p-8">
                                 <h3 className="text-xl font-bold text-foreground mb-2">Ready to try Zyene Reviews?</h3>
                                 <p className="text-muted-foreground mb-5">7-day free trial. Full access. No credit card lock-in.</p>
-                                <Link href={SIGNUP_URL}>
-                                    <Button className="gap-2">
+                                <Button className="gap-2" asChild>
+                                    <Link href={SIGNUP_URL}>
                                         Start Free Trial <ArrowRight className="size-4" />
-                                    </Button>
-                                </Link>
+                                    </Link>
+                                </Button>
                             </div>
                         </article>
 
@@ -65,11 +62,11 @@ export function BlogSlugArticleBodySidebarSection({ post, relatedPosts }: { post
                             <div className="bg-card border border-border rounded-2xl p-6">
                                 <p className="text-sm font-bold text-foreground mb-2">Try Zyene free</p>
                                 <p className="text-xs text-muted-foreground mb-4">7-day trial. AI replies, review requests, Negative Feedback Shield. Starting at $29.99/mo.</p>
-                                <Link href={SIGNUP_URL}>
-                                    <Button size="sm" className="w-full gap-2">
+                                <Button size="sm" className="w-full gap-2" asChild>
+                                    <Link href={SIGNUP_URL}>
                                         Start Free Trial <ArrowRight className="size-3.5" />
-                                    </Button>
-                                </Link>
+                                    </Link>
+                                </Button>
                             </div>
 
                             {/* Related posts */}

@@ -2,7 +2,7 @@ import type { CompetitorData } from "@/lib/comparisons/competitor-data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { SIGNUP_URL } from "@/config/env";
-import { ArrowRight, Check, X, ChevronRight, Sparkles, ShieldCheck } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function CompareCompetitorFinalCtaSection({ data }: { data: CompetitorData }) {
     return (
@@ -15,11 +15,11 @@ export function CompareCompetitorFinalCtaSection({ data }: { data: CompetitorDat
                         No annual contract. No credit card lock-in.<br />
                         Cancel before day 7 - pay nothing.
                     </p>
-                    <Link href={SIGNUP_URL}>
-                        <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl">
+                    <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl" asChild>
+                        <Link href={SIGNUP_URL}>
                             Start Your Free Trial <ArrowRight className="ml-2 size-5" />
-                        </Button>
-                    </Link>
+                        </Link>
+                    </Button>
                     <p className="mt-5 text-sm text-muted-foreground">
                         Already using {data.name}?{" "}
                         <a href="mailto:hello@zyenereviews.com?subject=Switching%20from%20{data.name}" className="underline hover:text-foreground">

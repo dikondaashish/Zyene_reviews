@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AGENCY_PARTNER_PERKS, PARTNER_CONTACT_EMAIL } from "@/lib/campaign-content/partnerships-data";
@@ -21,11 +21,11 @@ export function PartnersAgencyPerksSection() {
                             </li>
                         ))}
                     </ul>
-                    <a href={`mailto:${PARTNER_CONTACT_EMAIL}?subject=Agency%20partner%20application`}>
-                        <Button variant="outline" className="gap-2">
+                    <Button variant="outline" className="gap-2" asChild>
+                        <a href={`mailto:${PARTNER_CONTACT_EMAIL}?subject=Agency%20partner%20application`}>
                             Apply as agency partner <ArrowRight className="size-4" />
-                        </Button>
-                    </a>
+                        </a>
+                    </Button>
                 </div>
             </section>
     );

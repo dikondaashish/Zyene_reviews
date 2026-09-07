@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Clock } from "lucide-react";
 import { BLOG_POSTS, PILLAR_LABELS, PILLAR_COLORS } from "@/lib/content/blog-data";
 import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
@@ -26,6 +27,15 @@ export function BlogSlugMorePostsSection({ slug }: { slug: string }) {
                             .slice(0, 3)
                             .map((p) => (
                                 <Link key={p.slug} href={`/blog/${p.slug}`} className="group bg-card border border-border rounded-2xl p-6 hover:border-primary/40 hover:shadow-md transition-all flex flex-col">
+                                    {p.image ? (
+                                        <Image
+                                            src={p.image.src}
+                                            alt={p.image.alt}
+                                            width={640}
+                                            height={360}
+                                            className="mb-4 aspect-video w-full rounded-xl object-cover"
+                                        />
+                                    ) : null}
                                     <div className={`inline-flex items-center self-start gap-1 text-xs font-bold px-2.5 py-1 rounded-full border mb-3 ${PILLAR_COLORS[p.pillar]}`}>
                                         {PILLAR_LABELS[p.pillar]}
                                     </div>

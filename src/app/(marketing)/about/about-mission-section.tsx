@@ -3,7 +3,7 @@ import { Building2, Mail, Shield, Users } from "lucide-react";
 export function AboutMissionSection() {
     return (
         <>
-                    <h1 className="text-4xl font-bold text-foreground mb-4">About Zyene Reviews</h1>
+                    <h2 className="text-4xl font-bold text-foreground mb-4">About Zyene Reviews</h2>
                     <p className="text-lg text-muted-foreground mb-12 leading-relaxed">
                         Zyene Reviews is a product of{" "}
                         <strong>

@@ -52,9 +52,9 @@ export default async function NewsletterUnsubscribePage({
                         </p>
                     </>
                 )}
-                <Link href="/">
-                    <Button variant="outline">Back to Zyene Reviews</Button>
-                </Link>
+                <Button variant="outline" asChild>
+                    <Link href="/">Back to Zyene Reviews</Link>
+                </Button>
             </div>
         </div>
     );

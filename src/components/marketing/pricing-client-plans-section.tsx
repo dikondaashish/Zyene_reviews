@@ -15,7 +15,7 @@ export function PricingClientPlansSection({ starter, pro, enterprise, signupUrl 
     return (
         <section className="pb-24 px-4 bg-background">
             <div className="container mx-auto max-w-6xl">
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 gap-7 lg:grid-cols-3">
                     <PricingClientPlanCard plan={starter} isPopular={false} signupUrl={signupUrl} />
                     <PricingClientPlanCard plan={pro} isPopular signupUrl={signupUrl} />
                     <PricingClientPlanCard plan={enterprise} isPopular={false} signupUrl={signupUrl} />

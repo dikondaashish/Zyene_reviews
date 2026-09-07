@@ -10,7 +10,7 @@ export function PricingClientLocationScaleSection() {
                 <p className="text-muted-foreground text-center mb-10">
                     Each location gets its own full set of limits. Nothing shared.
                 </p>
-                <div className="overflow-x-auto rounded-xl border border-border bg-card">
+                <div role="region" aria-label="Professional plan by location count" tabIndex={0} className="overflow-x-auto rounded-xl border border-border bg-card">
                     <table className="w-full text-sm text-left">
                         <thead>
                             <tr className="border-b border-border bg-muted">
@@ -24,7 +24,7 @@ export function PricingClientLocationScaleSection() {
                             {[
                                 { metric: "Email review requests / mo", per: 700 },
                                 { metric: "SMS review requests / mo", per: 700 },
-                                { metric: "AI reply suggestions / mo", per: 2000 },
+                                { metric: "AI customer review drafts / mo", per: 2000 },
                             ].map(({ metric, per }) => (
                                 <tr
                                     key={metric}

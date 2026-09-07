@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { ArrowRight, Building2, TrendingUp } from "lucide-react";
+import { ArrowRight, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CASE_STUDIES } from "@/lib/social-proof/case-study-data";
-import { CustomerLogoBar } from "@/components/marketing/social-proof";
+
 import { SIGNUP_URL } from "@/config/env";
 
 export function CaseStudiesCtaSection() {
@@ -14,11 +13,11 @@ export function CaseStudiesCtaSection() {
                     <p className="text-muted-foreground mb-8">
                         Start your 7-day free trial - no annual contract. Same tools these businesses used.
                     </p>
-                    <Link href={SIGNUP_URL}>
-                        <Button size="lg" className="px-10 py-6 font-semibold rounded-xl">
+                    <Button size="lg" className="px-10 py-6 font-semibold rounded-xl" asChild>
+                        <Link href={SIGNUP_URL}>
                             Start Your Free Trial <ArrowRight className="ml-2 size-5" />
-                        </Button>
-                    </Link>
+                        </Link>
+                    </Button>
                 </div>
             </section>
     );

@@ -1,53 +1,26 @@
+import Link from "next/link";
+import { LandingHero } from "@/components/marketing/landing-hero";
 import { MarketingGeoSummary } from "@/components/marketing/marketing-geo-summary";
 import { COMPARE_HUB_OPENING_SUMMARY } from "@/app/(marketing)/compare/compare-hub-content";
-import { POSITIONING } from "@/lib/growth/product-foundation";
-import Link from "next/link";
-import { ArrowRight, Check, X, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SIGNUP_URL } from "@/config/env";
-import { COMPETITOR_MAP, COMPETITOR_SLUGS } from "@/lib/comparisons/competitor-data";
-import { FeatureCellValue } from "./[competitor]/compare-competitor-feature-cell";
 
 export function CompareHeroSection() {
     return (
-        <section className="pt-24 pb-20 px-4 text-center bg-background">
-                <div className="container mx-auto max-w-4xl">
-                    <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20 mb-6">
-                        <Sparkles className="size-3.5" />
-                        Honest Comparisons
-                    </div>
-                    <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-foreground mb-6 leading-[1.05]">
-                        Zyene Reviews vs Birdeye,<br />
-                        <span className="text-primary">Podium, NiceJob &amp; GatherUp</span>
-                    </h1>
-                    <p className="text-xl text-muted-foreground mb-4 max-w-2xl mx-auto">
-                        We believe in honest comparisons. Here&apos;s where Zyene Reviews wins, where competitors win, and how to decide what&apos;s right for your business.
-                    </p>
-                    <p className="text-sm text-muted-foreground mb-6 max-w-xl mx-auto">
-                        {POSITIONING.oneLiner}
-                    </p>
-                    <div className="max-w-2xl mx-auto mb-10 text-left space-y-4">
-                        <MarketingGeoSummary>{COMPARE_HUB_OPENING_SUMMARY}</MarketingGeoSummary>
-                        <p className="text-sm text-center text-muted-foreground">
-                            <Link href="/blog/birdeye-pricing-breakdown-2026" className="font-medium text-primary hover:underline">
-                                Birdeye pricing breakdown (2026)
-                            </Link>
-                            {" · "}
-                            <Link href="/blog/negative-feedback-shield" className="font-medium text-primary hover:underline">
-                                Negative Feedback Shield guide
-                            </Link>
-                            {" · "}
-                            <Link href="/compare/birdeye" className="font-medium text-primary hover:underline">
-                                Full Birdeye comparison
-                            </Link>
-                        </p>
-                    </div>
-                    <Link href={SIGNUP_URL}>
-                        <Button size="lg" className="px-8 py-6 text-base font-semibold rounded-xl">
-                            Try Zyene Reviews Free for 7 Days <ArrowRight className="ml-2 size-4" />
-                        </Button>
-                    </Link>
+        <>
+            <LandingHero
+                eyebrow="Find your fit"
+                title="The right review platform for your business."
+                description="Compare Zyene Reviews with Birdeye, Podium, NiceJob, and GatherUp. See the features, pricing, and tradeoffs in one place."
+                primary={{ label: "Try Zyene free", href: "/signup" }}
+                secondary={{ label: "Explore pricing", href: "/pricing" }}
+            />
+            <section className="marketing-container py-10">
+                <MarketingGeoSummary>{COMPARE_HUB_OPENING_SUMMARY}</MarketingGeoSummary>
+                <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm text-primary">
+                    <Link href="/blog/birdeye-pricing-breakdown-2026" className="underline underline-offset-4">Birdeye pricing breakdown</Link>
+                    <Link href="/compare/birdeye" className="underline underline-offset-4">Full Birdeye comparison</Link>
+                    <Link href="/blog/negative-feedback-shield" className="underline underline-offset-4">Negative Feedback Shield guide</Link>
                 </div>
             </section>
+        </>
     );
 }

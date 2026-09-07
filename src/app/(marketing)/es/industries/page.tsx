@@ -1,7 +1,8 @@
+import { LandingHero } from "@/components/marketing/landing-hero";
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import Link from "next/link";
-import { ArrowRight, Globe } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/industries/localized-industries";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
@@ -36,16 +37,9 @@ export default function EsIndustriesHubPage() {
                     { name: "Industrias (ES)", url: "https://www.zyenereviews.com/es/industries" },
                 ]}
             />
-            <section className="pt-24 pb-16 px-4">
-                <div className="container mx-auto max-w-4xl">
-                    <div className="inline-flex items-center gap-2 text-xs font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-full mb-4">
-                        <Globe className="size-3" /> Español
-                    </div>
-                    <h1 className="text-4xl font-bold mb-4">Soluciones por industria</h1>
-                    <p className="text-muted-foreground mb-8 max-w-2xl">
-                        Páginas localizadas para equipos en Latinoamérica y España. Versión en inglés:{" "}
-                        <Link href="/industries" className="text-primary underline">/industries</Link>.
-                    </p>
+            <LandingHero eyebrow="Zyene en español" title="Tu industria. Tu reputación." description="Gestión de reseñas para los negocios de tu comunidad. Encuentra una solución para tu equipo." secondary={{ label: "Explore in English", href: "/industries" }} />
+            <section className="marketing-section">
+                <div className="marketing-container max-w-4xl">
                     <ul className="grid sm:grid-cols-2 gap-4">
                         {pages.map((p) => (
                             <li key={p.localizedSlug}>

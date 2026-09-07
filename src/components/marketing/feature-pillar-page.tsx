@@ -1,3 +1,4 @@
+import { LandingHero } from "@/components/marketing/landing-hero";
 import Link from "next/link";
 import { ArrowRight, Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,18 +20,15 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
                 ]}
             />
 
-            <section className="pt-20 pb-12 px-4 bg-muted border-b border-border">
-                <div className="container mx-auto max-w-4xl">
-                    <Link
-                        href="/features"
-                        className="text-sm text-muted-foreground hover:text-primary mb-6 inline-block"
-                    >
-                        ← All features
-                    </Link>
-                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">{pillar.title}</h1>
-                    <p className="text-xl text-muted-foreground max-w-2xl">{pillar.tagline}</p>
-                </div>
-            </section>
+            <LandingHero
+                eyebrow="Explore the Zyene platform"
+                title={pillar.title}
+                description={pillar.tagline}
+                primary={{ label: "Start free trial", href: "/signup" }}
+                secondary={{ label: "Explore pricing", href: "/pricing" }}
+            >
+                <Link href="/features" className="underline underline-offset-4">All features</Link>
+            </LandingHero>
 
             <section className="py-16 px-4 bg-background">
                 <div className="container mx-auto max-w-4xl space-y-8">
@@ -95,16 +93,16 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
                     </div>
 
                     <div className="flex flex-wrap gap-4 pt-4">
-                        <Link href={pillar.cta.href === "/signup" ? SIGNUP_URL : pillar.cta.href}>
-                            <Button size="lg" className="gap-2">
+                        <Button size="lg" className="gap-2" asChild>
+                            <Link href={pillar.cta.href === "/signup" ? SIGNUP_URL : pillar.cta.href}>
                                 {pillar.cta.label} <ArrowRight className="size-4" />
-                            </Button>
-                        </Link>
-                        <Link href={SIGNUP_URL}>
-                            <Button size="lg" variant="outline">
+                            </Link>
+                        </Button>
+                        <Button size="lg" variant="outline" asChild>
+                            <Link href={SIGNUP_URL}>
                                 Start 7-day free trial
-                            </Button>
-                        </Link>
+                            </Link>
+                        </Button>
                     </div>
                 </div>
             </section>

@@ -31,16 +31,16 @@ export function IntegrationsDeveloperSection() {
                             ))}
                         </ul>
                         <div className="flex gap-4">
-                            <Link href="/docs/api">
-                                <Button className="gap-2">
+                            <Button className="gap-2" asChild>
+                                <Link href="/docs/api">
                                     <Globe className="size-4" /> Read API Docs
-                                </Button>
-                            </Link>
-                            <Link href={SIGNUP_URL}>
-                                <Button variant="outline" className="gap-2 border-[color:var(--marketing-footer-muted)] text-[color:var(--marketing-footer-fg)] hover:bg-white/10">
+                                </Link>
+                            </Button>
+                            <Button variant="outline" className="gap-2 border-[color:var(--marketing-footer-muted)] text-[color:var(--marketing-footer-fg)] hover:bg-white/10" asChild>
+                                <Link href={SIGNUP_URL}>
                                     <Sparkles className="size-4" /> Get API Key Free
-                                </Button>
-                            </Link>
+                                </Link>
+                            </Button>
                         </div>
                     </div>
 

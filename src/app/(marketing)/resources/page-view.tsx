@@ -1,3 +1,4 @@
+import { LandingHero } from "@/components/marketing/landing-hero";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Clock, FileText, Mail, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,21 +20,7 @@ export default function ResourcesHubPage() {
             />
 
             {/* ── Hero ── */}
-            <section className="pt-20 pb-16 px-4 bg-background border-b border-border">
-                <div className="container mx-auto max-w-5xl">
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="inline-flex items-center gap-1.5 text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full">
-                            <FileText className="size-3" /> Free Guides
-                        </div>
-                    </div>
-                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
-                        Practical guides for<br />local business owners
-                    </h1>
-                    <p className="text-xl text-muted-foreground max-w-2xl">
-                        In-depth, practical resources on Google reviews, local SEO, review templates, and reputation management. Free. No email required.
-                    </p>
-                </div>
-            </section>
+            <LandingHero eyebrow="The resource library" title="Small steps. A stronger local presence." description="Go deeper with practical guides to Google reviews, local SEO, and customer feedback. Free to read, ready to use." />
 
             {/* ── Guide Grid ── */}
             <section className="py-20 px-4 bg-background">
@@ -71,14 +58,14 @@ export default function ResourcesHubPage() {
                 <div className="container mx-auto max-w-5xl">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-card border border-border rounded-3xl p-8">
                         <div>
-                            <h3 className="text-2xl font-bold text-foreground mb-1">Looking for shorter reads?</h3>
+                            <h2 className="text-2xl font-bold text-foreground mb-1">Looking for shorter reads?</h2>
                             <p className="text-muted-foreground">Visit our blog for practical posts on Google reviews, local SEO, and reputation management.</p>
                         </div>
-                        <Link href="/blog" className="shrink-0">
-                            <Button variant="outline" className="gap-2 rounded-xl">
+                        <Button variant="outline" className="gap-2 rounded-xl" asChild>
+                            <Link href="/blog" className="shrink-0">
                                 <BookOpen className="size-4" /> Browse the Blog
-                            </Button>
-                        </Link>
+                            </Link>
+                        </Button>
                     </div>
                 </div>
             </section>
@@ -88,11 +75,11 @@ export default function ResourcesHubPage() {
                 <div className="container mx-auto max-w-3xl text-center">
                     <h2 className="text-3xl font-bold text-foreground mb-3">Ready to put this into practice?</h2>
                     <p className="text-muted-foreground mb-8">Zyene Reviews automates review collection, AI replies, competitor tracking, and more. 7-day free trial, no credit card lock-in.</p>
-                    <Link href={SIGNUP_URL}>
-                        <Button size="lg" className="gap-2 rounded-xl">
+                    <Button size="lg" className="gap-2 rounded-xl" asChild>
+                        <Link href={SIGNUP_URL}>
                             Start Free Trial <ArrowRight className="size-4" />
-                        </Button>
-                    </Link>
+                        </Link>
+                    </Button>
                 </div>
             </section>
         </>

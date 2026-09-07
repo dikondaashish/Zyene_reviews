@@ -353,30 +353,9 @@ export const post3: BlogPost = {
         { type: "h2", text: "Local Business Workflow (Zyene Reviews)" },
         {
             type: "summary",
-            text: "Illustrative product visuals below show how Zyene Reviews surfaces review urgency - not performance metrics or customer counts.",
+            text: "This workflow connects review requests, timely alerts, and service recovery so owners can act on customer feedback while the experience is still fresh.",
         },
-        { type: "image", image: {
-            src: "/marketing/home/alert-emily-carter.png",
-            alt: "Illustrative Zyene Reviews in-app alert for a new 5-star Google review",
-            width: 640,
-            height: 240,
-            caption: "Illustrative marketing visual: positive review alert UI. Not a live customer dashboard or verified metric.",
-        }},
-        { type: "image", image: {
-            src: "/marketing/home/alert-robert-hayes.png",
-            alt: "Illustrative Zyene Reviews in-app alert flagging a 1-star review for follow-up",
-            width: 640,
-            height: 240,
-            caption: "Illustrative marketing visual: low-rating alert UI. Pair with Negative Feedback Shield in review request flows - see /features.",
-        }},
         { type: "quote", text: "Negative Feedback Shield (conceptual flow)\n\n1. Customer completes review request\n2. Indicates they were not fully satisfied\n3. Routed to private feedback form (not straight to Google)\n4. Owner resolves issue; optional follow-up review request later\n\nFull product workflow: /blog/negative-feedback-shield. Birdeye does not ship this exact Shield workflow - compare on /compare/birdeye." },
-        { type: "image", image: {
-            src: "/marketing/home/hero-local-owner.png",
-            alt: "Local business owner checking review notifications on a phone",
-            width: 800,
-            height: 450,
-            caption: "Illustrative workflow: owner-operator reviews alerts on mobile. Original Zyene Reviews marketing asset - not a customer case study.",
-        }},
         { type: "cta", ctaLabel: "Explore Negative Feedback Shield and AI replies →", ctaHref: "/features" },
         { type: "h2", text: "The Headline: What Birdeye Actually Costs" },
         {

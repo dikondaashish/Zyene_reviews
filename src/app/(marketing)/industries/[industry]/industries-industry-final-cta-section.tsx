@@ -13,11 +13,11 @@ export function IndustriesIndustryFinalCtaSection({ data }: { data: IndustryData
                     Start your 7-day free trial today.<br />
                     No credit card lock-in. Cancel before day 7 and pay nothing.
                 </p>
-                <Link href={SIGNUP_URL}>
-                    <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl">
+                <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl" asChild>
+                    <Link href={SIGNUP_URL}>
                         Start Your Free Trial <ArrowRight className="ml-2 size-5" />
-                    </Button>
-                </Link>
+                    </Link>
+                </Button>
                 <div className="mt-8 flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
                     <Link href="/features" className="hover:text-primary transition-colors">See all features →</Link>
                     <Link href="/how-it-works" className="hover:text-primary transition-colors">How it works →</Link>

@@ -77,16 +77,6 @@ export const post15: BlogPost = {
             ]
         },
         {
-            type: "image",
-            image: {
-                src: "/images/blog/positive_review_reply.jpg",
-                alt: "Mockup of a professional owner response to a 5-star Google review",
-                width: 800,
-                height: 800,
-                caption: "A well-crafted response highlights specific details from the review."
-            }
-        },
-        {
             type: "h2",
             text: "The 3-Step Formula for the Perfect Response"
         },

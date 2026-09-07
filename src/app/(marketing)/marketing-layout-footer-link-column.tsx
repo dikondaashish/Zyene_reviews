@@ -7,9 +7,9 @@ export function MarketingLayoutFooterLinkColumn({
 }) {
     return (
         <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground mb-4">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-foreground mb-4">
                 {title}
-            </h4>
+            </h2>
             <ul className="space-y-2.5 text-sm text-muted-foreground">{children}</ul>
         </div>
     );

@@ -78,11 +78,11 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                             <div className="mt-12 bg-primary/5 border border-primary/20 rounded-2xl p-8">
                                 <h3 className="text-xl font-bold text-foreground mb-2">Put this guide into practice with Zyene</h3>
                                 <p className="text-muted-foreground mb-5">Automate review collection, AI replies, and reputation protection. 7-day free trial, no credit card lock-in.</p>
-                                <Link href={SIGNUP_URL}>
-                                    <Button className="gap-2">
+                                <Button className="gap-2" asChild>
+                                    <Link href={SIGNUP_URL}>
                                         Start Free Trial <ArrowRight className="size-4" />
-                                    </Button>
-                                </Link>
+                                    </Link>
+                                </Button>
                             </div>
                         </article>
 
@@ -94,21 +94,21 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                                     <p className="text-xs text-muted-foreground mb-4">
                                         Email the complete pack - fair outreach only, no review gating.
                                     </p>
-                                    <a href="#template-pack-capture">
-                                        <Button size="sm" variant="outline" className="w-full">
+                                    <Button size="sm" variant="outline" className="w-full" asChild>
+                                        <a href="#template-pack-capture">
                                             Get the 20 templates
-                                        </Button>
-                                    </a>
+                                        </a>
+                                    </Button>
                                 </div>
                             ) : null}
                             <div className="bg-card border border-border rounded-2xl p-6">
                                 <p className="text-sm font-bold text-foreground mb-2">Try Zyene free</p>
                                 <p className="text-xs text-muted-foreground mb-4">Everything in this guide, automated. Review requests, AI replies, Shield, competitor tracking. $29.99/mo. No contract.</p>
-                                <Link href={SIGNUP_URL}>
-                                    <Button size="sm" className="w-full gap-2">
+                                <Button size="sm" className="w-full gap-2" asChild>
+                                    <Link href={SIGNUP_URL}>
                                         Start Free Trial <ArrowRight className="size-3.5" />
-                                    </Button>
-                                </Link>
+                                    </Link>
+                                </Button>
                             </div>
 
                             {otherGuides.length > 0 && (
