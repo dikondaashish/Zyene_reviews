@@ -36,7 +36,7 @@ function parseStat(value: string | undefined, fallback: number): number {
 
 export function getPlatformStats() {
     const reviewCount = parseStat(process.env.NEXT_PUBLIC_TRUST_REVIEW_COUNT, 12400);
-    const businessCount = parseStat(process.env.NEXT_PUBLIC_TRUST_BUSINESS_COUNT, 380);
+    const businessCount = parseStat(process.env.NEXT_PUBLIC_TRUST_BUSINESS_COUNT, 250);
     return {
         reviewCount,
         reviewCountFormatted: reviewCount >= 1000

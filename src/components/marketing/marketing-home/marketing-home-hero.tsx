@@ -8,11 +8,13 @@ import { PlatformStatsBadge } from "@/components/marketing/social-proof";
 import { SIGNUP_URL } from "@/config/env";
 import Image from "next/image";
 import { marketingImages } from "@/lib/marketing/marketing-images";
+import { getPlatformStats } from "@/lib/social-proof/social-proof-data";
 
 import type { MarketingHomeMotionProps } from "@/components/marketing/marketing-home/marketing-home-motion-props";
 import { HeroGridBg } from "@/components/marketing/marketing-home/hero-grid-bg";
 
 export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMotion }: MarketingHomeMotionProps) {
+    const { businessCountFormatted } = getPlatformStats();
     return (
         <section className="relative w-full pt-24 pb-32 px-4">
             <HeroGridBg />
@@ -27,7 +29,7 @@ export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMo
                     className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground mb-8"
                 >
                     <span className="size-2 rounded-full bg-primary animate-pulse" />
-                    Trusted by 500+ local businesses
+                    Trusted by {businessCountFormatted} businesses
                 </motion.span>
 
                 <motion.h1

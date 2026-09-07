@@ -7,9 +7,12 @@ import { SIGNUP_URL } from "@/config/env";
 import { MarketingHomeFaqItem } from "@/components/marketing/marketing-home/marketing-home-faq-item";
 
 import type { MarketingHomeMotionProps } from "@/components/marketing/marketing-home/marketing-home-motion-props";
+import { getPlatformStats } from "@/lib/social-proof/social-proof-data";
+
+const { businessCountFormatted } = getPlatformStats();
 
 const STATS = [
-    { value: "500+", label: "Businesses" },
+    { value: businessCountFormatted, label: "Businesses" },
     { value: "50k+", label: "Reviews managed" },
     { value: "4.9", label: "Avg rating" },
     { value: "< 15 min", label: "Response time" },
