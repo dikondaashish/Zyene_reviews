@@ -1,0 +1,41 @@
+---
+description: Keep engineering docs and AI knowledge base in sync with code
+alwaysApply: true
+---
+
+# Documentation sync (Zyene Reviews)
+
+## Source of truth
+
+- Engineering hub: `docs/README.md`
+- Agent system map: `codebase-analysis-docs/CODEBASE_KNOWLEDGE.md`
+- Deep refs: `docs/ARCHITECTURE.md`, `docs/API.md`, `docs/DATA_MODELS.md`, `docs/AUTHENTICATION.md`, `docs/CONFIGURATION.md`, `docs/CODING_CONVENTIONS.md`, `docs/PUBLIC_API.md`
+- Standards: `AGENTS.md` (do not duplicate conflicting rules)
+
+Growth/GEO/ops docs under `docs/` remain valid; prefer the hub above for architecture and API work.
+
+## Before large changes
+
+1. Consult `docs/` and `codebase-analysis-docs/CODEBASE_KNOWLEDGE.md`.
+2. Prefer patterns in `docs/ARCHITECTURE.md` and `docs/CODING_CONVENTIONS.md`.
+3. Do not invent parallel auth, tenancy, or job systems.
+
+## When editing code, update or flag docs
+
+| You touch… | Update (or explicitly flag in PR) |
+|------------|-----------------------------------|
+| `src/app/api/**` | `docs/API.md` (and `/docs/api` UI data if public v1) |
+| Auth, cookies, API keys, roles | `docs/AUTHENTICATION.md` |
+| Env vars / `src/config/env.ts` | `docs/CONFIGURATION.md` + `.env.example` |
+| Migrations / core tables | `docs/DATA_MODELS.md` |
+| Cross-cutting architecture | `docs/ARCHITECTURE.md` + `CODEBASE_KNOWLEDGE.md` |
+| New reusable `lib`/`services` entry points | `docs/PUBLIC_API.md` |
+
+If you cannot update docs in the same change, leave a short “Docs debt” note and add a bullet under **Documentation TODO** in `codebase-analysis-docs/CODEBASE_KNOWLEDGE.md`.
+
+## Style for new documentation
+
+- Clear Markdown: headings, tables, fenced code, Mermaid when it clarifies structure.
+- Cross-link instead of copying large sections.
+- Audience: engineer joining the project (or an AI agent) — precise paths and symbols.
+- Mark unknown or roadmap behavior explicitly (do not invent GA status).

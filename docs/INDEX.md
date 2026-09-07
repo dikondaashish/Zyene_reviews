@@ -2,6 +2,20 @@
 
 Central index for project documentation and where each file belongs.
 
+## Engineering knowledge base (START HERE)
+
+- `docs/README.md` — documentation hub (setup overview + links).
+- `codebase-analysis-docs/CODEBASE_KNOWLEDGE.md` — multi-level system map, gotchas, documentation TODOs.
+- `docs/ARCHITECTURE.md` — subsystems, communication, Mermaid diagrams.
+- `docs/API.md` — HTTP API catalog.
+- `docs/DATA_MODELS.md` — core entities and relationships.
+- `docs/PUBLIC_API.md` — internal modules to reuse (not an npm package).
+- `docs/AUTHENTICATION.md` — sessions, tenancy, API keys.
+- `docs/CONFIGURATION.md` — env vars and config loading.
+- `docs/CODING_CONVENTIONS.md` — naming, layering, testing.
+- `.cursor/rules/documentation.mdc` — keep docs in sync with code.
+- `CLAUDE.md` — Claude/agent entry with pointers to the knowledge base.
+
 ## Core Product Docs (KEEP)
 
 - `README.md` - project overview, setup, scripts, and environment baseline (kept at root).
