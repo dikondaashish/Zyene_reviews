@@ -40,16 +40,16 @@ describe("a suppressed tile shows no number at all", () => {
 
     it("says how many more answers are needed, not just 'not enough data'", () => {
         expect(suppressionMessage({ reason: "insufficient_observations", observations: 1, required: 3 })).toBe(
-            "Only 1 answer so far — 2 more needed before this can be reported."
+            "Only 1 answer so far - 2 more needed before this can be reported."
         );
         expect(suppressionMessage({ reason: "insufficient_observations", observations: 2, required: 3 })).toBe(
-            "Only 2 answers so far — 1 more needed before this can be reported."
+            "Only 2 answers so far - 1 more needed before this can be reported."
         );
     });
 
     it("distinguishes never-answered from thinly-answered", () => {
         expect(suppressionMessage({ reason: "insufficient_observations", observations: 0, required: 3 })).toBe(
-            "No answers yet — needs 3 to report a rate."
+            "No answers yet - needs 3 to report a rate."
         );
     });
 

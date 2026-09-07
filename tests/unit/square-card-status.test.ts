@@ -7,7 +7,7 @@ import {
 describe("squarePaymentStatusLabel", () => {
     it("maps known statuses", () => {
         expect(squarePaymentStatusLabel("sent")).toBe("Review request sent");
-        expect(squarePaymentStatusLabel("skipped_guard")).toBe("Skipped — frequency cap");
+        expect(squarePaymentStatusLabel("skipped_guard")).toBe("Skipped - frequency cap");
     });
 
     it("falls back for unknown statuses", () => {
