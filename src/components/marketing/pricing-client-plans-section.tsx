@@ -2,32 +2,36 @@
 
 import Link from "next/link";
 import type { Plan } from "@/services/stripe/plans";
-import { PricingClientPlanCard } from "./pricing-client-plan-card";
+import { PricingClientPlanCard } from "@/components/marketing/pricing-client-plan-card";
+import styles from "@/components/marketing/pricing.module.css";
 
 interface PricingClientPlansSectionProps {
-    starter: Plan;
-    pro: Plan;
-    enterprise: Plan;
-    signupUrl: string;
+  starter: Plan;
+  pro: Plan;
+  enterprise: Plan;
+  signupUrl: string;
 }
 
 export function PricingClientPlansSection({ starter, pro, enterprise, signupUrl }: PricingClientPlansSectionProps) {
-    return (
-        <section className="pb-24 px-4 bg-background">
-            <div className="container mx-auto max-w-6xl">
-                <div className="grid grid-cols-1 gap-7 lg:grid-cols-3">
-                    <PricingClientPlanCard plan={starter} isPopular={false} signupUrl={signupUrl} />
-                    <PricingClientPlanCard plan={pro} isPopular signupUrl={signupUrl} />
-                    <PricingClientPlanCard plan={enterprise} isPopular={false} signupUrl={signupUrl} />
-                </div>
-                <p className="text-center text-xs text-muted-foreground mt-8">
-                    All prices in USD. Taxes may apply. By starting a trial you agree to our{" "}
-                    <Link href="/terms" className="underline hover:text-foreground">
-                        Terms of Service
-                    </Link>
-                    .
-                </p>
-            </div>
-        </section>
-    );
+  return (
+    <section id="pricing-plans" aria-label="Choose your plan" className="pb-24 px-4 bg-background">
+      <div className="container mx-auto max-w-6xl">
+        <div className={styles.grid}>
+          <PricingClientPlanCard plan={starter} isPopular={false} signupUrl={signupUrl} />
+          <PricingClientPlanCard plan={pro} isPopular signupUrl={signupUrl} />
+          <PricingClientPlanCard plan={enterprise} isPopular={false} signupUrl={signupUrl} />
+        </div>
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Daily equivalents use a 30-day month or 365-day year. Plans are billed monthly or annually.
+        </p>
+        <p className="text-center text-xs text-muted-foreground mt-8">
+          All prices in USD. Taxes may apply. By starting a trial you agree to our{" "}
+          <Link href="/terms" className="underline hover:text-foreground">
+            Terms of Service
+          </Link>
+          .
+        </p>
+      </div>
+    </section>
+  );
 }

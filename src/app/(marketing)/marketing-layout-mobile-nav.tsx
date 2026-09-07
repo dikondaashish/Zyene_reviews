@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { NAV_INDUSTRIES } from "@/app/(marketing)/marketing-layout-industry-links";
 import { ChevronDown } from "lucide-react";
 import { MarketingHeaderAuth } from "@/components/marketing/marketing-header-auth";
 import { PRODUCT_LINKS, RESOURCES_LINKS, SOLUTIONS_LINKS } from "@/app/(marketing)/marketing-layout-nav-data";
@@ -13,8 +14,8 @@ export function MarketingLayoutMobileNav({ loginUrl, signupUrl, onNavigate }: {
     return (
         <nav id="marketing-mobile-nav" aria-label="Main navigation" className="lg:hidden max-h-[calc(100dvh-76px)] overflow-y-auto border-t border-border bg-background px-5 pb-6">
             {[
-                { title: "Product", links: PRODUCT_LINKS },
-                { title: "Solutions", links: SOLUTIONS_LINKS },
+                { title: "Platform", links: PRODUCT_LINKS },
+                { title: "Industries & teams", links: [...NAV_INDUSTRIES.map(item => ({ label: item.name, href: `/industries/${item.slug}` })), ...SOLUTIONS_LINKS] },
                 { title: "Resources", links: RESOURCES_LINKS },
             ].map(({ title, links }) => (
                 <details key={title} className="group border-b border-border">

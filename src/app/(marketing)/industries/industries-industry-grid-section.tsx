@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { INDUSTRIES } from "@/lib/industries/industry-data";
 import { IndustryIcon } from "@/lib/industries/industry-icons";
+import { getIndustryImage } from "@/lib/industries/industry-imagery";
 
 export function IndustriesIndustryGridSection() {
     return (
@@ -17,13 +18,14 @@ export function IndustriesIndustryGridSection() {
                         <Link
                             key={industry.slug}
                             href={`/industries/${industry.slug}`}
-                            className="group bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/50 hover:shadow-lg transition-all flex flex-col"
+                            className="group bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/50 hover:shadow-lg transition-[border-color,box-shadow] flex flex-col"
                         >
                             <div className="relative w-full h-64 sm:h-60">
                                 <Image
-                                    src={industry.imagePath}
-                                    alt={`${industry.name} review management with Zyene Reviews`}
+                                    src={getIndustryImage(industry.slug).src}
+                                    alt={getIndustryImage(industry.slug, industry.name).alt}
                                     fill
+                                    sizes="(max-width: 639px) 100vw, 50vw"
                                     className="object-cover transition-transform group-hover:scale-105"
                                 />
                             </div>

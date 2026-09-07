@@ -1,0 +1,271 @@
+.intro {
+  width: min(100% - 32px, 1152px);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.introCopy {
+  min-width: 0;
+}
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+}
+.card {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: var(--card);
+}
+.popular {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--brand-wash) 40%, var(--card));
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+.badge {
+  position: absolute;
+  inset: -13px auto auto 28px;
+  padding: 4px 12px;
+  border: 1px solid var(--primary);
+  border-radius: 999px;
+  background: var(--brand-wash);
+  color: var(--foreground);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+}
+.planHeading {
+  min-height: 92px;
+}
+.planHeading h2 {
+  margin-bottom: 10px;
+  font-size: 25px;
+}
+.planHeading p {
+  color: var(--muted-foreground);
+  font-size: 14px;
+  line-height: 22px;
+}
+.priceDisplay,
+.priceContent {
+  display: grid;
+  grid-template-rows: 72px 132px 52px;
+}
+.priceContent {
+  grid-row: 1 / -1;
+  animation: price-fade 180ms ease-out;
+}
+.billingPrice {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-variant-numeric: tabular-nums;
+}
+.referencePrice {
+  color: var(--muted-foreground);
+  font-size: 14px;
+  line-height: 22px;
+}
+.referencePrice s {
+  text-decoration-thickness: 1px;
+}
+.monthlyPrice {
+  color: var(--foreground);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 27px;
+}
+.monthlyPrice > span:not(:first-child) {
+  font-size: 15px;
+}
+.equivalentLabel {
+  color: var(--muted-foreground);
+  font-weight: 400;
+}
+.annualCharge {
+  color: var(--foreground);
+  font-size: 15px;
+  line-height: 24px;
+}
+.dailyPrice {
+  align-self: center;
+  color: var(--foreground);
+}
+.dailyPrefix {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 24px;
+}
+.dailyAmount {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  white-space: nowrap;
+}
+.dailyNumber {
+  font-size: clamp(64px, 6vw, 80px);
+  font-weight: 600;
+  letter-spacing: -0.065em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.dailyPeriod {
+  color: var(--muted-foreground);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+.billingNote {
+  align-self: center;
+  color: var(--muted-foreground);
+  font-size: 14px;
+  line-height: 22px;
+}
+.customPrice {
+  align-self: center;
+  font-size: clamp(36px, 3.8vw, 46px);
+  font-weight: 550;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+}
+.cta {
+  width: 100%;
+  margin: 8px 0 28px;
+  gap: 12px;
+  padding-inline: 16px;
+}
+.cta svg {
+  flex-shrink: 0;
+}
+.features {
+  display: grid;
+  gap: 13px;
+  padding-top: 26px;
+  border-top: 1px solid var(--border);
+  color: var(--muted-foreground);
+  font-size: 14px;
+  line-height: 22px;
+}
+.features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.features svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--primary);
+}
+.toggle {
+  min-width: 0;
+  width: fit-content;
+  max-width: 100%;
+  flex-shrink: 0;
+}
+.toggle legend {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.toggleOptions {
+  display: inline-flex;
+  max-width: 100%;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--muted);
+}
+.toggleOption {
+  position: relative;
+  min-width: 0;
+  cursor: pointer;
+}
+.toggleInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.toggleLabel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--muted-foreground);
+  transition:
+    background-color 180ms ease-out,
+    color 180ms ease-out;
+}
+.toggleLabel svg {
+  visibility: hidden;
+  flex-shrink: 0;
+}
+.toggleInput:checked + .toggleLabel {
+  background: var(--card);
+  color: var(--foreground);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+.toggleInput:checked + .toggleLabel svg {
+  visibility: visible;
+}
+.toggleInput:focus-visible + .toggleLabel {
+  outline: 2px solid var(--foreground);
+  outline-offset: 3px;
+}
+.toggleInput:focus-visible {
+  outline: none;
+}
+@keyframes price-fade {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (min-width: 1024px) {
+  .intro {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 374px) {
+  .card {
+    padding: 22px;
+  }
+  .toggleLabel {
+    padding-inline: 9px;
+    font-size: 13px;
+  }
+  .dailyNumber {
+    font-size: 62px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .priceContent {
+    animation: none;
+  }
+  .toggleLabel {
+    transition: none;
+  }
+}

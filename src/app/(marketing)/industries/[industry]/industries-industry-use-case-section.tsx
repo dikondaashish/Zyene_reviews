@@ -1,44 +1,14 @@
+import Image from "next/image";
 import type { IndustryData } from "@/lib/industries/industry-data";
+import { getIndustryImage } from "@/lib/industries/industry-imagery";
 
 export function IndustriesIndustryUseCaseSection({ data }: { data: IndustryData }) {
+    const steps = [{ title: "Starting point", copy: data.useCase.startingPoint }, { title: "A better routine", copy: data.useCase.workflow }, { title: "What to measure", copy: data.useCase.measures }];
     return (
-        <section className="py-20 px-4 bg-primary/5 border-t border-primary/20">
-            <div className="container mx-auto max-w-4xl">
-                <div className="text-center mb-10">
-                    <h2 className="text-3xl font-bold text-foreground">
-                        An example workflow for a {data.nameSingular.toLowerCase()}
-                    </h2>
-                </div>
-
-                <div className="bg-card border border-border rounded-lg p-8 md:p-12 shadow-sm">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-6">
-                        Illustrative workflow
-                    </p>
-                    <div className="grid gap-8 md:grid-cols-3">
-                        <div>
-                            <h3 className="font-semibold text-foreground mb-2">Starting point</h3>
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                                {data.useCase.startingPoint}
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-foreground mb-2">Workflow</h3>
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                                {data.useCase.workflow}
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-foreground mb-2">What to measure</h3>
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                                {data.useCase.measures}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <p className="text-center text-xs text-muted-foreground mt-4">
-                    This is not a customer testimonial or a promised result.
-                </p>
+        <section className="marketing-section bg-muted">
+            <div className="marketing-container story-row">
+                <div className="story-visual" data-reveal><Image src={getIndustryImage(data.slug).src} alt={getIndustryImage(data.slug, data.name).alt} fill sizes="(max-width: 767px) 100vw, 45vw" /></div>
+                <div className="feature-detail-copy"><p className="marketing-eyebrow">An illustrative workflow</p><h2>A better day at your {data.nameSingular.toLowerCase()}.</h2><ol className="feature-detail-list">{steps.map((step, index) => <li key={step.title}><span className="text-primary">0{index + 1}</span><div><h3 className="mb-2 font-semibold">{step.title}</h3><p className="text-muted-foreground">{step.copy}</p></div></li>)}</ol><p className="mt-5 text-xs text-muted-foreground">This is not a customer testimonial or a promised result.</p></div>
             </div>
         </section>
     );

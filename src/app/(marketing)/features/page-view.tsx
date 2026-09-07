@@ -1,6 +1,6 @@
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { FeaturesHeroSection } from "./features-hero-section";
-import { FeaturesQuickFeatureGridSection } from "./features-quick-feature-grid-section";
+import { ProductShowcase } from "@/components/marketing/product-tour/product-showcase";
 import { FeaturesFeaturePillarsSection } from "./features-feature-pillars-section";
 import { FeaturesIntegrationsBarSection } from "./features-integrations-bar-section";
 import { FeaturesFinalCtaSection } from "./features-final-cta-section";
@@ -15,7 +15,7 @@ export default function FeaturesPage() {
                             ]}
                         />
             <FeaturesHeroSection />
-            <FeaturesQuickFeatureGridSection />
+            <ProductShowcase title="Meet your new everyday workspace." />
             <FeaturesFeaturePillarsSection />
             <FeaturesIntegrationsBarSection />
             <FeaturesFinalCtaSection />

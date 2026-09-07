@@ -1,20 +1,42 @@
 "use client";
 
-export function BillingToggle({ interval, onChange }: {
-    interval: "month" | "year";
-    onChange: (value: "month" | "year") => void;
+import { Check } from "lucide-react";
+import { YEARLY_SAVINGS_LABEL } from "@/lib/marketing/pricing-presentation";
+import styles from "@/components/marketing/pricing.module.css";
+
+export function BillingToggle({
+  interval,
+  onChange,
+}: {
+  interval: "month" | "year";
+  onChange: (value: "month" | "year") => void;
 }) {
-    return (
-        <fieldset className="shrink-0">
-            <legend className="mb-2 text-sm font-medium">Billing period</legend>
-            <div className="inline-flex rounded-xl border border-border bg-muted p-1">
-                {([{ value: "month", label: "Monthly" }, { value: "year", label: "Yearly · Save 17%" }] as const).map(({ value, label }) => (
-                    <label key={value} className="cursor-pointer">
-                        <input type="radio" name="billing-period" value={value} checked={interval === value} onChange={() => onChange(value)} className="peer sr-only" />
-                        <span className="block rounded-lg px-4 py-3 text-sm font-medium text-muted-foreground transition-colors peer-checked:bg-card peer-checked:text-foreground peer-checked:shadow-sm peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary">{label}</span>
-                    </label>
-                ))}
-            </div>
-        </fieldset>
-    );
+  return (
+    <fieldset className={styles.toggle}>
+      <legend>Billing period</legend>
+      <div className={styles.toggleOptions}>
+        {(
+          [
+            { value: "month", label: "Monthly" },
+            { value: "year", label: `Yearly · ${YEARLY_SAVINGS_LABEL}` },
+          ] as const
+        ).map(({ value, label }) => (
+          <label key={value} className={styles.toggleOption}>
+            <input
+              type="radio"
+              name="billing-period"
+              value={value}
+              checked={interval === value}
+              onChange={() => onChange(value)}
+              className={styles.toggleInput}
+            />
+            <span className={styles.toggleLabel}>
+              <Check size={14} aria-hidden="true" />
+              {label}
+            </span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
 }

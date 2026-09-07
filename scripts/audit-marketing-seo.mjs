@@ -177,8 +177,8 @@ const allLinks = new Set();
 for (const file of [...walk(MARKETING), join(ROOT, "src/app/(marketing)/marketing-layout-header.tsx"), join(ROOT, "src/app/(marketing)/marketing-layout-footer.tsx")].filter((f) => {
     try { return statSync(f).isFile(); } catch { return false; }
 })) {
-    if (!f.endsWith(".tsx")) continue;
-    for (const l of extractInternalLinks(readFileSync(f, "utf8"))) allLinks.add(l);
+    if (!file.endsWith(".tsx")) continue;
+    for (const l of extractInternalLinks(readFileSync(file, "utf8"))) allLinks.add(l);
 }
 
 console.log("META", JSON.stringify(metaResults, null, 2));

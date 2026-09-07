@@ -51,6 +51,6 @@ export const RESOURCES_LINKS: MarketingNavLink[] = [
     { href: "/blog", label: "Blog", icon: BookOpen, desc: "Practical guides on Google reviews and local SEO" },
     { href: "/resources", label: "Free Guides", icon: FileText, desc: "In-depth playbooks for local business owners" },
     { href: "/help", label: "Help Center", icon: HelpCircle, desc: "Setup guides, how-tos, and troubleshooting" },
-    { href: "/case-studies", label: "Case Studies", icon: Award, desc: "Before/after results from local businesses" },
+    { href: "/case-studies", label: "Case Studies", icon: Award, desc: "Example workflows for local businesses" },
     { href: "/partners", label: "Partners", icon: Handshake, desc: "Agencies, POS integrations, and co-marketing" },
 ];

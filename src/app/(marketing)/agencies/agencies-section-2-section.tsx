@@ -1,18 +1,5 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import {
-    ArrowRight,
-    Handshake,
-    Palette,
-    LayoutDashboard,
-    Check,
-    Mail,
-} from "lucide-react";
-import {
-    AGENCY_DASHBOARD_ROADMAP,
-    AGENCY_PRICING_TIERS,
-    WHITE_LABEL_FEATURES,
-} from "@/lib/enterprise/agency-pricing-data";
+import { Palette } from "lucide-react";
+import { WHITE_LABEL_FEATURES } from "@/lib/enterprise/agency-pricing-data";
 
 export function AgenciesSection2Section() {
     return (
@@ -23,9 +10,7 @@ export function AgenciesSection2Section() {
                         <h2 className="text-3xl font-bold">White-label branding</h2>
                     </div>
                     <p className="text-muted-foreground mb-8 max-w-2xl">
-                        We already support <strong>hide_branding</strong> on review collection flows, market it to
-                        clients as your proprietary reputation stack. Enterprise client accounts unlock full white-label
-                        widgets without the “Powered by Zyene” footer.
+                        Put your agency’s identity first with unbranded review collection flows. Enterprise client accounts also unlock white-label widgets, creating a consistent experience from the first request to the website.
                     </p>
                     <div className="grid md:grid-cols-3 gap-6">
                         {WHITE_LABEL_FEATURES.map((f) => (

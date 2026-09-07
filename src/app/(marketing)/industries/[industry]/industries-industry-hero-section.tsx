@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LandingHero } from "@/components/marketing/landing-hero";
 import type { IndustryData } from "@/lib/industries/industry-data";
 import { getEsIndustryPathForEnglishSlug } from "@/lib/industries/localized-industries";
+import { getIndustryImage } from "@/lib/industries/industry-imagery";
 
 export function IndustriesIndustryHeroSection({ data, slug }: { data: IndustryData; slug: string }) {
     const esIndustryPath = getEsIndustryPathForEnglishSlug(slug);
@@ -10,7 +11,7 @@ export function IndustriesIndustryHeroSection({ data, slug }: { data: IndustryDa
             eyebrow={`Zyene for ${data.name.toLowerCase()}`}
             title={data.heroHeadline}
             description={data.heroSub}
-            image={{ src: data.imagePath, alt: `${data.name} business environment` }}
+            image={getIndustryImage(slug, data.name)}
             primary={{ label: "Start free trial", href: "/signup" }}
             secondary={{ label: "Explore pricing", href: "/pricing" }}
         >

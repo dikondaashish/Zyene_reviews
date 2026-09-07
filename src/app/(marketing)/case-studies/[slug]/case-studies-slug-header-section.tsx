@@ -44,10 +44,10 @@ export function CaseStudiesSlugHeaderSection({ study }: { study: (typeof CASE_ST
 
                     <figure className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
                         <Image
-                            src="/images/industries/home-services.png"
-                            alt="Illustrative home-services technician outside a customer's home"
-                            width={1024}
-                            height={1024}
+                            src="/images/industries/window-installation.webp"
+                            alt="Stock photograph of a tradesperson fitting a window frame with a drill"
+                            width={1600}
+                            height={1068}
                             priority
                             className="aspect-[4/3] w-full object-cover"
                         />

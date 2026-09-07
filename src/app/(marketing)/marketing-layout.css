@@ -1,0 +1,43 @@
+.premium-header { background:var(--background); padding:12px 32px 0; }
+.premium-header-inner { position:relative; display:flex; align-items:center; justify-content:space-between; min-height:72px; gap:28px; padding:0 24px; max-width:1328px; margin:auto; border:1px solid var(--border); border-radius:18px; background:var(--background); box-shadow:0 4px 18px #20151504; }
+.premium-desktop-nav { display:flex; align-items:center; justify-content:space-between; flex:1; gap:24px; font-size:13px; font-weight:500; margin-left:36px; }
+.premium-nav-links { display:flex; align-items:center; gap:4px; }
+.premium-nav-auth { display:flex; align-items:center; gap:12px; }
+.premium-nav-auth [data-slot=button] { min-height:42px; font-size:12px; padding-inline:20px; }
+.mega-trigger { display:flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:12px 14px; border-radius:8px; cursor:pointer; color:var(--foreground); transition:background-color 160ms; }
+.mega-trigger:hover { background:var(--muted); }
+.mega-trigger-highlight { background:var(--muted); }
+.mega-trigger svg { transition:transform 180ms var(--ease-out); }
+.mega-trigger[aria-expanded=true] svg { transform:rotate(180deg); }
+.mega-panel { position:absolute; left:-1px; right:-1px; top:calc(100% + 10px); border:1px solid var(--border); border-radius:20px; background:var(--background); box-shadow:0 20px 60px #20151518; overflow:hidden; transform-origin:top center; animation:menu-enter 180ms var(--ease-out); }
+.mega-panel-main { display:grid; grid-template-columns:1fr 320px; padding:28px; gap:32px; }
+.mega-panel-label { font-size:10px; color:var(--muted-foreground); font-weight:600; letter-spacing:.09em; margin:6px 12px 22px; }
+.mega-link-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.mega-product-link { display:flex; align-items:start; gap:14px; padding:14px 12px; border-radius:12px; transition:background-color 160ms; }
+.mega-product-link:hover,.mega-industry-link:hover { background:var(--muted); }
+.mega-product-link > svg:first-child { color:var(--primary); flex-shrink:0; margin-top:3px; }
+.mega-product-link > svg:last-child { margin-left:auto; opacity:0; flex-shrink:0; margin-top:4px; transition:opacity 160ms; }
+.mega-product-link:hover > svg:last-child { opacity:1; }
+.mega-product-link strong { display:block; font-size:13px; font-weight:600; }
+.mega-product-link small { display:block; color:var(--muted-foreground); font-size:11px; font-weight:400; margin-top:5px; max-width:26ch; }
+.mega-feature { padding:12px; border-radius:14px; background:var(--muted); }
+.mega-feature > div { position:relative; aspect-ratio:1.8; border-radius:10px; overflow:hidden; margin-bottom:16px; }
+.mega-feature img { object-fit:cover; transition:transform 400ms var(--ease-out); }
+.mega-feature:hover img { transform:scale(1.04); }
+.mega-feature h2 { font-size:24px; line-height:1.1; padding:0 6px; margin-bottom:10px; }
+.mega-feature p { font-size:12px; color:var(--muted-foreground); padding:0 6px; }
+.mega-feature > span { display:flex; align-items:center; gap:14px; font-size:12px; font-weight:600; margin:18px 6px 6px; }
+.mega-panel-footer { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:18px 40px; background:var(--muted); border-top:1px solid var(--border); font-size:12px; }
+.mega-panel-footer > a,.mega-panel-footer > span { display:flex; align-items:center; gap:20px; }
+.mega-panel-footer > a { font-weight:600; }
+.mega-industry-link { display:flex; align-items:center; gap:14px; padding:8px 12px; border-radius:12px; font-weight:600; font-size:12px; }
+.mega-industry-link img { border-radius:8px; object-fit:cover; width:60px; height:48px; }
+.mega-industry-link > svg { margin-left:auto; flex-shrink:0; }
+@keyframes menu-enter { from { opacity:0; transform:translateY(-6px) scale(.99); } to { opacity:1; transform:translateY(0) scale(1); } }
+@media (max-width:1100px) { .premium-desktop-nav { margin-left:0; gap:8px; } .premium-header-inner { gap:12px; padding-inline:20px; } .mega-trigger { padding-inline:10px; } .mega-panel-main { grid-template-columns:1fr 260px; gap:16px; } }
+@media (max-width:1023px) {
+ .premium-header { padding:10px 16px 0; }
+ .premium-header-inner { min-height:64px; border-radius:14px; padding-inline:16px; }
+ .premium-desktop-nav { display:none; }
+ #marketing-mobile-nav { margin-top:10px; max-height:calc(100dvh - 94px); border:1px solid var(--border); border-radius:16px; box-shadow:0 16px 30px #2015150c; }
+}

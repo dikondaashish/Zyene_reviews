@@ -43,8 +43,8 @@ export function MarketingLayoutHeader() {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full min-w-0 border-b border-border bg-background">
-            <div className="container mx-auto flex h-[76px] min-w-0 max-w-[1264px] items-center justify-between gap-2 px-4 sm:px-8">
+        <header className="premium-header sticky top-0 z-50 w-full min-w-0">
+            <div className="premium-header-inner">
                 <MarketingLayoutHeaderBrand />
                 <MarketingLayoutDesktopNav
                     ref={desktopNavRef}

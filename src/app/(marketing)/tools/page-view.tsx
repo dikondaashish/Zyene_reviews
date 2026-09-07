@@ -15,7 +15,7 @@ export default function FreeToolsHubPage() {
                     { name: "Free Tools", url: "https://www.zyenereviews.com/tools" },
                 ]}
             />
-            <LandingHero eyebrow="Free tools for local business" title="A useful next step. On us." description="Create a Google review link, check your reputation, or find the words for your next reply. No signup needed to try." />
+            <LandingHero image={{ src: "/marketing/home/cafe-conversation.webp", alt: "A barista talking with a customer at work" }} eyebrow="Free tools for local business" title="A useful next step. On us." description="Create a Google review link, check your reputation, or find the words for your next reply. No signup needed to try." />
 
             <section className="py-20 px-4">
                 <div className="container mx-auto max-w-5xl grid grid-cols-1 gap-5">

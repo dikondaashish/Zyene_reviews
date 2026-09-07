@@ -11,14 +11,15 @@ interface LandingHeroProps {
     title: ReactNode;
     description: string;
     image?: { src: string; alt: string };
+    visual?: ReactNode;
     primary?: HeroAction;
     secondary?: HeroAction;
     children?: ReactNode;
 }
 
-export function LandingHero({ eyebrow, title, description, image, primary, secondary, children }: LandingHeroProps) {
+export function LandingHero({ eyebrow, title, description, image, visual, primary, secondary, children }: LandingHeroProps) {
     return (
-        <section className={`landing-hero ${image ? "landing-hero-with-image" : ""}`}>
+        <section className={`landing-hero ${image || visual ? "landing-hero-with-image" : ""}`}>
             <div className="marketing-container landing-hero-layout">
                 <div className="landing-hero-copy">
                     <p className="marketing-eyebrow">{eyebrow}</p>
@@ -36,7 +37,8 @@ export function LandingHero({ eyebrow, title, description, image, primary, secon
                     )}
                     {children && <div className="landing-hero-extra">{children}</div>}
                 </div>
-                {image && (
+                {visual && <div className="landing-hero-product">{visual}</div>}
+                {image && !visual && (
                     <div className="landing-hero-image">
                         <Image src={image.src} alt={image.alt} fill priority sizes="(max-width: 767px) 100vw, 45vw" className="object-cover" />
                     </div>

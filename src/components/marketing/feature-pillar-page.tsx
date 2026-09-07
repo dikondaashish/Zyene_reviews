@@ -1,111 +1,111 @@
-import { LandingHero } from "@/components/marketing/landing-hero";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Check, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SIGNUP_URL } from "@/config/env";
+import { ArrowRight, Check } from "lucide-react";
+import { LandingHero } from "@/components/marketing/landing-hero";
+import { ProductTour } from "@/components/marketing/product-tour/product-tour";
+import { FEATURE_VISUALS } from "@/components/marketing/feature-visual-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { SIGNUP_URL } from "@/config/env";
 import { NEGATIVE_FEEDBACK_SHIELD } from "@/lib/growth/product-foundation";
 import type { FeaturePillarPage as Pillar } from "@/lib/growth/feature-pillars";
 
 export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
-    const path = `/features/${pillar.slug}`;
-
-    return (
-        <>
-            <BreadcrumbJsonLd
-                items={[
-                    { name: "Home", url: "https://www.zyenereviews.com/" },
-                    { name: "Features", url: "https://www.zyenereviews.com/features" },
-                    { name: pillar.title, url: `https://www.zyenereviews.com${path}` },
-                ]}
-            />
-
-            <LandingHero
-                eyebrow="Explore the Zyene platform"
-                title={pillar.title}
-                description={pillar.tagline}
-                primary={{ label: "Start free trial", href: "/signup" }}
-                secondary={{ label: "Explore pricing", href: "/pricing" }}
+  const visual = FEATURE_VISUALS[pillar.slug];
+  return (
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "https://www.zyenereviews.com/" },
+          { name: "Features", url: "https://www.zyenereviews.com/features" },
+          { name: pillar.title, url: `https://www.zyenereviews.com/features/${pillar.slug}` },
+        ]}
+      />
+      <LandingHero
+        eyebrow={pillar.title}
+        title={visual.headline}
+        description={pillar.tagline}
+        visual={visual.tab ? <ProductTour initialTab={visual.tab} /> : undefined}
+        image={visual.tab ? undefined : { src: visual.image, alt: visual.alt }}
+        primary={{ label: "Start free trial", href: "/signup" }}
+        secondary={{ label: "Book a walkthrough", href: "/demo" }}
+      >
+        <Link href="/features" className="underline underline-offset-4">
+          Explore the whole platform
+        </Link>
+      </LandingHero>
+      <section className="marketing-section bg-muted">
+        <div className="marketing-container story-row">
+          <div className="story-visual" data-reveal>
+            <Image src={visual.image} alt={visual.alt} fill sizes="(max-width: 767px) 100vw, 45vw" />
+          </div>
+          <div className="feature-detail-copy">
+            <p className="marketing-eyebrow">Built for your working day</p>
+            <h2>{visual.story}</h2>
+            <p className="mt-5 text-muted-foreground">
+              {pillar.title} brings the details together, so your team can spend more time taking care of the people behind the
+              reviews.
+            </p>
+            <ul className="feature-detail-list">
+              {pillar.bullets.map((bullet) => (
+                <li key={bullet}>
+                  <Check size={17} aria-hidden="true" />
+                  <span>{bullet}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+      {pillar.slug === "review-collection" && (
+        <section className="marketing-section">
+          <div className="marketing-container grid gap-12 lg:grid-cols-2">
+            <div>
+              <p className="marketing-eyebrow">Make room for every kind of feedback</p>
+              <h2 className="text-4xl">{NEGATIVE_FEEDBACK_SHIELD.headline}</h2>
+              <p className="mt-6 text-muted-foreground">{NEGATIVE_FEEDBACK_SHIELD.result}</p>
+            </div>
+            <div>
+              <ol className="feature-detail-list">
+                {NEGATIVE_FEEDBACK_SHIELD.steps.map((step, i) => (
+                  <li key={step}>
+                    <span className="text-primary">0{i + 1}</span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+              <Link href="/resources/review-request-templates" className="marketing-button marketing-button-secondary mt-6">
+                Get the review request templates <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+      <section className="marketing-section">
+        <div className="marketing-container feature-detail-cta">
+          <div>
+            <p className="marketing-eyebrow">From $29.99 per month</p>
+            <h2>
+              More possibility.
+              <br />
+              Less busywork.
+            </h2>
+            <p className="mt-5 text-muted-foreground">
+              Review monitoring, replies, collection, and reporting in one workspace. Try it free for 7 days.
+            </p>
+          </div>
+          <div className="marketing-actions">
+            <Link href={SIGNUP_URL} className="marketing-button">
+              Start free trial <ArrowRight size={16} />
+            </Link>
+            <Link
+              href={pillar.cta.href === "/signup" ? "/pricing" : pillar.cta.href}
+              className="marketing-button marketing-button-secondary"
             >
-                <Link href="/features" className="underline underline-offset-4">All features</Link>
-            </LandingHero>
-
-            <section className="py-16 px-4 bg-background">
-                <div className="container mx-auto max-w-4xl space-y-8">
-                    <div className="space-y-3">
-                        <h2 className="text-2xl font-bold text-foreground">What you get</h2>
-                        <p className="text-muted-foreground leading-relaxed">
-                            {pillar.title} is included on Zyene Reviews paid plans so local businesses can manage reputation
-                            without enterprise pricing or annual contracts. Everything below is designed for
-                            owner-operators who need results in minutes, not hours.
-                        </p>
-                    </div>
-                    <ul className="space-y-4">
-                        {pillar.bullets.map((b) => (
-                            <li key={b} className="flex gap-3 text-muted-foreground">
-                                <Check className="text-primary shrink-0 mt-0.5 size-5" />
-                                <span>{b}</span>
-                            </li>
-                        ))}
-                    </ul>
-
-                    {pillar.slug === "review-collection" ? (
-                        <>
-                            <div className="rounded-2xl border border-primary/25 bg-primary/5 p-6">
-                                <div className="flex items-center gap-2 text-primary font-semibold mb-3">
-                                    <Sparkles className="size-4" />
-                                    {NEGATIVE_FEEDBACK_SHIELD.headline}
-                                </div>
-                                <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
-                                    {NEGATIVE_FEEDBACK_SHIELD.steps.map((s) => (
-                                        <li key={s}>{s}</li>
-                                    ))}
-                                </ol>
-                                <p className="text-sm font-medium text-foreground mt-4">
-                                    {NEGATIVE_FEEDBACK_SHIELD.result}
-                                </p>
-                            </div>
-                            <div className="rounded-2xl border border-border bg-muted/40 p-6">
-                                <p className="text-sm font-bold text-foreground mb-2">
-                                    Free review request template pack
-                                </p>
-                                <p className="text-sm text-muted-foreground mb-4">
-                                    20+ fair SMS and email scripts you can copy on the page - or get the full swipe file
-                                    by email.
-                                </p>
-                                <Link
-                                    href="/resources/review-request-templates"
-                                    className="text-sm font-semibold text-primary hover:underline inline-flex items-center gap-1"
-                                >
-                                    Get the template pack <ArrowRight className="size-3.5" />
-                                </Link>
-                            </div>
-                        </>
-                    ) : null}
-
-                    <div className="space-y-3 pt-2">
-                        <h2 className="text-2xl font-bold text-foreground">Why local businesses choose Zyene Reviews</h2>
-                        <p className="text-muted-foreground leading-relaxed">
-                            Strong Google reviews influence who calls, books, and walks in. Zyene Reviews combines monitoring,
-                            replies, collection, and reporting in one dashboard starting at $29.99/mo with a 7-day free
-                            trial - so you are not juggling separate tools for inbox, requests, and competitive insights.
-                        </p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-4 pt-4">
-                        <Button size="lg" className="gap-2" asChild>
-                            <Link href={pillar.cta.href === "/signup" ? SIGNUP_URL : pillar.cta.href}>
-                                {pillar.cta.label} <ArrowRight className="size-4" />
-                            </Link>
-                        </Button>
-                        <Button size="lg" variant="outline" asChild>
-                            <Link href={SIGNUP_URL}>
-                                Start 7-day free trial
-                            </Link>
-                        </Button>
-                    </div>
-                </div>
-            </section>
-        </>
-    );
+              {pillar.cta.href === "/signup" ? "Explore pricing" : pillar.cta.label}
+            </Link>
+          </div>
+        </div>
+      </section>
+    </>
+  );
 }

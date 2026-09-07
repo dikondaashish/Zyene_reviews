@@ -2,6 +2,7 @@
 
 import "@/app/(marketing)/marketing.css";
 
+import { MarketingMotion } from "@/components/marketing/marketing-motion";
 import { Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { UtmCapture } from "@/components/marketing/utm-capture";
@@ -25,6 +26,7 @@ export default function MarketingLayout({
         <div className={`${growthDashboard ? "" : "marketing-site"} flex min-h-dvh min-w-0 flex-col bg-background text-foreground`}>
             <a href="#main-content" className="marketing-skip-link marketing-button sr-only focus:not-sr-only">Skip to content</a>
             <MarketingLayoutHeader />
+            {growthDashboard ? null : <MarketingMotion />}
             <Suspense fallback={null}>
                 <UtmCapture />
             </Suspense>

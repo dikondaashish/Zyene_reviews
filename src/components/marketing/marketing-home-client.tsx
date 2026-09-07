@@ -4,6 +4,7 @@ import { MarketingHomeWorkflow } from "@/components/marketing/marketing-home/mar
 import { MarketingHomeIndustries } from "@/components/marketing/marketing-home/marketing-home-industries";
 import { MarketingHomeNextSteps } from "@/components/marketing/marketing-home/marketing-home-next-steps";
 import { MarketingHomeClosing } from "@/components/marketing/marketing-home/marketing-home-closing";
+import { MarketingHomeTestimonials } from "@/components/marketing/marketing-home/marketing-home-testimonials";
 
 export function MarketingHomeClient() {
     return (
@@ -12,6 +13,7 @@ export function MarketingHomeClient() {
             <MarketingHomeTrustStrip />
             <MarketingHomeWorkflow />
             <MarketingHomeIndustries />
+            <MarketingHomeTestimonials />
             <MarketingHomeNextSteps />
             <MarketingHomeClosing />
         </div>

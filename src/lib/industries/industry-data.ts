@@ -81,7 +81,7 @@ export const INDUSTRIES: IndustryData[] = [
             measures: "Track request delivery, genuine review volume, rating distribution, response coverage, and response time by location. Results depend on customer volume and experience.",
         },
         ctaJoinCopy: "Join other restaurant owners on Zyene",
-        imagePath: "/images/industries/restaurants.png",
+        imagePath: "/images/industries/restaurant-guests.webp",
     },
 
     // ── 2. Dental ────────────────────────────────────────────────────────────
@@ -261,7 +261,7 @@ export const INDUSTRIES: IndustryData[] = [
             measures: "Track request delivery, review volume, rating distribution, response time, and resolved service issues. Maps position depends on relevance, distance, and broader prominence signals.",
         },
         ctaJoinCopy: "Join other home services professionals on Zyene",
-        imagePath: "/images/industries/home-services.png",
+        imagePath: "/images/industries/window-installation.webp",
     },
 
     // ── 6. Medical / Healthcare ──────────────────────────────────────────────

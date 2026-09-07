@@ -1,64 +1,50 @@
+import Image from "next/image";
 import { Check } from "lucide-react";
-import { STEPS } from "./how-it-works-data";
+import { ReviewDemo } from "@/components/marketing/product-tour/review-demo";
+import { RequestDemo } from "@/components/marketing/product-tour/request-demo";
+import { ReportDemo } from "@/components/marketing/product-tour/report-demo";
+import { STEPS } from "@/app/(marketing)/how-it-works/how-it-works-data";
 
 export function HowItWorksStepsSection() {
-    return (
-        <>
-{STEPS.map((step, i) => {
-                const Icon = step.icon;
-                const isEven = i % 2 === 0;
-                return (
-                    <section
-                        key={step.step}
-                        id={`step-${step.step}`}
-                        className={`py-20 px-4 scroll-mt-20 ${isEven ? "bg-background" : "bg-muted/40"} ${step.highlight ? "border-y border-primary/20" : "border-t border-border"}`}
-                    >
-                        <div className={`container mx-auto max-w-6xl grid lg:grid-cols-2 gap-16 items-center ${isEven ? "" : "lg:grid-flow-dense"}`}>
-                            {/* Text */}
-                            <div className={isEven ? "" : "lg:col-start-2"}>
-                                <div className="flex items-center gap-3 mb-4">
-                                    <span className="text-6xl font-black text-primary/20 leading-none">{step.step}</span>
-                                    <div className={`${step.iconBg} p-2.5 rounded-xl`}>
-                                        <Icon className={`${step.iconColor} size-6`} />
-                                    </div>
-                                    <span className={`text-sm font-bold uppercase tracking-wider ${step.iconColor}`}>Step {step.step}, {step.title}</span>
-                                </div>
-                                <h2 className="text-4xl font-bold text-foreground mb-4 leading-tight">{step.headline}</h2>
-                                <p className="text-muted-foreground leading-relaxed mb-8 text-lg">{step.description}</p>
-                                <ul className="space-y-3">
-                                    {step.bullets.map((b) => (
-                                        <li key={b} className="flex items-start gap-3">
-                                            <Check className="text-primary shrink-0 mt-0.5 size-5" />
-                                            <span className="text-muted-foreground">{b}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            {/* Mockup */}
-                            <div className={isEven ? "" : "lg:col-start-1 lg:row-start-1"}>
-                                <div className={`rounded-2xl border-2 ${step.mockupBg} p-8 h-72 flex flex-col justify-center relative overflow-hidden`}>
-                                    <div className={`absolute left-0 top-0 bottom-0 w-1 ${step.accentColor} border-l-4`} />
-                                    <div className="flex flex-col gap-4 pl-2">
-                                        <div className={`flex items-center gap-3 ${step.iconBg} p-3 rounded-xl w-fit`}>
-                                            <Icon className={`${step.iconColor} size-8`} />
-                                            <span className="font-bold text-foreground text-lg">{step.title}</span>
-                                        </div>
-                                        <div className="space-y-3 font-mono text-sm text-muted-foreground bg-card/80 border border-border rounded-xl p-4">
-                                            {step.mockupLines.map((line) => (
-                                                <div key={line.label} className="flex items-center gap-2 text-foreground/80">
-                                                    <line.icon className="size-4 shrink-0 text-primary" aria-hidden="true" />
-                                                    <span>{line.label}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                );
-            })}
-</>
-    );
+  return (
+    <>
+      {STEPS.map((step, index) => (
+        <section key={step.step} id={`step-${step.step}`} className={`marketing-section ${index % 2 ? "bg-muted" : ""}`}>
+          <div className={`marketing-container story-row ${index % 2 ? "story-row-reverse" : ""}`}>
+            <div className={index === 0 ? "story-visual" : "workflow-product"} data-reveal>
+              {index === 0 ? (
+                <Image
+                  src="/marketing/home/cafe-conversation.webp"
+                  alt="A barista and customer talking across a café counter"
+                  fill
+                  sizes="(max-width: 767px) 100vw, 45vw"
+                />
+              ) : index === 1 ? (
+                <ReviewDemo />
+              ) : index === 2 ? (
+                <RequestDemo />
+              ) : (
+                <ReportDemo />
+              )}
+            </div>
+            <div className="feature-detail-copy">
+              <p className="marketing-eyebrow">
+                {step.step} / {step.title}
+              </p>
+              <h2>{step.headline}</h2>
+              <p className="mt-6 text-muted-foreground">{step.description}</p>
+              <ul className="feature-detail-list">
+                {step.bullets.map((bullet) => (
+                  <li key={bullet}>
+                    <Check size={17} aria-hidden="true" />
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+      ))}
+    </>
+  );
 }

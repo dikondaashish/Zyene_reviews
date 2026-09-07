@@ -1,9 +1,12 @@
+import Image from "next/image";
+import { resourceImage } from "@/components/marketing/resource-imagery";
 import { MarketingGeoSummary } from "@/components/marketing/marketing-geo-summary";
-import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/content/resource-data";
+import { RESOURCE_MAP } from "@/lib/content/resource-data";
 import Link from "next/link";
 import { Clock, ChevronRight } from "lucide-react";
 
 export function ResourcesGuideGuideHeaderSection({ resource }: { resource: (typeof RESOURCE_MAP)[string] }) {
+    const image = resourceImage(resource.slug);
     return (
         <header className="pt-16 pb-12 px-4 bg-background border-b border-border">
                 <div className="container mx-auto max-w-4xl">
@@ -23,6 +26,7 @@ export function ResourcesGuideGuideHeaderSection({ resource }: { resource: (type
                     <p className="text-xl text-muted-foreground mb-5 leading-relaxed">
                         {resource.subtitle}
                     </p>
+                    <div className="resource-photo my-8"><Image src={image.src} alt={image.alt} fill priority sizes="(max-width: 767px) 100vw, 896px" /></div>
                     {resource.openingSummary ? (
                         <div className="mb-7 max-w-3xl">
                             <MarketingGeoSummary>{resource.openingSummary}</MarketingGeoSummary>
