@@ -24,7 +24,7 @@ export function areEstimatedAeoSurfacesEnabled(): boolean {
 /** Shown verbatim next to any estimated figure. States the method, not just "beta". */
 export const ESTIMATED_SURFACE_DISCLOSURE =
     "Estimated, not measured. These figures are derived from your review rating " +
-    "compared against tracked competitors — no AI engine or search provider was " +
+    "compared against tracked competitors - no AI engine or search provider was " +
     "queried. Treat them as a placeholder until live tracking ships.";
 
 /** Marker persisted on rows so estimated data can never be mistaken for measured data. */
@@ -48,7 +48,7 @@ const LIVE_SAMPLING_ENV_KEY = "AEO_LIVE_SAMPLING";
  * Deliberately NOT the flag above. That one asks "may we display estimated
  * numbers"; this one asks "may we spend money calling engines". Reusing it
  * would mean live sampling only runs for deployments that opted into seeing
- * fabricated data — exactly backwards, and it would couple a display choice to
+ * fabricated data - exactly backwards, and it would couple a display choice to
  * a billing decision.
  *
  * Same strict comparison, for the same reason: anything other than the literal
@@ -66,7 +66,7 @@ const METERED_BILLING_ENV_KEY = "AEO_METERED_BILLING_LIVE";
  * Stripe overage (E-9).
  *
  * A THIRD gate alongside AEO_LIVE_SAMPLING and the Stripe price's own `active`
- * flag — this one specifically is checked as the FIRST line of the billing
+ * flag - this one specifically is checked as the FIRST line of the billing
  * step, before any database or Stripe call, so leaving it unset makes the
  * step a true no-op rather than a query against tables a not-yet-applied
  * migration hasn't created. Three independent things must all be true before
@@ -99,7 +99,7 @@ const LIVE_ALERTING_ENV_KEY = "AEO_LIVE_ALERTING";
  *
  * Same fail-closed posture as the other AEO live flags. An unset or
  * malformed value must never result in a customer receiving an email about
- * their AEO data — checked first in the alert worker, before any detection
+ * their AEO data - checked first in the alert worker, before any detection
  * runs.
  */
 export function isLiveAlertingEnabled(): boolean {
@@ -111,7 +111,7 @@ const LIVE_CONTENT_BRIEFS_ENV_KEY = "AEO_LIVE_CONTENT_BRIEFS";
 /**
  * Whether F6 may spend a real Gemini call generating a content brief.
  *
- * Same fail-closed posture as the other AEO live flags — this one guards
+ * Same fail-closed posture as the other AEO live flags - this one guards
  * real per-call cost (a Gemini generation, plus outbound fetches to
  * whatever a citation points at), not just a display choice.
  */

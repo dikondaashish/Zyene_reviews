@@ -23,7 +23,7 @@ export function usePublicProfileEditorQrShare(
     const handleShare = async () => {
         if (navigator.share) {
             try {
-                await navigator.share({ title: `${businessName} — Leave a Review`, url: fullUrl });
+                await navigator.share({ title: `${businessName} - Leave a Review`, url: fullUrl });
                 return;
             } catch {
                 /* user cancelled */

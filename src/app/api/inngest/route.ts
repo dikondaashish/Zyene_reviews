@@ -81,14 +81,14 @@ export const { GET, POST, PUT } = serve({
         aeoYearlyCreditResetWorker,
         // E-3: refuses to run unless AEO_LIVE_CRAWLING is exactly "true", so
         // registering it here does not by itself crawl anyone's site. Nothing
-        // sends aeo/crawl.requested yet either — see aeo-crawl-scheduler/route.ts.
+        // sends aeo/crawl.requested yet either - see aeo-crawl-scheduler/route.ts.
         aeoCrawlWorker,
         aeoPageDiagnosticWorker,
         aeoReportWorker,
         aeoPhase3RefreshWorker,
         // F8: both refuse to run unless AEO_LIVE_ALERTING is exactly "true", so
         // registering them here does not by itself alert or email anyone.
-        // Nothing sends either event yet — see aeo-alert-scheduler/route.ts and
+        // Nothing sends either event yet - see aeo-alert-scheduler/route.ts and
         // aeo-alert-digest/route.ts.
         aeoAlertWorker,
         aeoAlertDigestWorker,

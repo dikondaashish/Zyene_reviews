@@ -13,7 +13,7 @@ import {
  * This does NOT query a SERP or Maps provider. Cell labels are string-built from
  * the business city and ranks are derived from the review rating, so there are no
  * real coordinates behind them. Rows persist with `is_estimated = true`.
- * Disabled by default — see `@/lib/features/aeo-surfaces`.
+ * Disabled by default - see `@/lib/features/aeo-surfaces`.
  *
  * Phase 1 replaces this with coordinate-level Maps sampling (PRD-5), which needs
  * lat/lng columns this table does not yet have.

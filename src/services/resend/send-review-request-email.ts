@@ -41,7 +41,7 @@ export async function sendReviewRequestEmail({
     const apiKey = process.env.RESEND_COLLECTRATINGS_API_KEY?.trim();
     if (!apiKey || !resendCollectratings) {
         logger.warn(
-            "RESEND_COLLECTRATINGS_API_KEY unset — falling back to primary Resend for review request"
+            "RESEND_COLLECTRATINGS_API_KEY unset - falling back to primary Resend for review request"
         );
         return sendEmail({
             to,

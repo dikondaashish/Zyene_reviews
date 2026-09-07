@@ -37,7 +37,7 @@ export function AuthBrandPanel() {
                         reputation with ease
                     </h2>
                     <p className="text-[color:var(--marketing-footer-muted)] text-lg leading-relaxed max-w-md">
-                        Monitor reviews, respond faster with AI, and grow your business—all from one dashboard.
+                        Monitor reviews, respond faster with AI, and grow your business - all from one dashboard.
                     </p>
                 </div>
 

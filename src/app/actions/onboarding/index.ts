@@ -1,4 +1,4 @@
-/** Onboarding server actions — barrel re-export. */
+/** Onboarding server actions - barrel re-export. */
 
 export * from "./google-oauth";
 export * from "./google-connection-finalize";

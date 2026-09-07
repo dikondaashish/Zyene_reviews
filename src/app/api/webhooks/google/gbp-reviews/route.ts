@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
             successor: successorPubSubWebhookUrl(),
             userAgent: req.headers.get("user-agent"),
         },
-        "Deprecated GBP webhook invoked — no action taken; use /api/webhooks/google/pubsub"
+        "Deprecated GBP webhook invoked - no action taken; use /api/webhooks/google/pubsub"
     );
 
     return new NextResponse("OK", { status: 200, headers: deprecationHeaders() });

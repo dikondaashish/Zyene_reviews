@@ -73,7 +73,7 @@ export function NewCampaignTimingStep({ form, updateForm }: NewCampaignTimingSte
 
                         <div className="space-y-2">
                             <Label htmlFor="drip_step3_template">
-                                Step 3 message (Day 14) — optional
+                                Step 3 message (Day 14) - optional
                             </Label>
                             <p className="text-xs text-muted-foreground">
                                 Leave blank to reuse the Step 2 message.

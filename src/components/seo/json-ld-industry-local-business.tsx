@@ -4,7 +4,7 @@ import { buildOrganizationSchema } from "@/lib/seo/organization-schema";
 import { JSON_LD_BASE_URL } from "./json-ld-constants";
 import { JsonLdScript } from "./json-ld-script";
 
-/** Industry vertical landing pages — LocalBusiness / ProfessionalService for local SEO relevance. */
+/** Industry vertical landing pages - LocalBusiness / ProfessionalService for local SEO relevance. */
 export function IndustryLocalBusinessJsonLd({
     data,
     slug,

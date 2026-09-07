@@ -6,7 +6,7 @@ export interface IllustrativeBrand {
 
 /**
  * Well-known consumer brands shown purely to illustrate the *type* of local business
- * Zyene is built for (by industry). These are NOT Zyene customers, partners, or endorsers —
+ * Zyene is built for (by industry). These are NOT Zyene customers, partners, or endorsers -
  * render with the disclaimer in IllustrativeBrandsSection, never as a "trusted by" claim.
  */
 export const ILLUSTRATIVE_BRANDS: IllustrativeBrand[] = [

@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { WebSiteJsonLd } from "@/components/seo/json-ld";
 
-/** Site-wide schema only on the public marketing host — not auth, app, or review capture. */
+/** Site-wide schema only on the public marketing host - not auth, app, or review capture. */
 export async function ConditionalWebSiteJsonLd() {
     const host = (await headers()).get("host")?.toLowerCase() ?? "";
     if (

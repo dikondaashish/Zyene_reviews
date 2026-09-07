@@ -11,7 +11,7 @@ import { marketingCanonicalUrl } from "@/lib/seo/marketing-site-url";
 
 /**
  * Monthly marketing newsletter to blog/partners subscribers.
- * Schedule: 1st of each month, 10:00 — GET with Authorization: Bearer CRON_SECRET
+ * Schedule: 1st of each month, 10:00 - GET with Authorization: Bearer CRON_SECRET
  * (e.g. cron-jobs.org: "0 10 1 * *")
  */
 export async function GET(request: Request) {

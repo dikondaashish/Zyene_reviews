@@ -39,7 +39,7 @@ if (existsSync(layoutPath)) {
 }
 
 const rootLayoutPath = path.join(process.cwd(), "src/app/layout.tsx");
-// metadataBase lives in layout-metadata.ts, re-exported from layout.tsx — check both.
+// metadataBase lives in layout-metadata.ts, re-exported from layout.tsx - check both.
 const rootMetadataSrc = [rootLayoutPath, path.join(process.cwd(), "src/app/layout-metadata.ts")]
     .filter(existsSync)
     .map((p) => readFileSync(p, "utf8"))

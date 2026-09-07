@@ -12,7 +12,7 @@ const AEO_ELIGIBLE_PLAN_IDS = Object.keys(PLAN_CREDIT_GRANTS_MICRO_USD);
 /**
  * Businesses whose E-10 slot is right now, that have at least one active
  * prompt, whose org is on a plan this feature is actually billed for, AND
- * whose org has grant history — an aeo_credit_balances row, from at least one
+ * whose org has grant history - an aeo_credit_balances row, from at least one
  * prior checkout or renewal.
  *
  * That last filter is what closes the gap Wolfpack BBQ sat in on 2026-08-09: a
@@ -20,13 +20,13 @@ const AEO_ELIGIBLE_PLAN_IDS = Object.keys(PLAN_CREDIT_GRANTS_MICRO_USD);
  * aeo_credit_balances row at all because their subscription predated the
  * grant wiring. Nothing in the prompt library gates prompt creation or
  * activation by plan or by grant history, so this loader is the only place
- * that can catch it before a real run is even dispatched — bill-test.ts's own
+ * that can catch it before a real run is even dispatched - bill-test.ts's own
  * hasGrantHistory check is the second, independent layer that protects the
  * CUSTOMER side of this regardless of what triggered the sample; this one
  * additionally protects the VENDOR side, by not spending on the run at all.
  *
  * See sampling-slot.ts for the (day, hour) assignment and DEFAULT_SLOT_HOURS
- * for why this only ever fires within 1–8 UTC.
+ * for why this only ever fires within 1-8 UTC.
  *
  * Four plain queries joined in JS, matching load-yearly-reset-candidates.ts: a
  * query whose correctness can be read at a glance beats one that is merely

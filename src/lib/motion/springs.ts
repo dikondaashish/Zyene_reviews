@@ -1,12 +1,12 @@
 /**
- * Motion primitives — Apple's damping/response spring model.
+ * Motion primitives - Apple's damping/response spring model.
  *
  * Apple replaced the physics triplet (mass/stiffness/damping) with two
  * designer-facing parameters:
  *
- *   - damping ratio — controls overshoot. 1.0 = critically damped (no bounce).
+ *   - damping ratio - controls overshoot. 1.0 = critically damped (no bounce).
  *                     Below 1.0 overshoots; lower is bouncier.
- *   - response      — how quickly the value reaches its target, in seconds.
+ *   - response      - how quickly the value reaches its target, in seconds.
  *                     This is NOT a duration; a spring has no fixed duration,
  *                     its settle time emerges from the parameters.
  *
@@ -14,7 +14,7 @@
  *   bounce ≈ 1 − dampingRatio, duration ≈ response.
  *
  * House style: critically damped everywhere by default. Reserve overshoot for
- * motion the user's own gesture put momentum into — a flick, throw or drag
+ * motion the user's own gesture put momentum into - a flick, throw or drag
  * release. Bounce on a menu that merely faded in reads as wrong.
  */
 
@@ -36,11 +36,11 @@ export function appleSpring(dampingRatio: number, response: number): Transition 
 export const spring = {
     /** Default for anything that repositions or reveals. No overshoot. */
     default: appleSpring(1.0, 0.4),
-    /** Snappier critically damped settle — menus, popovers, small chrome. */
+    /** Snappier critically damped settle - menus, popovers, small chrome. */
     snappy: appleSpring(1.0, 0.3),
     /** Rotation carries a little overshoot in Apple's own components. */
     rotation: appleSpring(0.8, 0.4),
-    /** Drawers and sheets — momentum-driven, so a touch of bounce is right. */
+    /** Drawers and sheets - momentum-driven, so a touch of bounce is right. */
     sheet: appleSpring(0.8, 0.3),
     /** Post-flick / post-throw settle. Only after a gesture with velocity. */
     momentum: appleSpring(0.8, 0.4),
@@ -50,7 +50,7 @@ export const spring = {
  * Project where a flick is *going*, so the interface can animate to the
  * gesture's destination rather than snapping back from the release point.
  *
- * This is the exponential-decay form Apple ships — deliberately not the
+ * This is the exponential-decay form Apple ships - deliberately not the
  * physics-textbook v²/(2·deceleration), which produces a different feel.
  *
  * @param initialVelocity release velocity in px/s
@@ -104,7 +104,7 @@ export function relativeVelocity(gestureVelocity: number, current: number, targe
 }
 
 /**
- * Reduced motion does not mean no feedback — it means a gentler, non-vestibular
+ * Reduced motion does not mean no feedback - it means a gentler, non-vestibular
  * equivalent. Travel and overshoot go; a short cross-fade stays.
  */
 export const REDUCED_MOTION_TRANSITION: Transition = { duration: 0.12, ease: "linear" };

@@ -1,7 +1,7 @@
 import type { CitedSourceStructure } from "./fetch-cited-source";
 
 /**
- * F6.1's structural half — what the cited pages have that ours does not,
+ * F6.1's structural half - what the cited pages have that ours does not,
  * as facts a prompt can hand to Gemini, not as prose Gemini has to notice
  * on its own. Deterministic and testable independent of any AI call.
  */
@@ -18,7 +18,7 @@ export type CitationGap = {
     missingDirectAnswer: boolean;
     missingLocalBusinessSchema: boolean;
     citedSourceCount: number;
-    /** True when every citation fetch failed (paywalled/blocked) — PRD-7's lower-confidence edge case. */
+    /** True when every citation fetch failed (paywalled/blocked) - PRD-7's lower-confidence edge case. */
     allSourcesUnreachable: boolean;
 };
 

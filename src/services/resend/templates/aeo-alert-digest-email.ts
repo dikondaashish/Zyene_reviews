@@ -8,7 +8,7 @@ export interface AeoAlertDigestItem {
 interface AeoAlertDigestProps {
     businessName: string;
     alerts: AeoAlertDigestItem[];
-    /** Total alerts detected, which may exceed alerts.length once capped — the "+N more" the alert-storm edge case requires. */
+    /** Total alerts detected, which may exceed alerts.length once capped - the "+N more" the alert-storm edge case requires. */
     totalCount: number;
     dashboardUrl: string;
     settingsUrl: string;
@@ -50,7 +50,7 @@ export function aeoAlertDigestEmail({
 
     const overflowNote =
         totalCount > alerts.length
-            ? `<p style="margin: 16px 0 0; font-size: 13px; color: #a1a1aa;">+${totalCount - alerts.length} more — view the full list on your dashboard.</p>`
+            ? `<p style="margin: 16px 0 0; font-size: 13px; color: #a1a1aa;">+${totalCount - alerts.length} more - view the full list on your dashboard.</p>`
             : "";
 
     return `
@@ -84,7 +84,7 @@ export function aeoAlertDigestEmail({
 
                             <div style="padding-top: 32px; border-top: 1px solid #f4f4f5; text-align: center;">
                                 <p style="margin: 0; font-size: 12px; color: #a1a1aa;">
-                                    Only sent when a change clears a statistical significance bar — not every sampling wobble.
+                                    Only sent when a change clears a statistical significance bar - not every sampling wobble.
                                 </p>
                             </div>
                         </td>

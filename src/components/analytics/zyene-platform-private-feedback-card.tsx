@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { MessageCircle, Star } from "lucide-react";
+import { Frown, Meh, MessageCircle, Smile, Star } from "lucide-react";
 
 import type { PrivateFeedback } from "@/components/analytics/zyene-platform-analytics-types";
 
@@ -33,14 +33,14 @@ export function ZyenePlatformPrivateFeedbackCard({ privateFeedback }: { privateF
                 {privateFeedback.length > 0 ? (
                     <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1">
                         {privateFeedback.slice(0, 10).map((fb, idx) => {
-                            const ratingEmoji =
+                            const RatingIcon =
                                 fb.rating === 1
-                                    ? "😞"
+                                    ? Frown
                                     : fb.rating === 2
-                                      ? "😕"
+                                      ? Frown
                                       : fb.rating === 3
-                                        ? "😐"
-                                        : "😊";
+                                        ? Meh
+                                        : Smile;
                             return (
                                 <motion.div
                                     key={fb.id}
@@ -51,7 +51,7 @@ export function ZyenePlatformPrivateFeedbackCard({ privateFeedback }: { privateF
                                 >
                                     <div className="flex items-center justify-between mb-2">
                                         <div className="flex items-center gap-2">
-                                            <span className="text-lg">{ratingEmoji}</span>
+                                            <RatingIcon className="size-5 text-primary" aria-hidden="true" />
                                             <div className="flex items-center gap-0.5">
                                                 {Array.from({ length: 5 }).map((_, i) => (
                                                     <Star

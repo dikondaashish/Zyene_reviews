@@ -16,7 +16,7 @@ import { getGoogleSearchKeywords } from "@/services/google/performance-queries";
 import { loadSearchConsoleSection } from "../load-search-console-section";
 
 /**
- * F4.2 — fills the prompt library from the business's real Google category and
+ * F4.2 - fills the prompt library from the business's real Google category and
  * city. Creates nothing active, so it spends no quota (criterion #21).
  */
 

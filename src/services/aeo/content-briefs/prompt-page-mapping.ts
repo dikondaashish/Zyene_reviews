@@ -2,12 +2,12 @@
  * F6.2: which existing crawled page should own a prompt, or none.
  *
  * PRD-7 specifies "embedding similarity + GSC relevance." Neither exists in
- * this codebase — there is no embedding model call anywhere in this repo,
+ * this codebase - there is no embedding model call anywhere in this repo,
  * and E-2's Search Console data is real but sparse (most accounts have not
  * granted the incremental scope yet, see load-search-console-section.ts).
  * Rather than fabricate a vector call or silently skip the whole feature,
  * this uses term-overlap scoring: real, verifiable, and honestly a weaker
- * signal than embeddings — documented here, not disguised as the original
+ * signal than embeddings - documented here, not disguised as the original
  * design. GSC relevance folds in as a real bonus when it exists (see
  * gsc-relevance-bonus below), never assumed.
  */
@@ -31,7 +31,7 @@ function significantTerms(text: string): Set<string> {
 export type CrawledPageSummary = {
     url: string;
     title: string | null;
-    /** First ~150 words of visible body text — enough to score against without loading the full page. */
+    /** First ~150 words of visible body text - enough to score against without loading the full page. */
     contentExcerpt: string;
 };
 
@@ -39,7 +39,7 @@ export type PageMappingResult =
     | { hasOwner: true; url: string; score: number }
     | { hasOwner: false; reason: "no_pages_crawled" | "no_page_scores_above_threshold" };
 
-/** Below this overlap score, a page is "unrelated," not "a weak match" — PRD-7's own edge case: never force-fit. */
+/** Below this overlap score, a page is "unrelated," not "a weak match" - PRD-7's own edge case: never force-fit. */
 const MIN_MATCH_SCORE = 0.15;
 /** A title match counts several times as much as the same term appearing in body text. */
 const TITLE_WEIGHT = 3;

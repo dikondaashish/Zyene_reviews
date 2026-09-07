@@ -15,7 +15,7 @@ export type SearchConsoleSectionContent =
 
 /**
  * E-2: Search Console data for the dashboard, or null to omit the section
- * entirely — same reasoning as `aeoVisibility`: a business that never
+ * entirely - same reasoning as `aeoVisibility`: a business that never
  * granted this scope has not "measured zero," it has not looked, and those
  * must never render the same way. The connect entry point lives on the
  * Integrations card, not here.

@@ -1,7 +1,7 @@
 /**
  * Plan eligibility and monthly quota gate for AI review drafts.
  *
- * Any failure here denies the draft — the whole check is wrapped so a lookup
+ * Any failure here denies the draft - the whole check is wrapped so a lookup
  * error can never be read as "allowed".
  */
 import { NextResponse } from "next/server";

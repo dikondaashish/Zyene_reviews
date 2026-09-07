@@ -16,7 +16,7 @@ export function AboutMissionSection() {
                                 Zyene, Inc
                             </a>
                         </strong>
-                        . We build software that helps local businesses manage their online reputation—so they can
+                        . We build software that helps local businesses manage their online reputation - so they can
                         focus on what they do best: serving their customers.
                     </p>
 
@@ -41,8 +41,8 @@ export function AboutMissionSection() {
                             <div>
                                 <h2 className="font-semibold text-foreground mb-1">Who We Serve</h2>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
-                                    Restaurants, dental offices, auto shops, salons, and thousands of other local businesses
-                                    that rely on customer reviews to grow.
+                                    Restaurants, dental offices, auto shops, salons, and other local businesses
+                                    that rely on customer reviews to attract and retain customers.
                                 </p>
                             </div>
                         </div>

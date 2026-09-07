@@ -112,7 +112,7 @@ export async function loadPromptDetail(promptId: string): Promise<PromptDetailDa
         .map(([engineId, points]) => ({ engineId, points }))
         .sort((a, b) => a.engineId.localeCompare(b.engineId));
 
-    // Latest sample per engine — sampleRows is already sorted newest-first.
+    // Latest sample per engine - sampleRows is already sorted newest-first.
     const latestByEngine = new Map<string, (typeof sampleRows)[number]>();
     for (const row of sampleRows) {
         if (!latestByEngine.has(row.engine_id)) latestByEngine.set(row.engine_id, row);

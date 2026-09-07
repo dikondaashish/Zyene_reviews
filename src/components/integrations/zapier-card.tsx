@@ -41,7 +41,7 @@ export function ZapierCard({ hasApiKey }: ZapierCardProps) {
                         <div>
                             <p className="font-semibold text-base">Zapier</p>
                             <p className="text-sm text-muted-foreground">
-                                Connect 5,000+ apps via Zapier
+                                Send events to Zyene through a Zapier webhook
                             </p>
                         </div>
                     </div>

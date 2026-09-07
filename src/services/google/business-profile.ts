@@ -1,5 +1,5 @@
 /**
- * Google Business Profile API client — barrel re-export.
+ * Google Business Profile API client - barrel re-export.
  *
  * Split by API surface so a change to review handling does not sit next to
  * OAuth refresh and account listing:

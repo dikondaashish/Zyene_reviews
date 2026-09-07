@@ -38,7 +38,7 @@ function normalizeCost(costUnits: number): number {
  * A non-finite or negative figure is dropped entirely rather than clamped to 0,
  * because 0 means "the vendor told us this was free" and the ledger treats that
  * as authoritative. Silently turning a garbled value into a free call would
- * understate spend — the direction this whole design refuses to fail in.
+ * understate spend - the direction this whole design refuses to fail in.
  */
 function normalizeReportedCost(value: number | undefined): { reportedCostMicroUsd?: number } {
     if (value === undefined) return {};

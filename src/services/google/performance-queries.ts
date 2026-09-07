@@ -1,7 +1,7 @@
 import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-/** Local calendar YYYY-MM-DD — matches how GBP daily metrics are bucketed (avoid UTC day shift from toISOString). */
+/** Local calendar YYYY-MM-DD - matches how GBP daily metrics are bucketed (avoid UTC day shift from toISOString). */
 export function formatLocalYmd(d: Date): string {
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -203,7 +203,7 @@ export async function getGoogleSearchKeywords(
     return out;
 }
 
-/** Rough discovery vs direct: keywords containing business name tokens vs not — heuristic until richer data exists. */
+/** Rough discovery vs direct: keywords containing business name tokens vs not - heuristic until richer data exists. */
 export function estimateDiscoverySplit(
     keywords: Array<{ keyword: string; impressions: number }>,
     businessName: string

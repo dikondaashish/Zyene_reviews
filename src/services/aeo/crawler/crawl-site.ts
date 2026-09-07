@@ -8,7 +8,7 @@ import { computeAnswerabilitySignals } from "./answerability";
 import { pageCapForPlan, applyPageCap, type CrawlCoverage } from "./crawl-plan-budget";
 import type { PolitenessQueue } from "./politeness-queue";
 
-/** The user-agent this crawler identifies itself as — real, so a site owner can see and block it. */
+/** The user-agent this crawler identifies itself as - real, so a site owner can see and block it. */
 export const CRAWLER_USER_AGENT = "ZyeneReviewsBot/1.0 (+https://zyenereviews.com/bot)";
 
 export type CrawlSiteDeps = {
@@ -21,7 +21,7 @@ export type CrawledPage = {
     httpStatus: number | null;
     fetchError: string | null;
     signals: PageSignals | null;
-    /** Verbatim, only when the fetch succeeded — the persistence layer's evidence, not this module's concern where it ends up. */
+    /** Verbatim, only when the fetch succeeded - the persistence layer's evidence, not this module's concern where it ends up. */
     html: string | null;
 };
 
@@ -45,7 +45,7 @@ async function politeFetch(url: string, deps: CrawlSiteDeps) {
  *
  * Order matters: robots.txt is read BEFORE any page is fetched, both for the
  * F5.3 finding and so our own crawler respects the same disallow rules it is
- * auditing — a crawler that only checks robots.txt for AI bots while ignoring
+ * auditing - a crawler that only checks robots.txt for AI bots while ignoring
  * it for itself would be exactly the bad web citizenship this module exists
  * to avoid being.
  */
@@ -83,7 +83,7 @@ export async function crawlSite(
     const pages: CrawledPage[] = [];
     for (const url of toCrawl) {
         // Our own crawler honours the SAME rules it is checking for AI agents,
-        // under its own identifiable user-agent — never a path a site owner
+        // under its own identifiable user-agent - never a path a site owner
         // disallowed for everyone.
         if (!isPathAllowed(robotsRules, CRAWLER_USER_AGENT, new URL(url).pathname)) {
             continue;
@@ -106,7 +106,7 @@ export async function crawlSite(
         });
         findings.push(...pageLevelFindings(url, response.status, signals));
 
-        // F5.4 and F5.8, alongside F5.2's page-level checks — same page, same
+        // F5.4 and F5.8, alongside F5.2's page-level checks - same page, same
         // fetch, no second pass over stored content.
         if (response.ok && signals) {
             const isHomepage = new URL(url).pathname === "/";

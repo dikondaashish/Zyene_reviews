@@ -40,7 +40,7 @@ export async function processCloverAppEvent(event: ParsedAppEvent): Promise<void
     if (!connection) {
         logger.info(
             { merchantId: event.merchantId, eventType: event.eventType },
-            "[clover] app event for unknown merchant — ignore (await OAuth if install)",
+            "[clover] app event for unknown merchant - ignore (await OAuth if install)",
         );
         return;
     }
@@ -68,13 +68,13 @@ export async function processCloverAppEvent(event: ParsedAppEvent): Promise<void
                 businessId: connection.business_id,
                 merchantId: event.merchantId,
             },
-            "[clover] merchant uninstalled — connection disconnected, auto_send off",
+            "[clover] merchant uninstalled - connection disconnected, auto_send off",
         );
         return;
     }
 
     // CREATE (install / reinstall signal): clear disconnect flag if row exists.
-    // Do not create tokens here — OAuth callback owns that.
+    // Do not create tokens here - OAuth callback owns that.
     const { error: clearError } = await admin
         .from("clover_connections")
         .update({
@@ -96,6 +96,6 @@ export async function processCloverAppEvent(event: ParsedAppEvent): Promise<void
             businessId: connection.business_id,
             merchantId: event.merchantId,
         },
-        "[clover] app install signal — cleared disconnected_at (tokens via OAuth)",
+        "[clover] app install signal - cleared disconnected_at (tokens via OAuth)",
     );
 }

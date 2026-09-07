@@ -108,7 +108,7 @@ export const aeoAlertDigestWorker = inngest.createFunction(
             });
         }
 
-        // Marked sent only after every recipient's step above has run —
+        // Marked sent only after every recipient's step above has run -
         // a retry that reaches this point re-sends to nobody (steps are
         // memoized) and then correctly marks the batch delivered.
         await step.run("mark-digest-sent", () => store.markDigestSent(digest.alertIds));

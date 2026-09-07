@@ -11,7 +11,7 @@ const YEARLY_PLAN_IDS = Object.keys(PLAN_CREDIT_GRANTS_MICRO_USD).filter((id) =>
 
 /**
  * Two plain queries joined in JS, deliberately not one query with an embedded
- * PostgREST filter — the join condition here decides whether a real card gets
+ * PostgREST filter - the join condition here decides whether a real card gets
  * charged... no, decides whether real credit gets granted, and a query whose
  * correctness can be read at a glance beats one that is merely shorter.
  *

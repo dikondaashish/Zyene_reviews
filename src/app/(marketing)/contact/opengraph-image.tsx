@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Contact Zyene Reviews—Support & Sales";
+export const alt = "Contact Zyene Reviews - Support & Sales";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -33,7 +33,7 @@ export default function OgImage() {
                         <span style={{ color: "#4ade80" }}>Contact</span> Our Team
                     </div>
                     <div style={{ fontSize: "24px", color: "rgba(255,255,255,0.55)", lineHeight: "1.5", maxWidth: "760px" }}>
-                        support@zyenereviews.com · Monday–Friday 9am–6pm EST · Respond within 24 hours
+                        support@zyenereviews.com · Monday-Friday 9am-6pm EST · Respond within 24 hours
                     </div>
                 </div>
             </div>

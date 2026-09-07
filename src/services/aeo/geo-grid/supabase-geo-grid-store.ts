@@ -48,7 +48,7 @@ export class SupabaseGeoGridStore {
                  * NULL for both "searched, not in the local pack" and "search
                  * failed". They are different facts, and the difference lives in
                  * top_competitors: a searched cell records who WAS listed, a
-                 * failed one records nothing. Never a sentinel rank — a 0 or a
+                 * failed one records nothing. Never a sentinel rank - a 0 or a
                  * 20 would average into ATRP and turn "invisible here" into
                  * "mediocre here".
                  */

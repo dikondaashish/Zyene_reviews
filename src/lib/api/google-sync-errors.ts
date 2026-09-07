@@ -22,7 +22,7 @@ export function mapGoogleSyncError(error: unknown): GoogleSyncMappedError {
       status: 403,
       message: "Google My Business API is not enabled for this Cloud project.",
       details:
-        "Use the link (same project as your OAuth client). Click Enable, then enable My Business Account Management and My Business Business Information APIs. Wait 2–5 minutes and try Sync again.",
+        "Use the link (same project as your OAuth client). Click Enable, then enable My Business Account Management and My Business Business Information APIs. Wait 2-5 minutes and try Sync again.",
       code: "GOOGLE_API_DISABLED",
     };
   }
@@ -76,4 +76,3 @@ export function mapGoogleSyncError(error: unknown): GoogleSyncMappedError {
 
   return { status: 500, message: "Failed to sync reviews", details: message, code: "INTERNAL_ERROR" };
 }
-

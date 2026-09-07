@@ -27,7 +27,7 @@ export type LocalRankResult = {
     /** Null when the business did not appear at all. */
     rankPosition: number | null;
     placeIdFound: string | null;
-    /** Everyone Google did list, in order — the competitive picture at this point. */
+    /** Everyone Google did list, in order - the competitive picture at this point. */
     topCompetitors: { position: number; name: string; placeId: string | null }[];
     /** How many local-pack slots Google returned here. */
     packSize: number;
@@ -52,7 +52,7 @@ export function readLocalPack(items: readonly DataForSeoItem[]): LocalPackEntry[
  * Locates the business among local-pack entries.
  *
  * Matching is exact-after-normalisation on the whole entry title, plus a
- * containment check in each direction — Google renders "Radiant Plumbing, Air
+ * containment check in each direction - Google renders "Radiant Plumbing, Air
  * Conditioning, & Electrical" where the business calls itself "Radiant
  * Plumbing", and a strict equality check would report it as absent.
  *

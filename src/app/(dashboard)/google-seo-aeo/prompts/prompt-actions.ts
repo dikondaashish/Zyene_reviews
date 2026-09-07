@@ -11,12 +11,12 @@ import { activePromptLimitForPlan } from "@/services/aeo/prompts/prompt-plan-lim
 import { classifyPrompt } from "@/services/aeo/analytics/prompt-intent";
 
 /**
- * Prompt library (F4.1–F4.3).
+ * Prompt library (F4.1-F4.3).
  *
  * Activation is the money decision, not creation. An inactive prompt costs
  * nothing and is never dispatched; activating one enrols it in every future
  * run across every enabled engine. So activation is always an explicit,
- * separate act — nothing here creates a prompt that is already live.
+ * separate act - nothing here creates a prompt that is already live.
  */
 
 const PROMPT_TEXT_MAX = 500;
@@ -85,7 +85,7 @@ export async function createPrompt(input: unknown): Promise<PromptActionResult> 
         locale_city: parsed.data.localeCity,
         source: "manual",
         // Created inactive, always. Enrolling a prompt into paid runs is a
-        // separate, deliberate click — never a side effect of typing it.
+        // separate, deliberate click - never a side effect of typing it.
         is_active: false,
     });
 

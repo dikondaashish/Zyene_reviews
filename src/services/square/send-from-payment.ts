@@ -11,7 +11,7 @@ export type SquareSendOutcome =
 
 /**
  * Phase 2: send when auto_send_enabled (sandbox or production).
- * New connections default auto_send_enabled=false — flip per business to enable.
+ * New connections default auto_send_enabled=false - flip per business to enable.
  */
 export async function sendSquareReviewRequest(args: {
     businessId: string;

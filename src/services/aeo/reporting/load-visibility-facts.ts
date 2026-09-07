@@ -10,7 +10,7 @@ export const VISIBILITY_WINDOW_DAYS = 30;
 
 export type PromptFact = {
     /**
-     * Null once the prompt row is deleted — the FK is ON DELETE SET NULL, so the
+     * Null once the prompt row is deleted - the FK is ON DELETE SET NULL, so the
      * observation outlives the question by design. The stored answer envelope
      * still holds the prompt text for these (E-8).
      */

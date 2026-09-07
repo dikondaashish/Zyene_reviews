@@ -15,7 +15,7 @@ import type { PromptRow } from "./load-prompts-page-data";
  * The prompt table.
  *
  * Activation is the only control that costs money, so it is the only one that
- * states its consequence inline — the row shows how many engines a prompt will
+ * states its consequence inline - the row shows how many engines a prompt will
  * fan out to the moment it is switched on.
  */
 export function PromptList({

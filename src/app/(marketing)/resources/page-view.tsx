@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Clock, BookOpen, FileText } from "lucide-react";
+import { ArrowRight, BookOpen, Clock, FileText, Mail, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SIGNUP_URL } from "@/config/env";
 import { RESOURCE_GUIDES } from "@/lib/content/resource-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
 
-const ICONS = ["📗", "📕", "📘", "📙"];
+const ICONS = [BookOpen, FileText, Search, Mail];
 
 export default function ResourcesHubPage() {
     return (
@@ -28,7 +27,7 @@ export default function ResourcesHubPage() {
                         </div>
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
-                        Comprehensive guides for<br />local business owners
+                        Practical guides for<br />local business owners
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-2xl">
                         In-depth, practical resources on Google reviews, local SEO, review templates, and reputation management. Free. No email required.
@@ -40,9 +39,11 @@ export default function ResourcesHubPage() {
             <section className="py-20 px-4 bg-background">
                 <div className="container mx-auto max-w-5xl">
                     <div className="grid md:grid-cols-2 gap-8">
-                        {RESOURCE_GUIDES.map((guide, i) => (
-                            <Link key={guide.slug} href={`/resources/${guide.slug}`} className="group bg-card border border-border rounded-3xl p-8 hover:border-primary/40 hover:shadow-lg transition-[border-color,box-shadow] flex flex-col">
-                                <div className="text-5xl mb-5">{ICONS[i]}</div>
+                        {RESOURCE_GUIDES.map((guide, i) => {
+                            const GuideIcon = ICONS[i % ICONS.length];
+                            return (
+                                <Link key={guide.slug} href={`/resources/${guide.slug}`} className="group bg-card border border-border rounded-3xl p-8 hover:border-primary/40 hover:shadow-lg transition-[border-color,box-shadow] flex flex-col">
+                                    <GuideIcon className="mb-5 size-10 text-primary" aria-hidden="true" />
                                 <h2 className="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors leading-snug">
                                     {guide.title}
                                 </h2>
@@ -58,8 +59,9 @@ export default function ResourcesHubPage() {
                                         Read guide <ArrowRight className="size-3.5" />
                                     </span>
                                 </div>
-                            </Link>
-                        ))}
+                                </Link>
+                            );
+                        })}
                     </div>
                 </div>
             </section>

@@ -1,4 +1,4 @@
-/** Google review sync — review-lifecycle */
+/** Google review sync - review-lifecycle */
 
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
@@ -6,7 +6,7 @@ import type { AdminClient } from "./helpers";
 
 /**
  * After a full Google review list fetch, soft-hide rows that GBP no longer returns (e.g. customer deleted the review).
- * Skips if {@link reconciliationSafe} is false (sync hit MAX_REVIEW_PAGES with more pages left — list incomplete).
+ * Skips if {@link reconciliationSafe} is false (sync hit MAX_REVIEW_PAGES with more pages left - list incomplete).
  */
 export async function hideGoogleReviewsRemovedFromSource(
     admin: AdminClient,
@@ -155,4 +155,3 @@ export async function publishGoogleReviewSyncProgress(
         .eq("id", platformId)
         .eq("sync_status", "running");
 }
-

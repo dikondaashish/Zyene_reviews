@@ -33,7 +33,7 @@ export async function loadAeoVisibility(
 
     const answeredEngines = engines.filter((e) => e.observations > 0).length;
     const retained = engines.reduce((n, e) => n + e.provenance.withStoredAnswer, 0);
-    // One estimated sample anywhere makes the pooled figure estimated too —
+    // One estimated sample anywhere makes the pooled figure estimated too -
     // QA #36 is about the number shown, not about its best-sourced component.
     const overallBasis = engines.every((e) => e.provenance.basis === "measured")
         ? ("measured" as const)

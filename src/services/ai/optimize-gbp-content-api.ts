@@ -12,14 +12,14 @@ import { getGoogleLocation } from "@/services/google/listing-information";
 import { generatePostDrafts, generateServiceDescriptions } from "./gbp-content-generators";
 
 /**
- * F6.6 — the services and posts arms of the GBP optimizer.
+ * F6.6 - the services and posts arms of the GBP optimizer.
  *
  * Q&A is deliberately not here: answering a real customer question already
  * ships as /api/ai/suggest-qa-answer over the synced `gbp_questions` rows, and
  * a second implementation would drift from it.
  *
- * Both surfaces are grounded in what Google actually returns for the listing —
- * real `serviceItems`, real recent posts — so the model is rephrasing the
+ * Both surfaces are grounded in what Google actually returns for the listing -
+ * real `serviceItems`, real recent posts - so the model is rephrasing the
  * merchant's own data rather than inventing a business.
  */
 

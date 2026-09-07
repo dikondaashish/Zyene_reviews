@@ -1,9 +1,9 @@
 const STATUS_LABELS: Record<string, string> = {
     sent: "Review request sent",
     resolved: "Contact resolved (send off)",
-    skipped_disabled: "Skipped — auto-send off",
-    skipped_no_contact: "Skipped — no email/phone",
-    skipped_guard: "Skipped — frequency cap",
+    skipped_disabled: "Skipped - auto-send off",
+    skipped_no_contact: "Skipped - no email/phone",
+    skipped_guard: "Skipped - frequency cap",
     send_failed: "Send failed",
     error: "Error",
     received: "Received",

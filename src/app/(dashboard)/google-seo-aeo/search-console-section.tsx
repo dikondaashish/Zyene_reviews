@@ -6,7 +6,7 @@ function formatPercent(value: number): string {
     return `${(value * 100).toFixed(1)}%`;
 }
 
-/** E-2: real Search Console query data, only ever rendered once a grant exists — see load-search-console-section.ts. */
+/** E-2: real Search Console query data, only ever rendered once a grant exists - see load-search-console-section.ts. */
 export function SearchConsoleSection({ content }: { content: SearchConsoleSectionContent }) {
     return (
         <Card>

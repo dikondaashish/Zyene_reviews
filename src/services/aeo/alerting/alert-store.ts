@@ -18,7 +18,7 @@ export type AlertType =
 export type AlertSeverity = "critical" | "high" | "medium" | "low";
 
 /**
- * F8.8 cooldown, per alert type — a second, coarser-grained noise guard on
+ * F8.8 cooldown, per alert type - a second, coarser-grained noise guard on
  * top of the significance test (visibility) and the new-since-last-run diff
  * (technical). Independent of both: a bug or a manual re-run must not be
  * able to re-fire the same alert twice in one cooldown window regardless of
@@ -67,7 +67,7 @@ export class SupabaseAlertStore {
             .gte("created_at", cutoff)
             .limit(1);
 
-        // SQL NULL != NULL — .eq(x, null) matches nothing, so a null key needs .is().
+        // SQL NULL != NULL - .eq(x, null) matches nothing, so a null key needs .is().
         query = input.promptId === null ? query.is("prompt_id", null) : query.eq("prompt_id", input.promptId);
         query = input.engineId === null ? query.is("engine_id", null) : query.eq("engine_id", input.engineId);
         // Part of the cooldown identity: without it, one page losing a citation
@@ -80,7 +80,7 @@ export class SupabaseAlertStore {
         return data !== null;
     }
 
-    /** Returns the new alert's id, or null when the cooldown suppressed it — a real, expected outcome, not an error. */
+    /** Returns the new alert's id, or null when the cooldown suppressed it - a real, expected outcome, not an error. */
     async createIfNotCoolingDown(input: NewAlertInput): Promise<{ id: string } | null> {
         if (await this.wasRecentlyFired(input)) return null;
 
@@ -111,7 +111,7 @@ export class SupabaseAlertStore {
         return { id: data.id };
     }
 
-    /** Everything not yet bundled into a digest for this business, oldest first — the order a reader expects to see them in. */
+    /** Everything not yet bundled into a digest for this business, oldest first - the order a reader expects to see them in. */
     async loadUndigested(businessId: string) {
         const { data, error } = await this.db
             .from("aeo_alerts")

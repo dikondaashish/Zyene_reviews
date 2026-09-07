@@ -38,7 +38,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                                     <a href="#template-pack-capture" className="font-medium text-primary hover:underline">
                                         Get the 20 templates by email
                                     </a>
-                                    —preview scripts below stay visible for SEO.
+                                    - preview scripts below stay visible for SEO.
                                 </p>
                             ) : null}
 
@@ -92,7 +92,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                                 <div className="bg-primary/5 border border-primary/25 rounded-2xl p-6">
                                     <p className="text-sm font-bold text-foreground mb-2">Full swipe file</p>
                                     <p className="text-xs text-muted-foreground mb-4">
-                                        Email the complete pack—fair outreach only, no review gating.
+                                        Email the complete pack - fair outreach only, no review gating.
                                     </p>
                                     <a href="#template-pack-capture">
                                         <Button size="sm" variant="outline" className="w-full">

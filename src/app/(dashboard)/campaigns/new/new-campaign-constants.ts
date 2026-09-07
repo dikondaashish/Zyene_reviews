@@ -9,11 +9,11 @@ export const DELAY_OPTIONS = [
 ];
 
 export const DEFAULT_SMS =
-    "Hi {customer_name}! Thanks for visiting {business_name}. We'd love your feedback — takes 30 seconds: {review_link}";
+    "Hi {customer_name}! Thanks for visiting {business_name}. We'd love your feedback - takes 30 seconds: {review_link}";
 export const DEFAULT_EMAIL_SUBJECT = "How was your visit to {business_name}?";
 export const DEFAULT_EMAIL_BODY = `<p>Hi {customer_name},</p>
-<p>Thank you for visiting {business_name}! We'd really appreciate your feedback — it helps us improve and helps others discover us.</p>
+<p>Thank you for visiting {business_name}! We'd really appreciate your feedback - it helps us improve and helps others discover us.</p>
 <p><a href="{review_link}">Leave a Review</a></p>
 <p>It only takes about 30 seconds. Thank you!</p>`;
 export const DEFAULT_FOLLOW_UP =
-    "Hi {customer_name}, just a friendly reminder — we'd love to hear about your experience at {business_name}: {review_link}";
+    "Hi {customer_name}, just a friendly reminder - we'd love to hear about your experience at {business_name}: {review_link}";

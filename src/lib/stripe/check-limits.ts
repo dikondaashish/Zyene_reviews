@@ -16,7 +16,7 @@ type LimitType =
     | "smart_replies"
     | "businesses";
 
-/** Professional tier: per-location caps in marketing — multiply base DB limits by active locations (capped by max_businesses). */
+/** Professional tier: per-location caps in marketing - multiply base DB limits by active locations (capped by max_businesses). */
 function perLocationMultiplier(plan: string | null | undefined, businessCount: number, maxBusinesses: number): number {
     const tier = planProductTier(plan ?? undefined);
     if (tier !== "professional") {

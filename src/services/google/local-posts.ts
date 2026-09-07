@@ -23,7 +23,7 @@ const MAX_PAGES = 5;
 
 /**
  * Post lifecycle states. Only LIVE and RECURRING are described by Google as
- * "currently appearing in search results" — the rest are rejected, queued, or
+ * "currently appearing in search results" - the rest are rejected, queued, or
  * not yet due, and counting them would credit a business for posts no
  * searcher or AI engine can see.
  */

@@ -63,7 +63,7 @@ export function ContactContentSection() {
                                 <h3 className="font-semibold text-foreground">Business Hours</h3>
                             </div>
                             <p className="text-sm text-muted-foreground mb-1">
-                                Monday – Friday: 9:00 AM – 6:00 PM EST
+                                Monday - Friday: 9:00 AM - 6:00 PM EST
                             </p>
                             <p className="text-sm text-muted-foreground">
                                 We typically respond within 24 hours.
@@ -114,7 +114,7 @@ export function ContactContentSection() {
                             Ready to get started?
                         </h2>
                         <p className="text-muted-foreground mb-6 text-sm">
-                            Try Zyene Reviews free for 7 days. Cancel before the trial ends—no charge.
+                            Try Zyene Reviews free for 7 days. Cancel before the trial ends - no charge.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <Link href={SIGNUP_URL}>

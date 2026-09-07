@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Social Proof Data — Phase 5
+// Social Proof Data - Phase 5
 // Platform stats use env overrides; update when real aggregates are available.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -48,7 +48,7 @@ export function getPlatformStats() {
     };
 }
 
-/** Representative local businesses — swap for licensed logos when available */
+/** Representative local businesses - swap for licensed logos when available */
 export const CUSTOMER_LOGOS: CustomerLogo[] = [
     { name: "Sunrise Dental", industry: "Dental", initials: "SD", colorClass: "bg-chart-1" },
     { name: "Wolfpack BBQ", industry: "Restaurant", initials: "WB", colorClass: "bg-primary" },
@@ -89,7 +89,7 @@ export const FEATURED_TESTIMONIALS: TestimonialCard[] = [
         caseStudySlug: "apex-hvac-denver",
     },
     {
-        quote: "Clients mention their stylist in reviews now because our replies feel personal — but I'm not writing them from scratch at 10pm anymore.",
+        quote: "Clients mention their stylist in reviews now because our replies feel personal - but I'm not writing them from scratch at 10pm anymore.",
         author: "Isabella Chen",
         role: "Owner",
         company: "Bella's Salon & Spa",
@@ -98,7 +98,7 @@ export const FEATURED_TESTIMONIALS: TestimonialCard[] = [
         caseStudySlug: "bellas-salon-portland",
     },
     {
-        quote: "We're not a franchise — but on Google we look like we belong next to them now. The competitor dashboard alone was worth it.",
+        quote: "We're not a franchise - but on Google we look like we belong next to them now. The competitor dashboard alone was worth it.",
         author: "Tom Reyes",
         role: "Service Manager",
         company: "Precision Auto Works",
@@ -111,7 +111,7 @@ export const FEATURED_TESTIMONIALS: TestimonialCard[] = [
 export const THIRD_PARTY_TRUST: ThirdPartyTrustLink[] = [
     {
         name: "Google Business Profile",
-        description: "Zyene uses the same Google APIs we help you manage — we eat our own dogfood.",
+        description: "Zyene uses the same Google APIs we help you manage - we eat our own dogfood.",
         href: "https://www.google.com/business/",
         status: "live",
     },

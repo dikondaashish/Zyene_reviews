@@ -13,7 +13,7 @@ import { serializeAiOverview, serializeSerp } from "./dataforseo-serialize";
  *
  * Pure, and separate from the adapter, so the distinction that matters here can
  * be tested without any HTTP: an empty SERP and a missing AI Overview are both
- * `no_answer` — real observations about the page — and NEVER `failed` and never
+ * `no_answer` - real observations about the page - and NEVER `failed` and never
  * an ok sample with empty text. A caller must not be able to read either as
  * "the brand was not found".
  */
@@ -61,7 +61,7 @@ export function aiOverviewSample(
 
     // Google does not show an AI Overview for every query. That is a real
     // observation about the SERP, not a failure and not an absence of our
-    // brand — so it is `no_answer`, which stays out of every denominator.
+    // brand - so it is `no_answer`, which stays out of every denominator.
     if (!overview) {
         return noAnswerSample({
             modelId: ctx.modelId,

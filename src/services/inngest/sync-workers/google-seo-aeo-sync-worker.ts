@@ -8,7 +8,7 @@ import { areEstimatedAeoSurfacesEnabled } from "@/lib/features/aeo-surfaces";
  *
  * Its only job is to pick a keyword and enqueue the AI-visibility and heatmap
  * runs. Both of those are estimated surfaces, so when they are disabled this
- * worker has nothing to do — the page's own audit is computed live on load.
+ * worker has nothing to do - the page's own audit is computed live on load.
  */
 export const googleSeoAeoSyncWorker = inngest.createFunction(
     {

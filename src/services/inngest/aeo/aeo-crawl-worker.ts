@@ -25,7 +25,7 @@ function buildFetchText() {
  * up to 1,000 pages of raw HTML in its result; memoizing that as one step's
  * output risks the Inngest step-output size limit before this ever reaches
  * the DB. Only the DB write is memoized. The real cost of that tradeoff: a
- * crash between crawl and persist re-runs the ENTIRE crawl on retry — extra
+ * crash between crawl and persist re-runs the ENTIRE crawl on retry - extra
  * load against a site we do not control, not just extra compute here. Worth
  * revisiting (e.g. persisting page-by-page as the crawl progresses) before
  * this is ever pointed at a Professional-tier site with real page counts;
@@ -50,7 +50,7 @@ export const aeoCrawlWorker = inngest.createFunction(
             store.createRun({ businessId, origin, trigger, pageCap: pageCapForPlan(planId) })
         );
 
-        // `origin` is businesses.website — tenant-controlled data, not a value
+        // `origin` is businesses.website - tenant-controlled data, not a value
         // this app chose. Checked here, the one place every trigger path
         // (manual and scheduled) is guaranteed to pass through, rather than
         // relying on every future caller to remember to check it themselves.

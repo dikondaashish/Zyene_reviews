@@ -61,8 +61,8 @@
     "upgrade_prompt": "Plan upgraden",
     "website_clicks": "Website-Klicks",
     "website_clicks_desc": "Website-Link-Taps",
-    "positive_experience": "Positive Bewertungen (4–5★)",
-    "negative_mixed": "1–2★-Bewertungen",
+    "positive_experience": "Positive Bewertungen (4-5★)",
+    "negative_mixed": "1-2★-Bewertungen",
     "no_sentiment_data": "Noch keine Sentiment-Daten",
     "engagement_rate": "Anfragekonversion",
     "engagement_desc": "Abgeschlossene von gesendeten Anfragen",
@@ -83,8 +83,8 @@
     "review_spotlight_manage_all": "Alle verwalten",
     "needs_attention_title": "Benötigt Ihre Aufmerksamkeit",
     "needs_attention_subtitle_zero": "Derzeit keine dringenden Bewertungen",
-    "needs_attention_subtitle_one": "1 dringende Bewertung — wir können eine Antwort für Sie entwerfen",
-    "needs_attention_subtitle_many": "{count} dringende Bewertungen — wir können Antworten für Sie entwerfen",
+    "needs_attention_subtitle_one": "1 dringende Bewertung - wir können eine Antwort für Sie entwerfen",
+    "needs_attention_subtitle_many": "{count} dringende Bewertungen - wir können Antworten für Sie entwerfen",
     "needs_attention_view_all": "Alle anzeigen",
     "needs_attention_your_reply_label": "Ihre Antwort als Inhaber",
     "needs_attention_sent_saved": "Auf Google veröffentlicht",
@@ -156,7 +156,7 @@
     "proration_notice_fallback": "Heute fällt ein anteiliger Betrag für den Rest Ihrer Abrechnungsperiode an, danach {{recurring}}.",
     "proration_preview_loading": "Berechnung Ihrer Gebühr…",
     "trial_ends_on_upgrade_notice": "Ein Upgrade beendet Ihre kostenlose Testphase und startet die Abrechnung sofort.",
-    "pro_prorated_no_trial_badge": "Anteilige Abrechnung — keine Testphase"
+    "pro_prorated_no_trial_badge": "Anteilige Abrechnung - keine Testphase"
   },
   "public_profile": {
     "title": "Öffentliches Profil",

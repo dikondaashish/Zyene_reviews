@@ -74,7 +74,7 @@ export async function enqueueGooglePostConnectSync(
   if (!(await googlePlatformReadyForSync(platformId))) {
     logger.warn(
       { platformId },
-      "[Onboarding] Skipping google/sync.reviews — missing refresh token or GBP location",
+      "[Onboarding] Skipping google/sync.reviews - missing refresh token or GBP location",
     );
     return {
       mode: "failed",

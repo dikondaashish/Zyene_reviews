@@ -33,7 +33,7 @@ export interface GrowthKpiSnapshot {
         /** Where paid/trial subscription counts were sourced. */
         billingSource: "stripe" | "database";
     };
-    /** True when `GROWTH_MARKETING_SESSIONS_30D` is set — visitor → signup % can compute. */
+    /** True when `GROWTH_MARKETING_SESSIONS_30D` is set - visitor → signup % can compute. */
     marketingSessionsConfigured: boolean;
 }
 
@@ -62,7 +62,7 @@ function evaluateStatus(
 }
 
 function formatMetric(def: KpiDefinition, value: number | null): string {
-    if (value === null) return "—";
+    if (value === null) return " - ";
     switch (def.targetUnit) {
         case "%":
             return `${value.toFixed(1)}%`;
@@ -375,7 +375,7 @@ export async function fetchGrowthKpiSnapshot(
                         ? "Set GROWTH_MARKETING_SESSIONS_30D to calculate visitor → signup conversion."
                         : id === "mrr_growth_mom"
                           ? "Set GROWTH_MRR_PREVIOUS_MONTH_CENTS or use Stripe MRR chart."
-                          : "Insufficient data in period — connect Stripe or wait for more signups."
+                          : "Insufficient data in period - connect Stripe or wait for more signups."
                     : undefined,
         };
     });

@@ -19,7 +19,7 @@ export function GeneratingStep() {
             </div>
             <div>
                 <h2 className="text-xl font-bold text-foreground">Crafting your review...</h2>
-                <p className="text-sm text-muted-foreground mt-1">Just a moment ✨</p>
+                <p className="text-sm text-muted-foreground mt-1">Just a moment…</p>
             </div>
         </div>
     );

@@ -21,7 +21,7 @@ export type LatestBrief = {
     reviewInsights: Array<{ theme: string; mentions: number; examples: string[] }>;
 };
 
-/** Most recent brief for this prompt, or null — never fabricated, never shown stale-labeled-as-fresh. */
+/** Most recent brief for this prompt, or null - never fabricated, never shown stale-labeled-as-fresh. */
 export async function loadLatestBrief(
     db: SupabaseClient<Database>,
     businessId: string,

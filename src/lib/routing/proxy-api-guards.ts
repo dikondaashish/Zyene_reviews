@@ -13,7 +13,7 @@ import { originMatchesRequestHost } from "./proxy-cors";
 const RATE_LIMIT_EXEMPT = ["/api/webhooks", "/api/inngest", "/api/cron", "/api/auth"];
 
 /**
- * Developer API (v1) authenticates with X-API-Key / Bearer — Postman and
+ * Developer API (v1) authenticates with X-API-Key / Bearer - Postman and
  * servers often omit Origin, so it is exempt from the Origin check.
  */
 const CSRF_EXEMPT = ["/api/webhooks", "/api/inngest", "/api/cron", "/api/v1", "/api/aeo/crawler-logs"];

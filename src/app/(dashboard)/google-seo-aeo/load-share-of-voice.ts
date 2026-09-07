@@ -5,7 +5,7 @@ import { VISIBILITY_WINDOW_DAYS } from "@/services/aeo/reporting/load-visibility
 import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 /**
- * F3.2: null when this business has never been sampled — distinct from a
+ * F3.2: null when this business has never been sampled - distinct from a
  * suppressed-but-sampled ShareOfVoiceResult, same reasoning as aeoVisibility.
  * Reads through the caller's RLS-scoped client.
  */

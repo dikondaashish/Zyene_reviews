@@ -5,7 +5,7 @@ export type ContentBriefResult = {
     rewriteAfter: string;
 };
 
-/** Same defensive-parse shape as market-positioning-brief-result.ts — never trust the model's JSON to match the schema exactly. */
+/** Same defensive-parse shape as market-positioning-brief-result.ts - never trust the model's JSON to match the schema exactly. */
 export function parseContentBriefPayload(parsed: unknown): ContentBriefResult {
     if (parsed === null || typeof parsed !== "object") {
         throw new Error("Invalid model output: expected object");

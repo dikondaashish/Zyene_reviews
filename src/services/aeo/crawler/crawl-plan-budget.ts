@@ -1,7 +1,7 @@
 /**
  * E-3: per-plan page cap. Starter and Professional are named explicitly in
  * PRD-6's inputs; a plan this map does not know gets the Starter cap, not an
- * unbounded crawl — the safer failure for a real HTTP footprint against a
+ * unbounded crawl - the safer failure for a real HTTP footprint against a
  * site we do not control.
  */
 export const CRAWL_PAGE_CAP: Readonly<Record<string, number>> = {
@@ -26,7 +26,7 @@ export type CrawlCoverage = {
 
 /**
  * Which of the discovered URLs actually get crawled, and the coverage note
- * to disclose. "Disclose coverage %" is a PRD-6 edge case in its own right —
+ * to disclose. "Disclose coverage %" is a PRD-6 edge case in its own right -
  * a customer whose site was only 30% covered needs to know that, not read a
  * partial audit as a complete one.
  */

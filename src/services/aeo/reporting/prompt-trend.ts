@@ -4,7 +4,7 @@ import type { AnswerEngineId } from "../engines/engine-types";
 export type PromptSampleFact = {
     engineId: AnswerEngineId;
     status: "ok" | "no_answer" | "failed";
-    /** Named in prose, cited-only excluded — same rule as the pooled visibility score. */
+    /** Named in prose, cited-only excluded - same rule as the pooled visibility score. */
     ownBrandNamed: boolean;
     sampledAt: string;
 };
@@ -13,7 +13,7 @@ export type WeeklyTrendPoint = {
     weekStart: string;
     observations: number;
     named: number;
-    /** Null, never 0, for a week with no observations — a gap, never interpolated (PRD-8). */
+    /** Null, never 0, for a week with no observations - a gap, never interpolated (PRD-8). */
     rate: number | null;
 };
 
@@ -24,7 +24,7 @@ function weekStartIso(dateIso: string): string {
     return monday.toISOString().slice(0, 10);
 }
 
-/** The `weeks` window's Monday, most recent last — the x-axis this buckets onto. */
+/** The `weeks` window's Monday, most recent last - the x-axis this buckets onto. */
 export function recentWeekStarts(count: number, now: Date): string[] {
     const diff = (now.getUTCDay() + 6) % 7;
     const thisMonday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - diff));
@@ -40,7 +40,7 @@ export function recentWeekStarts(count: number, now: Date): string[] {
 /**
  * Weekly visibility rate per engine, over a fixed set of week-starts.
  *
- * Only `status: "ok"` samples count as observations — matching
+ * Only `status: "ok"` samples count as observations - matching
  * visibility-metrics.ts's pooled rate exactly, so a prompt's trend chart
  * never disagrees with its own summary tile about what an "observation" is.
  */
@@ -57,7 +57,7 @@ export function computePromptTrend(
 
         // Registered regardless of status: an engine that only ever failed in
         // this window still has a story (a flat line of gaps), and dropping it
-        // entirely would look identical to "we never tried this engine" —
+        // entirely would look identical to "we never tried this engine" -
         // matching computeEngineVisibility's "still appears" precedent.
         let engineMap = byEngine.get(fact.engineId);
         if (!engineMap) {

@@ -1,7 +1,7 @@
 /**
  * Loads a user's org + business memberships, with a short Redis cache.
  *
- * Deliberately not a server action — it is an internal helper for
+ * Deliberately not a server action - it is an internal helper for
  * business-context.ts, which owns the "use server" boundary.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -36,7 +36,7 @@ async function readCache(cacheKey: string): Promise<UserBusinessContext> {
         const businesses = (parsed.businesses as BusinessContextBusiness[]) ?? [];
         const organizations = (parsed.organizations as BusinessContextOrganization[]) ?? [];
 
-        // Legacy cache stored a single `organization` — ignore so multi-org users refresh
+        // Legacy cache stored a single `organization` - ignore so multi-org users refresh
         if (organizations.length === 0) return empty;
         return { organizations, businesses };
     } catch (e) {

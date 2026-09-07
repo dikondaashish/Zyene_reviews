@@ -88,7 +88,7 @@ export async function handleCompetitorsExport(request: Request) {
         if (m?.hasBaseline) {
             trendNote = "first vs last snapshot in period";
         } else if (ratingDelta !== null && reviewsDelta !== null) {
-            trendNote = "single snapshot in period — add time for a second point to measure movement";
+            trendNote = "single snapshot in period - add time for a second point to measure movement";
         }
         return {
             Period: periodLabel,

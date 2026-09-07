@@ -6,7 +6,7 @@ import { isIdentityType, type SchemaValidationResult } from "./schema-validator"
  * E-3 findings. F5.2 (crawlability), F5.3 (AI-bot access), F5.4
  * (schema/JSON-LD), and F5.8 (answerability) are all observed directly by
  * the crawl itself. F5.12's full severity-plus-affected-prompts model is a
- * separate pass — its linkage lives in finding-prompt-linkage.ts, computed
+ * separate pass - its linkage lives in finding-prompt-linkage.ts, computed
  * from these findings plus citation data the crawl itself never sees.
  */
 export type CrawlFindingSeverity = "critical" | "high" | "medium" | "low";
@@ -36,7 +36,7 @@ export type CrawlFinding = {
     fixInstruction: string;
 };
 
-/** One finding per AI crawler robots.txt blocks at the site root — F5.3, run-level. */
+/** One finding per AI crawler robots.txt blocks at the site root - F5.3, run-level. */
 export function aiBotBlockedFindings(blocked: readonly AiCrawlerAgent[]): CrawlFinding[] {
     return blocked.map((agent) => ({
         rule: "ai_bot_blocked",
@@ -49,7 +49,7 @@ export function aiBotBlockedFindings(blocked: readonly AiCrawlerAgent[]): CrawlF
 
 /**
  * robots.txt itself could not be read. Per the plan doc's own edge case: do
- * NOT assume allow when this happens — report the uncertainty explicitly
+ * NOT assume allow when this happens - report the uncertainty explicitly
  * rather than silently treating an unreachable robots.txt as "nothing is
  * blocked".
  */
@@ -63,7 +63,7 @@ export function robotsUnreachableFinding(reason: string): CrawlFinding {
     };
 }
 
-/** Findings this crawl directly observed while fetching one page — never claims what it did not see. */
+/** Findings this crawl directly observed while fetching one page - never claims what it did not see. */
 export function pageLevelFindings(url: string, httpStatus: number | null, signals: PageSignals | null): CrawlFinding[] {
     const findings: CrawlFinding[] = [];
 
@@ -96,7 +96,7 @@ export function pageLevelFindings(url: string, httpStatus: number | null, signal
 
     // Hedged deliberately: low visible text after stripping scripts/styles is
     // consistent with content that only renders after JavaScript, which AI
-    // crawlers largely do not execute (PRD-6's stated SPA edge case) — but a
+    // crawlers largely do not execute (PRD-6's stated SPA edge case) - but a
     // short page can also just be a short page. This says "found", not "is".
     if (signals.wordCount < 20) {
         findings.push({
@@ -105,7 +105,7 @@ export function pageLevelFindings(url: string, httpStatus: number | null, signal
             pageUrl: url,
             evidence: `Only ${signals.wordCount} words of visible text found in the raw HTML`,
             fixInstruction:
-                "If this page's real content renders via JavaScript, AI crawlers likely cannot read it — consider server-rendering the key content, or confirm this page is intentionally minimal.",
+                "If this page's real content renders via JavaScript, AI crawlers likely cannot read it - consider server-rendering the key content, or confirm this page is intentionally minimal.",
         });
     }
 
@@ -116,7 +116,7 @@ export function pageLevelFindings(url: string, httpStatus: number | null, signal
  * F5.4 findings for one page's JSON-LD.
  *
  * `missing_structured_data` fires ONLY on the homepage, and only when it
- * carries no LocalBusiness/Organization entity at all — flagging every page
+ * carries no LocalBusiness/Organization entity at all - flagging every page
  * on a site for lacking JSON-LD would be exactly the "simply check whether
  * JSON-LD exists" blanket noise the spec warns against. A blog post with no
  * schema is normal; a local business's homepage with no identity markup at
@@ -156,7 +156,7 @@ export function schemaFindings(
             severity: "medium",
             pageUrl: url,
             evidence: `Multiple ${conflict.entityType} blocks on this page disagree on identity: ${conflict.labels.join(" vs. ")}`,
-            fixInstruction: `Keep a single, consistent ${conflict.entityType} block per page — conflicting identity markup is a confusing signal to anything reading it.`,
+            fixInstruction: `Keep a single, consistent ${conflict.entityType} block per page - conflicting identity markup is a confusing signal to anything reading it.`,
         });
     }
 
@@ -168,7 +168,7 @@ export function schemaFindings(
                 severity: "high",
                 pageUrl: url,
                 evidence: "The homepage has no LocalBusiness or Organization structured data",
-                fixInstruction: "Add a LocalBusiness JSON-LD block to the homepage with at least name and address — this is the primary way AI systems confirm what business a page belongs to.",
+                fixInstruction: "Add a LocalBusiness JSON-LD block to the homepage with at least name and address - this is the primary way AI systems confirm what business a page belongs to.",
             });
         }
     }

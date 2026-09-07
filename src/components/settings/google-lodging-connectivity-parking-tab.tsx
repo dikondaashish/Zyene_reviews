@@ -32,9 +32,9 @@ export function GoogleLodgingConnectivityParkingTab({
             <div className="space-y-3">
                 <p className="text-sm font-medium">Connectivity</p>
                 {[
-                    ["Wi‑Fi available", wifi, setWifi],
-                    ["Free Wi‑Fi", freeWifi, setFreeWifi],
-                    ["Public area Wi‑Fi", publicWifi, setPublicWifi],
+                    ["Wi-Fi available", wifi, setWifi],
+                    ["Free Wi-Fi", freeWifi, setFreeWifi],
+                    ["Public area Wi-Fi", publicWifi, setPublicWifi],
                 ].map(([label, val, set]) => (
                     <div key={label as string} className="flex items-center justify-between gap-4">
                         <Label>{label as string}</Label>

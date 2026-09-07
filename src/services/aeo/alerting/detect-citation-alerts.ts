@@ -1,5 +1,5 @@
 /**
- * F8.2 — citation gained/lost alerts, per URL.
+ * F8.2 - citation gained/lost alerts, per URL.
  *
  * Compares which of OUR pages were cited in a recent window against a baseline
  * window. Only `classification: "own"` citations are considered: a competitor
@@ -11,7 +11,7 @@
  * present/absent fact per sample, not a proportion with a variance to test, so
  * the significance gate F8.1 uses does not apply. Instead a URL must have been
  * cited in at least MIN_BASELINE_CITATIONS baseline samples before its
- * disappearance counts as a loss — a page cited once and never again was never
+ * disappearance counts as a loss - a page cited once and never again was never
  * really "ours" on that prompt.
  */
 
@@ -41,7 +41,7 @@ export type CitationAlert = {
 export const MIN_BASELINE_CITATIONS = 2;
 
 /**
- * A gained citation needs corroboration too — one appearance can be a single
+ * A gained citation needs corroboration too - one appearance can be a single
  * lucky sample rather than a page that has started ranking.
  */
 export const MIN_RECENT_CITATIONS = 2;
@@ -79,7 +79,7 @@ export function splitCitationWindows(
 
 export function detectCitationAlerts(windows: CitationWindows): CitationAlert[] {
     // With no baseline at all there is nothing to have lost, and every URL
-    // would read as "gained" — the first-run alert storm criterion #42 guards
+    // would read as "gained" - the first-run alert storm criterion #42 guards
     // against for prompts, applied here to pages.
     if (windows.baseline.length === 0) return [];
 

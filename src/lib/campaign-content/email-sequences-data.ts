@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Email Marketing Sequences — Phase 6
+// Email Marketing Sequences - Phase 6
 // Content definitions; delivery via Inngest + Resend
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -12,7 +12,7 @@ export interface GrowthEmailStep {
 }
 
 /**
- * Trial nurture: 6 emails on days 2–7 (blueprint).
+ * Trial nurture: 6 emails on days 2-7 (blueprint).
  * Day 1 (welcome + connect Google) is sent immediately on signup via welcome-email.ts.
  */
 export const TRIAL_NURTURE_STEPS: GrowthEmailStep[] = [
@@ -21,21 +21,21 @@ export const TRIAL_NURTURE_STEPS: GrowthEmailStep[] = [
         dayOffset: 2,
         delayHours: 24,
         subject: "Day 2: Send your first review request",
-        preview: "SMS, email, or link — pick what fits your customers.",
+        preview: "SMS, email, or link - pick what fits your customers.",
     },
     {
         key: "trial_day3_ai_replies",
         dayOffset: 3,
         delayHours: 48,
         subject: "Day 3: Reply to reviews in one click with AI",
-        preview: "Professional responses in your brand voice — you stay in control.",
+        preview: "Professional responses in your brand voice - you stay in control.",
     },
     {
         key: "trial_day4_feedback_shield",
         dayOffset: 4,
         delayHours: 72,
         subject: "Day 4: Protect your rating with the Negative Feedback Shield",
-        preview: "Route unhappy customers to private feedback before they hit Google.",
+        preview: "Give low ratings a private feedback path and alert your team.",
     },
     {
         key: "trial_day5_competitors",
@@ -55,7 +55,7 @@ export const TRIAL_NURTURE_STEPS: GrowthEmailStep[] = [
         key: "trial_day7_upgrade",
         dayOffset: 7,
         delayHours: 168,
-        subject: "Day 7: Your trial ends soon — keep your momentum",
+        subject: "Day 7: Your trial ends soon - keep your momentum",
         preview: "Plans from $29.99/mo. No annual contract.",
     },
 ];
@@ -66,7 +66,7 @@ export const ONBOARDING_DRIP_STEPS: GrowthEmailStep[] = [
         key: "convert_benefits_recap",
         dayOffset: 0,
         delayHours: 2,
-        subject: "Welcome to paid — here's everything you unlocked",
+        subject: "Welcome to paid - here's everything you unlocked",
         preview: "AI replies, competitor tracking, and unlimited review requests on your plan.",
     },
     {
@@ -88,7 +88,7 @@ export const ONBOARDING_DRIP_STEPS: GrowthEmailStep[] = [
         dayOffset: 14,
         delayHours: 336,
         subject: "Last chance: lock in your plan before limits reset",
-        preview: "Stay on paid — keep AI replies, competitor tracking, and review automation.",
+        preview: "Stay on paid - keep AI replies, competitor tracking, and review automation.",
     },
 ];
 
@@ -108,7 +108,7 @@ export const MARKETING_NURTURE_STEPS: GrowthEmailStep[] = [
         key: "marketing_nurture_day2_shield",
         dayOffset: 2,
         delayHours: 48,
-        subject: "Resolve complaints privately before they hit Google",
+        subject: "Follow up when a customer gives a low rating",
         preview: "How Negative Feedback Shield fits compliant review workflows.",
     },
     {
@@ -116,7 +116,7 @@ export const MARKETING_NURTURE_STEPS: GrowthEmailStep[] = [
         dayOffset: 5,
         delayHours: 120,
         subject: "Automate review requests in one inbox",
-        preview: "7-day free trial — plans from $29.99/mo, no annual contract.",
+        preview: "7-day free trial - plans from $29.99/mo, no annual contract.",
     },
 ];
 
@@ -126,7 +126,7 @@ export const WINBACK_STEPS: GrowthEmailStep[] = [
         key: "winback_day14",
         dayOffset: 14,
         delayHours: 336,
-        subject: "We miss you — here's what's new at Zyene Reviews",
+        subject: "We miss you - here's what's new at Zyene Reviews",
         preview: "New features since you left, plus 25% off if you come back.",
     },
 ];

@@ -1,4 +1,4 @@
-/** Google review sync — sync-platform */
+/** Google review sync - sync-platform */
 
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
@@ -169,4 +169,3 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
         throw error;
     }
 }
-

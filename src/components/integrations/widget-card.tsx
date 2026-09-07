@@ -18,7 +18,7 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
     const [previewType, setPreviewType] = useState<"carousel" | "badge" | null>(null);
     const hasSlug = Boolean(businessSlug?.trim());
 
-    // Always use the public apex domain for iframes — app.* requires login and redirects to auth.* (breaks embeds).
+    // Always use the public apex domain for iframes - app.* requires login and redirects to auth.* (breaks embeds).
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com";
     const protocol = rootDomain.includes("localhost") ? "http" : "https";
     const embedBase = `${protocol}://${rootDomain}`;

@@ -14,7 +14,7 @@ export interface ProfileHealthResult {
 }
 
 /**
- * Simple 0–100 completeness score from Google Location fields (5 × 20).
+ * Simple 0-100 completeness score from Google Location fields (5 × 20).
  */
 export function computeProfileHealth(loc: GoogleLocationFull | null | undefined): ProfileHealthResult {
     const checks: ProfileHealthCheck[] = [];

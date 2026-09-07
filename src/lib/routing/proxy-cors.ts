@@ -7,7 +7,7 @@ import { NextResponse, type NextRequest } from "next/server";
 const ALLOWED_REQUEST_HEADERS =
     "Content-Type, Authorization, RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Next-Url, next-router-segment-prefetch";
 
-/** Origins allowed on OPTIONS preflight — includes the www apex. */
+/** Origins allowed on OPTIONS preflight - includes the www apex. */
 export function preflightAllowedOrigins(rootDomain: string): string[] {
     return [
         `https://auth.${rootDomain}`,
@@ -17,7 +17,7 @@ export function preflightAllowedOrigins(rootDomain: string): string[] {
     ];
 }
 
-/** Origins that get CORS headers on normal responses — no www apex. */
+/** Origins that get CORS headers on normal responses - no www apex. */
 export function responseAllowedOrigins(rootDomain: string): string[] {
     return [
         `https://auth.${rootDomain}`,

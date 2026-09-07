@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Resources—Free Guides for Local Business Owners | Zyene Reviews";
+export const alt = "Resources - Free Guides for Local Business Owners | Zyene Reviews";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -16,7 +16,7 @@ export default function OgImage() {
                         The <span style={{ color: "#22d3ee" }}>complete playbooks</span><br />for local business owners
                     </div>
                     <div style={{ display: "flex", gap: "16px", marginTop: "10px" }}>
-                        {["📗 Google Reviews Guide", "📕 Negative Review Templates", "📘 Local SEO Checklist", "📙 Review Request Templates"].map((g) => (
+                        {["Google Reviews Guide", "Negative Review Templates", "Local SEO Checklist", "Review Request Templates"].map((g) => (
                             <div key={g} style={{ background: "rgba(34,211,238,0.08)", border: "1px solid rgba(34,211,238,0.2)", borderRadius: "8px", padding: "8px 14px", color: "rgba(255,255,255,0.65)", fontSize: "12px", fontWeight: "600" }}>{g}</div>
                         ))}
                     </div>

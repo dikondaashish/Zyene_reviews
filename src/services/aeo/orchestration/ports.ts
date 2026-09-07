@@ -3,7 +3,7 @@ import type { AnswerEngineId, EngineLocale, EngineSampleResult } from "../engine
 /**
  * E-7 ports. Orchestration talks to these, never to Supabase directly, so the
  * dispatch path can be exercised against in-memory doubles before either
- * deferred migration is applied — and so a crash test can assert on real state
+ * deferred migration is applied - and so a crash test can assert on real state
  * transitions rather than mocks of them.
  */
 
@@ -17,7 +17,7 @@ export type ReserveOutcome =
     | { kind: "deferred"; deferredUnits: number }
     /**
      * This idempotency key already has a reservation. Returned on an Inngest step
-     * retry — the decisive signal that we must not open a second one.
+     * retry - the decisive signal that we must not open a second one.
      */
     | {
           kind: "existing";
@@ -60,7 +60,7 @@ export interface ReservationStore {
      *
      * A crash inside the call step re-runs that step, and we cannot know whether
      * the first request was billed. This makes the second attempt visible in the
-     * ledger instead of silent — `dispatchAttempts > 1` means a duplicate charge
+     * ledger instead of silent - `dispatchAttempts > 1` means a duplicate charge
      * is possible for that reservation.
      */
     markDispatched(reservationId: string, at: string): Promise<{ dispatchAttempts: number }>;
@@ -95,7 +95,7 @@ export interface RunStore {
 
     /**
      * Units already consumed today per engine, read from settled + in-flight
-     * reservations. Feeds the planner's projection only — the binding decision
+     * reservations. Feeds the planner's projection only - the binding decision
      * is made per unit inside aeo_reserve_quota.
      */
     consumedTodayByEngine(
@@ -127,7 +127,7 @@ export interface SampleStore {
         result: EngineSampleResult;
         costMicroUsd: number;
         /**
-         * Where the verbatim answer was stored, or null when none was — a failed
+         * Where the verbatim answer was stored, or null when none was - a failed
          * upload, or a sample with no prose to store. Null must read downstream
          * as "no evidence retained", never as "the engine said nothing".
          */
@@ -153,8 +153,8 @@ export interface AnswerStore {
 }
 
 /**
- * E-9. Everything a settled test needs to become a customer charge — credit
- * ledger, Stripe, and the org lookup between them — collapsed into the one
+ * E-9. Everything a settled test needs to become a customer charge - credit
+ * ledger, Stripe, and the org lookup between them - collapsed into the one
  * call dispatch-unit.ts makes. See services/aeo/billing/billing-gateway.ts
  * for what is behind it; dispatch-unit.ts does not need to know.
  */

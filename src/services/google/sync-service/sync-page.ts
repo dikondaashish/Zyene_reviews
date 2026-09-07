@@ -1,4 +1,4 @@
-/** Google review sync — sync-page */
+/** Google review sync - sync-page */
 
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
@@ -22,7 +22,7 @@ export async function syncGoogleReviewsPage(
     synced: number;
     total: number;
     avgRating: number;
-    /** Google `reviewId` values on this page — used to reconcile deletions after a full sync. */
+    /** Google `reviewId` values on this page - used to reconcile deletions after a full sync. */
     externalIdsOnPage: string[];
     earlyExit: boolean;
 }> {
@@ -34,7 +34,7 @@ export async function syncGoogleReviewsPage(
      * Incremental sync walks newest-first and stops when `updateTime <= last_review_update_time`.
      * If a past sync never imported the full history (e.g. job stopped early) but the watermark was
      * advanced to the listing's newest review, we would otherwise exit on the first row and never
-     * paginate — leaving hundreds of older Google reviews missing from the DB.
+     * paginate - leaving hundreds of older Google reviews missing from the DB.
      */
     if (!context.reviewGapCheckDone && !pageToken) {
         context.reviewGapCheckDone = true;
@@ -53,7 +53,7 @@ export async function syncGoogleReviewsPage(
                 logger.error({ err: countErr }, "[Sync] Review gap check (DB count) failed");
             } else {
                 const n = dbCount ?? 0;
-                /** Small slack for removals / Maps vs API headline drift — large gaps still trigger backfill. */
+                /** Small slack for removals / Maps vs API headline drift - large gaps still trigger backfill. */
                 const slack = 25;
                 if (n + slack < apiTotal) {
                     logger.error(`[Sync] Incomplete Google history: ${n} visible reviews in DB vs Google totalReviewCount=${apiTotal}. ` +
@@ -82,7 +82,7 @@ export async function syncGoogleReviewsPage(
 
     let syncedCount = 0;
     const reviewIdsToAnalyze: string[] = [];
-    /** Every ID Google returned on this page — needed for deletion reconciliation even when we hash-skip or early-exit mid-page. */
+    /** Every ID Google returned on this page - needed for deletion reconciliation even when we hash-skip or early-exit mid-page. */
     const externalIdsOnPage: string[] = [];
     for (const review of apiResp.reviews) {
         if (review.reviewId) {
@@ -171,4 +171,3 @@ export async function syncGoogleReviewsPage(
         earlyExit,
     };
 }
-

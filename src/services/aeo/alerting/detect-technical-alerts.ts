@@ -7,13 +7,13 @@ export type FindingLike = {
     evidence: string;
 };
 
-/** Same finding, same page, across two runs — the identity a "newly appeared" diff keys on. */
+/** Same finding, same page, across two runs - the identity a "newly appeared" diff keys on. */
 export function findingKey(f: Pick<FindingLike, "rule" | "pageUrl">): string {
     return `${f.rule}:${f.pageUrl ?? "__site__"}`;
 }
 
 /**
- * F8.4: technical blocker alerts — critical/high findings that are NEW since
+ * F8.4: technical blocker alerts - critical/high findings that are NEW since
  * the previous run, not every finding that still exists. An unresolved
  * finding from three weeks ago re-alerting every single week is exactly the
  * "alerts train users to ignore us" failure PRD-9 opens with; a finding that

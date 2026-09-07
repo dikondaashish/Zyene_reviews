@@ -10,7 +10,7 @@ import { MARKETING_SITE_ORIGIN } from "@/lib/seo/marketing-site-url";
 const AUTH_DISALLOW = ["/", "/login", "/signup", "/forgot-password", "/reset-password"];
 
 /**
- * Next.js robots.txt generation — served at /robots.txt per host.
+ * Next.js robots.txt generation - served at /robots.txt per host.
  *
  * Marketing (www): allow public content; block app, auth, ops, and embed/capture routes.
  * auth.*: block all crawlers. app.*: block dashboard host.

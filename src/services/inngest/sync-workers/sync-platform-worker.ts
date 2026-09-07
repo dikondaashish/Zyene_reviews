@@ -58,7 +58,7 @@ export const syncPlatformWorker = inngest.createFunction(
         } catch (error) {
           if (platformType === "google" && isGoogleSyncConflictError(error)) {
             logger.error(`[Worker] Sync skipped (lock held elsewhere) for google platform ${platformId}` +
-                (attempt < pubsubGoogleLockRetry ? ` — will retry after ${PUBSUB_GOOGLE_LOCK_RETRY_DELAY}` : "")
+                (attempt < pubsubGoogleLockRetry ? ` - will retry after ${PUBSUB_GOOGLE_LOCK_RETRY_DELAY}` : "")
             );
             await pingReviewSyncHeartbeat(true);
             return { skipped: true, reason: "sync_lock_conflict" as const, attempt };

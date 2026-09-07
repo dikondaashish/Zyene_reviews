@@ -20,7 +20,7 @@ export const insightsSchema: Schema = {
 export const AI_INSIGHTS_PROMPT = `You are an expert business analyst. Analyze the following customer reviews for a business called "{business_name}".
 
 Extract:
-1. **Key Themes** (3-5): The most prominent recurring themes across all reviews. Each theme should be a single sentence describing what customers frequently mention — both positive and negative patterns.
+1. **Key Themes** (3-5): The most prominent recurring themes across all reviews. Each theme should be a single sentence describing what customers frequently mention - both positive and negative patterns.
 2. **Suggestions** (2-3): Actionable, specific suggestions the business owner can implement to improve their ratings or capitalize on strengths.
 
 Rules:

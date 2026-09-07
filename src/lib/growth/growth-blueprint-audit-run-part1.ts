@@ -107,7 +107,7 @@ if (CASE_STUDY_SLUGS.length < 3) {
         id: "case-study-count",
         severity: "warning",
         area: "content",
-        message: `Blueprint targets 3–5 case studies; found ${CASE_STUDY_SLUGS.length}`,
+        message: `Blueprint targets 3-5 case studies; found ${CASE_STUDY_SLUGS.length}`,
     });
 }
 
@@ -137,7 +137,7 @@ if (existsSync(featuresPagePath)) {
             id: "foundation-pillars-7-10",
             severity: "error",
             area: "foundation",
-            message: "/features missing PlatformPillarsSection for blueprint pillars 7–10",
+            message: "/features missing PlatformPillarsSection for blueprint pillars 7-10",
         });
     }
 }

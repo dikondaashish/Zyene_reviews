@@ -15,7 +15,7 @@ const SAMPLE_LOOKBACK_DAYS = 120;
 
 /**
  * F8: one business's alert check. Read-heavy, side-effect-only through
- * SupabaseAlertStore's cooldown-gated insert — safe to re-run.
+ * SupabaseAlertStore's cooldown-gated insert - safe to re-run.
  */
 export async function runAlertDetectionForBusiness(
     db: Admin,
@@ -90,7 +90,7 @@ export async function runAlertDetectionForBusiness(
     // citation_gained / rank_drop alert types and the page_url column). Isolated
     // so that on a deployment where that migration has not been applied these
     // two degrade to "no citation or rank alerts" instead of aborting the run
-    // and taking F8.1 and F8.4 — which need no new schema — down with them.
+    // and taking F8.1 and F8.4 - which need no new schema - down with them.
     created += await safely("citation", () => detectCitationChanges(db, store, input));
     created += await safely("rank", () => detectRankMovement(db, store, input));
 

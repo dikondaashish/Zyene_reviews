@@ -31,7 +31,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
     } else {
-        logger.warn({}, "[square] SQUARE_WEBHOOK_SIGNATURE_KEY unset — skipping verify (dev only)");
+        logger.warn({}, "[square] SQUARE_WEBHOOK_SIGNATURE_KEY unset - skipping verify (dev only)");
     }
 
     let payload: SquareWebhookPayload;

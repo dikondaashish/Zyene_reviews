@@ -19,7 +19,7 @@ export type VisibilityTile = {
 
 /** Fixed locale, so the server and the client agree on the string. */
 function formatDate(iso: string | null): string {
-    if (!iso) return "—";
+    if (!iso) return " - ";
     return new Date(iso).toLocaleString("en-US", {
         year: "numeric",
         month: "short",
@@ -36,14 +36,14 @@ export function formatRate(rate: number): string {
 
 /**
  * Says what is missing and how much more is needed, rather than "not enough
- * data" — a reader who cannot tell whether the gap is one sample or a hundred
+ * data" - a reader who cannot tell whether the gap is one sample or a hundred
  * has no way to judge whether the number is coming.
  */
 export function suppressionMessage(s: Suppression): string {
     const short = s.required - s.observations;
     return s.observations === 0
-        ? `No answers yet — needs ${s.required} to report a rate.`
-        : `Only ${s.observations} answer${s.observations === 1 ? "" : "s"} so far — ${short} more needed before this can be reported.`;
+        ? `No answers yet - needs ${s.required} to report a rate.`
+        : `Only ${s.observations} answer${s.observations === 1 ? "" : "s"} so far - ${short} more needed before this can be reported.`;
 }
 
 function provenanceRows(v: EngineVisibility, windowLabel: string): ProvenanceRow[] {
@@ -63,7 +63,7 @@ function provenanceRows(v: EngineVisibility, windowLabel: string): ProvenanceRow
             label: "Answer retained",
             value:
                 p.observations === 0
-                    ? "—"
+                    ? " - "
                     : `${p.withStoredAnswer} of ${p.observations}${p.withStoredAnswer < p.observations ? " (older samples not kept)" : ""}`,
         },
         { label: "First sampled", value: formatDate(p.firstSampledAt) },

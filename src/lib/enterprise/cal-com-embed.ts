@@ -1,9 +1,9 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Cal.com inline embed for /demo — Phase 8
+// Cal.com inline embed for /demo - Phase 8
 // https://cal.com/docs/developing/guides/embeds
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Production booking link — override with NEXT_PUBLIC_CAL_COM_EMBED_URL if needed. */
+/** Production booking link - override with NEXT_PUBLIC_CAL_COM_EMBED_URL if needed. */
 export const DEFAULT_CAL_COM_BOOKING_URL =
     "https://cal.com/zyene/30-min-meeting?overlayCalendar=true";
 

@@ -4,7 +4,7 @@ import type { GeoGridPoint } from "./load-geo-grid-page-data";
  * The grid itself.
  *
  * Three visual states, not two: ranked, searched-but-not-found, and no data.
- * The pre-Phase-1 heatmap this replaces had no "not found" — every cell always
+ * The pre-Phase-1 heatmap this replaces had no "not found" - every cell always
  * showed a number, because the number came from the business's star rating
  * rather than a search. A cell Google answered with "you are not in the local
  * pack here" is a real, useful finding and is rendered as such.
@@ -42,7 +42,7 @@ export function GeoGridMap({ size, points }: { size: number; points: GeoGridPoin
                             !searched
                                 ? "Not searched"
                                 : point.rankPosition === null
-                                  ? "Searched — not in the local pack here"
+                                  ? "Searched - not in the local pack here"
                                   : `Rank ${point.rankPosition}${competitors ? ` · Ahead here: ${competitors}` : ""}`;
 
                         return (
@@ -68,10 +68,10 @@ export function GeoGridMap({ size, points }: { size: number; points: GeoGridPoin
                     <span className="bg-chart-2 inline-block size-3 rounded" /> Top 3
                 </span>
                 <span className="flex items-center gap-1">
-                    <span className="bg-chart-4 inline-block size-3 rounded" /> 4–10
+                    <span className="bg-chart-4 inline-block size-3 rounded" /> 4-10
                 </span>
                 <span className="flex items-center gap-1">
-                    <span className="bg-sync-action inline-block size-3 rounded" /> 11–20
+                    <span className="bg-sync-action inline-block size-3 rounded" /> 11-20
                 </span>
                 <span className="flex items-center gap-1">
                     <span className="bg-muted inline-block size-3 rounded border" /> Not in local pack

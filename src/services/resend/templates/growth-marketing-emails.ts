@@ -16,21 +16,21 @@ export function marketingNurtureEmail({
     const steps: Record<string, { subject: string; body: string; cta: string; url: string }> = {
         marketing_nurture_day0_guide: {
             subject: "Start here: our best guide for more Google reviews",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Thanks for subscribing. If you want one place to start, read our <strong>review request template pack</strong> and <strong>local SEO checklist</strong>—both are free on the site.</p>
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Thanks for subscribing. If you want one place to start, read our <strong>review request template pack</strong> and <strong>local SEO checklist</strong> - both are free on the site.</p>
 <p style="font-size:16px;line-height:1.6;color:#52525b;">You're receiving this at <strong>${email}</strong> because you joined our marketing list.</p>`,
             cta: "Open the template pack",
             url: "https://zyenereviews.com/resources/review-request-templates",
         },
         marketing_nurture_day2_shield: {
-            subject: "Resolve complaints privately before they hit Google",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Unhappy customers often post on Google before you hear from them. <strong>Negative Feedback Shield</strong> routes low scores to a private form first so you can fix issues—without review gating or suppressing honest public feedback.</p>
+            subject: "Follow up when a customer gives a low rating",
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">When a customer gives a low rating through a Zyene review page, <strong>Negative Feedback Shield</strong> gives them a private form to describe the problem and alerts your team. Use it for follow-up, without review gating or suppressing honest public feedback.</p>
 <p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="https://zyenereviews.com/blog/negative-feedback-shield" style="color:#16a34a;">Read how Shield works →</a></p>`,
             cta: "See review collection",
             url: "https://zyenereviews.com/features/review-collection",
         },
         marketing_nurture_day5_trial: {
             subject: "Automate review requests in one inbox",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">When manual texts stop scaling, Zyene Reviews sends SMS and email campaigns, alerts you on new reviews, and helps you reply faster—with Shield included on paid plans.</p>
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">When manual texts stop scaling, Zyene Reviews sends SMS and email campaigns, alerts you on new reviews, and helps you reply faster - with Shield included on paid plans.</p>
 <p style="font-size:16px;line-height:1.6;color:#52525b;">Plans from <strong>$29.99/mo</strong>, month-to-month. No annual contract required.</p>`,
             cta: "Start 7-day free trial",
             url: AUTH_SIGNUP_URL,
@@ -76,7 +76,7 @@ export function monthlyNewsletterEmail(params: {
 }): { subject: string; html: string } {
     const { monthLabel, productUpdate, tipTitle, tipBody, caseStudyLink, caseStudyTitle, unsubscribeUrl } = params;
     return {
-        subject: `Zyene Reviews Monthly — ${monthLabel}`,
+        subject: `Zyene Reviews Monthly - ${monthLabel}`,
         html: growthEmailLayout({
             userName: "there",
             bodyHtml: `<p style="font-size:16px;line-height:1.6;color:#52525b;"><strong>Product update:</strong> ${productUpdate}</p>

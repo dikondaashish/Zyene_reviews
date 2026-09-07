@@ -6,7 +6,7 @@ import { inngest } from "@/services/inngest/client";
 import { isLiveCrawlingEnabled } from "@/lib/features/aeo-surfaces";
 import { parseOrigin } from "@/services/aeo/scheduler/load-due-crawl-businesses";
 
-/** Real per-business cooldown, not a generic rate limiter — a business only ever needs one audit at a time, and re-crawling every few minutes is both wasteful and impolite to the target site. */
+/** Real per-business cooldown, not a generic rate limiter - a business only ever needs one audit at a time, and re-crawling every few minutes is both wasteful and impolite to the target site. */
 const MIN_MINUTES_BETWEEN_AUDITS = 60;
 
 async function canManageBusiness(businessId: string): Promise<boolean> {

@@ -9,7 +9,7 @@ const BENEFITS = [
     {
         icon: ShieldCheck,
         title: "Low ratings stay private",
-        body: "A 1–3 star tap routes to private feedback, not a public review.",
+        body: "A 1-3 star tap routes to private feedback, not a public review.",
     },
     {
         icon: Sparkles,

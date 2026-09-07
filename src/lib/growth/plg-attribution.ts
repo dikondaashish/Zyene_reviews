@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Product-led growth attribution — Phase 7
+// Product-led growth attribution - Phase 7
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { plgEmailFooterHtml as buildPlgEmailFooterHtml } from "@/lib/email/transactional-email-styles";
@@ -20,7 +20,7 @@ export function buildPlgMarketingUrl(source: PlgRefSource): string {
 export const PLG_FOOTER_LABEL = "Zyene Reviews";
 
 export function plgSmsFooter(): string {
-    return `\n\nReview management powered by Zyene Reviews — ${buildPlgMarketingUrl("review-request")}`;
+    return `\n\nReview management powered by Zyene Reviews - ${buildPlgMarketingUrl("review-request")}`;
 }
 
 export function plgEmailFooterHtml(): string {
@@ -29,5 +29,5 @@ export function plgEmailFooterHtml(): string {
 }
 
 export function plgEmailFooterPlain(): string {
-    return `\n\nReview management powered by Zyene Reviews — ${buildPlgMarketingUrl("review-request")}`;
+    return `\n\nReview management powered by Zyene Reviews - ${buildPlgMarketingUrl("review-request")}`;
 }

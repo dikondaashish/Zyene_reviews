@@ -1,4 +1,4 @@
-// Automated audit — GROWTH_BLUEPRINT §§ 0–8, 14–16 + page architecture table
+// Automated audit - GROWTH_BLUEPRINT §§ 0-8, 14-16 + page architecture table
 
 export type AuditSeverity = "error" | "warning" | "info";
 

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { AlertTriangle, CheckCircle2, Clock, Star } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Clock, Frown, Meh, Star } from "lucide-react";
 
 import type { ReviewRequest } from "@/components/analytics/zyene-platform-analytics-types";
 
@@ -40,7 +40,7 @@ export function ZyenePlatformLowRatingAlertsCard({
                     <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1">
                         {lowRatingEntries.map((r, idx) => {
                             const stars = r.rating_given || 0;
-                            const ratingEmoji = stars === 1 ? "😞" : stars === 2 ? "😕" : "😐";
+                            const RatingIcon = stars === 1 ? Frown : stars === 2 ? Frown : Meh;
                             return (
                                 <motion.div
                                     key={r.id}
@@ -49,7 +49,7 @@ export function ZyenePlatformLowRatingAlertsCard({
                                     transition={{ delay: idx * 0.05 }}
                                     className="flex items-start gap-3 p-3 rounded-xl border border-border/50 bg-card/30 hover:bg-card/60 transition-colors"
                                 >
-                                    <span className="text-2xl">{ratingEmoji}</span>
+                                    <RatingIcon className="mt-0.5 size-6 shrink-0 text-chart-4" aria-hidden="true" />
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center justify-between gap-2">
                                             <p className="text-sm font-bold truncate">
@@ -94,7 +94,7 @@ export function ZyenePlatformLowRatingAlertsCard({
                 ) : (
                     <div className="flex flex-col items-center justify-center py-12 text-muted-foreground space-y-2">
                         <CheckCircle2 className="opacity-20 text-chart-2 size-10" />
-                        <p className="text-sm font-medium">No low ratings in this period! 🎉</p>
+                        <p className="text-sm font-medium">No low ratings in this period</p>
                         <p className="text-xs">All your customers are happy</p>
                     </div>
                 )}

@@ -53,7 +53,7 @@ export function SignupForm({ googleClientId }: SignupFormProps) {
                             Why Google asks for business access:
                         </span>{" "}
                         Zyene uses your Google Business Profile to sync reviews, post AI replies, and track
-                        performance—the core of the product. We never post to Google without your approval and
+                        performance - the core of the product. We never post to Google without your approval and
                         never share your data with third parties.
                     </p>
                     <p className="text-[11px] text-muted-foreground mt-2">

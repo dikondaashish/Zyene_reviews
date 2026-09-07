@@ -14,7 +14,7 @@ import { mineReviewThemes } from "./review-mining";
 
 type Admin = SupabaseClient<Database>;
 
-/** Real citations only, deduped, capped — each one is a real outbound fetch that costs time and (via Gemini) money. */
+/** Real citations only, deduped, capped - each one is a real outbound fetch that costs time and (via Gemini) money. */
 const MAX_CITED_SOURCES = 5;
 
 export type GenerateBriefResult =
@@ -62,7 +62,7 @@ export async function generateAndStoreBrief(
     const pageSummaries: CrawledPageSummary[] = (pageRows ?? []).map((p) => ({
         url: p.url,
         title: p.title,
-        contentExcerpt: "", // title-only ranking — see prompt-page-mapping.ts's doc comment.
+        contentExcerpt: "", // title-only ranking - see prompt-page-mapping.ts's doc comment.
     }));
     const mapping = mapPromptToPage(prompt.prompt_text, pageSummaries);
 

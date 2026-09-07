@@ -5,7 +5,7 @@ import { getValidGoogleToken } from "@/services/google/sync-service";
 
 /**
  * Post a reply to Google and mark the review as responded (Auto commenter / system).
- * For background jobs — no end-user session; uses service role.
+ * For background jobs - no end-user session; uses service role.
  */
 export async function postGoogleReplySystem(reviewId: string, text: string): Promise<void> {
     const trimmed = text.trim();

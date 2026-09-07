@@ -17,7 +17,7 @@ export interface SendOutboundReviewRequestInput {
     /** Raw phone string; normalization is applied here. */
     customerPhone?: string | null;
     customerEmail?: string | null;
-    /** Defaults to "zapier" — programmatic sends look like POS/Zapier flows. */
+    /** Defaults to "zapier" - programmatic sends look like POS/Zapier flows. */
     triggerSource?: OutboundTriggerSource;
     /** Optional pre-built admin client (handy for tests or repeated calls). */
     admin?: SupabaseClient;

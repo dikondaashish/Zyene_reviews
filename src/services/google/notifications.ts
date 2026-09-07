@@ -137,7 +137,7 @@ export type RegisterNotificationsWithRetryParams = {
 
 /**
  * Wraps {@link registerNotifications}: one immediate attempt, then a second after 2s if the first throws.
- * Never throws — callers keep non-fatal behavior. Logs `platformId` and `googleAccountId` on failure.
+ * Never throws - callers keep non-fatal behavior. Logs `platformId` and `googleAccountId` on failure.
  */
 export async function registerNotificationsWithRetry(
     params: RegisterNotificationsWithRetryParams
@@ -158,7 +158,7 @@ export async function registerNotificationsWithRetry(
         } catch (secondError) {
             logger.error(
                 { err: secondError, platformId, googleAccountId, logPrefix },
-                `${logPrefix} registerNotifications failed after retry — Pub/Sub may stay unregistered until manual cron or reconnect`,
+                `${logPrefix} registerNotifications failed after retry - Pub/Sub may stay unregistered until manual cron or reconnect`,
             );
             return { ok: false };
         }

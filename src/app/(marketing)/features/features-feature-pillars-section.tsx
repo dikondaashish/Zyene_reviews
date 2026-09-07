@@ -32,7 +32,7 @@ export function FeaturesFeaturePillarsSection() {
                                     </div>
                                     {pillar.highlight && (
                                         <div className="inline-flex items-center gap-1 ml-2 mb-4 bg-primary/10 text-primary text-[11px] font-bold px-3 py-1 rounded-full border border-primary/20">
-                                            ✦ Unique to Zyene
+                                            <Sparkles className="size-3.5" aria-hidden="true" /> Unique to Zyene
                                         </div>
                                     )}
                                     <h2 className="text-4xl font-bold text-foreground mb-3 leading-tight">{pillar.title}</h2>

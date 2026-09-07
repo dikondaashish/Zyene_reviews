@@ -18,7 +18,7 @@ const contentBriefSchema: Schema = {
                 },
                 required: ["category", "description"],
             },
-            description: "3-8 ranked, concrete edits — never generic advice like 'add more content'.",
+            description: "3-8 ranked, concrete edits - never generic advice like 'add more content'.",
         },
         faq_items: {
             type: SchemaType.ARRAY,
@@ -56,7 +56,7 @@ function buildPrompt(input: ContentBriefInput): string {
               (s, i) =>
                   `${i + 1}. ${s.structure.title ?? s.structure.url} (${s.structure.wordCount} words)\n   Excerpt: ${s.structure.contentExcerpt.slice(0, 400)}`
           )
-        : ["(No cited sources could be read — generate from the prompt and gap analysis alone.)"];
+        : ["(No cited sources could be read - generate from the prompt and gap analysis alone.)"];
 
     return [
         "You are an AEO (answer-engine optimization) content strategist for a local business.",
@@ -82,7 +82,7 @@ function buildPrompt(input: ContentBriefInput): string {
         "- Do NOT state specific facts about this business (prices, hours, response times, certifications, awards, staff names, guarantees) unless they appear above.",
         "- Where a specific fact would strengthen an answer but was not provided, write a placeholder like {{insert your average response time}} instead of inventing one.",
         "- Every edit item must be concrete and actionable, never generic ('add more content', 'improve SEO').",
-        "- FAQ answers must be genuinely useful, self-contained answers — not teasers pointing elsewhere.",
+        "- FAQ answers must be genuinely useful, self-contained answers - not teasers pointing elsewhere.",
         "- rewrite_before must quote only the supplied current excerpt; rewrite_after must be a paste-ready improvement and may use the measured review themes without inventing claims.",
         "- Output ONLY raw JSON matching the schema. No markdown, no code fences.",
     ].join("\n");

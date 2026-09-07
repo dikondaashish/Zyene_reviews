@@ -36,7 +36,7 @@ export const PRODUCT_LINKS: MarketingNavLink[] = [
     { href: "/features/analytics", label: "Analytics & Reporting", icon: BarChart3, desc: "Trends, funnels, PDF and CSV exports" },
     { href: "/how-it-works", label: "How It Works", icon: GitBranch, desc: "4 steps to more 5-star reviews" },
     { href: "/integrations", label: "Integrations", icon: Zap, desc: "Google, Zapier, Square, and more" },
-    { href: "/pricing", label: "Pricing", icon: BarChart3, desc: "Plans from $29.99/mo — no contracts" },
+    { href: "/pricing", label: "Pricing", icon: BarChart3, desc: "Plans from $29.99/mo - no contracts" },
 ];
 
 export const SOLUTIONS_LINKS: MarketingNavLink[] = [

@@ -25,7 +25,7 @@ export default async function AeoAlertsPage() {
             <div>
                 <h2 className="text-3xl font-bold tracking-tight">Alerts</h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                    Only shown when a change clears a statistical significance bar — not every sampling wobble.
+                    Only shown when a change clears a statistical significance bar - not every sampling wobble.
                 </p>
             </div>
 

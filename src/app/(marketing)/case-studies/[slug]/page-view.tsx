@@ -29,13 +29,13 @@ export default async function CaseStudyPage(
                                 { name: study.company, url: `https://www.zyenereviews.com/case-studies/${slug}` },
                             ]}
                         />
-            <CaseStudiesSlugHeaderSection study={study} slug={slug} related={related} />
-            <CaseStudiesSlugChallengeSection study={study} slug={slug} related={related} />
-            <CaseStudiesSlugApproachSection study={study} slug={slug} related={related} />
-            <CaseStudiesSlugResultsSection study={study} slug={slug} related={related} />
-            <CaseStudiesSlugQuoteSection study={study} slug={slug} related={related} />
-            <CaseStudiesSlugRelatedSection study={study} slug={slug} related={related} />
-            <CaseStudiesSlugCtaSection study={study} slug={slug} related={related} />
+            <CaseStudiesSlugHeaderSection study={study} />
+            <CaseStudiesSlugChallengeSection study={study} />
+            <CaseStudiesSlugApproachSection study={study} />
+            <CaseStudiesSlugResultsSection study={study} />
+            <CaseStudiesSlugQuoteSection study={study} />
+            <CaseStudiesSlugRelatedSection study={study} />
+            <CaseStudiesSlugCtaSection related={related} />
         </>
     );
 }

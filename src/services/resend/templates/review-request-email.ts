@@ -26,7 +26,7 @@ function firstName(value: string | null | undefined): string {
 }
 
 /**
- * Plain-text body. Short, conversational, asks for a reply — patterns that
+ * Plain-text body. Short, conversational, asks for a reply - patterns that
  * Gmail typically treats as personal correspondence rather than bulk mail.
  */
 export function reviewRequestEmailPlainText({
@@ -61,7 +61,7 @@ export function reviewRequestEmailPlainText({
         "If you have a minute, we'd love to hear how it went:",
         reviewLink,
         "",
-        "Or just reply to this email — I read every response.",
+        "Or just reply to this email - I read every response.",
         "",
         "Thanks,",
         signoff,

@@ -7,8 +7,8 @@ type Admin = SupabaseClient<Database>;
 /**
  * Thin wrapper over aeo_consume_credit / aeo_reset_credit_grant.
  *
- * The decision logic — atomicity under concurrent samples, replay-safety on
- * sample_id, "no rollover" on reset — lives entirely in the SQL functions
+ * The decision logic - atomicity under concurrent samples, replay-safety on
+ * sample_id, "no rollover" on reset - lives entirely in the SQL functions
  * (20260808200000_aeo_credit_ledger.sql), not duplicated here. A JS mirror of
  * that logic would need its own row lock to be correct under concurrency,
  * which means it would just be a worse copy of the SQL function; keeping one
@@ -65,7 +65,7 @@ export class SupabaseCreditLedgerStore implements CreditLedgerStore {
 
         // 23505: a replayed billing step re-issued the same idempotent Stripe
         // charge and is now recording it a second time. Same object, same
-        // invoice item id, so the conflict IS the correctness — one real
+        // invoice item id, so the conflict IS the correctness - one real
         // charge, one audit row.
         if (error && error.code !== "23505") {
             throw new Error(`recordOverageCharge failed: ${error.message}`);

@@ -70,7 +70,7 @@ export function humanizeRequestStatus(status: string): string {
 }
 
 export function lastRequestEngagementLabel(r: ReviewRequestRow | null | undefined): string {
-    if (!r) return "—";
+    if (!r) return " - ";
     if (r.review_left || r.completed_at) return "Reviewed";
     if (r.clicked_at) return "Clicked";
     if (r.opened_at) return "Opened";

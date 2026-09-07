@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Meta (Facebook/Instagram) Ads — Phase 6
+// Meta (Facebook/Instagram) Ads - Phase 6
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type MetaAudienceType = "industry" | "retarget_competitor" | "retarget_site";
@@ -34,7 +34,7 @@ export const META_ADS_CAMPAIGNS: MetaAdsCampaign[] = [
         landingPath: "/industries/dental",
         utmCampaign: "meta_industry_dental",
         headline: "Dental practices growing reviews on autopilot",
-        subheadline: "SMS requests, private feedback routing, and AI replies — starting at $29.99/mo.",
+        subheadline: "SMS requests, private feedback routing, and AI replies - starting at $29.99/mo.",
     },
     {
         audience: "industry",
@@ -44,7 +44,7 @@ export const META_ADS_CAMPAIGNS: MetaAdsCampaign[] = [
         landingPath: "/industries/home-services",
         utmCampaign: "meta_industry_home_services",
         headline: "Contractors winning more jobs from Google",
-        subheadline: "Post-job SMS review requests and AI replies — from $29.99/mo.",
+        subheadline: "Post-job SMS review requests and AI replies - from $29.99/mo.",
     },
     {
         audience: "industry",
@@ -74,17 +74,17 @@ export const META_ADS_CAMPAIGNS: MetaAdsCampaign[] = [
         landingPath: "/compare/birdeye",
         utmCampaign: "meta_retarget_compare",
         headline: "Same outcomes. A fraction of the price.",
-        subheadline: "Zyene Reviews starts at $29.99/mo — no annual contract, 7-day free trial.",
+        subheadline: "Zyene Reviews starts at $29.99/mo - no annual contract, 7-day free trial.",
     },
     {
         audience: "retarget_competitor",
         audienceLabel: "Podium comparison visitors",
         creativeHook: "$30/mo vs $399/mo",
-        creativeDetail: "Podium retarget — SMS review requests without the enterprise price tag.",
+        creativeDetail: "Podium retarget - SMS review requests without the enterprise price tag.",
         landingPath: "/compare/podium",
         utmCampaign: "meta_retarget_podium",
         headline: "Podium costs $399/mo. Zyene starts at $29.99.",
-        subheadline: "Same SMS review requests and inbox — 7-day free trial, no annual contract.",
+        subheadline: "Same SMS review requests and inbox - 7-day free trial, no annual contract.",
     },
     {
         audience: "retarget_site",
@@ -94,7 +94,7 @@ export const META_ADS_CAMPAIGNS: MetaAdsCampaign[] = [
         landingPath: "/pricing",
         utmCampaign: "meta_retarget_pricing",
         headline: "Ready to grow your Google reviews?",
-        subheadline: "Join local businesses on Zyene — full access free for 7 days.",
+        subheadline: "Join local businesses on Zyene - full access free for 7 days.",
     },
 ];
 

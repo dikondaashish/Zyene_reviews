@@ -1,6 +1,6 @@
 /**
  * Inline hex colors for transactional / marketing emails.
- * Email clients require explicit values — keep them centralized here.
+ * Email clients require explicit values - keep them centralized here.
  */
 import { getAuthSiteUrl } from "@/lib/routing/platform-routes";
 
@@ -32,7 +32,7 @@ export function referralRewardEmailHtml(name: string): string {
     return `<p style="font-size:16px;color:${EMAIL_COLORS.body};">Hi ${name},</p>
 <p style="font-size:16px;color:${EMAIL_COLORS.body};">Someone you referred just became a paying Zyene Reviews customer. We've applied a <strong>1-month account credit</strong> to your Stripe balance (or will reflect on your next invoice).</p>
 <p style="font-size:16px;color:${EMAIL_COLORS.body};">Keep sharing your referral link from Settings → Billing.</p>
-<p style="font-size:13px;color:${EMAIL_COLORS.subtle};">— The Zyene Reviews Team</p>`;
+<p style="font-size:13px;color:${EMAIL_COLORS.subtle};"> - The Zyene Reviews Team</p>`;
 }
 
 export function reputationScoreEmailHtml(metrics: {
@@ -47,7 +47,7 @@ export function reputationScoreEmailHtml(metrics: {
 <li><strong>Review count:</strong> ${metrics.totalReviews}</li>
 <li><strong>Estimated response rate:</strong> ~${metrics.estimatedResponseRatePct}% (public-data estimate)</li>
 </ul>
-<p style="font-size:14px;color:${EMAIL_COLORS.muted};">Track competitors, automate requests, and reply with AI in Zyene Reviews — <a href="${AUTH_SIGNUP_URL}?utm_source=free_tool&utm_medium=reputation_score">free 7-day trial</a>.</p>`;
+<p style="font-size:14px;color:${EMAIL_COLORS.muted};">Track competitors, automate requests, and reply with AI in Zyene Reviews - <a href="${AUTH_SIGNUP_URL}?utm_source=free_tool&utm_medium=reputation_score">free 7-day trial</a>.</p>`;
 }
 
 export function reviewLinkEmailHtml(name: string, reviewLink: string): string {
@@ -62,7 +62,7 @@ export function reviewResponseBonusEmailHtml(primary: string, bonusHtml: string)
 <blockquote style="border-left:3px solid ${EMAIL_COLORS.border};padding-left:12px;color:${EMAIL_COLORS.body};">${primary}</blockquote>
 <h3 style="font-size:16px;color:${EMAIL_COLORS.heading};">5 bonus templates</h3>
 ${bonusHtml}
-<p style="font-size:14px;color:${EMAIL_COLORS.muted};"><a href="${AUTH_SIGNUP_URL}?utm_source=free_tool&utm_medium=review_response">Try AI replies in your brand voice</a> — 7-day free trial.</p>`;
+<p style="font-size:14px;color:${EMAIL_COLORS.muted};"><a href="${AUTH_SIGNUP_URL}?utm_source=free_tool&utm_medium=review_response">Try AI replies in your brand voice</a> - 7-day free trial.</p>`;
 }
 
 export function reviewResponseBonusItemHtml(label: string, text: string): string {

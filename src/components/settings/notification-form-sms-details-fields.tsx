@@ -52,7 +52,7 @@ export function NotificationFormSmsDetailsFields({ form }: { form: UseFormReturn
                             <NotificationFormFieldHelpTip label="What urgency score means for SMS">
                                 <p>
                                     We text you when a review’s urgency is <strong>at least</strong> this number,
-                                    or when it is <strong>1–2 stars</strong> (so you still hear about very unhappy
+                                    or when it is <strong>1-2 stars</strong> (so you still hear about very unhappy
                                     customers). A <strong>higher</strong> score means <strong>fewer</strong> texts;
                                     a lower score means more texts.
                                 </p>

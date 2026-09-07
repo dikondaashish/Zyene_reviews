@@ -32,9 +32,9 @@ import { buildLocalePrompt } from "./adapter-support";
  *   The free grounding bucket is per billing project and aeo_reserve_quota
  *   assumes it owns all of it. A shared key would let other features drain the
  *   allowance without ever reaching the ledger.
- * - Grounding is always on. An ungrounded answer is a different product — it
+ * - Grounding is always on. An ungrounded answer is a different product - it
  *   reflects training data rather than what the engine says about a business
- *   today — and it would also be billed under a different line of the quote.
+ *   today - and it would also be billed under a different line of the quote.
  */
 
 /** One grounded prompt = one unit of the daily allowance, however many searches it fans out to. */
@@ -106,7 +106,7 @@ export class GeminiEngineAdapter implements AnswerEngineAdapter {
 
             // A grounded call consumes its unit whether or not we liked the
             // answer, so cost is recorded on every non-failed outcome. Reporting
-            // 0 here would undercount the allowance — the self-amplifying error
+            // 0 here would undercount the allowance - the self-amplifying error
             // the ledger is built to avoid.
             const costUnits = UNITS_PER_GROUNDED_PROMPT;
 

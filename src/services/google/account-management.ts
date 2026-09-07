@@ -18,7 +18,7 @@ function normalizeParent(prefix: "accounts" | "locations", resourceName: string)
 }
 
 /**
- * GET accounts/{accountId}/admins — who has access to the Google Business account.
+ * GET accounts/{accountId}/admins - who has access to the Google Business account.
  * `accountResourceName` must be `accounts/{numericId}`.
  */
 export async function listAccountAdmins(
@@ -41,7 +41,7 @@ export async function listAccountAdmins(
 }
 
 /**
- * GET locations/{locationId}/admins — who has access to a specific Business Profile location.
+ * GET locations/{locationId}/admins - who has access to a specific Business Profile location.
  * `locationResourceName` must be `locations/{numericId}`.
  */
 export async function listLocationAdmins(

@@ -9,7 +9,7 @@
  *      `302 Location: http://169.254.169.254/...` and the validated origin
  *      becomes irrelevant. Every hop is re-validated here.
  *   2. Discovered URLs. Sitemap and link discovery bound themselves to the
- *      site's own host, but this layer does not assume they did — it is the
+ *      site's own host, but this layer does not assume they did - it is the
  *      single choke point every crawl request passes through, so the invariant
  *      holds even if a future discovery path forgets.
  *
@@ -38,7 +38,7 @@ export type CrawlFetchOptions = {
     isPublic?: (url: string) => Promise<{ safe: boolean }>;
 };
 
-/** Read at most `maxBytes`, then stop pulling — an oversized body is truncated, not fatal. */
+/** Read at most `maxBytes`, then stop pulling - an oversized body is truncated, not fatal. */
 async function readTextCapped(response: Response, maxBytes: number): Promise<string> {
     if (!response.body) return "";
     const reader = response.body.getReader();
@@ -68,7 +68,7 @@ function isRedirect(status: number): boolean {
 
 /**
  * Builds the `FetchText` the crawler runs on. Returns `null` for anything that
- * failed or was refused — the crawler already treats null as "request failed"
+ * failed or was refused - the crawler already treats null as "request failed"
  * and records it as a page-level finding, so a blocked address surfaces as an
  * unreachable page rather than a thrown crawl.
  */

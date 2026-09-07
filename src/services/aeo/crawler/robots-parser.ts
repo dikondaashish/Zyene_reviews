@@ -1,6 +1,6 @@
 /**
  * E-3 / F5.3: robots.txt, parsed enough to answer "can this agent fetch this
- * path" — the single check the plan doc calls the highest-impact AEO blocker
+ * path" - the single check the plan doc calls the highest-impact AEO blocker
  * and "trivially checkable". Trivial to CHECK, not trivial to get right: this
  * is the one place a bug reads as "your site blocks GPTBot" to a customer who
  * never blocked anything, so the matching algorithm follows RFC 9309 rather
@@ -10,7 +10,7 @@
  * end-anchor within a rule path, longest-match-wins with ties favouring
  * Allow. NOT scoped: Sitemap directives here (discover-urls.ts reads those
  * separately), Crawl-delay (Phase 1 politeness is a fixed ≤1 req/s regardless
- * of what a site asks for for other reasons — matching a slower request is
+ * of what a site asks for for other reasons - matching a slower request is
  * safe, matching a faster one is not, so a site's own Crawl-delay can only
  * ever widen our default, never narrow it, and nothing here does that yet).
  */
@@ -24,8 +24,8 @@ const WILDCARD_GROUP = "*";
 
 /**
  * The agents F5.3 checks by name. Google-Extended and CCBot are trained-on
- * crawlers with no separate "fetch this page for the answer" bot — blocking
- * them affects training, not live retrieval — but the plan doc names them
+ * crawlers with no separate "fetch this page for the answer" bot - blocking
+ * them affects training, not live retrieval - but the plan doc names them
  * explicitly as part of the audit, so they are checked the same way.
  */
 export const AI_CRAWLER_AGENTS = [
@@ -68,8 +68,8 @@ export function parseRobotsTxt(text: string): RobotsRules {
         if (field === "allow" || field === "disallow") {
             groupOpen = false;
             if (currentAgents.length === 0 || value === undefined) continue;
-            // Disallow with an empty value means "disallow nothing" per spec —
-            // equivalent to Allow: / — not "disallow everything".
+            // Disallow with an empty value means "disallow nothing" per spec -
+            // equivalent to Allow: / - not "disallow everything".
             const rule: RobotsRule = { path: value, allow: field === "allow" || value === "" };
             for (const agent of currentAgents) {
                 groups.get(agent)?.push(rule);
@@ -94,7 +94,7 @@ function ruleToRegExp(pattern: string): RegExp {
  * Whether `userAgent` may fetch `path`, per the most specific matching group.
  *
  * Falls back to `*` when no group names this agent exactly. No rules at all
- * — empty robots.txt, or a 404 for it — means allowed, per spec: absence is
+ * - empty robots.txt, or a 404 for it - means allowed, per spec: absence is
  * not a block.
  */
 export function isPathAllowed(rules: RobotsRules, userAgent: string, path: string): boolean {
@@ -116,7 +116,7 @@ export function isPathAllowed(rules: RobotsRules, userAgent: string, path: strin
 /**
  * F5.3's actual output: which named AI crawlers this robots.txt blocks from
  * the site root. Root-level blocking is the practical, well-understood
- * signal tools in this space report — a site that disallows everything for
+ * signal tools in this space report - a site that disallows everything for
  * GPTBot at "/" is blocked in every sense that matters to this audit.
  */
 export function findBlockedAiCrawlers(rules: RobotsRules): AiCrawlerAgent[] {

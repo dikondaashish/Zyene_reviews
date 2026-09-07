@@ -25,7 +25,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
     );
 }
 
-/** F6.1/F6.2/F6.4/F6.5: the content brief for this exact prompt — never auto-published, always copy-paste. */
+/** F6.1/F6.2/F6.4/F6.5: the content brief for this exact prompt - never auto-published, always copy-paste. */
 export function ContentBriefSection({
     businessId,
     promptId,
@@ -72,7 +72,7 @@ export function ContentBriefSection({
                     {brief.confidence === "low" && (
                         <div className="flex items-start gap-2 text-xs text-muted-foreground">
                             <AlertTriangle className="size-3.5 shrink-0 mt-0.5" />
-                            The cited sources for this prompt could not be read (paywalled or blocked) — this brief
+                            The cited sources for this prompt could not be read (paywalled or blocked) - this brief
                             is based on the prompt and gap analysis alone.
                         </div>
                     )}
@@ -80,7 +80,7 @@ export function ContentBriefSection({
                     <div>
                         <p className="text-sm font-medium">Target page</p>
                         <p className="text-sm text-muted-foreground">
-                            {brief.hasOwningPage ? brief.targetPageUrl : "No existing page owns this prompt yet — create a new page for it."}
+                            {brief.hasOwningPage ? brief.targetPageUrl : "No existing page owns this prompt yet - create a new page for it."}
                         </p>
                     </div>
 
@@ -95,7 +95,7 @@ export function ContentBriefSection({
                                         <span className="text-xs font-medium uppercase text-muted-foreground">
                                             {item.category}
                                         </span>{" "}
-                                        — {item.description}
+                                        - {item.description}
                                     </li>
                                 ))}
                             </ul>
@@ -129,7 +129,7 @@ export function ContentBriefSection({
                         </div>
                         {brief.schemaPatchHasPlaceholders && (
                             <p className="mt-1 text-xs text-muted-foreground">
-                                Contains {"{{placeholders}}"} for facts we could not verify — fill those in before
+                                Contains {"{{placeholders}}"} for facts we could not verify - fill those in before
                                 publishing.
                             </p>
                         )}

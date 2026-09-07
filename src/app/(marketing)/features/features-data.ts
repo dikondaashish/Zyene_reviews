@@ -13,7 +13,7 @@ export const PILLARS = [
         iconBg: "bg-chart-4/10",
         iconColor: "text-chart-4",
         title: "Review Monitoring & Inbox",
-        tagline: "Never miss a review — across every platform",
+        tagline: "Never miss a review - across every platform",
         bullets: [
             "Real-time sync from Google, Facebook, and Yelp",
             "Unified inbox for all reviews across all locations",
@@ -45,11 +45,11 @@ export const PILLARS = [
         iconBg: "bg-chart-2/10",
         iconColor: "text-chart-2",
         title: "Review Collection & Negative Feedback Shield",
-        tagline: "Get more 5-star reviews. Route bad ones privately.",
+        tagline: "Ask for reviews and follow up on low ratings.",
         bullets: [
             "Branded review request campaigns via SMS & email",
             "Shareable QR codes for in-person review collection",
-            "Negative Feedback Shield routes unhappy customers to private resolution before they go public on Google",
+            "Negative Feedback Shield gives unhappy customers a private feedback path and alerts your team",
             "POS & automation triggers (Square, Clover, Zapier)",
             "AI-generated review prompt crafted for each customer",
         ],

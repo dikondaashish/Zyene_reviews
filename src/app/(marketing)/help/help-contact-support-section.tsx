@@ -9,7 +9,7 @@ export function HelpContactSupportSection() {
                     <div className="p-10 bg-card rounded-2xl border border-border">
                         <h2 className="text-2xl font-bold mb-4">Still need help?</h2>
                         <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-                            Our support team is available Monday through Friday, 9am–6pm EST.
+                            Our support team is available Monday through Friday, 9am-6pm EST.
                             We typically respond within 24 hours.
                         </p>
                         <div className="flex flex-col sm:flex-row justify-center gap-4">

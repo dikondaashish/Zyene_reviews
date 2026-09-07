@@ -11,19 +11,6 @@ export function isCompleteReviewText(text: string): boolean {
     return SENTENCE_END.test(t);
 }
 
-/**
- * Ensures AI/copied review text ends on a full sentence and mentions the business when possible.
- */
-function mentionsBusiness(text: string, businessName: string): boolean {
-    const lower = text.toLowerCase();
-    const tokens = businessName
-        .trim()
-        .toLowerCase()
-        .split(/\s+/)
-        .filter((w) => w.length > 2);
-    return tokens.some((token) => lower.includes(token));
-}
-
 export function ensureCompleteReviewText(text: string, businessName: string): string {
     let t = text.trim().replace(/\s+/g, " ");
     if (!t) return t;
@@ -33,7 +20,7 @@ export function ensureCompleteReviewText(text: string, businessName: string): st
         if (lastEnd >= 40) {
             t = t.slice(0, lastEnd + 1).trim();
         } else {
-            t = t.replace(/[\s\-–—]+$/, "").replace(INCOMPLETE_TAIL, "").trim();
+            t = t.replace(/[\s-]+$/, "").replace(INCOMPLETE_TAIL, "").trim();
             if (!t) {
                 return `Great experience at ${businessName}.`;
             }
@@ -43,8 +30,8 @@ export function ensureCompleteReviewText(text: string, businessName: string): st
         }
     }
 
-    if (!mentionsBusiness(t, businessName)) {
-        t = `${t} Highly recommend ${businessName}.`;
+    if (businessName.trim() && !t.toLowerCase().includes(businessName.trim().toLowerCase())) {
+        t = `${t} I had this experience at ${businessName}.`;
     }
 
     return t;

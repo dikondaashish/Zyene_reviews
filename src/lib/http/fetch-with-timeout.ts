@@ -7,14 +7,14 @@
  * Clover, a heartbeat endpoint) into a burned function slot and, on a cron or
  * Inngest path, a step that never reports.
  *
- * A caller that passes its own `signal` keeps it — this only fills the gap
+ * A caller that passes its own `signal` keeps it - this only fills the gap
  * where there was none.
  */
 
 /** Enough for a slow third-party API, short enough to fail before the platform does. */
 export const DEFAULT_FETCH_TIMEOUT_MS = 10_000;
 
-/** Non-critical fire-and-forget pings — never worth holding a request open for. */
+/** Non-critical fire-and-forget pings - never worth holding a request open for. */
 export const HEARTBEAT_TIMEOUT_MS = 5_000;
 
 export function fetchWithTimeout(

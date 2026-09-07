@@ -1,4 +1,4 @@
-/** Local SEO checklist lead magnet — event names and attribution constants. */
+/** Local SEO checklist lead magnet - event names and attribution constants. */
 
 export const LOCAL_SEO_CHECKLIST_SOURCE = "local_seo_checklist";
 

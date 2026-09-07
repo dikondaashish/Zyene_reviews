@@ -11,7 +11,7 @@ type Admin = SupabaseClient<Database>;
 /**
  * Everything billTest needs (credit ledger, Stripe gateway, and resolving
  * which Stripe customer an org even is) assembled behind the one call
- * dispatch-unit.ts makes — see BillingGateway in orchestration/ports.ts for
+ * dispatch-unit.ts makes - see BillingGateway in orchestration/ports.ts for
  * why that file only needs the interface, not this.
  */
 export class SupabaseBillingGateway implements BillingGateway {

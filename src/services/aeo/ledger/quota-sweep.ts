@@ -5,14 +5,14 @@ import { assertReservationOpen } from "./quota-reservation";
  * E-5 recovery path: returning units claimed by work that never finished.
  *
  * Separate from quota-reservation.ts, which owns the live path (claim, then
- * reconcile against what the engine actually did). These two look alike — both
- * move a reservation out of `reserved` and both write a terminal timestamp — and
+ * reconcile against what the engine actually did). These two look alike - both
+ * move a reservation out of `reserved` and both write a terminal timestamp - and
  * they mean opposite things. Settling records consumption that happened;
  * sweeping asserts that none did. Reaching for the wrong one should require
  * importing from the wrong file rather than picking the wrong sibling function.
  */
 
-/** Abandon before dispatch — deferred by the budget guard, or the run was cancelled. */
+/** Abandon before dispatch - deferred by the budget guard, or the run was cancelled. */
 export function releaseReservation(reservation: Reservation, now?: Date): Reservation {
     assertReservationOpen(reservation, "release");
     return {
@@ -38,7 +38,7 @@ export function isExpired(reservation: Reservation, now: Date, ttlMs = RESERVATI
  * Sweep a crashed reservation so its units return to the day's allowance.
  *
  * Zeroing consumption here is a claim that nothing was spent, and a dispatched
- * reservation cannot honestly make it — `dispatch_attempts > 0` means a request
+ * reservation cannot honestly make it - `dispatch_attempts > 0` means a request
  * went out and may have been billed. Expiring such a row silently converts a
  * possible charge into recorded-zero, which is the undercount the ledger exists
  * to prevent. Callers must reconcile those against the vendor instead; this

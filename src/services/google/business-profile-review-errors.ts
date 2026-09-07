@@ -3,7 +3,7 @@
  *
  * Google returns the same HTTP status for "you never enabled the API" and
  * "your GBP access request is still pending", which need very different user
- * messaging — hence the parsing.
+ * messaging - hence the parsing.
  */
 
 const GBP_PREREQS_URL = "https://developers.google.com/my-business/content/prereqs";
@@ -30,12 +30,12 @@ export function parseGoogleReviewsApiError(errorBody: string, httpStatus: number
                 kind: "api_disabled",
                 userMessage:
                     "Enable the Google My Business API (mybusiness.googleapis.com) on this project using the link below, " +
-                    "and also enable My Business Account Management + Business Information APIs. Wait 2–5 minutes, then try Sync again.",
+                    "and also enable My Business Account Management + Business Information APIs. Wait 2-5 minutes, then try Sync again.",
                 activationUrl,
             };
         }
 
-        // Quota 0 / GBP formal access — after APIs are enabled but Google still blocks
+        // Quota 0 / GBP formal access - after APIs are enabled but Google still blocks
         const gbpAccess =
             /quota of 0|quota.*exhausted|RESOURCE_EXHAUSTED|request for GBP|GBP API access|Business Profile API access|prerequisite|not been granted|additional access required/i.test(
                 msg
@@ -45,7 +45,7 @@ export function parseGoogleReviewsApiError(errorBody: string, httpStatus: number
                 kind: "gbp_access_pending",
                 userMessage:
                     "Google may require Business Profile API access approval or a non-zero quota (common with the split My Business APIs). " +
-                    `Apply here: ${GBP_PREREQS_URL} — approval can take days to weeks.`,
+                    `Apply here: ${GBP_PREREQS_URL} - approval can take days to weeks.`,
             };
         }
     } catch {

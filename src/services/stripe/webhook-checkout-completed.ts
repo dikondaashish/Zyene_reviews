@@ -29,7 +29,7 @@ function planStatusFor(subStatus: Stripe.Subscription.Status): string {
     return "active";
 }
 
-/** Post-checkout growth emails and referral credit — every step is non-fatal. */
+/** Post-checkout growth emails and referral credit - every step is non-fatal. */
 async function runPostCheckoutGrowth(
     subscription: Stripe.Subscription,
     session: Stripe.Checkout.Session,

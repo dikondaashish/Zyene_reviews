@@ -6,7 +6,7 @@ import { MARKETING_SITE_ORIGIN } from "@/lib/seo/marketing-site-url";
  * Root metadata, split out of layout.tsx so the layout stays a thin shell of
  * providers. Re-exported from `layout.tsx`; Next.js reads it from there.
  *
- * `title.template` is what lets every page set a bare title segment — pages
+ * `title.template` is what lets every page set a bare title segment - pages
  * must NOT append "| Zyene Reviews" themselves.
  */
 export const metadata: Metadata = {
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
                 url: "/og/og-default.png",
                 width: 1200,
                 height: 630,
-                alt: "Zyene Reviews — Reputation Management for Local Businesses",
+                alt: "Zyene Reviews - Reputation Management for Local Businesses",
             },
         ],
     },

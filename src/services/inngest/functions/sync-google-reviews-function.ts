@@ -112,7 +112,7 @@ export const syncGoogleReviews = inngest.createFunction(
                 return enqueueMissingGoogleReviewAnalysis(context.platform.business_id);
             });
 
-            // Listing performance + search keywords — after reviews are visible and analysis is queued
+            // Listing performance + search keywords - after reviews are visible and analysis is queued
             await step.run("sync-google-performance", async () => {
                 const r = await syncGooglePerformanceForPlatform(platformId);
                 if (!r.success) {

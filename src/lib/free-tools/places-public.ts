@@ -71,7 +71,7 @@ export type PublicPlaceMetrics = {
     averageRating: number;
     totalReviews: number;
     reviewLink: string;
-    /** Heuristic: businesses with more reviews often respond more — public estimate only */
+    /** Heuristic: businesses with more reviews often respond more - public estimate only */
     estimatedResponseRatePct: number;
 };
 

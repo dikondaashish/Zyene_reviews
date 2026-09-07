@@ -13,7 +13,7 @@ export function toastAuthEmailRateLimit(toast: {
 }): void {
     toast.error("Too many auth emails right now", {
         description:
-            "Please wait 15–60 minutes before requesting another link, or use Sign in with Google. " +
+            "Please wait 15-60 minutes before requesting another link, or use Sign in with Google. " +
             "To raise limits permanently, set custom SMTP in the Supabase dashboard (Authentication → Emails).",
     });
 }

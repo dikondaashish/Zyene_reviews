@@ -4,7 +4,7 @@ import { redis } from "@/lib/db/redis";
 
 type AdminClient = ReturnType<typeof createAdminClient>;
 
-/** Invitation primary key (UUID) shape — used when invite links mistakenly use `id` instead of `token`. */
+/** Invitation primary key (UUID) shape - used when invite links mistakenly use `id` instead of `token`. */
 const INVITATION_ID_RE =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -143,7 +143,7 @@ export async function acceptBusinessInvitationAdmin(params: {
             }
             return { accepted: true, businessId: businessIdResolved };
         }
-        // Rare: invite marked accepted but membership row missing — repair.
+        // Rare: invite marked accepted but membership row missing - repair.
         const roleRepair = ["owner", "admin", "manager", "member", "viewer"].includes(anyInvite.role)
             ? anyInvite.role
             : "member";

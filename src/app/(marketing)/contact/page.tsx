@@ -16,7 +16,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         card: "summary_large_image",
         title: "Contact Zyene Reviews",
         description:
-            "Reach us at support@zyenereviews.com. Mon–Fri, 9am–6pm EST. We typically respond within 24 hours.",
+            "Reach us at support@zyenereviews.com. Mon-Fri, 9am-6pm EST. We typically respond within 24 hours.",
     },
 });
 

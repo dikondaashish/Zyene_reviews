@@ -1,16 +1,16 @@
 /**
- * F5.12: which prompts a crawl finding actually affects — never claimed
+ * F5.12: which prompts a crawl finding actually affects - never claimed
  * beyond what the data supports.
  *
  *   confirmed          Page-level finding on a URL an AI engine actually
  *                       cited for a specific active prompt. Direct evidence.
  *   likely              Site-wide finding (robots/AI-bot blocking) on a
- *                       business AI engines have demonstrably cited before —
+ *                       business AI engines have demonstrably cited before -
  *                       a block plausibly affects future citations too.
  *   possible            Site-wide finding with no citation history yet, or a
  *                       page-level finding on a page that was never cited.
  *                       Plausible, not evidenced.
- *   no_demonstrated_impact   No active prompts at all — nothing to affect.
+ *   no_demonstrated_impact   No active prompts at all - nothing to affect.
  */
 export type ImpactLevel = "confirmed" | "likely" | "possible" | "no_demonstrated_impact";
 

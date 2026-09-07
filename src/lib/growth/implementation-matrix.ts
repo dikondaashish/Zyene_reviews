@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Implementation Priority Matrix — GROWTH_BLUEPRINT § Implementation Priority
+// Implementation Priority Matrix - GROWTH_BLUEPRINT § Implementation Priority
 // Tracks phase deliverables and completion status for leadership reviews.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -30,8 +30,8 @@ export const GROWTH_IMPLEMENTATION_MATRIX: GrowthPhaseMatrix[] = [
     {
         phase: 0,
         title: "Fix the Foundation",
-        weekRange: "Week 1–2",
-        headline: "Must Do First — Foundation",
+        weekRange: "Week 1-2",
+        headline: "Must Do First - Foundation",
         status: "complete",
         blocks: [
             {
@@ -52,7 +52,7 @@ export const GROWTH_IMPLEMENTATION_MATRIX: GrowthPhaseMatrix[] = [
                 ],
             },
             {
-                weekLabel: "Week 3–4",
+                weekLabel: "Week 3-4",
                 tasks: [
                     { id: "p0-meta", title: "Per-page metadata", status: "complete", deliverable: "generateMetadata on marketing routes" },
                     { id: "p0-jsonld", title: "JSON-LD structured data", status: "complete", deliverable: "Organization + product schema" },
@@ -66,8 +66,8 @@ export const GROWTH_IMPLEMENTATION_MATRIX: GrowthPhaseMatrix[] = [
     {
         phase: 1,
         title: "SEO & Discoverability",
-        weekRange: "Week 2–4",
-        headline: "Foundation — discoverability",
+        weekRange: "Week 2-4",
+        headline: "Foundation - discoverability",
         status: "complete",
         blocks: [
             {
@@ -83,12 +83,12 @@ export const GROWTH_IMPLEMENTATION_MATRIX: GrowthPhaseMatrix[] = [
     {
         phase: 2,
         title: "Conversion Architecture",
-        weekRange: "Week 4–6",
-        headline: "Build Next — Conversion + core pages",
+        weekRange: "Week 4-6",
+        headline: "Build Next - Conversion + core pages",
         status: "complete",
         blocks: [
             {
-                weekLabel: "Week 4–5",
+                weekLabel: "Week 4-5",
                 tasks: [
                     { id: "p2-pricing", title: "/pricing page", status: "complete", deliverable: "/pricing" },
                     { id: "p2-features", title: "/features page", status: "complete", deliverable: "/features" },
@@ -102,12 +102,12 @@ export const GROWTH_IMPLEMENTATION_MATRIX: GrowthPhaseMatrix[] = [
     {
         phase: 3,
         title: "Industry & Comparison Engine",
-        weekRange: "Week 6–10",
-        headline: "Build Next — SEO verticals",
+        weekRange: "Week 6-10",
+        headline: "Build Next - SEO verticals",
         status: "complete",
         blocks: [
             {
-                weekLabel: "Week 6–8",
+                weekLabel: "Week 6-8",
                 tasks: [
                     { id: "p3-ind-hub", title: "/industries hub", status: "complete", deliverable: "/industries" },
                     { id: "p3-ind-3", title: "Key verticals (restaurants, dental, auto)", status: "complete", deliverable: "8 industry pages" },
@@ -115,7 +115,7 @@ export const GROWTH_IMPLEMENTATION_MATRIX: GrowthPhaseMatrix[] = [
                 ],
             },
             {
-                weekLabel: "Week 8–10",
+                weekLabel: "Week 8-10",
                 tasks: [
                     { id: "p3-compare-hub", title: "/compare hub", status: "complete", deliverable: "/compare" },
                     { id: "p3-compare-b", title: "/compare/birdeye", status: "complete", deliverable: "4 competitor pages" },
@@ -127,12 +127,12 @@ export const GROWTH_IMPLEMENTATION_MATRIX: GrowthPhaseMatrix[] = [
     {
         phase: 4,
         title: "Content & Authority",
-        weekRange: "Week 10–16",
-        headline: "Scale — Content + trust articles",
+        weekRange: "Week 10-16",
+        headline: "Scale - Content + trust articles",
         status: "complete",
         blocks: [
             {
-                weekLabel: "Week 10–14",
+                weekLabel: "Week 10-14",
                 tasks: [
                     { id: "p4-blog-infra", title: "Blog infrastructure", status: "complete", deliverable: "/blog + blog-data.ts" },
                     { id: "p4-blog-4", title: "First blog posts", status: "complete", deliverable: `${"multiple"} posts live` },
@@ -140,7 +140,7 @@ export const GROWTH_IMPLEMENTATION_MATRIX: GrowthPhaseMatrix[] = [
                 ],
             },
             {
-                weekLabel: "Week 14–16",
+                weekLabel: "Week 14-16",
                 tasks: [
                     { id: "p4-help", title: "Help center articles", status: "complete", deliverable: "23 help articles" },
                     { id: "p4-resources", title: "Resource guides", status: "complete", deliverable: "/resources/*" },
@@ -152,14 +152,14 @@ export const GROWTH_IMPLEMENTATION_MATRIX: GrowthPhaseMatrix[] = [
     {
         phase: 5,
         title: "Trust & Social Proof",
-        weekRange: "Week 16–20",
-        headline: "Scale — Trust flywheel",
+        weekRange: "Week 16-20",
+        headline: "Scale - Trust flywheel",
         status: "complete",
         blocks: [
             {
-                weekLabel: "Week 16–20",
+                weekLabel: "Week 16-20",
                 tasks: [
-                    { id: "p5-cases", title: "Case studies (3–5)", status: "complete", deliverable: "/case-studies/*" },
+                    { id: "p5-cases", title: "Case studies (3-5)", status: "complete", deliverable: "/case-studies/*" },
                     { id: "p5-logos", title: "Customer logo bar", status: "complete", deliverable: "Homepage social proof" },
                     { id: "p5-security", title: "/security page", status: "complete", deliverable: "/security" },
                     { id: "p5-g2", title: "G2/Capterra listing", status: "external", deliverable: "Third-party profiles" },
@@ -171,12 +171,12 @@ export const GROWTH_IMPLEMENTATION_MATRIX: GrowthPhaseMatrix[] = [
     {
         phase: 6,
         title: "Paid Acquisition & Partnerships",
-        weekRange: "Week 20–28",
-        headline: "Accelerate — Paid + partners",
+        weekRange: "Week 20-28",
+        headline: "Accelerate - Paid + partners",
         status: "complete",
         blocks: [
             {
-                weekLabel: "Week 20–28",
+                weekLabel: "Week 20-28",
                 tasks: [
                     { id: "p6-ads", title: "Google Ads setup", status: "external", deliverable: "Google Ads account + UTMs" },
                     { id: "p6-meta", title: "Meta retargeting", status: "external", deliverable: "Meta pixel + audiences" },
@@ -190,12 +190,12 @@ export const GROWTH_IMPLEMENTATION_MATRIX: GrowthPhaseMatrix[] = [
     {
         phase: 7,
         title: "Product-Led Growth Loops",
-        weekRange: "Week 28–36",
-        headline: "Accelerate — PLG",
+        weekRange: "Week 28-36",
+        headline: "Accelerate - PLG",
         status: "complete",
         blocks: [
             {
-                weekLabel: "Week 28–36",
+                weekLabel: "Week 28-36",
                 tasks: [
                     { id: "p7-referral", title: "Referral program", status: "complete", deliverable: "referral_conversions + settings card" },
                     { id: "p7-tools", title: "Free tools (lead gen)", status: "complete", deliverable: "/tools/*" },
@@ -210,7 +210,7 @@ export const GROWTH_IMPLEMENTATION_MATRIX: GrowthPhaseMatrix[] = [
         phase: 8,
         title: "Scale & Enterprise",
         weekRange: "Week 36+",
-        headline: "Accelerate — Enterprise",
+        headline: "Accelerate - Enterprise",
         status: "complete",
         blocks: [
             {

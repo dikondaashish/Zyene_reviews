@@ -1,5 +1,5 @@
 /**
- * Next.js middleware proxy — handles subdomain routing, auth session refresh,
+ * Next.js middleware proxy - handles subdomain routing, auth session refresh,
  * API rate limiting, and CORS headers for the multi-tenant app.
  *
  * Order matters: early exits (embeds, webhooks, preflight) run before the

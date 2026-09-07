@@ -32,7 +32,7 @@ const QUOTA_EXHAUSTED_MARKERS =
 /**
  * Maps an HTTP status to an error kind.
  *
- * Retryability is deliberately NOT decided here — `engineError` derives it from
+ * Retryability is deliberately NOT decided here - `engineError` derives it from
  * the kind, so no adapter can mark a permanent failure retryable and spin a run
  * against a wall that will never move.
  *

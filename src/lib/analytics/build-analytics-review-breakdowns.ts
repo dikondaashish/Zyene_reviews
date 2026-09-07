@@ -41,7 +41,7 @@ function buildTrendData(reviews: AnalyticsReviewRow[]) {
 function buildSentimentData(metrics: ReviewMetrics) {
   return [
     {
-      name: "Positive (4–5★)",
+      name: "Positive (4-5★)",
       value: metrics.positiveReviews,
       color: "var(--chart-2)",
     },
@@ -51,7 +51,7 @@ function buildSentimentData(metrics: ReviewMetrics) {
       color: "var(--chart-3)",
     },
     {
-      name: "Negative (1–2★)",
+      name: "Negative (1-2★)",
       value: metrics.negativeReviews,
       color: "var(--destructive)",
     },

@@ -7,7 +7,7 @@ import type { Database } from "@/lib/db/supabase/database.types";
  * Shared state threaded through the proxy's host-specific branches.
  *
  * `response()` is a getter rather than a value because Supabase reassigns the
- * session-carrying response from inside its `setAll` cookie callback — a
+ * session-carrying response from inside its `setAll` cookie callback - a
  * snapshot taken before that runs would drop refreshed auth cookies.
  */
 export interface ProxyContext {
@@ -39,7 +39,7 @@ export function isRscRequest(request: NextRequest): boolean {
     );
 }
 
-/** Reads the user's onboarding flag. Throws if the query fails — callers decide. */
+/** Reads the user's onboarding flag. Throws if the query fails - callers decide. */
 export async function readOnboardingRow(ctx: ProxyContext, userId: string) {
     const { data } = await ctx.supabase
         .from("users")

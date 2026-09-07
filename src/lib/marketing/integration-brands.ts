@@ -1,4 +1,4 @@
-/** Integration brand chips — colors reference CSS variables from globals.css. */
+/** Integration brand chips - colors reference CSS variables from globals.css. */
 
 export interface IntegrationBrandChip {
     name: string;

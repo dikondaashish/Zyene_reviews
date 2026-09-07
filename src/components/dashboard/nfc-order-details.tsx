@@ -26,7 +26,7 @@ export function NfcOrderDetails({
     const subtotal = nfcOrderTotals(quantity, "standard").subtotalCents;
     const features = [
         `Pre-linked to the ${businessName} review page`,
-        "Works on iPhone and Android — nothing to install",
+        "Works on iPhone and Android - nothing to install",
         "Countertop stand for checkout counters, desks, and tables",
     ];
 

@@ -1,5 +1,5 @@
 /**
- * Stripe plan catalog — pricing, limits, and marketing feature copy.
+ * Stripe plan catalog - pricing, limits, and marketing feature copy.
  * Source of truth for Starter, Professional, and Enterprise plan metadata.
  *
  * What a plan *unlocks* lives in plan-entitlements.ts; this file is only what a
@@ -172,7 +172,7 @@ export function getEnterprisePlan(): Plan {
 
 /**
  * Unsubscribed fallback limits (used when a subscription is canceled).
- * Not a selectable plan — just the defaults for downgraded orgs.
+ * Not a selectable plan - just the defaults for downgraded orgs.
  */
 export const UNSUBSCRIBED_LIMITS: PlanLimits = {
     maxLocations: 1,

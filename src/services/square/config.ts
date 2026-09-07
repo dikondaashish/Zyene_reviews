@@ -1,6 +1,6 @@
 /**
  * Square sandbox/production env helpers.
- * Optional — routes return a clear error if unset (do not throw at import).
+ * Optional - routes return a clear error if unset (do not throw at import).
  */
 import { getAppBaseUrl } from "@/config/env";
 
@@ -44,7 +44,7 @@ export function getSquareWebhookNotificationUrl(): string {
 
 /**
  * Application Secret looks like `sandbox-sq0csb-…` / `sq0csp-…`.
- * Values starting with `EAAA` are access tokens — a common mix-up that breaks ObtainToken.
+ * Values starting with `EAAA` are access tokens - a common mix-up that breaks ObtainToken.
  */
 export function squareApplicationSecretLooksValid(
     secret = getSquareApplicationSecret(),

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Growth KPI definitions — GROWTH_BLUEPRINT § KPI Dashboard
+// Growth KPI definitions - GROWTH_BLUEPRINT § KPI Dashboard
 // Targets and sources are the north-star; live values come from kpi-metrics.ts
 // or external dashboards linked below.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -85,7 +85,7 @@ export const KPI_DEFINITIONS: KpiDefinition[] = [
         name: "Visitor → signup rate",
         description: "New user.signed_up events divided by marketing sessions (same period). Set GROWTH_MARKETING_SESSIONS_30D or use Vercel/GA.",
         source: "events + GROWTH_MARKETING_SESSIONS_30D / Vercel Analytics",
-        targetLabel: "3–5%",
+        targetLabel: "3-5%",
         computable: true,
         targetDirection: "higher",
         targetValue: 3,
@@ -110,7 +110,7 @@ export const KPI_DEFINITIONS: KpiDefinition[] = [
         name: "Trial → paid conversion",
         description: "Organizations that moved from trial/trialing to active paid subscription.",
         source: "organizations.plan_status + Stripe",
-        targetLabel: "25–35%",
+        targetLabel: "25-35%",
         computable: true,
         targetDirection: "higher",
         targetValue: 25,

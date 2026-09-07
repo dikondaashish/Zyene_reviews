@@ -1,4 +1,4 @@
-/** Google review sync — tokens */
+/** Google review sync - tokens */
 
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";

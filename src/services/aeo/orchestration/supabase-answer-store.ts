@@ -20,7 +20,7 @@ const ENVELOPE_VERSION = 1;
  * overwrites its own object instead of orphaning one.
  *
  * The organization id leads because the read policy matches on the first path
- * segment — see 20260807180000_aeo_answer_storage.sql.
+ * segment - see 20260807180000_aeo_answer_storage.sql.
  */
 export function answerObjectPath(input: {
     organizationId: string;
@@ -35,7 +35,7 @@ export function answerObjectPath(input: {
 /**
  * E-8: the verbatim engine response, kept out-of-row.
  *
- * Stores the PROMPT alongside the answer. An answer on its own is not evidence —
+ * Stores the PROMPT alongside the answer. An answer on its own is not evidence -
  * "Gates and Arthur Bryant's" only means something next to the question that
  * produced it, and the prompt text can be edited or deactivated afterwards.
  * Locale travels with it for the same reason: the same question answers

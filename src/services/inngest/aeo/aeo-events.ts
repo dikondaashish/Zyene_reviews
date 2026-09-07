@@ -12,7 +12,7 @@
  * Per-unit children rather than one function looping every prompt x engine:
  * retry isolation is then per dispatch, and the granularity matches the
  * idempotency key exactly, so one poisoned engine cannot force a whole run to
- * be re-attempted — which for a paid engine would mean re-paying for the units
+ * be re-attempted - which for a paid engine would mean re-paying for the units
  * that already succeeded.
  */
 export type AeoRunRequestedEvent = {
@@ -48,7 +48,7 @@ export type AeoDispatchRequestedEvent = {
 /**
  * E-9.1. One event per yearly-plan org whose monthly credit-refresh day is
  * today (yearly-credit-reset-eligibility.ts decides "today"). grantedMicroUsd
- * is resolved once, at fan-out time, by the cron route — the worker trusts it
+ * is resolved once, at fan-out time, by the cron route - the worker trusts it
  * rather than re-deriving it, the same way aeo/dispatch.requested carries a
  * fully-resolved DispatchRequest rather than making the child re-plan.
  */
@@ -63,14 +63,14 @@ export type AeoCreditResetRequestedEvent = {
  * E-3 automation. One event per business whose weekly crawl slot
  * (crawl-slot.ts) is now. Carries a fully-resolved origin and plan-derived
  * page cap, the same "fan-out resolves, worker trusts" split as
- * AeoDispatchRequestedEvent — the worker never has to re-derive eligibility.
+ * AeoDispatchRequestedEvent - the worker never has to re-derive eligibility.
  */
 export type AeoCrawlRequestedEvent = {
     data: {
         businessId: string;
         organizationId: string;
         origin: string;
-        /** Null for a real org with no plan set (e.g. mid-signup) — pageCapForPlan() treats that the same as an unrecognized plan: the safer Starter cap. */
+        /** Null for a real org with no plan set (e.g. mid-signup) - pageCapForPlan() treats that the same as an unrecognized plan: the safer Starter cap. */
         planId: string | null;
         trigger: "scheduled" | "manual";
     };
@@ -79,7 +79,7 @@ export type AeoCrawlRequestedEvent = {
 /**
  * F8: one event per business to check for new alerts. Detection itself is
  * pure reads (no vendor calls, no crawling), so unlike E-3/E-7 this needs no
- * per-business slot — every AEO-eligible business is checked on the same
+ * per-business slot - every AEO-eligible business is checked on the same
  * daily fan-out.
  */
 export type AeoAlertCheckRequestedEvent = {

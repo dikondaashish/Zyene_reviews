@@ -12,7 +12,7 @@ export interface BillingClientProps {
     hasStripeCustomer: boolean;
     /** Net-new Stripe checkout may include a 7-day trial; false for returning subscribers. */
     checkoutOffersTrial: boolean;
-    /** Active Stripe subscription (active / trialing / past_due) — drives CTA copy and proration confirmation. */
+    /** Active Stripe subscription (active / trialing / past_due) - drives CTA copy and proration confirmation. */
     hasActiveStripeSubscription: boolean;
     canManageBilling: boolean;
     usage: {

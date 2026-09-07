@@ -10,7 +10,7 @@ type Admin = SupabaseClient<Database>;
  * Every claim goes through the aeo_reserve_quota RPC rather than an INSERT,
  * because the allowance decision and the row have to be written under one lock.
  * A read-then-insert here would let two concurrent dispatches see the same
- * remaining balance and both proceed — which is exactly what the pure
+ * remaining balance and both proceed - which is exactly what the pure
  * planEngineBudget guard cannot prevent, and why it was demoted to projection.
  */
 export class SupabaseReservationStore implements ReservationStore {
@@ -103,7 +103,7 @@ export class SupabaseReservationStore implements ReservationStore {
         }
     ): Promise<void> {
         // Guarded on state so a double-settle updates zero rows rather than
-        // overwriting a settled row — the accounting equivalent of a lost write.
+        // overwriting a settled row - the accounting equivalent of a lost write.
         const { data, error } = await this.db
             .from("aeo_quota_reservations")
             .update({

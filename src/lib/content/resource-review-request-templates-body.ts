@@ -4,7 +4,7 @@ import type { ContentSection } from "./blog-data";
 export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
     {
         type: "summary",
-        text: "Copy-paste SMS and email scripts for fair, honest review outreach—plus industry variants, one reminder, thank-you notes, and a private-feedback follow-up. Replace [Name], [Business Name], and [link] with your details.",
+        text: "Copy-paste SMS and email scripts for fair, honest review outreach - plus industry variants, one reminder, thank-you notes, and a private-feedback follow-up. Replace [Name], [Business Name], and [link] with your details.",
     },
     { type: "h2", text: "Compliance: Fair Outreach" },
     {
@@ -12,7 +12,7 @@ export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
         text: "Do not selectively ask only happy customers for reviews. Do not offer discounts, gifts, or incentives for positive reviews. Do not pressure customers with repeated messages. Invite real customers honestly, keep outreach proportional (one follow-up max per visit), and follow Google review policies for your industry.",
     },
     { type: "h2", text: "SMS Review Request Templates" },
-    { type: "h3", text: "1. General — short and direct" },
+    { type: "h3", text: "1. General - short and direct" },
     {
         type: "quote",
         text: "Hi [Name], thanks for visiting [Business Name] today. If your experience was good, we'd appreciate an honest Google review when you have a minute: [link]",
@@ -22,12 +22,12 @@ export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
         type: "quote",
         text: "Hi [Name], [Owner Name] here from [Business Name]. Thank you for your business. An honest Google review helps other locals find us: [link]",
     },
-    { type: "h3", text: "3. Service business — job complete" },
+    { type: "h3", text: "3. Service business - job complete" },
     {
         type: "quote",
         text: "Hi [Name], your service with [Business Name] is wrapped up. If everything met your expectations, a quick honest review on Google helps: [link] Thank you!",
     },
-    { type: "h3", text: "4. Post-visit follow-up (1–3 hours after)" },
+    { type: "h3", text: "4. Post-visit follow-up (1-3 hours after)" },
     {
         type: "quote",
         text: "Hi [Name], hope you're still feeling good about your visit to [Business Name]. When you have 60 seconds, an honest Google review means a lot: [link]",
@@ -87,28 +87,28 @@ export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
     { type: "h3", text: "15. In-person / QR placard (one line)" },
     {
         type: "quote",
-        text: "Enjoyed your visit? Scan for an honest Google review — thank you for supporting [Business Name].",
+        text: "Enjoyed your visit? Scan for an honest Google review - thank you for supporting [Business Name].",
     },
     { type: "h2", text: "Reminder, Thank-You & Private Feedback" },
-    { type: "h3", text: "16. Reminder (one follow-up, 5–7 days later)" },
+    { type: "h3", text: "16. Reminder (one follow-up, 5-7 days later)" },
     {
         type: "quote",
-        text: "Hi [Name], gentle reminder from [Business Name] — if you have a moment, an honest Google review still helps us: [link] This is our only follow-up. Thank you!",
+        text: "Hi [Name], gentle reminder from [Business Name] - if you have a moment, an honest Google review still helps us: [link] This is our only follow-up. Thank you!",
     },
     { type: "h3", text: "17. Follow-up email (non-responders)" },
     {
         type: "quote",
-        text: "Subject: One reminder from [Business Name]\n\nHi [Name],\n\nWe asked last week if you'd share an honest Google review. No pressure — this is our last note.\n\n→ [link]\n\nThanks for being a customer,\n[Business Name]",
+        text: "Subject: One reminder from [Business Name]\n\nHi [Name],\n\nWe asked last week if you'd share an honest Google review. No pressure - this is our last note.\n\n→ [link]\n\nThanks for being a customer,\n[Business Name]",
     },
     { type: "h3", text: "18. Thank-you after a review" },
     {
         type: "quote",
-        text: "Hi [Name], we saw your Google review — thank you for taking the time. It means a lot to our team at [Business Name]. Hope to see you again soon!",
+        text: "Hi [Name], we saw your Google review - thank you for taking the time. It means a lot to our team at [Business Name]. Hope to see you again soon!",
     },
     { type: "h3", text: "19. Negative feedback follow-up (private resolution)" },
     {
         type: "quote",
-        text: "Hi [Name], we're sorry your experience at [Business Name] wasn't what it should be. Please reply here or call [phone] so we can make it right. Your honest feedback helps us improve — we're not asking you to change a public review.",
+        text: "Hi [Name], we're sorry your experience at [Business Name] wasn't what it should be. Please reply here or call [phone] so we can make it right. Your honest feedback helps us improve - we're not asking you to change a public review.",
     },
     { type: "h3", text: "20. Loyalty / repeat customer" },
     {
@@ -118,7 +118,7 @@ export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
     { type: "h3", text: "21. Same-day evening check-in" },
     {
         type: "quote",
-        text: "Hi [Name], [Business Name] here — hope your day went well after your visit. When you have a spare minute, an honest Google review helps: [link]",
+        text: "Hi [Name], [Business Name] here - hope your day went well after your visit. When you have a spare minute, an honest Google review helps: [link]",
     },
     { type: "h3", text: "22. Email reminder (final)" },
     {
@@ -134,7 +134,7 @@ export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
         "Upload customers or trigger requests from POS/Zapier when a job completes",
         "Use your branded collectratings.com page with fair review paths and Negative Feedback Shield for private issue capture",
         "Get alerts for new Google, Facebook, and Yelp reviews in one inbox",
-        "Draft replies with AI assistance — you approve before posting",
+        "Draft replies with AI assistance - you approve before posting",
         "See campaign status without manual spreadsheet tracking",
     ]},
     { type: "p", text: "Learn how Shield keeps outreach compliant on /blog/negative-feedback-shield. Compare platforms on /compare; public plans on /pricing." },
@@ -170,7 +170,7 @@ export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
     },
     {
         type: "tip",
-        text: "Request the pack at the top of this page—we email a link to this URL (source: review_request_templates). No PDF attachment yet; the web version is ready now. Copy any preview template below without logging in.",
+        text: "Request the pack at the top of this page - we email a link to this URL (source: review_request_templates). No PDF attachment yet; the web version is ready now. Copy any preview template below without logging in.",
     },
     { type: "cta", ctaLabel: "Automate review requests with Zyene Reviews →", ctaHref: "/signup" },
     { type: "cta", ctaLabel: "See review collection features →", ctaHref: "/features/review-collection" },

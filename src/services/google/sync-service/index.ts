@@ -1,4 +1,4 @@
-/** Google review sync — public API barrel. */
+/** Google review sync - public API barrel. */
 
 export { isGoogleSyncConflictError } from "@/services/google/sync-lock-utils";
 

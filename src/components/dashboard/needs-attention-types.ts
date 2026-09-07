@@ -5,11 +5,11 @@ export type NeedsAttentionReview = {
     avatarUrl?: string | null;
     rating: number;
     urgency: number;
-    /** ISO string — must be JSON-serializable when passed from a Server Component. */
+    /** ISO string - must be JSON-serializable when passed from a Server Component. */
     date: string;
     text: string;
     tags: string[];
-    /** `google` (default) or `yelp` — only Google supports in-app reply posting. */
+    /** `google` (default) or `yelp` - only Google supports in-app reply posting. */
     platform?: string;
 };
 

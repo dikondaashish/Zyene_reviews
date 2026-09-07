@@ -56,7 +56,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 2. Conversion pages — Phase 2 (live)
+    // 2. Conversion pages - Phase 2 (live)
     // ─────────────────────────────────────────────
     const conversionPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/pricing`, lastModified: now, changeFrequency: "weekly", priority: 0.95 },
@@ -72,7 +72,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 3. Industry verticals — Phase 3 (live)
+    // 3. Industry verticals - Phase 3 (live)
     // ─────────────────────────────────────────────
     const industryPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/industries`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
@@ -87,7 +87,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 4. Comparison pages — Phase 3 (live)
+    // 4. Comparison pages - Phase 3 (live)
     // ─────────────────────────────────────────────
     const comparePages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/compare`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
@@ -200,7 +200,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 10. Enterprise & agencies — Phase 8
+    // 10. Enterprise & agencies - Phase 8
     // ─────────────────────────────────────────────
     const enterprisePages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/demo`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
@@ -216,7 +216,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 11. Free tools — Phase 7
+    // 11. Free tools - Phase 7
     // ─────────────────────────────────────────────
     const toolPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/tools`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
@@ -229,14 +229,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 11. Partners — Phase 6
+    // 11. Partners - Phase 6
     // ─────────────────────────────────────────────
     const partnerPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/partners`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     ];
 
     // ─────────────────────────────────────────────
-    // 11. Case Studies — Phase 5
+    // 11. Case Studies - Phase 5
     // ─────────────────────────────────────────────
     const caseStudyPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/case-studies`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
@@ -249,7 +249,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 7. Blog — Phase 4
+    // 7. Blog - Phase 4
     // ─────────────────────────────────────────────
     const blogPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
@@ -262,7 +262,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 8. Resource Guides — Phase 4
+    // 8. Resource Guides - Phase 4
     // ─────────────────────────────────────────────
     const resourcePages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/resources`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
@@ -275,7 +275,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ];
 
     // ─────────────────────────────────────────────
-    // 9. Help Center Articles — Phase 4
+    // 9. Help Center Articles - Phase 4
     // ─────────────────────────────────────────────
     const helpPages: MetadataRoute.Sitemap = [
         { url: `${BASE_URL}/help`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },

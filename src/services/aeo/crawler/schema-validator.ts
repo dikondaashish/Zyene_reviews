@@ -1,12 +1,12 @@
 import { extractJsonLdBlocks, flattenEntities, entityTypes, type JsonLdBlock } from "./extract-json-ld";
 
 /**
- * F5.4: validates the schema.org types that actually matter for AEO —
+ * F5.4: validates the schema.org types that actually matter for AEO -
  * LocalBusiness/Organization (identity a citation-checking crawler or AI
  * agent uses to confirm WHO this page is about), FAQPage (the single
  * highest-leverage type for direct-answer extraction), Article/BlogPosting,
  * and BreadcrumbList (site structure). This is not full schema.org spec
- * validation — schema.org has hundreds of types, and claiming to validate
+ * validation - schema.org has hundreds of types, and claiming to validate
  * "structured data" in general would be exactly the kind of overclaim this
  * module exists to avoid. Required fields per type follow Google's own
  * Search Central structured-data guidelines, not the (looser) schema.org
@@ -17,10 +17,10 @@ import { extractJsonLdBlocks, flattenEntities, entityTypes, type JsonLdBlock } f
 /**
  * schema.org's LocalBusiness subtypes, live-verified: Wolfpack BBQ's real
  * production homepage (checked 2026-08-09) uses `Restaurant`, not the
- * generic `LocalBusiness` — and Google's own structured-data guidelines say
+ * generic `LocalBusiness` - and Google's own structured-data guidelines say
  * to use the MOST SPECIFIC applicable type. A validator that only recognized
  * the literal string "LocalBusiness" would have flagged Wolfpack's complete,
- * correct, well-optimized markup as missing — a real false positive caught
+ * correct, well-optimized markup as missing - a real false positive caught
  * against real data, not a hypothetical. This list is the common subtypes
  * for this product's actual customer base (food service, retail, personal
  * care, home services, professional services), not the full schema.org
@@ -75,7 +75,7 @@ function requiredFieldsFor(type: string): readonly string[] | null {
     return REQUIRED_FIELDS[type] ?? null;
 }
 
-/** Any recognized LocalBusiness subtype, or Organization — identity that must not conflict across blocks on one page. */
+/** Any recognized LocalBusiness subtype, or Organization - identity that must not conflict across blocks on one page. */
 export function isIdentityType(type: string): boolean {
     return LOCAL_BUSINESS_TYPES.has(type) || type === "Organization";
 }
@@ -91,7 +91,7 @@ export type SchemaValidationResult = {
     parseErrors: string[];
     entitiesFound: { type: string; label: string | null }[];
     fieldFindings: SchemaEntityFinding[];
-    /** Same @type appearing twice with a different name/identity value — a real conflict, not a duplicate listing. */
+    /** Same @type appearing twice with a different name/identity value - a real conflict, not a duplicate listing. */
     conflictingIdentities: { entityType: string; labels: string[] }[];
 };
 
@@ -135,7 +135,7 @@ export function validateSchemaBlocks(html: string): SchemaValidationResult {
             if (isIdentityType(type)) {
                 // Grouped under one family key, not the raw @type: Restaurant and
                 // LocalBusiness disagreeing on name is exactly as real a conflict
-                // as two Restaurant blocks disagreeing — they are the same kind
+                // as two Restaurant blocks disagreeing - they are the same kind
                 // of claim ("what business is this page about") in different
                 // schema.org vocabulary.
                 const familyKey = LOCAL_BUSINESS_TYPES.has(type) ? "LocalBusiness" : "Organization";

@@ -5,7 +5,7 @@ function usd(microUsd: number): string {
     return `$${(microUsd / 1_000_000).toFixed(2)}`;
 }
 
-/** F4.9: prompts x engines x cadence vs. plan allowance — see quota-meter.ts for the cadence caveat. */
+/** F4.9: prompts x engines x cadence vs. plan allowance - see quota-meter.ts for the cadence caveat. */
 export function QuotaMeterPanel({ meter }: { meter: QuotaMeterResult }) {
     return (
         <div className="space-y-3 text-sm">
@@ -41,7 +41,7 @@ export function QuotaMeterPanel({ meter }: { meter: QuotaMeterResult }) {
                 </div>
             )}
             <p className="text-xs text-muted-foreground pt-1">
-                Based on the current weekly sampling cadence for every plan — the scheduler does not
+                Based on the current weekly sampling cadence for every plan - the scheduler does not
                 yet run Professional daily.
             </p>
         </div>

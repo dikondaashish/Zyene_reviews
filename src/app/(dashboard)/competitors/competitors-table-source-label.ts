@@ -10,5 +10,5 @@ export function getCompetitorSourceLabel(
     if (meta?.provider) return String(meta.provider);
     if (snap?.source === "google_places") return "google_places";
     if (snap?.source === "manual" && meta?.seeded_on_create) return "Pending sync";
-    return snap?.source || "—";
+    return snap?.source || " - ";
 }

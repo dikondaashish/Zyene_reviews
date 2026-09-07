@@ -18,7 +18,7 @@ export function GoogleSeoAeoBottomSection({ content }: { content: GoogleSeoAeoCo
                 />
             </div>
 
-            {/* F6.6 — the same optimizer idea extended past the description. */}
+            {/* F6.6 - the same optimizer idea extended past the description. */}
             <div id="gbp-content-optimizer">
                 <GbpContentOptimizerCard
                     businessId={content.businessId}

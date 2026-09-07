@@ -11,7 +11,7 @@ import { SupabaseReservationStore } from "@/services/aeo/orchestration/supabase-
  *
  * One function per grid rather than one per cell, unlike the sampling
  * dispatcher. The two look similar but bill differently: a sampling unit is one
- * independent charge, whereas a grid is only meaningful as a whole — 24 of 25
+ * independent charge, whereas a grid is only meaningful as a whole - 24 of 25
  * cells is not a heatmap. Fanning cells out as separate functions would let a
  * partial grid persist as if it were complete, and would spread one logical
  * spend across events nothing reconciles.
@@ -119,7 +119,7 @@ export const aeoGeoGridWorker = inngest.createFunction(
         if (persisted.failedCells > 0) {
             logger.warn(
                 { businessId: data.businessId, runId: persisted.runId, failedCells: persisted.failedCells },
-                "AEO geo-grid completed with unsearched cells — coverage excludes them"
+                "AEO geo-grid completed with unsearched cells - coverage excludes them"
             );
         }
         if (outcome.costMicroUsd > 0) {
@@ -142,7 +142,7 @@ export const aeoGeoGridWorker = inngest.createFunction(
  *
  * Only the business's own name today. Google frequently lists a longer trading
  * name, which findLocalRank handles by matching containment in either
- * direction — so a single canonical name is usually enough.
+ * direction - so a single canonical name is usually enough.
  */
 async function loadBusinessAliases(businessId: string): Promise<string[]> {
     const { data } = await createAdminClient()

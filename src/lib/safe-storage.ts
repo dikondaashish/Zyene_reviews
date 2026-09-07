@@ -11,6 +11,6 @@ export function safeLocalStorageSet(key: string, value: string): void {
     try {
         localStorage.setItem(key, value);
     } catch {
-        // Ignore — embed contexts may block storage.
+        // Ignore - embed contexts may block storage.
     }
 }

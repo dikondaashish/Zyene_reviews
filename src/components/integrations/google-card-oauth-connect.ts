@@ -31,7 +31,7 @@ export async function startGoogleOAuthConnect(businessId: string): Promise<void>
 
 /**
  * E-2: incremental consent for Search Console. Same redirect target as a
- * normal reconnect — `include_granted_scopes` widens the existing grant
+ * normal reconnect - `include_granted_scopes` widens the existing grant
  * instead of replacing it, so this never drops `business.manage` access.
  */
 export async function startGoogleSearchConsoleConnect(businessId: string): Promise<void> {

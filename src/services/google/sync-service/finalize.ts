@@ -1,4 +1,4 @@
-/** Google review sync — finalize */
+/** Google review sync - finalize */
 
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
@@ -16,7 +16,7 @@ export async function finalizeGoogleSync(
 ) {
     const admin = createAdminClient();
 
-    /** Roll up from DB only — Google API `totalReviewCount` can be 0 for wrong listing while rows exist here, and `0 ?? dbCount` would incorrectly keep 0. */
+    /** Roll up from DB only - Google API `totalReviewCount` can be 0 for wrong listing while rows exist here, and `0 ?? dbCount` would incorrectly keep 0. */
     const { data: ratingRows, error: rollupErr } = await admin
         .from("reviews")
         .select("rating")
@@ -100,4 +100,3 @@ export async function enqueueMissingGoogleReviewAnalysis(
 
     return { queued: ids.length };
 }
-

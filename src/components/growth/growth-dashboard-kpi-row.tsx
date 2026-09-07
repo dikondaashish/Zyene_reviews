@@ -34,7 +34,7 @@ export function GrowthDashboardKpiRow({ def, metric }: { def: KpiDefinition; met
                 {def.targetLabel}
             </td>
             <td className="py-3 px-2 text-sm font-mono align-top whitespace-nowrap">
-                {metric?.displayValue ?? "—"}
+                {metric?.displayValue ?? " - "}
             </td>
             <td className="py-3 pl-2 align-top min-w-[120px]">
                 <span

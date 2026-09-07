@@ -40,7 +40,7 @@ export function isInjectedMetaMaskError(event: ErrorEvent): boolean {
  * Next.js derives action ids from the build. When a deploy lands while someone
  * has a page open, their cached bundle posts an id the new build does not know,
  * and Next throws this. It is expected on every deploy, affects only tabs opened
- * before it, and clears on reload — so it is noise rather than a defect.
+ * before it, and clears on reload - so it is noise rather than a defect.
  *
  * Matched narrowly on Next's own wording plus the hex id, so a genuinely missing
  * action still surfaces through other error shapes.

@@ -1,5 +1,5 @@
 /**
- * The six Google Business Profile audit checks of F5.10 — five that shipped as
+ * The six Google Business Profile audit checks of F5.10 - five that shipped as
  * `pending` stubs, plus `services-list`, which shipped scored from a proxy
  * (`actionLinkCount >= 25`) and is replaced here with the merchant's real
  * Google services.
@@ -7,7 +7,7 @@
  * Pure functions over the signals in `gbp-audit-signals.ts`. Every verdict is
  * derived from a field Google actually returned; a signal we could not fetch
  * yields `unavailable`, and a check that does not apply to this business yields
- * `not-applicable`. Neither counts toward the score — inventing a `fail` from
+ * `not-applicable`. Neither counts toward the score - inventing a `fail` from
  * missing data is the failure mode this module is written to avoid.
  */
 import type { GbpAuditSignals } from "./gbp-audit-signals";
@@ -87,7 +87,7 @@ function checkPostKeywords(signals: GbpAuditSignals, keywords: string[]): GbpChe
         return {
             ...base,
             status: "not-applicable",
-            detail: `No published posts in the last ${posts.windowDays} days to analyse — see Post Frequency.`,
+            detail: `No published posts in the last ${posts.windowDays} days to analyse - see Post Frequency.`,
         };
     }
     if (keywords.length === 0) {
@@ -131,7 +131,7 @@ function checkServiceDescriptions(signals: GbpAuditSignals): GbpCheckResult {
         return {
             ...base,
             status: "not-applicable",
-            detail: "No services listed yet — see Services Listed.",
+            detail: "No services listed yet - see Services Listed.",
         };
     }
 
@@ -144,7 +144,7 @@ function checkServiceDescriptions(signals: GbpAuditSignals): GbpCheckResult {
 }
 
 /**
- * Google's v1 API models a service area as up to 20 place ids, not a radius —
+ * Google's v1 API models a service area as up to 20 place ids, not a radius -
  * the radius-based model the PRD's wording assumes does not exist on this API,
  * so this measures declared coverage areas instead.
  */

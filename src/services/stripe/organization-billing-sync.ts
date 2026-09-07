@@ -59,7 +59,7 @@ const TERMINAL_SUBSCRIPTION_STATUSES = new Set([
     "incomplete_expired",
 ]);
 
-/** After subscription is ended or missing in Stripe — same net effect as customer.subscription.deleted. */
+/** After subscription is ended or missing in Stripe - same net effect as customer.subscription.deleted. */
 export async function clearOrganizationBillingAfterCancellation(
     admin: SupabaseClient,
     organizationId: string

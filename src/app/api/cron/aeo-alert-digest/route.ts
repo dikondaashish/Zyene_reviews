@@ -7,7 +7,7 @@ import { inngest } from "@/services/inngest/client";
 import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
 
 /**
- * F8 digest fan-out — every business with at least one undigested,
+ * F8 digest fan-out - every business with at least one undigested,
  * unmuted alert. Deliberately separate from detection: a digest-send retry
  * must never re-run detection (which could create new alerts mid-send), and
  * a detection retry must never re-send an already-delivered email.

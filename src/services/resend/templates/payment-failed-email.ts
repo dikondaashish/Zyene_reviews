@@ -33,7 +33,7 @@ export function paymentFailedEmail({
                             <!-- Error Icon -->
                             <div style="text-align: center; margin-bottom: 24px;">
                                 <div style="display: inline-block; width: 64px; height: 64px; background-color: #fef2f2; border-radius: 50%; text-align: center; line-height: 64px;">
-                                    <span style="font-size: 32px;">⚠️</span>
+                                    ${EMAIL_STATUS_ICONS.warning}
                                 </div>
                             </div>
 
@@ -76,3 +76,4 @@ export function paymentFailedEmail({
 </html>
     `;
 }
+import { EMAIL_STATUS_ICONS } from "./email-status-icons";

@@ -1,9 +1,9 @@
 /**
  * F5.4: pulls every JSON-LD block out of a page's raw HTML and parses it with
- * real JSON.parse — regex only isolates the `<script>` tag itself (the same
+ * real JSON.parse - regex only isolates the `<script>` tag itself (the same
  * narrow, well-defined pattern extract-page-signals.ts already uses for
  * `<title>`/`<link>`/`<meta>`), never the JSON payload inside it. A malformed
- * block is captured as a `parseError`, never thrown — one broken script tag
+ * block is captured as a `parseError`, never thrown - one broken script tag
  * on a page must not stop the crawl or lose the other findings for that page.
  */
 export type JsonLdBlock = {
@@ -36,7 +36,7 @@ export function extractJsonLdBlocks(html: string): JsonLdBlock[] {
 /**
  * Flattens `@graph` wrappers and top-level arrays into a flat list of
  * entities. A block can legally be one object, an array of objects, or an
- * object with a `@graph` array — schema.org and Google both allow all three,
+ * object with a `@graph` array - schema.org and Google both allow all three,
  * and treating only the first shape as valid is how a validator convinces
  * itself real markup is broken.
  */

@@ -6,7 +6,7 @@ import { logger } from "@/lib/logger";
  * than assumed.
  *
  * The Supabase-Auth reconnect flow (`oauth-callback-existing-user.ts`) only
- * gets back a `Session` from `exchangeCodeForSession` — Google's raw token
+ * gets back a `Session` from `exchangeCodeForSession` - Google's raw token
  * response, which carries the `scope` field, never reaches application code
  * that way. Calling Google's own tokeninfo endpoint with the access token is
  * the only way that flow can observe what was granted, matching how the

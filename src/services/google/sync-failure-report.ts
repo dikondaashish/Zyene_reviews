@@ -46,7 +46,7 @@ export function reportGoogleSyncFailure(logPrefix: string, error: unknown): stri
                 googleReason: error.googleReason,
                 kind: error.kind,
             },
-            `${logPrefix} Google account state blocks sync — customer action required`
+            `${logPrefix} Google account state blocks sync - customer action required`
         );
         return message;
     }

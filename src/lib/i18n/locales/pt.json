@@ -61,8 +61,8 @@
     "upgrade_prompt": "Melhorar Plano",
     "website_clicks": "Cliques no site",
     "website_clicks_desc": "Toques no link do site",
-    "positive_experience": "Avaliações positivas (4–5★)",
-    "negative_mixed": "avaliações de 1–2★",
+    "positive_experience": "Avaliações positivas (4-5★)",
+    "negative_mixed": "avaliações de 1-2★",
     "no_sentiment_data": "Sem dados de sentimento",
     "engagement_rate": "Conversão de solicitações",
     "engagement_desc": "Solicitações concluídas entre as enviadas",
@@ -83,8 +83,8 @@
     "review_spotlight_manage_all": "Gerir tudo",
     "needs_attention_title": "Precisa da sua atenção",
     "needs_attention_subtitle_zero": "Sem avaliações urgentes de momento",
-    "needs_attention_subtitle_one": "1 avaliação urgente — podemos redigir uma resposta por si",
-    "needs_attention_subtitle_many": "{count} avaliações urgentes — podemos redigir respostas por si",
+    "needs_attention_subtitle_one": "1 avaliação urgente - podemos redigir uma resposta por si",
+    "needs_attention_subtitle_many": "{count} avaliações urgentes - podemos redigir respostas por si",
     "needs_attention_view_all": "Ver tudo",
     "needs_attention_your_reply_label": "A sua resposta como proprietário",
     "needs_attention_sent_saved": "Publicado no Google",
@@ -156,7 +156,7 @@
     "proration_notice_fallback": "Será cobrado hoje um valor proporcional ao restante do seu período de faturação; em seguida, {{recurring}}.",
     "proration_preview_loading": "A calcular o valor…",
     "trial_ends_on_upgrade_notice": "Ao fazer upgrade, sua avaliação gratuita termina e a cobrança começa imediatamente.",
-    "pro_prorated_no_trial_badge": "Faturação proporcional — sem avaliação"
+    "pro_prorated_no_trial_badge": "Faturação proporcional - sem avaliação"
   },
   "public_profile": {
     "title": "Perfil Público",

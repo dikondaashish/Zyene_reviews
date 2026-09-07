@@ -72,7 +72,7 @@ export default async function TechnicalAuditPage() {
                         <p className="py-6 text-sm text-muted-foreground">
                             {data.latestRun
                                 ? "Waiting for the current crawl to finish."
-                                : "No audit has run yet — click \"Run technical audit\" above to start one."}
+                                : "No audit has run yet - click \"Run technical audit\" above to start one."}
                         </p>
                     )}
                 </CardContent>

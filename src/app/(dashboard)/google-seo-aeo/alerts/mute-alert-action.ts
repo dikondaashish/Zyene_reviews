@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/db/supabase/server";
 
 /**
- * Calls mute_aeo_alert(uuid) — a narrow SECURITY DEFINER RPC, not a direct
+ * Calls mute_aeo_alert(uuid) - a narrow SECURITY DEFINER RPC, not a direct
  * table UPDATE. There is no client-writable UPDATE policy on aeo_alerts;
  * this RPC is the only write surface a signed-in user has, and it can only
  * ever set muted_at on a row already scoped to the caller's own org.

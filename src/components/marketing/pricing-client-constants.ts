@@ -2,7 +2,7 @@ export const PRICING_FAQS = [
     {
         question: "How does the 7-day free trial work?",
         answer:
-            "Sign up for Starter or Professional and get full access to every feature for 7 days. Cancel before the trial ends and you won't be charged. No credit card lock-in, no annual contracts — cancel anytime from your billing settings.",
+            "Sign up for Starter or Professional and get full access to every feature for 7 days. Cancel before the trial ends and you won't be charged. No credit card lock-in, no annual contracts - cancel anytime from your billing settings.",
     },
     {
         question: "What happens at the end of the trial?",
@@ -12,17 +12,17 @@ export const PRICING_FAQS = [
     {
         question: "Can I switch plans?",
         answer:
-            "Yes — upgrade or downgrade anytime from your billing settings. Upgrades take effect immediately (prorated). Downgrades take effect at the next billing cycle.",
+            "Yes - upgrade or downgrade anytime from your billing settings. Upgrades take effect immediately (prorated). Downgrades take effect at the next billing cycle.",
     },
     {
         question: "What counts against my monthly review request limits?",
         answer:
-            "Each email or SMS sent to a customer counts as 1 request toward your monthly quota. Shareable link views do not count — only the initial review draft generation step counts against your AI-generated review draft limit.",
+            "Each email or SMS sent to a customer counts as 1 request toward your monthly quota. Shareable link views do not count - only the initial review draft generation step counts against your AI-generated review draft limit.",
     },
     {
         question: "Can I manage multiple locations?",
         answer:
-            "The Starter plan covers 1 location. Professional covers up to 3 locations — each with its own independent limits (email requests, SMS, AI replies). Enterprise offers unlimited locations with custom limits.",
+            "The Starter plan covers 1 location. Professional covers up to 3 locations - each with its own independent limits (email requests, SMS, AI replies). Enterprise offers unlimited locations with custom limits.",
     },
     {
         question: "Do you offer annual billing?",
@@ -37,7 +37,7 @@ export const PRICING_FAQS = [
     {
         question: "Can I cancel anytime?",
         answer:
-            "Absolutely. Cancel anytime from your billing settings — no cancellation fees, no contracts, no questions asked. Your account stays active until the end of the billing period.",
+            "Absolutely. Cancel anytime from your billing settings - no cancellation fees, no contracts, no questions asked. Your account stays active until the end of the billing period.",
     },
 ] as const;
 

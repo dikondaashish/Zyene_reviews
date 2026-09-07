@@ -2,10 +2,10 @@ import { promises as dns } from "node:dns";
 import { isIP } from "node:net";
 
 /**
- * `origin` for a crawl is `businesses.website` — data the business OWNER
+ * `origin` for a crawl is `businesses.website` - data the business OWNER
  * controls, not a value we chose. Until a live trigger existed nothing could
  * ever reach `crawlSite()`, so this gap was structural but unreachable; a
- * manual or scheduled trigger makes it a real SSRF vector — a tenant could
+ * manual or scheduled trigger makes it a real SSRF vector - a tenant could
  * point their own "website" at cloud metadata (169.254.169.254) or an
  * internal service and have OUR server fetch it on their behalf. This is
  * checked in the worker (aeo-crawl-worker.ts), not just the UI action, so it
@@ -14,7 +14,7 @@ import { isIP } from "node:net";
  * Resolves DNS and checks every returned address against private/reserved
  * ranges. This does not close a DNS-rebinding TOCTOU window (the resolved IP
  * could theoretically change between this check and the crawler's own
- * fetches) — a fully bulletproof fix would pin the resolved IP and connect
+ * fetches) - a fully bulletproof fix would pin the resolved IP and connect
  * to it directly, which `fetch()` does not support without a custom
  * dispatcher. Flagged as a real, known residual gap rather than claimed as
  * fully closed.
@@ -54,7 +54,7 @@ export async function checkOriginIsPublic(origin: string): Promise<OriginSafetyR
     let hostname: string;
     try {
         // URL#hostname keeps the brackets around an IPv6 literal ("[::1]"),
-        // which node:net's isIP() does not recognize — stripped here once,
+        // which node:net's isIP() does not recognize - stripped here once,
         // rather than risking an IPv6 literal silently falling through to
         // the "not a literal IP, go resolve DNS" branch unrecognized.
         hostname = new URL(origin).hostname.replace(/^\[|\]$/g, "");

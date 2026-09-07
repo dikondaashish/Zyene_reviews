@@ -85,13 +85,13 @@ export default async function EsIndustryPage({
                         <h2 className="text-2xl font-bold text-foreground mb-3">Funciones clave</h2>
                         <p className="text-muted-foreground leading-relaxed">
                             Solicitudes automáticas por SMS, respuestas con IA en español e inglés, alertas en tiempo
-                            real y seguimiento de competidores locales — todo desde un solo panel para tu equipo.
+                            real y seguimiento de competidores locales - todo desde un solo panel para tu equipo.
                         </p>
                     </div>
                     <div>
                         <h2 className="text-2xl font-bold text-foreground mb-3">Empieza hoy</h2>
                         <p className="text-muted-foreground leading-relaxed mb-6">
-                            Prueba Zyene Reviews gratis durante 7 días. Sin contrato anual — planes desde $29.99/mes
+                            Prueba Zyene Reviews gratis durante 7 días. Sin contrato anual - planes desde $29.99/mes
                             con escudo de feedback negativo y respuestas con IA incluidas.
                         </p>
                         <Link href={SIGNUP_URL}>

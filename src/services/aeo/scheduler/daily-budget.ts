@@ -6,7 +6,7 @@ import { getEngineDescriptor, isMeterable } from "../engines/engine-catalog";
  *
  * Vendor free allowances are daily buckets shared across the whole billing
  * account. This decides, before any request is dispatched, how much of a day's
- * demand may actually run — so that crossing into paid usage is a decision
+ * demand may actually run - so that crossing into paid usage is a decision
  * somebody made, never a side effect of how many accounts happened to land on
  * a Tuesday.
  *
@@ -29,7 +29,7 @@ export type EngineDemand = {
 };
 
 export type BudgetReason =
-    /** Priced vendor with no confirmed rate — withheld, matching resolveRunnable. */
+    /** Priced vendor with no confirmed rate - withheld, matching resolveRunnable. */
     | "engine_not_meterable"
     /** Fits inside the vendor's free daily bucket; costs nothing. */
     | "within_free_allowance"
@@ -54,7 +54,7 @@ export type BudgetOutcome = {
 export type BudgetOptions = {
     /**
      * Per-org opt-in to spending past a free allowance. E-10 must record this in
-     * the ledger BEFORE the first billable call, not after — see QA criterion #52.
+     * the ledger BEFORE the first billable call, not after - see QA criterion #52.
      */
     overageAuthorised?: boolean;
     /**

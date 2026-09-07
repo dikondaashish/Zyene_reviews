@@ -27,10 +27,10 @@ function GoogleSyncStatusRow({ businessId }: { businessId: string }) {
     const failed = Boolean(remoteStatus?.startsWith("error")) || isStalled;
 
     const label = failed
-        ? "Google connected — import didn't finish. Use Sync on the Reviews page."
+        ? "Google connected - import didn't finish. Use Sync on the Reviews page."
         : importing
           ? totalReviews && totalReviews > 0
-              ? `Importing Google reviews — ${totalReviews} so far`
+              ? `Importing Google reviews - ${totalReviews} so far`
               : "Importing your Google reviews"
           : totalReviews && totalReviews > 0
             ? `${totalReviews} Google reviews imported`
@@ -43,7 +43,7 @@ function GoogleSyncStatusRow({ businessId }: { businessId: string }) {
             transition={{ delay: 0.2, duration: 0.3 }}
             className={cn(
                 "flex items-center gap-3 p-3.5 rounded-xl border",
-                // A stalled import is a warning, not a hard error — the connection itself is
+                // A stalled import is a warning, not a hard error - the connection itself is
                 // fine and Sync retries it. Matches the chart-4 callout convention.
                 failed ? "bg-chart-4/12 border-chart-4/35" : "bg-chart-2/10 border-chart-2/25"
             )}

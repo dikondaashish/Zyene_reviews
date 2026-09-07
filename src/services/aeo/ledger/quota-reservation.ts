@@ -2,7 +2,7 @@ import type { AnswerEngineId, EngineSampleResult } from "../engines/engine-types
 import { billableUnits } from "../engines/engine-types";
 
 /**
- * E-5: quota reservations — the write-ahead half of the ledger.
+ * E-5: quota reservations - the write-ahead half of the ledger.
  *
  * Charging a vendor and writing our own row are separate systems with no shared
  * transaction, so the window between them cannot be closed. Ordering only
@@ -17,13 +17,13 @@ import { billableUnits } from "../engines/engine-types";
  *                        Bounded, detectable, reversible.
  *
  * So units are reserved BEFORE dispatch, then settled against what the engine
- * actually consumed — pure write-ahead would overcount every failed call
+ * actually consumed - pure write-ahead would overcount every failed call
  * forever, and 429s are not rare. EngineSampleResult carries costUnits on every
  * variant, including `failed`, precisely so reconciliation can tell the
  * difference between a failure that cost nothing and one that did.
  *
  * Pure functions only. Persistence belongs to E-7, rollups to quota-rollup.ts,
- * and the recovery path (release/expire) to quota-sweep.ts — sweeping asserts
+ * and the recovery path (release/expire) to quota-sweep.ts - sweeping asserts
  * that nothing was consumed, which is the opposite claim to settling.
  */
 
@@ -71,7 +71,7 @@ export type Reservation = {
     /**
      * Whether spending past the free allowance was authorised for this
      * reservation. Recorded here, before dispatch, so the authorisation survives
-     * a crash — QA criterion #52.
+     * a crash - QA criterion #52.
      */
     overageAuthorised: boolean;
 };
@@ -140,7 +140,7 @@ export type Settlement = {
      */
     billableUnits: number;
     /**
-     * What was actually spent. Passed in, not recomputed from the catalog — the
+     * What was actually spent. Passed in, not recomputed from the catalog - the
      * catalog holds our *expected* rate, and recomputing would paper over a
      * vendor price change.
      */
@@ -152,7 +152,7 @@ export type Settlement = {
  *
  * Consumption comes from the results (every sample that used vendor quota);
  * the billable split comes from the caller. Deriving billable from the results
- * alone would count a free-allowance call as costing money, or — worse —
+ * alone would count a free-allowance call as costing money, or - worse -
  * record zero consumption for it, which would tell the budget guard the daily
  * bucket is untouched and let it authorise more spend.
  */

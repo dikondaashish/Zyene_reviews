@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Product Foundation — GROWTH_BLUEPRINT §1
+// Product Foundation - GROWTH_BLUEPRINT §1
 // Single source of truth for pillars, ICP, plans, positioning, and comparisons.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -57,7 +57,7 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
         number: 8,
         name: "Multi-Location Management",
         value: "Switch locations, per-location limits, scoped permissions.",
-        whyTheyPay: "Manage 1–3+ locations from one login.",
+        whyTheyPay: "Manage 1-3+ locations from one login.",
     },
     {
         number: 9,
@@ -68,7 +68,7 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
     {
         number: 10,
         name: "Team Collaboration",
-        value: "5–15+ seats, roles, notification preferences.",
+        value: "5-15+ seats, roles, notification preferences.",
         whyTheyPay: "Delegate without losing control.",
     },
 ];
@@ -78,8 +78,8 @@ export const NEGATIVE_FEEDBACK_SHIELD = {
     steps: [
         "Customer visits branded review page (collectratings.com/{slug})",
         "Rates experience (emoji/stars/slider)",
-        "4–5 stars → redirected to Google to post publicly",
-        "1–3 stars → private form; owner gets instant alert",
+        "4-5 stars → redirected to Google to post publicly",
+        "1-3 stars → private form; owner gets instant alert",
     ],
     result: "More 5-star public reviews + fewer 1-star surprises.",
     marketingNote:
@@ -96,7 +96,7 @@ export const PLAN_COMPARISON_ROWS = [
     { label: "Public review pages", free: "No", starter: "Yes", pro: "Yes", enterprise: "Yes + white-label" },
     { label: "Competitor tracking", free: "No", starter: "Yes", pro: "Yes", enterprise: "Yes" },
     { label: "Developer API", free: "No", starter: "Yes", pro: "Yes", enterprise: "Managed" },
-    { label: "7-day free trial", free: "—", starter: "Yes", pro: "Yes", enterprise: "Contact sales" },
+    { label: "7-day free trial", free: " - ", starter: "Yes", pro: "Yes", enterprise: "Contact sales" },
 ] as const;
 
 export const ICP_SEGMENTS = {
@@ -114,7 +114,7 @@ export const ICP_SEGMENTS = {
         ],
     },
     secondary: {
-        title: "Small multi-location (2–5)",
+        title: "Small multi-location (2-5)",
         examples: ["Regional restaurant groups", "Dental/medical groups", "Franchise owners"],
     },
     tertiary: {
@@ -125,15 +125,15 @@ export const ICP_SEGMENTS = {
 
 export const POSITIONING = {
     oneLiner:
-        "Enterprise-grade review management and local SEO intelligence for owner-operators — at 1/10th the cost of Birdeye, with no annual contract.",
+        "Enterprise-grade review management and local SEO intelligence for owner-operators - at 1/10th the cost of Birdeye, with no annual contract.",
     pillars: [
-        "10× cheaper than enterprise tools — $29.99 vs $299+ (Birdeye) or $399+ (Podium)",
-        "Negative Feedback Shield — route bad reviews to private resolution before Google",
-        "Local SEO intelligence included on Starter — not locked behind enterprise tiers",
+        "10× cheaper than enterprise tools - $29.99 vs $299+ (Birdeye) or $399+ (Podium)",
+        "Negative Feedback Shield - give low ratings a private feedback path before follow-up",
+        "Local SEO intelligence included on Starter - not locked behind enterprise tiers",
     ],
 } as const;
 
-/** Blueprint §2.2 — high-level capability matrix for marketing/compare pages */
+/** Blueprint §2.2 - high-level capability matrix for marketing/compare pages */
 export const MARKET_COMPARISON_CAPABILITIES = [
     { capability: "Google/Yelp/FB sync", zyene: true, birdeye: true, podium: true, nicejob: true },
     { capability: "AI reply suggestions", zyene: "Included", birdeye: "Starter+", podium: "Add-on", nicejob: "Pro only" },

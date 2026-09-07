@@ -5,7 +5,7 @@
 
 const PLACE_ID_LIKE = /ChIJ[A-Za-z0-9_-]{10,}/g;
 
-/** Lowercase, strip extra punctuation, collapse spaces — for loose name equality. */
+/** Lowercase, strip extra punctuation, collapse spaces - for loose name equality. */
 export function normalizeBusinessNameForCompare(name: string): string {
     return name
         .toLowerCase()
@@ -38,7 +38,7 @@ export function collectGoogleMapsFingerprints(raw: string | null | undefined): S
         const ftid = u.searchParams.get("ftid");
         if (ftid) out.add(`ftid:${ftid}`);
     } catch {
-        /* non-absolute URL — still scan for place ids */
+        /* non-absolute URL - still scan for place ids */
     }
 
     for (const m of s.match(PLACE_ID_LIKE) || []) {

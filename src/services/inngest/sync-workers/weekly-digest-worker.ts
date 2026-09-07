@@ -115,7 +115,7 @@ export const weeklyDigestWorker = inngest.createFunction(
 
     // Sequential rather than Promise.all: these are per-recipient steps, and a
     // burst of parallel sends is also the shape that trips Resend's rate limit.
-    // Step ids key on user id, not email — they surface in the Inngest UI.
+    // Step ids key on user id, not email - they surface in the Inngest UI.
     for (const recipient of digest.recipients) {
       await step.run(`send-digest-${recipient.userId}`, () =>
         sendEmail({

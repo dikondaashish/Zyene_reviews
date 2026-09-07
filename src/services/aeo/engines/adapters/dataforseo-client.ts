@@ -46,7 +46,7 @@ export type DataForSeoCall = {
     result?: DataForSeoResult;
     /**
      * What DataForSEO says this call cost, in USD. Reported on the envelope, so
-     * the ledger reconciles against an invoice rather than a catalog estimate —
+     * the ledger reconciles against an invoice rather than a catalog estimate -
      * same as Perplexity, unlike OpenAI.
      */
     costUsd?: number;
@@ -111,7 +111,7 @@ export async function callDataForSeo(
 
     return {
         // Both levels must be healthy. A 200 with a failed task is the shape
-        // that would otherwise be read as an empty-but-successful result — and
+        // that would otherwise be read as an empty-but-successful result - and
         // an empty result means "brand not found", which is exactly the
         // misreading this contract exists to prevent.
         ok: envelope.status_code === 20000 && task?.status_code === 20000,
@@ -137,7 +137,7 @@ export function classifyDataForSeoStatus(code: number | undefined): {
 } {
     if (code === undefined) return { kind: "unknown" };
     if (code === 40100 || code === 40101 || code === 40200) return { kind: "auth" };
-    // 40202 is "insufficient funds" — permanent until someone tops up, so it
+    // 40202 is "insufficient funds" - permanent until someone tops up, so it
     // must not be retryable or every dispatch burns its budget on a wall.
     if (code === 40202 || code === 40203) return { kind: "quota_exhausted" };
     if (code === 40201 || code === 40204) return { kind: "rate_limited" };

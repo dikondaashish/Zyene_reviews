@@ -68,7 +68,7 @@ export function PromptHeadToHead({ rows }: { rows: HeadToHeadRow[] }) {
                                 )}
                             </td>
                             <td className="py-2 text-muted-foreground">
-                                {row.competitorsNamed.length > 0 ? row.competitorsNamed.join(", ") : "—"}
+                                {row.competitorsNamed.length > 0 ? row.competitorsNamed.join(", ") : " - "}
                             </td>
                             <td className="py-2">
                                 {row.answerStoragePath ? (
@@ -92,7 +92,7 @@ export function PromptHeadToHead({ rows }: { rows: HeadToHeadRow[] }) {
             <Dialog open={open !== null} onOpenChange={(v) => !v && setOpen(null)}>
                 <DialogContent className="max-h-[80vh] max-w-2xl overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle>Verbatim answer — {open?.engineId}</DialogTitle>
+                        <DialogTitle>Verbatim answer - {open?.engineId}</DialogTitle>
                         <DialogDescription>
                             {open?.modelId ? `Model: ${open.modelId} · ` : ""}
                             {open ? new Date(open.sampledAt).toLocaleString() : ""}

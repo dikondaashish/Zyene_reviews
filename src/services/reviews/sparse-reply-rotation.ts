@@ -7,7 +7,7 @@ function randomIndex(exclusiveMax: number): number {
 }
 
 /**
- * How many recent template indices to remember in Redis (~75% of pool size, within ~70–80%).
+ * How many recent template indices to remember in Redis (~75% of pool size, within ~70-80%).
  * Capped below poolLength so at least one index can still be “fresh.”
  */
 export function sparseRotationHistoryCap(poolLength: number): number {

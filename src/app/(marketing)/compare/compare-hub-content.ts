@@ -1,13 +1,13 @@
 import type { FaqItem } from "@/components/seo/json-ld";
 
-/** 50–70 word GEO opening summary for /compare hub. */
+/** 50-70 word GEO opening summary for /compare hub. */
 export const COMPARE_HUB_OPENING_SUMMARY =
-    "Choose Zyene Reviews when you want a review-alert-driven, AI-assisted stack for local Google reputation—Shield, competitor tracking, and public pricing from $29.99/mo without an enterprise contract. Choose Birdeye, Podium, NiceJob, or GatherUp when you need broader CX, messaging and payments, social-proof marketing, or deep survey programs. This hub compares all five honestly.";
+    "Choose Zyene Reviews when you want a review-alert-driven, AI-assisted stack for local Google reputation - Shield, competitor tracking, and public pricing from $29.99/mo without an enterprise contract. Choose Birdeye, Podium, NiceJob, or GatherUp when you need broader CX, messaging and payments, social-proof marketing, or deep survey programs. This hub compares all five honestly.";
 
 export const COMPARE_HUB_BUYER_GUIDES: { title: string; body: string; pick?: string }[] = [
     {
         title: "Solo / small local business",
-        body: "You need fast review alerts, simple campaigns, and help replying—not a company-wide CX rollout. Favor tools with self-serve setup and month-to-month billing.",
+        body: "You need fast review alerts, simple campaigns, and help replying - not a company-wide CX rollout. Favor tools with self-serve setup and month-to-month billing.",
         pick: "Zyene Reviews, NiceJob, or GatherUp depending on whether you want review-first ops vs marketing/survey depth.",
     },
     {
@@ -17,12 +17,12 @@ export const COMPARE_HUB_BUYER_GUIDES: { title: string; body: string; pick?: str
     },
     {
         title: "Enterprise / multi-department team",
-        body: "You likely need webchat, ticketing, surveys, CRM integrations, and vendor success managers—not just Google review workflows.",
+        body: "You likely need webchat, ticketing, surveys, CRM integrations, and vendor success managers - not just Google review workflows.",
         pick: "Birdeye or Podium; treat Zyene Reviews as a focused review layer unless you are standardizing on a lighter stack.",
     },
     {
         title: "Review-focused buyer",
-        body: "Your KPI is Google rating, response rate, and review velocity—not inbox payments. Prioritize monitoring, AI-assisted replies, fair review requests, and optional private feedback capture.",
+        body: "Your KPI is Google rating, response rate, and review velocity - not inbox payments. Prioritize monitoring, AI-assisted replies, fair review requests, and optional private feedback capture.",
         pick: "Zyene Reviews; read /blog/negative-feedback-shield for Shield compliance positioning.",
     },
     {
@@ -52,12 +52,12 @@ export const COMPARE_HUB_FAQS: FaqItem[] = [
     {
         question: "Is Zyene Reviews cheaper than Birdeye or Podium?",
         answer:
-            "Zyene Reviews publishes plans from $29.99/mo month-to-month. Birdeye and Podium are commonly quoted well above that, often on annual contracts—but pricing can vary by package, contract terms, and location count; confirm with each vendor. See /blog/birdeye-pricing-breakdown-2026 for a Birdeye line-item checklist, not a guaranteed quote.",
+            "Zyene Reviews publishes plans from $29.99/mo month-to-month. Birdeye and Podium are commonly quoted well above that, often on annual contracts - but pricing can vary by package, contract terms, and location count; confirm with each vendor. See /blog/birdeye-pricing-breakdown-2026 for a Birdeye line-item checklist, not a guaranteed quote.",
     },
     {
         question: "Does Zyene replace Podium?",
         answer:
-            "No. Podium is stronger for texting, webchat, and payments. Zyene Reviews replaces the review-management slice—monitoring, requests, AI replies, Shield, and competitor tracking—without being a full communications and payments platform.",
+            "No. Podium is stronger for texting, webchat, and payments. Zyene Reviews replaces the review-management slice - monitoring, requests, AI replies, Shield, and competitor tracking - without being a full communications and payments platform.",
     },
     {
         question: "What is the simplest review management option?",

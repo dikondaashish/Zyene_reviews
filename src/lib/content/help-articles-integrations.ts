@@ -1,5 +1,5 @@
 /**
- * Help articles — Integrations (int1–int4).
+ * Help articles - Integrations (int1-int4).
  */
 
 import type { HelpArticle } from "./help-types";
@@ -8,7 +8,7 @@ export const int1: HelpArticle = {
     slug: "connecting-google",
     category: "integrations",
     title: "Connecting Your Google Account",
-    excerpt: "How to connect your Google account to Zyene — for Google Business Profile review monitoring and response publishing.",
+    excerpt: "How to connect your Google account to Zyene - for Google Business Profile review monitoring and response publishing.",
     readMinutes: 3,
     body: [
         { type: "p", text: "Connecting your Google account is the primary integration in Zyene. It's required for Google Business Profile review monitoring, response publishing, and GBP keyword performance data." },
@@ -31,15 +31,15 @@ export const int2: HelpArticle = {
     slug: "setting-up-zapier",
     category: "integrations",
     title: "Setting Up the Zapier Integration",
-    excerpt: "How to connect Zyene to thousands of apps via Zapier — to trigger review requests automatically from your POS, booking system, or CRM.",
+    excerpt: "How to use Zapier's generic webhook to trigger Zyene review requests from a POS, booking system, or CRM.",
     readMinutes: 5,
     body: [
-        { type: "p", text: "The Zapier integration lets you trigger Zyene review requests automatically from any app in Zapier's library — including Square, Acuity Scheduling, Calendly, Shopify, QuickBooks, and thousands more." },
+        { type: "p", text: "Use Zapier's generic webhook to send a Zyene review request after an event in another app. The workflow can start with a sale, booking, or completed service, then map the customer's name and contact details before sending the request." },
         { type: "h2", text: "Getting Your Zapier Webhook URL" },
         { type: "ol", items: [
             "Go to Settings → Integrations → Zapier in your Zyene dashboard.",
             "Copy the unique webhook URL for your account.",
-            "Save this URL — you'll need it in Zapier.",
+            "Save this URL - you'll need it in Zapier.",
         ]},
         { type: "h2", text: "Creating a Zap (Example: Square POS)" },
         { type: "ol", items: [
@@ -69,7 +69,7 @@ export const int3: HelpArticle = {
     slug: "using-the-api",
     category: "integrations",
     title: "Using the Zyene REST API",
-    excerpt: "How to use Zyene's REST API — authentication, available endpoints, and code examples for triggering review requests programmatically.",
+    excerpt: "How to use Zyene's REST API - authentication, available endpoints, and code examples for triggering review requests programmatically.",
     readMinutes: 6,
     body: [
         { type: "p", text: "Zyene's REST API lets developers integrate review request triggering, review data access, and response management directly into custom applications." },
@@ -91,7 +91,7 @@ export const int3: HelpArticle = {
         }},
         { type: "h2", text: "Example: Trigger a Review Request" },
         { type: "quote", text: "POST /v1/requests\nContent-Type: application/json\n\n{\n  \"first_name\": \"Maria\",\n  \"phone\": \"+15551234567\",\n  \"email\": \"maria@example.com\",\n  \"channel\": \"sms\",\n  \"location_id\": \"loc_xxxxxxxxxxxx\",\n  \"delay_minutes\": 90\n}" },
-        { type: "p", text: "For complete API documentation including all parameters, error codes, and response formats, visit zyenereviews.com/docs/api." },
+        { type: "p", text: "For endpoint details, request fields, and response examples, visit zyenereviews.com/docs/api." },
         { type: "cta", ctaLabel: "Read the full API documentation →", ctaHref: "/docs/api" },
     ],
 };
@@ -101,15 +101,15 @@ export const int4: HelpArticle = {
     category: "integrations",
     title: "Embedding Review Widgets on Your Website",
     excerpt:
-        "Add a review carousel or star rating badge to your website with Zyene embeddable widgets — setup, styling, and placement tips.",
+        "Add a review carousel or star rating badge to your website with Zyene embeddable widgets - setup, styling, and placement tips.",
     readMinutes: 4,
     body: [
-        { type: "p", text: "Zyene's review widgets let you display your Google reviews directly on your website — in a carousel format or as a star rating badge — to build trust with website visitors." },
+        { type: "p", text: "Zyene's review widgets let you display your Google reviews directly on your website - in a carousel format or as a star rating badge - to build trust with website visitors." },
         { type: "h2", text: "Widget Types" },
         { type: "ul", items: [
             "Review Carousel: A rotating carousel displaying recent 4-star and 5-star reviews with reviewer name, date, and rating.",
             "Star Rating Badge: A compact badge showing your current star rating and review count with a link to your Google profile.",
-            "Review Grid: A static grid layout showing your most recent reviews — ideal for a dedicated testimonials page.",
+            "Review Grid: A static grid layout showing your most recent reviews - ideal for a dedicated testimonials page.",
         ]},
         { type: "h2", text: "Getting Your Widget Code" },
         { type: "ol", items: [

@@ -6,7 +6,7 @@ import { isMeteredBillingLive } from "@/lib/features/aeo-surfaces";
 /**
  * E-9.1: one yearly-plan org's monthly credit refresh.
  *
- * Calls the SAME aeo_reset_credit_grant the monthly webhook path calls — no
+ * Calls the SAME aeo_reset_credit_grant the monthly webhook path calls - no
  * new reset logic, only a new trigger. This function's only job is deciding
  * WHEN to call it; aeo_reset_credit_grant's own same-calendar-day guard is
  * what actually protects against a duplicate dispatch double-granting.

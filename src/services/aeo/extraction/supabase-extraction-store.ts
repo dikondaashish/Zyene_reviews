@@ -66,7 +66,7 @@ export class SupabaseExtractionStore {
              *
              * Consequence, worth knowing before reading a report: a citation to
              * a competitor's own site classifies as `other`, not `competitor`.
-             * Competitor mentions in the ANSWER TEXT are unaffected — those match
+             * Competitor mentions in the ANSWER TEXT are unaffected - those match
              * on name and work today. Closing this needs a competitor website
              * captured at onboarding or resolved from the Maps URL.
              */

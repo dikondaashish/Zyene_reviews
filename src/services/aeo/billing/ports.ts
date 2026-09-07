@@ -1,6 +1,6 @@
 /**
  * E-9 ports. Orchestration talks to these, never to Supabase or Stripe
- * directly — same reason as orchestration/ports.ts: a crash test can assert
+ * directly - same reason as orchestration/ports.ts: a crash test can assert
  * on real decisions against in-memory doubles before either the migration is
  * applied or a live Stripe key is anywhere near the process.
  */
@@ -12,7 +12,7 @@ export type ConsumeCreditResult = {
     overageMicroUsd: number;
     remainingBalanceMicroUsd: number;
     /**
-     * True when this sample was already settled by an earlier call — a step
+     * True when this sample was already settled by an earlier call - a step
      * replay, not a new test. `debitedMicroUsd`/`overageMicroUsd` are the
      * ORIGINAL decision, not recomputed, so a caller cannot double-charge by
      * treating a replay as fresh.
@@ -37,7 +37,7 @@ export interface CreditLedgerStore {
 
     /**
      * Journals a successful Stripe overage charge for reconciliation. Called
-     * only after chargeOverage returns `charged: true` — this is audit
+     * only after chargeOverage returns `charged: true` - this is audit
      * history, not part of the debit decision, so it does not need the same
      * row-locked atomicity as consumeCredit.
      */
@@ -49,12 +49,12 @@ export interface CreditLedgerStore {
     }): Promise<void>;
 
     /**
-     * Whether this org has EVER been granted AEO credit — an aeo_credit_balances
+     * Whether this org has EVER been granted AEO credit - an aeo_credit_balances
      * row exists at all, regardless of what its current balance is.
      *
      * Deliberately not the same question as "is the balance nonzero". Wolfpack
      * BBQ (a real Starter customer, real card on file) had active prompts and
-     * NO row at all — their subscription predated the grant wiring, so nothing
+     * NO row at all - their subscription predated the grant wiring, so nothing
      * had ever run aeo_reset_credit_grant for them. A naive zero-balance check
      * cannot tell that apart from an org that legitimately spent a real $5
      * grant down to nothing this cycle, which is normal and MUST still bill.

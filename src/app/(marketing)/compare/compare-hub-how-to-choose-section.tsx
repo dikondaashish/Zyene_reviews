@@ -8,7 +8,7 @@ export function CompareHubHowToChooseSection() {
                     How to choose
                 </h2>
                 <p className="text-muted-foreground text-center mb-10 max-w-2xl mx-auto">
-                    Match the platform to how you operate—not the logo on the slide deck. Pricing can vary by package,
+                    Match the platform to how you operate - not the logo on the slide deck. Pricing can vary by package,
                     contract terms, and location count; confirm with each vendor before you sign.
                 </p>
                 <ul className="space-y-6">

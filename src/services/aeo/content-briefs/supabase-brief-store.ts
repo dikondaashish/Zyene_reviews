@@ -22,7 +22,7 @@ export type PersistBriefInput = {
     reviewInsights: unknown[];
 };
 
-/** Reads through the caller's admin client — generation is server-action-gated, not client-writable. */
+/** Reads through the caller's admin client - generation is server-action-gated, not client-writable. */
 export class SupabaseBriefStore {
     constructor(private readonly db: Admin) {}
 

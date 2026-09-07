@@ -7,14 +7,14 @@ import type { Database } from "@/lib/db/supabase/database.types";
 const RECENT_REVIEW_SAMPLE_SIZE = 5;
 
 export interface ResolvedReviewContext {
-    /** business_id resolved server-side from the review request — never trusted from the client. */
+    /** business_id resolved server-side from the review request - never trusted from the client. */
     resolvedBusinessId: string | null;
     recentReviewsContext: string;
 }
 
 /**
  * Resolves the owning business from a review request and pulls a few recent
- * reviews for tone context. Failures are non-fatal — the draft just loses
+ * reviews for tone context. Failures are non-fatal - the draft just loses
  * context.
  */
 export async function loadRecentReviewsContext(
@@ -80,7 +80,7 @@ Rules for a NATURAL, HUMAN-WRITTEN review:
 - Answer Engine Friendly: Use clear, direct sentences for AI search engines to feature as snippets.
 - Sound like a real person, not marketing. ONE exclamation mark max.
 - Mention specific things the customer liked naturally.
-- Output ONLY the review text — no labels, no quotes around the whole review, no "Review:" prefix.
+- Output ONLY the review text - no labels, no quotes around the whole review, no "Review:" prefix.
 
 Review Content:`;
 }

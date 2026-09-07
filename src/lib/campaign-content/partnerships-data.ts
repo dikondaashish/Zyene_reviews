@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Partnership Channels — Phase 6
+// Partnership Channels - Phase 6
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface PartnershipChannel {

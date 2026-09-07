@@ -15,7 +15,7 @@ export const INTEGRATIONS_B: IntegrationItem[] = [
             "OpenAPI spec + Postman collection available",
         ],
         description:
-            "Build exactly what your business needs. Our REST API gives developers full access to review data, request automation, and analytics — with webhooks for real-time triggers.",
+            "Build exactly what your business needs. Our REST API gives developers full access to review data, request automation, and analytics - with webhooks for real-time triggers.",
     },
     {
         name: "Website Review Widget",
@@ -31,7 +31,7 @@ export const INTEGRATIONS_B: IntegrationItem[] = [
             "Increases conversion from visitors to customers",
         ],
         description:
-            "Turn your 5-star reviews into website social proof. Embed a live review feed on your homepage, about page, or checkout page — it updates automatically as new reviews come in.",
+            "Turn your 5-star reviews into website social proof. Embed a live review feed on your homepage, about page, or checkout page - it updates automatically as new reviews come in.",
     },
     {
         name: "Clover POS",

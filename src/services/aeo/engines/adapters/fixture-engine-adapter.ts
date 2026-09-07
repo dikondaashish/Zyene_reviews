@@ -18,7 +18,7 @@ import {
  *
  * It exists so the orchestrator (E-7), the credit ledger (E-5), and the extraction
  * eval harness (E-6) can be built and tested end to end before a single vendor
- * contract is signed — and so failure paths (rate limits, refusals, timeouts) are
+ * contract is signed - and so failure paths (rate limits, refusals, timeouts) are
  * exercised deterministically rather than hoped for in production.
  *
  * Not auto-registered: callers construct and register it explicitly, so it can
@@ -29,7 +29,7 @@ export type FixtureResponse =
     | {
           kind: "ok";
           answerText: string;
-          /** Omit for engines that expose no sources — yields `citations_unavailable`. */
+          /** Omit for engines that expose no sources - yields `citations_unavailable`. */
           citations?: ReadonlyArray<{ url: string; title?: string | null }>;
       }
     | { kind: "no_answer"; reason: string }

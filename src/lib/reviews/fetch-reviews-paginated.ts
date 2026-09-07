@@ -5,7 +5,7 @@ const SAFETY_MAX_ROWS = 500_000;
 export type ReviewPageRow = Record<string, unknown>;
 
 /**
- * Fetches every row for a reviews query by paging `.range()` — PostgREST returns at most
+ * Fetches every row for a reviews query by paging `.range()` - PostgREST returns at most
  * ~1000 rows per request, so a single `.select()` under-counts for large businesses.
  */
 export async function fetchAllReviewRowsPaginated<T extends ReviewPageRow = ReviewPageRow>(

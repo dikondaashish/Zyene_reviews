@@ -12,7 +12,7 @@ import { loadYearlyResetCandidates } from "@/services/aeo/billing/load-yearly-re
  * in this repo (see scripts/ensure-cron-job-*.mjs for the pattern): daily,
  * any time, GET with Authorization: Bearer CRON_SECRET.
  *
- * Not yet registered with an external scheduler — this route exists and is
+ * Not yet registered with an external scheduler - this route exists and is
  * reachable, but nothing calls it until that registration happens, which is a
  * separate, deliberate step alongside flipping AEO_METERED_BILLING_LIVE.
  *

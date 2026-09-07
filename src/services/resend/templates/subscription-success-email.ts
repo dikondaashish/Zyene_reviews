@@ -45,7 +45,7 @@ export function subscriptionSuccessEmail({
                             <!-- Success Icon -->
                             <div style="text-align: center; margin-bottom: 24px;">
                                 <div style="display: inline-block; width: 64px; height: 64px; background-color: #f0fdf4; border-radius: 50%; text-align: center; line-height: 64px;">
-                                    <span style="font-size: 32px;">✨</span>
+                                    ${EMAIL_STATUS_ICONS.sparkle}
                                 </div>
                             </div>
 
@@ -72,7 +72,7 @@ export function subscriptionSuccessEmail({
                                 <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
                                     <tr>
                                         <td style="padding-bottom: 12px; vertical-align: top; width: 24px;">
-                                            <span style="font-size: 16px; color: #10b981;">✓</span>
+                                            ${EMAIL_STATUS_ICONS.check}
                                         </td>
                                         <td style="padding-bottom: 12px; padding-left: 12px; font-size: 14px; color: #3f3f46;">
                                             Smart Response Assistant (No limits)
@@ -80,7 +80,7 @@ export function subscriptionSuccessEmail({
                                     </tr>
                                     <tr>
                                         <td style="padding-bottom: 12px; vertical-align: top; width: 24px;">
-                                            <span style="font-size: 16px; color: #10b981;">✓</span>
+                                            ${EMAIL_STATUS_ICONS.check}
                                         </td>
                                         <td style="padding-bottom: 12px; padding-left: 12px; font-size: 14px; color: #3f3f46;">
                                             Higher review request limits (Email/SMS)
@@ -88,7 +88,7 @@ export function subscriptionSuccessEmail({
                                     </tr>
                                     <tr>
                                         <td style="padding-bottom: 12px; vertical-align: top; width: 24px;">
-                                            <span style="font-size: 16px; color: #10b981;">✓</span>
+                                            ${EMAIL_STATUS_ICONS.check}
                                         </td>
                                         <td style="padding-bottom: 12px; padding-left: 12px; font-size: 14px; color: #3f3f46;">
                                             Priority support and advanced insights
@@ -120,3 +120,4 @@ export function subscriptionSuccessEmail({
 </html>
     `;
 }
+import { EMAIL_STATUS_ICONS } from "./email-status-icons";

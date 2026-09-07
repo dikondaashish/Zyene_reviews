@@ -1,9 +1,4 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import {
-    Link2, Bell, Megaphone, TrendingUp, ArrowRight, Check,
-    Star, Sparkles, ShieldCheck, BarChart3,
-} from "lucide-react";
+import { Check } from "lucide-react";
 import { STEPS } from "./how-it-works-data";
 
 export function HowItWorksStepsSection() {
@@ -51,7 +46,10 @@ export function HowItWorksStepsSection() {
                                         </div>
                                         <div className="space-y-3 font-mono text-sm text-muted-foreground bg-card/80 border border-border rounded-xl p-4">
                                             {step.mockupLines.map((line) => (
-                                                <div key={line} className="text-foreground/80">{line}</div>
+                                                <div key={line.label} className="flex items-center gap-2 text-foreground/80">
+                                                    <line.icon className="size-4 shrink-0 text-primary" aria-hidden="true" />
+                                                    <span>{line.label}</span>
+                                                </div>
                                             ))}
                                         </div>
                                     </div>

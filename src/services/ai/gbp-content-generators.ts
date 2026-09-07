@@ -34,7 +34,7 @@ function parseJson<T>(raw: string): T | null {
 }
 
 /**
- * Describes services the merchant already lists. Never proposes new ones — a
+ * Describes services the merchant already lists. Never proposes new ones - a
  * service invented here would be published to a public listing as a claim the
  * business offers something it does not.
  */

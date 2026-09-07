@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Google Ads Strategy — Phase 6
+// Google Ads Strategy - Phase 6
 // Campaign → keyword themes → landing pages (for UTM routing & ad ops reference)
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -31,7 +31,7 @@ export const GOOGLE_ADS_CAMPAIGNS: GoogleAdsCampaign[] = [
         landingPath: "/compare/birdeye",
         utmCampaign: "google_competitor",
         headline: "Enterprise reputation tools at SMB pricing",
-        subheadline: "Compare Zyene to Birdeye, Podium, and NiceJob — starting at $29.99/mo, no annual contract.",
+        subheadline: "Compare Zyene to Birdeye, Podium, and NiceJob - starting at $29.99/mo, no annual contract.",
     },
     {
         type: "competitor",
@@ -41,7 +41,7 @@ export const GOOGLE_ADS_CAMPAIGNS: GoogleAdsCampaign[] = [
         landingPath: "/compare/podium",
         utmCampaign: "google_competitor_podium",
         headline: "Podium costs $399/mo. Zyene starts at $29.99.",
-        subheadline: "Same SMS review requests and inbox — without the enterprise contract.",
+        subheadline: "Same SMS review requests and inbox - without the enterprise contract.",
     },
     {
         type: "competitor",
@@ -51,7 +51,7 @@ export const GOOGLE_ADS_CAMPAIGNS: GoogleAdsCampaign[] = [
         landingPath: "/compare/nicejob",
         utmCampaign: "google_competitor_nicejob",
         headline: "NiceJob alternative with AI replies included",
-        subheadline: "Compare features and pricing — Zyene from $29.99/mo, no annual contract.",
+        subheadline: "Compare features and pricing - Zyene from $29.99/mo, no annual contract.",
     },
     {
         type: "competitor",
@@ -65,7 +65,7 @@ export const GOOGLE_ADS_CAMPAIGNS: GoogleAdsCampaign[] = [
     },
     {
         type: "category",
-        name: "Category — review management",
+        name: "Category - review management",
         budgetPriority: "medium",
         targetKeywords: [
             "review management software",
@@ -75,31 +75,31 @@ export const GOOGLE_ADS_CAMPAIGNS: GoogleAdsCampaign[] = [
         landingPath: "/features",
         utmCampaign: "google_category",
         headline: "All-in-one review management for local businesses",
-        subheadline: "Monitor, respond, collect, and protect your reputation — one platform, one price.",
+        subheadline: "Monitor, respond, collect, and protect your reputation - one platform, one price.",
     },
     {
         type: "industry",
-        name: "Industry — restaurants",
+        name: "Industry - restaurants",
         budgetPriority: "medium",
         targetKeywords: ["restaurant review management", "google reviews for restaurants"],
         landingPath: "/industries/restaurants",
         utmCampaign: "google_industry_restaurants",
         headline: "Review management built for restaurants",
-        subheadline: "Post-checkout SMS, Negative Feedback Shield, and AI replies — starting at $29.99/mo.",
+        subheadline: "Post-checkout SMS, Negative Feedback Shield, and AI replies - starting at $29.99/mo.",
     },
     {
         type: "industry",
-        name: "Industry — dental",
+        name: "Industry - dental",
         budgetPriority: "medium",
         targetKeywords: ["dental review management", "dental practice google reviews software"],
         landingPath: "/industries/dental",
         utmCampaign: "google_industry_dental",
         headline: "HIPAA-aware review workflows for dental practices",
-        subheadline: "Grow Google reviews while routing unhappy patients to private resolution first.",
+        subheadline: "Ask for Google reviews and give low ratings a private feedback path.",
     },
     {
         type: "industry",
-        name: "Industry — home services",
+        name: "Industry - home services",
         budgetPriority: "medium",
         targetKeywords: ["home services review management", "hvac google reviews software"],
         landingPath: "/industries/home-services",
@@ -109,7 +109,7 @@ export const GOOGLE_ADS_CAMPAIGNS: GoogleAdsCampaign[] = [
     },
     {
         type: "industry",
-        name: "Industry — auto repair",
+        name: "Industry - auto repair",
         budgetPriority: "medium",
         targetKeywords: ["auto repair review management", "mechanic google reviews"],
         landingPath: "/industries/auto-repair",
@@ -119,7 +119,7 @@ export const GOOGLE_ADS_CAMPAIGNS: GoogleAdsCampaign[] = [
     },
     {
         type: "industry",
-        name: "Industry — salons",
+        name: "Industry - salons",
         budgetPriority: "medium",
         targetKeywords: ["salon review management", "spa google reviews software"],
         landingPath: "/industries/salons",
@@ -129,7 +129,7 @@ export const GOOGLE_ADS_CAMPAIGNS: GoogleAdsCampaign[] = [
     },
     {
         type: "industry",
-        name: "Industry — medical",
+        name: "Industry - medical",
         budgetPriority: "medium",
         targetKeywords: ["medical practice review management", "doctor google reviews software"],
         landingPath: "/industries/medical",
@@ -139,7 +139,7 @@ export const GOOGLE_ADS_CAMPAIGNS: GoogleAdsCampaign[] = [
     },
     {
         type: "industry",
-        name: "Industry — hotels",
+        name: "Industry - hotels",
         budgetPriority: "medium",
         targetKeywords: ["hotel review management", "hospitality google reviews software"],
         landingPath: "/industries/hotels",
@@ -149,7 +149,7 @@ export const GOOGLE_ADS_CAMPAIGNS: GoogleAdsCampaign[] = [
     },
     {
         type: "industry",
-        name: "Industry — fitness",
+        name: "Industry - fitness",
         budgetPriority: "medium",
         targetKeywords: ["gym review management", "fitness studio google reviews"],
         landingPath: "/industries/fitness",
@@ -159,7 +159,7 @@ export const GOOGLE_ADS_CAMPAIGNS: GoogleAdsCampaign[] = [
     },
     {
         type: "problem",
-        name: "Problem — awareness",
+        name: "Problem - awareness",
         budgetPriority: "low",
         targetKeywords: [
             "how to get more google reviews",
@@ -169,11 +169,11 @@ export const GOOGLE_ADS_CAMPAIGNS: GoogleAdsCampaign[] = [
         landingPath: "/blog",
         utmCampaign: "google_problem_awareness",
         headline: "Practical guides for local business owners",
-        subheadline: "Free playbooks on Google reviews, local SEO, and reputation — then try Zyene free for 7 days.",
+        subheadline: "Free playbooks on Google reviews, local SEO, and reputation - then try Zyene free for 7 days.",
     },
     {
         type: "problem",
-        name: "Problem — resources",
+        name: "Problem - resources",
         budgetPriority: "low",
         targetKeywords: ["google reviews guide", "negative review response templates"],
         landingPath: "/resources",

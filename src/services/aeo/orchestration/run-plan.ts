@@ -6,7 +6,7 @@ import { planEngineBudget, type BudgetOutcome } from "../scheduler/daily-budget"
  * E-7 planning, as a pure function.
  *
  * The parent decides WHAT to dispatch; children decide nothing. Keeping the
- * decision here — with no I/O — means the fan-out can be asserted directly in
+ * decision here - with no I/O - means the fan-out can be asserted directly in
  * tests, and means the expensive part (one child per unit) is never reached by
  * a run that should not have started.
  *
@@ -56,7 +56,7 @@ export type RunPlan = {
     dispatches: DispatchRequest[];
     /** Engines dropped before planning: unimplemented, unconfigured, or unpriced. */
     withheld: EngineAvailability[];
-    /** Per-engine projection. Advisory — see the note on serialization above. */
+    /** Per-engine projection. Advisory - see the note on serialization above. */
     budgets: BudgetOutcome[];
     /** Units the projection expects not to fit inside today's allowance. */
     projectedDeferredUnits: number;

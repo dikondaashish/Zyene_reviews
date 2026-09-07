@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Page Architecture Map — GROWTH_BLUEPRINT § Page Architecture
+// Page Architecture Map - GROWTH_BLUEPRINT § Page Architecture
 // Single source of truth for marketing + product URLs and sitemap coverage.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -14,7 +14,7 @@ import { FEATURE_PILLAR_SLUGS } from "@/lib/growth/feature-pillars";
 import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/industries/localized-industries";
 
 export type PageStatus = "live" | "planned" | "redirect" | "app-only";
-export type PagePriority = "P0" | "P1" | "P2" | "—";
+export type PagePriority = "P0" | "P1" | "P2" | " - ";
 export type PageType =
     | "conversion"
     | "seo"
@@ -70,17 +70,17 @@ const DOC_PATHS = [
 /** All public and product routes from the growth blueprint, with implementation status. */
 export function buildGrowthPageInventory(): GrowthPageEntry[] {
     const pages: GrowthPageEntry[] = [
-        // ── Existing (Phase 0–2) ──
+        // ── Existing (Phase 0-2) ──
         entry({ path: "/", label: "Homepage", phase: 2, priority: "P0", pageType: "conversion", notes: "Long-scroll; refined Phase 2" }),
         entry({ path: "/about", label: "About", phase: 0, priority: "P1", pageType: "trust" }),
         entry({ path: "/contact", label: "Contact", phase: 0, priority: "P1", pageType: "trust" }),
         entry({ path: "/help", label: "Help hub", phase: 4, priority: "P1", pageType: "content" }),
-        entry({ path: "/privacy", label: "Privacy", phase: 0, priority: "—", pageType: "legal", inSitemap: true }),
-        entry({ path: "/terms", label: "Terms", phase: 0, priority: "—", pageType: "legal" }),
-        entry({ path: "/data-retention", label: "Data retention", phase: 0, priority: "—", pageType: "legal" }),
-        entry({ path: "/login", label: "Login", phase: 0, priority: "—", pageType: "auth", inSitemap: false, indexed: false }),
+        entry({ path: "/privacy", label: "Privacy", phase: 0, priority: " - ", pageType: "legal", inSitemap: true }),
+        entry({ path: "/terms", label: "Terms", phase: 0, priority: " - ", pageType: "legal" }),
+        entry({ path: "/data-retention", label: "Data retention", phase: 0, priority: " - ", pageType: "legal" }),
+        entry({ path: "/login", label: "Login", phase: 0, priority: " - ", pageType: "auth", inSitemap: false, indexed: false }),
         entry({ path: "/signup", label: "Signup", phase: 2, priority: "P0", pageType: "auth", inSitemap: false, indexed: false }),
-        entry({ path: "/forgot-password", label: "Forgot password", phase: 0, priority: "—", pageType: "auth", inSitemap: false, indexed: false }),
+        entry({ path: "/forgot-password", label: "Forgot password", phase: 0, priority: " - ", pageType: "auth", inSitemap: false, indexed: false }),
         entry({ path: "/reset-password", label: "Reset password", phase: 0, priority: "P0", pageType: "auth", inSitemap: false, indexed: false }),
         entry({ path: "/onboarding", label: "Onboarding", phase: 2, priority: "P0", pageType: "app", inSitemap: false, indexed: false }),
 
@@ -182,7 +182,7 @@ export function buildGrowthPageInventory(): GrowthPageEntry[] {
             path: "/customers",
             label: "Legacy /customers → case studies",
             phase: 5,
-            priority: "—",
+            priority: " - ",
             pageType: "trust",
             status: "redirect",
             inSitemap: false,
@@ -194,7 +194,7 @@ export function buildGrowthPageInventory(): GrowthPageEntry[] {
                 path: `/customers/${slug}`,
                 label: `Legacy /customers/${slug}`,
                 phase: 5,
-                priority: "—",
+                priority: " - ",
                 pageType: "trust",
                 status: "redirect",
                 inSitemap: false,
@@ -205,7 +205,7 @@ export function buildGrowthPageInventory(): GrowthPageEntry[] {
 
         // ── Phase 6 partnerships ──
         entry({ path: "/partners", label: "Partners", phase: 6, priority: "P1", pageType: "conversion" }),
-        entry({ path: "/newsletter/unsubscribe", label: "Newsletter unsubscribe", phase: 6, priority: "—", pageType: "ops", inSitemap: false, indexed: false }),
+        entry({ path: "/newsletter/unsubscribe", label: "Newsletter unsubscribe", phase: 6, priority: " - ", pageType: "ops", inSitemap: false, indexed: false }),
 
         // ── Phase 7 PLG ──
         entry({ path: "/tools", label: "Free tools hub", phase: 7, priority: "P1", pageType: "tool" }),
@@ -264,7 +264,7 @@ export function buildGrowthPageInventory(): GrowthPageEntry[] {
             path: "/growth",
             label: "Growth KPI dashboard",
             phase: 8,
-            priority: "—",
+            priority: " - ",
             pageType: "ops",
             inSitemap: false,
             indexed: false,

@@ -160,7 +160,7 @@ export function tagsMatchCategoryDefaults(items: ReviewTagItem[], category: stri
     );
 }
 
-/** Tags for live preview — mirrors what the public page will show. */
+/** Tags for live preview - mirrors what the public page will show. */
 export function customTagsForPreview(
     items: ReviewTagItem[],
     category: string

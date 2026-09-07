@@ -4,7 +4,7 @@
  * at depth 3 only when no sitemap exists at all.
  *
  * `fetchText` is injected rather than calling the global `fetch` directly, so
- * the traversal/parsing logic here is testable without a real network call —
+ * the traversal/parsing logic here is testable without a real network call -
  * the same split this codebase already uses throughout (pure decision logic,
  * I/O pushed to the edges).
  */
@@ -51,13 +51,13 @@ function isSameSite(url: string, origin: string): boolean {
 
 /**
  * Sitemap discovery. Returns null when no sitemap exists at all (a 404, or
- * the fetch itself failing) — the caller's signal to fall back to link
+ * the fetch itself failing) - the caller's signal to fall back to link
  * discovery. An empty-but-present sitemap returns `[]`, which is NOT the same
  * thing and must not trigger the fallback.
  *
  * One level of sitemap-index recursion: a `<sitemapindex>` root's `<loc>`
  * entries point at CHILD sitemaps, not pages, and are fetched once each.
- * Deliberately not recursive beyond that — an index of indexes is real but
+ * Deliberately not recursive beyond that - an index of indexes is real but
  * rare, and unbounded recursion against a site we do not control is exactly
  * the kind of thing the per-plan page cap exists to make unnecessary anyway.
  */
@@ -72,7 +72,7 @@ export async function discoverUrlsViaSitemap(origin: string, fetchText: FetchTex
     if (!isIndex) return extractLocs(root.text).filter((u) => isSameSite(u, origin));
 
     // Child sitemaps are fetched, so they are filtered BEFORE the request goes
-    // out — not just on the way back.
+    // out - not just on the way back.
     const childSitemapUrls = extractLocs(root.text).filter((u) => isSameSite(u, origin));
     const pages: string[] = [];
     for (const childUrl of childSitemapUrls) {
@@ -107,7 +107,7 @@ function extractSameOriginLinks(html: string, pageUrl: string, origin: string): 
 }
 
 /**
- * BFS from the homepage, same-origin only, capped at depth 3 — the exact
+ * BFS from the homepage, same-origin only, capped at depth 3 - the exact
  * fallback the plan doc specifies for a site with no sitemap. `maxPages`
  * bounds the frontier so a large, sitemap-less site cannot make this
  * discovery phase itself run away before the per-plan cap ever gets applied.

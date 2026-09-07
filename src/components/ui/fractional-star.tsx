@@ -2,7 +2,7 @@ import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * One star slot filled 0–1 for a 0–5 average: use fill = clamp(rating - index, 0, 1).
+ * One star slot filled 0-1 for a 0-5 average: use fill = clamp(rating - index, 0, 1).
  */
 export function FractionalStar({
     fill,

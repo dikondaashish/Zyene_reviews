@@ -85,9 +85,9 @@ export function ReviewResponseGeneratorClient() {
                 <div className="container mx-auto max-w-2xl space-y-4">
                     <h2 className="text-xl font-bold text-foreground">Respond professionally to every review</h2>
                     <p className="text-muted-foreground leading-relaxed">
-                        Replying to Google reviews shows future customers you care — and Google factors response rate
-                        into local visibility. This generator drafts a professional reply based on the rating and review
-                        text you provide.
+                        Replying to Google reviews shows customers how you handle feedback. Google does not publish
+                        response rate as a separate ranking factor. This generator drafts a reply from the rating and
+                        review text you provide.
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
                         For one-click AI replies on every new review, tone control, and optional auto-commenter, use

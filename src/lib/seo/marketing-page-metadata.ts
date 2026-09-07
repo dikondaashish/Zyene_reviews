@@ -5,7 +5,7 @@ export const MARKETING_OG_IMAGE = {
     url: "/og/og-default.png",
     width: 1200,
     height: 630,
-    alt: "Zyene Reviews — Reputation Management for Local Businesses",
+    alt: "Zyene Reviews - Reputation Management for Local Businesses",
 } as const;
 
 export const MARKETING_TWITTER_IMAGE = "/og/og-default.png";

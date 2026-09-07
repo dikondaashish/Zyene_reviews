@@ -31,7 +31,7 @@ export function resolveStorefrontAddress(
 
 /**
  * Only ever returns an /onboarding URL, and only on the host that made the
- * request — otherwise falls back to the configured app URL. This keeps a
+ * request - otherwise falls back to the configured app URL. This keeps a
  * client-supplied redirect_uri from pointing the OAuth exchange elsewhere.
  */
 export async function resolveGoogleOAuthRedirectUri(

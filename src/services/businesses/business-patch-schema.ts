@@ -41,7 +41,7 @@ export const businessPatchSchema = z
             .regex(/^#([0-9A-F]{3}){1,2}$/i)
             .optional()
             .nullable(),
-        // NOT NULL in the DB (default 'emoji') — accepting null here would have
+        // NOT NULL in the DB (default 'emoji') - accepting null here would have
         // produced a NOT NULL violation at update time.
         rating_style: z.enum(["emoji", "stars", "number", "slider", "radio"]).optional(),
         enable_staff_selection: z.boolean().optional(),

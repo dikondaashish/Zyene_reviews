@@ -1,4 +1,4 @@
-/** Google review sync — process-review */
+/** Google review sync - process-review */
 
 import { logger } from "@/lib/logger";
 import type { GoogleReview } from "@/services/google/business-profile";
@@ -121,4 +121,3 @@ export async function processGoogleReview(
 
     return { upserted: upsertedOk, id: upserted?.id, needsAnalysis, isNew, error: upsertError };
 }
-

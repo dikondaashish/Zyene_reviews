@@ -60,7 +60,7 @@ export const processReviewAnalysisBatch = inngest.createFunction(
         if (!reviews || reviews.length === 0) return { status: "no_reviews_found" };
 
         // 2. Format for AI
-        // Must use `reviewId` in the payload — the model output schema uses reviewId; using `id` often causes
+        // Must use `reviewId` in the payload - the model output schema uses reviewId; using `id` often causes
         // the model to return `id` instead, so .eq("id", result.reviewId) updates zero rows.
         const reviewsForAi = reviews.map((r: { id: string, rating: number, text: string | null }) => ({
             reviewId: r.id,

@@ -6,7 +6,7 @@ import { ONE_TEST_MICRO_USD, PLAN_CREDIT_GRANTS_MICRO_USD } from "./billing-cons
  * RUNS_PER_MONTH is WEEKLY (52/12), not the PRD-1 "weekly Starter, daily
  * Professional" split. The scheduler that actually dispatches runs
  * (is-business-due-now.ts / crawl-slot.ts's AEO-sampling counterpart,
- * sampling-slot.ts) assigns every business ONE slot regardless of plan —
+ * sampling-slot.ts) assigns every business ONE slot regardless of plan -
  * there is no per-plan cadence in the code today. A meter that assumed the
  * PRD's daily-for-Professional cadence would project a number nobody is
  * actually being run against; this projects what the scheduler will really

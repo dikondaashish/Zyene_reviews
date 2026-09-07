@@ -5,7 +5,7 @@ import { grantIncludesSearchConsole } from "./oauth-scopes";
 /**
  * Google Search Console (E-2), read-only.
  *
- * Access is INCREMENTAL — a business can have a perfectly healthy Google
+ * Access is INCREMENTAL - a business can have a perfectly healthy Google
  * connection and still have no Search Console grant, because the sensitive
  * scope is requested separately (see oauth-scopes.ts). Every entry point here
  * therefore returns a discriminated result rather than throwing, so a caller
@@ -22,7 +22,7 @@ const API_BASE = "https://searchconsole.googleapis.com/webmasters/v3";
 export type GscOutcome<T> =
     | { ok: true; data: T }
     | { ok: false; reason: "scope_not_granted" }
-    /** Token rejected — revoked, expired beyond refresh, or app access removed. */
+    /** Token rejected - revoked, expired beyond refresh, or app access removed. */
     | { ok: false; reason: "unauthorized"; detail: string }
     /** Authenticated, but this Google account cannot see this property. */
     | { ok: false; reason: "no_property_access"; detail: string }
@@ -91,7 +91,7 @@ export async function gscFetch<T>(
     if (response.status === 403) {
         // Google uses 403 for both "API not enabled on the project" and "this
         // account lacks access to that property". Only the body separates them,
-        // and they need completely different fixes — one is ours, one is the
+        // and they need completely different fixes - one is ours, one is the
         // customer's.
         const disabled = /accessNotConfigured|SERVICE_DISABLED|has not been used in project/i.test(body);
         return disabled

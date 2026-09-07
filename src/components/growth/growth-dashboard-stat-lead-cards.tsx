@@ -2,7 +2,7 @@
 
 export { GrowthDashboardStatCard } from "./growth-dashboard-ui";
 
-/** @deprecated Use GrowthDashboardStatCard — kept for import stability */
+/** @deprecated Use GrowthDashboardStatCard - kept for import stability */
 export function GrowthDashboardLeadCard({ label, value }: { label: string; value: number }) {
     return (
         <div className="rounded-xl border border-border/80 bg-card px-4 py-3 shadow-sm">

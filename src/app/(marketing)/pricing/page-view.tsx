@@ -17,7 +17,7 @@ const PRICING_FAQS = [
     {
         question: "Can I switch plans?",
         answer:
-            "Yes—upgrade or downgrade anytime from your billing settings. Upgrades take effect immediately. Downgrades take effect at the next billing cycle.",
+            "Yes - upgrade or downgrade anytime from your billing settings. Upgrades take effect immediately. Downgrades take effect at the next billing cycle.",
     },
     {
         question: "Can I manage multiple locations?",
@@ -32,7 +32,7 @@ const PRICING_FAQS = [
     {
         question: "Can I cancel anytime?",
         answer:
-            "Absolutely. Cancel anytime from your billing settings—no cancellation fees, no contracts, no questions asked.",
+            "Absolutely. Cancel anytime from your billing settings - no cancellation fees, no contracts, no questions asked.",
     },
 ];
 

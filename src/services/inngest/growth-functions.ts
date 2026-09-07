@@ -27,7 +27,7 @@ async function markSequenceCompleted(sequenceKey: string, email: string, organiz
     await q;
 }
 
-/** Trial nurture (days 2–7) — one email per step; day-1 welcome is sent on signup */
+/** Trial nurture (days 2-7) - one email per step; day-1 welcome is sent on signup */
 export const trialNurtureWorker = inngest.createFunction(
     { id: "growth-trial-nurture", name: "Growth Trial Nurture" },
     { event: "growth/trial-nurture.start" },
@@ -97,7 +97,7 @@ export const onboardingDripWorker = inngest.createFunction(
     }
 );
 
-/** Newsletter / checklist leads — 3-email nurture (excludes template pack immediate pack email) */
+/** Newsletter / checklist leads - 3-email nurture (excludes template pack immediate pack email) */
 export const marketingNurtureWorker = inngest.createFunction(
     { id: "growth-marketing-nurture", name: "Growth Marketing Nurture" },
     { event: "growth/marketing-nurture.start" },

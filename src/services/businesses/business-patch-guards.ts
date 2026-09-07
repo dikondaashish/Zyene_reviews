@@ -68,7 +68,7 @@ export async function loadCurrentBusiness(
 
 /**
  * Auto commenter is a paid feature. Only enforced when the patch actually
- * touches auto-reply and leaves it enabled — editing other fields on a business
+ * touches auto-reply and leaves it enabled - editing other fields on a business
  * whose plan lapsed must still work.
  */
 export function assertAutoReplyAllowed(

@@ -83,7 +83,7 @@ export async function GET(request: Request) {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            maxAge: 300, // 5 minutes — short-lived
+            maxAge: 300, // 5 minutes - short-lived
             path: "/",
         });
 

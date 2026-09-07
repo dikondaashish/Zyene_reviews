@@ -108,7 +108,7 @@ export async function deleteReviewReply(
     if (!response.ok) {
         const body = await response.text().catch(() => "");
         throw new Error(
-            `Failed to delete review reply: ${response.status} ${response.statusText}${body ? ` — ${body}` : ""}`
+            `Failed to delete review reply: ${response.status} ${response.statusText}${body ? ` - ${body}` : ""}`
         );
     }
 }

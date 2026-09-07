@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 
 export function AboutProductSection() {
     return (
@@ -12,24 +12,24 @@ export function AboutProductSection() {
                         </p>
                         <ul className="space-y-2 text-muted-foreground mb-8">
                             <li className="flex items-start gap-2">
-                                <span className="text-primary mt-1">✓</span>
+                                <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
                                 Monitor and respond to customer reviews from Google, Facebook, and Yelp in one dashboard
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-primary mt-1">✓</span>
+                                <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
                                 Generate AI-powered reply suggestions and auto-respond to reviews hands-free
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-primary mt-1">✓</span>
-                                Send review requests to customers via email, SMS, or shareable links—with the Negative Feedback Shield routing low ratings to private resolution
+                                <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
+                                Send review requests to customers via email, SMS, or shareable links - with the Negative Feedback Shield routing low ratings to private resolution
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-primary mt-1">✓</span>
+                                <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
                                 Track competitors, monitor your Google Business Profile performance, and optimize for local SEO
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-primary mt-1">✓</span>
-                                Manage multiple business locations from one account—starting at $29.99/mo
+                                <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
+                                Manage multiple business locations from one account - starting at $29.99/mo
                             </li>
                         </ul>
                         <div className="flex flex-wrap gap-4">

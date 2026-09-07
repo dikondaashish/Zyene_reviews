@@ -2,12 +2,12 @@ import type { FaqItem } from "@/components/seo/json-ld";
 import type { ResourceGuide } from "./resource-data";
 import { REVIEW_REQUEST_TEMPLATES_BODY } from "./resource-review-request-templates-body";
 
-/** Phase 3 lead magnet — /resources/review-request-templates */
+/** Phase 3 lead magnet - /resources/review-request-templates */
 export const reviewRequestTemplatesGuide: ResourceGuide = {
     slug: "review-request-templates",
     title: "20 Review Request Templates for Local Businesses",
     subtitle:
-        "Free SMS and email swipe file for honest Google review outreach—restaurants, dental, home services, salons, reminders, thank-yous, and private feedback follow-ups.",
+        "Free SMS and email swipe file for honest Google review outreach - restaurants, dental, home services, salons, reminders, thank-yous, and private feedback follow-ups.",
     excerpt:
         "22 copy-paste review request templates (SMS, email, industry-specific) with compliance notes and a comparison of manual outreach vs Zyene Reviews campaigns.",
     purpose: "Lead magnet + rank for review request template keywords",
@@ -15,7 +15,7 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
     readMinutes: 14,
     metaTitle: "20 Review Request Templates (SMS & Email)",
     metaDescription:
-        "Free review request templates: SMS, email, restaurant, dental, HVAC, reminders, and compliant outreach—plus how Zyene Reviews automates campaigns.",
+        "Free review request templates: SMS, email, restaurant, dental, HVAC, reminders, and compliant outreach - plus how Zyene Reviews automates campaigns.",
     keywords: [
         "review request templates",
         "review request email template",
@@ -25,7 +25,7 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
     ],
     resourceLabel: "Free Template Pack",
     openingSummary:
-        "This pack gives local owners 20+ short SMS and email scripts for honest Google review requests—plus reminders, thank-yous, and private feedback follow-ups. Use it to start outreach today; automate fair campaigns and alerts with Zyene Reviews when manual copy-paste stops scaling.",
+        "This pack gives local owners 20+ short SMS and email scripts for honest Google review requests - plus reminders, thank-yous, and private feedback follow-ups. Use it to start outreach today; automate fair campaigns and alerts with Zyene Reviews when manual copy-paste stops scaling.",
     internalLinks: [
         { label: "Review collection features", href: "/features/review-collection" },
         { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
@@ -37,22 +37,22 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
         {
             question: "Can I copy these review request templates for free?",
             answer:
-                "Yes. Preview templates on this page are ungated—copy any script and replace [Name], [Business Name], and [link]. Optional email capture sends a dedicated message with a link back to this page (no PDF attachment yet).",
+                "Yes. Preview templates on this page are ungated - copy any script and replace [Name], [Business Name], and [link]. Optional email capture sends a dedicated message with a link back to this page (no PDF attachment yet).",
         },
         {
             question: "Is it okay to only send review requests to happy customers?",
             answer:
-                "No. Selectively asking only satisfied customers is review gating and violates Google policies. Ask customers fairly, avoid incentives for positive reviews, and use private feedback channels (like Zyene Reviews' Negative Feedback Shield) to resolve issues—not to block honest public reviews.",
+                "No. Selectively asking only satisfied customers is review gating and violates Google policies. Ask customers fairly, avoid incentives for positive reviews, and use private feedback channels (like Zyene Reviews' Negative Feedback Shield) to resolve issues - not to block honest public reviews.",
         },
         {
             question: "How many follow-ups should I send?",
             answer:
-                "One initial request and at most one polite reminder per transaction is a good default. More than that feels like pressure and increases opt-outs. Templates 16–17 and 22 in this pack are written as single follow-ups.",
+                "One initial request and at most one polite reminder per transaction is a good default. More than that feels like pressure and increases opt-outs. Templates 16-17 and 22 in this pack are written as single follow-ups.",
         },
         {
             question: "How does Zyene Reviews automate these templates?",
             answer:
-                "You configure SMS, email, or QR campaigns in the dashboard, connect triggers (e.g., Zapier or POS), and send branded review pages on collectratings.com. Zyene tracks requests, alerts you on new reviews, and supports AI-assisted replies—see /features/review-collection.",
+                "You configure SMS, email, or QR campaigns in the dashboard, connect triggers (e.g., Zapier or POS), and send branded review pages on collectratings.com. Zyene tracks requests, alerts you on new reviews, and supports AI-assisted replies - see /features/review-collection.",
         },
         {
             question: "Which template should a restaurant or dental practice use?",
@@ -77,7 +77,7 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
         },
         {
             name: "Send within a few hours of a positive visit",
-            text: "Deliver the first request soon after service while the experience is fresh. One polite reminder is enough—avoid repeated pressure.",
+            text: "Deliver the first request soon after service while the experience is fresh. One polite reminder is enough - avoid repeated pressure.",
         },
         {
             name: "Follow compliance rules on every send",
@@ -85,7 +85,7 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
         },
         {
             name: "Respond to reviews and route unhappy customers privately",
-            text: "Reply to new Google reviews promptly. Use private feedback (e.g., Zyene Reviews Negative Feedback Shield) to resolve low scores before issues escalate—not to suppress public reviews.",
+            text: "Reply to new Google reviews promptly. Use private feedback (e.g., Zyene Reviews Negative Feedback Shield) to resolve low scores before issues escalate - not to suppress public reviews.",
         },
         {
             name: "Automate at scale when manual copy-paste stops working",

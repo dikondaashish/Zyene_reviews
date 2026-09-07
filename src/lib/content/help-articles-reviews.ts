@@ -1,5 +1,5 @@
 /**
- * Help articles — Reviews (rev1–rev4).
+ * Help articles - Reviews (rev1-rev4).
  */
 
 import type { HelpArticle } from "./help-types";
@@ -8,7 +8,7 @@ export const rev1: HelpArticle = {
     slug: "reading-your-review-inbox",
     category: "reviews",
     title: "Reading and Managing Your Review Inbox",
-    excerpt: "How to use the Zyene review inbox — filtering, sorting, marking as reviewed, and managing reviews across multiple platforms.",
+    excerpt: "How to use the Zyene review inbox - filtering, sorting, marking as reviewed, and managing reviews across multiple platforms.",
     readMinutes: 3,
     body: [
         { type: "p", text: "Your Zyene review inbox aggregates all reviews from connected platforms (Google, Facebook, Yelp) into a single, sorted view." },
@@ -46,7 +46,7 @@ export const rev2: HelpArticle = {
             "Open any review in your inbox.",
             "Click the 'AI Reply' button below the review text.",
             "Zyene will generate a response draft based on the review content, your business type, and your configured tone.",
-            "Read the draft — it will appear in the response field.",
+            "Read the draft - it will appear in the response field.",
         ]},
         { type: "h2", text: "Editing and Publishing" },
         { type: "ol", items: [
@@ -67,7 +67,7 @@ export const rev3: HelpArticle = {
     slug: "setting-up-auto-commenter",
     category: "reviews",
     title: "Setting Up the Auto-Commenter",
-    excerpt: "The Auto-Commenter automatically publishes AI responses to 4-star and 5-star reviews — so your review inbox stays current even when you're busy.",
+    excerpt: "The Auto-Commenter automatically publishes AI responses to 4-star and 5-star reviews - so your review inbox stays current even when you're busy.",
     readMinutes: 4,
     body: [
         { type: "p", text: "The Auto-Commenter is a hands-free mode that automatically generates and publishes AI responses to positive reviews without requiring your manual review. It's designed for businesses that receive high review volume and want to maintain 100% response rate with minimal effort." },

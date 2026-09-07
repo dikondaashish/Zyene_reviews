@@ -96,14 +96,14 @@ export function GrowthDashboardLeadsTable({ rows }: { rows: GrowthDashboardLeadR
                             <td className="py-2 px-3 text-muted-foreground">
                                 {[row.utm_source, row.utm_medium, row.utm_campaign]
                                     .filter(Boolean)
-                                    .join(" / ") || "—"}
+                                    .join(" / ") || " - "}
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
             <p className="text-[10px] text-muted-foreground px-3 py-2 border-t border-border/60">
-                Source and UTM only — emails stay in the database.
+                Source and UTM only - emails stay in the database.
             </p>
         </div>
     );
@@ -114,7 +114,7 @@ export function formatFunnelConversion(
     opts: { hasTraffic: boolean; hasLeads: boolean },
 ): { value: string; sub?: string } {
     if (!opts.hasTraffic && !opts.hasLeads) {
-        return { value: "—", sub: "No traffic in period" };
+        return { value: " - ", sub: "No traffic in period" };
     }
     if (rate === null || (!opts.hasLeads && opts.hasTraffic)) {
         return { value: "0%", sub: "No real leads yet. QA traffic is excluded." };

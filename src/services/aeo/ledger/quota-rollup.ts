@@ -22,7 +22,7 @@ import type { Reservation } from "./quota-reservation";
  * against capacity that is already committed.
  *
  * A settled row counts `settledUnits + overrunUnits`. The overrun is consumption
- * the vendor reported beyond what we claimed — real drain on the bucket, and
+ * the vendor reported beyond what we claimed - real drain on the bucket, and
  * leaving it out here would be the same undercount the column exists to stop.
  */
 export function consumedUnits(reservations: readonly Reservation[]): number {
@@ -33,7 +33,7 @@ export function consumedUnits(reservations: readonly Reservation[]): number {
     }, 0);
 }
 
-/** Units that actually cost money. Distinct from consumption — see consumedUnits. */
+/** Units that actually cost money. Distinct from consumption - see consumedUnits. */
 export function billedUnits(reservations: readonly Reservation[]): number {
     return reservations.reduce((sum, r) => sum + r.billableUnits, 0);
 }

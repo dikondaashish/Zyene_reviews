@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Growth / lifecycle email templates — Phase 6
+// Growth / lifecycle email templates - Phase 6
 // ─────────────────────────────────────────────────────────────────────────────
 interface GrowthEmailLayoutProps {
     userName: string;
@@ -26,7 +26,7 @@ export function growthEmailLayout({ userName, bodyHtml, ctaLabel, ctaUrl }: Grow
 <p style="margin:0 0 16px;font-size:16px;color:#52525b;">Hi ${userName},</p>
 ${bodyHtml}
 ${ctaBlock}
-<p style="margin:32px 0 0;font-size:13px;color:#a1a1aa;line-height:1.5;">— The Zyene Reviews Team</p>
+<p style="margin:32px 0 0;font-size:13px;color:#a1a1aa;line-height:1.5;"> - The Zyene Reviews Team</p>
 </td></tr></table>
 </td></tr></table>
 </body></html>`;
@@ -48,19 +48,19 @@ export function trialNurtureEmail({ userName, dashboardUrl, stepKey }: TrialNurt
         },
         trial_day2_first_request: {
             subject: "Day 2: Send your first review request",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Happy customers often forget to leave a review. Send your first request via <strong>SMS, email, or a shareable link</strong> — right after a great visit.</p>
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Happy customers often forget to leave a review. Send your first request via <strong>SMS, email, or a shareable link</strong> - right after a great visit.</p>
 <p style="font-size:16px;line-height:1.6;color:#52525b;">Most businesses see their first new Google review within 48 hours of sending requests.</p>`,
             cta: "Send a review request",
         },
         trial_day3_ai_replies: {
             subject: "Day 3: Reply to reviews in one click with AI",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Responding shows you care — and helps your local SEO. Use <strong>AI reply suggestions</strong> to draft professional responses in seconds. You review and post every reply.</p>`,
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Responding shows you care - and helps your local SEO. Use <strong>AI reply suggestions</strong> to draft professional responses in seconds. You review and post every reply.</p>`,
             cta: "Open your review inbox",
         },
         trial_day4_feedback_shield: {
             subject: "Day 4: Protect your rating with the Negative Feedback Shield",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Customers who rate 1–3 stars are routed to a <strong>private feedback form</strong> first, so you can resolve issues before they hit Google publicly.</p>
-<p style="font-size:16px;line-height:1.6;color:#52525b;">4–5 star customers are guided to leave a public review. This is included on every paid plan.</p>`,
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Customers who rate 1-3 stars can use a <strong>private feedback form</strong> to describe the problem, and your team receives an alert for follow-up.</p>
+<p style="font-size:16px;line-height:1.6;color:#52525b;">Keep public review requests fair for your customer base. This is included on every paid plan.</p>`,
             cta: "See how it works",
         },
         trial_day5_competitors: {
@@ -70,13 +70,13 @@ export function trialNurtureEmail({ userName, dashboardUrl, stepKey }: TrialNurt
         },
         trial_day6_case_study: {
             subject: "Day 6: How Sunrise Dental grew from 23 to 89 Google reviews",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Sunrise Dental used automated SMS requests and the Negative Feedback Shield to grow from 4.1 to 4.7 stars in 90 days — without hiring marketing staff.</p>
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Sunrise Dental used automated SMS requests and the Negative Feedback Shield to grow from 4.1 to 4.7 stars in 90 days - without hiring marketing staff.</p>
 <p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="https://zyenereviews.com/case-studies/sunrise-dental-austin" style="color:#16a34a;">Read the full case study →</a></p>`,
             cta: "Go to dashboard",
         },
         trial_day7_upgrade: {
-            subject: "Day 7: Your trial ends soon — keep your momentum",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Your free trial is wrapping up. Keep your review automation, AI replies, and competitor tracking for <strong>$29.99/mo</strong> — no annual contract.</p>
+            subject: "Day 7: Your trial ends soon - keep your momentum",
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Your free trial is wrapping up. Keep your review automation, AI replies, and competitor tracking for <strong>$29.99/mo</strong> - no annual contract.</p>
 <p style="font-size:16px;line-height:1.6;color:#52525b;">Cancel anytime from billing settings if Zyene isn't the right fit.</p>`,
             cta: "View plans",
         },
@@ -101,7 +101,7 @@ export function onboardingDripEmail({
 }: TrialNurtureEmailProps): { subject: string; html: string } {
     const steps: Record<string, { subject: string; body: string; cta: string }> = {
         convert_benefits_recap: {
-            subject: "Welcome to paid — here's everything you unlocked",
+            subject: "Welcome to paid - here's everything you unlocked",
             body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Thanks for subscribing. You now have full access to your plan limits: review requests, AI replies, competitor tracking, and more.</p>`,
             cta: "Open dashboard",
         },
@@ -117,7 +117,7 @@ export function onboardingDripEmail({
         },
         convert_last_chance_offer: {
             subject: "Last chance: lock in your plan before limits reset",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">You're on a paid plan — keep your review automation, AI replies, and competitor tracking active. <a href="https://zyenereviews.com/pricing" style="color:#16a34a;">Review plan options →</a> or reply if you need help before your next billing cycle.</p>`,
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">You're on a paid plan - keep your review automation, AI replies, and competitor tracking active. <a href="https://zyenereviews.com/pricing" style="color:#16a34a;">Review plan options →</a> or reply if you need help before your next billing cycle.</p>`,
             cta: "Manage billing",
         },
     };
@@ -136,11 +136,11 @@ export function winbackFollowUpEmail({
     rejoinUrl: string;
 }): { subject: string; html: string } {
     return {
-        subject: "We miss you — here's what's new at Zyene Reviews",
+        subject: "We miss you - here's what's new at Zyene Reviews",
         html: growthEmailLayout({
             userName,
             bodyHtml: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Since you left, we've shipped competitor benchmarks, improved AI replies, industry playbooks, and more case studies from businesses like yours.</p>
-<p style="font-size:16px;line-height:1.6;color:#52525b;">Come back with <strong>25% off your next 3 months</strong> on any plan — reply to this email or reactivate below.</p>`,
+<p style="font-size:16px;line-height:1.6;color:#52525b;">Come back with <strong>25% off your next 3 months</strong> on any plan - reply to this email or reactivate below.</p>`,
             ctaLabel: "Reactivate with 25% off",
             ctaUrl: rejoinUrl,
         }),

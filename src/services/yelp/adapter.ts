@@ -109,7 +109,7 @@ export async function searchBusiness(
 
 /**
  * Get the 3 most recent reviews for a Yelp business.
- * NOTE: Yelp API only returns 3 reviews per call — this is an API limitation.
+ * NOTE: Yelp API only returns 3 reviews per call - this is an API limitation.
  */
 export async function getReviews(
     yelpBusinessId: string

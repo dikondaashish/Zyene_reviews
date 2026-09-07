@@ -23,7 +23,7 @@ export const aeoRunPlanner = inngest.createFunction(
         id: "aeo-run-planner",
         // One in-flight run per business. A second planner for the same business
         // would fan out a duplicate set of units, and each would reserve under a
-        // different runId — so the idempotency key would not catch it.
+        // different runId - so the idempotency key would not catch it.
         concurrency: { key: "event.data.businessId", limit: 1 },
         retries: 2,
     },

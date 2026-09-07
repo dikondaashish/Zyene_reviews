@@ -1,7 +1,7 @@
 import type { LodgingRecord } from "./lodging";
 
 /**
- * 0–100 rough completeness: how many major lodging sections have any data.
+ * 0-100 rough completeness: how many major lodging sections have any data.
  */
 export function computeLodgingHealth(lodging: LodgingRecord | null | undefined): number {
     if (!lodging || typeof lodging !== "object") return 0;

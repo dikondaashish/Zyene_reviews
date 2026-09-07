@@ -4,7 +4,7 @@ import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 export const metadata: Metadata = mergeMarketingSocial({
     title: "Features",
     description:
-        "AI review replies, review collection with Negative Feedback Shield, competitor tracking, and local SEO — own your online reputation in one platform.",
+        "AI review replies, review collection with Negative Feedback Shield, competitor tracking, and local SEO - own your online reputation in one platform.",
     alternates: { canonical: "https://www.zyenereviews.com/features" },
     openGraph: {
         title: "Features",

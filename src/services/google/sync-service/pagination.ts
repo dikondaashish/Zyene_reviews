@@ -1,4 +1,4 @@
-/** Google review sync — pagination */
+/** Google review sync - pagination */
 
 import { logger } from "@/lib/logger";
 import {
@@ -20,7 +20,7 @@ export async function fetchGoogleReviewsPaginated(
     googleReviews: GoogleReview[];
     apiTotalReviews?: number;
     apiAverageRating?: number;
-    /** True when more pages existed but we stopped at {@link MAX_REVIEW_PAGES} — list is incomplete for reconciliation. */
+    /** True when more pages existed but we stopped at {@link MAX_REVIEW_PAGES} - list is incomplete for reconciliation. */
     truncated: boolean;
 }> {
     let pageToken: string | undefined = undefined;
@@ -73,4 +73,3 @@ export async function fetchGoogleReviewsPaginated(
     const truncated = Boolean(pageToken);
     return { googleReviews, apiTotalReviews, apiAverageRating, truncated };
 }
-

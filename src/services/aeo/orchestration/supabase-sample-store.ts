@@ -64,8 +64,8 @@ export class SupabaseSampleStore implements SampleStore {
                 citations_availability: isObservation(result) ? result.citations.availability : null,
                 no_answer_reason: result.status === "no_answer" ? result.reason : null,
                 error_kind: result.status === "failed" ? result.error.kind : null,
-                // E-8 pointer. NULL means no answer was retained — either there
-                // was no prose to keep, or the upload failed — and readers must
+                // E-8 pointer. NULL means no answer was retained - either there
+                // was no prose to keep, or the upload failed - and readers must
                 // show that as missing evidence, not as an empty answer.
                 answer_storage_path: input.answerStoragePath,
             })

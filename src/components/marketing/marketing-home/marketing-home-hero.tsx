@@ -42,8 +42,8 @@ export function MarketingHomeHero({ fadeInUp, staggerContainer, prefersReducedMo
                     variants={fadeInUp}
                     className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed"
                 >
-                    The review management platform built for local businesses, helping owners
-                    monitor reviews, respond faster, and build trust.
+                    Monitor Google, Facebook, and Yelp reviews, send review requests, and draft
+                    replies from one workspace.
                 </motion.p>
 
                 <motion.div variants={fadeInUp} className="mt-8 flex items-center justify-center gap-4 flex-wrap">

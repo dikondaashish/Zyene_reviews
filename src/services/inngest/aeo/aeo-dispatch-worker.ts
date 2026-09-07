@@ -99,13 +99,13 @@ export const aeoDispatchWorker = inngest.createFunction(
             // reservation may now understate what the vendor actually charged.
             logger.error(
                 { runId: data.runId, promptId: data.promptId, engineId, sampleId: outcome.sampleId },
-                "AEO dispatch may have been billed twice — reconcile against the vendor invoice"
+                "AEO dispatch may have been billed twice - reconcile against the vendor invoice"
             );
         }
 
         // Extraction runs in its own step, AFTER the sample is durable and the
         // reservation is settled. It spends nothing and is re-runnable, so a
-        // failure here must never cost a sample that was already paid for —
+        // failure here must never cost a sample that was already paid for -
         // hence it is not folded into the dispatch steps.
         if (outcome.kind === "sampled") {
             const extracted = await step.run("extract-mentions", async () => {

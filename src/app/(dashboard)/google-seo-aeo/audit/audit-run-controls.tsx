@@ -9,7 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { runTechnicalAuditNow } from "./run-audit-action";
 import type { AuditRun } from "./load-audit-page-data";
 
-/** F5 manual trigger. Polls while a run is in flight — the same "running" refresh pattern the Google sync card already uses. */
+/** F5 manual trigger. Polls while a run is in flight - the same "running" refresh pattern the Google sync card already uses. */
 export function AuditRunControls({
     businessId,
     latestRun,
@@ -61,7 +61,7 @@ export function AuditRunControls({
                     <AlertTitle>Audit in progress</AlertTitle>
                     <AlertDescription>
                         Crawling {latestRun.origin}. Page counts are written once the crawl finishes, not
-                        live — this can take a minute or two depending on site size. This page checks
+                        live - this can take a minute or two depending on site size. This page checks
                         automatically.
                     </AlertDescription>
                 </Alert>
@@ -98,7 +98,7 @@ export function AuditRunControls({
             {latestRun?.status === "success" && (
                 <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
                     <CheckCircle2 className="size-4 text-chart-2" />
-                    Last ran {new Date(latestRun.startedAt).toLocaleString()} — {latestRun.pagesCrawled} pages
+                    Last ran {new Date(latestRun.startedAt).toLocaleString()} - {latestRun.pagesCrawled} pages
                     crawled.
                 </p>
             )}

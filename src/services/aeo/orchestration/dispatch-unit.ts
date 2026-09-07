@@ -9,11 +9,11 @@ import { reconcileUnit } from "./reconcile-unit";
 import type { AnswerStore, BillingGateway, ReservationStore, SampleStore, StepRunner } from "./ports";
 
 /**
- * E-7: one unit of sampling work — a single (prompt × engine × attempt).
+ * E-7: one unit of sampling work - a single (prompt × engine × attempt).
  *
  * Separate steps, deliberately: Inngest memoizes a step that COMPLETES and
  * re-runs one that dies mid-flight, so where the boundaries fall decides what
- * a crash costs — reserve|call|settle replays only settle after a crash;
+ * a crash costs - reserve|call|settle replays only settle after a crash;
  * reserve+call|settle replays the call too and double-bills the vendor.
  * bill-test (E-9) is its own step for the same reason, one level up.
  */
@@ -74,7 +74,7 @@ export async function dispatchUnit(
     const descriptor = getEngineDescriptor(input.engineId);
     const idempotencyKey = `${input.runId}:${input.promptId}:${input.engineId}:${input.attempt}`;
 
-    // STEP 1 — claim before spending. Atomic in the database: the allowance
+    // STEP 1 - claim before spending. Atomic in the database: the allowance
     // decision and the row are written under one lock, so concurrent dispatches
     // cannot both consume the same remaining balance.
     const reservation = await step("reserve", async () =>
@@ -96,7 +96,7 @@ export async function dispatchUnit(
 
     // A closed reservation means this exact unit already ran to completion. Its
     // sample is stored and its units are accounted for, so there is nothing left
-    // to do — and calling the engine again would pay the vendor a second time
+    // to do - and calling the engine again would pay the vendor a second time
     // for an answer we already have, then fail trying to settle a closed row.
     //
     // This is NOT the mid-flight retry case: there the reservation is still
@@ -107,7 +107,7 @@ export async function dispatchUnit(
 
     const reservationId = reservation.reservationId;
 
-    // STEP 2 — mark intent, then call, INSIDE ONE STEP.
+    // STEP 2 - mark intent, then call, INSIDE ONE STEP.
     //
     // The marker deliberately is not its own step. A completed step is memoized
     // and replayed, so a separate `mark-dispatched` step would return
@@ -131,7 +131,7 @@ export async function dispatchUnit(
 
     const result = called.sample;
     const duplicateRisk = called.dispatchAttempts > 1;
-    // STEP 3 — reconcile. The arithmetic lives in reconcileUnit, which is pure
+    // STEP 3 - reconcile. The arithmetic lives in reconcileUnit, which is pure
     // and tested directly: it decides what the customer is charged.
     const { settledUnits, overrunUnits, billableUnits: billed, costMicroUsd } = reconcileUnit(
         result,
@@ -181,7 +181,7 @@ export async function dispatchUnit(
 
     // E-9, separate step: what the vendor charged US just settled above; this
     // is what WE charge the customer, and a crash here must never replay that
-    // settle. Only "ok" is billable — a vendor-billed failure is our cost.
+    // settle. Only "ok" is billable - a vendor-billed failure is our cost.
     if (result.status === "ok") {
         await step("bill-test", () =>
             billing.settleTest({ organizationId: input.organizationId, sampleId: persisted.sampleId })

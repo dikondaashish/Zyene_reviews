@@ -3,7 +3,7 @@
  *
  * Idempotent by design: suggesting twice must not double a business's library.
  * Duplicate detection is on normalised prompt text across ALL of the business's
- * prompts, not just suggested ones — a user who already typed "best plumber in
+ * prompts, not just suggested ones - a user who already typed "best plumber in
  * Austin" should not be handed it back as a suggestion.
  *
  * Everything is written `is_active = false`. Nothing in this file can enrol a

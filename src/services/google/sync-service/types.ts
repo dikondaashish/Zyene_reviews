@@ -1,4 +1,4 @@
-/** Google review sync — types */
+/** Google review sync - types */
 
 import { SyncStateManager } from "@/services/google/sync-state-manager";
 import type { GooglePlatformWithTokens } from "@/types/google-sync";
@@ -30,4 +30,3 @@ export interface GoogleSyncContext {
      */
     reviewGapCheckDone?: boolean;
 }
-

@@ -15,7 +15,7 @@ export type AeoVisibilityContent = {
 };
 
 /**
- * QA #35–#37. Every tile carries its own provenance and its own badge, and a
+ * QA #35-#37. Every tile carries its own provenance and its own badge, and a
  * rate the sample cannot support is not rendered as a number at all.
  *
  * There is deliberately no "0%" fallback anywhere below. A suppressed rate and a
@@ -35,7 +35,7 @@ export function AeoVisibilitySection({ content }: { content: AeoVisibilityConten
                 </CardTitle>
                 <CardDescription>
                     How often answer engines name this business, over the last {content.windowDays} days.
-                    Only answers count — a refusal or a failed call is not evidence of absence.
+                    Only answers count - a refusal or a failed call is not evidence of absence.
                 </CardDescription>
             </CardHeader>
 

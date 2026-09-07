@@ -25,7 +25,7 @@ import { aiModeSample, aiOverviewSample, serpSample } from "./dataforseo-sample"
  *
  * That serialisation is evidence, not interpretation: it contains only what
  * DataForSEO returned, in the order it returned it. Nothing here decides
- * whether a brand is visible — that stays with E-6, as it does for every other
+ * whether a brand is visible - that stays with E-6, as it does for every other
  * engine.
  *
  * Both surfaces bill from the first request (no free bucket), so the E-10 guard
@@ -49,7 +49,7 @@ export class DataForSeoSerpAdapter implements AnswerEngineAdapter {
     /**
      * No model: this is a vendor-proxied search surface with nothing to pin.
      * The vendor is recorded instead, so a stored sample still says what
-     * produced it — QA #1 requires a non-empty identifier on every sample.
+     * produced it - QA #1 requires a non-empty identifier on every sample.
      */
     get modelId(): string {
         return this.id === "google_ai_mode" ? "dataforseo/google-ai-mode" : "dataforseo/google-serp";
@@ -155,9 +155,9 @@ export class DataForSeoSerpAdapter implements AnswerEngineAdapter {
 /**
  * DataForSEO takes exactly one location field, and is strict about its shape.
  *
- * A coordinate wins when present — that is what the geo-grid (F1.12) supplies.
+ * A coordinate wins when present - that is what the geo-grid (F1.12) supplies.
  *
- * `location_name` must be fully qualified — "Kansas City,Missouri,United States".
+ * `location_name` must be fully qualified - "Kansas City,Missouri,United States".
  * The bare city this used to send is rejected with 40501, so every Google sample
  * failed as `invalid_request` while still consuming a unit. An abbreviated state
  * ("Kansas City,MO,United States") is rejected identically.
@@ -168,7 +168,7 @@ export class DataForSeoSerpAdapter implements AnswerEngineAdapter {
  *
  * Returns null when it cannot place the search at all. The country fallback is
  * the US location code, so applying it to a country we cannot name would run an
- * Australian business's search in America and report the miss as absence — a
+ * Australian business's search in America and report the miss as absence - a
  * wrong answer dressed as a measurement. The caller refuses instead.
  */
 function locationFor(request: EngineSampleRequest): Record<string, unknown> | null {

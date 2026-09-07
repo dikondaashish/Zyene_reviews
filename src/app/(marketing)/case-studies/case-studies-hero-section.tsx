@@ -16,7 +16,7 @@ export function CaseStudiesHeroSection() {
                         Results local businesses achieve with Zyene Reviews
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed mb-4">
-                        Explore illustrative scenarios for restaurants, dental practices, home services, salons, and auto repair—built from typical workflows on Zyene Reviews, not verified named-customer engagements.
+                        Explore illustrative scenarios for restaurants, dental practices, home services, salons, and auto repair - built from typical workflows on Zyene Reviews, not verified named-customer engagements.
                     </p>
                     <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed border-l-2 border-primary/30 pl-4">
                         {CASE_STUDY_COMPOSITE_DISCLAIMER}

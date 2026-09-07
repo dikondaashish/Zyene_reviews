@@ -8,7 +8,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Filter, SlidersHorizontal } from "lucide-react";
+import { Filter, SlidersHorizontal, Star } from "lucide-react";
 
 interface ReviewsFiltersProps {
     filters: {
@@ -43,11 +43,12 @@ export function ReviewsFilters({ filters, onFilterChange }: ReviewsFiltersProps)
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="all">All Stars</SelectItem>
-                        <SelectItem value="5">⭐ 5 Stars</SelectItem>
-                        <SelectItem value="4">⭐ 4 Stars</SelectItem>
-                        <SelectItem value="3">⭐ 3 Stars</SelectItem>
-                        <SelectItem value="2">⭐ 2 Stars</SelectItem>
-                        <SelectItem value="1">⭐ 1 Star</SelectItem>
+                        {[5, 4, 3, 2, 1].map((rating) => (
+                            <SelectItem key={rating} value={String(rating)}>
+                                <Star className="mr-2 size-3.5 fill-chart-4 text-chart-4" aria-hidden="true" />
+                                {rating} {rating === 1 ? "Star" : "Stars"}
+                            </SelectItem>
+                        ))}
                     </SelectContent>
                 </Select>
 

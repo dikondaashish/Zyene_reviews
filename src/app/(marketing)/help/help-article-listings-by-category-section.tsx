@@ -1,13 +1,12 @@
 import Link from "next/link";
-import { ArrowRight, Mail, Search } from "lucide-react";
-import type { Metadata } from "next";
+import { ArrowRight } from "lucide-react";
 import {
     HELP_BY_CATEGORY,
     HELP_CATEGORIES,
     helpArticleNestedPath,
-    type HelpCategory,
 } from "@/lib/content/help-data";
 import { CATEGORY_ORDER } from "./help-data";
+import { HelpCategoryIcon } from "@/components/marketing/help-category-icon";
 
 export function HelpArticleListingsByCategorySection() {
     return (
@@ -24,7 +23,7 @@ export function HelpArticleListingsByCategorySection() {
                                     className="flex items-center gap-3 mb-6 group w-fit"
                                 >
                                     <div className="p-2.5 bg-primary/10 text-primary rounded-lg border border-primary/20 text-xl leading-none">
-                                        {catInfo.emoji}
+                                        <HelpCategoryIcon category={categoryKey} size={22} />
                                     </div>
                                     <div>
                                         <h2 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">

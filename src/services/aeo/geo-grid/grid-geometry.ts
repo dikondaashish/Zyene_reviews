@@ -2,7 +2,7 @@
  * Laying out a geo-grid.
  *
  * This replaces the pre-Phase-1 heatmap, which built cell labels from the
- * business's city string and derived a "rank" from its star rating — no
+ * business's city string and derived a "rank" from its star rating - no
  * coordinate was ever used and no search was ever run. Everything here produces
  * real coordinates that get really searched.
  *
@@ -35,7 +35,7 @@ const METERS_PER_DEGREE_LAT = 111_320;
 const MAX_ABS_LAT = 85;
 
 /**
- * Metres per degree of longitude shrinks with latitude — by cos(lat).
+ * Metres per degree of longitude shrinks with latitude - by cos(lat).
  *
  * Ignoring this is the classic geo-grid bug: a grid laid out with a fixed
  * degree step is correct at the equator and progressively squashed east-west as
@@ -97,13 +97,13 @@ function round6(value: number): number {
 }
 
 /**
- * Average rank across the grid — the "ATRP" a customer sees.
+ * Average rank across the grid - the "ATRP" a customer sees.
  *
  * Cells where the business did NOT appear are excluded, not scored. A sentinel
  * (0, or 20, or "worst rank + 1") would average into the number and make a
  * business that appears in two cells out of forty-nine look mediocre rather
  * than nearly invisible. `coverage` is what carries that, and both must be read
- * together — which is why this returns them together rather than as separate
+ * together - which is why this returns them together rather than as separate
  * calls someone can use one of.
  */
 export function gridCoverage(ranks: readonly (number | null)[]): {

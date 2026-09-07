@@ -10,12 +10,12 @@ export function generatePrimaryReviewResponse(params: {
     const stars = Math.min(5, Math.max(1, Math.round(rating)));
 
     if (stars >= 4) {
-        return `Thank you so much for the ${stars}-star review! We're thrilled you had a great experience with ${name}. Your feedback means a lot to our team and helps other customers know what to expect. We hope to see you again soon!`;
+        return `Thanks for the ${stars}-star review. We're glad you had a good experience at ${name}. We appreciate you taking the time to share it.`;
     }
     if (stars === 3) {
-        return `Thank you for sharing your honest feedback about ${name}. We're glad parts of your visit went well, and we'd love to hear more about how we can earn a 5-star experience next time. Please reach out to us directly — we're committed to improving.`;
+        return `Thanks for reviewing ${name}. We're glad some parts of your visit went well. If you're open to it, please contact us with what we could improve.`;
     }
-    return `We're sorry your experience with ${name} didn't meet your expectations. ${reviewText.trim() ? "We take your comments seriously and want to make this right." : "Your feedback is important to us."} Please contact us so we can address your concerns personally before you update your review.`;
+    return `We're sorry your experience with ${name} didn't meet your expectations. ${reviewText.trim() ? "We want to understand what happened and address it." : "Please tell us what went wrong."} Contact us directly so we can follow up.`;
 }
 
 export const BONUS_REVIEW_RESPONSE_TEMPLATES = [
@@ -28,12 +28,12 @@ export const BONUS_REVIEW_RESPONSE_TEMPLATES = [
         text: "Thank you for your review. We're glad you chose {business} and welcome any suggestions to make your next visit even better.",
     },
     {
-        label: "Service recovery (1–2 star)",
+        label: "Service recovery (1-2 star)",
         text: "We apologize for falling short. Please contact {business} directly so our manager can follow up with you today.",
     },
     {
         label: "HIPAA-aware (dental/medical tone)",
-        text: "Thank you for your feedback. Out of respect for your privacy, we'd like to discuss the details offline — please call our office at your convenience.",
+        text: "Thank you for your feedback. Out of respect for your privacy, we'd like to discuss the details offline - please call our office at your convenience.",
     },
     {
         label: "Restaurant / hospitality",

@@ -4,7 +4,7 @@ import type { AnswerEngineId } from "../engines/engine-types";
  * QA #37. Below this many observations a rate is not reported at all.
  *
  * Three is not arbitrary caution. Gemini answered the same prompt with the same
- * pinned model on two runs and named the business in one and not the other — so
+ * pinned model on two runs and named the business in one and not the other - so
  * a single observation is a coin flip rendered as a percentage, and "0%
  * visibility on ChatGPT" from one sample is a claim the data cannot support.
  */
@@ -41,14 +41,14 @@ export type EngineVisibility = {
      *
      * Null rather than 0 deliberately, and callers must not coalesce it: "we
      * cannot say" and "measured zero" are opposite claims, and this business is
-     * genuinely at 0% on two engines — a number that has to stay believable.
+     * genuinely at 0% on two engines - a number that has to stay believable.
      */
     visibilityRate: number | null;
     suppressed: Suppression | null;
     provenance: EngineProvenance;
 };
 
-/** QA #35 — what a tile must be able to show about its own number. */
+/** QA #35 - what a tile must be able to show about its own number. */
 export type EngineProvenance = {
     engineId: AnswerEngineId;
     /** Every distinct model behind these samples. Plural at a changeover. */
@@ -130,7 +130,7 @@ export function computeEngineVisibility(facts: readonly SampleFact[]): EngineVis
  *
  * Pools OBSERVATIONS, not per-engine rates: averaging rates would weight an
  * engine with three answers the same as one with twenty. Suppressed engines
- * still contribute their observations here — the reason to withhold a per-engine
+ * still contribute their observations here - the reason to withhold a per-engine
  * rate is that the engine's own sample is thin, which pooling fixes.
  */
 export function computeOverallVisibility(facts: readonly SampleFact[]): {

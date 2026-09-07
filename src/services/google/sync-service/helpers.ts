@@ -1,4 +1,4 @@
-/** Google review sync — helpers */
+/** Google review sync - helpers */
 
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import type { Json } from "@/lib/db/supabase/database.types";
@@ -94,4 +94,3 @@ export function isOrderByUnsupportedError(error: unknown): boolean {
         /orderBy/i.test(msg)
     );
 }
-

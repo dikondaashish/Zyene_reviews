@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Localized marketing industry pages — Phase 8.3
+// Localized marketing industry pages - Phase 8.3
 // Pattern: /es/industries/{localizedSlug} → English industry slug
 // ─────────────────────────────────────────────────────────────────────────────
 

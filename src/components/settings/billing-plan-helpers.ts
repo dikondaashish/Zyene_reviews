@@ -11,6 +11,6 @@ export function sameProductTier(a: Plan | null, b: Plan): boolean {
 
 export function formatRecurringLabel(plan: Plan): string {
     const suffix = plan.interval === "year" ? "/yr" : "/mo";
-    const amount = plan.price != null ? plan.price.toFixed(2) : "—";
+    const amount = plan.price != null ? plan.price.toFixed(2) : " - ";
     return `$${amount}${suffix}`;
 }

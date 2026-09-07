@@ -8,7 +8,7 @@ import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
 import { loadDueCrawlBusinesses } from "@/services/aeo/scheduler/load-due-crawl-businesses";
 
 /**
- * E-3 fan-out — the trigger the crawler engine never had.
+ * E-3 fan-out - the trigger the crawler engine never had.
  *
  * Mirrors /api/cron/aeo-run-scheduler exactly: hourly, matching the same
  * (day, hour) slot mechanism (crawl-slot.ts, independently salted from E-10's
@@ -17,8 +17,8 @@ import { loadDueCrawlBusinesses } from "@/services/aeo/scheduler/load-due-crawl-
  * actually run (isLiveCrawlingEnabled()) and does the crawling.
  *
  * Registered in vercel.json on the same `0 1-8 * * *` band as the sampling
- * scheduler, because crawl-slot.ts draws its hour from the same 1–8 UTC
- * window — a narrower band would strand every business whose slot fell
+ * scheduler, because crawl-slot.ts draws its hour from the same 1-8 UTC
+ * window - a narrower band would strand every business whose slot fell
  * outside it, silently and permanently.
  *
  * Registration is NOT the same as going live. AEO_LIVE_CRAWLING remains the

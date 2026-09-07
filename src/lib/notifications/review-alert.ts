@@ -118,7 +118,7 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
                 if (!inQuietHours) {
                     const snippet = review.text ? review.text.substring(0, 80) : "";
                     const author = review.author_name || "a customer";
-                    const body = `⚠️ New ${rating}★ review for ${business.name}:\n"${snippet}..."\n— ${author}\nReply: ${APP_URL}/dashboard`;
+                    const body = `⚠️ New ${rating}★ review for ${business.name}:\n"${snippet}..."\n - ${author}\nReply: ${APP_URL}/dashboard`;
                     await sendSMS(userPref.sms_phone_number, body);
                 }
             }

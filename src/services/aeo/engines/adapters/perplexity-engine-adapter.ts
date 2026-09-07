@@ -32,7 +32,7 @@ import {
  * call the two differed by 26% ($0.00532 actual against a $0.0067 estimate),
  * which would compound silently across a month of sampling.
  *
- * Bills from the first request — there is no free bucket to protect, so the
+ * Bills from the first request - there is no free bucket to protect, so the
  * E-10 budget guard deliberately does not stand in the way. Affordability here
  * is the ledger's job.
  */
@@ -143,7 +143,7 @@ export class PerplexityEngineAdapter implements AnswerEngineAdapter {
         const text = body.choices?.[0]?.message?.content?.trim() ?? "";
         // The request completed and is billable whatever it returned.
         const reportedCostMicroUsd = usdToMicroUsd(body.usage?.cost?.total_cost);
-        // The model that actually answered, when reported — it can differ from
+        // The model that actually answered, when reported - it can differ from
         // what we asked for, and a trend line needs to know that.
         const modelId = body.model?.trim() || this.modelId;
 
@@ -164,7 +164,7 @@ export class PerplexityEngineAdapter implements AnswerEngineAdapter {
             answerText: text,
             // Always `present`: Sonar is a search-grounded engine, so zero
             // sources is a real zero and belongs in the denominator. This is
-            // never `unavailable` — that state is for engines with no notion of
+            // never `unavailable` - that state is for engines with no notion of
             // sources at all.
             citations: citationsPresent(mergeCitations(body)),
             latencyMs: elapsed(),
@@ -177,7 +177,7 @@ export class PerplexityEngineAdapter implements AnswerEngineAdapter {
 /**
  * `search_results` carries titles; `citations` is a bare URL list. They cover
  * the same sources, so titles are joined on by URL and the citation list keeps
- * its ordering — that order is the prominence signal (F3.4).
+ * its ordering - that order is the prominence signal (F3.4).
  */
 function mergeCitations(body: PerplexityResponse): { url: string; title: string | null }[] {
     const titleByUrl = new Map<string, string>();

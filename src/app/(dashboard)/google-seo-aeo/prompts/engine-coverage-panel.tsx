@@ -5,7 +5,7 @@ import type { EngineCoverage } from "./load-prompts-page-data";
  * F1.10 coverage panel.
  *
  * Lists every catalogued engine including ones that cannot run, with the reason
- * — "Claude: Phase 2" is a more honest answer than silently omitting it. A user
+ * - "Claude: Phase 2" is a more honest answer than silently omitting it. A user
  * comparing us to a competitor's engine list should see what we do not cover
  * and why, rather than being left to infer it from an absence.
  */
@@ -14,7 +14,7 @@ const STATE_LABEL: Record<string, { text: string; variant: "default" | "secondar
     available: { text: "Sampling", variant: "default" },
     not_implemented: { text: "Not yet built", variant: "outline" },
     not_configured: { text: "Needs credentials", variant: "secondary" },
-    pricing_unconfirmed: { text: "Withheld — price unconfirmed", variant: "secondary" },
+    pricing_unconfirmed: { text: "Withheld - price unconfirmed", variant: "secondary" },
 };
 
 export function EngineCoveragePanel({ engines }: { engines: EngineCoverage[] }) {

@@ -14,13 +14,13 @@ export const CAMPAIGN_TEMPLATES: CampaignTemplate[] = [
             name: "Post-Visit Review Request",
             channel: "sms",
             trigger_type: "manual_batch",
-            sms_template: "Hi {customer_name}! Thanks for visiting {business_name} today. We'd love your feedback — it takes 30 seconds: {review_link}",
+            sms_template: "Hi {customer_name}! Thanks for visiting {business_name} today. We'd love your feedback - it takes 30 seconds: {review_link}",
             email_subject: "How was your visit to {business_name}?",
-            email_template: "<p>Hi {customer_name},</p><p>Thank you for visiting {business_name} today! We'd really appreciate your feedback — it helps us improve and helps others discover us.</p><p><a href=\"{review_link}\">Leave a Review</a></p>",
+            email_template: "<p>Hi {customer_name},</p><p>Thank you for visiting {business_name} today! We'd really appreciate your feedback - it helps us improve and helps others discover us.</p><p><a href=\"{review_link}\">Leave a Review</a></p>",
             delay_minutes: 60,
             follow_up_enabled: true,
             follow_up_delay_hours: 48,
-            follow_up_template: "Hi {customer_name}, just a friendly reminder — we'd love to hear about your experience at {business_name}: {review_link}"
+            follow_up_template: "Hi {customer_name}, just a friendly reminder - we'd love to hear about your experience at {business_name}: {review_link}"
         }
     },
     {

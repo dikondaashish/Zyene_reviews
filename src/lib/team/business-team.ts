@@ -8,7 +8,7 @@ export type InviteRole = (typeof INVITE_ROLE_VALUES)[number];
 
 /**
  * Which invite roles an inviter may assign (business-scoped).
- * Managers may only invite peers or members — not admin (owners/admins can invite admin).
+ * Managers may only invite peers or members - not admin (owners/admins can invite admin).
  */
 export function inviteRolesAssignableByInviter(inviterBusinessRole: string): InviteRole[] {
     const r = String(inviterBusinessRole || "").toLowerCase();

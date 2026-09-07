@@ -18,7 +18,7 @@ export function ShareOfVoiceSection({ result }: { result: ShareOfVoiceResult }) 
                     <div className="space-y-2">
                         <p className="text-sm text-muted-foreground">
                             Add at least {result.required} competitors to see a meaningful share of
-                            voice — with {result.competitorCount} configured, the metric would mislead.
+                            voice - with {result.competitorCount} configured, the metric would mislead.
                         </p>
                         <Button asChild size="sm" variant="outline">
                             <Link href="/competitors">Manage competitors</Link>
@@ -28,14 +28,14 @@ export function ShareOfVoiceSection({ result }: { result: ShareOfVoiceResult }) 
                 {result.suppressed && result.reason === "insufficient_observations" && (
                     <p className="text-sm text-muted-foreground">
                         Only {result.observations} observation{result.observations === 1 ? "" : "s"} in
-                        the last 30 days — need at least {result.required} before share of voice is
+                        the last 30 days - need at least {result.required} before share of voice is
                         reliable.
                     </p>
                 )}
                 {result.suppressed && result.reason === "no_brands_named" && (
                     <p className="text-sm text-muted-foreground">
-                        Across {result.observations} answers, no tracked brand — yours or a
-                        competitor&apos;s — was named. That&apos;s an opportunity signal in its own
+                        Across {result.observations} answers, no tracked brand - yours or a
+                        competitor&apos;s - was named. That&apos;s an opportunity signal in its own
                         right, not a data gap.
                     </p>
                 )}
@@ -44,7 +44,7 @@ export function ShareOfVoiceSection({ result }: { result: ShareOfVoiceResult }) 
                         {result.noBrandNamedCount > 0 && (
                             <p className="text-xs text-muted-foreground">
                                 {result.noBrandNamedCount} of {result.observations} answers named no
-                                tracked brand at all — excluded from the share below.
+                                tracked brand at all - excluded from the share below.
                             </p>
                         )}
                         <ul className="space-y-2">

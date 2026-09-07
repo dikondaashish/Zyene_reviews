@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
-/** Chrome/Safari roughly cap canvas edges around 8k–16k px; stay under to avoid blank/failed captures. */
+/** Chrome/Safari roughly cap canvas edges around 8k-16k px; stay under to avoid blank/failed captures. */
 const MAX_CANVAS_EDGE = 8192;
 
 export function sanitizeReportFilenamePart(s: string): string {

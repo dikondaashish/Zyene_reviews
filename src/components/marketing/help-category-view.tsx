@@ -7,6 +7,7 @@ import {
     type HelpCategory,
 } from "@/lib/content/help-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { HelpCategoryIcon } from "@/components/marketing/help-category-icon";
 
 export function HelpCategoryView({ categoryKey }: { categoryKey: HelpCategory }) {
     const catInfo = HELP_CATEGORIES[categoryKey];
@@ -31,7 +32,9 @@ export function HelpCategoryView({ categoryKey }: { categoryKey: HelpCategory })
                         ← Help Center
                     </Link>
                     <div className="flex items-center gap-3 mb-4">
-                        <span className="text-3xl">{catInfo.emoji}</span>
+                        <div className="flex size-11 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
+                            <HelpCategoryIcon category={categoryKey} size={24} />
+                        </div>
                         <h1 className="text-3xl font-bold tracking-tight">{catInfo.label}</h1>
                     </div>
                     <p className="text-lg text-muted-foreground max-w-2xl">{catInfo.description}</p>

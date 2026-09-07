@@ -52,12 +52,12 @@ export async function POST(request: Request) {
         await sendEmail({
             to: PARTNER_CONTACT_EMAIL,
             subject: `[Agency dashboard waitlist] ${agencyName || email}`,
-            // Escaped — anonymous input rendered in our own inbox.
+            // Escaped - anonymous input rendered in our own inbox.
             html: `<p>Agency dashboard waitlist signup</p>
 <ul>
 <li>Email: ${escapeHtml(email)}</li>
-<li>Agency: ${escapeHtml(agencyName || "—")}</li>
-<li>Clients: ${escapeHtml(clientCount || "—")}</li>
+<li>Agency: ${escapeHtml(agencyName || " - ")}</li>
+<li>Clients: ${escapeHtml(clientCount || " - ")}</li>
 </ul>`,
         });
     } catch (err) {

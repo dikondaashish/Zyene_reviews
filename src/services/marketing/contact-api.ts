@@ -25,7 +25,7 @@ const contactSchema = z.object({
 
 export async function handleContactPost(request: Request) {
     // Unauthenticated and it sends two real emails, one of them to an address the
-    // caller supplies — without a limit that is a spam relay on our sending domain.
+    // caller supplies - without a limit that is a spam relay on our sending domain.
     // Fails CLOSED: if the limiter is unreachable we would rather drop a contact
     // form submission than leave the relay wide open.
     try {
@@ -60,7 +60,7 @@ export async function handleContactPost(request: Request) {
     try {
         await sendEmail({
             to: CONTACT_INBOX,
-            subject: `[Contact] ${subject} — ${name}`,
+            subject: `[Contact] ${subject} - ${name}`,
             html: `<p><strong>New contact form submission</strong></p>
 <ul>
 <li><strong>Name:</strong> ${escapeHtml(name)}</li>
@@ -75,10 +75,10 @@ ${emailMutedFooter("Submitted via zyenereviews.com/contact")}`,
 
         await sendEmail({
             to: email,
-            subject: "We received your message — Zyene Reviews",
+            subject: "We received your message - Zyene Reviews",
             html: `<p>Hi ${escapeHtml(name)},</p>
 <p>Thanks for reaching out. We received your message about <strong>${escapeHtml(subject)}</strong> and will reply within one business day.</p>
-<p>— Zyene Reviews</p>`,
+<p> - Zyene Reviews</p>`,
         });
     } catch (err) {
         logger.error({ err }, "[contact] email failed:");

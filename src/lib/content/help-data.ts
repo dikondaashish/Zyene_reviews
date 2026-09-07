@@ -1,5 +1,5 @@
 /**
- * Help data barrel — Phase 4.
+ * Help data barrel - Phase 4.
  * Re-exports types, aggregates all 23 articles, and exposes lookup maps/utilities.
  */
 

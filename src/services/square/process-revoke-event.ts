@@ -28,6 +28,6 @@ export async function processSquareRevokeEvent(event: ParsedSquareRevokeEvent): 
 
     logger.info(
         { merchantId: event.merchantId, updated: data?.length ?? 0 },
-        "[square] OAuth revoked — connection disconnected",
+        "[square] OAuth revoked - connection disconnected",
     );
 }

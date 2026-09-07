@@ -16,7 +16,7 @@ export const INTEGRATIONS_A: IntegrationItem[] = [
             "Access local pack ranking insights",
         ],
         description:
-            "The heart of your local SEO. Zyene connects to your Google Business Profile via official OAuth — syncing every review, monitoring your keyword performance, and letting you publish AI-crafted replies without leaving the dashboard.",
+            "The heart of your local SEO. Zyene connects to your Google Business Profile via official OAuth - syncing every review, monitoring your keyword performance, and letting you publish AI-crafted replies without leaving the dashboard.",
     },
     {
         name: "Facebook Reviews",
@@ -58,14 +58,14 @@ export const INTEGRATIONS_A: IntegrationItem[] = [
         badge: null,
         status: "live",
         features: [
-            "Trigger review requests from 5,000+ apps",
-            "Connect CRMs: HubSpot, Salesforce, Zoho",
-            "Trigger after POS sales, bookings, or support tickets",
-            "Build multi-step automation workflows",
-            "No code required",
+            "Trigger review requests from apps that can send a webhook",
+            "Map customer name, email, and phone fields",
+            "Trigger after a sale, booking, or completed service",
+            "Use Zapier filters and delays before sending",
+            "No custom code required for the webhook setup",
         ],
         description:
-            "If your workflow lives in another app, Zapier bridges the gap. Trigger a review request the moment a booking is completed, a sale is closed, or a support ticket is resolved — automatically.",
+            "If your workflow lives in another app, use Zapier to send a review request after a sale, booking, or completed service. Map the customer fields, add any filters or delays, and send the request to Zyene.",
     },
     {
         name: "Square",
@@ -81,6 +81,6 @@ export const INTEGRATIONS_A: IntegrationItem[] = [
             "Works for retail and food & beverage",
         ],
         description:
-            "Square is the most popular POS for local businesses. Connect once and Zyene will automatically send a review request after every completed sale — no manual work required.",
+            "Connect Square once and Zyene can send a review request after a completed sale. Configure the delay and customer contact fields in the integration settings.",
     },
 ];

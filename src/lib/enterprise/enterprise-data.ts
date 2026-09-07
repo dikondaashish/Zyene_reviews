@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Enterprise motion — Phase 8.1
+// Enterprise motion - Phase 8.1
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const ENTERPRISE_SALES_EMAIL = "sales@zyenereviews.com";
@@ -8,7 +8,7 @@ export const ENTERPRISE_VALUE_PROPS = [
     {
         title: "Unlimited scale",
         description:
-            "Unlimited locations, review requests, and AI replies — priced for multi-location brands and franchises, not per-seat enterprise bloat.",
+            "Unlimited locations, review requests, and AI replies - priced for multi-location brands and franchises, not per-seat enterprise bloat.",
     },
     {
         title: "White-label & branding",
@@ -47,10 +47,10 @@ export const ENTERPRISE_SLA_BULLETS = [
 
 export const ENTERPRISE_COMPARISON_ROWS = [
     { feature: "Locations", starter: "1", professional: "3", enterprise: "Unlimited" },
-    { feature: "White-label widgets", starter: "—", professional: "—", enterprise: "Included" },
-    { feature: "SSO (SAML/OIDC)", starter: "—", professional: "—", enterprise: "Included" },
-    { feature: "Dedicated AM", starter: "—", professional: "—", enterprise: "Included" },
-    { feature: "Custom SLA", starter: "—", professional: "—", enterprise: "Included" },
+    { feature: "White-label widgets", starter: " - ", professional: " - ", enterprise: "Included" },
+    { feature: "SSO (SAML/OIDC)", starter: " - ", professional: " - ", enterprise: "Included" },
+    { feature: "Dedicated AM", starter: " - ", professional: " - ", enterprise: "Included" },
+    { feature: "Custom SLA", starter: " - ", professional: " - ", enterprise: "Included" },
     { feature: "API & integrations", starter: "Standard", professional: "Standard", enterprise: "Managed" },
 ] as const;
 

@@ -95,7 +95,7 @@ export function getAppSiteOrigin(
     return `https://app.${apexHost}`;
 }
 
-/** Auth, app, and infrastructure paths — never business slugs on any host. */
+/** Auth, app, and infrastructure paths - never business slugs on any host. */
 export const PLATFORM_ROUTE_PREFIXES = [
     "/api",
     "/_next",

@@ -185,7 +185,7 @@ export async function addCompetitor(
                     average_rating: 0,
                     total_reviews: 0,
                     source: "manual",
-                    metadata: { seeded_on_create: true, note: "Places lookup unavailable — use Sync or wait for cron" },
+                    metadata: { seeded_on_create: true, note: "Places lookup unavailable - use Sync or wait for cron" },
                 } as never);
             }
 

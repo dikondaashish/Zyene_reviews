@@ -126,7 +126,7 @@ export function questionToRow(
 }
 
 /**
- * POST .../locations/{loc}/questions/{q}/answers:upsert — parent is full question name.
+ * POST .../locations/{loc}/questions/{q}/answers:upsert - parent is full question name.
  */
 export async function upsertQuestionAnswer(
     accessToken: string,

@@ -8,7 +8,7 @@ import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
 import { loadDueBusinesses } from "@/services/aeo/scheduler/load-due-businesses";
 
 /**
- * E-10 fan-out — the trigger the sampling scheduler never had.
+ * E-10 fan-out - the trigger the sampling scheduler never had.
  *
  * assignSlot()/planDailyBudget() (sampling-slot.ts, daily-budget.ts) were
  * fully built and tested but had no caller: nothing decided "today, this
@@ -16,7 +16,7 @@ import { loadDueBusinesses } from "@/services/aeo/scheduler/load-due-businesses"
  * decides WHO; aeoRunPlanner (unchanged) still decides WHAT to sample and
  * enforces the daily budget guard per business, same as it always has.
  *
- * Hourly, not daily, matching DEFAULT_SLOT_HOURS (1–8 UTC): a once-daily
+ * Hourly, not daily, matching DEFAULT_SLOT_HOURS (1-8 UTC): a once-daily
  * fire would dispatch a whole day's businesses at once, recreating the
  * thundering herd the (day, hour) split exists to prevent.
  *
@@ -27,7 +27,7 @@ import { loadDueBusinesses } from "@/services/aeo/scheduler/load-due-businesses"
  * caps today's real financial exposure to Gemini's free daily bucket at the
  * vendor side. It does NOT cap E-9's customer-facing side: one dispatch unit
  * settling "ok" still costs $2.50 in AEO credit or Stripe overage regardless
- * of what the vendor charged us for it — see billing-constants.ts.
+ * of what the vendor charged us for it - see billing-constants.ts.
  *
  * Not yet registered with any scheduler, including Vercel Cron. The route
  * exists and is reachable but nothing calls it, the same posture E-9.1's

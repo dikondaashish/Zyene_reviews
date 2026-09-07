@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Feature pillar pages — GROWTH_BLUEPRINT §4.2 (/features/*)
+// Feature pillar pages - GROWTH_BLUEPRINT §4.2 (/features/*)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type FeaturePillarSlug =
@@ -10,7 +10,7 @@ export type FeaturePillarSlug =
     | "local-seo"
     | "analytics";
 
-/** Legacy slug from early features page — redirect to competitor-tracking */
+/** Legacy slug from early features page - redirect to competitor-tracking */
 export const FEATURE_PILLAR_ALIASES: Record<string, FeaturePillarSlug> = {
     "competitor-intelligence": "competitor-tracking",
 };
@@ -30,7 +30,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
     {
         slug: "review-monitoring",
         title: "Review Monitoring & Inbox",
-        tagline: "Never miss a review — across every platform",
+        tagline: "Never miss a review - across every platform",
         metaTitle: "Review Monitoring & Inbox",
         metaDescription:
             "Centralized Google, Facebook, and Yelp review inbox with real-time alerts, sentiment analysis, and urgency scoring for local businesses.",
@@ -62,15 +62,15 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
     {
         slug: "review-collection",
         title: "Review Collection & Negative Feedback Shield",
-        tagline: "Get more 5-star reviews. Route bad ones privately.",
+        tagline: "Ask for reviews and follow up on low ratings.",
         metaTitle: "Review Collection & Negative Feedback Shield",
         metaDescription:
-            "SMS, email, and QR review campaigns with the Negative Feedback Shield — unhappy customers resolve privately before posting on Google.",
+            "SMS, email, and QR review campaigns with a private feedback path for low ratings.",
         bullets: [
             "Branded review request campaigns via SMS & email",
             "Shareable QR codes for in-person review collection",
-            "Negative Feedback Shield routes unhappy customers to private resolution before they go public on Google",
-            "POS & automation triggers (Square, Clover, Zapier)",
+            "Negative Feedback Shield gives low ratings a private feedback path and alerts your team",
+            "POS and automation triggers (Square, Zapier)",
             "AI-generated review prompt crafted for each customer",
         ],
         cta: { label: "See pricing", href: "/pricing" },
@@ -98,7 +98,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         tagline: "Understand and improve your Google Business Profile",
         metaTitle: "Local SEO Dashboard",
         metaDescription:
-            "GBP keyword performance, search insights, and actionable SEO fixes — included on Starter, not locked behind enterprise tiers.",
+            "GBP keyword performance, search insights, and actionable SEO fixes - included on Starter, not locked behind enterprise tiers.",
         bullets: [
             "Google Business Profile keyword performance tracking",
             "Keyword insights: what customers search to find you",
@@ -114,7 +114,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         tagline: "Understand what's working and share results",
         metaTitle: "Analytics & Reporting",
         metaDescription:
-            "Review trends, sentiment, engagement funnel, PDF reports, and CSV exports — analytics for local teams on Zyene Reviews from $29.99/mo.",
+            "Review trends, sentiment, engagement funnel, PDF reports, and CSV exports - analytics for local teams on Zyene Reviews from $29.99/mo.",
         bullets: [
             "Dashboard overview: ratings, volume, response rate, trends",
             "Review growth charts over time (weekly/monthly)",

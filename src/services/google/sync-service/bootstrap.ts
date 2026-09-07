@@ -1,4 +1,4 @@
-/** Google review sync — bootstrap */
+/** Google review sync - bootstrap */
 
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
@@ -66,4 +66,3 @@ export async function bootstrapGoogleReviewsForPlatform(
         throw err;
     }
 }
-

@@ -1,5 +1,5 @@
 /**
- * Blog post — AI visibility audit for local businesses (GEO Priority 5).
+ * Blog post - AI visibility audit for local businesses (GEO Priority 5).
  */
 
 import type { BlogPost } from "./blog-types";
@@ -8,7 +8,7 @@ export const post14: BlogPost = {
     slug: "ai-visibility-audit-local-businesses",
     title: "AI Visibility Audit for Local Businesses: What to Check in 2026",
     excerpt:
-        "An AI visibility audit checks whether assistants and AI Overviews can cite your brand accurately. Use this checklist for local SEO, reviews, and reputation—without guaranteed ranking claims.",
+        "An AI visibility audit checks whether assistants and AI Overviews can cite your brand accurately. Use this checklist for local SEO, reviews, and reputation - without guaranteed ranking claims.",
     pillar: "local-seo",
     pillarLabel: "Local SEO",
     publishedAt: "2026-05-25",
@@ -43,7 +43,7 @@ export const post14: BlogPost = {
         {
             question: "What is an AI visibility audit?",
             answer:
-                "It is a structured review of whether AI assistants and AI-generated search surfaces can find, understand, and accurately describe your business. You test brand queries, check factual consistency across your site and listings, and note gaps in reviews, local SEO, and structured data—not a single automated score from Google.",
+                "It is a structured review of whether AI assistants and AI-generated search surfaces can find, understand, and accurately describe your business. You test brand queries, check factual consistency across your site and listings, and note gaps in reviews, local SEO, and structured data - not a single automated score from Google.",
         },
         {
             question: "How is AI visibility different from traditional SEO?",
@@ -53,7 +53,7 @@ export const post14: BlogPost = {
         {
             question: "Which tools should I use to test AI citations?",
             answer:
-                "Run the same five to ten plain-language queries in ChatGPT (with browsing if available), Perplexity, Gemini, and Google search (watch for AI Overviews). Record date, query, whether your brand appeared, and what was said. Spreadsheets are enough—no tool guarantees citation placement.",
+                "Run the same five to ten plain-language queries in ChatGPT (with browsing if available), Perplexity, Gemini, and Google search (watch for AI Overviews). Record date, query, whether your brand appeared, and what was said. Spreadsheets are enough - no tool guarantees citation placement.",
         },
         {
             question: "Do more Google reviews help AI visibility?",
@@ -63,24 +63,24 @@ export const post14: BlogPost = {
         {
             question: "Can Zyene Reviews guarantee AI Overview rankings?",
             answer:
-                "No. Zyene Reviews helps you collect reviews fairly, respond faster, and monitor reputation—it does not control Google, ChatGPT, or Perplexity outputs. Use this audit to improve fundamentals; treat any vendor promise of guaranteed AI placement as a red flag.",
+                "No. Zyene Reviews helps you collect reviews fairly, respond faster, and monitor reputation - it does not control Google, ChatGPT, or Perplexity outputs. Use this audit to improve fundamentals; treat any vendor promise of guaranteed AI placement as a red flag.",
         },
     ],
     body: [
         {
             type: "summary",
-            text: "An AI visibility audit asks whether AI systems can describe your local business accurately when customers search in natural language. This guide lists what to check—brand queries, listings, reviews, and page structure—without promising guaranteed AI Overview placement.",
+            text: "An AI visibility audit asks whether AI systems can describe your local business accurately when customers search in natural language. This guide lists what to check - brand queries, listings, reviews, and page structure - without promising guaranteed AI Overview placement.",
         },
-        { type: "p", text: "Generative answers pull from public web content, business profiles, and reputation signals. Local businesses that already invest in Google Business Profile, reviews, and clear website copy are better positioned—but you still need to test and document what assistants actually say about you." },
+        { type: "p", text: "Generative answers pull from public web content, business profiles, and reputation signals. Local businesses that already invest in Google Business Profile, reviews, and clear website copy are better positioned - but you still need to test and document what assistants actually say about you." },
         { type: "h2", text: "What to include in your audit" },
         {
             type: "summary",
-            text: "Cover six areas: branded AI queries, factual consistency, local SEO fundamentals, review volume and responses, comparison content, and structured data. Score each as pass, partial, or fail with notes—do not invent benchmark percentages.",
+            text: "Cover six areas: branded AI queries, factual consistency, local SEO fundamentals, review volume and responses, comparison content, and structured data. Score each as pass, partial, or fail with notes - do not invent benchmark percentages.",
         },
         { type: "ol", items: [
             "Branded queries: Ask whether assistants name your business for “best [service] in [city]” and “[your brand] reviews.”",
             "Factual consistency: Compare NAP, hours, and services across your website, Google Business Profile, and top directories.",
-            "Local SEO baseline: Work through the local SEO checklist—categories, citations, location pages, and mobile speed.",
+            "Local SEO baseline: Work through the local SEO checklist - categories, citations, location pages, and mobile speed.",
             "Reviews and responses: Note review count, recency, average rating, and whether you respond within 48 hours.",
             "Reputation and comparisons: Ensure you have honest comparison and pricing context pages where prospects research alternatives.",
             "Structured data: Confirm LocalBusiness, FAQ, and Article schema validate in Google’s Rich Results Test where applicable.",

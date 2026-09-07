@@ -61,8 +61,8 @@
     "upgrade_prompt": "Mejorar Plan",
     "website_clicks": "Clics en el sitio web",
     "website_clicks_desc": "Toques en el enlace",
-    "positive_experience": "Reseñas positivas (4–5★)",
-    "negative_mixed": "reseñas de 1–2★",
+    "positive_experience": "Reseñas positivas (4-5★)",
+    "negative_mixed": "reseñas de 1-2★",
     "no_sentiment_data": "Sin datos de sentimiento",
     "engagement_rate": "Conversión de solicitudes",
     "engagement_desc": "Solicitudes completadas de las enviadas",
@@ -83,8 +83,8 @@
     "review_spotlight_manage_all": "Gestionar todo",
     "needs_attention_title": "Requiere tu atención",
     "needs_attention_subtitle_zero": "No hay reseñas urgentes por ahora",
-    "needs_attention_subtitle_one": "1 reseña urgente — podemos redactar una respuesta por ti",
-    "needs_attention_subtitle_many": "{count} reseñas urgentes — podemos redactar respuestas por ti",
+    "needs_attention_subtitle_one": "1 reseña urgente - podemos redactar una respuesta por ti",
+    "needs_attention_subtitle_many": "{count} reseñas urgentes - podemos redactar respuestas por ti",
     "needs_attention_view_all": "Ver todas",
     "needs_attention_your_reply_label": "Tu respuesta como propietario",
     "needs_attention_sent_saved": "Publicado en Google",
@@ -156,7 +156,7 @@
     "proration_notice_fallback": "Se cobrará hoy un importe prorrateado por el resto de su periodo de facturación; después, {{recurring}}.",
     "proration_preview_loading": "Calculando su cargo…",
     "trial_ends_on_upgrade_notice": "Al mejorar el plan finalizará su prueba gratuita y comenzará la facturación de inmediato.",
-    "pro_prorated_no_trial_badge": "Facturación prorrateada — sin prueba"
+    "pro_prorated_no_trial_badge": "Facturación prorrateada - sin prueba"
   },
   "public_profile": {
     "title": "Perfil Público",

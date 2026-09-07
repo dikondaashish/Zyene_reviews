@@ -143,7 +143,7 @@ export function isGoogleAccountStateError(error: unknown): error is GoogleServic
     );
 }
 
-/** True when the failure is ours to fix or investigate — i.e. worth an alert. */
+/** True when the failure is ours to fix or investigate - i.e. worth an alert. */
 export function isGoogleActionableFault(error: unknown): boolean {
     return !isGoogleConfigurationError(error) && !isGoogleAccountStateError(error);
 }

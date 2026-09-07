@@ -22,7 +22,7 @@ export function getTwilioClient(): ReturnType<typeof twilio> {
     return _client;
 }
 
-/** @deprecated Use getTwilioClient() instead — this may be null. */
+/** @deprecated Use getTwilioClient() instead - this may be null. */
 export const twilioClient = null as ReturnType<typeof twilio> | null;
 
 export const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER;

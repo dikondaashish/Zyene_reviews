@@ -1,7 +1,7 @@
 import { Schema, Type as SchemaType } from "@google/genai";
 
 /**
- * F6.6 — prompts and response schemas for the services and posts optimizers.
+ * F6.6 - prompts and response schemas for the services and posts optimizers.
  *
  * Kept separate from the API handler so the wording a customer's Google
  * listing ends up carrying is reviewable on its own, next to the schema that
@@ -9,8 +9,8 @@ import { Schema, Type as SchemaType } from "@google/genai";
  *
  * Every prompt here inherits the anti-fabrication rule the content briefs
  * established: the model may only rephrase and structure what it was given.
- * A specific it was not handed — a price, a guarantee, a certification, an
- * opening time — must come back as a `{{placeholder}}` for the merchant to
+ * A specific it was not handed - a price, a guarantee, a certification, an
+ * opening time - must come back as a `{{placeholder}}` for the merchant to
  * fill, never as an invented fact published to their public listing.
  */
 
@@ -116,7 +116,7 @@ export function buildPostDraftsPrompt(input: {
         `Keywords worth covering: ${input.keywords.length ? input.keywords.join(", ") : "None tracked yet"}`,
         "",
         input.recentSummaries.length
-            ? `Recently published posts — do NOT repeat these themes:\n${input.recentSummaries
+            ? `Recently published posts - do NOT repeat these themes:\n${input.recentSummaries
                   .map((s) => `- ${s.slice(0, 200)}`)
                   .join("\n")}`
             : "This business has not posted recently.",

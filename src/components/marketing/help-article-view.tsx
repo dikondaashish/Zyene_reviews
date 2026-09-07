@@ -11,6 +11,7 @@ import {
 import { ContentRenderer } from "@/components/marketing/content-renderer";
 import { BreadcrumbJsonLd, FAQPageJsonLd } from "@/components/seo/json-ld";
 import { extractFaqItemsFromHelpBody } from "@/lib/seo/help-faq-from-body";
+import { HelpCategoryIcon } from "@/components/marketing/help-category-icon";
 
 export function HelpArticleView({
     article,
@@ -58,7 +59,7 @@ export function HelpArticleView({
                     </nav>
 
                     <div className="flex items-center gap-2 mb-4">
-                        <span className="text-xl">{catInfo.emoji}</span>
+                        <HelpCategoryIcon category={article.category} className="text-primary" size={20} />
                         <span className="text-sm font-semibold text-muted-foreground">{catInfo.label}</span>
                     </div>
                     <h1 className="text-4xl font-bold tracking-tight text-foreground mb-3">
@@ -81,7 +82,7 @@ export function HelpArticleView({
                                 <div>
                                     <p className="text-sm font-bold text-foreground mb-1">Still have questions?</p>
                                     <p className="text-sm text-muted-foreground">
-                                        Our support team is available Mon–Fri, 9am–6pm EST.
+                                        Our support team is available Mon-Fri, 9am-6pm EST.
                                     </p>
                                 </div>
                                 <a href="mailto:support@zyenereviews.com" className="shrink-0">

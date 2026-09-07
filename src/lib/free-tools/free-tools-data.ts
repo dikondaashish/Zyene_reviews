@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Free lead-gen tools — Phase 7.3
+// Free lead-gen tools - Phase 7.3
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface FreeToolDefinition {
@@ -23,7 +23,7 @@ export const FREE_TOOLS: FreeToolDefinition[] = [
         slug: "reputation-score-checker",
         title: "Reputation Score Checker",
         description:
-            "See your public Google rating, review count, and a quick response-rate estimate — then get the full report by email.",
+            "See your public Google rating, review count, and a quick response-rate estimate - then get the full report by email.",
         icon: "chart",
         leadSource: "tool_reputation_score",
     },

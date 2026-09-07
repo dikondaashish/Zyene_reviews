@@ -1,20 +1,20 @@
 /**
  * E-1: the answer-engine sampling contract.
  *
- * Every engine — LLM or SERP, first-party or vendor-proxied — is reached through
+ * Every engine - LLM or SERP, first-party or vendor-proxied - is reached through
  * `AnswerEngineAdapter`. Two properties of these types are load-bearing and should
  * not be "simplified" away:
  *
  * 1. An adapter returns what an engine SAID. It never returns whether our brand
  *    appeared. Presence is decided by a separate extraction pass, so no adapter is
- *    ever in a position to assert visibility — which is the exact bug class that
+ *    ever in a position to assert visibility - which is the exact bug class that
  *    produced the pre-Phase-1 heuristic surfaces.
  * 2. `failed` carries no answer payload at all. A caller cannot accidentally treat
  *    a transport failure as "brand not found" (QA criterion #2), because there is
  *    no field there to misread.
  */
 
-/** Persisted verbatim on every sample row. Stable — never rename or reuse a value. */
+/** Persisted verbatim on every sample row. Stable - never rename or reuse a value. */
 export const ANSWER_ENGINE_IDS = [
     "google_serp",
     "google_ai_overview",
@@ -40,7 +40,7 @@ export type EngineLocale = {
     language: string;
     city?: string;
     /**
-     * Full region name, e.g. "Missouri" — never the "MO" abbreviation, which
+     * Full region name, e.g. "Missouri" - never the "MO" abbreviation, which
      * search vendors reject. Required alongside `city` to identify a metro at
      * all: "Kansas City" alone is ambiguous between two states. Absent means the
      * city cannot be qualified, and a consumer must widen to the country rather
@@ -104,7 +104,7 @@ type EngineSampleBase = {
      * Present, this is authoritative and the ledger uses it instead of
      * `units x catalog rate`. The catalog rate is a planning figure derived from
      * a quote; this is the invoice. Perplexity returns per-request cost that
-     * varies with tokens and search depth, so the two genuinely differ — the
+     * varies with tokens and search depth, so the two genuinely differ - the
      * catalog's 6,700 micro-USD estimate against a measured 5,320 on a real
      * call, a 26% overstatement that would compound silently across a month.
      *
@@ -117,7 +117,7 @@ type EngineSampleBase = {
 /** The engine answered. `answerText` is the verbatim response, stored as evidence. */
 export type EngineSampleOk = EngineSampleBase & {
     status: "ok";
-    /** Never empty — QA criterion #1 requires a model id on every stored sample. */
+    /** Never empty - QA criterion #1 requires a model id on every stored sample. */
     modelId: string;
     answerText: string;
     citations: EngineCitations;
@@ -142,7 +142,7 @@ export type EngineSampleResult = EngineSampleOk | EngineSampleNoAnswer | EngineS
 
 /**
  * True only for samples that represent a real observation of engine output.
- * Use this to build every visibility denominator — never `status !== "failed"`,
+ * Use this to build every visibility denominator - never `status !== "failed"`,
  * which would silently fold `no_answer` back in.
  */
 export function isObservation(result: EngineSampleResult): result is EngineSampleOk {

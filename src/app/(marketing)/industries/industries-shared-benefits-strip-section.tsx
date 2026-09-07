@@ -9,7 +9,7 @@ const BENEFITS = [
     {
         icon: Shield,
         title: "Negative Feedback Shield",
-        desc: "Route bad experiences to private resolution before they hit Google.",
+        desc: "Give low ratings a private feedback path and alert your team.",
     },
     {
         icon: BarChart3,

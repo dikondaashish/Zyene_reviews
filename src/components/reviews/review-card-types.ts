@@ -32,7 +32,7 @@ export interface ReviewCardProps {
     review: Review;
     /** Business listing on Google Maps (from GBP link); used when review photos are not in the API. */
     googleMapsListingUrl?: string | null;
-    /** Starter+ / Professional / Enterprise — required for AI suggest-reply */
+    /** Starter+ / Professional / Enterprise - required for AI suggest-reply */
     planAllowsAiReplies?: boolean;
     isSelected?: boolean;
     onSelect?: (id: string, selected: boolean) => void;

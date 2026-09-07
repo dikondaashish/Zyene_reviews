@@ -46,9 +46,9 @@ export async function POST(request: Request) {
 
     const email = parsed.data.email;
     const name = parsed.data.name || "Unknown";
-    const company = parsed.data.company || "—";
-    const locations = parsed.data.locations || "—";
-    const message = parsed.data.message || "—";
+    const company = parsed.data.company || " - ";
+    const locations = parsed.data.locations || " - ";
+    const message = parsed.data.message || " - ";
 
     const lead = await captureMarketingLead({
         email,
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     try {
         await sendEmail({
             to: salesInbox,
-            subject: `[Demo request] ${company} — ${name}`,
+            subject: `[Demo request] ${company} - ${name}`,
             // Escaped: these land in our own sales inbox, and an email client
             // renders whatever markup an anonymous submitter put in them.
             html: `<p><strong>Demo / enterprise inquiry</strong></p>
@@ -81,10 +81,10 @@ ${emailMutedFooter("Submitted via zyenereviews.com/demo")}`,
         });
         await sendEmail({
             to: email,
-            subject: "We received your demo request — Zyene Reviews",
+            subject: "We received your demo request - Zyene Reviews",
             html: `<p>Hi ${escapeHtml(name)},</p>
 <p>Thanks for your interest in Zyene Reviews Enterprise. Our sales team will reach out within one business day to schedule a walkthrough.</p>
-<p>— Zyene Reviews Sales</p>`,
+<p> - Zyene Reviews Sales</p>`,
         });
     } catch (err) {
         logger.error({ err: err }, "[demo-request] email failed:");

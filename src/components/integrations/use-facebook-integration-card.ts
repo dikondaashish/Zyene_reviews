@@ -48,7 +48,7 @@ export function useFacebookIntegrationCard({
     const fbRatingDisplay =
         fbVisibleCount > 0 && dbVisibleFacebookAverageRating != null && !Number.isNaN(dbVisibleFacebookAverageRating)
             ? dbVisibleFacebookAverageRating.toFixed(1)
-            : "—";
+            : " - ";
     const isError =
         platform?.sync_status?.startsWith("error") || platform?.sync_status === "error_token_expired";
 

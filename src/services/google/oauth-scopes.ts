@@ -11,7 +11,7 @@
 /** Identity. Present on the Supabase-Auth flows, absent on the raw onboarding flow. */
 export const IDENTITY_SCOPES = ["openid", "email", "profile"] as const;
 
-/** Google Business Profile — reviews, locations, Q&A. The core product. */
+/** Google Business Profile - reviews, locations, Q&A. The core product. */
 export const GBP_SCOPE = "https://www.googleapis.com/auth/business.manage";
 
 /**
@@ -21,7 +21,7 @@ export const GBP_SCOPE = "https://www.googleapis.com/auth/business.manage";
  * in Google's classification, and adding a sensitive scope to the primary
  * consent screen puts the whole screen back through verification. While that is
  * pending, the `business.manage` consent every customer needs can be shown as
- * unverified or blocked outright — so bundling them would risk the core review
+ * unverified or blocked outright - so bundling them would risk the core review
  * product to add a reporting feature.
  *
  * Requested incrementally instead: the user connects Google normally, and later

@@ -1,11 +1,11 @@
 /**
- * F5.8: answerability heuristics — is this page shaped so an AI system can
+ * F5.8: answerability heuristics - is this page shaped so an AI system can
  * extract a direct answer from it, independent of whether the CONTENT is
  * good. Regex over well-formed markup, same approach and same limits as
  * extract-page-signals.ts: narrow, well-defined tag patterns only.
  *
  * "Entity clarity" from the PRD's F5.8 list is deliberately NOT a separate
- * check here — F5.4's LocalBusiness/Organization identity validation already
+ * check here - F5.4's LocalBusiness/Organization identity validation already
  * answers "is it clear who this page is about," and a second heuristic path
  * asking the same question would add false-positive surface without new
  * signal. Scoped out, not silently dropped.
@@ -65,7 +65,7 @@ export function computeAnswerabilitySignals(html: string): AnswerabilitySignals 
     const paragraphs = paragraphTexts(body);
 
     // Direct-answer paragraph: a concise paragraph whose own text ends within
-    // the first DIRECT_ANSWER_WORD_WINDOW words of visible body text — not
+    // the first DIRECT_ANSWER_WORD_WINDOW words of visible body text - not
     // just "some short paragraph exists somewhere on the page".
     let wordsSoFar = 0;
     let hasDirectAnswerParagraph = false;

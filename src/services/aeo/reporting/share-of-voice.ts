@@ -3,10 +3,10 @@ import { MIN_OBSERVATIONS } from "./visibility-metrics";
 /**
  * F3.2: SoV = our mentions / total tracked-brand mentions. "Tracked" means
  * the business's own configured competitor set (competitors table), not open
- * brand extraction — see supabase-extraction-store.ts's loadBrandContext.
+ * brand extraction - see supabase-extraction-store.ts's loadBrandContext.
  * That is a real, honest SoV among the brands this business chose to track,
  * not the PRD's aspirational "every brand named, fuzzy-matched into an
- * emerging-competitor bucket" — that extraction does not exist yet, and this
+ * emerging-competitor bucket" - that extraction does not exist yet, and this
  * module must not imply it does.
  */
 
@@ -35,7 +35,7 @@ export type ShareOfVoiceResult =
           suppressed: false;
           observations: number;
           totalTrackedMentions: number;
-          /** Observations where no tracked brand (own or competitor) was named at all — its own signal, per PRD-3. */
+          /** Observations where no tracked brand (own or competitor) was named at all - its own signal, per PRD-3. */
           noBrandNamedCount: number;
           ownShare: number;
           ranking: BrandShare[];

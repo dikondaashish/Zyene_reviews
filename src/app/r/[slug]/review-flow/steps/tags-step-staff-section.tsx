@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { UserRound } from "lucide-react";
 
 export interface TagsStepStaffSectionProps {
     staffNames: string[];
@@ -39,7 +40,7 @@ export function TagsStepStaffSection({
                             borderColor: selectedStaff.includes(name) ? resolvedBrandColor : undefined,
                         }}
                     >
-                        <span>👤</span>
+                        <UserRound className="size-4" aria-hidden="true" />
                         {name}
                     </button>
                 ))}

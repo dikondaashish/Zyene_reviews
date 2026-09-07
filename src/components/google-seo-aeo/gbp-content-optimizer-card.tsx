@@ -12,7 +12,7 @@ type ServiceDraft = { name: string; description: string };
 type PostDraft = { topicType: string; summary: string; rationale: string };
 
 /**
- * F6.6 — the services and posts arms of the GBP optimizer, alongside the
+ * F6.6 - the services and posts arms of the GBP optimizer, alongside the
  * description card that already shipped.
  *
  * Drafts are shown for copying, never published. Writing to a customer's

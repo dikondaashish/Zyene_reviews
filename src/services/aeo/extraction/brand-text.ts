@@ -3,8 +3,8 @@
 /**
  * Text primitives for brand matching.
  *
- * Split from the matcher because these decide the SHAPE of a match — what
- * counts as the same string — while the matcher decides what a match MEANS.
+ * Split from the matcher because these decide the SHAPE of a match - what
+ * counts as the same string - while the matcher decides what a match MEANS.
  * They are also where every false-positive risk lives, so they are worth
  * reading and testing on their own.
  */
@@ -34,7 +34,7 @@ export function escapeRegExp(value: string): string {
 }
 
 /**
- * Word-boundary match, so "Ace" does not fire inside "Aceituna" — but a plain
+ * Word-boundary match, so "Ace" does not fire inside "Aceituna" - but a plain
  * `\b` is wrong at the edges of names ending in punctuation ("Bob's"), so the
  * boundary is asserted only where the alias itself starts/ends with a word
  * character.
@@ -50,8 +50,8 @@ export function buildAliasPattern(alias: string): RegExp {
 /**
  * Strips everything but letters and digits.
  *
- * Domains carry brand names with the spaces removed —
- * `bluedragonplumbing.test`, `blue-dragon-plumbing.test` — so a spaced alias can
+ * Domains carry brand names with the spaces removed -
+ * `bluedragonplumbing.test`, `blue-dragon-plumbing.test` - so a spaced alias can
  * never match one. Compacting both sides is the only way a citation to a
  * business's own site is recognised as that business.
  */
@@ -114,4 +114,3 @@ export function firstOccurrence(
     }
     return best;
 }
-

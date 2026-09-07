@@ -9,8 +9,8 @@ export const metadata: Metadata = {
     title: "Quickstart Guide",
     description: "Get Zyene Reviews set up in minutes. Connect your Google Business Profile, configure review requests, and start monitoring reviews from day one.",
     alternates: { canonical: "https://www.zyenereviews.com/docs/quickstart" },
-    openGraph: { title: "Quickstart, Zyene Reviews Docs", description: "Connect GBP, configure review requests, and start monitoring, complete quickstart guide.", url: "https://www.zyenereviews.com/docs/quickstart" },
-    twitter: { card: "summary_large_image", title: "Quickstart, Zyene Reviews Docs", description: "Get Zyene Reviews set up in minutes. Step-by-step quickstart guide." },
+    openGraph: { title: "Quickstart, Zyene Reviews Docs", description: "Connect GBP, configure review requests, and start monitoring reviews.", url: "https://www.zyenereviews.com/docs/quickstart" },
+    twitter: { card: "summary_large_image", title: "Quickstart, Zyene Reviews Docs", description: "Connect GBP, configure review requests, and start monitoring reviews." },
 };
 
 export default function DocsQuickstartPage() {

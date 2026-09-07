@@ -52,7 +52,7 @@ export function useQuestionsPageClient({ questions, isDemo }: QuestionsPageClien
             if (!res.ok) throw new Error(data.error || "Suggestion failed");
             const text = typeof data.answer === "string" ? data.answer : "";
             setAnswerText(text);
-            toast.success("Suggestion added — review before posting.");
+            toast.success("Suggestion added - review before posting.");
         } catch (e: unknown) {
             toast.error(e instanceof Error ? e.message : "Suggestion failed");
         } finally {

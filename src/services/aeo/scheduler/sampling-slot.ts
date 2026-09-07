@@ -10,7 +10,7 @@
  *      Professional businesses free, and bunched onto one day it covers ~660.
  *      Even spreading is worth ~$3.50/business/month at scale.
  *   2. Signal quality. A business that drifts between slots is sampled at
- *      irregular intervals — six days apart one week, eight the next. That
+ *      irregular intervals - six days apart one week, eight the next. That
  *      injects noise into every trend line and into the F8.8 significance gate,
  *      which cannot distinguish "visibility moved" from "we measured later".
  *
@@ -20,13 +20,13 @@
 export type SamplingSlot = {
     /** 0 = Sunday … 6 = Saturday, matching Date#getUTCDay(). */
     dayOfWeek: number;
-    /** UTC hour, 0–23. */
+    /** UTC hour, 0-23. */
     hour: number;
 };
 
 /**
  * Default dispatch window, UTC. Overnight for the Americas and early morning in
- * Europe — sampling is not user-facing, so it should avoid the hours when the
+ * Europe - sampling is not user-facing, so it should avoid the hours when the
  * dashboard and review-sync workers are busiest.
  */
 export const DEFAULT_SLOT_HOURS: readonly number[] = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -35,7 +35,7 @@ const DAYS_PER_WEEK = 7;
 
 /**
  * FNV-1a, 32-bit. Chosen over crypto hashing because it is dependency-free,
- * synchronous, and — the property that matters here — produces identical output
+ * synchronous, and - the property that matters here - produces identical output
  * for identical input on every machine and every Node version. Slot assignment
  * that varied by runtime would silently break requirement (2) above.
  */
@@ -70,7 +70,7 @@ export function assignSlot(
  *
  * Used at enrolment: a newly connected business is given a slot and waits for
  * it rather than sampling immediately. Fifty signups in one minute would
- * otherwise produce fifty simultaneous runs — the thundering herd the slot
+ * otherwise produce fifty simultaneous runs - the thundering herd the slot
  * system exists to prevent (QA criterion #53).
  */
 export function nextRunAt(slot: SamplingSlot, from: Date): Date {

@@ -38,7 +38,7 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
     if (connError || !connection) {
         logger.warn(
             { merchantId: event.merchantId, paymentId: event.paymentId },
-            "[square] payment event for unknown or disconnected merchant — ignore",
+            "[square] payment event for unknown or disconnected merchant - ignore",
         );
         return;
     }
@@ -59,17 +59,17 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
             return;
         }
     } else if (!existing) {
-        logger.info({ paymentId: event.paymentId }, "[square] payment.updated with no prior row — ignore");
+        logger.info({ paymentId: event.paymentId }, "[square] payment.updated with no prior row - ignore");
         return;
     } else if (
         existing.review_request_id ||
         existing.status === "sent" ||
         existing.status === "sending"
     ) {
-        logger.info({ paymentId: event.paymentId }, "[square] payment already claimed/sent — ignore");
+        logger.info({ paymentId: event.paymentId }, "[square] payment already claimed/sent - ignore");
         return;
     } else if (existing.customer_email || existing.customer_phone) {
-        logger.info({ paymentId: event.paymentId }, "[square] payment.updated contact already set — ignore");
+        logger.info({ paymentId: event.paymentId }, "[square] payment.updated contact already set - ignore");
         return;
     }
 
@@ -92,7 +92,7 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
                 customer_phone: null,
                 customer_name: contact.name,
             });
-            logger.info({ paymentId: event.paymentId }, "[square] Phase2 skipped — no contact");
+            logger.info({ paymentId: event.paymentId }, "[square] Phase2 skipped - no contact");
             return;
         }
 
@@ -103,7 +103,7 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
         });
 
         if (!(await claimSquarePaymentSend(admin, event.merchantId, event.paymentId))) {
-            logger.info({ paymentId: event.paymentId }, "[square] send claim lost — skip duplicate");
+            logger.info({ paymentId: event.paymentId }, "[square] send claim lost - skip duplicate");
             return;
         }
 

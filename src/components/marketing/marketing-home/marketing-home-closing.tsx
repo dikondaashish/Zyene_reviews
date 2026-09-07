@@ -97,7 +97,7 @@ export function MarketingHomeClosing({ fadeInUp }: MarketingHomeMotionProps) {
                         Ready to grow your reviews?
                     </h2>
                     <p className="text-lg text-background/70 mb-10 max-w-xl mx-auto">
-                        Join local businesses managing their reputation and growing their Google ratings every day.
+                        Keep review alerts, requests, private feedback, and replies in one workspace.
                     </p>
                     <Link href={SIGNUP_URL}>
                         <Button

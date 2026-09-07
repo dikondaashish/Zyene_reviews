@@ -3,7 +3,7 @@
  *
  * This is the number the whole product reports, and it is the exact number the
  * pre-Phase-1 surfaces fabricated. So it is computed DETERMINISTICALLY, by
- * matching known names against the answer text — not by asking a model "is this
+ * matching known names against the answer text - not by asking a model "is this
  * business mentioned?".
  *
  * A model can hallucinate a mention. A string matcher cannot: every hit points
@@ -11,8 +11,8 @@
  * more here than any gain in recall, because a false positive is
  * indistinguishable from the original bug.
  *
- * An LLM pass still has a place — discovering brands we have never heard of,
- * and reading sentiment — but it runs SEPARATELY and cannot influence whether
+ * An LLM pass still has a place - discovering brands we have never heard of,
+ * and reading sentiment - but it runs SEPARATELY and cannot influence whether
  * the business itself was found. See brand-extraction.ts.
  */
 

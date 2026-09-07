@@ -138,9 +138,9 @@ export async function finalizeGoogleConnection(
 
             // Pub/Sub registration deliberately NOT awaited here. `enqueueGooglePostConnectSync`
             // above already runs prepareGoogleSync, which registers the same account for the same
-            // topic — so this call was duplicate work that ran twice per connect. Worse, it was
+            // topic - so this call was duplicate work that ran twice per connect. Worse, it was
             // awaited inside the server action the user is waiting on: 2 attempts, a 2s sleep
-            // between them, each wrapping fetchWithRetry(retries=3, backoff 2s→4s→8s) — up to
+            // between them, each wrapping fetchWithRetry(retries=3, backoff 2s→4s→8s) - up to
             // ~30s of spinner for a background concern the user never sees.
             //
             // Coverage without it: every subsequent sync re-registers via prepareGoogleSync, and

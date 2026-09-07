@@ -1,5 +1,5 @@
 /**
- * Help articles — Analytics (an1–an3).
+ * Help articles - Analytics (an1-an3).
  */
 
 import type { HelpArticle } from "./help-types";
@@ -8,7 +8,7 @@ export const an1: HelpArticle = {
     slug: "understanding-your-analytics-dashboard",
     category: "analytics",
     title: "Understanding Your Analytics Dashboard",
-    excerpt: "A full explanation of every metric in your Zyene analytics dashboard — what each number means and how to use it.",
+    excerpt: "A full explanation of every metric in your Zyene analytics dashboard - what each number means and how to use it.",
     readMinutes: 5,
     body: [
         { type: "p", text: "The Zyene Analytics dashboard gives you a data-driven view of your review performance and campaign effectiveness. Here's what each metric means." },
@@ -32,7 +32,7 @@ export const an1: HelpArticle = {
         ]},
         { type: "h2", text: "Competitor Comparison" },
         { type: "p", text: "The Competitor section of analytics shows your average rating and review count relative to added competitors. The chart displays ranking changes over time." },
-        { type: "tip", text: "A falling conversion rate (reviews generated per request sent) over time can indicate request fatigue — customers receiving too many requests — or an issue with your review link. Check both when you see a decline." },
+        { type: "tip", text: "A falling conversion rate (reviews generated per request sent) over time can indicate request fatigue - customers receiving too many requests - or an issue with your review link. Check both when you see a decline." },
     ],
 };
 
@@ -40,10 +40,10 @@ export const an2: HelpArticle = {
     slug: "reading-the-engagement-funnel",
     category: "analytics",
     title: "Reading the Review Request Engagement Funnel",
-    excerpt: "How to interpret your review request funnel — from send to delivery to click to review — and identify where you're losing customers.",
+    excerpt: "How to interpret your review request funnel - from send to delivery to click to review - and identify where you're losing customers.",
     readMinutes: 4,
     body: [
-        { type: "p", text: "The Engagement Funnel shows you how customers move through the review request process from initial send to posted review. Each stage of the funnel has a drop-off rate — understanding where drop-off happens tells you where to improve." },
+        { type: "p", text: "The Engagement Funnel shows you how customers move through the review request process from initial send to posted review. Each stage of the funnel has a drop-off rate - understanding where drop-off happens tells you where to improve." },
         { type: "h2", text: "Funnel Stages" },
         { type: "ol", items: [
             "Sent: Total requests sent.",
@@ -63,7 +63,7 @@ export const an2: HelpArticle = {
                 ["Review submitted", "Friction on the review page, Google sign-in barrier", "Check your review link works on mobile; consider the Shield flow"],
             ],
         }},
-        { type: "tip", text: "Most businesses lose the most conversions at the 'Clicked → Review Submitted' stage, primarily because Google requires a signed-in Google account to leave a review. Your only control here is timing — requests sent while the customer experience is fresh have higher submit rates." },
+        { type: "tip", text: "Most businesses lose the most conversions at the 'Clicked → Review Submitted' stage, primarily because Google requires a signed-in Google account to leave a review. Your only control here is timing - requests sent while the customer experience is fresh have higher submit rates." },
     ],
 };
 

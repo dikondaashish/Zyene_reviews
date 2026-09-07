@@ -1,5 +1,5 @@
 /**
- * F4.2 — suggested prompts, generated from the business's own Google data.
+ * F4.2 - suggested prompts, generated from the business's own Google data.
  *
  * Deterministic templates, not an LLM call. Three reasons, in order of weight:
  *
@@ -25,7 +25,7 @@ export type PromptSuggestion = {
     promptText: string;
     intent: PromptIntent;
     localeCity: string | null;
-    /** F4.3 — the cluster this suggestion is filed under. */
+    /** F4.3 - the cluster this suggestion is filed under. */
     clusterName: string;
     sourceQuery?: string | null;
     discoveryScore?: number | null;
@@ -56,7 +56,7 @@ type Template = {
  * Ordered by usefulness, because a business with a short category list still
  * gets its strongest prompts first if this is ever truncated.
  *
- * The last two deliberately omit both city and category — a real person asking
+ * The last two deliberately omit both city and category - a real person asking
  * about a business by name alone is a genuine query shape, and dropping it
  * would make the set tidier than reality. They are kept to 2 of 20 (10%) so
  * the ≥80% floor in criterion #20 holds with margin.
@@ -148,7 +148,7 @@ export function suggestPrompts(input: SuggestPromptsInput): PromptSuggestion[] {
     return suggestions;
 }
 
-/** Share of suggestions naming the city or category — criterion #20's measure. */
+/** Share of suggestions naming the city or category - criterion #20's measure. */
 export function cityOrCategoryCoverage(
     suggestions: PromptSuggestion[],
     input: { category: string | null; city: string | null }

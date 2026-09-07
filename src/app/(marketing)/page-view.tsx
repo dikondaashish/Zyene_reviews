@@ -29,7 +29,7 @@ const HOME_FAQS = [
     {
         question: "What happens to negative feedback?",
         answer:
-            "Customers who rate 4–5 stars are guided to leave a public review on Google. Customers who rate 1–3 stars are directed to a private feedback form so you can resolve the issue before it goes public. This is the Negative Feedback Shield, included on every paid plan.",
+            "Customers who rate 4-5 stars are guided to leave a public review on Google. Customers who rate 1-3 stars are directed to a private feedback form so you can resolve the issue before it goes public. This is the Negative Feedback Shield, included on every paid plan.",
     },
     {
         question: "Can I cancel anytime?",

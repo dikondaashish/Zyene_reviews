@@ -4,7 +4,7 @@ import { stripe } from "@/services/stripe/client";
 import type { OverageChargeGateway, OverageChargeResult } from "./ports";
 
 /**
- * price_1U2HMAIiQQIaqDALvgvid1Us — "AEO Test Overage", $2.50 one-time.
+ * price_1U2HMAIiQQIaqDALvgvid1Us - "AEO Test Overage", $2.50 one-time.
  *
  * Created inactive on 2026-08-08; verified ACTIVE in livemode on 2026-08-11.
  * It is no longer a gate. The only remaining switch in front of a real charge
@@ -15,7 +15,7 @@ import type { OverageChargeGateway, OverageChargeResult } from "./ports";
 export const AEO_OVERAGE_PRICE_ID = "price_1U2HMAIiQQIaqDALvgvid1Us";
 
 /**
- * Ad-hoc Invoice Items rolled into an auto-advanced Invoice — not a Billing
+ * Ad-hoc Invoice Items rolled into an auto-advanced Invoice - not a Billing
  * Meter, and no subscription item is added to the customer's existing
  * Starter/Professional subscription. Chosen so this can ship without ever
  * touching a live customer's subscription object; see the E-9 implementation
@@ -25,8 +25,8 @@ export const AEO_OVERAGE_PRICE_ID = "price_1U2HMAIiQQIaqDALvgvid1Us";
  * own state: `sampleId` is stable across an Inngest step replay, so a
  * duplicate call with the same key returns Stripe's ORIGINAL object instead
  * of creating a second charge. This is the Stripe-side twin of
- * aeo_consume_credit's replay guard — the two together close the loop for
- * "STEP 2 — mark intent, then call, INSIDE ONE STEP" style crashes.
+ * aeo_consume_credit's replay guard - the two together close the loop for
+ * "STEP 2 - mark intent, then call, INSIDE ONE STEP" style crashes.
  */
 export class StripeOverageChargeGateway implements OverageChargeGateway {
     async chargeOverage(input: {
@@ -61,7 +61,7 @@ export class StripeOverageChargeGateway implements OverageChargeGateway {
             return { charged: true, stripeInvoiceItemId: item?.id ?? invoice.id ?? "" };
         } catch (err) {
             // A declined card or a missing payment method is an expected outcome
-            // of billing someone automatically, not a bug — return it as data so
+            // of billing someone automatically, not a bug - return it as data so
             // the caller records the attempt. Anything else (network, rate
             // limit) is re-thrown: the idempotency keys above make an Inngest
             // retry safe, so letting it retry is correct, not risky.

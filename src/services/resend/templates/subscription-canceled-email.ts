@@ -33,7 +33,7 @@ export function subscriptionCanceledEmail({
                             <!-- Bye Icon -->
                             <div style="text-align: center; margin-bottom: 24px;">
                                 <div style="display: inline-block; width: 64px; height: 64px; background-color: #f4f4f5; border-radius: 50%; text-align: center; line-height: 64px;">
-                                    <span style="font-size: 32px;">👋</span>
+                                    ${EMAIL_STATUS_ICONS.goodbye}
                                 </div>
                             </div>
 
@@ -60,7 +60,7 @@ export function subscriptionCanceledEmail({
 
                              <div style="background-color: #f9fafb; border-radius: 8px; padding: 24px; border: 1px solid #f1f5f9; text-align: center;">
                                  <p style="margin: 0; font-size: 14px; color: #71717a; line-height: 1.6;">
-                                     <strong>How can we improve?</strong> We're always trying to build a better platform. If you have 30 seconds, we'd love to hear why you decided to leave — just reply to this email!
+                                     <strong>How can we improve?</strong> We're always trying to build a better platform. If you have 30 seconds, we'd love to hear why you decided to leave - just reply to this email!
                                  </p>
                              </div>
 
@@ -79,3 +79,4 @@ export function subscriptionCanceledEmail({
 </html>
     `;
 }
+import { EMAIL_STATUS_ICONS } from "./email-status-icons";

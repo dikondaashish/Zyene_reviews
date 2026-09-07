@@ -55,12 +55,12 @@ export async function handleInvoicePaymentSucceeded(
 ) {
     const invoice = event.data.object as Stripe.Invoice;
 
-    // Only for recurring payments — the first one is covered by checkout.session.completed.
+    // Only for recurring payments - the first one is covered by checkout.session.completed.
     if (invoice.billing_reason !== "subscription_cycle") return;
 
     // Isolated on purpose: a bug in this newer, less-proven feature must never
-    // block the payment-success email below, which every renewing customer —
-    // AEO or not — relies on today. organizations.plan is read rather than
+    // block the payment-success email below, which every renewing customer -
+    // AEO or not - relies on today. organizations.plan is read rather than
     // re-derived from the invoice's price id because organization-billing-sync
     // already keeps it current; one row read serves both organization_id and
     // plan id.

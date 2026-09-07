@@ -1,4 +1,4 @@
-/** Full comparison matrix for /compare hub — qualitative; confirm pricing with each vendor. */
+/** Full comparison matrix for /compare hub - qualitative; confirm pricing with each vendor. */
 
 export interface HubMatrixRow {
     feature: string;
@@ -44,7 +44,7 @@ export const HUB_MATRIX_ROWS: HubMatrixRow[] = [
     },
     {
         feature: "Negative feedback / issue-resolution workflow",
-        zyene: "Negative Feedback Shield — private capture + fair public paths",
+        zyene: "Negative Feedback Shield - private capture + fair public paths",
         birdeye: "CX tickets/surveys; no equivalent Shield workflow",
         podium: "Conversation-led recovery; not review-first Shield",
         nicejob: "Basic private feedback options",
@@ -52,7 +52,7 @@ export const HUB_MATRIX_ROWS: HubMatrixRow[] = [
     },
     {
         feature: "Multi-location support",
-        zyene: "Built for 1–few locations; scales without enterprise overhead",
+        zyene: "Built for 1-few locations; scales without enterprise overhead",
         birdeye: "Industry leader for large multi-location rollouts",
         podium: "Multi-location messaging and payments at scale",
         nicejob: "Multi-location review marketing",
@@ -60,7 +60,7 @@ export const HUB_MATRIX_ROWS: HubMatrixRow[] = [
     },
     {
         feature: "Messaging / inbox",
-        zyene: "Review inbox focus — not a full payments/texting suite",
+        zyene: "Review inbox focus - not a full payments/texting suite",
         birdeye: "Webchat, ticketing, surveys in one platform",
         podium: "Core strength: texting, webchat, payments depth",
         nicejob: "Social/referral layer more than full CX inbox",
@@ -84,7 +84,7 @@ export const HUB_MATRIX_ROWS: HubMatrixRow[] = [
     },
     {
         feature: "Best for small local businesses",
-        zyene: "Yes — primary ICP",
+        zyene: "Yes - primary ICP",
         birdeye: "Usually overkill for solo operators",
         podium: "Often more tool than a 1-location shop needs",
         nicejob: "Good fit for marketing-forward SMBs",

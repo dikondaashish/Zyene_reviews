@@ -1,5 +1,5 @@
 /**
- * Blog post type definitions — Phase 4.
+ * Blog post type definitions - Phase 4.
  * Shared by blog post data modules and help-data (ContentSection).
  */
 

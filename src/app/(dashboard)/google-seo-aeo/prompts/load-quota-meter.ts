@@ -4,7 +4,7 @@ import { computeQuotaMeter, type QuotaMeterResult } from "@/services/aeo/billing
 import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 /**
- * F4.9: reads through the caller's RLS-scoped client — aeo_credit_balances'
+ * F4.9: reads through the caller's RLS-scoped client - aeo_credit_balances'
  * own select policy is the isolation boundary, same as aeoVisibility.
  */
 export async function loadQuotaMeter(

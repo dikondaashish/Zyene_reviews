@@ -8,9 +8,9 @@ import { assignSlot } from "./sampling-slot";
  * that decides whether a real business gets sampled today, and it should be
  * testable without a database in the loop.
  *
- * Compared on BOTH day and hour, not day alone — a once-daily cron would
+ * Compared on BOTH day and hour, not day alone - a once-daily cron would
  * dispatch a whole day's businesses simultaneously, exactly the thundering
- * herd DEFAULT_SLOT_HOURS spreads across 1–8 UTC to avoid. This is why the
+ * herd DEFAULT_SLOT_HOURS spreads across 1-8 UTC to avoid. This is why the
  * scheduler route is meant to run hourly, not daily like the credit-reset one.
  */
 export function isBusinessDueNow(businessId: string, now: Date): boolean {

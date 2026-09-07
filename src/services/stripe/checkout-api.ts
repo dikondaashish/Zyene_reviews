@@ -166,7 +166,7 @@ export async function handleBillingCheckout(request: Request) {
                 price: priceId,
               },
             ],
-            // Downgrades: no immediate proration credit — change applies per Stripe schedule (standard SaaS).
+            // Downgrades: no immediate proration credit - change applies per Stripe schedule (standard SaaS).
             proration_behavior: tierDowngrade ? "none" : "create_prorations",
             ...(endTrialForTierUpgrade ? { trial_end: "now" } : {}),
           });

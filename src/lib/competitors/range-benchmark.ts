@@ -39,7 +39,7 @@ export function firstLastSnapshotsByCompetitor(
 /** Average of end-of-period ratings (last snapshot per competitor), with fallback to current competitor row. */
 /**
  * True when at least one competitor has non-zero stored metrics or a Google Places snapshot
- * in the given rows — i.e. we are not only showing seeded 0/0 placeholders before a sync.
+ * in the given rows - i.e. we are not only showing seeded 0/0 placeholders before a sync.
  */
 export function hasSyncedCompetitorMetrics(
     competitors: CompetitorRow[],

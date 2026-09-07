@@ -9,7 +9,7 @@ type Admin = SupabaseClient<Database>;
 export const AEO_CRAWL_PAGES_BUCKET = "aeo-crawl-pages";
 
 /**
- * E-3: persists one crawlSite() result. Mirrors E-8's SupabaseAnswerStore —
+ * E-3: persists one crawlSite() result. Mirrors E-8's SupabaseAnswerStore -
  * raw HTML goes to Storage first, the pointer (or null on a failed upload)
  * goes in the row, and a storage failure never loses the observation itself.
  */
@@ -44,7 +44,7 @@ export class SupabaseCrawlStore {
         return { runId: data.id };
     }
 
-    /** Uploads one page's raw HTML. Returns null (never throws) on failure — same contract as AnswerStore.put. */
+    /** Uploads one page's raw HTML. Returns null (never throws) on failure - same contract as AnswerStore.put. */
     private async storeHtml(input: {
         organizationId: string;
         runId: string;

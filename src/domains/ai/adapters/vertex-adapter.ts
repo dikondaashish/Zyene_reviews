@@ -29,9 +29,9 @@ export interface VertexGenerationOptions {
     /** Kept for API compatibility; all tiers use primary (Flash) then fallback (Pro) unless env overrides. */
     isPremium?: boolean;
     enableGrounding?: boolean;
-    /** Caps generation length — lowers latency for short outputs (e.g. suggest reply). */
+    /** Caps generation length - lowers latency for short outputs (e.g. suggest reply). */
     maxOutputTokens?: number;
-    /** Lower = faster, more deterministic (e.g. 0.45–0.65 for replies). */
+    /** Lower = faster, more deterministic (e.g. 0.45-0.65 for replies). */
     temperature?: number;
     /** Use this model id instead of GOOGLE_AI_PRIMARY_MODEL for this call only. */
     modelOverride?: string;

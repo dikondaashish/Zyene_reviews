@@ -7,7 +7,7 @@ import { isLiveContentBriefsEnabled } from "@/lib/features/aeo-surfaces";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plan-entitlements";
 import { generateAndStoreBrief } from "@/services/aeo/content-briefs/generate-and-store-brief";
 
-/** One real Gemini call plus up to 5 real outbound fetches per generation — a genuine cooldown, not busywork. */
+/** One real Gemini call plus up to 5 real outbound fetches per generation - a genuine cooldown, not busywork. */
 const MIN_MINUTES_BETWEEN_BRIEFS = 60;
 
 export type GenerateBriefResult = { success: true; briefId: string } | { success: false; error: string };

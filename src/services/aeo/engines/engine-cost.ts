@@ -23,7 +23,7 @@ export type EngineCost = {
      */
     overageMicroUsd: number;
     /**
-     * Samples per day at no charge, across the whole billing account — not per
+     * Samples per day at no charge, across the whole billing account - not per
      * business, and in some cases shared across several models of one family.
      * Zero means every sample bills.
      *
@@ -32,7 +32,7 @@ export type EngineCost = {
      * smooths runs across the week for exactly this reason.
      *
      * Note the bucket size changes the STAKES of bad scheduling, not just the
-     * headroom — a smaller allowance makes a burst cost proportionally more.
+     * headroom - a smaller allowance makes a burst cost proportionally more.
      */
     freePerDay: number;
     confidence: EngineCostConfidence;

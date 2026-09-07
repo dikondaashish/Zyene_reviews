@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Regional privacy compliance summaries — Phase 8.3
+// Regional privacy compliance summaries - Phase 8.3
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const REGIONAL_COMPLIANCE_SECTIONS = [

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// UTM capture & attribution — Phase 6
+// UTM capture & attribution - Phase 6
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const UTM_COOKIE_NAME = "zyene_utm";

@@ -1,4 +1,4 @@
-/** Review request template pack lead magnet — event names and attribution constants. */
+/** Review request template pack lead magnet - event names and attribution constants. */
 
 export const TEMPLATE_PACK_SOURCE = "review_request_templates";
 

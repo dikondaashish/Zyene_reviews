@@ -52,7 +52,7 @@ export function ContactForm() {
             form.reset();
             setSubject("");
         } catch {
-            setError("Network error—try again");
+            setError("Network error - try again");
         } finally {
             setLoading(false);
         }

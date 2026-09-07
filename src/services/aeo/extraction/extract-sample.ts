@@ -10,7 +10,7 @@ import { normalizeCitation, type NormalizedCitation } from "./citation-normalize
  * cost a sample that was already paid for.
  *
  * `extraction_model_id` is required on every mention row. For this pass it
- * records a METHOD rather than a model — the presence decision is a string
+ * records a METHOD rather than a model - the presence decision is a string
  * match, not an inference, and saying so is the difference between a claim that
  * can be audited and one that has to be trusted.
  */
@@ -28,7 +28,7 @@ export type SampleExtraction = {
     extractionModelId: string;
     /**
      * Whether our brand was NAMED in the answer prose. The headline number.
-     * Null when the sample is not an observation — a failed call or a refusal is
+     * Null when the sample is not an observation - a failed call or a refusal is
      * not evidence of absence, and must never be counted as "not visible".
      */
     ownBrandNamed: boolean | null;

@@ -5,7 +5,7 @@
  * and other search engines use for rich results, sitelinks, knowledge panels, etc.
  *
  * Usage: import and place directly in server component page.tsx or layout.tsx.
- * Do NOT wrap in "use client" — these must be server-rendered.
+ * Do NOT wrap in "use client" - these must be server-rendered.
  */
 
 export type { FaqItem, BreadcrumbItem } from "./json-ld-types";

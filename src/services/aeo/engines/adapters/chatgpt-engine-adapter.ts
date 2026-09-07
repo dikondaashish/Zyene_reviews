@@ -22,7 +22,7 @@ import { buildLocalePrompt, classifyHttpStatus, retryAfterMs } from "./adapter-s
  *
  * - It is not in the default engine set. A run must ask for it.
  * - It has no free bucket, so E-10's budget guard deliberately does not gate it
- *   — blocking it would stop the product rather than protect an allowance.
+ *   - blocking it would stop the product rather than protect an allowance.
  *   Affordability is the ledger's call, per reservation.
  *
  * Sends an Idempotency-Key. OpenAI honours it, so the crash-in-window case from
@@ -49,7 +49,7 @@ type ResponsesPayload = {
         }[];
     }[];
     /* Tokens are recorded by the API but deliberately not turned into a cost
-     * figure here — see the note in sample(). */
+     * figure here - see the note in sample(). */
 };
 
 export type ChatGptEngineAdapterOptions = {
@@ -57,7 +57,7 @@ export type ChatGptEngineAdapterOptions = {
     timeoutMs?: number;
     /**
      * Stable across retries of one dispatch unit. E-7 derives it from
-     * (runId, promptId, engineId, attempt) — deterministic, no timestamp, so a
+     * (runId, promptId, engineId, attempt) - deterministic, no timestamp, so a
      * replay is recognised as the same request rather than a new one.
      */
     idempotencyKey?: string;
@@ -157,11 +157,11 @@ export class ChatGptEngineAdapter implements AnswerEngineAdapter {
         const block = message?.content?.find((c) => c.type === "output_text");
         const text = block?.text?.trim() ?? "";
         // No reportedCostMicroUsd. OpenAI reports TOKENS, not money, and that
-        // field means "what the vendor said this cost" — the invoice. Deriving a
+        // field means "what the vendor said this cost" - the invoice. Deriving a
         // figure from token counts and filing it there would make the ledger
         // treat an estimate as fact, which is the exact bug class this module
         // exists to eliminate. It would also be a systematic UNDERCOUNT, because
-        // the per-call web_search fee is not itemised in the response — and
+        // the per-call web_search fee is not itemised in the response - and
         // undercounting is the self-amplifying direction.
         //
         // Omitting it means the ledger falls back to the catalog rate, which is
@@ -179,7 +179,7 @@ export class ChatGptEngineAdapter implements AnswerEngineAdapter {
         }
 
         // url_citation annotations are attached to the text block. Their absence
-        // means the model answered without searching — genuinely no sources to
+        // means the model answered without searching - genuinely no sources to
         // expose for this sample, so it stays out of the citation-rate
         // denominator rather than counting as a zero.
         const annotations = (block?.annotations ?? []).filter(

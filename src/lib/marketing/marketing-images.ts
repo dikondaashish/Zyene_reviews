@@ -19,7 +19,7 @@ export const marketingImages = {
       oneStar: {
         name: "Robert Hayes",
         src: "/marketing/home/alert-robert-hayes.png",
-        alt: "Robert Hayes — 1-star review alert",
+        alt: "Robert Hayes - 1-star review alert",
         width: 64,
         height: 64,
       },

@@ -8,10 +8,10 @@ export function ThankYouStep({ thankYouHeading, thankYouMessage }: ThankYouStepP
         <div className="px-8 py-16 text-center space-y-6 animate-in fade-in zoom-in duration-500">
             <div className="relative inline-flex">
                 <div className="bg-gradient-to-br from-chart-2 to-chart-2 rounded-full flex items-center justify-center shadow-lg shadow-chart-2/30 size-28">
-                    <span className="text-6xl animate-bounce" style={{ animationDuration: "2s" }}>🎉</span>
+                    <CheckCircle2 className="size-16 text-primary-foreground" aria-hidden="true" />
                 </div>
                 <div className="absolute -top-1 -right-1 bg-chart-4 rounded-full flex items-center justify-center text-lg shadow-md size-8">
-                    ✨
+                    <Sparkles className="size-4 text-foreground" aria-hidden="true" />
                 </div>
             </div>
             <div>
@@ -23,3 +23,4 @@ export function ThankYouStep({ thankYouHeading, thankYouMessage }: ThankYouStepP
         </div>
     );
 }
+import { CheckCircle2, Sparkles } from "lucide-react";

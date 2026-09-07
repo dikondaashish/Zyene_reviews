@@ -76,11 +76,11 @@ export async function runOAuthExistingUserLogin(params: {
         if (!finalRefreshToken) {
             logger.warn(
                 { businessId },
-                "[Auth Callback] Google OAuth omitted refresh_token — existing refresh preserved on update"
+                "[Auth Callback] Google OAuth omitted refresh_token - existing refresh preserved on update"
             );
         }
 
-        // Observed, not assumed — see verify-granted-scopes.ts. Google's raw
+        // Observed, not assumed - see verify-granted-scopes.ts. Google's raw
         // token response never reaches this flow, so this is the only way it
         // learns whether the reconnect widened the grant (e.g. Search Console).
         const grantedScopes = finalAccessToken
@@ -114,7 +114,7 @@ export async function runOAuthExistingUserLogin(params: {
             if (encAccess) updatePayload.access_token = encAccess;
             // Only update refresh when Google returns one. Location is selected later.
             if (finalRefreshToken && encRefresh) updatePayload.refresh_token = encRefresh;
-            // Never overwrite a known grant with null — see verify-granted-scopes.ts.
+            // Never overwrite a known grant with null - see verify-granted-scopes.ts.
             if (grantedScopes) updatePayload.granted_scopes = grantedScopes;
 
             await admin.from("review_platforms").update(updatePayload).eq("id", platformData.id);

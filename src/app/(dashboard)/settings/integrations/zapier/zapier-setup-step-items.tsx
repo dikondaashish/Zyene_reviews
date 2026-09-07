@@ -1,6 +1,6 @@
 import type { ElementType, ReactNode } from "react";
 
-/** Numbered step with an accent icon — used by the "How it works" card. */
+/** Numbered step with an accent icon - used by the "How it works" card. */
 export function HowItWorksStep({
     index,
     icon: Icon,
@@ -32,7 +32,7 @@ export function HowItWorksStep({
     );
 }
 
-/** Numbered list item — used by the "Configure your Zap" ordered list. */
+/** Numbered list item - used by the "Configure your Zap" ordered list. */
 export function SetupStep({
     index,
     title,

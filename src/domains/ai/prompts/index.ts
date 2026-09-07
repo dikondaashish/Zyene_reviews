@@ -38,7 +38,7 @@ Generate 2 reply options. Rules:
 Rating: {rating}/5
 Review: {text}`;
 
-/** Shorter than REPLY_PROMPT (no long examples) — used for dashboard “AI Suggest Reply” to cut latency. */
+/** Shorter than REPLY_PROMPT (no long examples) - used for dashboard “AI Suggest Reply” to cut latency. */
 export const SUGGEST_REPLY_PROMPT_COMPACT = `You are the owner of {business_name} ({business_category}). Write ONE public reply to this review.
 
 Rules:
@@ -47,7 +47,7 @@ Rules:
 - Mention the business name naturally where it fits.
 - Use ONLY facts present in the review/context. Do not invent food items, services, timeline details, or experiences.
 - If review text is vague or stars-only, keep the reply generic and appreciative without guessing specifics.
-- Negative: apologize briefly, offer to make it right, invite them back—never argue.
+- Negative: apologize briefly, offer to make it right, invite them back - never argue.
 - Positive: thank them and echo what they praised.
 - Max ~120 words.
 

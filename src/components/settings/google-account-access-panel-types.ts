@@ -17,7 +17,7 @@ export type GoogleAdminRow = {
 
 export function parseGoogleAdminIdentity(a: GoogleAdminRow): { label: string; email?: string } {
     const raw = (a.admin || a.name || "").trim();
-    if (!raw) return { label: "—" };
+    if (!raw) return { label: " - " };
     if (raw.includes("@")) return { label: raw };
     const email = raw.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0];
     if (email) return { label: email, email };

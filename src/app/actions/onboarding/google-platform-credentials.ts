@@ -13,7 +13,7 @@ interface StoreCredentialsParams {
     googleReviewUrl: string | null;
     reviewCount: number;
     averageRating: number;
-    /** Verbatim from the token response. Undefined stays NULL — unknown, not "none". */
+    /** Verbatim from the token response. Undefined stays NULL - unknown, not "none". */
     grantedScopes?: string;
 }
 
@@ -24,7 +24,7 @@ type StoreCredentialsResult =
 /**
  * Encrypts the Google tokens via the `encrypt_token` RPC and upserts the
  * review_platforms row. An absent refresh token falls back to the one already
- * stored — Google only returns it on first consent.
+ * stored - Google only returns it on first consent.
  */
 export async function storeGooglePlatformCredentials(
     params: StoreCredentialsParams,
@@ -95,7 +95,7 @@ export async function storeGooglePlatformCredentials(
              * scopes we asked for: Google may grant fewer than requested, and an
              * incremental Search Console consent widens the grant later.
              *
-             * Left untouched when the response carried no `scope` — overwriting a
+             * Left untouched when the response carried no `scope` - overwriting a
              * known grant with NULL would turn "we observed these scopes" back
              * into "unknown" on any refresh that happens to omit the field.
              */

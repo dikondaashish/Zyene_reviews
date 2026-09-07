@@ -2,7 +2,7 @@
  * Pass/fail bars for the six Google Business Profile audit checks (F5.10).
  *
  * These are our editorial bar, not limits Google publishes. They are collected
- * here — rather than inlined next to each check — so the number a customer is
+ * here - rather than inlined next to each check - so the number a customer is
  * judged against is reviewable in one place, and so a test can assert the
  * boundary rather than restating a literal that has drifted.
  */
@@ -16,7 +16,7 @@ export const PHOTO_RECENCY_DAYS = 90;
 /** Lookback for post activity. Matches the photo window so both read alike. */
 export const POST_WINDOW_DAYS = 90;
 
-/** Three posts across the 90-day window — roughly monthly cadence. */
+/** Three posts across the 90-day window - roughly monthly cadence. */
 export const MIN_POSTS_IN_WINDOW = 3;
 
 /**

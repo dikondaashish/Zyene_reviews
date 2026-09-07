@@ -68,7 +68,7 @@ export async function handleAppSubdomain(ctx: ProxyContext): Promise<NextRespons
         );
     }
 
-    // Public review carousel embed — no login; must not redirect to auth (iframes break).
+    // Public review carousel embed - no login; must not redirect to auth (iframes break).
     if (pathname.startsWith("/w/")) {
         return ctx.withSessionCookies(ctx.response());
     }
@@ -84,7 +84,7 @@ export async function handleAppSubdomain(ctx: ProxyContext): Promise<NextRespons
         return ctx.withSessionCookies(NextResponse.rewrite(new URL("/dashboard", request.url)));
     }
 
-    // Legacy integrations URLs (pre–marketing /integrations page)
+    // Legacy integrations URLs (pre-marketing /integrations page)
     if (pathname === "/integrations" || pathname.startsWith("/integrations/")) {
         const target = pathname.replace(/^\/integrations/, "/settings/integrations");
         return ctx.withSessionCookies(NextResponse.redirect(new URL(target, request.url)));

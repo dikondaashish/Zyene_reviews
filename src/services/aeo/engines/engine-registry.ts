@@ -4,7 +4,7 @@ import type { AnswerEngineDescriptor } from "./engine-catalog";
 
 /**
  * E-1 registry. Engines are looked up here rather than imported directly so that
- * swapping a vendor — or standing an engine down mid-incident — is a registration
+ * swapping a vendor - or standing an engine down mid-incident - is a registration
  * change, not a code change across the orchestrator.
  */
 
@@ -53,7 +53,7 @@ export class EngineRegistry {
             return {
                 descriptor,
                 state: "not_implemented",
-                reason: `Not implemented yet — planned for Phase ${descriptor.phase}.`,
+                reason: `Not implemented yet - planned for Phase ${descriptor.phase}.`,
             };
         }
         if (!adapter.isConfigured()) {

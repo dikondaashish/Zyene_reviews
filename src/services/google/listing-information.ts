@@ -16,13 +16,13 @@ export const LOCATION_READ_MASK = [
     "metadata",
     // Read for the GBP audit (F5.10). Both are top-level Location fields; a
     // readMask that omits them makes Google return them absent rather than
-    // error, which is indistinguishable from a business that has none — so
+    // error, which is indistinguishable from a business that has none - so
     // leaving them out would have the audit report "no services" for every
     // customer.
     "serviceItems",
     "serviceArea",
     // Centre point for the geo-grid (F1.12). Google's own coordinate for the
-    // listing is the only defensible centre — geocoding the address ourselves
+    // listing is the only defensible centre - geocoding the address ourselves
     // would put the grid somewhere Google does not think the business is.
     "latlng",
 ].join(",");
@@ -59,7 +59,7 @@ export interface GoogleServiceItem {
 
 /**
  * Where a service-area business operates. Google's v1 model is a set of place
- * ids (max 20), not a radius — the older radius-based model does not exist on
+ * ids (max 20), not a radius - the older radius-based model does not exist on
  * this API.
  */
 export interface GoogleServiceArea {

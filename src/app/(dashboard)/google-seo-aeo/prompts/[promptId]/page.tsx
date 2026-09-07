@@ -55,7 +55,7 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ p
                 <CardHeader>
                     <CardTitle>Content brief</CardTitle>
                     <CardDescription>
-                        A concrete edit checklist for this exact prompt — never auto-published, always
+                        A concrete edit checklist for this exact prompt - never auto-published, always
                         copy-paste.
                     </CardDescription>
                 </CardHeader>

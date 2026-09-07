@@ -3,7 +3,7 @@
  * audit checks score against.
  *
  * Every field here comes from a real API response. A signal this module cannot
- * retrieve is `null`, never a zero — "Google did not answer" and "the business
+ * retrieve is `null`, never a zero - "Google did not answer" and "the business
  * has none" are different findings, and collapsing them would report a healthy
  * profile as empty during an outage.
  */

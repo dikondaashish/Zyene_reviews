@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { generateSuggestedPrompts } from "./suggest-prompts-action";
 
 /**
- * F4.2 — fills the library from the business's Google category and city.
+ * F4.2 - fills the library from the business's Google category and city.
  *
  * Says "inactive" on the button's own result message, not just in help text:
  * the one thing a user needs to know before clicking is that this cannot start
@@ -29,7 +29,7 @@ export function SuggestPromptsButton({ businessId }: { businessId: string }) {
         if (result.inserted === 0) {
             toast.info(
                 result.skipped > 0
-                    ? "No new suggestions — your library already covers them."
+                    ? "No new suggestions - your library already covers them."
                     : "No suggestions could be generated."
             );
             return;

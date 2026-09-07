@@ -1,34 +1,35 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeft, ChevronRight, Check, Quote } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { CASE_STUDY_MAP, CASE_STUDY_SLUGS } from "@/lib/social-proof/case-study-data";
-import { SIGNUP_URL } from "@/config/env";
+import { ArrowLeft } from "lucide-react";
+import { CASE_STUDY_MAP } from "@/lib/social-proof/case-study-data";
 
-export function CaseStudiesSlugCtaSection({ study, slug, related }: { study: (typeof CASE_STUDY_MAP)[string]; slug: string; related: (typeof CASE_STUDY_MAP)[string][] }) {
+export function CaseStudiesSlugCtaSection({ related }: { related: (typeof CASE_STUDY_MAP)[string][] }) {
     return (
-        <section className="py-16 px-4 bg-muted border-t border-border">
-                    <div className="container mx-auto max-w-3xl">
-                        <h2 className="text-xl font-bold text-foreground mb-6">More case studies</h2>
-                        <div className="grid sm:grid-cols-2 gap-4">
-                            {related.map((r) => (
-                                <Link
-                                    key={r.slug}
-                                    href={`/case-studies/${r.slug}`}
-                                    className="bg-card border border-border rounded-xl p-5 hover:border-primary/30 transition-colors"
-                                >
-                                    <span className="text-2xl">{r.emoji}</span>
-                                    <p className="font-semibold text-foreground mt-2">{r.company}</p>
-                                    <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{r.excerpt}</p>
-                                </Link>
-                            ))}
-                        </div>
-                        <Link
-                            href="/case-studies"
-                            className="inline-flex items-center gap-2 text-sm font-semibold text-primary mt-8 hover:brightness-90"
-                        >
-                            <ArrowLeft className="size-4" /> All case studies
+        <section className="border-t border-border bg-muted/35 py-16 sm:py-20">
+            <div className="container mx-auto max-w-6xl px-4 sm:px-8">
+                <div className="mb-8 flex items-end justify-between gap-4">
+                    <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">More case studies</h2>
+                    <Link href="/case-studies" className="hidden items-center gap-2 text-sm font-semibold text-primary hover:underline sm:inline-flex">
+                        All case studies <ArrowLeft className="size-4" aria-hidden="true" />
+                    </Link>
+                </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                    {related.map((r) => (
+                        <Link key={r.slug} href={`/case-studies/${r.slug}`} className="group border-t border-border py-5 transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                            <div className="flex items-start justify-between gap-4">
+                                <div>
+                                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary">{r.industry}</p>
+                                    <p className="mt-2 text-lg font-semibold text-foreground">{r.company}</p>
+                                    <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">{r.excerpt}</p>
+                                </div>
+                                <span className="text-xl transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+                            </div>
                         </Link>
-                    </div>
-                </section>
+                    ))}
+                </div>
+                <Link href="/case-studies" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline sm:hidden">
+                    <ArrowLeft className="size-4" aria-hidden="true" /> All case studies
+                </Link>
+            </div>
+        </section>
     );
 }

@@ -32,13 +32,13 @@ export const NFC_SHIPPING = {
         id: "standard",
         name: "Standard shipping",
         amountCents: 499,
-        estimate: "5–8 business days",
+        estimate: "5-8 business days",
     },
     expedited: {
         id: "expedited",
         name: "Expedited shipping",
         amountCents: 699,
-        estimate: "2–3 business days",
+        estimate: "2-3 business days",
     },
 } as const;
 

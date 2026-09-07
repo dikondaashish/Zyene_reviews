@@ -4,7 +4,7 @@
  * Two engines return URLs that are not the source: Gemini wraps every citation
  * in a `vertexaisearch.cloud.google.com/grounding-api-redirect/...` hop. Parsing
  * a domain out of that would file EVERY Gemini citation under Google's redirect
- * host and destroy own-vs-competitor attribution entirely — the whole point of
+ * host and destroy own-vs-competitor attribution entirely - the whole point of
  * tracking citations. The real domain arrives in the citation title instead.
  *
  * Recovering it from the title is a deliberate trade: the alternative is one
@@ -72,7 +72,7 @@ export function canonicalDomain(hostOrDomain: string): string {
     return hostOrDomain.trim().toLowerCase().replace(/^www\./, "").replace(/\.$/, "");
 }
 
-/** True when `domain` is `parent` or a subdomain of it — never a substring match. */
+/** True when `domain` is `parent` or a subdomain of it - never a substring match. */
 export function isSameOrSubdomain(domain: string, parent: string): boolean {
     const a = canonicalDomain(domain);
     const b = canonicalDomain(parent);
@@ -85,7 +85,7 @@ export function isSameOrSubdomain(domain: string, parent: string): boolean {
  *
  * Gemini titles are bare domains ("forbes.com"). Other engines put a headline
  * there, so anything that does not look like a hostname is rejected rather than
- * guessed at — a wrong domain is worse than an absent one.
+ * guessed at - a wrong domain is worse than an absent one.
  */
 export function domainFromTitle(title: string | null): string | null {
     if (!title) return null;

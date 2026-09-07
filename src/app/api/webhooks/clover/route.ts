@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     if (isCloverVerificationPayload(payload)) {
         logger.info(
             { verificationCode: payload.verificationCode },
-            "[clover] webhook verification code received — paste this into Clover dashboard",
+            "[clover] webhook verification code received - paste this into Clover dashboard",
         );
         return NextResponse.json({ ok: true, verificationCode: payload.verificationCode });
     }

@@ -14,7 +14,7 @@ const log = createLogger("cron-register-google-pubsub-notifications");
  * (`registerNotifications`) for every distinct `google_account_id` on connected Google rows.
  *
  * Same auth pattern as other cron routes: `Authorization: Bearer <CRON_SECRET>`.
- * Does not change review sync or webhooks — only calls Google's Notifications API.
+ * Does not change review sync or webhooks - only calls Google's Notifications API.
  */
 export async function GET(request: Request) {
     if (!isAuthorizedCronRequest(request)) {

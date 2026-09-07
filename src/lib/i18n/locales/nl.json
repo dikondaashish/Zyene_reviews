@@ -61,8 +61,8 @@
     "upgrade_prompt": "Plan upgraden",
     "website_clicks": "Websitebezoeken",
     "website_clicks_desc": "Klikken op websitelink",
-    "positive_experience": "Positieve beoordelingen (4–5★)",
-    "negative_mixed": "beoordelingen van 1–2★",
+    "positive_experience": "Positieve beoordelingen (4-5★)",
+    "negative_mixed": "beoordelingen van 1-2★",
     "no_sentiment_data": "Nog geen sentimentgegevens",
     "engagement_rate": "Aanvraagconversie",
     "engagement_desc": "Voltooide van verzonden aanvragen",
@@ -83,8 +83,8 @@
     "review_spotlight_manage_all": "Alles beheren",
     "needs_attention_title": "Vereist uw aandacht",
     "needs_attention_subtitle_zero": "Geen urgente reviews op dit moment",
-    "needs_attention_subtitle_one": "1 urgente review — we kunnen een antwoord voor u opstellen",
-    "needs_attention_subtitle_many": "{count} urgente reviews — we kunnen antwoorden voor u opstellen",
+    "needs_attention_subtitle_one": "1 urgente review - we kunnen een antwoord voor u opstellen",
+    "needs_attention_subtitle_many": "{count} urgente reviews - we kunnen antwoorden voor u opstellen",
     "needs_attention_view_all": "Alles bekijken",
     "needs_attention_your_reply_label": "Uw antwoord als eigenaar",
     "needs_attention_sent_saved": "Geplaatst op Google",
@@ -156,7 +156,7 @@
     "proration_notice_fallback": "Vandaag betaalt u een pro rata-bedrag voor de rest van uw factureringsperiode, daarna {{recurring}}.",
     "proration_preview_loading": "Uw bedrag wordt berekend…",
     "trial_ends_on_upgrade_notice": "Upgraden beëindigt uw gratis proefperiode en de facturering start direct.",
-    "pro_prorated_no_trial_badge": "Pro rata-facturering — geen proefperiode"
+    "pro_prorated_no_trial_badge": "Pro rata-facturering - geen proefperiode"
   },
   "public_profile": {
     "title": "Openbaar Profiel",

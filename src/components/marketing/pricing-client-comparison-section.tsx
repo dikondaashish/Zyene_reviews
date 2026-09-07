@@ -17,7 +17,7 @@ export function PricingClientComparisonSection() {
             <div className="container mx-auto max-w-5xl">
                 <h2 className="text-3xl font-bold text-foreground mb-2 text-center">See how we compare</h2>
                 <p className="text-muted-foreground text-center mb-10">
-                    Enterprise features at owner-operator pricing—no annual contracts required.
+                    Enterprise features at owner-operator pricing - no annual contracts required.
                 </p>
                 <div className="overflow-x-auto rounded-xl border border-border bg-card">
                     <table className="w-full text-sm text-left border-collapse">
@@ -80,7 +80,7 @@ export function PricingClientComparisonSection() {
                 </div>
                 <p className="text-center text-xs text-muted-foreground mt-4">
                     Competitor pricing based on publicly listed rates as of 2026. Birdeye pricing may vary by package and
-                    contract—confirm with the vendor.{" "}
+                    contract - confirm with the vendor.{" "}
                     <Link href="/compare/birdeye" className="underline hover:text-foreground">
                         Zyene Reviews vs Birdeye
                     </Link>

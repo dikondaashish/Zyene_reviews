@@ -18,7 +18,7 @@ const DIGEST_LOOKBACK_MS = 7 * 24 * 60 * 60 * 1000;
  *
  * Better Stack: optional `BETTERSTACK_WEEKLY_DIGEST_HEARTBEAT_URL`; legacy monitor URL is built in if unset.
  * For a daily monitor: schedule GET /api/cron/daily-digest every day (heartbeat only).
- * For weekly emails: schedule this route weekly (e.g. Monday 09:00) and set monitor interval to 7–8 days,
+ * For weekly emails: schedule this route weekly (e.g. Monday 09:00) and set monitor interval to 7-8 days,
  * or keep daily heartbeat via /api/cron/daily-digest.
  */
 export async function GET(request: Request) {

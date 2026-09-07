@@ -1,4 +1,4 @@
-import { RATINGS } from "@/app/r/[slug]/review-flow/types";
+import { Frown, Meh, Smile } from "lucide-react";
 
 export interface NegativeStepHeaderProps {
     rating: number | null;
@@ -7,12 +7,12 @@ export interface NegativeStepHeaderProps {
 }
 
 export function NegativeStepHeader({ rating, apologyMsg, negativeSubheading }: NegativeStepHeaderProps) {
-    const selectedRating = RATINGS.find((r) => r.value === rating);
+    const RatingIcon = rating !== null && rating <= 2 ? Frown : rating === 3 ? Meh : Smile;
 
     return (
         <div className="flex items-center gap-4">
             <div className="bg-muted rounded-2xl flex items-center justify-center flex-shrink-0 border border-border dark:bg-[rgb(30,41,59)] dark:border-white/10 size-16">
-                <span className="text-4xl">{selectedRating?.emoji || "😕"}</span>
+                <RatingIcon className="size-10 text-primary" aria-hidden="true" />
             </div>
             <div className="text-left">
                 <h2 className="text-xl font-bold text-foreground">

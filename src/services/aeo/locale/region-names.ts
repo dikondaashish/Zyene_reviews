@@ -9,8 +9,8 @@
  * the data never had, and a local-visibility product that silently measures the
  * wrong metro is worse than one that measures nothing.
  *
- * Abbreviations are not accepted by the vendor either — "Kansas City,MO,United
- * States" is rejected exactly like the bare city — so the expansion below is
+ * Abbreviations are not accepted by the vendor either - "Kansas City,MO,United
+ * States" is rejected exactly like the bare city - so the expansion below is
  * required, not cosmetic.
  */
 

@@ -87,7 +87,7 @@ export function runGrowthBlueprintAudit(): BlueprintAuditItem[] {
             severity: "info",
             area: "kpi",
             message: "Set GROWTH_MARKETING_SESSIONS_30D to calculate visitor → signup conversion.",
-            remediation: "Optional env var — see docs/GROWTH_OPERATIONS.md (Vercel + manual GA/Vercel session updates)",
+            remediation: "Optional env var - see docs/GROWTH_OPERATIONS.md (Vercel + manual GA/Vercel session updates)",
         });
     }
 

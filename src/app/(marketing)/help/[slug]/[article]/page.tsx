@@ -31,7 +31,7 @@ export async function generateMetadata(
     if (!article || article.category !== category) return {};
     const catInfo = HELP_CATEGORIES[category];
     const path = helpArticleNestedPath(article);
-    const pageTitle = `${article.title} — ${catInfo.label}`;
+    const pageTitle = `${article.title} - ${catInfo.label}`;
     const canonicalUrl = `https://www.zyenereviews.com${path}`;
     return mergeMarketingSocial({
         title: pageTitle,

@@ -55,9 +55,8 @@ export function ReviewLinkGeneratorClient() {
                 <div className="container mx-auto max-w-2xl space-y-4">
                     <h2 className="text-xl font-bold text-foreground">Why a direct review link matters</h2>
                     <p className="text-muted-foreground leading-relaxed">
-                        The easier it is for happy customers to leave a Google review, the more 5-star ratings you
-                        collect. A direct &quot;Write a review&quot; link removes friction — customers tap once instead
-                        of searching for your business on Maps.
+                        A direct &quot;Write a review&quot; link removes a step for customers who want to leave honest
+                        feedback. They can tap once instead of searching for your business on Maps.
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
                         Use this free generator to find your listing and receive the link by email. For automated SMS

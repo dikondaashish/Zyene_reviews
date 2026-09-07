@@ -1,7 +1,7 @@
 /**
  * `pending` means we never built the check. `unavailable` means we built it,
  * asked Google, and got nothing back this load. `not-applicable` means the
- * check was run and genuinely does not apply to this business — a storefront
+ * check was run and genuinely does not apply to this business - a storefront
  * that never travels to customers has no service area to declare.
  *
  * The three are kept distinct because only `pending` is a gap in the product;

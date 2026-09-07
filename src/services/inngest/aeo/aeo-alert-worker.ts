@@ -4,7 +4,7 @@ import { isLiveAlertingEnabled } from "@/lib/features/aeo-surfaces";
 import { runAlertDetectionForBusiness } from "@/services/aeo/alerting/run-alert-detection";
 
 /**
- * F8: one business's alert check. Detection-only — sending digests is a
+ * F8: one business's alert check. Detection-only - sending digests is a
  * separate worker (aeo-alert-digest-worker.ts) on its own schedule, so a
  * detection retry can never re-send an email that already went out.
  */

@@ -59,7 +59,7 @@ const marketBriefSchema: Schema = {
         data_limitations: {
             type: SchemaType.STRING,
             description:
-                "One honest sentence: data is from public Maps/Places listings and the user's own GBP keywords — not competitors' private dashboards.",
+                "One honest sentence: data is from public Maps/Places listings and the user's own GBP keywords - not competitors' private dashboards.",
         },
     },
     required: [
@@ -76,7 +76,7 @@ function buildPrompt(input: MarketPositioningBriefInput): string {
         input.yourTopKeywords.length > 0
             ? input.yourTopKeywords
                   .slice(0, 15)
-                  .map((k, i) => `${i + 1}. "${k.keyword}" — ${k.impressions} impressions (monthly bucket)`)
+                  .map((k, i) => `${i + 1}. "${k.keyword}" - ${k.impressions} impressions (monthly bucket)`)
             : ["(no keyword impression data synced yet)"];
 
     const compLines = input.competitors.map((c, i) => {
@@ -101,7 +101,7 @@ function buildPrompt(input: MarketPositioningBriefInput): string {
         `Our average rating (visible reviews in Zyene, is_visible=true): ${input.yourRating != null ? input.yourRating.toFixed(1) : "unknown"}`,
         `Our total visible reviews in Zyene: ${input.yourReviewCount ?? "unknown"}`,
         "",
-        "Our Google Business Profile search terms (impressions — our listing only):",
+        "Our Google Business Profile search terms (impressions - our listing only):",
         ...kwLines,
         "",
         `Heuristic split of our keyword impressions (name/brand vs discovery): ${input.keywordDirectPct}% brand/name vs ${input.keywordDiscoveryPct}% broader discovery (approximate).`,
@@ -134,7 +134,7 @@ export async function generateMarketPositioningBrief(
         positioningBullets: input.competitors.slice(0, 3).map((c) => {
             const r = c.rating != null ? `${c.rating.toFixed(1)} stars` : "unknown rating";
             const n = c.reviewCount ?? "?";
-            return `${c.name}: ${r}, ${n} reviews (public)${c.primaryCategory ? ` — ${c.primaryCategory}` : ""}`;
+            return `${c.name}: ${r}, ${n} reviews (public)${c.primaryCategory ? ` - ${c.primaryCategory}` : ""}`;
         }),
         opportunityActions: [
             {

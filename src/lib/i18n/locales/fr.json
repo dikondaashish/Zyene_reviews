@@ -61,8 +61,8 @@
     "upgrade_prompt": "Améliorer le plan",
     "website_clicks": "Clics sur le site",
     "website_clicks_desc": "Tapes sur le lien",
-    "positive_experience": "Avis positifs (4–5★)",
-    "negative_mixed": "avis de 1–2★",
+    "positive_experience": "Avis positifs (4-5★)",
+    "negative_mixed": "avis de 1-2★",
     "no_sentiment_data": "Pas de données sentimentales",
     "engagement_rate": "Conversion des demandes",
     "engagement_desc": "Demandes terminées parmi les envois",
@@ -83,8 +83,8 @@
     "review_spotlight_manage_all": "Tout gérer",
     "needs_attention_title": "Nécessite votre attention",
     "needs_attention_subtitle_zero": "Aucun avis urgent pour le moment",
-    "needs_attention_subtitle_one": "1 avis urgent — nous pouvons rédiger une réponse pour vous",
-    "needs_attention_subtitle_many": "{count} avis urgents — nous pouvons rédiger des réponses pour vous",
+    "needs_attention_subtitle_one": "1 avis urgent - nous pouvons rédiger une réponse pour vous",
+    "needs_attention_subtitle_many": "{count} avis urgents - nous pouvons rédiger des réponses pour vous",
     "needs_attention_view_all": "Tout voir",
     "needs_attention_your_reply_label": "Votre réponse en tant qu’établissement",
     "needs_attention_sent_saved": "Publié sur Google",
@@ -156,7 +156,7 @@
     "proration_notice_fallback": "Un montant au prorata sera facturé aujourd’hui pour le reste de votre période, puis {{recurring}}.",
     "proration_preview_loading": "Calcul de votre facturation…",
     "trial_ends_on_upgrade_notice": "Une mise à niveau met fin à votre essai gratuit et la facturation commence immédiatement.",
-    "pro_prorated_no_trial_badge": "Facturation au prorata — pas d’essai"
+    "pro_prorated_no_trial_badge": "Facturation au prorata - pas d’essai"
   },
   "public_profile": {
     "title": "Profil Public",

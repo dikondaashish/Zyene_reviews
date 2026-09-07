@@ -12,7 +12,7 @@ export function GrowthDashboardTabAuditSection({ auditItems, auditSummary }: Gro
     return (
         <section className="space-y-4">
             <p className="text-sm text-muted-foreground">
-                Automated checks for blueprint §§14–16.{" "}
+                Automated checks for blueprint §§14-16.{" "}
                 {auditSummary.passed ? (
                     <span className="text-chart-2 font-medium">No blocking errors.</span>
                 ) : (

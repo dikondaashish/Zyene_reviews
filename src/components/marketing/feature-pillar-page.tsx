@@ -72,7 +72,7 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
                                     Free review request template pack
                                 </p>
                                 <p className="text-sm text-muted-foreground mb-4">
-                                    20+ fair SMS and email scripts you can copy on the page—or get the full swipe file
+                                    20+ fair SMS and email scripts you can copy on the page - or get the full swipe file
                                     by email.
                                 </p>
                                 <Link
@@ -90,7 +90,7 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
                         <p className="text-muted-foreground leading-relaxed">
                             Strong Google reviews influence who calls, books, and walks in. Zyene Reviews combines monitoring,
                             replies, collection, and reporting in one dashboard starting at $29.99/mo with a 7-day free
-                            trial — so you are not juggling separate tools for inbox, requests, and competitive insights.
+                            trial - so you are not juggling separate tools for inbox, requests, and competitive insights.
                         </p>
                     </div>
 

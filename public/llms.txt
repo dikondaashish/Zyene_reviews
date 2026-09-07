@@ -1,6 +1,6 @@
 # Zyene Reviews
 
-> AI-powered review management for local businesses — monitor Google reviews, automate requests, route negative feedback privately, and reply with AI.
+> AI-powered review management for local businesses - monitor Google reviews, automate requests, route negative feedback privately, and reply with AI.
 
 ## Canonical site
 
@@ -35,4 +35,4 @@
 
 ## Review capture (separate domain)
 
-Public review collection flows are hosted at https://collectratings.com/ — not on the marketing site.
+Public review collection flows are hosted at https://collectratings.com/ - not on the marketing site.

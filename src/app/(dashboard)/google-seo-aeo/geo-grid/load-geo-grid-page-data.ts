@@ -9,7 +9,7 @@ import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 export type GeoGridPoint = {
     row: number;
     col: number;
-    /** Null means "searched, not found in the local pack" — never rendered as a rank. */
+    /** Null means "searched, not found in the local pack" - never rendered as a rank. */
     rankPosition: number | null;
     searchStatus: "searched" | "failed";
     topCompetitors: { position: number; name: string; placeId: string | null }[];
@@ -28,7 +28,7 @@ export type GeoGridRun = {
     /** Average of found ranks only. Null when nothing ranked. */
     averageRank: number | null;
     foundCells: number;
-    /** Cells Google answered for — excludes cells whose search failed. */
+    /** Cells Google answered for - excludes cells whose search failed. */
     searchedCells: number;
     estimatedCostMicroUsd: number;
     actualCostMicroUsd: number | null;

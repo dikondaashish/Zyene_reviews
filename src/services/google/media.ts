@@ -4,7 +4,7 @@
  * Still on the v4 `mybusiness.googleapis.com` host: media has no equivalent in
  * the v1 Business Information / Account Management split, so v4 remains the
  * only way to read it. Same host the reviews client already uses
- * (`BASE_URL_REVIEWS`), and the same `business.manage` scope — this adds no new
+ * (`BASE_URL_REVIEWS`), and the same `business.manage` scope - this adds no new
  * consent surface.
  *
  * v4 addresses locations as `accounts/{accountId}/locations/{locationId}`, so

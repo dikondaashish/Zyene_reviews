@@ -18,7 +18,7 @@ export function IndustriesCtaSection() {
                     </h2>
                     <p className="text-xl text-muted-foreground mb-10">
                         7-day free trial. Full access. No credit card lock-in.<br />
-                        Works for every industry on this page—starting at $29.99/mo.
+                        Works for every industry on this page - starting at $29.99/mo.
                     </p>
                     <Link href={SIGNUP_URL}>
                         <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl">

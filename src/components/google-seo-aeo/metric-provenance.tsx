@@ -4,7 +4,7 @@ import { Info } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 /**
- * QA #35 — where a number came from, attached to the number itself.
+ * QA #35 - where a number came from, attached to the number itself.
  *
  * Every field arrives pre-formatted. Dates are rendered on the server and passed
  * as strings because `toLocaleString` resolves against the runtime's locale and

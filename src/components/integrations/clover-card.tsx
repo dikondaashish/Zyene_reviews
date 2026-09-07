@@ -103,7 +103,7 @@ export function CloverCard({ businessId, connection, configured }: CloverCardPro
                     </p>
                 ) : (
                     <p className="text-xs text-muted-foreground">
-                        Phase 1 logs resolved email/phone from payments — does not send review
+                        Phase 1 logs resolved email/phone from payments - does not send review
                         requests yet.
                     </p>
                 )}

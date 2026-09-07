@@ -10,12 +10,12 @@ import { PLAN_CREDIT_GRANTS_MICRO_USD } from "@/services/aeo/billing/billing-con
 const AEO_ELIGIBLE_PLAN_IDS = Object.keys(PLAN_CREDIT_GRANTS_MICRO_USD);
 
 /**
- * F8 detection fan-out — daily, every AEO-eligible business, no per-business
+ * F8 detection fan-out - daily, every AEO-eligible business, no per-business
  * slot. Unlike E-10 (sampling) and E-3 (crawling), detection is pure reads
  * against data that already exists; there is no external call to spread
  * load against, so there is nothing E-10's slot mechanism would protect.
  *
- * Registered daily at 09:00 UTC — after the 1–8 UTC sampling window closes,
+ * Registered daily at 09:00 UTC - after the 1-8 UTC sampling window closes,
  * so detection reads the night's fresh samples rather than racing them. The
  * digest runs an hour later, at 10:00, giving detection room to finish before
  * anything is emailed.

@@ -13,7 +13,7 @@ const CRAWL_ELIGIBLE_PLAN_IDS = Object.keys(CRAWL_PAGE_CAP);
  * Businesses whose weekly E-3 crawl slot is right now, on a plan the crawler
  * is scoped to, with a real website to crawl.
  *
- * Deliberately NO grant-history filter here — unlike load-due-businesses.ts
+ * Deliberately NO grant-history filter here - unlike load-due-businesses.ts
  * (E-10 sampling), crawling never touches aeo_credit_balances. It costs this
  * app's own compute and the target site's own bandwidth, not vendor spend, so
  * the Wolfpack-shaped gap that filter exists for does not apply to this path.
@@ -55,7 +55,7 @@ export async function loadDueCrawlBusinesses(db: Admin, now: Date): Promise<DueC
     return due;
 }
 
-/** Shared with the manual-trigger action (audit/run-audit-action.ts) — one definition of "a real, crawlable website". */
+/** Shared with the manual-trigger action (audit/run-audit-action.ts) - one definition of "a real, crawlable website". */
 export function parseOrigin(website: string | null): string | null {
     if (!website?.trim()) return null;
     try {

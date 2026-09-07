@@ -5,7 +5,7 @@ import { ReviewResponseGeneratorClient } from "./review-response-generator-clien
 export const metadata: Metadata = mergeMarketingSocial({
     title: "Free Review Response Template Generator",
     description:
-        "Paste any customer review and get a professional response draft instantly. Free generator for local businesses — unlock more templates with your email.",
+        "Paste any customer review and get a professional response draft instantly. Free generator for local businesses - unlock more templates with your email.",
     alternates: { canonical: "https://www.zyenereviews.com/tools/review-response-generator" },
     openGraph: {
         title: "Free Review Response Generator",

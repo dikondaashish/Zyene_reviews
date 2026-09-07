@@ -18,7 +18,7 @@ export type ViewAnswerResult = { ok: true; answer: StoredAnswer } | { ok: false;
  * F3.6 evidence viewer. Reads through the caller's RLS-scoped client on BOTH
  * calls: the aeo_samples row confirms this sample belongs to a business the
  * caller can see, and the storage bucket's own SELECT policy (path-prefixed
- * by organization id) is what actually gates the download — this function
+ * by organization id) is what actually gates the download - this function
  * does not grant access, it only refuses to ask for a path the caller
  * couldn't already reach on their own.
  */

@@ -4,7 +4,7 @@ import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 export const metadata: Metadata = mergeMarketingSocial({
     title: "Review Management for Local Businesses",
     description:
-        "Monitor, respond to, and grow Google reviews with AI. Negative Feedback Shield routes unhappy customers privately before public posts. From $29.99/mo.",
+        "Monitor and respond to Google reviews with AI. Negative Feedback Shield gives low ratings a private feedback path while your team follows up. From $29.99/mo.",
     alternates: {
         canonical: "https://www.zyenereviews.com/",
     },

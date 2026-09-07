@@ -8,7 +8,7 @@ import {
 
 import type { ProxyContext } from "./proxy-context";
 
-/** Hosts that serve public review capture only — no marketing site. */
+/** Hosts that serve public review capture only - no marketing site. */
 export const REVIEW_CAPTURE_DOMAINS = [
     "collectratings.com",
     "www.collectratings.com",
@@ -24,7 +24,7 @@ export function isReviewCaptureDomain(hostname: string): boolean {
 export function handleReviewCaptureDomain(ctx: ProxyContext): NextResponse {
     const { request, pathname, rootDomain } = ctx;
 
-    // Root has no marketing site — review capture only.
+    // Root has no marketing site - review capture only.
     if (pathname === "/") {
         return new NextResponse("", { status: 404 });
     }

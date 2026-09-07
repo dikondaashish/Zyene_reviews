@@ -27,7 +27,7 @@ export const dashboardTourSteps: TourStep[] = [
         target: "tour-sidebar",
         title: "Navigation Menu",
         description:
-            "Browse all sections from here — Reviews, Campaigns, Customers, Analytics, Integrations, and more. Everything is one click away.",
+            "Browse all sections from here - Reviews, Campaigns, Customers, Analytics, Integrations, and more. Everything is one click away.",
         placement: "right",
         icon: "panel-left",
     },
@@ -35,7 +35,7 @@ export const dashboardTourSteps: TourStep[] = [
         target: "tour-stats",
         title: "Dashboard Results",
         description:
-            "Your key metrics at a glance — total reviews, average rating, response rate, and pending reviews. These update in real-time.",
+            "Your key metrics at a glance - total reviews, average rating, response rate, and pending reviews. These update in real-time.",
         placement: "bottom",
         icon: "home",
     },

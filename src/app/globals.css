@@ -70,7 +70,7 @@
   --popover: #fffefb;
   --popover-foreground: #201515;
   --primary: #ff4f00;
-  /* Light text on saturated primary — matches intent of .text-primary-foreground on orange */
+  /* Light text on saturated primary - matches intent of .text-primary-foreground on orange */
   --primary-foreground: #ffffff;
   --cta: #ff4f00;
   --cta-foreground: #fffefb;
@@ -146,25 +146,25 @@
   --hero-grid-glow: rgba(255, 79, 0, 0.05);
 
   /* ---------------------------------------------------------------------
-   * Motion — Apple's damping/response model (see .claude/skills/apple-design).
+   * Motion - Apple's damping/response model (see .claude/skills/apple-design).
    * "Response" is how fast the value reaches target, NOT a fixed duration.
    * Springs live in @/lib/motion/springs.ts; these are the CSS equivalents
    * for non-gesture transitions (hover, focus, colour, press).
    * ------------------------------------------------------------------ */
   --motion-press: 100ms; /* press feedback must feel instant */
   --motion-response-fast: 150ms;
-  --motion-response: 300ms; /* response 0.3 — default UI */
-  --motion-response-slow: 400ms; /* response 0.4 — larger repositioning */
+  --motion-response: 300ms; /* response 0.3 - default UI */
+  --motion-response-slow: 400ms; /* response 0.4 - larger repositioning */
 
-  /* Critically damped (damping 1.0) — graceful settle, no overshoot. Default. */
+  /* Critically damped (damping 1.0) - graceful settle, no overshoot. Default. */
   --motion-ease-damped: cubic-bezier(0.25, 1, 0.5, 1);
-  /* Under-damped (damping ~0.8) — reserve for momentum-driven gestures only. */
+  /* Under-damped (damping ~0.8) - reserve for momentum-driven gestures only. */
   --motion-ease-momentum: cubic-bezier(0.34, 1.36, 0.64, 1);
   /* Mirrored pair so a reversible transition returns along the path it left. */
   --motion-ease-enter: cubic-bezier(0.25, 1, 0.5, 1);
   --motion-ease-exit: cubic-bezier(0.5, 0, 0.75, 0);
 
-  /* Press affordance — scale is the only transform that reads as "pressed"
+  /* Press affordance - scale is the only transform that reads as "pressed"
    * without shifting layout or fighting the border-first elevation model. */
   --motion-press-scale: 0.97;
   --motion-press-scale-subtle: 0.985;
@@ -191,7 +191,7 @@
   --destructive: oklch(0.55 0.18 25);
   --destructive-foreground: #ffffff;
   /* Dark theme: the tint stays close, the text lightens to clear contrast on a
-     dark surface — mirroring the old `dark:text-amber-400` override. */
+     dark surface - mirroring the old `dark:text-amber-400` override. */
   --warning: oklch(0.8 0.13 70);
   --warning-foreground: oklch(0.85 0.12 80);
   --border: #4a4540;
@@ -246,7 +246,7 @@
     font-optical-sizing: auto;
   }
 
-  /* Tracking and leading are size-specific — a single value is wrong somewhere.
+  /* Tracking and leading are size-specific - a single value is wrong somewhere.
    * Large text reads too loose, so it tightens; body copy stays near 0.
    * These are DEFAULTS in the base layer: any explicit `tracking-*`/`leading-*`
    * utility on an element still wins, so existing call sites are untouched.
@@ -274,7 +274,7 @@
     letter-spacing: 0.01em;
   }
 
-  /* Feedback belongs on the press, not the release — waiting for `click` to
+  /* Feedback belongs on the press, not the release - waiting for `click` to
    * show any response feels dead. This is a base-layer default so every button
    * gets it (including the shadcn primitives, which are not edited directly);
    * any explicit `active:*` utility on a component still overrides it.
@@ -292,7 +292,7 @@
 }
 
 /* ---------------------------------------------------------------------------
- * Accessibility — reduced motion / transparency / contrast.
+ * Accessibility - reduced motion / transparency / contrast.
  * Reduced motion does not mean no feedback; it means a gentler, non-vestibular
  * equivalent. Opacity and colour changes survive because they aid comprehension;
  * travel, overshoot and looping motion do not.
@@ -304,7 +304,7 @@
   *,
   *::before,
   *::after {
-    /* Short cross-fade instead of an abrupt cut — still readable as feedback. */
+    /* Short cross-fade instead of an abrupt cut - still readable as feedback. */
     transition-duration: 120ms !important;
     transition-timing-function: linear !important;
     /* Kill overshoot: no spring curve survives this. */
@@ -344,7 +344,7 @@
 }
 
 @layer utilities {
-  /* Marketing / hero only — geometric display (Syne); functional UI stays Inter (docs/DESIGN.md) */
+  /* Marketing / hero only - geometric display (Syne); functional UI stays Inter (docs/DESIGN.md) */
   .font-display {
     font-family: var(--font-display), var(--font-inter), system-ui, sans-serif;
   }
@@ -370,7 +370,7 @@
     @apply bg-card/80 backdrop-blur-xl border border-border rounded-2xl;
   }
 
-  /* Translucent chrome (nav/toolbars/sheets) — content scrolls underneath.
+  /* Translucent chrome (nav/toolbars/sheets) - content scrolls underneath.
    * Tagged so the reduced-transparency and high-contrast rules can solidify it.
    * Do NOT hand-write `-webkit-backdrop-filter` here: Lightning CSS treats the
    * unprefixed declaration as overridden by a later prefixed one and drops it,
@@ -381,11 +381,11 @@
     backdrop-filter: blur(20px) saturate(180%);
   }
 
-  /* Primary CTA — border-first, Zapier orange (docs/DESIGN.md §4 Buttons) */
+  /* Primary CTA - border-first, Zapier orange (docs/DESIGN.md §4 Buttons) */
   .cta-button {
     @apply bg-primary text-primary-foreground border border-primary rounded-[4px] px-4 py-2.5 font-semibold
            hover:brightness-95 active:brightness-90;
-    /* brightness is a filter and transform is a transform — neither is covered
+    /* brightness is a filter and transform is a transform - neither is covered
      * by `transition-colors`, which is what this used to declare. */
     transition-property: color, background-color, border-color, filter, transform;
     transition-duration: var(--motion-response-fast);
@@ -454,7 +454,7 @@
   }
 }
 
-/* BetterStack Announcement Banner — follow app theme */
+/* BetterStack Announcement Banner - follow app theme */
 .betteruptime-announcement {
   top: unset;
   bottom: 0;

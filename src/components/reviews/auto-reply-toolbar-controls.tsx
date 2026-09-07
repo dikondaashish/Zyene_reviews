@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, CircleHelp, Loader2 } from "lucide-react";
+import { Bot, CircleHelp, Loader2, Star } from "lucide-react";
 
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -88,9 +88,12 @@ export function AutoReplyToolbarControls({
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="3">3★ and up</SelectItem>
-                                <SelectItem value="4">4★ and up</SelectItem>
-                                <SelectItem value="5">5★ only</SelectItem>
+                                {[3, 4, 5].map((rating) => (
+                                    <SelectItem key={rating} value={String(rating)}>
+                                        <Star className="mr-2 size-3.5 fill-chart-4 text-chart-4" aria-hidden="true" />
+                                        {rating} stars {rating === 5 ? "only" : "and up"}
+                                    </SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                     </div>

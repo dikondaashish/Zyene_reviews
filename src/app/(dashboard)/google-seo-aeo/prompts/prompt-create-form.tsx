@@ -17,10 +17,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { createPrompt } from "./prompt-actions";
 
 const INTENTS = [
-    { value: "discovery", label: "Discovery — “best plumber in Austin”" },
-    { value: "comparison", label: "Comparison — “X vs Y”" },
-    { value: "transactional", label: "Transactional — “book a plumber now”" },
-    { value: "branded", label: "Branded — “is Acme Plumbing any good”" },
+    { value: "discovery", label: "Discovery - “best plumber in Austin”" },
+    { value: "comparison", label: "Comparison - “X vs Y”" },
+    { value: "transactional", label: "Transactional - “book a plumber now”" },
+    { value: "branded", label: "Branded - “is Acme Plumbing any good”" },
 ] as const;
 
 export function PromptCreateForm({ businessId }: { businessId: string }) {

@@ -1,6 +1,6 @@
 /**
  * Clover sandbox/production env helpers.
- * Optional — routes return a clear error if unset (do not throw at import).
+ * Optional - routes return a clear error if unset (do not throw at import).
  */
 import { getAppBaseUrl } from "@/config/env";
 

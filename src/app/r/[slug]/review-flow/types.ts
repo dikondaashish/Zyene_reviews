@@ -12,7 +12,7 @@ export const RATINGS = [
 ] as const;
 
 export const DEFAULT_PRIVATE_FEEDBACK_OFFER_TEXT =
-    "We're sorry for the inconvenience. We'd like to make things right with a special offer for you — we'll follow up with the details.";
+    "We're sorry for the inconvenience. We'd like to make things right with a special offer for you - we'll follow up with the details.";
 
 export interface PublicReviewFlowProps {
     businessId: string;

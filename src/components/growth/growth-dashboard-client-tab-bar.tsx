@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { CheckCircle2 } from "lucide-react";
 import type { GrowthDashboardTabId } from "./growth-dashboard-client-types";
 
 interface GrowthDashboardClientTabBarProps {
@@ -45,9 +46,7 @@ export function GrowthDashboardClientTabBar({ tab, onTab, auditErrors }: GrowthD
                             />
                         ) : null}
                         {t.id === "audit" && auditErrors === 0 && tab !== "audit" ? (
-                            <span className="ml-1 text-chart-2" aria-hidden>
-                                ✓
-                            </span>
+                            <CheckCircle2 className="ml-1 inline-block size-3.5 text-chart-2" aria-hidden="true" />
                         ) : null}
                     </button>
                 );

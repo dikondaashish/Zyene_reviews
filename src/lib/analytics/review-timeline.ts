@@ -1,6 +1,6 @@
 /**
  * Analytics should follow when the review was written (platform review date),
- * not when the row was inserted — bulk Google syncs set `created_at` to sync time.
+ * not when the row was inserted - bulk Google syncs set `created_at` to sync time.
  */
 
 export type ReviewTimelineFields = {

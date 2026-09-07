@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Resource Guides Data — Phase 4
+// Resource Guides Data - Phase 4
 // 4 comprehensive, long-form guides targeting high-volume keyword clusters.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -20,7 +20,7 @@ export interface ResourceGuide {
     keywords: string[];
     tableOfContents: Array<{ anchor: string; label: string }>;
     body: ContentSection[];
-    /** 50–70 word GEO summary (template pack, etc.). */
+    /** 50-70 word GEO summary (template pack, etc.). */
     openingSummary?: string;
     /** Badge in header, e.g. Free Template Pack */
     resourceLabel?: string;
@@ -33,8 +33,8 @@ export interface ResourceGuide {
 const guide1: ResourceGuide = {
     slug: "google-reviews-guide",
     title: "The Complete Guide to Google Reviews",
-    subtitle: "Everything local business owners need to know about Google Reviews in 2026 — collection, responses, ranking, and reputation protection.",
-    excerpt: "The definitive guide to Google Reviews for local businesses. Covers collection strategy, response best practices, ranking impact, and protecting your rating.",
+    subtitle: "Everything local business owners need to know about Google Reviews in 2026 - collection, responses, ranking, and reputation protection.",
+    excerpt: "A practical guide to Google Reviews for local businesses, covering collection, responses, local ranking signals, and reputation work.",
     purpose: "Rank for 'google reviews' cluster keywords",
     lastUpdated: "2026-08-15",
     readMinutes: 18,
@@ -71,7 +71,7 @@ const guide1: ResourceGuide = {
         {
             question: "Can I respond to reviews from a mobile device?",
             answer:
-                "Yes—via the Google Maps app, Google Business Profile app, or business.google.com. A review management tool like Zyene Reviews lets you monitor Google, Facebook, and Yelp and reply from one inbox.",
+                "Yes - via the Google Maps app, Google Business Profile app, or business.google.com. A review management tool like Zyene Reviews lets you monitor Google, Facebook, and Yelp and reply from one inbox.",
         },
         {
             question: "Is it okay to ask customers for Google reviews?",
@@ -91,48 +91,48 @@ const guide1: ResourceGuide = {
     ],
     body: [
         { type: "h2", text: "What Are Google Reviews?" },
-        { type: "p", text: "Google Reviews are customer-generated ratings and written testimonials that appear on a business's Google Business Profile — the listing that shows in Google Maps and in local search results. Each review consists of a star rating (1–5 stars) and an optional written comment." },
+        { type: "p", text: "Google Reviews are customer-generated ratings and written testimonials that appear on a business's Google Business Profile - the listing that shows in Google Maps and in local search results. Each review consists of a star rating (1-5 stars) and an optional written comment." },
         { type: "p", text: "Only customers with a Google account can leave reviews, which provides some level of authenticity verification. Businesses can respond to reviews publicly, and those responses are visible to all visitors to the Google Business Profile." },
         { type: "h2", text: "Why Google Reviews Matter" },
-        { type: "p", text: "Google Reviews are the most influential source of social proof for local businesses. Unlike paid advertising, review content is created by real customers based on real experiences — which is why consumers trust them as much as personal recommendations from friends." },
+        { type: "p", text: "Google Reviews appear beside a business in Google Search and Maps, so customers often read them before they call, visit, or book. They describe individual experiences; they are not a substitute for checking the business's services, policies, or current information." },
         { type: "ul", items: [
             "93% of consumers read online reviews before visiting a local business",
-            "Reviews are the #1 factor in Google local (Maps) search ranking",
-            "A 1-star increase correlates with 5–9% revenue increase for independent businesses",
+            "Reviews are one of several signals Google considers in local Maps results",
+            "A 1-star increase correlates with 5-9% revenue increase for independent businesses",
             "88% of consumers say they trust online reviews as much as personal recommendations",
             "53% of customers expect businesses to respond to reviews within a week",
         ]},
         { type: "h2", text: "How to Get More Reviews" },
         { type: "h3", text: "The Fundamental Rule: Ask" },
-        { type: "p", text: "The most impactful thing you can do to increase your review count is to ask for reviews systematically. 70–80% of customers who have a positive experience will leave a review if asked directly — but most businesses never ask, leaving the vast majority of happy customers silent while the occasional unhappy customer takes the initiative to write a 1-star review." },
+        { type: "p", text: "The most impactful thing you can do to increase your review count is to ask for reviews systematically. 70-80% of customers who have a positive experience will leave a review if asked directly - but most businesses never ask, leaving the vast majority of happy customers silent while the occasional unhappy customer takes the initiative to write a 1-star review." },
         { type: "h3", text: "When to Ask (Timing Is Everything)" },
-        { type: "p", text: "Ask within 1–3 hours of a positive interaction. This is when customer satisfaction is highest, the experience is vivid, and the likelihood of a review is greatest. Review requests sent days later see 60–70% lower conversion rates." },
+        { type: "p", text: "Ask within 1-3 hours of a positive interaction. This is when customer satisfaction is highest, the experience is vivid, and the likelihood of a review is greatest. Review requests sent days later see 60-70% lower conversion rates." },
         { type: "h3", text: "How to Ask (Channel and Script)" },
         { type: "table", table: {
             headers: ["Channel", "Best Timing", "Response Rate", "Script Length"],
             rows: [
-                ["SMS", "1–2 hrs after visit/purchase", "15–25%", "Under 160 characters"],
-                ["Email", "Within 24 hrs", "5–10%", "3–5 sentences"],
+                ["SMS", "1-2 hrs after visit/purchase", "15-25%", "Under 160 characters"],
+                ["Email", "Within 24 hrs", "5-10%", "3-5 sentences"],
                 ["QR code (in-person)", "At payment / exit", "Varies", "1 line + QR"],
-                ["Automated (post-completion)", "Trigger-based", "12–22%", "2–3 sentences"],
+                ["Automated (post-completion)", "Trigger-based", "12-22%", "2-3 sentences"],
             ],
         }},
         { type: "h3", text: "Google's Rules on Review Collection" },
         { type: "ul", items: [
-            "Never offer incentives (discounts, freebies) in exchange for reviews — this violates Google's policies and can result in review removal or GBP suspension.",
+            "Never offer incentives (discounts, freebies) in exchange for reviews - this violates Google's policies and can result in review removal or GBP suspension.",
             "Never dictate specific review content to customers ('please say X in your review').",
             "Never use review gating: you cannot filter customers to only send review requests to satisfied ones.",
             "Asking customers who are in your premises on your business WiFi is against Google's policies.",
-            "You CAN ask all customers to leave honest reviews — positive and negative.",
+            "You CAN ask all customers to leave honest reviews - positive and negative.",
         ]},
         { type: "h2", text: "Responding to Reviews" },
         { type: "h3", text: "Why Responding Matters" },
         { type: "p", text: "Responding to reviews shows customers that you are engaged and accountable, gives you an opportunity to add context or resolve issues publicly, and follows Google's guidance for helping a Business Profile stand out. Google does not publish response rate as a separate ranking factor." },
         { type: "h3", text: "Best Practices for Positive Review Responses" },
         { type: "ul", items: [
-            "Always personalize — mention the reviewer's name and at least one specific detail from their review.",
-            "Keep it brief — 2–4 sentences is ideal. Long responses to positive reviews can seem excessive.",
-            "Naturally mention your services or location when relevant: 'We're so glad the deep cleaning went well — see you at our Austin office next time!'",
+            "Always personalize - mention the reviewer's name and at least one specific detail from their review.",
+            "Keep it brief - 2-4 sentences is ideal. Long responses to positive reviews can seem excessive.",
+            "Naturally mention your services or location when relevant: 'We're so glad the deep cleaning went well - see you at our Austin office next time!'",
             "Vary your opening phrases. Never use the same opener in consecutive responses.",
         ]},
         { type: "h3", text: "The Framework for Negative Review Responses" },
@@ -155,18 +155,18 @@ const guide1: ResourceGuide = {
         ]},
         { type: "h2", text: "Protecting Your Rating" },
         { type: "h3", text: "The Negative Feedback Shield Approach" },
-        { type: "p", text: "The most effective way to protect your Google rating is to intercept unhappy customers before they go to Google. When customers have a complaint, they typically have two options: tell you about it directly, or write a public review. Most choose the path of least resistance — which, in the smartphone era, is a 1-star Google review from the parking lot." },
-        { type: "p", text: "A Negative Feedback Shield changes this dynamic by creating a prominent private resolution channel in your review request flow. When a customer indicates they were not satisfied, they're routed to a private form where they can share feedback directly with you — rather than being taken straight to Google's review page." },
+        { type: "p", text: "A private feedback option gives customers a direct way to describe a problem to the business. It can help the team respond sooner, but it should not be used to discourage public reviews or selectively invite only satisfied customers." },
+        { type: "p", text: "Negative Feedback Shield adds that private feedback step to Zyene Reviews review requests. Use it for service recovery and follow-up, alongside fair review requests and public responses." },
         { type: "h3", text: "How to Handle Fake Reviews" },
         { type: "ul", items: [
             "Document the review with screenshots before doing anything.",
             "Flag it using the ⋮ menu next to the review in Google Maps ('Report review' → 'Spam or fake').",
-            "Escalate to Google Business Profile support if the flag doesn't result in removal within 7–10 days.",
-            "Respond professionally and briefly — don't argue, but signal to readers that the review may not be authentic.",
+            "Escalate to Google Business Profile support if the flag doesn't result in removal within 7-10 days.",
+            "Respond professionally and briefly - don't argue, but signal to readers that the review may not be authentic.",
             "Accelerate legitimate review collection to dilute the fake review's impact.",
         ]},
         { type: "h2", text: "Tools and Automation" },
-        { type: "p", text: "Manually managing Google Reviews — monitoring multiple platforms, sending individual requests, writing responses, and tracking competitors — is unsustainable for busy business owners. Review management software automates the repetitive work and ensures nothing falls through the cracks." },
+        { type: "p", text: "With several platforms, manual review work means checking separate inboxes, sending individual requests, writing replies, and tracking follow-ups. Review management software puts those recurring tasks in one place." },
         { type: "p", text: "Key features to look for in a review management tool:" },
         { type: "ul", items: [
             "Real-time review alerts across Google, Facebook, and Yelp",
@@ -182,9 +182,9 @@ const guide1: ResourceGuide = {
         { type: "h3", text: "Can I remove a negative Google review?" },
         { type: "p", text: "You cannot unilaterally remove a Google review. You can flag it for removal if it violates Google's policies (spam, fake, offensive content). Google then decides whether to remove it. If the review is genuine, the best approach is a professional response and ongoing review collection to dilute its impact." },
         { type: "h3", text: "How long does it take for a review to appear?" },
-        { type: "p", text: "Most Google reviews appear within minutes to hours. Occasionally, Google's spam filters hold reviews for review, which can take 1–3 days. If a customer tells you they left a review but you can't see it, ask them to check if it's showing on their own profile." },
+        { type: "p", text: "Most Google reviews appear within minutes to hours. Occasionally, Google's spam filters hold reviews for review, which can take 1-3 days. If a customer tells you they left a review but you can't see it, ask them to check if it's showing on their own profile." },
         { type: "h3", text: "Do Google Reviews affect my website's SEO?" },
-        { type: "p", text: "Google Reviews primarily affect local search rankings (Google Maps / Local 3-Pack) rather than traditional organic website SEO. However, review schema markup on your website can display star ratings in organic search results (rich snippets), which improves click-through rates." },
+        { type: "p", text: "Google Reviews are mainly relevant to local search in Google Maps and the Local 3-Pack, not to every organic ranking for your website. Review markup may qualify a page for a rich result, but Google decides whether to show it and does not guarantee a click-through improvement." },
         { type: "h3", text: "Can I respond to reviews from a mobile device?" },
         { type: "p", text: "Yes. You can respond to reviews through the Google Maps app, the Google Business Profile app, or any browser via business.google.com. Using a review management tool like Zyene lets you monitor and respond from a single dashboard across all platforms." },
     ],
@@ -193,7 +193,7 @@ const guide1: ResourceGuide = {
 const guide2: ResourceGuide = {
     slug: "negative-review-templates",
     title: "Negative Review Response Templates (20+ Ready-to-Use)",
-    subtitle: "Copy-paste response templates for every type of negative Google review — organized by complaint category and industry.",
+    subtitle: "Copy-paste response templates for every type of negative Google review - organized by complaint category and industry.",
     excerpt: "20+ ready-to-use templates for responding to negative Google reviews. Organized by complaint type: service quality, wait time, billing, staff attitude, and more.",
     purpose: "Rank for 'how to respond to bad reviews' cluster",
     lastUpdated: "2026-05-25",
@@ -202,7 +202,7 @@ const guide2: ResourceGuide = {
     metaDescription: "Ready-to-use templates for responding to any negative Google review. 20+ templates organized by complaint type with customization instructions.",
     keywords: ["negative review response templates", "how to respond to bad reviews", "google review response templates", "1 star review response", "bad review templates"],
     openingSummary:
-        "Use these 20+ negative review response templates when a Google review needs a calm, professional reply. Each script follows a short framework—acknowledge, apologize where appropriate, invite private resolution—and stays under 150 words. Personalize every response; templates are starting points, not copy-paste spam.",
+        "Use these 20+ negative review response templates when a Google review needs a calm, professional reply. Each script follows a short framework - acknowledge, apologize where appropriate, invite private resolution - and stays under 150 words. Personalize every response; templates are starting points, not copy-paste spam.",
     internalLinks: [
         { label: "Review collection & Shield", href: "/features/review-collection" },
         { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
@@ -225,7 +225,7 @@ const guide2: ResourceGuide = {
         {
             question: "Can I use the same template twice in a row?",
             answer:
-                "Avoid repeating identical openers or full scripts on consecutive reviews—readers notice patterns. Swap opening phrases and reference different details from each review even when the complaint category is the same.",
+                "Avoid repeating identical openers or full scripts on consecutive reviews - readers notice patterns. Swap opening phrases and reference different details from each review even when the complaint category is the same.",
         },
         {
             question: "What if the review seems fake or from someone who never visited?",
@@ -235,7 +235,7 @@ const guide2: ResourceGuide = {
         {
             question: "Should I offer a refund or discount in the public reply?",
             answer:
-                "Keep specific offers in private follow-up when possible. Public replies should focus on empathy and a direct contact path. Do not tie any incentive to changing or removing a review—that violates platform policies.",
+                "Keep specific offers in private follow-up when possible. Public replies should focus on empathy and a direct contact path. Do not tie any incentive to changing or removing a review - that violates platform policies.",
         },
     ],
     tableOfContents: [
@@ -260,50 +260,50 @@ const guide2: ResourceGuide = {
         ]},
         { type: "h2", text: "Service Quality Complaint Templates" },
         { type: "h3", text: "Template SQ-1: General Service Quality" },
-        { type: "quote", text: "Hi [Name], thank you for your honest feedback. We're genuinely sorry your experience didn't reflect the quality we work hard to provide. What you described is not the standard we hold ourselves to, and we've shared your feedback directly with our team. We'd love the opportunity to make this right — please reach out to us at [email] or [phone] and we'll take care of you personally. We hope to see you again." },
+        { type: "quote", text: "Hi [Name], thank you for your honest feedback. We're genuinely sorry your experience didn't reflect the quality we work hard to provide. What you described is not the standard we hold ourselves to, and we've shared your feedback directly with our team. We'd love the opportunity to make this right - please reach out to us at [email] or [phone] and we'll take care of you personally. We hope to see you again." },
         { type: "h3", text: "Template SQ-2: Incomplete or Rushed Service" },
-        { type: "quote", text: "Hi [Name], thank you for letting us know about this. We're sorry your visit felt rushed — that's not the experience we want you to have, and I understand your frustration. We've addressed this with the relevant team members. If you'd be willing to give us another chance, please contact us at [email] — we'd like to ensure your next experience reflects what we're truly capable of." },
+        { type: "quote", text: "Hi [Name], thank you for letting us know about this. We're sorry your visit felt rushed - that's not the experience we want you to have, and I understand your frustration. We've addressed this with the relevant team members. If you'd be willing to give us another chance, please contact us at [email] - we'd like to ensure your next experience reflects what we're truly capable of." },
         { type: "h3", text: "Template SQ-3: Miscommunication About Service Scope" },
-        { type: "quote", text: "Hi [Name], we appreciate you sharing this. We're sorry there was a miscommunication about what was included in your service — that's something we should have made clearer upfront. We're reviewing how we communicate our service scope to prevent this for future customers. Please reach out to us at [email] if you'd like to discuss your specific experience further — we value your business." },
+        { type: "quote", text: "Hi [Name], we appreciate you sharing this. We're sorry there was a miscommunication about what was included in your service - that's something we should have made clearer upfront. We're reviewing how we communicate our service scope to prevent this for future customers. Please reach out to us at [email] if you'd like to discuss your specific experience further - we value your business." },
         { type: "h2", text: "Wait Time & Availability Templates" },
         { type: "h3", text: "Template WT-1: Excessive Wait Time" },
-        { type: "quote", text: "Hi [Name], thank you for this feedback. We sincerely apologize for the wait you experienced — we know your time is valuable and we clearly didn't manage our schedule well that day. We're looking at our staffing and scheduling to address this. If you'd like to give us another opportunity, please call us at [phone] to book directly — we'll make sure you're prioritized. Thank you for your patience." },
+        { type: "quote", text: "Hi [Name], thank you for this feedback. We sincerely apologize for the wait you experienced - we know your time is valuable and we clearly didn't manage our schedule well that day. We're looking at our staffing and scheduling to address this. If you'd like to give us another opportunity, please call us at [phone] to book directly - we'll make sure you're prioritized. Thank you for your patience." },
         { type: "h3", text: "Template WT-2: Couldn't Get an Appointment" },
-        { type: "quote", text: "Hi [Name], we're so sorry you had trouble getting an appointment. We've been experiencing high demand, and we clearly haven't done enough to accommodate everyone who wants to see us. We're working to expand our availability. Please reach out to us at [email] or [phone] — we'll personally help find a time that works for you." },
+        { type: "quote", text: "Hi [Name], we're so sorry you had trouble getting an appointment. We've been experiencing high demand, and we clearly haven't done enough to accommodate everyone who wants to see us. We're working to expand our availability. Please reach out to us at [email] or [phone] - we'll personally help find a time that works for you." },
         { type: "h2", text: "Billing & Pricing Templates" },
         { type: "h3", text: "Template BP-1: Unexpected Charges" },
-        { type: "quote", text: "Hi [Name], thank you for bringing this to our attention. We're sorry you were surprised by the charges on your bill — that's not the experience we want our customers to have, and clearer upfront communication is something we're actively improving. Please reach out to us at [email] or call [phone] and ask for [manager name]. We'll review your account personally and make sure you feel treated fairly." },
+        { type: "quote", text: "Hi [Name], thank you for bringing this to our attention. We're sorry you were surprised by the charges on your bill - that's not the experience we want our customers to have, and clearer upfront communication is something we're actively improving. Please reach out to us at [email] or call [phone] and ask for [manager name]. We'll review your account personally and make sure you feel treated fairly." },
         { type: "h3", text: "Template BP-2: Price vs. Value Complaint" },
-        { type: "quote", text: "Hi [Name], we appreciate your honest feedback. We understand that value is personal, and we're sorry the experience didn't feel worth the price for you. We take pricing feedback seriously as we think about how to better communicate what's included. If there's anything specific we could have done differently, we'd love to hear more — please reach out at [email]. Thank you." },
+        { type: "quote", text: "Hi [Name], we appreciate your honest feedback. We understand that value is personal, and we're sorry the experience didn't feel worth the price for you. We take pricing feedback seriously as we think about how to better communicate what's included. If there's anything specific we could have done differently, we'd love to hear more - please reach out at [email]. Thank you." },
         { type: "h3", text: "Template BP-3: Billing Error" },
-        { type: "quote", text: "Hi [Name], thank you for letting us know about this. Billing errors should simply not happen, and we're genuinely sorry this was your experience. Please contact us immediately at [email] or [phone] and ask for [name] — we'll review your account, correct any error, and make sure this is fully resolved. This has our full attention." },
+        { type: "quote", text: "Hi [Name], thank you for letting us know about this. Billing errors should simply not happen, and we're genuinely sorry this was your experience. Please contact us immediately at [email] or [phone] and ask for [name] - we'll review your account, correct any error, and make sure this is fully resolved. This has our full attention." },
         { type: "h2", text: "Staff Attitude & Communication Templates" },
         { type: "h3", text: "Template SA-1: Rude or Dismissive Staff" },
-        { type: "quote", text: "Hi [Name], thank you for taking the time to share this. We're very sorry about the interaction you experienced — this falls far below the respectful, professional standard we hold our entire team to. I've shared your feedback directly with our management team and it will be addressed. We'd appreciate the chance to restore your confidence in us — please reach out at [email]. Thank you for holding us accountable." },
+        { type: "quote", text: "Hi [Name], thank you for taking the time to share this. We're very sorry about the interaction you experienced - this falls far below the respectful, professional standard we hold our entire team to. I've shared your feedback directly with our management team and it will be addressed. We'd appreciate the chance to restore your confidence in us - please reach out at [email]. Thank you for holding us accountable." },
         { type: "h3", text: "Template SA-2: Communication Failure" },
-        { type: "quote", text: "Hi [Name], thank you for this feedback. We're sorry that communication about [the issue] wasn't clear — we should have been more proactive in keeping you informed. That's a process gap we're actively working to close. If you'd be willing to discuss this further, please reach out at [email] — we'd like to understand your experience in more detail and do better." },
+        { type: "quote", text: "Hi [Name], thank you for this feedback. We're sorry that communication about [the issue] wasn't clear - we should have been more proactive in keeping you informed. That's a process gap we're actively working to close. If you'd be willing to discuss this further, please reach out at [email] - we'd like to understand your experience in more detail and do better." },
         { type: "h2", text: "Product Quality Templates" },
         { type: "h3", text: "Template PQ-1: Product Quality Below Expectations" },
-        { type: "quote", text: "Hi [Name], thank you for your honest feedback. We're disappointed to hear the [product] didn't meet your expectations — that's not the standard we hold ourselves to. We'd like to understand more about your specific experience. Please reach out to us at [email] and we'll make this right. Your feedback also helps us improve for every customer who comes after you." },
+        { type: "quote", text: "Hi [Name], thank you for your honest feedback. We're disappointed to hear the [product] didn't meet your expectations - that's not the standard we hold ourselves to. We'd like to understand more about your specific experience. Please reach out to us at [email] and we'll make this right. Your feedback also helps us improve for every customer who comes after you." },
         { type: "h3", text: "Template PQ-2: Damaged or Incorrect Product" },
-        { type: "quote", text: "Hi [Name], we sincerely apologize for this. Receiving a damaged or incorrect [product] is completely unacceptable, and we want to fix this right away. Please contact us at [email] or [phone] with your order details and we'll send a replacement and/or process a refund — no questions asked. Thank you for letting us know." },
+        { type: "quote", text: "Hi [Name], we sincerely apologize for this. Receiving a damaged or incorrect [product] is completely unacceptable, and we want to fix this right away. Please contact us at [email] or [phone] with your order details and we'll send a replacement and/or process a refund - no questions asked. Thank you for letting us know." },
         { type: "h2", text: "Vague or Unverifiable Review Templates" },
         { type: "h3", text: "Template VU-1: Minimal Information" },
-        { type: "quote", text: "Hi [Name], we're sorry to see you had a disappointing experience. We'd genuinely like to understand what happened so we can make it right. Please reach out to us at [email] — we'd love to speak with you directly and address your concerns properly. Thank you for taking the time to share your experience." },
+        { type: "quote", text: "Hi [Name], we're sorry to see you had a disappointing experience. We'd genuinely like to understand what happened so we can make it right. Please reach out to us at [email] - we'd love to speak with you directly and address your concerns properly. Thank you for taking the time to share your experience." },
         { type: "h3", text: "Template VU-2: No Record of Visit" },
-        { type: "quote", text: "Hi [Name], thank you for the feedback. We're sorry to hear about your experience — however, we're having difficulty matching your visit with our records so we can address it properly. If you've had a genuine issue, we sincerely want to resolve it. Please reach out to us at [email] with any details you can share about your visit so we can look into this further." },
+        { type: "quote", text: "Hi [Name], thank you for the feedback. We're sorry to hear about your experience - however, we're having difficulty matching your visit with our records so we can address it properly. If you've had a genuine issue, we sincerely want to resolve it. Please reach out to us at [email] with any details you can share about your visit so we can look into this further." },
         { type: "h2", text: "Suspected Fake Review Templates" },
         { type: "h3", text: "Template FR-1: Suspected Fake (Neutral Tone)" },
-        { type: "quote", text: "Thank you for the feedback. We've reviewed our records and are unable to verify this visit. If you're a real customer who had a genuine concern, we sincerely want to hear from you — please reach out to us directly at [email] with your visit details. We take all feedback seriously and are investigating this review further." },
+        { type: "quote", text: "Thank you for the feedback. We've reviewed our records and are unable to verify this visit. If you're a real customer who had a genuine concern, we sincerely want to hear from you - please reach out to us directly at [email] with your visit details. We take all feedback seriously and are investigating this review further." },
         { type: "h2", text: "How to Customize These Templates" },
         { type: "ol", items: [
             "Replace all [bracketed] placeholders with real information: reviewer's name, your email, manager name, relevant product/service details.",
             "Add 1 specific detail from the review: mention the exact issue they raised in their specific language to show you actually read it.",
             "Adjust the tone to match your brand: a family-owned restaurant can be warmer; a healthcare practice should be more formal.",
             "Never use the same template twice in a row: vary your opening phrase at minimum. Readers can spot template patterns.",
-            "Read it out loud before publishing: if anything sounds robotic, defensive, or insincere — edit it.",
+            "Read it out loud before publishing: if anything sounds robotic, defensive, or insincere - edit it.",
         ]},
-        { type: "tip", text: "Zyene's AI reply feature generates customized response drafts for every review — positive and negative — that you then personalize before publishing. It uses the structure of these templates as a foundation and adapts the language to each specific review." },
+        { type: "tip", text: "Zyene's AI reply feature generates customized response drafts for every review - positive and negative - that you then personalize before publishing. It uses the structure of these templates as a foundation and adapts the language to each specific review." },
         { type: "cta", ctaLabel: "Try AI-powered review replies with Zyene →", ctaHref: "/signup" },
     ],
 };
@@ -311,14 +311,14 @@ const guide2: ResourceGuide = {
 const guide3: ResourceGuide = {
     slug: "local-seo-checklist",
     title: "Local SEO Checklist for 2026 (40+ Action Items)",
-    subtitle: "The complete local SEO checklist for local business owners — Google Business Profile, citations, reviews, on-page optimization, and more.",
-    excerpt: "The complete 2026 local SEO checklist. 40+ action items across Google Business Profile, citations, reviews, on-page optimization, and link building — all for local businesses.",
+    subtitle: "The complete local SEO checklist for local business owners - Google Business Profile, citations, reviews, on-page optimization, and more.",
+    excerpt: "The complete 2026 local SEO checklist. 40+ action items across Google Business Profile, citations, reviews, on-page optimization, and link building - all for local businesses.",
     purpose: "Rank for 'local SEO checklist' and 'local SEO 2026' clusters",
     lastUpdated: "2026-05-25",
     readMinutes: 16,
     metaTitle: "Local SEO Checklist for 2026 (40+ Action Items)",
     metaDescription:
-        "Local SEO checklist for 2026: 40+ action items for Google Business Profile, citations, reviews, on-page SEO, and links—built for local business owners.",
+        "Local SEO checklist for 2026: 40+ action items for Google Business Profile, citations, reviews, on-page SEO, and links - built for local business owners.",
     keywords: ["local seo checklist", "local seo checklist 2026", "local business seo checklist", "google local seo", "local seo guide 2026"],
     resourceLabel: "Free Checklist",
     openingSummary:
@@ -345,7 +345,7 @@ const guide3: ResourceGuide = {
         {
             question: "How many Google reviews do I need for local SEO?",
             answer:
-                "There is no fixed number—competitive categories often need dozens to hundreds of reviews with steady recency. Focus on consistent monthly collection and owner responses rather than a one-time push.",
+                "There is no fixed number - competitive categories often need dozens to hundreds of reviews with steady recency. Focus on consistent monthly collection and owner responses rather than a one-time push.",
         },
         {
             question: "Does NAP consistency still matter in 2026?",
@@ -355,7 +355,7 @@ const guide3: ResourceGuide = {
         {
             question: "What is the fastest local SEO win on this checklist?",
             answer:
-                "Completing and verifying your Google Business Profile—categories, services, photos, hours, and Q&A—often delivers the quickest visibility lift before you tackle citations and link building.",
+                "Completing and verifying your Google Business Profile - categories, services, photos, hours, and Q&A - often delivers the quickest visibility lift before you tackle citations and link building.",
         },
     ],
     howToSteps: [
@@ -369,7 +369,7 @@ const guide3: ResourceGuide = {
         },
         {
             name: "Set up review collection and responses",
-            text: "Ask customers fairly after visits, respond to every review within 48 hours, and use private feedback channels to resolve issues—not to block honest public reviews.",
+            text: "Ask customers fairly after visits, respond to every review within 48 hours, and use private feedback channels to resolve issues - not to block honest public reviews.",
         },
         {
             name: "Optimize location pages on your website",
@@ -393,9 +393,9 @@ const guide3: ResourceGuide = {
     ],
     body: [
         { type: "h2", text: "Section 1: Google Business Profile Optimization" },
-        { type: "p", text: "Your Google Business Profile is the foundation of local SEO. Complete and active GBPs consistently outrank incomplete ones — regardless of competition." },
+        { type: "p", text: "Your Google Business Profile supplies the basic facts Google uses to understand a local business. Complete the profile, keep hours and services current, and measure local performance against nearby competitors rather than assuming completeness guarantees a higher position." },
         { type: "ul", items: [
-            "☐ Business name: Exact legal/operating name — no keyword stuffing",
+            "☐ Business name: Exact legal/operating name - no keyword stuffing",
             "☐ Primary category: Most specific category that accurately describes your primary service",
             "☐ Additional categories: Up to 9 secondary categories for related services",
             "☐ Complete address verified and consistent with your website",
@@ -413,7 +413,7 @@ const guide3: ResourceGuide = {
             "☐ Reviews response rate: 100% of reviews responded to within 48 hours",
         ]},
         { type: "h2", text: "Section 2: NAP Consistency & Citations" },
-        { type: "p", text: "NAP (Name, Address, Phone) consistency across the web is a foundational local SEO signal. Inconsistent citations — your name spelled differently, old addresses, wrong phone numbers — confuse Google and dilute your Prominence score." },
+        { type: "p", text: "NAP (Name, Address, Phone) consistency across the web is a foundational local SEO signal. Inconsistent citations - your name spelled differently, old addresses, wrong phone numbers - confuse Google and dilute your Prominence score." },
         { type: "ul", items: [
             "☐ NAP is identical across your website, GBP, Yelp, Facebook, and all major directories",
             "☐ Yelp profile: Complete with photos, hours, and responding to reviews",
@@ -429,11 +429,11 @@ const guide3: ResourceGuide = {
         { type: "h2", text: "Section 3: Reviews" },
         {
             type: "warning",
-            text: "Review outreach compliance: Ask customers honestly for feedback. Do not offer incentives tied to star ratings, do not send review links only to happy customers (review gating), and do not pressure people with repeated messages. Use private feedback to resolve issues—not to block legitimate public criticism.",
+            text: "Review outreach compliance: Ask customers honestly for feedback. Do not offer incentives tied to star ratings, do not send review links only to happy customers (review gating), and do not pressure people with repeated messages. Use private feedback to resolve issues - not to block legitimate public criticism.",
         },
         { type: "ul", items: [
             "☐ Google review count: 50+ (competitive minimum), 100+ (preferred)",
-            "☐ Review velocity: 5–10 new reviews per month minimum",
+            "☐ Review velocity: 5-10 new reviews per month minimum",
             "☐ Average rating: 4.0+ (4.4+ preferred for competitive categories)",
             "☐ Review response rate: 100% of reviews responded to",
             "☐ Review response time: Under 48 hours for all, under 24 hours for negative",
@@ -445,7 +445,7 @@ const guide3: ResourceGuide = {
         { type: "h2", text: "Section 4: On-Page Website Optimization" },
         { type: "ul", items: [
             "☐ Title tag: City + primary keyword + business name (e.g., 'Austin Family Dentist | Bright Smiles Dental')",
-            "☐ Meta description: 150–160 characters, includes city and primary keyword",
+            "☐ Meta description: 150-160 characters, includes city and primary keyword",
             "☐ H1 tag: Contains primary keyword and city",
             "☐ Content: 500+ words on homepage mentioning city, neighborhood, and primary services",
             "☐ NAP on website: Name, address, and phone number in text (not just image) on homepage footer and contact page",
@@ -485,13 +485,13 @@ const guide3: ResourceGuide = {
         ]},
         { type: "h2", text: "Section 8: Tracking Your Results" },
         { type: "ul", items: [
-            "☐ Google Business Profile Insights: Review weekly — impressions, direction requests, calls, website clicks",
+            "☐ Google Business Profile Insights: Review weekly - impressions, direction requests, calls, website clicks",
             "☐ GBP keyword performance: What searches are driving views (Zyene dashboard or Google Search Console with local filter)",
             "☐ Google Search Console: Local keyword rankings and click-through rates",
             "☐ Google Analytics 4: Track conversions from local organic traffic (calls, form submissions, bookings)",
-            "☐ Local rank tracking: Weekly check of your ranking for top 5–10 target keywords in your city",
+            "☐ Local rank tracking: Weekly check of your ranking for top 5-10 target keywords in your city",
         ]},
-        { type: "tip", text: "Zyene's GBP keyword performance dashboard shows you which search queries are driving impressions and clicks to your Google Business Profile — data that's hard to extract from Google's native tools alone." },
+        { type: "tip", text: "Zyene's GBP keyword performance dashboard shows you which search queries are driving impressions and clicks to your Google Business Profile - data that's hard to extract from Google's native tools alone." },
         { type: "cta", ctaLabel: "Track your local SEO performance with Zyene →", ctaHref: "/features" },
     ],
 };

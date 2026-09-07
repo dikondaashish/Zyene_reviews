@@ -3,13 +3,13 @@
  * HTML, without a DOM parser. Regex over well-formed markup is fragile in
  * general; it is acceptable here because every field extracted comes from a
  * single, narrowly-shaped tag (`<title>`, one `<link rel=canonical>`, one
- * `<meta name=robots>`) rather than anything requiring real tree structure —
+ * `<meta name=robots>`) rather than anything requiring real tree structure -
  * the moment F5.4's JSON-LD validation is built, THAT will need a real
  * parser, and should get one rather than stretching this file to cover it.
  *
  * Attribute order is NOT assumed. Wolfpack's own live site (checked
- * 2026-08-09) renders `<link href="..." rel="canonical"/>` — href before
- * rel — which an order-assuming regex misses on real, current production
+ * 2026-08-09) renders `<link href="..." rel="canonical"/>` - href before
+ * rel - which an order-assuming regex misses on real, current production
  * markup, not just a hypothetical edge case.
  */
 export type PageSignals = {

@@ -25,7 +25,7 @@ export async function generateMetadata(
 
     if (isHelpCategory(slug)) {
         const cat = HELP_CATEGORIES[slug];
-        const catTitle = `${cat.label} — Help Center`;
+        const catTitle = `${cat.label} - Help Center`;
         return mergeMarketingSocial({
             title: catTitle,
             description: cat.description,

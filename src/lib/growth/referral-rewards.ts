@@ -78,7 +78,7 @@ export async function processReferralConversionReward(refereeOrganizationId: str
             await stripe.customers.createBalanceTransaction(referrerCustomerId, {
                 amount: -rewardCents,
                 currency: "usd",
-                description: "Referral reward — 1 month credit (Phase 7)",
+                description: "Referral reward - 1 month credit (Phase 7)",
             });
         } catch (err) {
             logger.error({ err: err }, "[referral] Stripe balance credit failed:");
@@ -101,7 +101,7 @@ export async function processReferralConversionReward(refereeOrganizationId: str
         try {
             await sendEmail({
                 to: referrerUser.email,
-                subject: "You earned a free month — referral reward",
+                subject: "You earned a free month - referral reward",
                 html: referralRewardEmailHtml(name),
             });
         } catch (err) {

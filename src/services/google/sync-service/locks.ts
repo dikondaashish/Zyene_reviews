@@ -1,4 +1,4 @@
-/** Google review sync — locks */
+/** Google review sync - locks */
 
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
@@ -60,4 +60,3 @@ export function enforceSyncCooldown(platform: { last_synced_at?: string | null; 
         throw createSyncError("Please wait before syncing again.", "RATE_LIMIT");
     }
 }
-

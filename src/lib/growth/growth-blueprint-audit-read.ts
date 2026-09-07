@@ -40,7 +40,7 @@ export const REQUIRED_ROUTE_FILES: Record<string, string> = {
     "/help/[slug]/[article]": "help/[slug]/[article]/page.tsx",
 };
 
-/** Blueprint § Page Architecture — required live marketing URLs */
+/** Blueprint § Page Architecture - required live marketing URLs */
 export const BLUEPRINT_REQUIRED_PATHS: string[] = [
     "/",
     "/about",

@@ -6,7 +6,7 @@ import { findLocalRank, readLocalPack, type LocalRankResult } from "./local-rank
  * PRD-5 geo-grid: search the same keyword from N x N real coordinates and record
  * where the business actually ranks in each local pack.
  *
- * Replaces the heuristic heatmap, which never issued a search — it generated
+ * Replaces the heuristic heatmap, which never issued a search - it generated
  * cell labels from the business's city and a "rank" from its star rating. Every
  * number here comes from a request Google actually answered.
  *

@@ -20,7 +20,7 @@ const IMPACT_LABEL: Record<ImpactLevel, string> = {
     no_demonstrated_impact: "No demonstrated impact",
 };
 
-/** F5.12: impact badge only rendered when it says something beyond "we don't know" — no_demonstrated_impact with zero prompts is not worth a badge on every row. */
+/** F5.12: impact badge only rendered when it says something beyond "we don't know" - no_demonstrated_impact with zero prompts is not worth a badge on every row. */
 function ImpactBadge({ finding }: { finding: AuditFinding }) {
     if (finding.impact.level === "no_demonstrated_impact") return null;
     return (
@@ -38,7 +38,7 @@ export function AuditFindingsList({ findings }: { findings: AuditFinding[] }) {
         return (
             <div className="flex items-center gap-2 py-6 text-sm text-muted-foreground">
                 <CheckCircle2 className="size-4 text-chart-2" />
-                No findings — this crawl found nothing to flag.
+                No findings - this crawl found nothing to flag.
             </div>
         );
     }

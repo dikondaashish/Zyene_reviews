@@ -7,7 +7,7 @@ import type { DataForSeoItem } from "./dataforseo-client";
  * contract, so the rules are worth stating:
  *
  * 1. Only what DataForSEO returned goes in, in the order it returned it. No
- *    scoring, no summarising, no inference. The serialisation is EVIDENCE — a
+ *    scoring, no summarising, no inference. The serialisation is EVIDENCE - a
  *    human reading a stored sample sees the SERP as it was.
  * 2. The local pack comes before organic results, because that is the order
  *    Google presents them and prominence is measured by position.
@@ -27,7 +27,7 @@ function localPackLine(item: DataForSeoItem, index: number): string | null {
     const rating = item.rating?.value;
     const votes = item.rating?.votes_count;
     const suffix =
-        rating !== undefined ? ` — ${rating}★${votes !== undefined ? ` (${votes} reviews)` : ""}` : "";
+        rating !== undefined ? ` - ${rating}★${votes !== undefined ? ` (${votes} reviews)` : ""}` : "";
     return `${index}. ${title}${suffix}`;
 }
 
@@ -39,7 +39,7 @@ function organicLine(item: DataForSeoItem, index: number): string | null {
     return [
         `${index}. ${title}`,
         domain ? ` [${domain}]` : "",
-        snippet ? ` — ${snippet}` : "",
+        snippet ? ` - ${snippet}` : "",
     ].join("");
 }
 
@@ -81,7 +81,7 @@ export function serializeSerp(items: readonly DataForSeoItem[]): SerializedSurfa
  * AI Overview text lives in nested `items`, and its sources in `references`.
  *
  * References are the honest citation list here: they are what Google said the
- * overview was built from. Organic results on the same page are NOT folded in —
+ * overview was built from. Organic results on the same page are NOT folded in -
  * appearing below an overview is not the same as being cited by it, and merging
  * them would inflate citation share.
  */

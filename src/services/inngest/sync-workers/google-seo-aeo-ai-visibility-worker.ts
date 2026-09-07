@@ -15,7 +15,7 @@ const ESTIMATED_MODELS = ["ChatGPT", "Claude", "Gemini", "Grok", "Llama", "Perpl
  * This does NOT query any answer engine. It compares the business rating against
  * tracked competitor ratings and marks a likely presence. Rows persist with
  * `is_estimated = true` so they can never be mixed into measured Phase 1 metrics.
- * Disabled by default — see `@/lib/features/aeo-surfaces`.
+ * Disabled by default - see `@/lib/features/aeo-surfaces`.
  */
 export const googleSeoAeoAiVisibilityWorker = inngest.createFunction(
     {

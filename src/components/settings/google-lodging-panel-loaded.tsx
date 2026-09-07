@@ -83,7 +83,7 @@ export function GoogleLodgingPanelLoaded({
                 >
                     <TabsTrigger value="property">Property</TabsTrigger>
                     <TabsTrigger value="services">Services</TabsTrigger>
-                    <TabsTrigger value="connectivity">Wi‑Fi & parking</TabsTrigger>
+                    <TabsTrigger value="connectivity">Wi-Fi & parking</TabsTrigger>
                     <TabsTrigger value="pets">Pets & business</TabsTrigger>
                     <TabsTrigger value="accessibility">Access & housekeeping</TabsTrigger>
                     <TabsTrigger value="policies">Policies</TabsTrigger>

@@ -18,7 +18,7 @@ export const SECURITY_SECTIONS = [
     {
         icon: Database,
         title: "Row Level Security (RLS)",
-        body: "Every table in our PostgreSQL database uses Supabase Row Level Security. Queries are scoped to your organization via get_user_org_ids() — one tenant cannot read, update, or delete another tenant's reviews, customers, or settings. This is enforced at the database layer, not only in application code.",
+        body: "Every table in our PostgreSQL database uses Supabase Row Level Security. Queries are scoped to your organization via get_user_org_ids() - one tenant cannot read, update, or delete another tenant's reviews, customers, or settings. This is enforced at the database layer, not only in application code.",
     },
     {
         icon: Lock,
@@ -28,17 +28,17 @@ export const SECURITY_SECTIONS = [
     {
         icon: Globe,
         title: "GDPR, CCPA & LGPD",
-        body: "We process personal data under lawful bases documented in our Privacy Policy (Section 10: Regional Privacy Rights). GDPR and UK rights, California CPRA requests, and Brazil LGPD rights are supported — contact privacy@zyenereviews.com. Enterprise customers may request a Data Processing Agreement.",
+        body: "We process personal data under lawful bases documented in our Privacy Policy (Section 10: Regional Privacy Rights). GDPR and UK rights, California CPRA requests, and Brazil LGPD rights are supported - contact privacy@zyenereviews.com. Enterprise customers may request a Data Processing Agreement.",
     },
     {
         icon: ShieldCheck,
         title: "No review gating policy",
-        body: "Zyene does not filter which customers may leave a public review based on star rating. Our Negative Feedback Shield routes low ratings to private resolution first — but we never block legitimate public reviews. This aligns with Google and FTC guidance on deceptive review practices.",
+        body: "Zyene does not filter which customers may leave a public review based on star rating. Our Negative Feedback Shield routes low ratings to private resolution first - but we never block legitimate public reviews. This aligns with Google and FTC guidance on deceptive review practices.",
     },
     {
         icon: KeyRound,
         title: "Secure Google OAuth (Limited Use)",
-        body: "Google Business Profile access uses official OAuth 2.0 with the minimum scopes required. We comply with Google's API Services User Data Policy and Limited Use requirements — your Google data is used only to sync and reply to reviews you authorize, never for advertising or unrelated purposes.",
+        body: "Google Business Profile access uses official OAuth 2.0 with the minimum scopes required. We comply with Google's API Services User Data Policy and Limited Use requirements - your Google data is used only to sync and reply to reviews you authorize, never for advertising or unrelated purposes.",
     },
     {
         icon: FileCheck,

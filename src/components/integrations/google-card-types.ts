@@ -15,7 +15,7 @@ export interface GoogleCardProps {
     businessName?: string | null;
     /** All Google rows in `reviews` including hidden (`is_visible = false`); optional diagnostics only. */
     dbGoogleSyncedRowCount?: number;
-    /** Visible Google rows (`is_visible = true`) — primary count for UI and polling seed. */
+    /** Visible Google rows (`is_visible = true`) - primary count for UI and polling seed. */
     dbVisibleGoogleReviewCount?: number;
     dbVisibleGoogleAverageRating?: number | null;
 }

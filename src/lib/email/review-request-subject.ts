@@ -1,6 +1,6 @@
 /**
  * Subjects for 1:1 review-request mail.
- * Avoid "Quick question…" / heavy review-CTA wording — Gmail clusters those as bulk.
+ * Avoid "Quick question…" / heavy review-CTA wording - Gmail clusters those as bulk.
  */
 export function reviewRequestSubject(businessName: string, isFollowUp = false): string {
     const name = (businessName || "").trim() || "us";

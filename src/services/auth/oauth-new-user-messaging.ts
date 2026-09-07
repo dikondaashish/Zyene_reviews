@@ -20,7 +20,7 @@ export async function sendOAuthNewUserMessages(params: {
 
     sendEmail({
         to: email,
-        subject: "Welcome to Zyene Reviews — connect Google to get started",
+        subject: "Welcome to Zyene Reviews - connect Google to get started",
         html: welcomeEmail({ userName: fullName || "User", loginUrl }),
         text: welcomeEmailText({ userName: fullName || "User", loginUrl }),
     }).catch((error: unknown) => {

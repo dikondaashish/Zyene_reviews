@@ -11,7 +11,7 @@ import { detectRankAlert, type GridCell } from "./detect-rank-alerts";
  *
  * Split from run-alert-detection.ts to keep both files under the services cap,
  * and because these two are the only detectors that depend on migration
- * 20260818154353 — keeping them together makes that dependency one import to
+ * 20260818154353 - keeping them together makes that dependency one import to
  * find rather than two blocks to notice.
  */
 
@@ -28,7 +28,7 @@ const CITATION_RECENT_WINDOW_DAYS = 14;
 /**
  * Runs one detector, absorbing its failure.
  *
- * Only ever wrapped around detectors whose failure is survivable — losing one
+ * Only ever wrapped around detectors whose failure is survivable - losing one
  * alert family is strictly better than losing all of them. The error is logged
  * rather than swallowed silently, so a missing migration surfaces as a real
  * signal instead of an unexplained absence of alerts.
@@ -43,7 +43,7 @@ export async function safely(label: string, run: () => Promise<number>): Promise
 }
 
 
-/** F8.2 — our own pages gaining or losing citations. */
+/** F8.2 - our own pages gaining or losing citations. */
 export async function detectCitationChanges(
     db: Admin,
     store: SupabaseAlertStore,
@@ -97,7 +97,7 @@ export async function detectCitationChanges(
     return created;
 }
 
-/** F8.3 — local-pack rank movement between the two latest grids of one keyword. */
+/** F8.3 - local-pack rank movement between the two latest grids of one keyword. */
 export async function detectRankMovement(
     db: Admin,
     store: SupabaseAlertStore,

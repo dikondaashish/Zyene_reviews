@@ -1,12 +1,12 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Case Study Data — Phase 5
+// Case Study Data - Phase 5
 // Representative customer outcomes (composite stories based on typical results).
 // Replace with permissioned customer stories as they become available.
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Shown on index + detail pages — not verified individual customers. */
+/** Shown on index + detail pages - not verified individual customers. */
 export const CASE_STUDY_COMPOSITE_DISCLAIMER =
-    "This story illustrates typical outcomes local businesses see with Zyene Reviews. Names, locations, quotes, and metrics are composite for education—not a verified testimonial from a named customer unless we publish an updated, permissioned story.";
+    "This story illustrates typical outcomes local businesses see with Zyene Reviews. Names, locations, quotes, and metrics are composite for education - not a verified testimonial from a named customer unless we publish an updated, permissioned story.";
 
 export interface CaseStudyMetric {
     label: string;
@@ -22,7 +22,6 @@ export interface CaseStudy {
     industrySlug: string;
     location: string;
     size: string;
-    emoji: string;
     headline: string;
     excerpt: string;
     /** ~60-word GEO summary of outcomes (uses metrics already stated on the page). */
@@ -47,16 +46,15 @@ export const CASE_STUDIES: CaseStudy[] = [
         industrySlug: "dental",
         location: "Austin, TX",
         size: "2 locations · 12 staff",
-        emoji: "🦷",
-        headline: "From 23 to 89 Google reviews in 90 days — without hiring marketing staff",
+        headline: "From 23 to 89 Google reviews in 90 days - without hiring marketing staff",
         excerpt: "A two-location dental practice used Zyene Reviews' Negative Feedback Shield and automated review requests to grow their Google rating from 4.1 to 4.7 stars.",
         resultsSummary:
-            "Results in brief: Over 90 days on Starter on Zyene Reviews, Sunrise Dental grew from 23 to 89 Google reviews and raised average rating from 4.1 to 4.7 stars. The team reached full review response coverage and cut typical reply time from about six days to four hours—using SMS requests, Negative Feedback Shield, and HIPAA-aware AI replies at two Austin locations.",
+            "Results in brief: Over 90 days on Starter on Zyene Reviews, Sunrise Dental grew from 23 to 89 Google reviews and raised average rating from 4.1 to 4.7 stars. The team reached full review response coverage and cut typical reply time from about six days to four hours - using SMS requests, Negative Feedback Shield, and HIPAA-aware AI replies at two Austin locations.",
         challenge:
             "Sunrise Dental had strong chair-side satisfaction but only 23 Google reviews after five years in business. Negative billing complaints occasionally went public because the front desk had no system to intercept unhappy patients before they posted. The office manager spent 45 minutes per week trying to respond to reviews manually.",
         solutionFeatures: [
             "Automated SMS review requests after every checkout",
-            "Negative Feedback Shield routing 1–3 star experiences to private resolution",
+            "Negative Feedback Shield routing 1-3 star experiences to private resolution",
             "AI reply suggestions with HIPAA-safe tone defaults",
             "Multi-location dashboard for both Austin offices",
         ],
@@ -67,11 +65,11 @@ export const CASE_STUDIES: CaseStudy[] = [
             { label: "Avg. response time", before: "6 days", after: "4 hours", change: "−96%" },
         ],
         quote:
-            "We stopped dreading Google reviews. Unhappy patients reach us privately first, and our happy patients actually leave reviews now — we went from asking randomly to a system that runs every day.",
+            "We stopped dreading Google reviews. Unhappy patients reach us privately first, and our happy patients actually leave reviews now - we went from asking randomly to a system that runs every day.",
         quoteAuthor: "Dr. Priya Mehta",
         quoteRole: "Owner, Sunrise Dental",
         timeline: "90 days on Starter on Zyene Reviews",
-        metaTitle: "Sunrise Dental Case Study — 23 to 89 Google Reviews",
+        metaTitle: "Sunrise Dental Case Study - 23 to 89 Google Reviews",
         metaDescription:
             "How Sunrise Dental grew from 23 to 89 Google reviews in 90 days using Zyene Reviews' Negative Feedback Shield, SMS review requests, and AI replies.",
         keywords: ["dental review management case study", "google reviews dental practice", "zyene reviews case study"],
@@ -83,9 +81,8 @@ export const CASE_STUDIES: CaseStudy[] = [
         industrySlug: "restaurants",
         location: "Charlotte, NC",
         size: "1 location · 28 staff",
-        emoji: "🍽️",
         headline: "A Charlotte BBQ joint added 64 five-star reviews in 60 days",
-        excerpt: "Wolfpack BBQ turned inconsistent review collection into a post-checkout SMS habit — and protected their 4.6-star rating with the Negative Feedback Shield.",
+        excerpt: "Wolfpack BBQ turned inconsistent review collection into a post-checkout SMS habit - and protected their 4.6-star rating with the Negative Feedback Shield.",
         resultsSummary:
             "Results in brief: In 60 days on Professional on Zyene Reviews, Wolfpack BBQ grew from 41 to 105 Google reviews and logged 64 new five-star reviews in that window. Negative Feedback Shield helped intercept unhappy guests before public posts. Local map pack rank moved from #7 to #2 for their BBQ category alongside post-checkout SMS requests.",
         challenge:
@@ -93,21 +90,21 @@ export const CASE_STUDIES: CaseStudy[] = [
         solutionFeatures: [
             "SMS review requests 2 hours after dine-in checkout",
             "Table tent QR codes linked to the same review flow",
-            "Auto-commenter for 4–5 star Google reviews",
+            "Auto-commenter for 4-5 star Google reviews",
             "Competitor tracking for three nearby BBQ restaurants",
         ],
         metrics: [
             { label: "Google reviews", before: "41", after: "105", change: "+156%" },
-            { label: "5-star reviews (60 days)", before: "—", after: "+64", change: "New" },
-            { label: "1-star reviews prevented", before: "—", after: "11", change: "Shield" },
+            { label: "5-star reviews (60 days)", before: " - ", after: "+64", change: "New" },
+            { label: "1-star reviews prevented", before: " - ", after: "11", change: "Shield" },
             { label: "Local map pack rank", before: "#7", after: "#2", change: "↑ 5 spots" },
         ],
         quote:
-            "The SMS after dinner works better than anything we tried before. And when something goes wrong, we hear about it in private — not on Google the next morning.",
+            "The SMS after dinner works better than anything we tried before. And when something goes wrong, we hear about it in private - not on Google the next morning.",
         quoteAuthor: "Marcus Webb",
         quoteRole: "Owner, Wolfpack BBQ",
         timeline: "60 days on Professional on Zyene Reviews",
-        metaTitle: "Wolfpack BBQ Case Study — Restaurant Review Growth",
+        metaTitle: "Wolfpack BBQ Case Study - Restaurant Review Growth",
         metaDescription:
             "How Wolfpack BBQ added 64 five-star Google reviews in 60 days with automated SMS requests and the Negative Feedback Shield.",
         keywords: ["restaurant review management case study", "get more restaurant google reviews", "zyene restaurant reviews"],
@@ -119,7 +116,6 @@ export const CASE_STUDIES: CaseStudy[] = [
         industrySlug: "home-services",
         location: "Denver, CO",
         size: "1 location · 18 technicians",
-        emoji: "🔧",
         headline: "Home services company cut public 1-stars by 70% in the first quarter",
         excerpt: "Apex HVAC used private feedback routing and Zapier-triggered review requests after job completion to grow trust before the first phone call.",
         resultsSummary:
@@ -136,14 +132,14 @@ export const CASE_STUDIES: CaseStudy[] = [
             { label: "Google reviews", before: "34", after: "112", change: "+229%" },
             { label: "Average rating", before: "4.0 ★", after: "4.8 ★", change: "+0.8" },
             { label: "Public 1-star reviews", before: "8/qtr", after: "2/qtr", change: "−70%" },
-            { label: "Review request conversion", before: "—", after: "22%", change: "SMS" },
+            { label: "Review request conversion", before: " - ", after: "22%", change: "SMS" },
         ],
         quote:
             "Homeowners choose us from Google before they call. More reviews and faster responses mean we win jobs we used to lose to bigger franchises.",
         quoteAuthor: "James Ortiz",
         quoteRole: "Owner, Apex HVAC & Plumbing",
         timeline: "First 90 days on Starter on Zyene Reviews",
-        metaTitle: "Apex HVAC Case Study — Home Services Reputation",
+        metaTitle: "Apex HVAC Case Study - Home Services Reputation",
         metaDescription:
             "How Apex HVAC grew Google reviews 229% and cut public 1-star reviews 70% with Zyene Reviews review automation and the Negative Feedback Shield.",
         keywords: ["home services review management", "hvac google reviews", "zyene case study"],
@@ -155,11 +151,10 @@ export const CASE_STUDIES: CaseStudy[] = [
         industrySlug: "salons",
         location: "Portland, OR",
         size: "1 location · 9 stylists",
-        emoji: "💇",
         headline: "Salon doubled review velocity and hit 4.9 stars in 45 days",
-        excerpt: "Bella's Salon automated post-appointment review requests and used AI replies to thank every client — without spending evenings on Google.",
+        excerpt: "Bella's Salon automated post-appointment review requests and used AI replies to thank every client - without spending evenings on Google.",
         resultsSummary:
-            "Results in brief: In 45 days on Starter on Zyene Reviews, Bella's Salon grew from 56 to 118 Google reviews and lifted average rating from 4.4 to 4.9 stars. New reviews moved from about two or three per month to 14–18, while owner time on Google dropped from roughly three hours per week to about twenty minutes.",
+            "Results in brief: In 45 days on Starter on Zyene Reviews, Bella's Salon grew from 56 to 118 Google reviews and lifted average rating from 4.4 to 4.9 stars. New reviews moved from about two or three per month to 14-18, while owner time on Google dropped from roughly three hours per week to about twenty minutes.",
         challenge:
             "Stylists relied on walk-ins from Instagram but Google was an afterthought. A single viral bad review about wait times sat unanswered for three weeks. Review count stalled at 56 after two years.",
         solutionFeatures: [
@@ -171,15 +166,15 @@ export const CASE_STUDIES: CaseStudy[] = [
         metrics: [
             { label: "Google reviews", before: "56", after: "118", change: "+111%" },
             { label: "Average rating", before: "4.4 ★", after: "4.9 ★", change: "+0.5" },
-            { label: "Monthly new reviews", before: "2–3", after: "14–18", change: "6×" },
+            { label: "Monthly new reviews", before: "2-3", after: "14-18", change: "6×" },
             { label: "Owner time on reviews", before: "3 hrs/wk", after: "20 min/wk", change: "−89%" },
         ],
         quote:
-            "Clients mention their stylist in reviews now because our replies feel personal — but I'm not writing them from scratch at 10pm anymore.",
+            "Clients mention their stylist in reviews now because our replies feel personal - but I'm not writing them from scratch at 10pm anymore.",
         quoteAuthor: "Isabella Chen",
         quoteRole: "Owner, Bella's Salon & Spa",
         timeline: "45 days on Starter on Zyene Reviews",
-        metaTitle: "Bella's Salon Case Study — Salon Review Management",
+        metaTitle: "Bella's Salon Case Study - Salon Review Management",
         metaDescription:
             "How Bella's Salon doubled Google review velocity and reached 4.9 stars in 45 days with Zyene Reviews automated requests and AI replies.",
         keywords: ["salon review management", "google reviews salon spa", "zyene reviews salon"],
@@ -191,11 +186,10 @@ export const CASE_STUDIES: CaseStudy[] = [
         industrySlug: "auto-repair",
         location: "Phoenix, AZ",
         size: "1 location · 6 bays",
-        emoji: "🔩",
         headline: "Auto shop went from invisible on Google to top-3 in local search",
         excerpt: "Precision Auto Works combined review requests at vehicle pickup with competitor benchmarks to close the gap with chain shops.",
         resultsSummary:
-            "Results in brief: Over 120 days on Starter on Zyene Reviews, Precision Auto Works grew from 19 to 94 Google reviews and average rating from 3.9 to 4.6 stars. They reached top-three local map visibility and raised review response rate from about 5% to 98%—using pickup SMS requests, competitor tracking, and Shield for warranty disputes.",
+            "Results in brief: Over 120 days on Starter on Zyene Reviews, Precision Auto Works grew from 19 to 94 Google reviews and average rating from 3.9 to 4.6 stars. They reached top-three local map visibility and raised review response rate from about 5% to 98% - using pickup SMS requests, competitor tracking, and Shield for warranty disputes.",
         challenge:
             "Chain competitors dominated Google Maps with 300+ reviews. Precision had 19 reviews and a 3.9 average after a run of unresponded warranty complaints. The service manager had no marketing background.",
         solutionFeatures: [
@@ -211,11 +205,11 @@ export const CASE_STUDIES: CaseStudy[] = [
             { label: "Response rate", before: "5%", after: "98%", change: "+93 pts" },
         ],
         quote:
-            "We're not a franchise — but on Google we look like we belong next to them now. The competitor dashboard alone was worth it.",
+            "We're not a franchise - but on Google we look like we belong next to them now. The competitor dashboard alone was worth it.",
         quoteAuthor: "Tom Reyes",
         quoteRole: "Service Manager, Precision Auto Works",
         timeline: "120 days on Starter on Zyene Reviews",
-        metaTitle: "Precision Auto Works Case Study — Auto Repair SEO",
+        metaTitle: "Precision Auto Works Case Study - Auto Repair SEO",
         metaDescription:
             "How Precision Auto Works grew Google reviews 395% and reached top-3 local map rankings with Zyene Reviews review requests and competitor tracking.",
         keywords: ["auto repair review management", "mechanic google reviews", "zyene auto repair case study"],

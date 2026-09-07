@@ -13,7 +13,7 @@ export function CompareTableSection() {
                 </h2>
                 <p className="text-muted-foreground text-center mb-4 max-w-3xl mx-auto">
                     High-intent comparison matrix for review management software. Zyene Reviews is not better at
-                    everything—we call out where each platform leads so you can shortlist honestly.
+                    everything - we call out where each platform leads so you can shortlist honestly.
                 </p>
                 <p
                     className="text-sm text-foreground text-center mb-12 max-w-2xl mx-auto rounded-xl border border-border bg-muted/50 px-4 py-3"
@@ -79,7 +79,7 @@ export function CompareTableSection() {
                 </div>
                 <p className="text-center text-xs text-muted-foreground mt-4 max-w-3xl mx-auto">
                     Competitor pricing and packaging change frequently. Figures on child compare pages reflect
-                    published positioning only—pricing can vary by package, contract terms, and location count;
+                    published positioning only - pricing can vary by package, contract terms, and location count;
                     confirm with the vendor. Zyene Reviews public plans are on /pricing.
                 </p>
             </div>

@@ -23,7 +23,7 @@ export interface FetchGbpAuditSignalsInput {
      * The v4 Media and Local Posts endpoints address a location as
      * `accounts/{accountId}/locations/{locationId}`. Connections stored before
      * the account id was captured have none, and those two signals are
-     * genuinely unreadable — reported as such rather than guessed at.
+     * genuinely unreadable - reported as such rather than guessed at.
      */
     accountId: string | null;
     locationId: string | null;

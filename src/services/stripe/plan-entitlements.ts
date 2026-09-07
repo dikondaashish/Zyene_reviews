@@ -1,11 +1,11 @@
 /**
- * What each plan unlocks — tier comparison and feature gating.
+ * What each plan unlocks - tier comparison and feature gating.
  *
  * Separate from plan-catalog.ts on purpose: pricing/packaging changes and
  * entitlement changes ship for different reasons and rarely together.
  *
  * These read `organizations.plan`, which stores Stripe plan ids
- * (`starter_monthly`, `professional_yearly`, …) — not display names. Every gate
+ * (`starter_monthly`, `professional_yearly`, …) - not display names. Every gate
  * here must stay in sync with the `organizations.plan` CHECK constraint and the
  * values the Stripe webhook writes.
  */
@@ -80,7 +80,7 @@ export function planAllowsAutoCommenter(
 /**
  * Public embed widget (/w/...) and similar surfaces: paid SKU (same rules as auto-commenter,
  * e.g. starter_monthly, professional_yearly, enterprise, growth, agency_*) plus active/trialing status.
- * Do not use a short allowlist of display names — DB stores Stripe plan ids.
+ * Do not use a short allowlist of display names - DB stores Stripe plan ids.
  */
 export function planAllowsPublicReviewWidget(
     plan: string | null | undefined,

@@ -74,7 +74,7 @@ const PARTNERS: {
 ];
 
 /**
- * Server Component — imports `simple-icons` here so the heavy icon index
+ * Server Component - imports `simple-icons` here so the heavy icon index
  * never ships in the client bundle for the Zapier setup form.
  */
 export function ZapierPartnerTilesCard() {

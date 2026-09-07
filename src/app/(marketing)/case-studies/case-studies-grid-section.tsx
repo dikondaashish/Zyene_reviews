@@ -1,9 +1,7 @@
 import Link from "next/link";
-import { ArrowRight, Building2, TrendingUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 import { CASE_STUDIES } from "@/lib/social-proof/case-study-data";
-import { CustomerLogoBar } from "@/components/marketing/social-proof";
-import { SIGNUP_URL } from "@/config/env";
+import { IndustryIcon } from "@/lib/industries/industry-icons";
 
 export function CaseStudiesGridSection() {
     return (
@@ -19,7 +17,9 @@ export function CaseStudiesGridSection() {
                                     Representative example
                                 </p>
                                 <div className="flex items-start gap-4 mb-4">
-                                    <span className="text-4xl" aria-hidden>{study.emoji}</span>
+                                    <div className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
+                                        <IndustryIcon slug={study.industrySlug} size={26} />
+                                    </div>
                                     <div>
                                         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                                             {study.industry} · illustrative scenario

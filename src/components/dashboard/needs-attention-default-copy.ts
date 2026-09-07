@@ -3,8 +3,8 @@ import type { NeedsAttentionCopy } from "@/components/dashboard/needs-attention-
 export const DEFAULT_NEEDS_ATTENTION_COPY: NeedsAttentionCopy = {
     title: "Needs your attention",
     subtitleZero: "No urgent reviews right now",
-    subtitleOne: "1 urgent review — we can draft a response for you",
-    subtitleMany: "{count} urgent reviews — we can draft responses for you",
+    subtitleOne: "1 urgent review - we can draft a response for you",
+    subtitleMany: "{count} urgent reviews - we can draft responses for you",
     viewAll: "View all",
     yourReplyLabel: "Your reply as owner",
     sentToGoogle: "Posted to Google",

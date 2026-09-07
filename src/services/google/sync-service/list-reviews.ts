@@ -1,4 +1,4 @@
-/** Google review sync — list-reviews */
+/** Google review sync - list-reviews */
 
 import { logger } from "@/lib/logger";
 import { listReviews } from "@/services/google/business-profile";
@@ -87,4 +87,3 @@ export async function listReviewsWithOrderByFallback(
         );
     }
 }
-

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Check } from "lucide-react";
 import { EVERYTHING_TAG } from "@/lib/review-flow/tags-for-ai";
 import { TAG_ACTION_BTN_CLASS } from "./tags-step-types";
 
@@ -32,7 +33,8 @@ export function TagsStepEverythingButton({
                     : undefined,
             }}
         >
-            👍 Everything!
+            <Check className="size-4" aria-hidden="true" />
+            Everything
         </button>
     );
 }

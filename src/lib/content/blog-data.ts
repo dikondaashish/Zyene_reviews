@@ -1,5 +1,5 @@
 /**
- * Blog data barrel — Phase 4.
+ * Blog data barrel - Phase 4.
  * Re-exports types, aggregates all 12 posts, and exposes lookup maps.
  */
 

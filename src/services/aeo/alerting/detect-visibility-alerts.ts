@@ -28,7 +28,7 @@ export type VisibilityAlert = {
  * F8.1: visibility-threshold alerts, gated by F8.8's significance test.
  *
  * Splits each (prompt, engine)'s observed samples into a recent window and
- * the baseline window immediately before it — both drawn from real weekly
+ * the baseline window immediately before it - both drawn from real weekly
  * samples, newest-first. `windowSize` samples in EACH window means a
  * (prompt, engine) needs `windowSize * 2` weeks of history before it is
  * eligible for an alert at all, which is a stronger version of PRD-9's

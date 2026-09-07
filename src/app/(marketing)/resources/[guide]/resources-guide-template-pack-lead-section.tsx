@@ -4,12 +4,12 @@ import { Download, ListChecks } from "lucide-react";
 
 const REVIEW_COMPLIANCE_ITEMS = [
     "No discounts, gifts, or incentives for positive reviews.",
-    "Do not ask only happy customers for reviews—keep outreach fair and honest.",
+    "Do not ask only happy customers for reviews - keep outreach fair and honest.",
     "One polite follow-up per visit is enough; do not pressure people with repeated messages.",
 ] as const;
 
 const CHECKLIST_COMPLIANCE_ITEMS = [
-    "Review requests must be fair—do not gate unhappy customers away from Google.",
+    "Review requests must be fair - do not gate unhappy customers away from Google.",
     "No incentives tied to star ratings or review text.",
     "Use private feedback to resolve issues, not to suppress public criticism.",
 ] as const;
@@ -29,26 +29,26 @@ function leadCopy(slug: string): {
             badge: "Free checklist",
             heading: "Get the checklist by email",
             description:
-                "We'll send a link to this page so you can work through all 40+ local SEO items. No PDF yet—the full checklist lives on this page.",
+                "We'll send a link to this page so you can work through all 40+ local SEO items. No PDF yet - the full checklist lives on this page.",
             source: "local_seo_checklist",
             submitLabel: "Email me the checklist",
             successMessage: "Check your inbox for the checklist link. You can also use the checklist on this page now.",
             compliance: CHECKLIST_COMPLIANCE_ITEMS,
-            footerNote: "The full checklist stays on this page for search and AI crawlers—no login required.",
+            footerNote: "The full checklist stays on this page for search and AI crawlers - no login required.",
         };
     }
     return {
         badge: "Free swipe file",
         heading: "Get the full template pack",
         description:
-            "Send me the 20 templates — we'll email a link to the full web swipe file (22 SMS and email scripts). No PDF yet; everything is ready on the page below.",
+            "Send me the 20 templates - we'll email a link to the full web swipe file (22 SMS and email scripts). No PDF yet; everything is ready on the page below.",
         source: "review_request_templates",
         submitLabel: "Send me the 20 templates",
         successMessage:
             "Check your email for the template pack link. The full web version is also available on this page.",
         compliance: REVIEW_COMPLIANCE_ITEMS,
         footerNote:
-            "Preview templates stay on this page for search and AI crawlers—no login required to read or copy them here.",
+            "Preview templates stay on this page for search and AI crawlers - no login required to read or copy them here.",
     };
 }
 

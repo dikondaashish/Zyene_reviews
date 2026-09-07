@@ -1,5 +1,5 @@
 /**
- * Help articles — Billing (bill1–bill4).
+ * Help articles - Billing (bill1-bill4).
  */
 
 import type { HelpArticle } from "./help-types";
@@ -28,11 +28,11 @@ export const bill1: HelpArticle = {
         }},
         { type: "h2", text: "Which Plan Is Right for You?" },
         { type: "ul", items: [
-            "Starter ($29.99/mo): Best for single-location businesses. Includes all core features — AI replies, review requests, Shield, competitor tracking, and API.",
-            "Professional ($59.99/mo): Best for businesses with 2–3 locations. Includes white-label reporting and higher request volume.",
+            "Starter ($29.99/mo): Best for single-location businesses. Includes all core features - AI replies, review requests, Shield, competitor tracking, and API.",
+            "Professional ($59.99/mo): Best for businesses with 2-3 locations. Includes white-label reporting and higher request volume.",
             "Enterprise (contact us): Best for 4+ location businesses, franchises, or agencies. Unlimited locations, custom request volume, dedicated support.",
         ]},
-        { type: "tip", text: "Start with the 7-day free trial — you get full access to all features regardless of plan. Upgrade to a paid plan before day 7 to continue without interruption." },
+        { type: "tip", text: "Start with the 7-day free trial - you get full access to all features regardless of plan. Upgrade to a paid plan before day 7 to continue without interruption." },
     ],
 };
 
@@ -64,7 +64,7 @@ export const bill3: HelpArticle = {
     slug: "understanding-usage-limits",
     category: "billing",
     title: "Understanding Usage Limits",
-    excerpt: "How SMS credits, review request limits, and team member limits work in Zyene — and what happens when you reach them.",
+    excerpt: "How SMS credits, review request limits, and team member limits work in Zyene - and what happens when you reach them.",
     readMinutes: 3,
     body: [
         { type: "p", text: "Zyene plans include usage limits for certain high-cost features, primarily SMS review requests. Here's how limits work and what happens when you reach them." },
@@ -95,7 +95,7 @@ export const bill4: HelpArticle = {
     slug: "canceling-your-subscription",
     category: "billing",
     title: "Canceling Your Subscription",
-    excerpt: "How to cancel your Zyene subscription — what happens to your data, when billing stops, and how to reactivate if you change your mind.",
+    excerpt: "How to cancel your Zyene subscription - what happens to your data, when billing stops, and how to reactivate if you change your mind.",
     readMinutes: 2,
     body: [
         { type: "p", text: "We don't make cancellation difficult. Here's exactly how to cancel and what to expect." },
@@ -109,12 +109,12 @@ export const bill4: HelpArticle = {
         { type: "h2", text: "What Happens After Cancellation" },
         { type: "ul", items: [
             "Your subscription remains active until the end of your current billing period. You won't be charged again after that.",
-            "Your data — reviews, campaign history, analytics — is retained for 90 days after cancellation. You can export it at any time during this period.",
+            "Your data - reviews, campaign history, analytics - is retained for 90 days after cancellation. You can export it at any time during this period.",
             "After 90 days, your data is permanently deleted in accordance with our data retention policy.",
             "Your Google Business Profile connection is deauthorized and review responses from Zyene remain unchanged on Google.",
         ]},
         { type: "h2", text: "Reactivating Your Account" },
         { type: "p", text: "If you change your mind, you can reactivate your account at any time within the 90-day retention window. Log back in, go to Settings → Billing, and click 'Reactivate Subscription'. All your data will be restored." },
-        { type: "tip", text: "If you're canceling because of cost, consider downgrading to a lower plan rather than canceling entirely. You keep your review history and campaign automation — just with lower limits." },
+        { type: "tip", text: "If you're canceling because of cost, consider downgrading to a lower plan rather than canceling entirely. You keep your review history and campaign automation - just with lower limits." },
     ],
 };

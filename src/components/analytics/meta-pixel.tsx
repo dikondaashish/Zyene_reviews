@@ -5,7 +5,7 @@ const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() || "";
 /**
  * Meta (Facebook) Pixel. Renders nothing at all when the id is unset, so a
  * deployment without the env var ships no tracking script and no tracking
- * pixel — the `noscript` fallback is gated on the same check as the script.
+ * pixel - the `noscript` fallback is gated on the same check as the script.
  *
  * Raw `<img>` rather than `next/image`: this is a 1x1 tracking beacon on a
  * third-party origin, not content, and it must work with JS disabled.
