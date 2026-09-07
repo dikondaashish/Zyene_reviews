@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "clean": "rm -rf .next .turbo node_modules/.cache tsconfig.tsbuildinfo",
+    "clean": "rm -rf .next .turbo node_modules/.cache *.tsbuildinfo tmp output",
     "build": "NODE_OPTIONS=--max-old-space-size=4096 next build --webpack",
     "start": "next start",
     "verify": "pnpm typecheck && pnpm test && pnpm check:sizes",

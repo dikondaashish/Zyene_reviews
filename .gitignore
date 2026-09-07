@@ -70,3 +70,7 @@ test-results/
 # local AI/codex config
 .codex/
 **/__pycache__/
+
+# local prospecting / PDF scratch (regenerate via scripts/prospecting/)
+/tmp/
+/output/
