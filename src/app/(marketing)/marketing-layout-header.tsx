@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { LOGIN_URL, SIGNUP_URL } from "@/config/env";
@@ -11,7 +10,6 @@ import { MarketingLayoutDesktopNav } from "@/app/(marketing)/marketing-layout-de
 import { MarketingLayoutMobileNav } from "@/app/(marketing)/marketing-layout-mobile-nav";
 
 export function MarketingLayoutHeader() {
-  const isHome = usePathname() === "/";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<MarketingNavMenu | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -57,7 +55,7 @@ export function MarketingLayoutHeader() {
 
   return (
     <header
-      className={`premium-header sticky top-0 z-50 w-full min-w-0${isHome ? " home-reference-header" : ""}${isScrolled ? " is-scrolled" : ""}`}
+      className={`premium-header sticky top-0 z-50 w-full min-w-0${isScrolled ? " is-scrolled" : ""}`}
       data-scrolled={isScrolled ? "true" : "false"}
     >
       <div className="premium-header-inner">

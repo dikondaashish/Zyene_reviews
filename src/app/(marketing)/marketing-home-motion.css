@@ -1,6 +1,5 @@
 /* First-load choreography. Content remains in server HTML and never waits for hydration. */
 .hero-enter { animation:hero-enter 550ms cubic-bezier(.22,1,.36,1) backwards; }
-.home-reference-header .premium-header-inner { animation:hero-nav-enter 500ms cubic-bezier(.22,1,.36,1) backwards; }
 .hero-laptop-enter { animation:hero-device-enter 850ms 450ms cubic-bezier(.22,1,.36,1) backwards; }
 .hero-scene-glow > div { animation:hero-glow-enter 900ms 300ms cubic-bezier(.22,1,.36,1) backwards,hero-breathe 10s 1200ms ease-in-out infinite; }
 .hero-floating-review-top { animation:hero-card-enter 550ms 1050ms cubic-bezier(.22,1,.36,1) backwards; }
@@ -19,7 +18,6 @@
 .home-product-scene:focus-within .hero-phone-float { animation-play-state:paused; }
 .home-hero :focus-visible { animation:none !important; }
 @keyframes hero-enter { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
-@keyframes hero-nav-enter { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
 @keyframes hero-device-enter { from { opacity:0; transform:translate(45px,18px) scale(.96); } to { opacity:1; transform:translate(0,0) scale(1); } }
 @keyframes hero-card-enter { from { opacity:0; translate:14px -12px; scale:.94; } to { opacity:1; translate:0 0; scale:1; } }
 @keyframes hero-phone-enter { from { opacity:0; transform:translate(32px,30px) rotate(4deg) scale(.94); } to { opacity:1; transform:translate(0,0) rotate(0) scale(1); } }
@@ -71,6 +69,6 @@
 }
 @keyframes hero-mobile-device-enter { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
 @media (prefers-reduced-motion:reduce) {
- .home-hero *, .home-hero *::before, .home-hero *::after, .home-reference-header .premium-header-inner { animation:none !important; transition:none !important; }
+ .home-hero *, .home-hero *::before, .home-hero *::after { animation:none !important; transition:none !important; }
  .home-hero-copy-layer,.home-hero-scene-layer,.home-hero-pointer-layer,.hero-scene-glow { transform:none !important; }
 }

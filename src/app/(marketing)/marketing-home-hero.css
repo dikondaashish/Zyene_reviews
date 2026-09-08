@@ -1,14 +1,10 @@
 /* The reference hero is scoped to the homepage; other marketing pages keep their layout. */
 .marketing-site-home {
   --home-shell-top: 16px;
-  --home-header-top: 35px;
-  --home-header-height: 72px;
-  --home-header-width: min(1440px, calc(100% - 80px));
-  --marketing-menu-clearance: calc(var(--home-header-top) + var(--home-header-height) + 20px);
 }
 /* Keep the hero's backdrop behind the header without nesting navigation in its clipping layer. */
 .marketing-site-home > .marketing-content {
-  margin-top: calc(-1 * (var(--home-header-top) + var(--home-header-height)));
+  margin-top: calc(-1 * (var(--marketing-header-top) + var(--marketing-header-height)));
 }
 .home-hero-shell {
   position: relative;
@@ -16,7 +12,7 @@
   z-index: 1;
   width: calc(100% - 32px);
   margin: var(--home-shell-top) auto 0;
-  padding-top: calc(var(--home-header-top) + var(--home-header-height) - var(--home-shell-top) - 1px);
+  padding-top: calc(var(--marketing-header-top) + var(--marketing-header-height) - var(--home-shell-top) - 1px);
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.78);
   border-radius: 30px;
@@ -57,76 +53,6 @@
 .home-hero-shell .home-hero {
   position: relative;
   z-index: 1;
-}
-.home-reference-header {
-  /* Native sticky scrolling preserves layout and never switches positioning modes. */
-  position: sticky;
-  top: calc(8px - var(--home-header-top));
-  padding: var(--home-header-top) 0 0;
-  background: transparent;
-}
-.home-reference-header .premium-header-inner {
-  transition:
-    background-color 300ms var(--ease-out),
-    border-color 300ms var(--ease-out),
-    box-shadow 300ms var(--ease-out);
-}
-.home-reference-header.is-scrolled .premium-header-inner {
-  background: rgba(255, 255, 255, 0.88);
-  border-color: rgba(32, 21, 21, 0.12);
-  box-shadow:
-    0 14px 34px rgba(55, 34, 24, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
-}
-.home-reference-header .premium-header-inner {
-  width: var(--home-header-width);
-  max-width: none;
-  min-height: var(--home-header-height);
-  border-radius: 20px;
-  padding-inline: 22px;
-  background: rgba(255, 255, 255, 0.8);
-  border-color: rgba(255, 255, 255, 0.78);
-  box-shadow:
-    0 12px 36px rgba(55, 34, 24, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.92),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.38);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-  backdrop-filter: blur(24px) saturate(140%);
-}
-.home-reference-header .premium-header-inner > a {
-  gap: 12px;
-}
-.home-reference-header .premium-header-inner > a > div:first-child {
-  width: 40px !important;
-  height: 40px !important;
-}
-.home-reference-header .premium-header-inner > a > div:last-child > span {
-  font-size: 24px;
-  letter-spacing: -0.04em;
-}
-.home-reference-header .premium-desktop-nav {
-  margin-left: 28px;
-  font-size: 15px;
-}
-.home-reference-header .premium-nav-links {
-  gap: 6px;
-}
-.home-reference-header .premium-nav-auth {
-  gap: 20px;
-}
-.home-reference-header .premium-nav-auth [data-slot="button"] {
-  min-height: 46px;
-  min-width: 164px;
-  font-size: 14px;
-  padding-inline: 22px;
-  transition:
-    background-color 200ms,
-    transform 200ms,
-    box-shadow 200ms;
-}
-.home-reference-header .premium-nav-auth [data-slot="button"] svg {
-  margin-left: 12px;
-  transition: transform 200ms;
 }
 .home-hero {
   width: 100%;
@@ -237,8 +163,7 @@
   flex-shrink: 0;
 }
 @media (hover: hover) and (pointer: fine) {
-  .home-hero-actions .marketing-button:hover,
-  .home-reference-header .premium-nav-auth [data-slot="button"]:hover {
+  .home-hero-actions .marketing-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px #ff4f0026;
   }
@@ -247,57 +172,21 @@
     box-shadow: none;
     border-color: #d2c8c0;
   }
-  .home-hero-actions .marketing-button:hover svg,
-  .home-reference-header .premium-nav-auth [data-slot="button"]:hover svg {
+  .home-hero-actions .marketing-button:hover svg {
     transform: translateX(4px);
   }
 }
-.home-hero-actions .marketing-button:active,
-.home-reference-header .premium-nav-auth [data-slot="button"]:active {
+.home-hero-actions .marketing-button:active {
   transform: scale(0.98);
 }
 @media (min-width: 1200px) and (max-width: 1439px) {
   .home-hero-container {
     width: calc(100% - 88px);
   }
-  .home-reference-header .premium-desktop-nav {
-    margin-left: 16px;
-    font-size: 14px;
-  }
-  .home-reference-header .premium-nav-links {
-    gap: 0;
-  }
-  .home-reference-header .premium-nav-auth {
-    gap: 8px;
-  }
-  .home-reference-header .premium-nav-auth [data-slot="button"] {
-    min-width: 170px;
-    font-size: 14px;
-  }
-  .home-reference-header .premium-header-inner > a > div:last-child > span {
-    font-size: 23px;
-  }
 }
 @media (max-width: 1199px) {
   .home-hero-container {
     width: calc(100% - 80px);
-  }
-  .home-reference-header .premium-desktop-nav {
-    margin-left: 0;
-    font-size: 14px;
-  }
-  .home-reference-header .premium-nav-links {
-    gap: 0;
-  }
-  .home-reference-header .premium-nav-auth {
-    gap: 4px;
-  }
-  .home-reference-header .premium-nav-auth [data-slot="button"] {
-    min-width: 150px;
-    font-size: 13px;
-  }
-  .home-reference-header .premium-header-inner > a > div:last-child > span {
-    font-size: 21px;
   }
   .home-hero {
     padding-top: 44px;
@@ -327,24 +216,10 @@
 @media (max-width: 767px) {
   .marketing-site-home {
     --home-shell-top: 8px;
-    --home-header-top: 21px;
-    --home-header-height: 66px;
-    --home-header-width: calc(100% - 50px);
   }
   .home-hero-shell {
     width: calc(100% - 16px);
     border-radius: 24px;
-  }
-  .home-reference-header .premium-header-inner {
-    padding-inline: 14px;
-    border-radius: 17px;
-  }
-  .home-reference-header .premium-header-inner > a {
-    gap: 8px;
-  }
-  .home-reference-header .premium-header-inner > a > div:first-child {
-    width: 34px !important;
-    height: 34px !important;
   }
   .home-hero {
     padding-top: 36px;
@@ -422,11 +297,6 @@
   }
   .home-hero-shell::before {
     display: none;
-  }
-  .home-reference-header .premium-header-inner {
-    background: var(--background);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
   }
 }
 @media (max-width: 359px) {

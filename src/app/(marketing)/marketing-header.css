@@ -1,0 +1,163 @@
+/* One header system for every public marketing page. */
+.marketing-site, .premium-header {
+  --marketing-header-top: 35px;
+  --marketing-header-height: 72px;
+  --marketing-header-width: min(1440px, calc(100% - 80px));
+  --marketing-menu-clearance: calc(var(--marketing-header-top) + var(--marketing-header-height) + 20px);
+}
+@media (max-width:767px) {
+  .marketing-site, .premium-header {
+    --marketing-header-top: 21px;
+    --marketing-header-height: 66px;
+    --marketing-header-width: calc(100% - 50px);
+  }
+}
+
+.premium-header {
+  /* Native sticky scrolling preserves layout and never switches positioning modes. */
+  position: sticky;
+  top: calc(8px - var(--marketing-header-top));
+  padding: var(--marketing-header-top) 0 0;
+  background: transparent;
+}
+.premium-header .premium-header-inner {
+  transition:
+    background-color 300ms var(--ease-out),
+    border-color 300ms var(--ease-out),
+    box-shadow 300ms var(--ease-out);
+}
+.premium-header.is-scrolled .premium-header-inner {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(32, 21, 21, 0.12);
+  box-shadow:
+    0 14px 34px rgba(55, 34, 24, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+.premium-header .premium-header-inner {
+  width: var(--marketing-header-width);
+  max-width: none;
+  min-height: var(--marketing-header-height);
+  border-radius: 20px;
+  padding-inline: 22px;
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.78);
+  box-shadow:
+    0 12px 36px rgba(55, 34, 24, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.38);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  backdrop-filter: blur(24px) saturate(140%);
+}
+.premium-header .premium-header-inner > a {
+  gap: 12px;
+}
+.premium-header .premium-header-inner > a > div:first-child {
+  width: 40px !important;
+  height: 40px !important;
+}
+.premium-header .premium-header-inner > a > div:last-child > span {
+  font-size: 24px;
+  letter-spacing: -0.04em;
+}
+.premium-header .premium-desktop-nav {
+  margin-left: 28px;
+  font-size: 15px;
+}
+.premium-header .premium-nav-links {
+  gap: 6px;
+}
+.premium-header .premium-nav-auth {
+  gap: 20px;
+}
+.premium-header .premium-nav-auth [data-slot="button"] {
+  min-height: 46px;
+  min-width: 164px;
+  font-size: 14px;
+  padding-inline: 22px;
+  transition:
+    background-color 200ms,
+    transform 200ms,
+    box-shadow 200ms;
+}
+.premium-header .premium-nav-auth [data-slot="button"] svg {
+  margin-left: 12px;
+  transition: transform 200ms;
+}
+@media (hover: hover) and (pointer: fine) {
+  .premium-header .premium-nav-auth [data-slot="button"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px #ff4f0026;
+  }
+  .premium-header .premium-nav-auth [data-slot="button"]:hover svg {
+    transform: translateX(4px);
+  }
+}
+.premium-header .premium-nav-auth [data-slot="button"]:active {
+  transform: scale(0.98);
+}
+@media (min-width: 1200px) and (max-width: 1439px) {
+  .premium-header .premium-desktop-nav {
+    margin-left: 16px;
+    font-size: 14px;
+  }
+  .premium-header .premium-nav-links {
+    gap: 0;
+  }
+  .premium-header .premium-nav-auth {
+    gap: 8px;
+  }
+  .premium-header .premium-nav-auth [data-slot="button"] {
+    min-width: 170px;
+    font-size: 14px;
+  }
+  .premium-header .premium-header-inner > a > div:last-child > span {
+    font-size: 23px;
+  }
+}
+@media (max-width: 1199px) {
+  .premium-header .premium-desktop-nav {
+    margin-left: 0;
+    font-size: 14px;
+  }
+  .premium-header .premium-nav-links {
+    gap: 0;
+  }
+  .premium-header .premium-nav-auth {
+    gap: 4px;
+  }
+  .premium-header .premium-nav-auth [data-slot="button"] {
+    min-width: 150px;
+    font-size: 13px;
+  }
+  .premium-header .premium-header-inner > a > div:last-child > span {
+    font-size: 21px;
+  }
+}
+@media (max-width: 767px) {
+  .premium-header .premium-header-inner {
+    padding-inline: 14px;
+    border-radius: 17px;
+  }
+  .premium-header .premium-header-inner > a {
+    gap: 8px;
+  }
+  .premium-header .premium-header-inner > a > div:first-child {
+    width: 34px !important;
+    height: 34px !important;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .premium-header .premium-header-inner {
+    background: var(--background);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+@media (max-width:1023px) {
+  .premium-header #marketing-mobile-nav {
+    width: var(--marketing-header-width);
+    margin-inline: auto;
+    left: 0;
+    right: 0;
+  }
+}

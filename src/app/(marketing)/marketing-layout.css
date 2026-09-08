@@ -1,9 +1,8 @@
-.premium-header { isolation:isolate; flex-shrink:0; background:var(--background); padding:12px 32px 0; }
-.premium-header-inner { position:relative; display:flex; align-items:center; justify-content:space-between; min-height:72px; gap:28px; padding:0 24px; max-width:1328px; margin:auto; border:1px solid var(--border); border-radius:18px; background:var(--background); box-shadow:0 4px 18px #20151504; }
-.premium-desktop-nav { display:flex; align-items:center; justify-content:space-between; flex:1; gap:24px; font-size:13px; font-weight:500; margin-left:36px; }
-.premium-nav-links { display:flex; align-items:center; gap:4px; }
-.premium-nav-auth { display:flex; align-items:center; gap:12px; }
-.premium-nav-auth [data-slot=button] { min-height:42px; font-size:12px; padding-inline:20px; }
+.premium-header { isolation:isolate; flex-shrink:0; }
+.premium-header-inner { position:relative; display:flex; align-items:center; justify-content:space-between; gap:28px; margin:auto; border:1px solid var(--border); }
+.premium-desktop-nav { display:flex; align-items:center; justify-content:space-between; flex:1; gap:24px; font-weight:500; }
+.premium-nav-links { display:flex; align-items:center; }
+.premium-nav-auth { display:flex; align-items:center; }
 .mega-trigger { display:flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:12px 14px; border-radius:8px; cursor:pointer; color:var(--foreground); transition:background-color 160ms; }
 .mega-trigger:hover { background:var(--muted); }
 .mega-trigger-highlight { background:var(--muted); }
@@ -38,9 +37,6 @@
 @keyframes menu-enter { from { opacity:0; transform:translateY(-6px) scale(.99); } to { opacity:1; transform:translateY(0) scale(1); } }
 @media (max-width:1100px) { .premium-desktop-nav { margin-left:0; gap:8px; } .premium-header-inner { gap:12px; padding-inline:20px; } .mega-trigger { padding-inline:10px; } .mega-panel-main { grid-template-columns:1fr 260px; gap:16px; } }
 @media (max-width:1023px) {
- .premium-header { padding:10px 16px 0; }
- .premium-header-inner { min-height:64px; border-radius:14px; padding-inline:16px; }
  .premium-desktop-nav { display:none; }
  #marketing-mobile-nav { position:absolute; top:100%; left:16px; right:16px; margin-top:10px; max-height:calc(100dvh - var(--marketing-menu-clearance,94px)); overscroll-behavior:contain; border:1px solid var(--border); border-radius:16px; box-shadow:0 16px 30px #2015150c; }
- .home-reference-header #marketing-mobile-nav { width:var(--home-header-width); margin-inline:auto; left:0; right:0; }
 }
