@@ -112,6 +112,13 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         height: 941,
         caption: "A specific thank-you helps turn a positive review into a genuine customer relationship moment.",
     },
+    "how-to-get-a-google-review-link": {
+        src: "/images/blog/google_review_link.jpg",
+        alt: "Smartphone displaying a direct Google review rating pop-up with five stars ready for customer feedback",
+        width: 800,
+        height: 600,
+        caption: "Direct Google review links open the review window immediately, eliminating customer friction.",
+    },
 };
 
 export function getBlogImage(slug: string): ContentImage {
