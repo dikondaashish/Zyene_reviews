@@ -4,19 +4,19 @@ import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 export const metadata: Metadata = mergeMarketingSocial({
     title: "Features",
     description:
-        "AI review replies, review collection with Negative Feedback Shield, competitor tracking, and local SEO - own your online reputation in one platform.",
+        "Invite fair feedback, manage reviews, reply with AI, and act on local insights in one connected review-management platform.",
     alternates: { canonical: "https://www.zyenereviews.com/features" },
     openGraph: {
         title: "Features",
         description:
-            "AI replies, Negative Feedback Shield, competitor tracking, local SEO, and more, all in one platform starting at $29.99/mo.",
+            "Branded requests, AI-assisted replies, private feedback, competitor context, and local insights in one platform.",
         url: "https://www.zyenereviews.com/features",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
         title: "Features",
-        description: "AI replies, Negative Feedback Shield, competitor tracking, local SEO, starting at $29.99/mo.",
+        description: "Branded requests, AI replies, private feedback, and local insights in one platform.",
     },
 });
 

@@ -4,10 +4,10 @@ import { Lightbulb, AlertTriangle, ArrowRight } from "lucide-react";
 import type { ContentSection } from "@/lib/content/blog-data";
 import { Button } from "@/components/ui/button";
 import { SIGNUP_URL } from "@/config/env";
-// Renders the structured content section array used by blog posts, resource guides, and help articles.
-export function ContentRenderer({ sections }: { sections: ContentSection[] }) {
+import { cn } from "@/lib/utils";
+export function ContentRenderer({ sections, className }: { sections: ContentSection[]; className?: string }) {
     return (
-        <div className="prose-zyene space-y-5 text-foreground">
+        <div className={cn(className ? "text-foreground" : "prose-zyene space-y-5 text-foreground", className)}>
             {sections.map((section) => {
                 const sectionKey = JSON.stringify(section);
                 switch (section.type) {

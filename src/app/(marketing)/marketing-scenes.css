@@ -1,16 +1,4 @@
 /* Photography, product stories, and page introductions. */
-.marketing-home-hero { padding:64px 0 30px; width:100%; }
-.home-hero-copy { text-align:center; margin:0 auto 48px; max-width:1050px; }
-.marketing-site .marketing-home-hero h1 { font-size:clamp(44px,5.8vw,84px); line-height:1.02; margin-bottom:24px; }
-.marketing-home-hero h1 span { color:var(--primary); }
-.home-hero-copy > p:not(.marketing-eyebrow):not(.marketing-home-note) { max-width:560px; margin-inline:auto; font-size:18px; color:var(--muted-foreground); }
-.home-hero-copy .marketing-actions { justify-content:center; margin-top:26px; }
-.marketing-home-note { margin-top:16px; display:flex; justify-content:center; align-items:center; gap:8px; color:var(--muted-foreground); font-size:12px; }
-.home-visual-stage { display:grid; grid-template-columns:minmax(0,.7fr) minmax(0,1.55fr); gap:24px; align-items:stretch; }
-.home-visual-photo { min-width:0; width:100%; position:relative; min-height:480px; overflow:hidden; border-radius:28px; background:var(--brand-wash); }
-.home-visual-photo img { object-fit:cover; object-position:50% 28%; }
-.home-visual-stage > .product-tour { min-width:0; }
-.home-visual-caption { display:flex; align-items:center; justify-content:space-between; gap:20px; margin-top:18px; font-size:12px; color:var(--muted-foreground); }
 .landing-hero { padding:72px 0 80px; }
 .landing-hero-layout { display:grid; gap:48px; }
 .landing-hero-copy { max-width:900px; }
@@ -51,15 +39,8 @@
 .footer-signoff p { font-size:clamp(28px,3.3vw,48px); line-height:1.15; letter-spacing:-.04em; max-width:700px; }
 .footer-wordmark { font-size:clamp(90px,22vw,300px); line-height:.8; font-weight:650; letter-spacing:-.075em; color:#ff4f00; padding:72px 0 12px; overflow:hidden; }
 .premium-plan-intro { padding:68px 0 40px; }
-@media (max-width:1023px) { .home-visual-stage { grid-template-columns:minmax(0,1fr); } .home-visual-photo { display:block; min-height:240px; aspect-ratio:2; } .brand-moment { padding:48px 36px; gap:36px; } }
+@media (max-width:1023px) { .brand-moment { padding:48px 36px; gap:36px; } }
 @media (max-width:767px) {
- .marketing-home-hero { padding-top:38px; }
- .home-hero-copy { margin-bottom:34px; text-align:left; }
- .marketing-site .marketing-home-hero h1 { font-size:clamp(42px,10.5vw,64px); }
- .home-hero-copy .marketing-actions,.marketing-home-note { justify-content:start; }
- .home-hero-copy > p:not(.marketing-eyebrow):not(.marketing-home-note) { font-size:16px; }
- .home-visual-stage { gap:16px; }
- .home-visual-caption { align-items:start; flex-direction:column; gap:6px; }
  .landing-hero { padding:42px 0 48px; }
  .landing-hero-with-image .landing-hero-layout { grid-template-columns:1fr; gap:32px; }
  .landing-hero-image { min-height:290px; aspect-ratio:1.2; }
@@ -93,4 +74,5 @@ a:hover .resource-photo img { transform:scale(1.035); }
 /* Keep the photographed faces visible when portrait sources fill wider cards. */
 .marketing-site img[src*="cafe-service.webp"] { object-position:50% 28%; }
 .marketing-site img[src*="cafe-conversation.webp"] { object-position:65% 42%; }
+.marketing-site img[src*="cafe-owner-feedback.webp"] { object-position:65% 50%; }
 .marketing-site img[src*="window-installation.webp"] { object-position:45% 35%; }

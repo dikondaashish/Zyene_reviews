@@ -1,25 +1,25 @@
-import { BarChart3, Bot, MapPin, Shield } from "lucide-react";
+import { BarChart3, Bot, MessageSquare, Shield } from "lucide-react";
 
 const BENEFITS = [
     {
+        icon: MessageSquare,
+        title: "Fair review requests",
+        desc: "Invite customers by SMS, email, shareable link, or QR code after a visit or completed service.",
+    },
+    {
         icon: Bot,
-        title: "AI Replies",
-        desc: "Respond to every review in seconds with one-click AI suggestions.",
+        title: "AI-assisted Google replies",
+        desc: "Start with a relevant draft, then tailor a thoughtful response before you post.",
     },
     {
         icon: Shield,
-        title: "Negative Feedback Shield",
-        desc: "Give low ratings a private feedback path and alert your team.",
+        title: "Private feedback follow-up",
+        desc: "Give someone a private way to share a concern so your team can follow up without taking away their public-review choice.",
     },
     {
         icon: BarChart3,
-        title: "Competitor Tracking",
-        desc: "See how you compare to nearby competitors in real time.",
-    },
-    {
-        icon: MapPin,
-        title: "Local SEO Dashboard",
-        desc: "GBP keyword performance data and profile guidance for Google Maps.",
+        title: "Review intelligence",
+        desc: "Use request and review trends, local visibility signals, and nearby competitor context to decide what to improve next.",
     },
 ] as const;
 
@@ -27,8 +27,11 @@ export function IndustriesSharedBenefitsStripSection() {
     return (
         <section className="py-16 px-4 bg-background border-t border-border">
             <div className="container mx-auto max-w-5xl">
-                <p className="text-center text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-10">
-                    Every industry gets the same core platform
+                <h2 className="text-center text-2xl font-bold text-foreground mb-3">
+                    One practical review routine for every local business
+                </h2>
+                <p className="text-center text-sm text-muted-foreground max-w-2xl mx-auto mb-10">
+                    Invite feedback fairly, respond with care, follow up on what needs attention, and use the data to keep improving.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center">
                     {BENEFITS.map((item) => (

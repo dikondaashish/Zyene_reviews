@@ -2,21 +2,21 @@ import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
 export const metadata: Metadata = mergeMarketingSocial({
-    title: "Compare Zyene Reviews vs Competitors, 2026",
+    title: "Compare Zyene Reviews vs Review Platforms, 2026",
     description:
-        "Compare Zyene Reviews vs Birdeye, Podium, NiceJob, and GatherUp: review alerts, AI replies, Shield, messaging, and honest strengths by buyer type.",
+        "Compare Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp, and Prosperly: pricing, AI replies, review workflows, and buyer-fit tradeoffs.",
     alternates: { canonical: "https://www.zyenereviews.com/compare" },
     openGraph: {
-        title: "See How Zyene Reviews Compares, 2026",
+        title: "Compare Zyene Reviews With Review Platforms, 2026",
         description:
-            "Honest comparison matrix: Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp. Review-first vs CX, messaging, and survey platforms.",
+            "Honest comparisons: Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp, and Prosperly. Pricing, review workflows, and buyer-fit tradeoffs.",
         url: "https://www.zyenereviews.com/compare",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
-        title: "See How Zyene Reviews Compares, 2026",
-        description: "Honest comparisons: Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp.",
+        title: "Compare Zyene Reviews With Review Platforms, 2026",
+        description: "Honest comparisons: Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp, and Prosperly.",
     },
 });
 

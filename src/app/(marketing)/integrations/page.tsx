@@ -2,21 +2,21 @@ import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
 export const metadata: Metadata = mergeMarketingSocial({
-    title: "Integrations",
+    title: "Review Platform Integrations",
     description:
-        "Zyene Reviews connects with Google Business Profile, Facebook, Yelp, Zapier, and Square. Use the REST API or generic webhook for custom workflows.",
+        "Sync Google, Facebook, and Yelp reviews. Trigger fair review requests from your workflow with Zyene’s REST API or generic inbound webhook.",
     alternates: { canonical: "https://www.zyenereviews.com/integrations" },
     openGraph: {
-        title: "Integrations",
+        title: "Review Platform Integrations",
         description:
-            "Connect Zyene to Google, Facebook, Yelp, Zapier, and Square. Use the REST API for custom integrations.",
+            "Sync Google, Facebook, and Yelp reviews. Trigger review requests through Zyene’s REST API or generic inbound webhook.",
         url: "https://www.zyenereviews.com/integrations",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
-        title: "Integrations",
-        description: "Connect Zyene to Google, Facebook, Yelp, Zapier, and Square.",
+        title: "Review Platform Integrations",
+        description: "Sync reviews and trigger review requests through your existing workflow.",
     },
 });
 

@@ -6,10 +6,12 @@ import { cn } from "@/lib/utils";
 export function BlogAuthorByline({
     author,
     size = "sm",
+    showRole = true,
     className,
 }: {
     author: BlogAuthor;
     size?: "sm" | "md";
+    showRole?: boolean;
     className?: string;
 }) {
     const resolved = resolveBlogAuthor(author);
@@ -41,7 +43,7 @@ export function BlogAuthorByline({
             )}
             <div className={cn("min-w-0 text-left", textClass)}>
                 <p className="font-medium text-foreground truncate">{resolved.name}</p>
-                {resolved.role ? (
+                {showRole && resolved.role ? (
                     <p className="text-muted-foreground truncate">{resolved.role}</p>
                 ) : null}
             </div>

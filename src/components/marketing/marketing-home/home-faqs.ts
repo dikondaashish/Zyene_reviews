@@ -7,7 +7,7 @@ export const HOME_FAQS = [
     {
         question: "How do review requests work?",
         answer:
-            "You can send review requests via email, SMS, or a shareable link. Each request directs your customer to your custom review page where they can leave feedback or be guided to Google, Yelp, or Facebook.",
+            "You can send a branded review request by email, SMS, shareable link, or QR code. Each request opens your review page so customers can share feedback, and your team has a clear next step.",
     },
     {
         question: "Does Zyene post AI replies directly to Google?",
@@ -20,9 +20,9 @@ export const HOME_FAQS = [
             "Yes. The Professional plan supports up to 3 locations with independent limits per location. Enterprise plans offer unlimited locations.",
     },
     {
-        question: "What happens to negative feedback?",
+        question: "How does private feedback work?",
         answer:
-            "Customers who rate 4-5 stars are guided to leave a public review on Google. Customers who rate 1-3 stars are directed to a private feedback form so you can resolve the issue before it goes public. This is the Negative Feedback Shield, included on every paid plan.",
+            "Negative Feedback Shield gives customers a private way to share feedback and alerts your team so you can respond quickly. It supports service recovery; it does not block legitimate public reviews. Send review requests fairly and use private feedback to improve the next experience.",
     },
     {
         question: "Can I cancel anytime?",

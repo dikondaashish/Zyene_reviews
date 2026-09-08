@@ -4,19 +4,19 @@ import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 export const metadata: Metadata = mergeMarketingSocial({
     title: "About Us",
     description:
-        "Zyene Reviews helps local businesses monitor reviews, reply with AI, and grow reputation ethically. Built by Zyene, Inc. for affordable review management.",
+        "Zyene Reviews helps local businesses build a fair review routine: invite feedback, respond with AI assistance, follow up privately, and learn from trends.",
     alternates: { canonical: "https://www.zyenereviews.com/about" },
     openGraph: {
         title: "About Zyene Reviews",
         description:
-            "Zyene Reviews is a product of Zyene, Inc. We help local businesses monitor reviews, respond with AI, and grow their reputation, ethically and affordably.",
+            "Zyene Reviews helps local businesses invite feedback fairly, respond with AI assistance, follow up privately, and learn from trends.",
         url: "https://www.zyenereviews.com/about",
     },
     twitter: {
         card: "summary_large_image",
         title: "About Zyene Reviews",
         description:
-            "Built by Zyene, Inc., making review management accessible and ethical for every local business. Starting at $29.99/mo.",
+            "Built by Zyene, Inc. for local businesses that want a fair, consistent review routine.",
     },
 });
 

@@ -1,54 +1,61 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Clock } from "lucide-react";
-import { BLOG_POSTS, PILLAR_LABELS, PILLAR_COLORS } from "@/lib/content/blog-data";
-import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { BLOG_POSTS } from "@/lib/content/blog-data";
+import { resolveBlogAuthor } from "@/lib/content/blog-authors";
 
-export function BlogAllPostsGridSection({ posts }: { posts: typeof BLOG_POSTS }) {
+const BLOG_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
+
+function formatDate(date: string) {
+    return BLOG_DATE_FORMATTER.format(new Date(date));
+}
+
+export function BlogAllPostsGridSection({
+    posts,
+    totalCount = posts.length,
+    hasMore = false,
+    onLoadMore,
+}: {
+    posts: typeof BLOG_POSTS;
+    totalCount?: number;
+    hasMore?: boolean;
+    onLoadMore?: () => void;
+}) {
     return (
-        <section className="py-8 pb-24 px-4 bg-background">
-                <div className="container mx-auto max-w-5xl">
-                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-6">All Posts</p>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {posts.map((post) => (
-                            <Link key={post.slug} href={`/blog/${post.slug}`} className="group bg-card border border-border rounded-2xl p-6 hover:border-primary/40 hover:shadow-md transition-all flex flex-col">
-                                {post.image ? (
-                                    <Image
-                                        src={post.image.src}
-                                        alt={post.image.alt}
-                                        width={640}
-                                        height={360}
-                                        className="mb-5 aspect-video w-full rounded-xl object-cover"
-                                    />
-                                ) : null}
-                                <div className={`inline-flex items-center self-start gap-1 text-xs font-bold px-2.5 py-1 rounded-full border mb-3 ${PILLAR_COLORS[post.pillar]}`}>
-                                    {PILLAR_LABELS[post.pillar]}
-                                </div>
-                                <h3 className="text-base font-bold text-foreground mb-2 group-hover:text-primary transition-colors leading-snug flex-1">
-                                    {post.title}
-                                </h3>
-                                <p className="text-sm text-muted-foreground mb-4 leading-relaxed line-clamp-2">
-                                    {post.excerpt}
-                                </p>
-                                <div className="mt-auto space-y-3 pt-4 border-t border-border">
-                                    <BlogAuthorByline author={post.author} />
-                                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                                        <div className="flex items-center gap-1">
-                                            <Clock className="size-3" />
-                                            {post.readMinutes} min
-                                        </div>
-                                        <span>
-                                            {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                                                month: "short",
-                                                day: "numeric",
-                                            })}
-                                        </span>
-                                    </div>
-                                </div>
-                            </Link>
-                        ))}
+        <section className="blog-grid-section" aria-labelledby="blog-grid-heading">
+            <div className="marketing-container">
+                <div className="blog-grid-heading-row">
+                    <div>
+                        <p className="blog-grid-kicker">The Zyene Reviews journal</p>
+                        <h2 id="blog-grid-heading">Fresh ideas for a stronger reputation.</h2>
                     </div>
+                    <span className="blog-grid-count">{totalCount} {totalCount === 1 ? "article" : "articles"}</span>
                 </div>
-            </section>
+                {posts.length > 0 ? (
+                    <div className="blog-post-grid">
+                        {posts.map((post, index) => {
+                            const author = resolveBlogAuthor(post.author);
+                            return (
+                                <Link key={post.slug} href={`/blog/${post.slug}`} className="blog-post-card group" data-reveal>
+                                    <div className="blog-post-image">
+                                        {post.image ? <Image src={post.image.src} alt={post.image.alt} fill sizes="(max-width:767px) 100vw, (max-width:1100px) 50vw, 33vw" priority={index < 3} /> : null}
+                                        <span className="blog-post-image-arrow" aria-hidden="true"><ArrowUpRight size={16} /></span>
+                                    </div>
+                                    <div className="blog-post-content">
+                                        <span className="blog-post-pillar" data-pillar={post.pillar}>{post.pillarLabel}</span>
+                                        <h3>{post.title}</h3>
+                                        <p>{post.excerpt}</p>
+                                        <div className="blog-post-meta">
+                                            <span>{author.name}</span><span aria-hidden="true">•</span><time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time><span>{post.readMinutes} min read</span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                ) : <div className="blog-grid-empty">No articles match that search yet. Try another topic.</div>}
+                {hasMore && onLoadMore ? <button type="button" className="blog-load-more" onClick={onLoadMore}>Load more <ArrowDown size={15} aria-hidden="true" /></button> : null}
+            </div>
+        </section>
     );
 }

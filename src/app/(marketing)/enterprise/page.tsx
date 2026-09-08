@@ -2,19 +2,19 @@ import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
 export const metadata: Metadata = mergeMarketingSocial({
-    title: "Enterprise, Custom Pricing, SLA, SSO & White-Label",
+    title: "Enterprise Review Management for Multi-Location Teams",
     description:
-        "Enterprise review management for multi-location brands: unlimited locations, dedicated account manager, SSO, uptime SLA, and white-label widgets.",
+        "Coordinate review requests, private feedback follow-up, AI-assisted replies, and reporting with an Enterprise plan built around your business.",
     alternates: { canonical: "https://www.zyenereviews.com/enterprise" },
     openGraph: {
         title: "Zyene Reviews Enterprise",
-        description: "Scale review operations across unlimited locations with SLA, SSO, and white-label.",
+        description: "Enterprise review management built around your locations, team, and reputation workflow.",
         url: "https://www.zyenereviews.com/enterprise",
     },
     twitter: {
         card: "summary_large_image",
         title: "Zyene Reviews Enterprise",
-        description: "Scale review operations across unlimited locations with SLA, SSO, and white-label.",
+        description: "Enterprise review management built around your locations, team, and reputation workflow.",
     },
 });
 

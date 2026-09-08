@@ -4,19 +4,19 @@ import { ArrowRight, Check } from "lucide-react";
 
 const STORIES = [
   {
-    title: "You make their day. Make it easy to share.",
-    label: "01 / GET MORE REVIEWS",
-    text: "The best time to ask is while a great experience is still fresh. Reach customers with a personal review request by text, email, or a quick scan.",
+    title: "Ask once. Follow up thoughtfully. Keep it moving.",
+    label: "01 / INVITE FEEDBACK",
+    text: "Set a branded review request for the right moment after a visit or completed service. Reach customers by text, email, link, or QR code, then add an optional reminder when they have not engaged.",
     image: "/marketing/home/cafe-service.webp",
     alt: "A barista serving iced coffee across a café counter",
     href: "/features/review-collection",
     link: "Make every visit count",
-    features: ["SMS & email requests", "QR codes & review links"],
+    features: ["SMS, email, links & QR codes", "Optional follow-up reminders"],
   },
   {
-    title: "A personal reply. Without the blank page.",
-    label: "02 / KEEP THE CONVERSATION GOING",
-    text: "Good feedback deserves more than silence. Bring your reviews together, find the right words with AI, and add the human touch only you can.",
+    title: "A thoughtful reply. Without the blank page.",
+    label: "02 / RESPOND WITH CARE",
+    text: "Bring Google, Facebook, and Yelp feedback into one working view. Let AI get the first draft started, then add the human context only your team can provide before you publish to Google.",
     image: "/marketing/home/cafe-conversation.webp",
     alt: "A barista listening to a customer at a café counter",
     href: "/features/ai-replies",
@@ -24,9 +24,9 @@ const STORIES = [
     features: ["AI reply suggestions", "Your tone, your final say"],
   },
   {
-    title: "Your reputation has a story. See the whole picture.",
-    label: "03 / GROW WITH CLARITY",
-    text: "Understand what customers value, keep an eye on local competitors, and give every location a clear view of what’s working.",
+    title: "Your reputation has a story. See the next move.",
+    label: "03 / LEARN WITH CLARITY",
+    text: "See request activity, rating and response trends, local competitor context, and the feedback that deserves a closer look—then improve the experience that comes next.",
     image: "/marketing/about/team-collaboration.png",
     alt: "A business team reviewing its work together",
     href: "/features/analytics",
@@ -41,14 +41,14 @@ export function MarketingHomeWorkflow() {
       <div className="marketing-container">
         <div className="marketing-section-heading">
           <h2>
-            Your good work.
+            A review routine
             <br />
-            More people talking about it.
+            that keeps working.
           </h2>
           <p>
-            Less time chasing reviews.
+            Invite feedback.
             <br />
-            More time doing what you do best.
+            Respond with care. Learn quickly.
           </p>
         </div>
         {STORIES.map((story, index) => (

@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, Check, X, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 import { COMPETITORS } from "@/lib/comparisons/competitor-data";
-import { FeatureCellValue } from "./[competitor]/compare-competitor-feature-cell";
 
 export function CompareCardsSection() {
     return (
@@ -12,7 +10,7 @@ export function CompareCardsSection() {
                     <p className="text-muted-foreground text-center mb-12">
                         Each page has a full feature-by-feature breakdown, honest analysis, and pricing comparison.
                     </p>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
                         {COMPETITORS.map((comp) => (
                             <div
                                 key={comp.slug}

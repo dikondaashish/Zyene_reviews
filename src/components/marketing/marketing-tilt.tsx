@@ -36,7 +36,8 @@ export function MarketingTilt({ children, className }: { children: ReactNode; cl
   return (
     <m.div
       className={className}
-      style={{ transform: reducedMotion ? "none" : transform }}
+      data-marketing-tilt
+      style={{ transform }}
       onPointerMove={move}
       onPointerLeave={reset}
       onPointerCancel={reset}

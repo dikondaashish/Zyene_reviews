@@ -12,17 +12,17 @@ export function IntegrationsDeveloperSection() {
                         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20 mb-6">
                             <Code2 className="size-3.5" /> For Developers
                         </div>
-                        <h2 className="text-4xl font-bold mb-4 leading-tight">Build exactly what your business needs</h2>
+                        <h2 className="text-4xl font-bold mb-4 leading-tight">Build review requests into your workflow</h2>
                         <p className="text-[color:var(--marketing-footer-muted)] mb-6 leading-relaxed text-lg">
-                            Our REST API gives full programmatic access to reviews, requests, responses, analytics, and webhooks. Included on every paid plan - no enterprise contract required.
+                            Use a scoped REST API key to send review requests from your own system, list reviews, and retrieve aggregate review and request activity. A generic inbound webhook is available when your automation tool can send the customer event.
                         </p>
                         <ul className="space-y-3 mb-8">
                             {[
-                                "OpenAPI 3.0 specification + Postman collection",
-                                "Webhook events for new reviews, replies, and requests",
-                                "Full read/write access to all review data",
-                                "API key management per team member",
-                                "Rate-limited and secure by default",
+                                "Create scoped API keys for your business",
+                                "Send SMS, email, link, or combined review requests",
+                                "List reviews connected to your business",
+                                "Retrieve aggregate review and request activity",
+                                "Accept customer events through a generic inbound webhook",
                             ].map((f) => (
                                 <li key={f} className="flex items-start gap-3 text-[color:var(--marketing-footer-list)]">
                                     <Check className="text-primary shrink-0 mt-0.5 size-5" />
@@ -38,7 +38,7 @@ export function IntegrationsDeveloperSection() {
                             </Button>
                             <Button variant="outline" className="gap-2 border-[color:var(--marketing-footer-muted)] text-[color:var(--marketing-footer-fg)] hover:bg-white/10" asChild>
                                 <Link href={SIGNUP_URL}>
-                                    <Sparkles className="size-4" /> Get API Key Free
+                                    <Sparkles className="size-4" /> Create an API Key
                                 </Link>
                             </Button>
                         </div>
@@ -49,17 +49,17 @@ export function IntegrationsDeveloperSection() {
                             <span className="rounded-full bg-destructive/70 size-3" />
                             <span className="rounded-full bg-chart-4/70 size-3" />
                             <span className="rounded-full bg-chart-2/70 size-3" />
-                            <span className="text-white/30 text-xs ml-2">POST /v1/requests</span>
+                            <span className="text-white/30 text-xs ml-2">POST /api/v1/requests/send</span>
                         </div>
                         <pre className="text-[13px] leading-relaxed overflow-x-auto text-left whitespace-pre">
                             <code>
                                 <span className="text-chart-1">curl</span>{" "}
                                 <span className="text-chart-2">-X POST</span>{" \\\n"}
                                 {"  "}
-                                <span className="text-chart-4">https://api.zyenereviews.com/v1/requests</span>{" \\\n"}
+                                <span className="text-chart-4">https://www.zyenereviews.com/api/v1/requests/send</span>{" \\\n"}
                                 {"  "}
                                 <span className="text-chart-2">-H</span>{" "}
-                                <span className="text-primary">&quot;Authorization: Bearer $API_KEY&quot;</span>{" \\\n"}
+                                <span className="text-primary">&quot;X-API-Key: $API_KEY&quot;</span>{" \\\n"}
                                 {"  "}
                                 <span className="text-chart-2">-H</span>{" "}
                                 <span className="text-primary">&quot;Content-Type: application/json&quot;</span>{" \\\n"}
@@ -67,19 +67,19 @@ export function IntegrationsDeveloperSection() {
                                 <span className="text-chart-2">-d</span>{" "}
                                 <span className="text-primary">&apos;&#123;</span>{"\n"}
                                 {"    "}
-                                <span className="text-primary">&quot;customer_name&quot;: &quot;Jane Smith&quot;,</span>{"\n"}
+                                <span className="text-primary">&quot;customerName&quot;: &quot;Jane Smith&quot;,</span>{"\n"}
                                 {"    "}
-                                <span className="text-primary">&quot;phone&quot;: &quot;+15551234567&quot;,</span>{"\n"}
+                                <span className="text-primary">&quot;customerPhone&quot;: &quot;+15551234567&quot;,</span>{"\n"}
                                 {"    "}
-                                <span className="text-primary">&quot;channel&quot;: &quot;sms&quot;,</span>{"\n"}
+                                <span className="text-primary">&quot;customerEmail&quot;: &quot;jane@example.com&quot;,</span>{"\n"}
                                 {"    "}
-                                <span className="text-primary">&quot;location_id&quot;: &quot;loc_abc123&quot;</span>{"\n"}
+                                <span className="text-primary">&quot;channel&quot;: &quot;sms&quot;</span>{"\n"}
                                 {"  "}
                                 <span className="text-primary">&#125;&apos;</span>
                             </code>
                         </pre>
                         <div className="mt-4 pt-3 border-t border-white/10 text-chart-2 text-xs">
-                            ✓ 200 OK - Review request sent via SMS
+                            ✓ 200 OK - Review request created
                         </div>
                     </div>
                 </div>

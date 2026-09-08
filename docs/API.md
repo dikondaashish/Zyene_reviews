@@ -217,6 +217,7 @@ Unauthenticated or lightly rate-limited:
 | `/api/marketing/demo-request` | Demo inbound |
 | `/api/marketing/newsletter/subscribe`, `unsubscribe` | Newsletter |
 | `/api/marketing/agency-waitlist` | Agency waitlist |
+| `/api/marketing/book-lead` | Overview-guide lead capture (returns download URL) |
 | `/api/marketing/events/track` | Funnel events |
 | `/api/marketing/tools/*` | Free tools (places search, reputation score, review link, review response) |
 | `/api/track/review`, `/api/track/review-open` | Open/click tracking pixels/redirects |

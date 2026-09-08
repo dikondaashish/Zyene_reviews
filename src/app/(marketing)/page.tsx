@@ -4,22 +4,21 @@ import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 export const metadata: Metadata = mergeMarketingSocial({
     title: "Review Management for Local Businesses",
     description:
-        "Monitor and respond to Google reviews with AI. Negative Feedback Shield gives low ratings a private feedback path while your team follows up. From $29.99/mo.",
+        "Send fair review requests, manage Google, Facebook, and Yelp feedback, reply with AI, and use Negative Feedback Shield for private follow-up. From $29.99/mo.",
     alternates: {
         canonical: "https://www.zyenereviews.com/",
     },
     openGraph: {
         title: "Zyene Reviews, Review Management for Local Businesses",
         description:
-            "AI-powered review management, competitor tracking, and local SEO for local businesses. Starting at $29.99/mo. 7-day free trial.",
+            "Fair review requests, AI-assisted Google replies, competitor context, and local insights for local businesses. From $29.99/mo.",
         url: "https://www.zyenereviews.com/",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
         title: "Zyene Reviews, Review Management for Local Businesses",
-        description:
-            "AI-powered review management, competitor tracking, and local SEO for local businesses. Starting at $29.99/mo. 7-day free trial.",
+        description: "A fair, repeatable review routine for local businesses. From $29.99/mo.",
     },
 });
 

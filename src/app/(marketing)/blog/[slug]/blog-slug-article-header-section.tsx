@@ -1,74 +1,41 @@
 import Link from "next/link";
-import Image from "next/image";
-import { Clock, ChevronRight } from "lucide-react";
-import { PILLAR_LABELS, PILLAR_COLORS } from "@/lib/content/blog-data";
+import { CalendarDays, Clock, Slash } from "lucide-react";
+import { PILLAR_LABELS } from "@/lib/content/blog-data";
 import type { BlogPost } from "@/lib/content/blog-types";
 import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
 
-// ─── Static Generation ────────────────────────────────────────────────────────
+const BLOG_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+});
 
-
-// ─── Metadata ─────────────────────────────────────────────────────────────────
-
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
+function formatDate(date: string) {
+    return BLOG_DATE_FORMATTER.format(new Date(`${date}T12:00:00`));
+}
 
 export function BlogSlugArticleHeaderSection({ post }: { post: BlogPost }) {
     return (
-        <header className="pt-16 pb-12 px-4 bg-background border-b border-border">
-                <div className="container mx-auto max-w-3xl">
-                    {/* Breadcrumb */}
-                    <nav className="flex items-center gap-2 text-xs text-muted-foreground mb-6">
-                        <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
-                        <ChevronRight className="size-3.5" />
-                        <span className="text-foreground font-medium truncate max-w-[200px]">{post.title}</span>
-                    </nav>
-
-                    {/* Pillar tag */}
-                    <div className={`inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full border mb-5 ${PILLAR_COLORS[post.pillar]}`}>
-                        {PILLAR_LABELS[post.pillar]}
-                    </div>
-
-                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-5 leading-[1.1]">
-                        {post.title}
-                    </h1>
-                    <p className="text-xl text-muted-foreground mb-7 leading-relaxed">
-                        {post.excerpt}
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-border pt-5">
-                        <BlogAuthorByline author={post.author} size="md" />
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                            <span>
-                                {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                                    month: "long",
-                                    day: "numeric",
-                                    year: "numeric",
-                                })}
-                            </span>
-                            <span className="text-muted-foreground/40 hidden sm:inline">·</span>
-                            <div className="flex items-center gap-1.5">
-                                <Clock className="size-3.5" />
-                                {post.readMinutes} min read
-                            </div>
-                        </div>
-                    </div>
-                    {post.image ? (
-                        <figure className="mt-8 overflow-hidden rounded-2xl border border-border bg-muted/30">
-                            <Image
-                                src={post.image.src}
-                                alt={post.image.alt}
-                                width={post.image.width}
-                                height={post.image.height}
-                                priority
-                                className="aspect-video w-full object-cover"
-                            />
-                            <figcaption className="border-t border-border px-4 py-3 text-xs leading-relaxed text-muted-foreground">
-                                {post.image.caption}
-                            </figcaption>
-                        </figure>
-                    ) : null}
+        <header className="blog-article-hero">
+            <div className="blog-article-hero-inner">
+                <div className="blog-article-breadcrumb" aria-label="Article category">
+                    <Link href="/blog">Blog</Link>
+                    <Slash className="size-3.5" aria-hidden="true" />
+                    <span>{PILLAR_LABELS[post.pillar]}</span>
                 </div>
-            </header>
+                <h1>{post.title}</h1>
+                <div className="blog-article-meta">
+                    <BlogAuthorByline author={post.author} size="md" showRole={false} className="blog-article-author" />
+                    <span className="blog-article-meta-item">
+                        <CalendarDays className="size-4" aria-hidden="true" />
+                        <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+                    </span>
+                    <span className="blog-article-meta-item">
+                        <Clock className="size-4" aria-hidden="true" />
+                        {post.readMinutes} min read
+                    </span>
+                </div>
+            </div>
+        </header>
     );
 }

@@ -1,9 +1,5 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// Competitor Comparison Data - Phase 3
-// Single source of truth for all 4 comparison landing pages.
-// ─────────────────────────────────────────────────────────────────────────────
-
 import type { FaqItem } from "@/components/seo/json-ld";
+import { prosperlyComparison } from "@/lib/comparisons/competitor-data-prosperly";
 
 export interface FeatureRow {
     feature: string;
@@ -34,6 +30,10 @@ export interface CompetitorData {
     openingSummary?: string;
     /** Optional deep-dive article (uncopyable asset) linked from compare hero. */
     deepDiveLink?: { label: string; href: string };
+    /** A current plan-terms sentence used instead of making a contract inference. */
+    billingTerms?: string;
+    /** Public competitor pricing source shown on the comparison page. */
+    pricingSource?: { label: string; href: string; checkedOn: string };
     faqs?: FaqItem[];
 }
 
@@ -444,9 +444,9 @@ export const COMPETITORS: CompetitorData[] = [
         ],
         accentColor: "orange",
     },
+    prosperlyComparison,
 ];
 
-/** Lookup map keyed by slug. */
 export const COMPETITOR_MAP: Record<string, CompetitorData> = Object.fromEntries(
     COMPETITORS.map((c) => [c.slug, c])
 );

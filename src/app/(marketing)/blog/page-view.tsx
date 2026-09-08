@@ -1,15 +1,10 @@
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { BLOG_POSTS } from "@/lib/content/blog-data";
 import { BlogHeroSection } from "./blog-hero-section";
-import { BlogPillarFiltersSection } from "./blog-pillar-filters-section";
-import { BlogFeaturedPostSection } from "./blog-featured-post-section";
-import { BlogAllPostsGridSection } from "./blog-all-posts-grid-section";
+import { BlogCatalog } from "./blog-catalog";
 import { BlogNewsletterCtaSection } from "./blog-newsletter-cta-section";
 
 export default function BlogHubPage() {
-    const featured = BLOG_POSTS[0];
-    const rest = BLOG_POSTS.slice(1);
-
     return (
         <>
             <BreadcrumbJsonLd
@@ -19,9 +14,7 @@ export default function BlogHubPage() {
                 ]}
             />
             <BlogHeroSection />
-            <BlogPillarFiltersSection />
-            <BlogFeaturedPostSection featured={featured} />
-            <BlogAllPostsGridSection posts={rest} />
+            <BlogCatalog posts={BLOG_POSTS} />
             <BlogNewsletterCtaSection />
         </>
     );

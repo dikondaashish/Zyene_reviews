@@ -2,20 +2,20 @@ import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
 export const metadata: Metadata = mergeMarketingSocial({
-    title: "Customer Case Studies, Real Results for Local Businesses",
+    title: "Illustrative Review Workflows for Local Businesses",
     description:
-        "See how dental practices, restaurants, salons, HVAC companies, and auto shops grew Google reviews and ratings with Zyene Reviews, with before/after metrics.",
+        "Explore illustrative review-management workflows for dental, restaurant, salon, HVAC, and auto teams. Composite examples are educational.",
     alternates: { canonical: "https://www.zyenereviews.com/case-studies" },
     openGraph: {
-        title: "Customer Case Studies",
-        description: "Before/after metrics from local businesses using Zyene Reviews for review management and reputation growth.",
+        title: "Illustrative Review Workflows",
+        description: "Composite workflow examples for local teams building a better review routine.",
         url: "https://www.zyenereviews.com/case-studies",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
-        title: "Customer Case Studies",
-        description: "Real outcomes: more Google reviews, higher ratings, faster response times.",
+        title: "Illustrative Review Workflows",
+        description: "Composite workflow examples for local teams building a better review routine.",
     },
 });
 

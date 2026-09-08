@@ -5,17 +5,62 @@ import { MarketingHomeIndustries } from "@/components/marketing/marketing-home/m
 import { MarketingHomeNextSteps } from "@/components/marketing/marketing-home/marketing-home-next-steps";
 import { MarketingHomeClosing } from "@/components/marketing/marketing-home/marketing-home-closing";
 import { MarketingHomeTestimonials } from "@/components/marketing/marketing-home/marketing-home-testimonials";
+import { ProductShowcase } from "@/components/marketing/product-tour/product-showcase";
+import { MarketingLayoutHeader } from "@/app/(marketing)/marketing-layout-header";
+import { MarketingScrollReveal } from "@/components/marketing/marketing-scroll-reveal";
+import { HomeLeadWizard } from "@/components/marketing/home-lead-wizard";
+import { MarketingHomeFeatureConstellation } from "@/components/marketing/marketing-home/marketing-home-feature-constellation";
 
 export function MarketingHomeClient() {
-    return (
-        <div className="flex w-full flex-col items-center">
-            <MarketingHomeHero />
-            <MarketingHomeTrustStrip />
-            <MarketingHomeWorkflow />
-            <MarketingHomeIndustries />
-            <MarketingHomeTestimonials />
-            <MarketingHomeNextSteps />
-            <MarketingHomeClosing />
+  return (
+    <div className="flex w-full flex-col items-center">
+      <div className="home-hero-shell">
+        <MarketingLayoutHeader />
+        <MarketingHomeHero />
+      </div>
+      <MarketingScrollReveal className="home-scroll-section" intensity="subtle">
+        <MarketingHomeTrustStrip />
+      </MarketingScrollReveal>
+      <MarketingScrollReveal className="home-scroll-section" delay={40}>
+        <div id="home-product-tour" className="w-full">
+          <ProductShowcase />
         </div>
-    );
+      </MarketingScrollReveal>
+      <MarketingScrollReveal
+        className="home-scroll-section"
+        delay={60}
+        intensity="prominent"
+      >
+        <MarketingHomeFeatureConstellation />
+      </MarketingScrollReveal>
+      <MarketingScrollReveal
+        className="home-scroll-section"
+        delay={80}
+        intensity="prominent"
+      >
+        <MarketingHomeWorkflow />
+      </MarketingScrollReveal>
+      <MarketingScrollReveal className="home-scroll-section" delay={100}>
+        <MarketingHomeIndustries />
+      </MarketingScrollReveal>
+      <MarketingScrollReveal
+        className="home-scroll-section"
+        delay={120}
+        intensity="subtle"
+      >
+        <MarketingHomeTestimonials />
+      </MarketingScrollReveal>
+      <MarketingScrollReveal className="home-scroll-section" delay={140}>
+        <MarketingHomeNextSteps />
+      </MarketingScrollReveal>
+      <MarketingScrollReveal
+        className="home-scroll-section"
+        delay={160}
+        intensity="subtle"
+      >
+        <MarketingHomeClosing />
+      </MarketingScrollReveal>
+      <HomeLeadWizard />
+    </div>
+  );
 }

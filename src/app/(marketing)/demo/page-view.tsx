@@ -19,7 +19,7 @@ export default function DemoPage() {
                 ]}
             />
 
-            <LandingHero eyebrow="See Zyene in action" title="Let’s make it work for your business." description="Explore review requests, AI replies, and reporting with our team. Bring your questions. We’ll help you find the right fit." />
+            <LandingHero eyebrow="See Zyene in action" title="See your review routine in action." description="Walk through fair SMS, email, link, and QR-code requests, AI-assisted Google replies, private feedback follow-up, and reporting with our team." />
 
             <section className="py-16 px-4">
                 <div className="container mx-auto max-w-5xl grid lg:grid-cols-2 gap-10">

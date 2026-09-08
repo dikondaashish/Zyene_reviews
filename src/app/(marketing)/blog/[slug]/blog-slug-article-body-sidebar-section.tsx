@@ -1,96 +1,55 @@
-import { BLOG_POST_MAP } from "@/lib/content/blog-data";
-
 import Link from "next/link";
-import { ArrowRight, Clock } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BlogSlugFaqSection } from "@/components/marketing/blog-slug-faq-section";
 import { ContentRenderer } from "@/components/marketing/content-renderer";
 import { SIGNUP_URL } from "@/config/env";
+import { BLOG_POST_MAP } from "@/lib/content/blog-data";
+import { BlogSlugTableOfContents } from "./blog-slug-table-of-contents";
 
-// ─── Static Generation ────────────────────────────────────────────────────────
-
-// ─── Metadata ─────────────────────────────────────────────────────────────────
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
-
-export function BlogSlugArticleBodySidebarSection({ post, relatedPosts }: { post: (typeof BLOG_POST_MAP)[string]; relatedPosts: (typeof BLOG_POST_MAP)[string][] }) {
+export function BlogSlugArticleBodySidebarSection({ post }: { post: (typeof BLOG_POST_MAP)[string] }) {
     return (
-        <div className="py-12 px-4 bg-background">
-                <div className="container mx-auto max-w-5xl">
-                    <div className="grid lg:grid-cols-[1fr_280px] gap-12 items-start">
+        <section className="blog-article-shell">
+            <div className="blog-article-layout">
+                <aside className="blog-article-sidebar">
+                    <BlogSlugTableOfContents sections={post.body} faqs={post.faqs} />
+                </aside>
+                <article className="blog-article-main">
+                    <p className="blog-article-lead" data-geo-summary="">
+                        {post.excerpt}
+                    </p>
+                    <ContentRenderer sections={post.body} className="blog-article-content" />
 
-                        {/* Article content */}
-                        <article>
-                            <ContentRenderer sections={post.body} />
+                    {post.faqs && post.faqs.length > 0 ? <BlogSlugFaqSection faqs={post.faqs} /> : null}
 
-                            {post.faqs && post.faqs.length > 0 ? <BlogSlugFaqSection faqs={post.faqs} /> : null}
-
-                            {/* Internal links */}
-                            {post.internalLinks.length > 0 && (
-                                <div className="mt-12 pt-8 border-t border-border">
-                                    <p className="text-sm font-semibold text-foreground mb-4">Related resources:</p>
-                                    <div className="space-y-2">
-                                        {post.internalLinks.map((link) => (
-                                            <Link
-                                                key={link.href}
-                                                href={link.href === "/signup" ? SIGNUP_URL : link.href}
-                                                className="flex items-center gap-2 text-sm text-primary hover:brightness-90 transition-colors group"
-                                            >
-                                                <ArrowRight className="shrink-0 group-hover:translate-x-1 transition-transform size-3.5" />
-                                                {link.label}
-                                            </Link>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Post footer CTA */}
-                            <div className="mt-12 bg-primary/5 border border-primary/20 rounded-2xl p-8">
-                                <h3 className="text-xl font-bold text-foreground mb-2">Ready to try Zyene Reviews?</h3>
-                                <p className="text-muted-foreground mb-5">7-day free trial. Full access. No credit card lock-in.</p>
-                                <Button className="gap-2" asChild>
-                                    <Link href={SIGNUP_URL}>
-                                        Start Free Trial <ArrowRight className="size-4" />
+                    {post.internalLinks.length > 0 ? (
+                        <section className="blog-article-resources" aria-labelledby="blog-resources-heading">
+                            <h2 id="blog-resources-heading">Keep exploring</h2>
+                            <div>
+                                {post.internalLinks.map((link) => (
+                                    <Link key={link.href} href={link.href === "/signup" ? SIGNUP_URL : link.href}>
+                                        <ArrowRight className="size-4" aria-hidden="true" />
+                                        {link.label}
                                     </Link>
-                                </Button>
+                                ))}
                             </div>
-                        </article>
+                        </section>
+                    ) : null}
 
-                        {/* Sidebar */}
-                        <aside className="hidden lg:block space-y-6 sticky top-24">
-                            {/* CTA Card */}
-                            <div className="bg-card border border-border rounded-2xl p-6">
-                                <p className="text-sm font-bold text-foreground mb-2">Try Zyene free</p>
-                                <p className="text-xs text-muted-foreground mb-4">7-day trial. AI replies, review requests, Negative Feedback Shield. Starting at $29.99/mo.</p>
-                                <Button size="sm" className="w-full gap-2" asChild>
-                                    <Link href={SIGNUP_URL}>
-                                        Start Free Trial <ArrowRight className="size-3.5" />
-                                    </Link>
-                                </Button>
-                            </div>
-
-                            {/* Related posts */}
-                            {relatedPosts.length > 0 && (
-                                <div className="bg-card border border-border rounded-2xl p-6">
-                                    <p className="text-sm font-bold text-foreground mb-4">Related reading</p>
-                                    <div className="space-y-4">
-                                        {relatedPosts.map((related) => (
-                                            <Link key={related.slug} href={`/blog/${related.slug}`} className="group block">
-                                                <p className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors leading-snug mb-1">
-                                                    {related.title}
-                                                </p>
-                                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                                    <Clock className="size-3" />
-                                                    {related.readMinutes} min
-                                                </div>
-                                            </Link>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </aside>
-                    </div>
-                </div>
+                    <section className="blog-article-cta" data-reveal aria-labelledby="blog-cta-heading">
+                        <div>
+                            <p className="blog-article-eyebrow">A practical next step</p>
+                            <h2 id="blog-cta-heading">Ready to make review work easier?</h2>
+                            <p>Bring requests, replies, and feedback into one calm daily routine.</p>
+                        </div>
+                        <Button asChild>
+                            <Link href={SIGNUP_URL}>
+                                Start Free Trial <ArrowRight className="size-4" aria-hidden="true" />
+                            </Link>
+                        </Button>
+                    </section>
+                </article>
             </div>
+        </section>
     );
 }

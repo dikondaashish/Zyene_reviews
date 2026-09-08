@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { HUB_MATRIX_ROWS } from "./compare-hub-matrix-data";
 import { CellValue } from "./compare-cell-value";
 
@@ -9,11 +10,12 @@ export function CompareTableSection() {
         >
             <div className="container mx-auto max-w-6xl">
                 <h2 id="compare-matrix-heading" className="text-3xl font-bold text-foreground text-center mb-3">
-                    Zyene Reviews vs Birdeye vs Podium vs NiceJob vs GatherUp
+                    Side-by-side comparison matrix
                 </h2>
                 <p className="text-muted-foreground text-center mb-4 max-w-3xl mx-auto">
-                    High-intent comparison matrix for review management software. Zyene Reviews is not better at
-                    everything - we call out where each platform leads so you can shortlist honestly.
+                    Compare Zyene Reviews with Birdeye, Podium, NiceJob, and GatherUp. Zyene Reviews is not better at
+                    everything - we call out where each platform leads so you can shortlist honestly. For Prosperly’s
+                    law- and insurance-focused workflow, see the <Link href="/compare/prosperly" className="underline underline-offset-4 hover:text-foreground">full Prosperly comparison</Link>.
                 </p>
                 <p
                     className="text-sm text-foreground text-center mb-12 max-w-2xl mx-auto rounded-xl border border-border bg-muted/50 px-4 py-3"

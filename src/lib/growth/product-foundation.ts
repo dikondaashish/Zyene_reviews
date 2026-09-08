@@ -27,7 +27,7 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
         number: 3,
         name: "Review Collection Engine",
         value: "Branded pages, SMS/email/link campaigns, Negative Feedback Shield, QR codes.",
-        whyTheyPay: "Grow from 10 to 100+ reviews. Turn happy customers into Google reviews.",
+        whyTheyPay: "Invite feedback at the right moment and give your team a clear path to follow up.",
     },
     {
         number: 4,
@@ -62,8 +62,8 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
     {
         number: 9,
         name: "Integrations & API",
-        value: "Google, Facebook, Yelp, Zapier, REST API, embeddable widgets.",
-        whyTheyPay: "Connect existing workflow. Automate everything.",
+        value: "Google, Facebook, Yelp, REST API, secure webhooks, embeddable widgets.",
+        whyTheyPay: "Connect the request workflow to the tools your team already uses.",
     },
     {
         number: 10,
@@ -77,13 +77,13 @@ export const NEGATIVE_FEEDBACK_SHIELD = {
     headline: "Negative Feedback Shield",
     steps: [
         "Customer visits branded review page (collectratings.com/{slug})",
-        "Rates experience (emoji/stars/slider)",
-        "4-5 stars → redirected to Google to post publicly",
-        "1-3 stars → private form; owner gets instant alert",
+        "They can share a rating and context about their experience",
+        "A private feedback path gives the team the details to follow up",
+        "A public review path remains available for customers who choose to share publicly",
     ],
-    result: "More 5-star public reviews + fewer 1-star surprises.",
+    result: "A faster, more thoughtful response when an experience needs attention.",
     marketingNote:
-        "Headline on every marketing page, comparison, and sales conversation.",
+        "Use for fair service recovery, never to suppress honest public feedback.",
 } as const;
 
 export const PLAN_COMPARISON_ROWS = [
@@ -128,7 +128,7 @@ export const POSITIONING = {
         "Enterprise-grade review management and local SEO intelligence for owner-operators - at 1/10th the cost of Birdeye, with no annual contract.",
     pillars: [
         "10× cheaper than enterprise tools - $29.99 vs $299+ (Birdeye) or $399+ (Podium)",
-        "Negative Feedback Shield - give low ratings a private feedback path before follow-up",
+        "Negative Feedback Shield - give customers a private feedback path so your team can follow up",
         "Local SEO intelligence included on Starter - not locked behind enterprise tiers",
     ],
 } as const;

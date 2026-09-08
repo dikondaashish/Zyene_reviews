@@ -2,6 +2,12 @@
 @import "./marketing-scenes.css";
 @import "./marketing-tour.css";
 @import "./marketing-testimonials.css";
+@import "./marketing-home-hero.css";
+@import "./marketing-home-scene.css";
+@import "./marketing-home-motion.css";
+@import "./marketing-home-lead-wizard.css";
+@import "./marketing-home-features.css";
+@import "./blog.css";
 /* Public marketing has a consistent light canvas. Brand orange remains #ff4f00. */
 .marketing-site {
  --background:#fffefb; --foreground:#201515; --card:#fffefb; --card-foreground:#201515;
@@ -53,5 +59,6 @@
 }
 @media (max-width:399px) { .marketing-actions { align-items:stretch; flex-direction:column; } }
 @media (prefers-reduced-motion:reduce) {
+ .marketing-site [data-marketing-tilt] { transform:none !important; }
  .marketing-site *, .marketing-site *::before, .marketing-site *::after { animation:none !important; transition-duration:0s !important; scroll-behavior:auto !important; }
 }

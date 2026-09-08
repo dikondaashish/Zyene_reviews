@@ -14,15 +14,15 @@ export function IndustriesCtaSection() {
                         ))}
                     </div>
                     <h2 className="text-4xl font-bold text-foreground mb-4">
-                        Start getting more 5-star reviews today
+                        Turn customer moments into a stronger reputation.
                     </h2>
                     <p className="text-xl text-muted-foreground mb-10">
-                        7-day free trial. Full access. No credit card lock-in.<br />
-                        Works for every industry on this page - starting at $29.99/mo.
+                        Start a 7-day free trial to send fair review requests, respond with AI assistance, follow up on private feedback, and learn from the trends.<br />
+                        Plans start at $29.99/month. Cancel anytime.
                     </p>
                     <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl" asChild>
                         <Link href={SIGNUP_URL}>
-                            Start Your Free Trial <ArrowRight className="ml-2 size-5" />
+                            Start your 7-day free trial <ArrowRight className="ml-2 size-5" />
                         </Link>
                     </Button>
                 </div>

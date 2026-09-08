@@ -28,21 +28,21 @@ export type MarketingNavLink = {
 
 export const PRODUCT_LINKS: MarketingNavLink[] = [
     { href: "/features", label: "Features Overview", icon: Sparkles, desc: "Everything Zyene can do for your business" },
-    { href: "/features/review-monitoring", label: "Review Monitoring", icon: Sparkles, desc: "Unified inbox + real-time alerts" },
+    { href: "/features/review-monitoring", label: "Review Monitoring", icon: Sparkles, desc: "Connected review activity and alerts" },
     { href: "/features/ai-replies", label: "AI-Powered Replies", icon: Bot, desc: "One-click drafts and auto-commenter" },
-    { href: "/features/review-collection", label: "Review Collection", icon: ShieldCheck, desc: "Negative Feedback Shield included" },
-    { href: "/features/competitor-tracking", label: "Competitor Tracking", icon: TrendingUp, desc: "Ratings, trends, and AI briefs" },
+    { href: "/features/review-collection", label: "Review Collection", icon: ShieldCheck, desc: "Fair requests and private feedback follow-up" },
+    { href: "/features/competitor-tracking", label: "Competitor Tracking", icon: TrendingUp, desc: "Ratings, trends, and local context" },
     { href: "/features/local-seo", label: "Local SEO Dashboard", icon: Globe, desc: "GBP keywords and performance" },
-    { href: "/features/analytics", label: "Analytics & Reporting", icon: BarChart3, desc: "Trends, funnels, PDF and CSV exports" },
-    { href: "/how-it-works", label: "How It Works", icon: GitBranch, desc: "4 steps to more 5-star reviews" },
-    { href: "/integrations", label: "Integrations", icon: Zap, desc: "Google, Zapier, Square, and more" },
+    { href: "/features/analytics", label: "Analytics & Reporting", icon: BarChart3, desc: "Trends, request funnels, and CSV exports" },
+    { href: "/how-it-works", label: "How It Works", icon: GitBranch, desc: "Four steps to a better review routine" },
+    { href: "/integrations", label: "Integrations", icon: Zap, desc: "Google, Facebook, Yelp, API, and webhooks" },
     { href: "/pricing", label: "Pricing", icon: BarChart3, desc: "Plans from $29.99/mo - no contracts" },
 ];
 
 export const SOLUTIONS_LINKS: MarketingNavLink[] = [
     { href: "/industries", label: "By Industry", icon: Building2, desc: "Restaurants, dental, auto repair, and more" },
-    { href: "/compare", label: "Compare Tools", icon: Scale, desc: "Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp" },
-    { href: "/enterprise", label: "Enterprise", icon: Building2, desc: "Multi-location brands, SLA, SSO, white-label" },
+    { href: "/compare", label: "Compare Tools", icon: Scale, desc: "Compare Zyene Reviews with leading review platforms" },
+    { href: "/enterprise", label: "Enterprise", icon: Building2, desc: "Multi-location review workflows and white-label options" },
     { href: "/agencies", label: "Agencies", icon: Handshake, desc: "White-label review management for agencies" },
 ];
 

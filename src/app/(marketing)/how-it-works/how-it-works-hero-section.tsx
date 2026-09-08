@@ -5,9 +5,9 @@ import { STEPS } from "@/app/(marketing)/how-it-works/how-it-works-data";
 export function HowItWorksHeroSection() {
     return (
         <LandingHero
-            eyebrow="From setup to your next review"
-            title="A simpler routine for your reputation."
-            description="Connect your business, invite customer feedback, and keep the conversation going. Here’s how it all works."
+            eyebrow="From first request to next improvement"
+            title="A review routine your team can keep."
+            description="Connect your profile, invite feedback fairly, respond with care, and use the signals to improve the next customer experience."
             primary={{ label: "Start free trial", href: "/signup" }}
             secondary={{ label: "Book a demo", href: "/demo" }}
         >

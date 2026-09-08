@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Compare Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp - 2026";
+export const alt = "Compare Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp, and Prosperly - 2026";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -15,8 +15,8 @@ export default function OgImage() {
                     <div style={{ fontSize: "58px", fontWeight: "800", color: "#ffffff", lineHeight: "1.05", marginBottom: "24px" }}>
                         See how Zyene Reviews<br /><span style={{ color: "#4ade80" }}>compares to the rest</span>
                     </div>
-                    <div style={{ display: "flex", gap: "12px", marginBottom: "24px" }}>
-                        {["vs Birdeye $299/mo", "vs Podium $399/mo", "vs NiceJob $75/mo", "vs GatherUp $99/mo"].map((c) => (
+                    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "12px", marginBottom: "24px", maxWidth: "1000px" }}>
+                        {["vs Birdeye $299/mo", "vs Podium $399/mo", "vs NiceJob $75/mo", "vs GatherUp $99/mo", "vs Prosperly $119/mo"].map((c) => (
                             <div key={c} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "10px", padding: "8px 14px", color: "rgba(255,255,255,0.7)", fontSize: "13px", fontWeight: "600" }}>{c}</div>
                         ))}
                     </div>

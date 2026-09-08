@@ -86,7 +86,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         { url: `${BASE_URL}/industries/fitness`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     ];
 
-    // ─────────────────────────────────────────────
     // 4. Comparison pages - Phase 3 (live)
     // ─────────────────────────────────────────────
     const comparePages: MetadataRoute.Sitemap = [
@@ -95,6 +94,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         { url: `${BASE_URL}/compare/podium`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
         { url: `${BASE_URL}/compare/nicejob`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
         { url: `${BASE_URL}/compare/gatherup`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+        { url: `${BASE_URL}/compare/prosperly`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     ];
 
     // ─────────────────────────────────────────────

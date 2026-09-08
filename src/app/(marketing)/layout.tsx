@@ -11,7 +11,7 @@ import { MarketingLayoutHeader } from "@/app/(marketing)/marketing-layout-header
 import { MarketingLayoutFooter } from "@/app/(marketing)/marketing-layout-footer";
 
 function isGrowthOperationsPath(pathname: string | null): boolean {
-    return pathname === "/growth" || (pathname?.startsWith("/growth/") ?? false);
+  return pathname === "/growth" || (pathname?.startsWith("/growth/") ?? false);
 }
 
 export default function MarketingLayout({
@@ -25,7 +25,7 @@ export default function MarketingLayout({
     return (
         <div className={`${growthDashboard ? "" : "marketing-site"} flex min-h-dvh min-w-0 flex-col bg-background text-foreground`}>
             <a href="#main-content" className="marketing-skip-link marketing-button sr-only focus:not-sr-only">Skip to content</a>
-            <MarketingLayoutHeader />
+            {pathname === "/" ? null : <MarketingLayoutHeader />}
             {growthDashboard ? null : <MarketingMotion />}
             <Suspense fallback={null}>
                 <UtmCapture />

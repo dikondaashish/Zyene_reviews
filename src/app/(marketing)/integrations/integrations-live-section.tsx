@@ -7,8 +7,8 @@ export function IntegrationsLiveSection() {
     return (
         <section className="py-20 px-4 bg-muted border-t border-border">
             <div className="container mx-auto max-w-6xl">
-                <h2 className="text-3xl font-bold text-foreground mb-2 text-center">Live integrations</h2>
-                <p className="text-muted-foreground text-center mb-12">Connect today, no waitlist, available on all paid plans.</p>
+                <h2 className="text-3xl font-bold text-foreground mb-2 text-center">Available connections</h2>
+                <p className="text-muted-foreground text-center mb-12">Bring feedback together, then connect completed-customer events to a review-request workflow.</p>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {LIVE_INTEGRATIONS.map((int) => (
                         <div key={int.name} className="bg-card border border-border rounded-2xl p-7 flex flex-col hover:shadow-md transition-shadow group">
@@ -33,7 +33,7 @@ export function IntegrationsLiveSection() {
                                 <div>
                                     <h3 className="font-bold text-foreground text-lg leading-tight">{int.name}</h3>
                                     <span className="inline-block mt-1 bg-primary/10 text-primary text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-primary/20">
-                                        Live
+                                        {int.badge ?? "Available"}
                                     </span>
                                 </div>
                             </div>

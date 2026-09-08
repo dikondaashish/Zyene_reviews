@@ -8,7 +8,7 @@ export function FeaturesFeaturePillarsSection() {
         <>
             <section className="marketing-section">
                 <div className="marketing-container">
-                    <div className="marketing-section-heading"><h2>Everything has its place.<br />And a purpose.</h2><p>Explore the tools that help you collect, understand, and act on customer feedback.</p></div>
+                    <div className="marketing-section-heading"><h2>Every review moment.<br />One connected routine.</h2><p>From the first request to the next improvement, Zyene helps your team invite feedback, respond with care, and turn the patterns into action.</p></div>
                     <div className="grid grid-cols-1 gap-x-16 md:grid-cols-2">
                         {PILLARS.map(pillar => (
                             <article key={pillar.id} id={pillar.id} className="border-t border-border py-8">

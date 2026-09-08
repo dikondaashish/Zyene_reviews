@@ -1,0 +1,76 @@
+/* First-load choreography. Content remains in server HTML and never waits for hydration. */
+.hero-enter { animation:hero-enter 550ms cubic-bezier(.22,1,.36,1) backwards; }
+.home-reference-header .premium-header-inner { animation:hero-nav-enter 500ms cubic-bezier(.22,1,.36,1) backwards; }
+.hero-laptop-enter { animation:hero-device-enter 850ms 450ms cubic-bezier(.22,1,.36,1) backwards; }
+.hero-scene-glow > div { animation:hero-glow-enter 900ms 300ms cubic-bezier(.22,1,.36,1) backwards,hero-breathe 10s 1200ms ease-in-out infinite; }
+.hero-floating-review-top { animation:hero-card-enter 550ms 1050ms cubic-bezier(.22,1,.36,1) backwards; }
+.hero-floating-review-bottom { animation:hero-card-enter 550ms 1150ms cubic-bezier(.22,1,.36,1) backwards; }
+.hero-floating-review-top .hero-review-card { animation:hero-float 6s 1600ms ease-in-out infinite; }
+.hero-floating-review-bottom .hero-review-card { animation:hero-float 6.8s 1700ms ease-in-out infinite reverse; }
+.hero-growth-enter { animation:hero-card-enter 500ms 1250ms cubic-bezier(.22,1,.36,1) backwards; }
+.hero-growth-card { animation:hero-drift 8s 1750ms ease-in-out infinite; }
+.hero-phone-enter { animation:hero-phone-enter 750ms 900ms cubic-bezier(.22,1,.36,1) backwards; }
+.hero-phone-float { animation:hero-phone-float 7.5s 1650ms ease-in-out infinite; }
+.hero-phone[data-interacted=false] .hero-phone-stars svg { animation:hero-star-fill 350ms cubic-bezier(.22,1,.36,1) forwards; }
+.hero-phone[data-interacted=false] .hero-phone-submit { animation:hero-button-pulse 400ms 2450ms ease-out; }
+.hero-annotations p { animation:hero-enter 550ms 1400ms cubic-bezier(.22,1,.36,1) backwards; }
+.hero-annotations path { stroke-dasharray:1; animation:hero-draw 600ms 1450ms ease-out backwards; }
+.hero-plant,.hero-mug { animation:hero-enter 750ms 650ms cubic-bezier(.22,1,.36,1) backwards; }
+.home-product-scene:focus-within .hero-phone-float { animation-play-state:paused; }
+.home-hero :focus-visible { animation:none !important; }
+@keyframes hero-enter { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+@keyframes hero-nav-enter { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes hero-device-enter { from { opacity:0; transform:translate(45px,18px) scale(.96); } to { opacity:1; transform:translate(0,0) scale(1); } }
+@keyframes hero-card-enter { from { opacity:0; translate:14px -12px; scale:.94; } to { opacity:1; translate:0 0; scale:1; } }
+@keyframes hero-phone-enter { from { opacity:0; transform:translate(32px,30px) rotate(4deg) scale(.94); } to { opacity:1; transform:translate(0,0) rotate(0) scale(1); } }
+@keyframes hero-glow-enter { from { opacity:0; scale:.94; } to { opacity:1; scale:1; } }
+@keyframes hero-breathe { 0%,100% { scale:1; } 50% { scale:1.015; } }
+@keyframes hero-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-5px); } }
+@keyframes hero-drift { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-2px); } }
+@keyframes hero-phone-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
+@keyframes hero-star-fill { 0% { transform:scale(.8); } 65% { transform:scale(1.12); } 100% { fill:#ffb300; color:#df9600; transform:scale(1); } }
+@keyframes hero-button-pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.025); } }
+@keyframes hero-draw { from { stroke-dashoffset:1; } to { stroke-dashoffset:0; } }
+
+/* OptiMonk-style section choreography: reveal on entry, then drift gently with the scroll. */
+.marketing-scroll-reveal { width:100%; }
+.marketing-scroll-reveal-content {
+  width:100%;
+  transition:opacity 720ms var(--ease-out),transform 720ms var(--ease-out);
+  will-change:opacity,transform;
+}
+.marketing-scroll-reveal[data-scroll-mounted="true"][data-scroll-visible="false"] .marketing-scroll-reveal-content {
+  opacity:.001;
+  transform:translateY(24px) scale(.992);
+}
+.marketing-scroll-reveal[data-scroll-mounted="true"][data-scroll-visible="true"] .marketing-scroll-reveal-content {
+  opacity:1;
+  transform:none;
+  transition-delay:var(--scroll-delay,0ms);
+}
+@media (max-width:767px) {
+  .marketing-scroll-reveal-content { transition-duration:600ms; }
+  .marketing-scroll-reveal[data-scroll-mounted="true"][data-scroll-visible="false"] .marketing-scroll-reveal-content { transform:translateY(16px); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .marketing-scroll-reveal { transform:none !important; }
+  .marketing-scroll-reveal-content { opacity:1 !important; transform:none !important; transition:none !important; }
+}
+@supports (animation-timeline:scroll()) {
+ @media (min-width:1200px) and (prefers-reduced-motion:no-preference) {
+  .hero-scene-glow { animation:hero-glow-scroll linear both; animation-timeline:scroll(root); animation-range:0px 450px; }
+ }
+}
+@keyframes hero-glow-scroll { from { transform:translateY(0); } to { transform:translateY(25px); } }
+@media (max-width:1199px), (pointer:coarse) {
+ .home-hero-copy-layer,.home-hero-scene-layer,.home-hero-pointer-layer { transform:none !important; }
+}
+@media (max-width:767px) {
+ .hero-laptop-enter,.hero-phone-enter { animation-name:hero-mobile-device-enter; }
+ .hero-floating-review-top .hero-review-card,.hero-phone-float { animation-name:hero-drift; }
+}
+@keyframes hero-mobile-device-enter { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@media (prefers-reduced-motion:reduce) {
+ .home-hero *, .home-hero *::before, .home-hero *::after, .home-reference-header .premium-header-inner { animation:none !important; transition:none !important; }
+ .home-hero-copy-layer,.home-hero-scene-layer,.home-hero-pointer-layer,.hero-scene-glow { transform:none !important; }
+}

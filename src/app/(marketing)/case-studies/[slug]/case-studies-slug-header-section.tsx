@@ -34,7 +34,7 @@ export function CaseStudiesSlugHeaderSection({ study }: { study: (typeof CASE_ST
                         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">{study.excerpt}</p>
                         <div className="mt-8 flex flex-wrap gap-3">
                             <Link href="#results" className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 font-semibold text-primary-foreground transition-transform hover:brightness-95 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                                See the results <ArrowDown className="size-4" aria-hidden="true" />
+                                See the workflow <ArrowDown className="size-4" aria-hidden="true" />
                             </Link>
                             <Link href="/case-studies" className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-5 py-3 font-semibold text-foreground transition-colors hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                                 All case studies <ArrowRight className="size-4" aria-hidden="true" />
@@ -59,10 +59,10 @@ export function CaseStudiesSlugHeaderSection({ study }: { study: (typeof CASE_ST
 
                 <div className="mt-12 grid gap-6 border-t border-border pt-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-start">
                     <div>
-                        <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Results in brief</p>
+                        <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Illustrative summary</p>
                         <p className="mt-2 text-sm text-muted-foreground">{study.timeline}</p>
                     </div>
-                    <MarketingGeoSummary label="Results in brief">{resultSummary}</MarketingGeoSummary>
+                    <MarketingGeoSummary label="Illustrative summary">{resultSummary}</MarketingGeoSummary>
                 </div>
             </div>
         </header>

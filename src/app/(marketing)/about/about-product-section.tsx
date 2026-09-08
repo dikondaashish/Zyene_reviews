@@ -8,28 +8,29 @@ export function AboutProductSection() {
                         <h2 className="text-2xl font-semibold text-foreground mb-4">What Zyene Reviews Does</h2>
                         <p className="text-muted-foreground leading-relaxed mb-4">
                             Zyene Reviews is a SaaS platform that connects to your Google Business Profile through
-                            Google&apos;s official OAuth authorization. Once connected, our platform helps you:
+                            Google&apos;s official OAuth authorization. It helps your team build a consistent reputation routine,
+                            from a fair review request to a thoughtful response and the next improvement:
                         </p>
                         <ul className="space-y-2 text-muted-foreground mb-8">
                             <li className="flex items-start gap-2">
                                 <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
-                                Monitor and respond to customer reviews from Google, Facebook, and Yelp in one dashboard
+                                Keep Google, Facebook, and Yelp review activity in one dashboard so your team can stay on top of customer feedback
                             </li>
                             <li className="flex items-start gap-2">
                                 <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
-                                Generate AI-powered reply suggestions and auto-respond to reviews hands-free
+                                Draft AI-assisted Google review replies, then tailor each response to the customer and your voice
                             </li>
                             <li className="flex items-start gap-2">
                                 <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
-                                Send review requests to customers via email, SMS, or shareable links - with the Negative Feedback Shield routing low ratings to private resolution
+                                Send fair review requests by email, SMS, shareable link, or QR code, with a private feedback path for customers who need help
                             </li>
                             <li className="flex items-start gap-2">
                                 <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
-                                Track competitors, monitor your Google Business Profile performance, and optimize for local SEO
+                                Follow up on private feedback while keeping every customer&apos;s public-review choice intact
                             </li>
                             <li className="flex items-start gap-2">
                                 <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
-                                Manage multiple business locations from one account - starting at $29.99/mo
+                                Learn from review and request analytics, competitor context, local visibility signals, and review widgets on paid plans
                             </li>
                         </ul>
                         <div className="flex flex-wrap gap-4">

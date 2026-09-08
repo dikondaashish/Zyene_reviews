@@ -29,7 +29,7 @@ const PLANS = [
         features: [
             "Everything in Starter",
             "Competitor tracking",
-            "Multi-location dashboard",
+            "Up to 3 business locations",
             "Priority support",
         ],
         highlighted: true,
@@ -41,9 +41,10 @@ const PLANS = [
         locations: "Unlimited locations",
         features: [
             "Everything in Professional",
-            "Dedicated account manager",
-            "Custom integrations",
-            "Volume discounts",
+            "Enterprise planning with sales",
+            "Unlimited business locations",
+            "White-label review widgets",
+            "Talk to sales about rollout and integration needs",
         ],
         highlighted: false,
     },

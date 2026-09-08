@@ -12,21 +12,23 @@ export async function generateMetadata(
     const { slug } = await params;
     const study = CASE_STUDY_MAP[slug];
     if (!study) return {};
+    const title = `Illustrative ${study.industry} Review Workflow`;
+    const description = `An illustrative ${study.industry.toLowerCase()} review-management workflow using Zyene Reviews. This composite example is educational, not a verified customer testimonial.`;
     return mergeMarketingSocial({
-        title: study.metaTitle,
-        description: study.metaDescription,
+        title,
+        description,
         alternates: { canonical: `https://www.zyenereviews.com/case-studies/${slug}` },
         keywords: study.keywords,
         openGraph: {
-            title: study.metaTitle,
-            description: study.metaDescription,
+            title,
+            description,
             url: `https://www.zyenereviews.com/case-studies/${slug}`,
             type: "article",
         },
         twitter: {
             card: "summary_large_image",
-            title: study.metaTitle,
-            description: study.metaDescription,
+            title,
+            description,
         },
     });
 }

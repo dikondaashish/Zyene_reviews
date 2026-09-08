@@ -22,7 +22,7 @@ export function EnterpriseSection3Section() {
                 <div className="container mx-auto max-w-5xl">
                     <div className="flex items-center gap-3 mb-6">
                         <Shield className="text-primary size-8" />
-                        <h2 className="text-3xl font-bold">SLA &amp; support</h2>
+                        <h2 className="text-3xl font-bold">Rollout &amp; support planning</h2>
                     </div>
                     <ul className="grid sm:grid-cols-2 gap-3">
                         {ENTERPRISE_SLA_BULLETS.map((b) => (

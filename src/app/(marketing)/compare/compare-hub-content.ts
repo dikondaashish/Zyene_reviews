@@ -2,7 +2,7 @@ import type { FaqItem } from "@/components/seo/json-ld";
 
 /** 50-70 word GEO opening summary for /compare hub. */
 export const COMPARE_HUB_OPENING_SUMMARY =
-    "Choose Zyene Reviews when you want a review-alert-driven, AI-assisted stack for local Google reputation - Shield, competitor tracking, and public pricing from $29.99/mo without an enterprise contract. Choose Birdeye, Podium, NiceJob, or GatherUp when you need broader CX, messaging and payments, social-proof marketing, or deep survey programs. This hub compares all five honestly.";
+    "Choose Zyene Reviews when you want a review-alert-driven, AI-assisted stack for local reputation - private feedback, competitor tracking, Google Business Profile insights, and public pricing from $29.99/mo. Choose Birdeye, Podium, NiceJob, GatherUp, or Prosperly when you need broader CX, messaging and payments, social-proof marketing, surveys, or a law- and insurance-focused workflow. This hub compares the tradeoffs honestly.";
 
 export const COMPARE_HUB_BUYER_GUIDES: { title: string; body: string; pick?: string }[] = [
     {
@@ -30,6 +30,11 @@ export const COMPARE_HUB_BUYER_GUIDES: { title: string; body: string; pick?: str
         body: "You measure success by conversations converted and payments collected. Review features are secondary to texting, webchat, and checkout flows.",
         pick: "Podium; pair with a review specialist only if your team still struggles with Google reputation.",
     },
+    {
+        title: "Law firm / insurance buyer",
+        body: "You want a review workflow designed around a legal or insurance practice, with automated follow-ups and a customer-referral program in the same vendor story.",
+        pick: "Prosperly; compare its Core and Ultimate plans with Zyene Reviews if broader local review monitoring, widgets, API access, or competitor tracking matter too.",
+    },
 ];
 
 export const COMPARE_HUB_RESOURCE_LINKS: { label: string; href: string }[] = [
@@ -37,6 +42,7 @@ export const COMPARE_HUB_RESOURCE_LINKS: { label: string; href: string }[] = [
     { label: "Zyene vs Podium", href: "/compare/podium" },
     { label: "Zyene vs NiceJob", href: "/compare/nicejob" },
     { label: "Zyene vs GatherUp", href: "/compare/gatherup" },
+    { label: "Zyene vs Prosperly", href: "/compare/prosperly" },
     { label: "Birdeye pricing breakdown (2026)", href: "/blog/birdeye-pricing-breakdown-2026" },
     { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
     { label: "Zyene Reviews pricing", href: "/pricing" },
@@ -67,6 +73,11 @@ export const COMPARE_HUB_FAQS: FaqItem[] = [
     {
         question: "Which tool is best if I only care about Google reviews?",
         answer:
-            "Zyene Reviews centers on Google (plus Facebook and Yelp monitoring), AI-assisted replies, review campaigns, and Shield for private issue resolution. Compare feature-level detail on /compare/birdeye, /compare/podium, /compare/nicejob, and /compare/gatherup before you switch.",
+            "Zyene Reviews centers on Google (plus Facebook and Yelp monitoring), AI-assisted replies, review campaigns, and a private feedback path for service recovery. Compare feature-level detail on /compare/birdeye, /compare/podium, /compare/nicejob, /compare/gatherup, and /compare/prosperly before you switch.",
+    },
+    {
+        question: "Is Prosperly a good fit for law firms and insurance agencies?",
+        answer:
+            "Prosperly positions its review workflow for law firms and insurance agencies, with published automated follow-ups, a customer-referral program, and Ultimate-tier surveys, onboarding, and account management. Zyene Reviews is a broader local-business review platform with Google, Facebook, and Yelp sync, AI replies, competitor tracking, GBP insights, widgets, and API access. Compare both workflows and current pricing before choosing.",
     },
 ];
