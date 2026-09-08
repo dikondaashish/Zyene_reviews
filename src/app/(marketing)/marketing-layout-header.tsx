@@ -8,8 +8,9 @@ import type { MarketingNavMenu } from "@/app/(marketing)/marketing-layout-nav-ty
 import { MarketingLayoutHeaderBrand } from "@/app/(marketing)/marketing-layout-header-brand";
 import { MarketingLayoutDesktopNav } from "@/app/(marketing)/marketing-layout-desktop-nav";
 import { MarketingLayoutMobileNav } from "@/app/(marketing)/marketing-layout-mobile-nav";
+import { MarketingNavigationProgress } from "@/components/marketing/marketing-navigation-progress";
 
-export function MarketingLayoutHeader() {
+export function MarketingLayoutHeader({ pending = false, pendingLabel = "Opening page…" }: { pending?: boolean; pendingLabel?: string }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<MarketingNavMenu | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -84,6 +85,7 @@ export function MarketingLayoutHeader() {
             <Menu className="size-6" />
           )}
         </Button>
+        {pending && <MarketingNavigationProgress key={pendingLabel} label={pendingLabel} />}
       </div>
       {mobileMenuOpen ? (
         <MarketingLayoutMobileNav

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DemoRequestForm } from "@/components/marketing/demo-request-form";
+import { DemoBookingCalendar } from "@/components/marketing/demo-booking-calendar";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { ENTERPRISE_SALES_EMAIL } from "@/lib/enterprise/enterprise-data";
 import { getCalComEmbedUrlFromEnv } from "@/lib/enterprise/cal-com-embed";
@@ -29,12 +30,7 @@ export default function DemoPage() {
                             Pick a time that works for your team. Typical demo: 30 minutes.
                         </p>
                         {calComEmbedUrl ? (
-                            <iframe
-                                src={calComEmbedUrl}
-                                title="Schedule a Zyene Reviews demo on Cal.com"
-                                sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
-                                className="w-full min-h-[520px] rounded-xl border border-border"
-                            />
+                            <DemoBookingCalendar src={calComEmbedUrl} />
                         ) : (
                             <div className="rounded-xl border border-dashed border-border bg-muted/40 p-8 text-center text-sm text-muted-foreground">
                                 <p className="mb-4">Choose a time on our booking page, or send your details and we’ll arrange a demo.</p>

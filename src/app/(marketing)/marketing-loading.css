@@ -1,0 +1,14 @@
+.marketing-navigation-progress { position:absolute; inset-inline:0; top:calc(100% + 3px); pointer-events:none; z-index:2; }
+.marketing-navigation-track { height:3px; overflow:hidden; border-radius:999px; background:var(--brand-wash); animation:navigation-appear 150ms ease-out both; }
+.marketing-navigation-track > span { display:block; width:35%; height:100%; border-radius:inherit; background:var(--primary); animation:navigation-travel 1.2s ease-in-out infinite; }
+.marketing-navigation-message { position:absolute; top:12px; right:0; max-width:calc(100vw - 50px); padding:10px 16px; border:1px solid var(--border); border-radius:12px; background:var(--background); color:var(--muted-foreground); box-shadow:0 4px 16px #2015150c; font-size:13px; }
+.demo-calendar-frame { position:relative; min-height:520px; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.demo-calendar-loading { position:absolute; inset:0; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:28px; background:var(--background); text-align:center; }
+.demo-calendar-spinner { width:24px; height:24px; border:2px solid var(--border); border-top-color:var(--primary); border-radius:50%; animation:calendar-spin 900ms linear infinite; }
+@keyframes navigation-appear { from { opacity:0; } to { opacity:1; } }
+@keyframes navigation-travel { from { transform:translateX(-100%); } to { transform:translateX(386%); } }
+@keyframes calendar-spin { to { transform:rotate(360deg); } }
+@media (prefers-reduced-motion:reduce) {
+  .marketing-navigation-track,.marketing-navigation-track > span,.demo-calendar-spinner { animation:none; }
+  .marketing-navigation-track > span { width:100%; }
+}
