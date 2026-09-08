@@ -1,4 +1,4 @@
-.premium-header { background:var(--background); padding:12px 32px 0; }
+.premium-header { isolation:isolate; flex-shrink:0; background:var(--background); padding:12px 32px 0; }
 .premium-header-inner { position:relative; display:flex; align-items:center; justify-content:space-between; min-height:72px; gap:28px; padding:0 24px; max-width:1328px; margin:auto; border:1px solid var(--border); border-radius:18px; background:var(--background); box-shadow:0 4px 18px #20151504; }
 .premium-desktop-nav { display:flex; align-items:center; justify-content:space-between; flex:1; gap:24px; font-size:13px; font-weight:500; margin-left:36px; }
 .premium-nav-links { display:flex; align-items:center; gap:4px; }
@@ -9,7 +9,7 @@
 .mega-trigger-highlight { background:var(--muted); }
 .mega-trigger svg { transition:transform 180ms var(--ease-out); }
 .mega-trigger[aria-expanded=true] svg { transform:rotate(180deg); }
-.mega-panel { position:absolute; left:-1px; right:-1px; top:calc(100% + 10px); border:1px solid var(--border); border-radius:20px; background:var(--background); box-shadow:0 20px 60px #20151518; overflow:hidden; transform-origin:top center; animation:menu-enter 180ms var(--ease-out); }
+.mega-panel { position:absolute; z-index:1; left:-1px; right:-1px; top:calc(100% + 10px); max-height:calc(100dvh - var(--marketing-menu-clearance,114px)); border:1px solid var(--border); border-radius:20px; background:var(--background); box-shadow:0 20px 60px #20151518; overflow-y:auto; overscroll-behavior:contain; transform-origin:top center; animation:menu-enter 180ms var(--ease-out); }
 .mega-panel-main { display:grid; grid-template-columns:1fr 320px; padding:28px; gap:32px; }
 .mega-panel-label { font-size:10px; color:var(--muted-foreground); font-weight:600; letter-spacing:.09em; margin:6px 12px 22px; }
 .mega-link-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
@@ -39,5 +39,6 @@
  .premium-header { padding:10px 16px 0; }
  .premium-header-inner { min-height:64px; border-radius:14px; padding-inline:16px; }
  .premium-desktop-nav { display:none; }
- #marketing-mobile-nav { margin-top:10px; max-height:calc(100dvh - 94px); border:1px solid var(--border); border-radius:16px; box-shadow:0 16px 30px #2015150c; }
+ #marketing-mobile-nav { position:absolute; top:100%; left:16px; right:16px; margin-top:10px; max-height:calc(100dvh - var(--marketing-menu-clearance,94px)); overscroll-behavior:contain; border:1px solid var(--border); border-radius:16px; box-shadow:0 16px 30px #2015150c; }
+ .home-reference-header #marketing-mobile-nav { width:var(--home-header-width); margin-inline:auto; left:0; right:0; }
 }

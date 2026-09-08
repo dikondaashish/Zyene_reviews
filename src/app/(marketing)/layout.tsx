@@ -23,9 +23,9 @@ export default function MarketingLayout({
     const growthDashboard = isGrowthOperationsPath(pathname);
 
     return (
-        <div className={`${growthDashboard ? "" : "marketing-site"} flex min-h-dvh min-w-0 flex-col bg-background text-foreground`}>
+        <div className={`${growthDashboard ? "" : "marketing-site"}${pathname === "/" ? " marketing-site-home" : ""} flex min-h-dvh min-w-0 flex-col bg-background text-foreground`}>
             <a href="#main-content" className="marketing-skip-link marketing-button sr-only focus:not-sr-only">Skip to content</a>
-            {pathname === "/" ? null : <MarketingLayoutHeader />}
+            {pathname === "/" ? null : <MarketingLayoutHeader key={pathname} />}
             {growthDashboard ? null : <MarketingMotion />}
             <Suspense fallback={null}>
                 <UtmCapture />
@@ -35,6 +35,7 @@ export default function MarketingLayout({
                     <AdLandingBanner />
                 </Suspense>
             )}
+            {pathname === "/" ? <MarketingLayoutHeader key={pathname} /> : null}
             <main id="main-content" tabIndex={-1} className="marketing-content min-w-0 flex-1">{children}</main>
             {growthDashboard ? null : <MarketingLayoutFooter />}
         </div>

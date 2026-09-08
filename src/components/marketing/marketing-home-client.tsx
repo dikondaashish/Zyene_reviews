@@ -6,7 +6,6 @@ import { MarketingHomeNextSteps } from "@/components/marketing/marketing-home/ma
 import { MarketingHomeClosing } from "@/components/marketing/marketing-home/marketing-home-closing";
 import { MarketingHomeTestimonials } from "@/components/marketing/marketing-home/marketing-home-testimonials";
 import { ProductShowcase } from "@/components/marketing/product-tour/product-showcase";
-import { MarketingLayoutHeader } from "@/app/(marketing)/marketing-layout-header";
 import { MarketingScrollReveal } from "@/components/marketing/marketing-scroll-reveal";
 import { HomeLeadWizard } from "@/components/marketing/home-lead-wizard";
 import { MarketingHomeFeatureConstellation } from "@/components/marketing/marketing-home/marketing-home-feature-constellation";
@@ -15,7 +14,6 @@ export function MarketingHomeClient() {
   return (
     <div className="flex w-full flex-col items-center">
       <div className="home-hero-shell">
-        <MarketingLayoutHeader />
         <MarketingHomeHero />
       </div>
       <MarketingScrollReveal className="home-scroll-section" intensity="subtle">
