@@ -15,9 +15,11 @@
 .mega-link-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 .mega-product-link { display:flex; align-items:start; gap:14px; padding:14px 12px; border-radius:12px; transition:background-color 160ms; }
 .mega-product-link:hover,.mega-industry-link:hover { background:var(--muted); }
-.mega-product-link > svg:first-child { color:var(--primary); flex-shrink:0; margin-top:3px; }
+.mega-product-link > svg:first-child { box-sizing:border-box; width:52px; height:52px; padding:13px; border-radius:14px; background:oklch(.965 .003 260); color:oklch(.55 .016 260); flex-shrink:0; stroke-width:1.8; transition:background-color 160ms,color 160ms; }
+.mega-product-link > span { min-width:0; padding-top:2px; }
+.mega-product-link:is(:hover,:focus-visible) > svg:first-child { background:oklch(.94 .005 260); color:oklch(.43 .016 260); }
 .mega-product-link > svg:last-child { margin-left:auto; opacity:0; flex-shrink:0; margin-top:4px; transition:opacity 160ms; }
-.mega-product-link:hover > svg:last-child { opacity:1; }
+.mega-product-link:is(:hover,:focus-visible) > svg:last-child { opacity:1; }
 .mega-product-link strong { display:block; font-size:13px; font-weight:600; }
 .mega-product-link small { display:block; color:var(--muted-foreground); font-size:11px; font-weight:400; margin-top:5px; max-width:26ch; }
 .mega-feature { padding:12px; border-radius:14px; background:var(--muted); }
