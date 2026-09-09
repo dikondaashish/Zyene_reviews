@@ -1,0 +1,65 @@
+.home-brands {
+  width: 100%;
+  padding-block: clamp(28px, 4vw, 48px);
+  border-bottom: 1px solid var(--border);
+  background: var(--background);
+}
+.home-brands-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+  color: var(--muted-foreground);
+  font-size: 14px;
+  font-weight: 500;
+}
+.home-brands-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  min-width: 76px;
+  padding-inline: 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.home-brands-toggle:hover { background: var(--muted); }
+.home-brands-window {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+.home-brands-track {
+  display: flex;
+  width: max-content;
+  animation: home-brands-slide 42s linear infinite;
+}
+.home-brands-group {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: clamp(40px, 5vw, 80px);
+  padding: 12px clamp(40px, 5vw, 80px) 12px 0;
+  margin: 0;
+  list-style: none;
+}
+.home-brand { display: flex; align-items: center; gap: 14px; white-space: nowrap; }
+.home-brand-logo { flex: none; width: 44px; height: 44px; object-fit: contain; filter: grayscale(1); }
+.home-brand-name { color: var(--muted-foreground); font-size: clamp(20px, 1.8vw, 26px); font-weight: 650; letter-spacing: -.035em; line-height: 1.2; }
+.home-brand-industry { margin-top: 6px; color: var(--muted-foreground); font-size: 12px; line-height: 1.4; }
+.home-brands-disclaimer { margin-top: 24px; color: var(--muted-foreground); font-size: 12px; }
+.home-brands-window[data-paused="true"] .home-brands-track { animation-play-state: paused; }
+@media (hover: hover) {
+  .home-brands-window:hover .home-brands-track { animation-play-state: paused; }
+}
+@keyframes home-brands-slide { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .home-brands-toggle { display: none; }
+  .home-brands-window { overflow: visible; mask-image: none; }
+  .home-brands-track { width: 100%; animation: none; }
+  .home-brands-group { width: 100%; padding-inline: 20px; flex-wrap: wrap; justify-content: center; gap: 28px 40px; }
+  .home-brands-group[aria-hidden="true"] { display: none; }
+}

@@ -1,4 +1,8 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
+import { Pause, Play } from "lucide-react";
 import { ILLUSTRATIVE_BRANDS } from "@/lib/social-proof/illustrative-brands-data";
 import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 
@@ -7,35 +11,48 @@ export function IllustrativeBrandsBar({
 }: {
     title?: string;
 }) {
+    const [paused, setPaused] = useState(false);
+
     return (
-        <section className="w-full py-12 border-y border-border bg-muted/40">
-            <div className="container mx-auto max-w-6xl px-4">
-                <p className="text-center text-xs font-bold uppercase tracking-wider text-muted-foreground mb-8">
-                    {title}
-                </p>
-                <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
-                    {ILLUSTRATIVE_BRANDS.map((brand) => (
-                        <div
-                            key={brand.name}
-                            className="flex items-center gap-2.5 opacity-80 hover:opacity-100 transition-opacity"
-                            title={`${brand.name} · ${brand.industry}`}
-                        >
-                            <Image
-                                src={getBrandLogoUrl(brand.domain)}
-                                alt={`${brand.name} logo`}
-                                width={36}
-                                height={36}
-                                className="rounded-lg shrink-0 size-9 object-contain"
-                                unoptimized
-                            />
-                            <div className="hidden sm:block text-left">
-                                <div className="text-sm font-semibold text-foreground leading-none">{brand.name}</div>
-                                <div className="text-[10px] text-muted-foreground mt-0.5">{brand.industry}</div>
-                            </div>
-                        </div>
+        <section className="home-brands" aria-label={title}>
+            <div className="marketing-container home-brands-heading">
+                <p>{title}</p>
+                <button
+                    type="button"
+                    className="home-brands-toggle"
+                    aria-label={paused ? "Play brand carousel" : "Pause brand carousel"}
+                    aria-controls="home-brands-track"
+                    onClick={() => setPaused(!paused)}
+                >
+                    {paused ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
+                    <span>{paused ? "Play" : "Pause"}</span>
+                </button>
+            </div>
+            <div className="home-brands-window" data-paused={paused}>
+                <div id="home-brands-track" className="home-brands-track">
+                    {[false, true].map((duplicate) => (
+                        <ul key={String(duplicate)} className="home-brands-group" aria-hidden={duplicate || undefined}>
+                            {ILLUSTRATIVE_BRANDS.map((brand) => (
+                                <li key={brand.domain} className="home-brand">
+                                    <Image
+                                        src={getBrandLogoUrl(brand.domain)}
+                                        alt=""
+                                        width={44}
+                                        height={44}
+                                        className="home-brand-logo"
+                                        unoptimized
+                                    />
+                                    <div>
+                                        <p className="home-brand-name">{brand.name}</p>
+                                        <p className="home-brand-industry">{brand.industry}</p>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
                     ))}
                 </div>
             </div>
+            <p className="marketing-container home-brands-disclaimer">Illustrative brands, not customers or endorsements.</p>
         </section>
     );
 }

@@ -10,7 +10,8 @@ export interface IllustrativeBrand {
  * render with the disclaimer in IllustrativeBrandsSection, never as a "trusted by" claim.
  */
 export const ILLUSTRATIVE_BRANDS: IllustrativeBrand[] = [
-    { name: "Dunkin'", industry: "Cafe & QSR", domain: "dunkindonuts.com" },
+    // Google's logo service resolves Dunkin's www host; the bare domain returns 404.
+    { name: "Dunkin'", industry: "Cafe & QSR", domain: "www.dunkindonuts.com" },
     { name: "Chipotle", industry: "Restaurant", domain: "chipotle.com" },
     { name: "Aspen Dental", industry: "Dental", domain: "aspendental.com" },
     { name: "Great Clips", industry: "Salon", domain: "greatclips.com" },
