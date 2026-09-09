@@ -1,0 +1,38 @@
+.tour-request-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .85fr); align-items: start; gap: 48px; }
+.tour-request-form > p:first-child { color: var(--muted-foreground); font-size: 14px; margin-bottom: 22px; }
+.tour-channel { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.tour-channel legend, .tour-request-form > label { display: block; margin-bottom: 9px; font-size: 12px; font-weight: 600; }
+.tour-channel legend { float: left; width: 100%; }
+.tour-channel button { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); min-height: 44px; font-size: 13px; }
+.tour-channel button[aria-pressed=true] { background: var(--brand-wash); border-color: color-mix(in oklab, var(--primary) 40%, var(--border)); }
+.tour-request-form select { margin-bottom: 20px; }
+.tour-request-hint { color: var(--muted-foreground); font-size: 11px; margin-block: 10px 16px; }
+.tour-preview-column { padding: 22px; border-radius: 14px; background: var(--muted); }
+.tour-preview-caption { text-align: center; color: var(--muted-foreground); font-size: 11px; margin-bottom: 14px; }
+.request-example { width: 100%; max-width: 330px; min-height: 420px; margin-inline: auto; padding: 18px; border: 1px solid var(--border); border-radius: 22px; background: var(--background); box-shadow: 0 8px 24px oklch(.25 .02 40 / .06); text-align: center; }
+.request-example-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--border); font-size: 10px; color: var(--muted-foreground); }
+.request-avatar { display: grid; place-items: center; width: 44px; height: 44px; margin: 20px auto 10px; border-radius: 14px; background: var(--foreground); color: var(--background); }
+.request-example > strong { font-size: 15px; }
+.request-time { display: block; color: var(--muted-foreground); font-size: 10px; margin-top: 5px; }
+.tour-message-bubble { white-space: pre-wrap; overflow-wrap: anywhere; text-align: left; margin-top: 20px; padding: 14px; border-radius: 4px 14px 14px; background: var(--muted); font-size: 13px; line-height: 1.6; }
+.request-example-link { display: block; width: 100%; padding: 14px 12px; margin-top: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--background); text-align: center; }
+.request-example-link:not(:disabled) { border-color: var(--primary); background: var(--brand-wash); }
+.request-example-link .tour-stars { justify-content: center; margin: 0 0 6px; font-size: 19px; }
+.request-example-link strong { display: block; font-size: 13px; }
+.request-example-link > span:last-child { display: block; color: var(--muted-foreground); font-size: 10px; margin-top: 5px; }
+.tour-opt-out { font-size: 10px; color: var(--muted-foreground); margin-top: 10px; }
+.tour-demo-delivered { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; color: var(--tour-success); margin-top: 12px; }
+.tour-rating-heading { font-size: 20px; font-weight: 600; line-height: 1.25; margin-top: 22px; }
+.tour-rating-description { color: var(--muted-foreground); font-size: 12px; margin-top: 12px; }
+.tour-rating-picker { display: flex; justify-content: center; margin-top: 12px; }
+.tour-rating-picker button { display: grid; place-items: center; min-width: 40px; min-height: 44px; color: oklch(.6 .14 65); border-radius: 8px; }
+.request-example > .tour-action { width: 100%; margin-top: 16px; }
+.tour-preview-back { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 12px !important; margin-top: 12px; color: var(--muted-foreground); }
+.tour-rating-confirmation { display: flex; align-items: center; flex-direction: column; gap: 14px; margin-top: 30px; font-size: 13px; }
+.tour-rating-confirmation > svg { color: var(--tour-success); }
+.tour-rating-confirmation h4 { font-size: 20px; font-weight: 600; }
+@container (max-width: 700px) {
+  .tour-request-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .tour-preview-column { padding: 16px 8px; }
+  .tour-request-form > .tour-action { width: 100%; }
+}

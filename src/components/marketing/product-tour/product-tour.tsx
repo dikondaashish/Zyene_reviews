@@ -1,22 +1,11 @@
 "use client";
 
 import { useId, useState, type KeyboardEvent } from "react";
-import dynamic from "next/dynamic";
-import { BarChart3, ChevronDown, MessageSquare, Send } from "lucide-react";
+import { BarChart3, Coffee, MessageSquare, RotateCcw, Send, ShieldCheck } from "lucide-react";
 import { ReviewDemo } from "@/components/marketing/product-tour/review-demo";
 import { RequestDemo } from "@/components/marketing/product-tour/request-demo";
-import { AnimatedBackground } from "@/components/marketing/animated-background";
-import { TransitionPanel } from "@/components/marketing/transition-panel";
+import { ReportDemo } from "@/components/marketing/product-tour/report-demo";
 
-const ReportDemo = dynamic(
-  () =>
-    import("@/components/marketing/product-tour/report-demo").then(
-      (m) => m.ReportDemo,
-    ),
-  {
-    loading: () => <p className="p-8">Loading example report…</p>,
-  },
-);
 const TABS = [
   { key: "reviews", label: "Reviews & replies", icon: MessageSquare },
   { key: "requests", label: "Review requests", icon: Send },
@@ -24,80 +13,38 @@ const TABS = [
 ] as const;
 export type ProductTourTab = (typeof TABS)[number]["key"];
 
-export function ProductTour({
-  initialTab = "reviews",
-}: {
-  initialTab?: ProductTourTab;
-}) {
+export function ProductTour({ initialTab = "reviews" }: { initialTab?: ProductTourTab }) {
+  const [version, setVersion] = useState(0);
+  return <ProductTourSession key={version} initialTab={initialTab} onReset={() => setVersion(value => value + 1)} />;
+}
+
+function ProductTourSession({ initialTab, onReset }: { initialTab: ProductTourTab; onReset: () => void }) {
   const [active, setActive] = useState<ProductTourTab>(initialTab);
+  const [pointerMotion, setPointerMotion] = useState(false);
   const id = useId();
   function onKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
-    const next =
-      event.key === "ArrowRight"
-        ? (index + 1) % TABS.length
-        : event.key === "ArrowLeft"
-          ? (index + TABS.length - 1) % TABS.length
-          : event.key === "Home"
-            ? 0
-            : event.key === "End"
-              ? TABS.length - 1
-              : null;
+    const next = event.key === "ArrowRight" ? (index + 1) % TABS.length
+      : event.key === "ArrowLeft" ? (index + TABS.length - 1) % TABS.length
+        : event.key === "Home" ? 0 : event.key === "End" ? TABS.length - 1 : null;
     if (next === null) return;
     event.preventDefault();
     setActive(TABS[next].key);
-    event.currentTarget.parentElement
-      ?.querySelectorAll<HTMLButtonElement>("[role=tab]")
-      [next]?.focus();
+    event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>("[role=tab]")[next]?.focus();
   }
   return (
-    <div className="product-tour">
+    <div className="product-tour" data-pointer-motion={pointerMotion} onPointerDownCapture={() => setPointerMotion(true)} onKeyDownCapture={() => setPointerMotion(false)}>
       <div className="tour-toolbar">
-        <span className="tour-wordmark">
-          zyene<span>reviews</span>
-        </span>
-        <span className="tour-business">
-          Juniper Coffee <ChevronDown size={12} />
-        </span>
-        <span className="tour-example-label">Example workspace</span>
+        <span className="tour-wordmark">Zyene<span>Reviews</span></span>
+        <span className="tour-business"><Coffee size={17} aria-hidden="true" /><span>Juniper Coffee<small>Example workspace</small></span></span>
+        <button type="button" className="tour-reset" onClick={onReset}><RotateCcw size={14} aria-hidden="true" /><span>Reset demo</span></button>
       </div>
       <div className="tour-tabs" role="tablist" aria-label="Explore Zyene">
-        <AnimatedBackground value={active} className="tour-tab-highlight">
-          {TABS.map(({ key, label, icon: Icon }, index) => (
-            <button
-              key={key}
-              data-id={key}
-              type="button"
-              role="tab"
-              id={`${id}-${key}`}
-              aria-selected={active === key}
-              aria-controls={`${id}-panel`}
-              tabIndex={active === key ? 0 : -1}
-              onClick={() => setActive(key)}
-              onKeyDown={(event) => onKeyDown(event, index)}
-            >
-              <Icon size={16} aria-hidden="true" />
-              {label}
-            </button>
-          ))}
-        </AnimatedBackground>
+        {TABS.map(({ key, label, icon: Icon }, index) => <button key={key} type="button" role="tab" id={`${id}-${key}`} aria-selected={active === key} aria-controls={`${id}-${key}-panel`} tabIndex={active === key ? 0 : -1} onClick={() => setActive(key)} onKeyDown={event => onKeyDown(event, index)}><Icon size={17} aria-hidden="true" />{label}</button>)}
       </div>
-      <div
-        className="tour-panel"
-        role="tabpanel"
-        id={`${id}-panel`}
-        aria-labelledby={`${id}-${active}`}
-        tabIndex={0}
-      >
-        <TransitionPanel activeKey={active}>
-          {active === "reviews" ? (
-            <ReviewDemo />
-          ) : active === "requests" ? (
-            <RequestDemo />
-          ) : (
-            <ReportDemo />
-          )}
-        </TransitionPanel>
-      </div>
+      {TABS.map(({ key }) => <div key={key} className="tour-panel" role="tabpanel" id={`${id}-${key}-panel`} aria-labelledby={`${id}-${key}`} hidden={active !== key} tabIndex={0}>
+        {key === "reviews" ? <ReviewDemo /> : key === "requests" ? <RequestDemo /> : <ReportDemo />}
+      </div>)}
+      <div className="tour-sandbox-note"><ShieldCheck size={15} aria-hidden="true" /><p>Yours to explore. Fictional data, sample replies, no real sends.</p></div>
     </div>
   );
 }

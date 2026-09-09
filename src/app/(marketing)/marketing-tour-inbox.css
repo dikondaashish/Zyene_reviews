@@ -1,0 +1,52 @@
+.tour-inbox { display: grid; grid-template-columns: 280px minmax(0, 1fr); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.tour-review-list { min-width: 0; border-right: 1px solid var(--border); background: var(--muted); }
+.tour-search { display: flex; gap: 8px; align-items: center; margin: 14px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--background); color: var(--muted-foreground); }
+.tour-search input { width: 100%; min-width: 0; background: transparent; border: 0; font-size: 13px; }
+.tour-search svg { flex-shrink: 0; }
+.tour-review-list > .tour-segment { margin: 0 10px 10px; }
+.tour-review-options { display: grid; }
+.tour-review-option { display: block; padding: 16px; border-top: 1px solid var(--border); text-align: left; }
+.tour-review-option[aria-pressed=true] { background: var(--background); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--primary) 40%, var(--border)); }
+.tour-review-option-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; }
+.tour-review-option-top > span { color: var(--muted-foreground); font-size: 10px; }
+.tour-review-option-rating { display: flex; gap: 12px; align-items: center; margin-top: 8px; font-size: 11px; }
+.tour-review-option-rating > span:first-child, .tour-stars { color: oklch(.6 .14 65); }
+.tour-platform-name { text-transform: capitalize; color: var(--muted-foreground); }
+.tour-review-excerpt { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 12px; line-height: 1.6; color: var(--muted-foreground); margin-block: 8px; }
+.tour-replied, .tour-pending { display: inline-block; font-size: 10px; padding: 3px 7px; border-radius: 5px; }
+.tour-replied { color: var(--tour-success); background: color-mix(in oklab, var(--tour-success) 8%, var(--background)); }
+.tour-pending { color: var(--muted-foreground); border: 1px solid var(--border); }
+.tour-empty { display: flex; flex-direction: column; padding: 20px; color: var(--muted-foreground); font-size: 13px; }
+.tour-review-detail { padding: 24px; min-width: 0; }
+.tour-review-detail-heading { display: flex; gap: 10px; align-items: center; }
+.tour-review-detail-heading .tour-sample-badge { margin-left: auto; }
+.tour-avatar { display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: var(--brand-wash); font-size: 12px; font-weight: 600; }
+.tour-detail-meta { color: var(--muted-foreground); font-size: 11px; margin-top: 3px; }
+.tour-stars { display: flex; gap: 3px; margin-top: 18px; }
+.tour-review-content { margin-top: 12px; font-size: 14px; line-height: 1.7; max-width: 70ch; }
+.tour-published-reply { padding: 16px; margin-top: 20px; border: 1px solid color-mix(in oklab, var(--tour-success) 20%, var(--border)); border-radius: 10px; background: color-mix(in oklab, var(--tour-success) 4%, var(--background)); }
+.tour-published-reply strong { display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--tour-success); }
+.tour-published-reply p { margin-top: 8px; font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.tour-composer { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+.tour-composer-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tour-composer-top strong { display: flex; gap: 8px; align-items: center; font-size: 13px; }
+.tour-composer-top strong svg { color: var(--primary); }
+.tour-composer-top > span { font-size: 10px; color: var(--muted-foreground); }
+.tour-tones { display: flex; gap: 4px; margin-block: 12px; }
+.tour-tones button { min-height: 40px; padding: 7px 12px; border-radius: 7px; font-size: 12px; text-transform: capitalize; color: var(--muted-foreground); border: 1px solid transparent; }
+.tour-tones button[aria-pressed=true] { color: var(--foreground); background: var(--muted); border-color: var(--border); }
+.tour-composer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 12px; }
+.tour-character-count { color: var(--muted-foreground); font-size: 11px; font-variant-numeric: tabular-nums; }
+@media (hover: hover) and (pointer: fine) { .tour-review-option:hover { background: var(--background); } }
+@container (max-width: 700px) {
+  .tour-inbox { grid-template-columns: minmax(0, 1fr); }
+  .tour-review-list { border-right: 0; border-bottom: 1px solid var(--border); }
+  .tour-review-options { display: flex; overflow-x: auto; }
+  .tour-review-option { min-width: 220px; width: 75%; flex-shrink: 0; border-right: 1px solid var(--border); }
+  .tour-review-excerpt { -webkit-line-clamp: 1; }
+  .tour-review-detail { padding: 20px 14px; }
+  .tour-review-detail-heading .tour-sample-badge { display: none; }
+  .tour-composer-bottom { flex-wrap: wrap; }
+  .tour-composer-bottom .tour-action { flex-grow: 1; }
+  .tour-tones button { min-height: 44px; padding-inline: 9px; }
+}

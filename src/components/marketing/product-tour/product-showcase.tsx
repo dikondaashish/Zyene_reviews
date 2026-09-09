@@ -2,7 +2,7 @@ import { ProductTour, type ProductTourTab } from "@/components/marketing/product
 
 export function ProductShowcase({
   title = "Take a look around.",
-  description = "Explore a sample review inbox, try a reply tone, and see how review requests and reporting fit together.",
+  description = "Pick a review. Make a reply your own. Send a sample request and explore the results. Go ahead, it’s all safe to try.",
   initialTab = "reviews",
 }: {
   title?: string;
@@ -22,9 +22,6 @@ export function ProductShowcase({
         <div className="product-showcase-frame">
           <ProductTour initialTab={initialTab} />
         </div>
-        <p className="mt-5 text-center text-xs text-muted-foreground">
-          Interactive product example with fictional data. No messages or replies are sent.
-        </p>
       </div>
     </section>
   );

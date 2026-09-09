@@ -11,7 +11,7 @@ export function HowItWorksStepsSection() {
       {STEPS.map((step, index) => (
         <section key={step.step} id={`step-${step.step}`} className={`marketing-section ${index % 2 ? "bg-muted" : ""}`}>
           <div className={`marketing-container story-row ${index % 2 ? "story-row-reverse" : ""}`}>
-            <div className={index === 0 ? "story-visual" : "workflow-product"} data-reveal>
+            <div className={index === 0 ? "story-visual" : "workflow-product product-tour"} data-reveal>
               {index === 0 ? (
                 <Image
                   src="/marketing/home/cafe-conversation.webp"
