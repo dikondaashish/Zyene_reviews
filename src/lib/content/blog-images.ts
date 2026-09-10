@@ -120,11 +120,11 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         caption: "Direct Google review links open the review window immediately, eliminating customer friction.",
     },
     "can-you-delete-a-google-review": {
-        src: `${BLOG_IMAGE_BASE}/fake-review-evidence.jpg`,
-        alt: "Concerned business owner reviewing customer feedback and reporting inappropriate reviews on a laptop",
+        src: `${BLOG_IMAGE_BASE}/delete-google-review-hero.jpg`,
+        alt: "Small business owner reviewing customer feedback on a laptop at a cafe counter",
         width: 1672,
         height: 941,
-        caption: "Business owners can report policy-violating Google reviews directly through official dispute workflows.",
+        caption: "Understanding Google's review policies is the first step toward protecting your business reputation.",
     },
 };
 

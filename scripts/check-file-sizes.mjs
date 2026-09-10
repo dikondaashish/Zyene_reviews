@@ -51,6 +51,10 @@ const BASELINE = {
   "src/lib/content/blog-posts-month1.ts": { max: 639, why: "content dataset" },
   "src/lib/content/blog-posts-month2.ts": { max: 456, why: "content dataset" },
   "src/lib/content/blog-posts-month3.ts": { max: 430, why: "content dataset" },
+  "src/lib/content/blog-posts-delete-google-review.ts": {
+    max: 323,
+    why: "content dataset — comprehensive SEO guide with long-tail Q&A sections",
+  },
   "src/lib/content/resource-data.ts": { max: 505, why: "content dataset" },
   "src/lib/comparisons/competitor-data.ts": {
     max: 455,
