@@ -68,12 +68,15 @@
 .hero-growth-bars i:nth-child(2) { height:56%; }
 .hero-growth-bars i:nth-child(3) { height:78%; }
 .hero-growth-bars i:nth-child(4) { height:100%; }
-.hero-phone-enter { position:absolute; width:27%; top:43.5%; right:-1%; z-index:5; }
-.hero-phone { position:relative; aspect-ratio:.56; padding:1.6cqw .9cqw; background:#fffefd; border:.65cqw solid #171a19; border-radius:3.6cqw; box-shadow:inset 0 0 0 2px #a9aaa3,0 1px 0 2px #55584f,0 15px 24px #30201424; transform:rotate(7deg); }
+.hero-phone-enter { position:absolute; width:23.5%; top:43%; right:0; z-index:5; }
+.hero-phone { position:relative; aspect-ratio:.49; padding:1.6cqw .9cqw; background:#fffefd; border:.55cqw solid #171a19; border-radius:3.1cqw; box-shadow:inset 0 0 0 2px #a9aaa3,0 1px 0 2px #55584f,0 15px 24px #30201424; transform:rotate(5deg); }
+.hero-phone::before,.hero-phone::after { content:""; position:absolute; z-index:1; width:.35cqw; background:#454942; border-radius:3px 0 0 3px; pointer-events:none; }
+.hero-phone::before { left:-.82cqw; top:20%; height:6.5cqw; box-shadow:0 8cqw 0 #454942; }
+.hero-phone::after { right:-.82cqw; top:28%; height:10cqw; border-radius:0 3px 3px 0; }
 .hero-phone-status { display:flex; align-items:center; justify-content:space-between; padding:0 .7cqw; font-size:.85cqw; font-weight:650; }
 .hero-phone-status > span:last-child { display:flex; gap:.22cqw; }
 .hero-phone-status svg { width:1.05cqw; height:1.05cqw; }
-.hero-phone-notch { position:absolute; top:0; left:28%; width:44%; height:1.8cqw; background:#171a19; border-radius:0 0 1.4cqw 1.4cqw; }
+.hero-phone-notch { position:absolute; top:0; left:31%; width:38%; height:1.65cqw; background:#171a19; border-radius:0 0 1.1cqw 1.1cqw; }
 .hero-phone-content { display:flex; flex-direction:column; align-items:center; padding-top:2cqw; text-align:center; }
 .hero-phone-content > img { width:4.6cqw; height:4.6cqw; border-radius:.5cqw; }
 .hero-phone-brand { font-size:1.7cqw; font-weight:650; letter-spacing:-.035em; margin-top:.65cqw; }
@@ -86,7 +89,10 @@
 .hero-phone-stars input:focus-visible + svg { outline:2px solid #be3900; outline-offset:3px; border-radius:2px; }
 .hero-phone-stars svg.is-filled { fill:#ffb300; color:#df9600; }
 .hero-phone-submit { width:94%; min-height:32px; margin-top:1cqw; border-radius:999px; padding:1cqw .4cqw; background:var(--primary); color:#fffefd; font-size:1.7cqw; font-weight:600; cursor:pointer; transition:transform 180ms,background-color 180ms; }
+.hero-phone-submit:disabled { background:#d8d4d0; color:#756f6b; cursor:not-allowed; }
 .hero-phone-submit:active { transform:scale(.98); }
+.hero-phone-submit:disabled:active { transform:none; }
+.hero-phone-rating-status { min-height:1.6cqw; margin-top:.4cqw; color:#68717c; font-size:1.05cqw; }
 .hero-phone-minute { color:#68717c; font-size:1.35cqw; margin-top:1.6cqw; }
 .hero-phone-demo { display:block; margin-top:1.6cqw; font-size:1.2cqw; color:#71665e; }
 .hero-phone-home { position:absolute; bottom:.8cqw; left:34%; width:32%; height:.35cqw; border-radius:4px; background:#212827; }
@@ -142,8 +148,8 @@
  .hero-review-avatar { width:8cqw; height:8cqw; }
  .hero-review-avatar svg { width:4.6cqw; height:4.6cqw; }
  .hero-review-rays,.hero-floating-review-bottom,.hero-growth-enter { display:none; }
- .hero-phone-enter { width:70%; top:40%; right:5%; }
- .hero-phone { aspect-ratio:auto; min-height:104cqw; border-width:.85cqw; border-radius:6cqw; padding:3cqw 2cqw 7cqw; transform:rotate(3deg); }
+ .hero-phone-enter { width:58%; top:38%; right:8%; }
+ .hero-phone { aspect-ratio:auto; min-height:116cqw; border-width:.85cqw; border-radius:5.5cqw; padding:3cqw 2cqw 7cqw; transform:rotate(2deg); }
  .hero-phone-status { font-size:2.5cqw; }
  .hero-phone-status svg { width:2.8cqw; height:2.8cqw; }
  .hero-phone-notch { height:2.2cqw; }
@@ -155,6 +161,7 @@
  .hero-phone-stars label { min-height:44px; }
  .hero-phone-stars svg { width:6cqw; height:6cqw; }
  .hero-phone-submit { min-height:44px; font-size:4cqw; margin-top:2cqw; }
+ .hero-phone-rating-status { min-height:3.5cqw; margin-top:1cqw; font-size:2.6cqw; }
  .hero-phone-minute { font-size:3cqw; margin-top:3cqw; }
  .hero-phone-demo { font-size:2.8cqw; }
  .hero-phone-success { font-size:3.6cqw; gap:2cqw; margin-top:3cqw; }

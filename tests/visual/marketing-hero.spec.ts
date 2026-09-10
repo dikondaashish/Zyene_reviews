@@ -76,6 +76,8 @@ test("phone example supports rating, feedback and retry without sending a review
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const phone = page.locator(".hero-phone");
+  await expect(phone.getByRole("button", { name: "Leave a review" })).toBeDisabled();
+  await expect(phone.getByText("Choose a rating to continue")).toBeVisible();
   await phone
     .getByRole("radio", { name: "3 stars", exact: true })
     .check({ force: true });
@@ -83,8 +85,10 @@ test("phone example supports rating, feedback and retry without sending a review
   await expect(
     phone.getByRole("radio", { name: "3 stars", exact: true }),
   ).toBeChecked();
+  await expect(phone.getByText("3 stars selected")).toBeVisible();
   await phone.getByRole("button", { name: "Leave a review" }).click();
-  await expect(phone.getByRole("status")).toContainText("No review was sent.");
+  await expect(phone.getByRole("status")).toContainText("Your 3-star demo rating was saved.");
+  await expect(phone.getByRole("status")).toContainText("Nothing was sent.");
   await phone.getByRole("button", { name: "Try again" }).click();
   await expect(phone.locator(".is-filled")).toHaveCount(0);
   await phone.getByRole("radio", { name: "1 star", exact: true }).focus();
@@ -92,6 +96,16 @@ test("phone example supports rating, feedback and retry without sending a review
   await expect(
     phone.getByRole("radio", { name: "2 stars", exact: true }),
   ).toBeChecked();
+});
+
+test("phone uses a realistic narrow device ratio", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const ratio = await page.locator(".hero-phone").evaluate((phone) =>
+    phone.clientWidth / phone.clientHeight,
+  );
+  expect(ratio).toBeLessThanOrEqual(0.52);
 });
 
 test("reduced motion disables all hero motion and keeps content visible", async ({
@@ -164,19 +178,17 @@ test("existing navigation, trial links and product tour remain available", async
   await expect(menu).toBeFocused();
 });
 
-test("star demo runs once and yields to a customer's chosen rating", async ({
+test("phone starts neutral and yields to a customer's chosen rating", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
   const phone = page.locator(".hero-phone");
   const stars = phone.locator(".hero-phone-stars svg");
-  await expect(stars.last()).toHaveCSS("fill", "rgb(255, 179, 0)");
-  await expect(stars.last()).toHaveCSS("animation-iteration-count", "1");
+  await expect(stars.last()).toHaveCSS("fill", "rgba(0, 0, 0, 0)");
   await phone
     .getByRole("radio", { name: "2 stars", exact: true })
     .check({ force: true });
   await expect(phone.locator(".is-filled")).toHaveCount(2);
   await expect(stars.last()).toHaveCSS("fill", "rgba(0, 0, 0, 0)");
-  await expect(stars.last()).toHaveCSS("animation-name", "none");
 });
