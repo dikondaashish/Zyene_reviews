@@ -46,10 +46,10 @@
   margin: 0;
   list-style: none;
 }
-.home-brand { display: flex; align-items: center; gap: 14px; white-space: nowrap; }
-.home-brand-logo { flex: none; width: 44px; height: 44px; object-fit: contain; filter: grayscale(1); }
-.home-brand-name { color: var(--muted-foreground); font-size: clamp(20px, 1.8vw, 26px); font-weight: 650; letter-spacing: -.035em; line-height: 1.2; }
-.home-brand-industry { margin-top: 6px; color: var(--muted-foreground); font-size: 12px; line-height: 1.4; }
+.home-brand { display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+.home-brand-logo { flex: none; width: 36px; height: 36px; object-fit: contain; filter: grayscale(1); }
+.home-brand-name { color: var(--muted-foreground); font-size: clamp(16px, 1.5vw, 20px); font-weight: 650; letter-spacing: -.035em; line-height: 1.2; }
+.home-brand-industry { margin-top: 4px; color: var(--muted-foreground); font-size: 11px; line-height: 1.4; }
 .home-brands-disclaimer { margin-top: 24px; color: var(--muted-foreground); font-size: 12px; }
 .home-brands-window[data-paused="true"] .home-brands-track { animation-play-state: paused; }
 @media (hover: hover) {

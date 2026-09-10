@@ -37,8 +37,8 @@ export function IllustrativeBrandsBar({
                                     <Image
                                         src={getBrandLogoUrl(brand.domain)}
                                         alt=""
-                                        width={44}
-                                        height={44}
+                                        width={36}
+                                        height={36}
                                         className="home-brand-logo"
                                         unoptimized
                                     />
