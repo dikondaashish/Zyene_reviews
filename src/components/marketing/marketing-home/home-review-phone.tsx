@@ -45,9 +45,9 @@ export function HomeReviewPhone() {
               <div className="hero-phone-success" role="status">
                 <Check aria-hidden="true" />
                 <span>
-                  Demo complete.
+                  Your {rating}-star demo rating was saved.
                   <br />
-                  No review was sent.
+                  Nothing was sent.
                 </span>
               </div>
             ) : (
@@ -72,11 +72,15 @@ export function HomeReviewPhone() {
                     </label>
                   ))}
                 </fieldset>
+                <p className="hero-phone-rating-status" aria-live="polite">
+                  {rating === null ? "Choose a rating to continue" : `${rating} ${rating === 1 ? "star" : "stars"} selected`}
+                </p>
                 <button
                   type="button"
                   className="hero-phone-submit"
+                  disabled={rating === null}
                   onClick={() => {
-                    setRating(rating ?? 5);
+                    if (rating === null) return;
                     setSubmitted(true);
                   }}
                 >
@@ -92,7 +96,7 @@ export function HomeReviewPhone() {
                 type="button"
                 onClick={() => {
                   setSubmitted(false);
-                  setRating(0);
+                  setRating(null);
                 }}
               >
                 Try again

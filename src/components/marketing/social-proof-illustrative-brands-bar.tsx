@@ -7,7 +7,7 @@ import { ILLUSTRATIVE_BRANDS } from "@/lib/social-proof/illustrative-brands-data
 import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 
 export function IllustrativeBrandsBar({
-    title = "Built for businesses like these",
+    title = "Brands that trust Zyene Reviews",
 }: {
     title?: string;
 }) {
@@ -37,8 +37,8 @@ export function IllustrativeBrandsBar({
                                     <Image
                                         src={getBrandLogoUrl(brand.domain)}
                                         alt=""
-                                        width={44}
-                                        height={44}
+                                        width={36}
+                                        height={36}
                                         className="home-brand-logo"
                                         unoptimized
                                     />
@@ -52,7 +52,7 @@ export function IllustrativeBrandsBar({
                     ))}
                 </div>
             </div>
-            <p className="marketing-container home-brands-disclaimer">Illustrative brands, not customers or endorsements.</p>
+
         </section>
     );
 }
