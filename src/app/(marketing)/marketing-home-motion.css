@@ -10,8 +10,6 @@
 .hero-growth-card { animation:hero-drift 8s 1750ms ease-in-out infinite; }
 .hero-phone-enter { animation:hero-phone-enter 750ms 900ms cubic-bezier(.22,1,.36,1) backwards; }
 .hero-phone-float { animation:hero-phone-float 7.5s 1650ms ease-in-out infinite; }
-.hero-phone[data-interacted=false] .hero-phone-stars svg { animation:hero-star-fill 350ms cubic-bezier(.22,1,.36,1) forwards; }
-.hero-phone[data-interacted=false] .hero-phone-submit { animation:hero-button-pulse 400ms 2450ms ease-out; }
 .hero-annotations p { animation:hero-enter 550ms 1400ms cubic-bezier(.22,1,.36,1) backwards; }
 .hero-annotations path { stroke-dasharray:1; animation:hero-draw 600ms 1450ms ease-out backwards; }
 .hero-plant,.hero-mug { animation:hero-enter 750ms 650ms cubic-bezier(.22,1,.36,1) backwards; }
@@ -26,8 +24,6 @@
 @keyframes hero-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-5px); } }
 @keyframes hero-drift { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-2px); } }
 @keyframes hero-phone-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
-@keyframes hero-star-fill { 0% { transform:scale(.8); } 65% { transform:scale(1.12); } 100% { fill:#ffb300; color:#df9600; transform:scale(1); } }
-@keyframes hero-button-pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.025); } }
 @keyframes hero-draw { from { stroke-dashoffset:1; } to { stroke-dashoffset:0; } }
 
 /* OptiMonk-style section choreography: reveal on entry, then drift gently with the scroll. */

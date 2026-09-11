@@ -10,7 +10,7 @@ export function ProductShowcase({
   initialTab?: ProductTourTab;
 }) {
   return (
-    <section className="marketing-section bg-muted">
+    <section className="marketing-section product-tour-section bg-muted">
       <div className="marketing-container">
         <div className="marketing-section-heading">
           <div>
