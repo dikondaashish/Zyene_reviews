@@ -54,6 +54,20 @@ export function MarketingLayoutHeader({ pending = false, pendingLabel = "Opening
     setOpenMenu((current) => (current === menu ? null : menu));
   };
 
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleOpenMenu = (menu: MarketingNavMenu) => {
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    setOpenMenu(menu);
+  };
+
+  const handleCloseMenu = () => {
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    closeTimeoutRef.current = setTimeout(() => {
+      setOpenMenu(null);
+    }, 150);
+  };
+
   return (
     <header
       className={`premium-header sticky top-0 z-50 w-full min-w-0${isScrolled ? " is-scrolled" : ""}`}
@@ -67,8 +81,8 @@ export function MarketingLayoutHeader({ pending = false, pendingLabel = "Opening
           signupUrl={SIGNUP_URL}
           openMenu={openMenu}
           onToggleMenu={toggleMenu}
-          onOpenMenu={(menu: MarketingNavMenu) => setOpenMenu(menu)}
-          onCloseMenu={() => setOpenMenu(null)}
+          onOpenMenu={handleOpenMenu}
+          onCloseMenu={handleCloseMenu}
         />
         <Button
           variant="ghost"
