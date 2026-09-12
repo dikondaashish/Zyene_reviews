@@ -71,7 +71,7 @@ export const INDUSTRIES: IndustryData[] = [
         ],
         solutions: [
             { title: "Never miss a new review", description: "Get instant SMS or email alerts the moment a new Google, Facebook, or Yelp review arrives - so you can respond before the diner even gets home." },
-            { title: "AI replies that sound like you", description: "One-click AI reply suggestions match your restaurant's tone - warm, professional, or apologetic - and can be published in seconds without sounding robotic." },
+            { title: "AI replies that sound like you", description: "During the morning rush, let automatic Google replies answer eligible new reviews in a Professional, Friendly, or Concise tone. Review and publish a draft yourself when a guest needs a personal response." },
             { title: "Follow up on low ratings", description: "The Negative Feedback Shield gives unhappy diners a private form to describe the problem and alerts your team. Use that feedback for service recovery while keeping public review requests fair." },
             { title: "Track nearby competitors", description: "See exactly how your star rating, review volume, and response rate compares to the restaurants around you - and identify where you're winning or falling behind." },
         ],
@@ -116,7 +116,7 @@ export const INDUSTRIES: IndustryData[] = [
         ],
         solutions: [
             { title: "Grow your review count automatically", description: "Send automated review requests via SMS or email after each appointment - timed to arrive when patient satisfaction is highest, like 2 hours after checkout." },
-            { title: "HIPAA-aware, professional AI replies", description: "Zyene's AI reply suggestions are designed for healthcare contexts - never referencing protected health information, always sounding professional and empathetic." },
+            { title: "Professional replies with team review", description: "Draft professional responses for your team to review. Keep public replies general and avoid patient details. Automatic Google replies are optional; use individual review when a response needs privacy-sensitive judgment." },
             { title: "Handle billing and wait-time complaints", description: "The Negative Feedback Shield gives patients a private feedback path for billing or wait-time concerns, so your team can review the issue and follow up." },
             { title: "Monitor every platform in one inbox", description: "Track your reviews across Google, Healthgrades context, and Facebook - from one dashboard. Identify which of your associates receives the best patient feedback." },
         ],
@@ -161,7 +161,7 @@ export const INDUSTRIES: IndustryData[] = [
         ],
         solutions: [
             { title: "Build trust before the first call", description: "Proactively grow your 5-star review count so new customers find a shop they feel confident about - before they've even called." },
-            { title: "AI replies that sound like a real shop owner", description: "Zyene AI crafts replies that are direct, honest, and professional - matching the tone of a real shop owner, not a corporate script." },
+            { title: "AI replies that sound like a real shop owner", description: "Keep up with feedback while your team works on the next vehicle. Automatically reply to eligible new Google reviews in your chosen tone, or edit an AI draft for a specific customer concern." },
             { title: "Follow up on estimate disputes", description: "When a customer is upset about their bill, the Negative Feedback Shield gives them a private way to explain the problem and alerts your team to follow up." },
             { title: "See how you compare to the shop down the street", description: "Track up to 10 nearby competitors. See their star rating, review volume, and response rate - and identify exactly what's driving customers to choose them over you." },
         ],
@@ -206,7 +206,7 @@ export const INDUSTRIES: IndustryData[] = [
         ],
         solutions: [
             { title: "Automated requests after every appointment", description: "Send a branded review request via SMS or email automatically after each appointment - when the client is freshly satisfied and still glowing from the service." },
-            { title: "AI replies that sound personal, not generic", description: "Zyene AI crafts warm, personalized reply suggestions that sound like they came from you - not from a template. Edit in seconds and publish with one click." },
+            { title: "AI replies that sound personal, not generic", description: "Keep your salon’s voice in the conversation. Choose a tone and star threshold for automatic Google replies, while handling appointment concerns with a draft you review yourself." },
             { title: "Follow up on disappointed clients", description: "When a client isn't happy with their cut or color, the Negative Feedback Shield gives them a private way to explain what went wrong and alerts your team." },
             { title: "Stay ahead of nearby salons", description: "The competitor tracker monitors nearby salons and spas. Know when a competitor is getting more reviews than you - and respond before it affects your bookings." },
         ],
@@ -251,7 +251,7 @@ export const INDUSTRIES: IndustryData[] = [
         ],
         solutions: [
             { title: "Request reviews the moment the job is done", description: "Trigger a review request automatically when a job is marked complete - via SMS or email - when the homeowner's satisfaction is highest." },
-            { title: "AI replies that sound like a real professional", description: "Whether you're a solo plumber or a 10-truck HVAC company, Zyene AI crafts professional, specific replies - not generic copy-paste responses." },
+            { title: "AI replies that sound like a real professional", description: "Let automatic Google replies handle eligible new reviews while you are on the next job. Set a tone and star threshold for each business, and review complex service concerns yourself." },
             { title: "Follow up on pricing disputes", description: "The Negative Feedback Shield gives unhappy homeowners a private way to explain a pricing problem and alerts your team to follow up." },
             { title: "Win seasonal search ranking battles", description: "Track competitor review volume and freshness across your service area. Stay ahead before peak season hits by proactively collecting reviews during quieter months." },
         ],
@@ -296,7 +296,7 @@ export const INDUSTRIES: IndustryData[] = [
         ],
         solutions: [
             { title: "Automate review requests after each visit", description: "Send a review request via email or SMS after each appointment - timed to arrive when patient satisfaction is highest and the visit is still fresh." },
-            { title: "Professional, empathetic AI replies", description: "Zyene's AI reply suggestions are designed for healthcare - always professional and empathetic, never referencing protected health information." },
+            { title: "Professional, empathetic AI replies", description: "Draft empathetic responses and review them before publishing. Keep patient-specific information out of public replies. Automatic Google replies are optional and do not replace your practice’s review process." },
             { title: "Privately resolve front-desk and wait-time complaints", description: "The Negative Feedback Shield routes upset patients to a private feedback form. Most wait-time and billing complaints can be resolved before they become public 1-star reviews." },
             { title: "Monitor all platforms from one dashboard", description: "Track your Google, Facebook, and other review platforms from one inbox. Set up instant alerts so your team can respond within hours - not days." },
         ],
@@ -340,7 +340,7 @@ export const INDUSTRIES: IndustryData[] = [
             },
         ],
         solutions: [
-            { title: "Respond to every guest review - instantly with AI", description: "Zyene AI crafts personalized, professional replies that match your hotel's brand voice. Respond to dozens of reviews in minutes, not hours." },
+            { title: "AI drafts and automatic Google replies", description: "Automatically reply to eligible new Google reviews after a stay, using your selected tone and star threshold. Keep individual service issues in a manual draft-and-review workflow." },
             { title: "Private resolution for room complaints", description: "The Negative Feedback Shield gives unhappy guests a private channel to report issues before they write a public review. Resolving quickly drives loyalty, not churn." },
             { title: "Automate post-checkout review requests", description: "Send a branded review request via email or SMS automatically at checkout - when guests are most likely to write a positive review." },
             { title: "Track your competitive set", description: "Monitor the review volume, rating, and response rate of nearby hotels in the same class. Use the comparison to decide where to improve; Google Maps position depends on more than reviews." },
@@ -386,7 +386,7 @@ export const INDUSTRIES: IndustryData[] = [
         ],
         solutions: [
             { title: "Build review momentum before January", description: "Proactively collect reviews during quieter months so you enter January with a fresh, high-volume review profile that beats competitors in Google Maps results." },
-            { title: "AI replies that sound like a real community", description: "Zyene crafts fitness-appropriate reply suggestions - energetic, personal, and on-brand - so your responses feel like they came from a community manager, not a template." },
+            { title: "AI replies that sound like a real community", description: "Choose a Friendly, Professional, or Concise tone for automatic replies to eligible new Google reviews. Give membership concerns personal attention with drafts your team reviews." },
             { title: "Privately resolve cancellation and billing disputes", description: "The Negative Feedback Shield routes cancellation complaints and billing disputes to a private channel - where you can fix the issue before it becomes a 1-star review." },
             { title: "Track competitor gyms in your area", description: "See how nearby gyms compare on review volume and rating. Know when a competitor is gaining on you - and stay ahead with a proactive review collection strategy." },
         ],

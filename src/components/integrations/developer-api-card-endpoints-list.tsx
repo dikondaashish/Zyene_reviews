@@ -14,7 +14,7 @@ export function DeveloperApiCardEndpointsList() {
                             variant="outline"
                             className={`font-mono text-[10px] shrink-0 ${
                                 ep.method === "POST"
-                                    ? "text-chart-2 border-chart-2/40 dark:text-chart-2 dark:border-chart-2/30"
+                                    ? "text-success border-chart-2/40 dark:text-success dark:border-chart-2/30"
                                     : "text-primary border-primary/30 dark:text-primary dark:border-primary/40"
                             }`}
                         >

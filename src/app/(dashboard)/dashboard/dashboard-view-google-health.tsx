@@ -50,7 +50,7 @@ export function DashboardViewGoogleHealth({
                     <CardContent>
                         <div
                             className={`text-2xl font-bold ${
-                                unansweredQaCount === 0 ? "text-chart-2" : "text-chart-4"
+                                unansweredQaCount === 0 ? "text-success" : "text-warning-foreground"
                             }`}
                         >
                             {unansweredQaCount}
@@ -72,7 +72,7 @@ export function DashboardViewGoogleHealth({
                 <CardContent>
                     <div
                         className={`text-2xl font-bold ${
-                            brokenPlaceLinksCount === 0 ? "text-chart-2" : "text-destructive"
+                            brokenPlaceLinksCount === 0 ? "text-success" : "text-destructive"
                         }`}
                     >
                         {brokenPlaceLinksCount}
@@ -98,9 +98,9 @@ export function DashboardViewGoogleHealth({
                             googleProfileHealthScore === null
                                 ? "text-muted-foreground"
                                 : googleProfileHealthScore >= 80
-                                  ? "text-chart-2"
+                                  ? "text-success"
                                   : googleProfileHealthScore >= 40
-                                    ? "text-chart-4"
+                                    ? "text-warning-foreground"
                                     : "text-destructive"
                         }`}
                     >

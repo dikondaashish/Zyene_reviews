@@ -18,7 +18,7 @@ export function AboutProductSection() {
                             </li>
                             <li className="flex items-start gap-2">
                                 <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
-                                Draft AI-assisted Google review replies, then tailor each response to the customer and your voice
+                                Edit AI reply drafts yourself or automatically publish replies to eligible new Google reviews in your chosen tone
                             </li>
                             <li className="flex items-start gap-2">
                                 <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />

@@ -6,11 +6,11 @@
 .tour-story-copy { margin-top: 38px; min-height: 300px; animation: tour-story-enter 280ms cubic-bezier(.22,1,.36,1); }
 .tour-story-chapter { display: flex; align-items: center; justify-content: space-between; max-width: 240px; margin-bottom: 18px; }
 .tour-story-chapter > span { font-size: 11px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; letter-spacing: .08em; }
-.tour-story-chapter > svg { color: #ba3b00; }
+.tour-story-chapter > svg { color: var(--primary); }
 .tour-story-copy h3 { max-width: 12ch; font-size: clamp(29px, 2.8vw, 40px); font-weight: 550; letter-spacing: -.055em; line-height: 1.12; text-wrap: balance; }
 .tour-story-copy > p { margin-top: 20px; font-size: 14px; line-height: 1.75; color: var(--muted-foreground); max-width: 32ch; }
 .tour-story-detail { display: block; margin-top: 15px; font-size: 12px; font-weight: 550; }
-.tour-story-hint { display: flex; align-items: flex-start; gap: 7px; margin-top: 22px; color: #ae3904; font-size: 11px; line-height: 1.6; }
+.tour-story-hint { display: flex; align-items: flex-start; gap: 7px; margin-top: 22px; color: var(--foreground); font-size: 11px; line-height: 1.6; }
 .tour-story-hint svg { flex-shrink: 0; margin-top: 1px; }
 .tour-story-nav { display: flex; gap: 6px; margin-top: 26px; }
 .tour-story-nav button { display: flex; align-items: center; justify-content: center; gap: 6px; flex: 1; min-height: 44px; padding: 6px; border-top: 2px solid #d6d1c8; font-size: 11px; color: var(--muted-foreground); cursor: pointer; transition: border-color 180ms, color 180ms; }
@@ -20,7 +20,7 @@
 .tour-story-scroll { display: flex; align-items: center; gap: 7px; margin-top: 20px; color: var(--muted-foreground); font-size: 10px; }
 .tour-story-scroll > svg { animation: tour-scroll-cue 1.5s ease-in-out 3; }
 .tour-story-progress { display: none; height: 2px; background: #dedad2; margin-top: 16px; }
-.tour-story-progress > span { display: block; height: 100%; background: #a9a197; transform: scaleX(0); transform-origin: left; }
+.tour-story-progress > span { display: block; height: 100%; background: var(--primary); transform: scaleX(0); transform-origin: left; }
 .tour-story-section:has(:focus-visible) .tour-story-copy { animation: none; }
 @keyframes tour-story-enter { from { opacity: .15; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes tour-scroll-cue { 50% { transform: translateY(4px); } }

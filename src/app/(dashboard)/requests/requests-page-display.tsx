@@ -60,8 +60,8 @@ export function getRequestStatusBadge(
 ) {
     if (converted) {
         return (
-            <Badge className="bg-chart-4/15 text-chart-4 hover:bg-chart-4/15 border-chart-4/35">
-                <Star className="mr-1 fill-chart-4 text-chart-4 size-3" />{" "}
+            <Badge className="bg-chart-4/15 text-warning-foreground hover:bg-chart-4/15 border-chart-4/35">
+                <Star className="mr-1 fill-chart-4 text-warning-foreground size-3" />{" "}
                 Review Left
             </Badge>
         );
@@ -118,7 +118,7 @@ export function getRequestStatusBadge(
                         variant="outline"
                         className={
                             e === "sent"
-                                ? "border-chart-2/40 bg-chart-2/15 text-chart-2"
+                                ? "border-chart-2/40 bg-chart-2/15 text-success"
                                 : "border-destructive/40 bg-destructive/10 text-destructive"
                         }
                     >
@@ -130,7 +130,7 @@ export function getRequestStatusBadge(
                         variant="outline"
                         className={
                             s === "sent"
-                                ? "border-chart-2/40 bg-chart-2/15 text-chart-2"
+                                ? "border-chart-2/40 bg-chart-2/15 text-success"
                                 : "border-destructive/40 bg-destructive/10 text-destructive"
                         }
                     >
@@ -157,7 +157,7 @@ export function getRequestStatusBadge(
             );
         case "delivered":
             return (
-                <Badge className="bg-chart-2/15 text-chart-2 hover:bg-chart-2/15 border-chart-2/30">
+                <Badge className="bg-chart-2/15 text-success hover:bg-chart-2/15 border-chart-2/30">
                     Delivered
                 </Badge>
             );

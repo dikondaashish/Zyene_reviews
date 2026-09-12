@@ -12,6 +12,7 @@ import {
   Zap,
 } from "lucide-react";
 import type { ReactNode } from "react";
+import Link from "next/link";
 
 function FeatureLabel({ children }: { children: ReactNode }) {
   return <span className="home-feature-card-label">{children}</span>;
@@ -62,12 +63,13 @@ export function MarketingHomeFeatureConstellation() {
           </article>
 
           <article className="home-feature-card home-feature-card-ai">
-            <div className="home-feature-card-title"><Bot size={18} aria-hidden="true" /><h3>AI-assisted replies</h3></div>
-            <p>Start with a thoughtful draft, then make it sound exactly like your team.</p>
+            <div className="home-feature-card-title"><Bot size={18} aria-hidden="true" /><h3>Automatic Google replies</h3></div>
+            <p>Your next Google reply, taken care of. Choose eligible star ratings and a tone that sounds like your business.</p>
             <div className="home-feature-conversation">
               <div className="home-feature-message home-feature-message-customer"><MessageSquareText size={14} aria-hidden="true" /><span>“Amazing service. We’ll be back.”</span></div>
-              <div className="home-feature-message home-feature-message-ai"><Sparkles size={14} aria-hidden="true" /><span>Draft ready in your tone</span><small>Review before publishing</small></div>
+              <div className="home-feature-message home-feature-message-ai"><Sparkles size={14} aria-hidden="true" /><span>New review → AI reply → Published</span><small>Example · Automatic mode</small></div>
             </div>
+            <Link href="/features/ai-replies#automatic-replies-heading" className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-4">See automatic replies in action →</Link>
           </article>
 
           <article className="home-feature-card home-feature-card-analytics">

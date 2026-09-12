@@ -24,7 +24,7 @@ export function GoogleConnectBanner({
     return (
         <div className="w-full border-b border-chart-4/25 bg-chart-4/10 px-4 py-2.5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3 min-w-0">
-                <div className="mt-0.5 rounded-lg bg-chart-4/15 p-1.5 text-chart-4 shrink-0">
+                <div className="mt-0.5 rounded-lg bg-chart-4/15 p-1.5 text-warning-foreground shrink-0">
                     <AlertCircle className="size-4" />
                 </div>
                 <p className="text-sm font-medium text-foreground">

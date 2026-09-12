@@ -20,7 +20,7 @@ export function ReviewCarouselCard({
                             aria-hidden="true"
                             className={cn(
                                 "size-4",
-                                i < review.rating ? "fill-chart-4 text-chart-4" : "fill-muted text-muted-foreground/40"
+                                i < review.rating ? "fill-chart-4 text-warning-foreground" : "fill-muted text-muted-foreground/40"
                             )}
                         />
                     ))}

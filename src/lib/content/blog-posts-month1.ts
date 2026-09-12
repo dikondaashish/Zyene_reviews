@@ -531,7 +531,7 @@ export const post4: BlogPost = {
             "Price: $29.99/mo (Starter, 1 location) - 10× cheaper than Birdeye's starting price",
             "Review monitoring: Google, Facebook, Yelp - real-time alerts",
             "AI reply suggestions: Unlimited on all plans (Birdeye gates this)",
-            "Auto-commenter: Hands-free AI replies to 4+5-star reviews",
+            "Automatic Google replies: Choose a tone and minimum star rating for new reviews",
             "Negative Feedback Shield: Route unhappy customers to private resolution (Birdeye doesn't have this)",
             "Competitor tracking: Monitor up to 10 nearby competitors",
             "GBP keyword performance dashboard",

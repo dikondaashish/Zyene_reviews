@@ -13,12 +13,12 @@ export default async function OgImage({ params }: { params: Promise<{ guide: str
 
     return new ImageResponse(
         (
-            <div style={{ width: "1200px", height: "630px", display: "flex", flexDirection: "column", justifyContent: "flex-end", background: "linear-gradient(135deg, #0f1a1a 0%, #152d2d 60%, #0f1a1a 100%)", fontFamily: "system-ui, -apple-system, sans-serif", padding: "0", position: "relative", overflow: "hidden" }}>
+            <div style={{ width: "1200px", height: "630px", display: "flex", flexDirection: "column", justifyContent: "flex-end", background: "linear-gradient(135deg, #201515 0%, #2a2222 60%, #201515 100%)", fontFamily: "system-ui, -apple-system, sans-serif", padding: "0", position: "relative", overflow: "hidden" }}>
                 <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize: "40px 40px" }} />
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "3px", background: "linear-gradient(90deg, #22d3ee, #0ea5e9)" }} />
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "3px", background: "#ff4f00" }} />
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "60px 72px", position: "relative", zIndex: 10 }}>
                     <div style={{ display: "flex", gap: "12px", marginBottom: "24px", alignItems: "center" }}>
-                        <div style={{ background: "rgba(34,211,238,0.1)", border: "1px solid rgba(34,211,238,0.3)", borderRadius: "8px", padding: "6px 16px", color: "#22d3ee", fontSize: "13px", fontWeight: "700", letterSpacing: "0.05em", textTransform: "uppercase" }}>Free Guide</div>
+                        <div style={{ background: "rgba(255,79,0,0.1)", border: "1px solid rgba(255,79,0,0.3)", borderRadius: "8px", padding: "6px 16px", color: "#ff4f00", fontSize: "13px", fontWeight: "700", letterSpacing: "0.05em", textTransform: "uppercase" }}>Free Guide</div>
                         {readTime && <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "13px" }}>{readTime}</div>}
                     </div>
                     <div style={{ fontSize: title.length > 55 ? "36px" : "44px", fontWeight: "800", color: "#ffffff", lineHeight: "1.15", marginBottom: "16px", maxWidth: "900px" }}>{title}</div>

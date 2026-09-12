@@ -46,7 +46,7 @@ export function ReviewsFilters({ filters, onFilterChange }: ReviewsFiltersProps)
                         <SelectItem value="all">All Stars</SelectItem>
                         {[5, 4, 3, 2, 1].map((rating) => (
                             <SelectItem key={rating} value={String(rating)}>
-                                <Star className="mr-2 size-3.5 fill-chart-4 text-chart-4" aria-hidden="true" />
+                                <Star className="mr-2 size-3.5 fill-chart-4 text-warning-foreground" aria-hidden="true" />
                                 {rating} {rating === 1 ? "Star" : "Stars"}
                             </SelectItem>
                         ))}

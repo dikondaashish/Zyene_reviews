@@ -8,7 +8,7 @@ export function CampaignsEmptyState() {
     return (
         <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-background to-primary/10 rounded-3xl border border-primary/20 relative overflow-hidden">
             <div className="absolute top-0 right-0 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32 size-64" />
-            <div className="absolute bottom-0 left-0 bg-chart-1/15/10 dark:bg-chart-1/10 rounded-full blur-3xl -ml-32 -mb-32 size-64" />
+            <div className="absolute bottom-0 left-0 bg-chart-1/10 dark:bg-chart-1/10 rounded-full blur-3xl -ml-32 -mb-32 size-64" />
 
             <div className="relative z-10 flex flex-col items-center text-center max-w-lg">
                 <div className="bg-gradient-to-tr from-primary to-primary/80 rounded-3xl flex items-center justify-center mb-8 rotate-3 transform transition-transform hover:rotate-0 duration-500 size-24">

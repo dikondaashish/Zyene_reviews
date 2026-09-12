@@ -90,8 +90,8 @@ export function ReviewResponseGeneratorClient() {
                         response rate as a separate ranking factor. This free tool selects a reusable template by rating; it does not analyze the meaning of the review text.
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
-                        For one-click AI replies on every new review, tone control, and optional automatic replies, use
-                        Zyene Reviews AI reply feature on all paid plans with a 7-day free trial.
+                        To draft replies or automatically publish responses to eligible new Google reviews, use
+                        <Link href="/features/ai-replies" className="font-semibold underline underline-offset-4">Zyene’s AI drafts and automatic Google replies</Link> on eligible paid plans with a 7-day free trial.
                     </p>
                 </div>
             </section>
@@ -154,7 +154,7 @@ export function ReviewResponseGeneratorClient() {
                             </Button>
                         </form>
                     )}
-                    {bonusSent && <p className="text-sm text-chart-2 text-center">Bonus templates accepted for email delivery.</p>}
+                    {bonusSent && <p className="text-sm text-success text-center">Bonus templates accepted for email delivery.</p>}
                     {error && <p className="text-sm text-destructive text-center">{error}</p>}
                 </div>
             </section>

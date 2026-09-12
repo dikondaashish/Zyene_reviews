@@ -5,6 +5,7 @@ import { Search, Star, CheckCheck } from "lucide-react";
 import { DEMO_REVIEWS } from "@/lib/marketing/product-demo-data";
 import { DemoReplyComposer } from "@/components/marketing/product-tour/reply-composer";
 import { createReviewDemoState, reviewDemoReducer } from "@/lib/marketing/product-demo";
+import { AutomaticReplyDemo } from "@/components/marketing/product-tour/automatic-reply-demo";
 
 export function ReviewDemo() {
   const [state, dispatch] = useReducer(reviewDemoReducer, undefined, createReviewDemoState);
@@ -21,6 +22,7 @@ export function ReviewDemo() {
         <div><span className="tour-overline">YOUR REPUTATION, IN ONE PLACE</span><h3>Review inbox</h3></div>
         <span className="tour-status"><span />{pending} awaiting a reply</span>
       </div>
+      <AutomaticReplyDemo />
       <div className="tour-inbox">
         <aside className="tour-review-list" aria-label="Sample review inbox">
           <label className="tour-search"><Search size={16} aria-hidden="true" /><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search reviews" aria-label="Search sample reviews" /></label>

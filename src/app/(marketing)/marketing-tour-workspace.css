@@ -8,9 +8,9 @@
 .product-tour .tour-tabs { flex-direction: column; gap: 5px; padding: 0; border: 0; background: transparent; }
 .product-tour .tour-tabs button { justify-content: flex-start; gap: 9px; padding: 10px; font-size: 11px; }
 .product-tour .tour-tabs button[aria-selected=true] { background: var(--brand-wash); border-color: #ffd3be; box-shadow: none; }
-.product-tour .tour-tabs button[aria-selected=true] svg { color: #b63a00; }
+.product-tour .tour-tabs button[aria-selected=true] svg { color: var(--primary); }
 .tour-sidebar-tip { margin: auto 4px 24px; padding-top: 32px; color: var(--muted-foreground); font-size: 11px; }
-.tour-sidebar-tip > svg { margin-bottom: 9px; color: #b63a00; }
+.tour-sidebar-tip > svg { margin-bottom: 9px; color: var(--primary); }
 .tour-sidebar-tip strong { display: block; color: var(--foreground); font-size: 11px; }
 .tour-sidebar-tip p { margin-top: 5px; line-height: 1.6; }
 .tour-sidebar-user { display: flex; align-items: center; gap: 9px; padding: 16px 4px 4px; border-top: 1px solid var(--border); font-size: 11px; }
@@ -32,11 +32,11 @@
 .product-tour .tour-composer { padding: 16px; margin-top: 20px; border: 1px solid #ebd5c9; background: #fffaf6; border-radius: 10px; }
 .product-tour .tour-composer-top strong { font-size: 12px; }
 .product-tour .tour-composer textarea { font-size: 12px; min-height: 108px; background: var(--background); }
-.product-tour .tour-tones button[aria-pressed=true] { background: var(--brand-wash); border-color: #f5c6ae; }
+.product-tour .tour-tones button[aria-pressed=true] { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
 .product-tour .tour-request-layout { gap: 24px; }
 .product-tour .tour-preview-column { padding: 16px; background: #f1f0ec; }
 .product-tour .request-example { border: 5px solid #303033; border-radius: 28px; box-shadow: 0 0 0 1px #9b9b9e, 0 12px 22px #20151515; }
-.tour-write-ai { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; color: #ac3600; font-size: 12px !important; }
+.tour-write-ai { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; color: var(--primary); font-size: 12px !important; }
 .tour-sending-spinner { animation: tour-spin 1s linear infinite; }
 .tour-typing-dots { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; }
 .tour-typing-dots i { width: 5px; height: 5px; background: var(--muted-foreground); border-radius: 50%; animation: tour-dot 800ms ease-in-out infinite alternate; }

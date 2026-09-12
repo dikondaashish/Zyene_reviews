@@ -89,7 +89,7 @@ export function UpgradeModalPlanCards({
                                 {plan.features.map((feature) => (
                                     <PricingCard.ListItem key={feature} className="text-xs gap-2">
                                         <span className="mt-0.5 shrink-0">
-                                            <CheckCircle2 className="text-chart-2 size-3.5" aria-hidden />
+                                            <CheckCircle2 className="text-success size-3.5" aria-hidden />
                                         </span>
                                         <span>{feature}</span>
                                     </PricingCard.ListItem>

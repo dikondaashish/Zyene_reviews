@@ -19,7 +19,7 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
             </div>
             <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
                 <div className="flex shrink-0 items-center justify-center rounded-lg bg-chart-2/10 size-9">
-                    <Percent className="text-chart-2 size-4" />
+                    <Percent className="text-success size-4" />
                 </div>
                 <div className="min-w-0 flex-1">
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
@@ -33,7 +33,7 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
             </div>
             <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
                 <div className="flex shrink-0 items-center justify-center rounded-lg bg-chart-4/10 size-9">
-                    <MessageCircleOff className="text-chart-4 size-4" />
+                    <MessageCircleOff className="text-warning-foreground size-4" />
                 </div>
                 <div className="min-w-0 flex-1">
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
@@ -45,7 +45,7 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
             </div>
             <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
                 <div className="flex shrink-0 items-center justify-center rounded-lg bg-chart-4/15 size-9">
-                    <BarChart3 className="text-chart-4 size-4" />
+                    <BarChart3 className="text-warning-foreground size-4" />
                 </div>
                 <div className="min-w-0 flex-1">
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">

@@ -35,8 +35,8 @@ export function ImportMapStep({ state }: { state: ImportState }) {
                 </div>
             </CardHeader>
             <CardContent className="space-y-6">
-                <div className="bg-chart-4/12 border border-chart-4/35 rounded-md p-3 text-sm text-chart-4 flex gap-2">
-                    <AlertTriangle className="shrink-0 text-chart-4 size-5" />
+                <div className="bg-chart-4/12 border border-chart-4/35 rounded-md p-3 text-sm text-warning-foreground flex gap-2">
+                    <AlertTriangle className="shrink-0 text-warning-foreground size-5" />
                     <p>
                         You must map at least an <strong>Email</strong> or <strong>Phone Number</strong> so
                         we can contact the customer.

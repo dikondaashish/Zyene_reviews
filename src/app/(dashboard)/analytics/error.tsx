@@ -22,9 +22,9 @@ export default function AnalyticsError({
                 <AlertCircle className="text-destructive size-8" />
             </div>
             <div className="space-y-2 max-w-sm">
-                <h2 className="text-2xl font-semibold tracking-tight">
+                <h1 className="text-2xl font-semibold tracking-tight">
                     Failed to load analytics
-                </h2>
+                </h1>
                 <p className="text-sm text-muted-foreground">
                     We could not process the analytics data. Please try reloading the page.
                 </p>

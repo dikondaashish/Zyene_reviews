@@ -123,7 +123,7 @@ export function ReputationScoreCheckerClient() {
                             </Button>
                         </form>
                     )}
-                    {fullSent && <p className="text-sm text-chart-2 text-center">Snapshot accepted for email delivery. Check your inbox.</p>}
+                    {fullSent && <p className="text-sm text-success text-center">Snapshot accepted for email delivery. Check your inbox.</p>}
                     {error && <p className="text-sm text-destructive text-center">{error}</p>}
                 </div>
             </section>

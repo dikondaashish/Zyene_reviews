@@ -36,17 +36,17 @@ export const STEPS = [
         title: "Monitor",
         headline: "See what needs a response while it is still fresh",
         description:
-            "Keep reviews and private feedback in view, then use AI to get a thoughtful Google reply started in your team’s voice. You stay in control of the final response.",
+            "Keep reviews and private feedback in view, then use AI to get a thoughtful Google reply started in your team’s voice. Edit and publish a draft yourself, or enable automatic replies for new Google reviews that match your chosen star ratings.",
         bullets: [
             "Review and private-feedback alerts for your active location",
             "Google, Facebook, and Yelp review sync in one working view",
-            "AI reply suggestions with tone controls",
-            "Review, edit, and publish Google replies from Zyene",
+            "Professional, Friendly, or Concise reply tones",
+            "Approve a Google reply yourself or turn on automatic publishing",
         ],
         mockupLines: [
-            { icon: BellRing, label: "New review needs attention" },
-            { icon: Sparkles, label: 'AI reply: "We\'re sorry to hear this…"' },
-            { icon: CheckCircle2, label: "Reviewed and ready to publish" },
+            { icon: BellRing, label: "New Google review meets your rating threshold" },
+            { icon: Sparkles, label: 'AI reply: "Thanks for visiting!"' },
+            { icon: CheckCircle2, label: "Automatic reply published to Google" },
         ],
         mockupBg: "bg-chart-4/5 border-chart-4/30",
     },

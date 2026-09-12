@@ -54,7 +54,7 @@ export function ZapierWebhookUrlCard({
                     <div className="flex gap-2">
                         <Input value={webhookUrl} readOnly className="bg-muted/50 font-mono text-xs" />
                         <Button variant="outline" size="icon" onClick={() => copy(webhookUrl, "url", "Webhook URL copied")} aria-label="Copy webhook URL">
-                            {copied === "url" ? <Check className="size-4 text-chart-2" /> : <Copy className="size-4" />}
+                            {copied === "url" ? <Check className="size-4 text-success" /> : <Copy className="size-4" />}
                         </Button>
                     </div>
                     <p className="mt-1.5 text-[11px] text-muted-foreground">

@@ -10,9 +10,9 @@ export function GoogleIntegrationCardNeedsLocationCallout({
     onReconnect: () => void;
 }) {
     return (
-        <div className="rounded-lg border border-chart-4/35 bg-chart-4/12 p-3 text-sm text-chart-4">
+        <div className="rounded-lg border border-chart-4/35 bg-chart-4/12 p-3 text-sm text-warning-foreground">
             <p className="font-medium">Action required: choose your Google location</p>
-            <p className="text-xs mt-1 text-chart-4">
+            <p className="text-xs mt-1 text-warning-foreground">
                 This business is connected to Google, but no GBP location has been selected yet.
             </p>
             <div className="mt-2">

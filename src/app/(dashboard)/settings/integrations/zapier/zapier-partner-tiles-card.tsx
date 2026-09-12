@@ -101,7 +101,7 @@ export function ZapierPartnerTilesCard() {
                                 <p className="truncate text-[11px] text-muted-foreground">{app.blurb}</p>
                                 <Badge
                                     variant="secondary"
-                                    className="mt-1.5 gap-1 border-0 bg-chart-2/15 px-1.5 py-0.5 text-[10px] font-medium text-chart-2 dark:bg-chart-2/20 dark:text-chart-2"
+                                    className="mt-1.5 gap-1 border-0 bg-chart-2/15 px-1.5 py-0.5 text-[10px] font-medium text-success dark:bg-chart-2/20 dark:text-success"
                                 >
                                     <CheckCircle2 className="size-2.5" aria-hidden />
                                     Works via Zapier

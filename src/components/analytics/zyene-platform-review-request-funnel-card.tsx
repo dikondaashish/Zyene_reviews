@@ -82,10 +82,10 @@ export function ZyenePlatformReviewRequestFunnelCard({
                         className={cn(
                           "text-[9px] font-bold px-1.5 py-0",
                           percentOfSent >= 50
-                            ? "bg-chart-2/10 text-chart-2"
+                            ? "bg-chart-2/10 text-success"
                             : percentOfSent >= 20
-                              ? "bg-chart-4/120/10 text-chart-4"
-                              : "bg-sync-action/100/10 text-sync-action",
+                              ? "bg-chart-4/10 text-warning-foreground"
+                              : "bg-muted text-muted-foreground",
                         )}
                       >
                         {percentOfSent}% of sent

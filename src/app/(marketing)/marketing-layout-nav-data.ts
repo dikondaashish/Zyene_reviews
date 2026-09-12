@@ -29,7 +29,7 @@ export type MarketingNavLink = {
 export const PRODUCT_LINKS: MarketingNavLink[] = [
     { href: "/features", label: "Features Overview", icon: Sparkles, desc: "Everything Zyene can do for your business" },
     { href: "/features/review-monitoring", label: "Review Monitoring", icon: Sparkles, desc: "Connected review activity and alerts" },
-    { href: "/features/ai-replies", label: "AI-Powered Replies", icon: Bot, desc: "One-click drafts and auto-commenter" },
+    { href: "/features/ai-replies", label: "AI Review Replies", icon: Bot, desc: "Draft replies or publish automatically to Google" },
     { href: "/features/review-collection", label: "Review Collection", icon: ShieldCheck, desc: "Fair requests and private feedback follow-up" },
     { href: "/features/competitor-tracking", label: "Competitor Tracking", icon: TrendingUp, desc: "Ratings, trends, and local context" },
     { href: "/features/local-seo", label: "Local SEO Dashboard", icon: Globe, desc: "GBP keywords and performance" },

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type CustomerPortalCardQrPreviewProps = {
     loading: boolean;
     qrDataUrl: string | null;
@@ -6,21 +8,24 @@ type CustomerPortalCardQrPreviewProps = {
 export function CustomerPortalCardQrPreview({ loading, qrDataUrl }: CustomerPortalCardQrPreviewProps) {
     return (
         <div className="relative z-10 flex flex-col items-center justify-center mb-6">
-            <h3 className="text-[28px] font-bold text-white mb-2">Scan to Review</h3>
-            <div className="bg-white p-4 rounded-[20px] shadow-lg border border-white/10">
+            <h3 className="text-sm font-medium text-white mb-2">Scan to Review</h3>
+            <div className="bg-white p-4 rounded-[20px] border border-white/10">
                 {loading ? (
-                    <div className="flex items-center justify-center text-[11px] text-[rgb(161,161,170)] font-medium bg-[rgba(24,24,27,0.5)] rounded-xl size-[180px]">
+                    <div className="flex items-center justify-center text-xs text-[rgb(161,161,170)] font-medium bg-[rgba(24,24,27,0.5)] rounded-xl size-[180px]">
                         Generating...
                     </div>
                 ) : qrDataUrl ? (
-                    <img
+                    <Image
                         src={qrDataUrl}
                         alt="Scan to Review"
+                        width={180}
+                        height={180}
+                        unoptimized
                         className="display-block size-[180px]"
                         style={{ imageRendering: "pixelated" }}
                     />
                 ) : (
-                    <div className="flex items-center justify-center text-[11px] text-[rgba(248,113,113,0.7)] font-medium bg-[rgba(69,10,10,0.1)] rounded-xl size-[180px]">
+                    <div className="flex items-center justify-center text-xs text-[rgba(248,113,113,0.7)] font-medium bg-[rgba(69,10,10,0.1)] rounded-xl size-[180px]">
                         Failed to load QR
                     </div>
                 )}

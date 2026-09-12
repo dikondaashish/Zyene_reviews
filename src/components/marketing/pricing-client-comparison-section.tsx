@@ -72,7 +72,7 @@ export function PricingClientComparisonSection() {
                     </table>
                 </div>
                 <p className="text-center text-xs text-muted-foreground mt-4">
-                    Competitor pricing based on publicly listed rates as of 2026. Birdeye pricing may vary by package and
+                    Automatic-reply details checked September 12, 2026: <a href="https://help.nicejob.com/en/articles/10324617-ai-review-replies" className="underline">NiceJob</a> and <a href="https://support.birdeye.com/en/articles/12654785-how-to-configure-and-use-the-review-response-agent" className="underline">Birdeye</a>. Confirm current plans and platform coverage. Competitor pricing based on publicly listed rates as of 2026. Birdeye pricing may vary by package and
                     contract - confirm with the vendor.{" "}
                     <Link href="/compare/birdeye" className="underline hover:text-foreground">
                         Zyene Reviews vs Birdeye

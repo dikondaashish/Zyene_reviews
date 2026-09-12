@@ -73,7 +73,7 @@ export function DashboardViewCharts({
                     </div>
                     <div className="flex shrink-0 items-center gap-1 text-xl font-medium tracking-tight">
                         {displayAverageRating.toFixed(1)}
-                        <Star className="fill-chart-4 text-chart-4 size-4" strokeWidth={1} />
+                        <Star className="fill-chart-4 text-warning-foreground size-4" strokeWidth={1} />
                     </div>
                 </CardHeader>
                 <CardContent className="flex-1 pt-6 pb-6">

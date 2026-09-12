@@ -59,7 +59,7 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
             {/* Label */}
             <div className="flex justify-between items-center text-[10px] uppercase tracking-wider font-bold">
                 <span className="text-muted-foreground">Security Score:</span>
-                <span className={strength === 3 ? "text-chart-2" : "text-muted-foreground"}>
+                <span className={strength === 3 ? "text-success" : "text-muted-foreground"}>
                     {getStrengthLabel()}
                 </span>
             </div>
@@ -70,7 +70,7 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
                     <div key={req.label} className="flex items-center gap-2">
                         <div className={`flex-shrink-0 rounded-full flex items-center justify-center transition-colors ${ req.met ? "bg-chart-2/15" : "bg-muted" } size-3.5`}>
                             {req.met ? (
-                                <Check className="text-chart-2 size-2" strokeWidth={4} />
+                                <Check className="text-success size-2" strokeWidth={4} />
                             ) : (
                                 <X className="text-muted-foreground size-2" strokeWidth={3} />
                             )}

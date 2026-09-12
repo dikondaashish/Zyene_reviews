@@ -92,7 +92,7 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
                         disabled={isUpdating}
                         className="h-9 w-full rounded-lg text-xs text-background/80 hover:bg-background/20 hover:text-background sm:h-8 sm:w-auto sm:rounded-full"
                     >
-                        <Check className="mr-1.5 text-chart-2 size-3.5" />
+                        <Check className="mr-1.5 text-success size-3.5" />
                         Pending
                     </Button>
                 </div>

@@ -12,7 +12,7 @@ interface YelpIntegrationCardErrorProps {
 
 export function YelpIntegrationCardError({ onReconnect }: YelpIntegrationCardErrorProps) {
     return (
-        <Card className="border border-destructive/30 bg-destructive/10/30">
+        <Card className="border border-destructive/30 bg-destructive/30">
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">

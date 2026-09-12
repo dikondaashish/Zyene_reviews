@@ -55,11 +55,11 @@ function GoogleSyncStatusRow({ businessId }: { businessId: string }) {
                 )}
             >
                 {failed ? (
-                    <AlertTriangle className="text-chart-4 size-4" />
+                    <AlertTriangle className="text-warning-foreground size-4" />
                 ) : importing ? (
-                    <Loader2 className="text-chart-2 size-4 animate-spin" />
+                    <Loader2 className="text-success size-4 animate-spin" />
                 ) : (
-                    <CheckCircle2 className="text-chart-2 size-4" />
+                    <CheckCircle2 className="text-success size-4" />
                 )}
             </div>
             <span className="text-xs font-medium text-foreground">{label}</span>
@@ -119,7 +119,7 @@ export function Step5FormCelebration({
                         className="flex items-center gap-3 p-3.5 bg-chart-2/10 rounded-xl border border-chart-2/25"
                     >
                         <div className="rounded-lg bg-chart-2/15 flex items-center justify-center shrink-0 size-7">
-                            <CheckCircle2 className="text-chart-2 size-4" />
+                            <CheckCircle2 className="text-success size-4" />
                         </div>
                         <span className="text-xs font-medium text-foreground">{item.label}</span>
                     </motion.div>

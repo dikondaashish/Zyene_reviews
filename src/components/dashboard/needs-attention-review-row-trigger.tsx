@@ -68,7 +68,7 @@ export function NeedsAttentionReviewRowTrigger({
                                 key={i}
                                 strokeWidth={i < rating ? 0 : 1.35}
                                 className={cn(
-                                    "shrink-0 text-chart-4 size-2.5",
+                                    "shrink-0 text-warning-foreground size-2.5",
                                     i < rating ? "fill-chart-4" : "fill-none"
                                 )}
                                 aria-hidden
@@ -85,7 +85,7 @@ export function NeedsAttentionReviewRowTrigger({
                     {isSent ? (
                         <Badge
                             variant="secondary"
-                            className="border-chart-2/30 bg-chart-2/15 text-chart-2 dark:bg-chart-2/20"
+                            className="border-chart-2/30 bg-chart-2/15 text-success dark:bg-chart-2/20"
                         >
                             <Check className="mr-1 size-3" aria-hidden />
                             {copy.sent}

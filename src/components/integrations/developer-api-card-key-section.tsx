@@ -46,13 +46,13 @@ export function DeveloperApiCardKeySection({
                     <div className="flex gap-2">
                         <Input value={newSecret} readOnly className="bg-background font-mono text-xs" />
                         <Button variant="outline" size="icon" onClick={onCopy} aria-label="Copy API key">
-                            {copied ? <Check className="size-4 text-chart-2" /> : <Copy className="size-4" />}
+                            {copied ? <Check className="size-4 text-success" /> : <Copy className="size-4" />}
                         </Button>
                     </div>
                 </div>
             ) : apiKey ? (
                 <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-3">
-                    <ShieldCheck className="size-4 text-chart-2" />
+                    <ShieldCheck className="size-4 text-success" />
                     <div className="min-w-0">
                         <p className="font-mono text-xs">{apiKey.keyPrefix}••••••••••••</p>
                         <p className="mt-1 text-xs text-muted-foreground">

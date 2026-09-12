@@ -54,9 +54,9 @@ export function ProStatCard({
                         className={cn(
                             "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold",
                             isPositive
-                                ? "bg-chart-2/10 text-chart-2"
+                                ? "bg-chart-2/10 text-success"
                                 : isNegative
-                                  ? "bg-destructive/100/10 text-destructive"
+                                  ? "bg-destructive/10 text-destructive"
                                   : "bg-muted text-muted-foreground",
                         )}
                     >

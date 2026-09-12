@@ -24,7 +24,7 @@ export function ReviewCardPendingReplyActions({
     return (
         <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
             {review.platform === "yelp" ? (
-                <div className="flex items-start gap-2 rounded-md border border-chart-4/35 bg-chart-4/12 px-3 py-2 text-xs text-chart-4">
+                <div className="flex items-start gap-2 rounded-md border border-chart-4/35 bg-chart-4/12 px-3 py-2 text-xs text-warning-foreground">
                     <AlertTriangle className="flex-shrink-0 size-3.5" />
                     <span>
                         Replies to Yelp reviews must be made on{" "}
@@ -32,7 +32,7 @@ export function ReviewCardPendingReplyActions({
                             href="https://biz.yelp.com"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-medium underline hover:text-chart-4"
+                            className="font-medium underline hover:text-warning-foreground"
                         >
                             yelp.com
                         </a>

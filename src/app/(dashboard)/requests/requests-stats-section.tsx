@@ -44,7 +44,7 @@ export function RequestsStatsSection({
                     <CardTitle className="text-sm font-medium">
                         Delivery Rate
                     </CardTitle>
-                    <CheckCircle2 className="text-chart-2 size-4" />
+                    <CheckCircle2 className="text-success size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
@@ -60,7 +60,7 @@ export function RequestsStatsSection({
                     <CardTitle className="text-sm font-medium">
                         Click Rate
                     </CardTitle>
-                    <MousePointerClick className="text-chart-4 size-4" />
+                    <MousePointerClick className="text-warning-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
@@ -76,7 +76,7 @@ export function RequestsStatsSection({
                     <CardTitle className="text-sm font-medium">
                         Request completion
                     </CardTitle>
-                    <Star className="text-chart-4 size-4" />
+                    <Star className="text-warning-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">

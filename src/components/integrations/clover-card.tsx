@@ -86,7 +86,7 @@ export function CloverCard({ businessId, connection, configured }: CloverCardPro
                     <Badge
                         className={
                             isConnected
-                                ? "border-0 bg-chart-2/15 text-xs text-chart-2"
+                                ? "border-0 bg-chart-2/15 text-xs text-success"
                                 : "border-0 bg-muted text-xs text-muted-foreground"
                         }
                     >

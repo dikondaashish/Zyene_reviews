@@ -39,7 +39,7 @@ export function CustomerDetailTimelineRequestItem({ item }: { item: TimelineRequ
                             <span className="hidden sm:inline" aria-hidden>
                                 ·
                             </span>
-                            <span className="text-chart-2">Request completed; publication unverified</span>
+                            <span className="text-success">Request completed; publication unverified</span>
                         </>
                     ) : null}
                 </p>

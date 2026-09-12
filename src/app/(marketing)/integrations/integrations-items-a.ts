@@ -10,12 +10,12 @@ export const INTEGRATIONS_A: IntegrationItem[] = [
         status: "live",
         features: [
             "Sync Google Business Profile reviews into Zyene",
-            "Publish approved review responses to Google",
+            "Publish your own responses or enable automatic Google replies",
             "Track review keywords & GBP performance",
             "Monitor incoming reviews and rating changes",
         ],
         description:
-            "Connect your Google Business Profile to sync reviews, track review activity and GBP performance, and publish approved review responses from Zyene.",
+            "Connect your Google Business Profile to sync reviews, track review activity and GBP performance, and publish replies from Zyene. Optional automatic Google replies answer new reviews that meet your rating threshold in your chosen tone.",
     },
     {
         name: "Facebook Reviews",

@@ -8,7 +8,7 @@ import type { TimelineFeedbackItem } from "@/lib/customers/customer-detail-data"
 export function CustomerDetailTimelineFeedbackItem({ item }: { item: TimelineFeedbackItem }) {
     return (
         <div className="flex gap-4">
-            <div className="mt-0.5 flex shrink-0 items-center justify-center rounded-xl bg-chart-4/15 text-chart-4 shadow-inner size-11">
+            <div className="mt-0.5 flex shrink-0 items-center justify-center rounded-xl bg-chart-4/15 text-warning-foreground shadow-inner size-11">
                 <Star className="size-5" />
             </div>
             <div className="min-w-0 flex-1 space-y-2">
@@ -20,7 +20,7 @@ export function CustomerDetailTimelineFeedbackItem({ item }: { item: TimelineFee
                                 key={i}
                                 className={cn(
                                     "size-4",
-                                    i < item.rating ? "fill-chart-4 text-chart-4" : "text-muted-foreground/25"
+                                    i < item.rating ? "fill-chart-4 text-warning-foreground" : "text-muted-foreground/25"
                                 )}
                             />
                         ))}

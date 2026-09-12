@@ -44,7 +44,7 @@ export const post15: BlogPost = {
         },
         {
             question: "Can I automate responses to positive reviews?",
-            answer: "While you can automate review responses, it's safer to use AI tools that draft personalized replies for your approval. Fully automated, generic responses like 'Thanks!' can look robotic and miss the chance to build a real connection.",
+            answer: "Yes. Zyene offers automatic Google replies for eligible new reviews, with a choice of tone and minimum star rating. You can also edit and publish AI drafts yourself. Keep personal or complex concerns in a workflow where your team reviews the response.",
         },
         {
             question: "How quickly should I respond to a positive review?",

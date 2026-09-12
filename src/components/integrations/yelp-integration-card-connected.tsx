@@ -49,7 +49,7 @@ export function YelpIntegrationCardConnected({
                             <p className="text-xs text-muted-foreground">Business reviews</p>
                         </div>
                     </div>
-                    <Badge variant="outline" className="bg-chart-2/10 text-chart-2 border-chart-2/30 text-[10px]">
+                    <Badge variant="outline" className="bg-chart-2/10 text-success border-chart-2/30 text-[10px]">
                         <CheckCircle2 className="mr-1 size-3" /> Connected
                     </Badge>
                 </div>
@@ -80,7 +80,7 @@ export function YelpIntegrationCardConnected({
                         </p>
                     </div>
                 </div>
-                <p className="text-[10px] text-chart-4 mt-3 flex items-center gap-1">
+                <p className="text-[10px] text-warning-foreground mt-3 flex items-center gap-1">
                     <AlertTriangle className="size-3" />
                     Yelp API returns 3 most recent reviews per sync
                 </p>

@@ -59,7 +59,7 @@ export function BillingPlanPickerHeader(props: {
                         Yearly
                         <Badge
                             variant="secondary"
-                            className="text-xs bg-chart-2/15 text-chart-2 border-chart-2/30 dark:bg-chart-2/20 dark:text-chart-2 dark:border-chart-2/30"
+                            className="text-xs bg-chart-2/15 text-success border-chart-2/30 dark:bg-chart-2/20 dark:text-success dark:border-chart-2/30"
                         >
                             Save {yearlySavings > 0 ? `~${yearlySavings}%` : "more"}
                         </Badge>

@@ -28,10 +28,10 @@ export const HUB_MATRIX_ROWS: HubMatrixRow[] = [
     },
     {
         feature: "AI reply assistance",
-        zyene: "AI drafts + optional auto-commenter on paid plans",
-        birdeye: "AI replies often gated to higher tiers or add-ons",
-        podium: "Basic AI assist; not the core product story",
-        nicejob: "Limited vs dedicated review-reply stacks",
+        zyene: "AI drafts + automatic Google replies on paid plans",
+        birdeye: "AI suggestions and autonomous replies; confirm package",
+        podium: "AI response tools; confirm automation scope and plan",
+        nicejob: "AI replies with automatic replies on Pro",
         gatherup: "Some AI/help; not positioned as primary AI reply engine",
     },
     {

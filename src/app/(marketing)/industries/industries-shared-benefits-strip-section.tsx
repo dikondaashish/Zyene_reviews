@@ -8,8 +8,8 @@ const BENEFITS = [
     },
     {
         icon: Bot,
-        title: "AI-assisted Google replies",
-        desc: "Start with a relevant draft, then tailor a thoughtful response before you post.",
+        title: "AI drafts & automatic Google replies",
+        desc: "Edit a draft yourself, or automatically publish replies to eligible new Google reviews in your chosen tone.",
     },
     {
         icon: Shield,

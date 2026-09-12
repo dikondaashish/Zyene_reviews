@@ -20,14 +20,15 @@ export default function DemoPage() {
                 ]}
             />
 
-            <LandingHero eyebrow="See Zyene in action" title="See your review routine in action." description="Walk through fair SMS, email, link, and QR-code requests, AI-assisted Google replies, private feedback follow-up, and reporting with our team." />
+            <LandingHero eyebrow="See Zyene in action" title="See your review routine in action." description="Walk through fair SMS, email, link, and QR-code requests, AI drafts and automatic Google replies, private feedback follow-up, and reporting with our team." />
 
+            <p className="marketing-container"><Link href="/#home-product-tour" className="inline-flex min-h-11 items-center font-semibold underline underline-offset-4">Try automatic replies in the interactive demo before booking →</Link></p>
             <section className="py-16 px-4">
                 <div className="container mx-auto max-w-5xl grid lg:grid-cols-2 gap-10">
                     <div className="bg-card border border-border rounded-2xl p-6 md:p-8">
                         <h2 className="text-xl font-bold mb-2">Pick a time that suits you</h2>
                         <p className="text-sm text-muted-foreground mb-6">
-                            Pick a time that works for your team. Typical demo: 30 minutes.
+                            Pick a time that works for your team. Typical demo: 30 minutes. We’ll show how to select a business, choose a reply tone and star threshold, and turn on automatic Google replies.
                         </p>
                         {calComEmbedUrl ? (
                             <DemoBookingCalendar src={calComEmbedUrl} />

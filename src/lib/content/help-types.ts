@@ -31,7 +31,7 @@ export const HELP_CATEGORIES: Record<HelpCategory, { label: string; description:
     "reviews": {
         label: "Reviews",
         description:
-            "Monitor your unified review inbox, publish AI replies, configure auto-commenter, and export reviews for reporting.",
+            "Monitor your unified review inbox, publish AI replies, configure automatic Google replies, and export reviews for reporting.",
     },
     "campaigns": {
         label: "Campaigns",

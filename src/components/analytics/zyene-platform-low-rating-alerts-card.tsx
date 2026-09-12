@@ -21,7 +21,7 @@ export function ZyenePlatformLowRatingAlertsCard({
                 <div className="flex items-center justify-between">
                     <div className="space-y-1">
                         <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <AlertTriangle className="text-chart-4 size-5" />
+                            <AlertTriangle className="text-warning-foreground size-5" />
                             Low Rating Alerts
                         </CardTitle>
                         <p className="text-xs text-muted-foreground font-medium">
@@ -29,7 +29,7 @@ export function ZyenePlatformLowRatingAlertsCard({
                         </p>
                     </div>
                     {lowRatingEntries.length > 0 && (
-                        <Badge className="bg-chart-4/120/10 text-chart-4 border-chart-4/30 font-bold">
+                        <Badge className="bg-chart-4/10 text-warning-foreground border-chart-4/30 font-bold">
                             {lowRatingsLength} total
                         </Badge>
                     )}
@@ -49,7 +49,7 @@ export function ZyenePlatformLowRatingAlertsCard({
                                     transition={{ delay: idx * 0.05 }}
                                     className="flex items-start gap-3 p-3 rounded-xl border border-border/50 bg-card/30 hover:bg-card/60 transition-colors"
                                 >
-                                    <RatingIcon className="mt-0.5 size-6 shrink-0 text-chart-4" aria-hidden="true" />
+                                    <RatingIcon className="mt-0.5 size-6 shrink-0 text-warning-foreground" aria-hidden="true" />
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center justify-between gap-2">
                                             <p className="text-sm font-bold truncate">
@@ -62,7 +62,7 @@ export function ZyenePlatformLowRatingAlertsCard({
                                                         className={cn(
                                                             "size-3",
                                                             i < stars
-                                                                ? "fill-chart-4 text-chart-4"
+                                                                ? "fill-chart-4 text-warning-foreground"
                                                                 : "text-muted-foreground/30"
                                                         )}
                                                     />
@@ -93,7 +93,7 @@ export function ZyenePlatformLowRatingAlertsCard({
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-12 text-muted-foreground space-y-2">
-                        <CheckCircle2 className="opacity-20 text-chart-2 size-10" />
+                        <CheckCircle2 className="opacity-20 text-success size-10" />
                         <p className="text-sm font-medium">No low ratings in this period</p>
                         <p className="text-xs">All your customers are happy</p>
                     </div>

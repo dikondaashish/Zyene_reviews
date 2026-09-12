@@ -24,9 +24,9 @@ export default function BillingError({
                 <AlertCircle className="text-destructive size-8" />
             </div>
             <div className="space-y-2 max-w-sm">
-                <h2 className="text-2xl font-semibold tracking-tight">
+                <h1 className="text-2xl font-semibold tracking-tight">
                     Billing Error
-                </h2>
+                </h1>
                 <p className="text-sm text-muted-foreground">
                     We couldn&apos;t load your billing information. This might be a temporary issue ,  please try again.
                 </p>

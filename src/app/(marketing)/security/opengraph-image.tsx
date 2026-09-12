@@ -28,7 +28,7 @@ export default function OgImage() {
                         ZYENE REVIEWS
                     </div>
                     <div style={{ fontSize: "60px", fontWeight: "700", color: "#ffffff", lineHeight: "1.1", marginBottom: "24px", letterSpacing: "-0.02em" }}>
-                        Security &amp; <span style={{ color: "#4ade80" }}>Trust</span>
+                        Security &amp; <span style={{ color: "#ff4f00" }}>Trust</span>
                     </div>
                     <div style={{ fontSize: "24px", color: "rgba(255,255,255,0.55)", lineHeight: "1.5", maxWidth: "800px" }}>
                         RLS multi-tenant isolation · 256-bit encryption · Privacy controls · Secure OAuth

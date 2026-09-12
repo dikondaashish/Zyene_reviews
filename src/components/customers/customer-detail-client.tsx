@@ -93,7 +93,7 @@ export function CustomerDetailClient({
             />
 
             {missingPhoneAndEmail ? (
-                <Alert className="border-chart-4/35 bg-chart-4/5 text-foreground [&>svg]:text-chart-4">
+                <Alert className="border-chart-4/35 bg-chart-4/5 text-foreground [&>svg]:text-warning-foreground">
                     <CircleAlert className="size-4" />
                     <AlertTitle>Add phone or email</AlertTitle>
                     <AlertDescription>

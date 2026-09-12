@@ -49,13 +49,13 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         tagline: "Professional responses in seconds, in your voice",
         metaTitle: "AI-Powered Review Replies",
         metaDescription:
-            "One-click AI reply drafts, tone control, and optional auto-commenter for Google reviews. Save hours weekly while keeping your brand voice.",
+            "Draft replies in your voice or automatically reply to new Google reviews. Choose star ratings and a Professional, Friendly, or Concise tone.",
         bullets: [
             "One-click AI reply suggestions for every review",
-            "Tone customization: formal, friendly, apologetic",
-            "Auto-commenter for hands-free Google replies",
-            "Personalized context (customer name, visit details)",
-            "Consistent brand voice across your team",
+            "Professional, Friendly, or Concise reply tones",
+            "Automatic replies to new, unanswered Google reviews",
+            "Choose eligible star ratings for automatic replies",
+            "Review drafts yourself or turn on automatic publishing",
         ],
         cta: { label: "See how it works", href: "/how-it-works" },
     },

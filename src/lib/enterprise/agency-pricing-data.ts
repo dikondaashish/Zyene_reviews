@@ -31,7 +31,7 @@ export const AGENCY_PRICING_TIERS: AgencyPricingTier[] = [
         clientRange: "5-15 client locations",
         priceLabel: "Request volume pricing",
         highlights: [
-            "Scope SMS and email allowances for each client",
+            "Scope SMS/email allowances and automatic Google replies per client",
             "Co-branded onboarding for your clients",
             "Priority roadmap input for agency dashboard",
         ],

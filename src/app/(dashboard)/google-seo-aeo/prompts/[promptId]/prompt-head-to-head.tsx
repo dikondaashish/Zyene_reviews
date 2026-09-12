@@ -58,7 +58,7 @@ export function PromptHeadToHead({ rows }: { rows: HeadToHeadRow[] }) {
                                         <HelpCircle className="size-3" /> {row.status.replace("_", " ")}
                                     </Badge>
                                 ) : row.ownBrandNamed ? (
-                                    <Badge className="gap-1 border-0 bg-chart-2/15 text-chart-2 text-xs">
+                                    <Badge className="gap-1 border-0 bg-chart-2/15 text-success text-xs">
                                         <CheckCircle2 className="size-3" /> Named
                                     </Badge>
                                 ) : (

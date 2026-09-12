@@ -74,7 +74,7 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
                                 Preview
                             </Button>
                             <Button variant="secondary" size="sm" onClick={() => handleCopy("carousel")}>
-                                {copiedType === "carousel" ? <Check className="mr-1 text-chart-2 size-4" /> : <Copy className="mr-1 size-4" />}
+                                {copiedType === "carousel" ? <Check className="mr-1 text-success size-4" /> : <Copy className="mr-1 size-4" />}
                                 {copiedType === "carousel" ? "Copied" : "Copy"}
                             </Button>
                         </div>
@@ -98,7 +98,7 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
                                 Preview
                             </Button>
                             <Button variant="secondary" size="sm" onClick={() => handleCopy("badge")}>
-                                {copiedType === "badge" ? <Check className="mr-1 text-chart-2 size-4" /> : <Copy className="mr-1 size-4" />}
+                                {copiedType === "badge" ? <Check className="mr-1 text-success size-4" /> : <Copy className="mr-1 size-4" />}
                                 {copiedType === "badge" ? "Copied" : "Copy"}
                             </Button>
                         </div>

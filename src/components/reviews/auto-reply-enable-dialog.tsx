@@ -58,7 +58,7 @@ export function AutoReplyEnableDialog({
                     </blockquote>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                    Existing reviews are not included. Plan limits still apply. Turn this off at any time to stop future
+                    Existing reviews are not included. An active paid subscription or trial is required. Turn this off at any time to stop future
                     automatic replies.
                 </p>
                 <DialogFooter>

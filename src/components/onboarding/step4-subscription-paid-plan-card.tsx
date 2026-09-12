@@ -66,7 +66,7 @@ export function Step4SubscriptionPaidPlanCard({
                     <PricingCard.Period>{intervalLabel}</PricingCard.Period>
                 </PricingCard.Price>
                 {checkoutOffersTrial === true && (
-                    <p className="text-xs font-medium text-chart-2 dark:text-chart-2 mb-3">{trialIncludedText}</p>
+                    <p className="text-xs font-medium text-success dark:text-success mb-3">{trialIncludedText}</p>
                 )}
                 <Button
                     className={cn(
@@ -90,7 +90,7 @@ export function Step4SubscriptionPaidPlanCard({
                     {plan.features.map((feature) => (
                         <PricingCard.ListItem key={feature} className="text-xs gap-2">
                             <span className="mt-0.5 shrink-0">
-                                <CheckCircle2 className="text-chart-2 size-3.5" aria-hidden />
+                                <CheckCircle2 className="text-success size-3.5" aria-hidden />
                             </span>
                             <span>{feature}</span>
                         </PricingCard.ListItem>

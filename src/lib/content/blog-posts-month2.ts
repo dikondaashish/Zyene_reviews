@@ -20,7 +20,7 @@ export const post5: BlogPost = {
     keywords: ["how to respond to a 1 star review", "respond to negative review", "bad google review response", "1 star review template", "negative review response"],
     relatedSlugs: ["ai-reply-mistakes-to-avoid", "why-google-reviews-matter-in-2026"],
     internalLinks: [
-        { label: "See how Zyene Reviews' AI replies work", href: "/features" },
+        { label: "See how Zyene Reviews' AI replies work", href: "/features/ai-replies" },
         { label: "Check out our negative review response template library", href: "/resources/negative-review-templates" },
     ],
     faqs: [
@@ -129,7 +129,7 @@ export const post6: BlogPost = {
     keywords: ["ai reply mistakes", "ai review responses", "ai google review reply", "how to respond to reviews with ai", "review response ai tips"],
     relatedSlugs: ["how-to-respond-to-a-1-star-review", "why-google-reviews-matter-in-2026"],
     internalLinks: [
-        { label: "Try Zyene Reviews' AI reply feature", href: "/features" },
+        { label: "Try Zyene Reviews' AI reply feature", href: "/features/ai-replies" },
     ],
     faqs: [
         {
@@ -146,7 +146,7 @@ export const post6: BlogPost = {
         },
         {
             question: "How does Zyene Reviews' AI reply feature work?",
-            answer: "Zyene Reviews suggests professional, friendly, or concise drafts from the review text in your inbox. You edit and post - Zyene Reviews does not auto-publish without your approval on standard workflows.",
+            answer: "Zyene Reviews suggests Professional, Friendly, or Concise drafts you can edit and publish yourself. You can separately enable automatic Google replies for eligible new reviews, selecting a star threshold and tone before confirming public publishing.",
         },
         {
             question: "Do AI replies help local SEO?",
@@ -209,7 +209,7 @@ export const post6: BlogPost = {
             "Vary your opening phrase. Never use the same opener twice in a row.",
             "For negative reviews: read the final response out loud as if you're a skeptical potential customer before publishing.",
         ]},
-        { type: "cta", ctaLabel: "See how Zyene Reviews' AI reply suggestions work →", ctaHref: "/features" },
+        { type: "cta", ctaLabel: "See how Zyene Reviews' AI reply suggestions work →", ctaHref: "/features/ai-replies" },
     ],
 };
 

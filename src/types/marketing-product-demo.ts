@@ -1,6 +1,9 @@
 export type DemoTone = "friendly" | "professional" | "concise";
 export type DemoPlatform = "google" | "facebook" | "yelp";
 export type DemoChannel = "sms" | "email";
+export type DemoAutoRating = 3 | 4 | 5;
+export interface DemoAutoSettings { enabled: boolean; minRating: DemoAutoRating; tone: DemoTone; rating: DemoAutoRating }
+export interface DemoAutoResult { status: "typing" | "published" | "skipped"; rating: DemoAutoRating; review: string; reply: string }
 export interface DemoReview {
   id: string;
   name: string;

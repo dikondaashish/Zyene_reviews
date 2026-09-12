@@ -59,7 +59,7 @@ export function SlugEditorForm({
                                             <Loader2 className="animate-spin text-muted-foreground size-4" />
                                         )}
                                         {!isChecking && isAvailable === true && (
-                                            <Check className="text-chart-2 size-4" />
+                                            <Check className="text-success size-4" />
                                         )}
                                         {!isChecking && isAvailable === false && (
                                             <X className="text-destructive size-4" />

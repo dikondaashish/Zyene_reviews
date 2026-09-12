@@ -97,7 +97,7 @@ export function AuditRunControls({
 
             {latestRun?.status === "success" && (
                 <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                    <CheckCircle2 className="size-4 text-chart-2" />
+                    <CheckCircle2 className="size-4 text-success" />
                     Last ran {new Date(latestRun.startedAt).toLocaleString()} - {latestRun.pagesCrawled} pages
                     crawled.
                 </p>

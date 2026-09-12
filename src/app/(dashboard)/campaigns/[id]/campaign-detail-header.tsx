@@ -26,9 +26,9 @@ export function CampaignDetailHeader({ campaign, detail }: CampaignDetailHeaderP
                             variant={campaign.status === "active" ? "default" : "secondary"}
                             className={
                                 campaign.status === "active"
-                                    ? "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2"
+                                    ? "bg-chart-2/15 text-success dark:bg-chart-2/20 dark:text-success"
                                     : campaign.status === "paused"
-                                        ? "bg-chart-4/15 text-chart-4 dark:bg-chart-4/20 dark:text-chart-4"
+                                        ? "bg-chart-4/15 text-warning-foreground dark:bg-chart-4/20 dark:text-warning-foreground"
                                         : ""
                             }
                         >

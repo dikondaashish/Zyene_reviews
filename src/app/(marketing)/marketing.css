@@ -17,6 +17,8 @@
  --popover:#fffefb; --popover-foreground:#201515; --muted:#f5f4f0; --muted-foreground:#68615e;
  --secondary:#f0efeb; --secondary-foreground:#201515; --accent:#f0efeb; --accent-foreground:#201515;
  --primary:#ff4f00; --cta:var(--primary); --primary-foreground:#ffffff; --cta-foreground:#ffffff; --border:#e4e1da; --input:#e4e1da; --ring:#ff4f00;
+ --success:#287653; --success-foreground:#ffffff; --warning:oklch(0.75 0.15 70); --warning-foreground:oklch(0.45 0.12 70);
+ --destructive:oklch(0.6 0.2 25); --destructive-foreground:#ffffff;
  --canvas:#f5f4f0; --brand-wash:#ffede4; --brand-orange:#ff4f00;
  --marketing-footer-bg:#201515; --marketing-footer-fg:#fffefb; --marketing-footer-muted:#c5c0b1;
  --marketing-footer-list:#eceae3; --marketing-footer-subtle:#b3aaa6; --marketing-footer-border:#493b35;
@@ -37,7 +39,7 @@
 .marketing-eyebrow { color:var(--muted-foreground); font-size:12px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; margin-bottom:24px; }
 .marketing-actions { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:30px; }
 .marketing-button { display:inline-flex; align-items:center; justify-content:center; gap:22px; min-height:54px; padding:15px 26px; border:1px solid transparent; border-radius:999px; background:var(--primary); color:var(--primary-foreground); font-size:14px; font-weight:600; line-height:1.4; transition:background-color 180ms,transform 180ms var(--ease-out),box-shadow 180ms; }
-.marketing-button:hover { background:color-mix(in oklab,var(--primary) 92%,var(--foreground)); box-shadow:0 5px 16px #ff4f0024; }
+.marketing-button:hover { background:var(--primary); box-shadow:0 5px 16px #ff4f0024; }
 .marketing-button:active { transform:scale(.97); }
 .marketing-button svg { transition:transform 180ms var(--ease-out); }
 .marketing-button:hover svg { transform:translateX(3px); }

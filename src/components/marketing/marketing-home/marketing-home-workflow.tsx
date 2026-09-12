@@ -16,12 +16,12 @@ const STORIES = [
   {
     title: "A thoughtful reply. Without the blank page.",
     label: "02 / RESPOND WITH CARE",
-    text: "Bring Google, Facebook, and Yelp feedback into one working view. Let AI get the first draft started, then add the human context only your team can provide before you publish to Google.",
+    text: "Bring Google, Facebook, and Yelp feedback into one working view. Edit an AI draft yourself, or let automatic Google replies handle eligible new reviews in your chosen tone.",
     image: "/marketing/home/cafe-conversation.webp",
     alt: "A barista listening to a customer at a café counter",
     href: "/features/ai-replies",
     link: "Find your voice, faster",
-    features: ["AI reply suggestions", "Your tone, your final say"],
+    features: ["AI drafts you can edit", "Automatic Google replies"],
   },
   {
     title: "Your reputation has a story. See the next move.",

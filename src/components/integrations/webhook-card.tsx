@@ -53,7 +53,7 @@ export function WebhookCard({ hasApiKey = false }: WebhookCardProps) {
             </CardHeader>
             <CardContent className="space-y-4">
                 {!hasApiKey && (
-                    <div className="flex items-start gap-2 rounded-md border border-chart-4/35 bg-chart-4/12 p-3 text-xs text-chart-4">
+                    <div className="flex items-start gap-2 rounded-md border border-chart-4/35 bg-chart-4/12 p-3 text-xs text-warning-foreground">
                         <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
                         <p>
                             Generate an API key in the <span className="font-medium">Developer API</span>{" "}

@@ -30,7 +30,7 @@ export function CompetitorsListMarketBriefCard({
                 <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
                     <div className="min-w-0 space-y-1.5">
                         <CardTitle className="flex items-center gap-2">
-                            <Sparkles className="text-chart-4 size-5" />
+                            <Sparkles className="text-warning-foreground size-5" />
                             AI market positioning brief
                         </CardTitle>
                         <CardDescription className="text-muted-foreground">

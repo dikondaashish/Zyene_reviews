@@ -35,9 +35,9 @@ export function getUpgradeModalCopy(context: UpgradeModalContext): { title: stri
             };
         case "auto_commenter":
             return {
-                title: "Upgrade to use Auto commenter",
+                title: "Upgrade to use automatic Google replies",
                 description:
-                    "Auto commenter posts AI replies to eligible Google reviews on Starter and above - 1,500 AI replies/month, no manual copy-paste.",
+                    "Automatic Google replies publish responses to eligible new reviews on Starter and above, with no monthly business-reply quota.",
             };
         case "review_request_limit":
             return {

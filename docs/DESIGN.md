@@ -19,20 +19,24 @@ Premium quality comes from complete workflows, readable typography, deliberate s
 | Primary foreground | `#ffffff` | `#ffffff` | Text on primary |
 | Brand accent | `#ff4f00` | `#ff4f00` | Decorative identity |
 | Muted foreground | `#6d685d` | `#c5c0b1` | Supporting text |
+| Success | `#287653` | `#89cda8` | Completed, sent, connected and positive states |
+| Success foreground | `#ffffff` | `#201515` | Text on a filled success surface |
 | Border | `#c5c0b1` | `#4a4540` | Grouping and controls |
 
 The product owner requested restoring the original orange after the contrast adjustment. White on `#ff4f00` is approximately 3.30:1; the original normal-text contrast concern remains. Marketing uses a light theme with the same original brand orange.
 
-Use semantic tokens from `src/app/globals.css`. Do not use chart fill colors as text colors for status messages; use warning/destructive and their foreground roles. Custom business colors use `readableForeground` for filled controls so text remains readable. A color must not be the only indication of selection or status.
+Use semantic tokens from `src/app/globals.css`. Do not use chart fill colors as text colors for status messages; use success, warning/destructive and their foreground roles. Success text uses `text-success` on neutral or lightly tinted surfaces; warning text uses `text-warning-foreground`. Keep chart series separate from status labels. The legacy sync-action token aliases primary, so AI and sync do not introduce another brand color. Custom business colors use `readableForeground` for filled controls so text remains readable. A color must not be the only indication of selection or status.
 
 ## Typography
 
 - **Syne (`font-display`)**: brand headings, the business name on the dashboard, and selected large editorial moments.
 - **Inter (`font-sans`)**: navigation, forms, tables, body text, and supporting copy.
 - **Geist Mono**: code examples and user-editable message variables; avoid using code styling for ordinary product explanations.
-- Product page titles: 24–32 px, 600 weight, tight tracking. The dashboard business name may reach 36 px.
+- Product page titles: 24 px in the dashboard shell and 24–32 px in editorial or onboarding surfaces, 600 weight, tight tracking.
 - Section headings: 18–20 px, 600 weight. Body and controls: 14–16 px. Supporting text: 12–14 px with sufficient contrast.
 - Allow headings, business names and labels to wrap. Avoid all-caps paragraphs and unnecessary text truncation. Maintain usable layouts under browser zoom and text enlargement.
+
+The shared dashboard shell now enforces one 24 px page-title scale, 14 px body rhythm, and 12 px metadata rhythm across every dashboard route. Route-level classes may still size intentional microcopy (badges, chart labels, and legal notes), but page titles should not introduce a second scale. The shell uses 16 px gutters on compact screens, 20 px at the small breakpoint, and 24 px on wide screens; marketing pages retain their larger responsive editorial headings and section spacing.
 
 ## Layout and hierarchy
 

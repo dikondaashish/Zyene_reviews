@@ -16,11 +16,11 @@ export function SmartInsightsCardHeader({
 }: SmartInsightsCardHeaderProps) {
     return (
         <div className="flex flex-col lg:flex-row lg:items-start justify-between relative z-10 w-full">
-            <div className="max-w-[75%] space-y-4">
-                <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1.5 bg-[rgb(43,53,46)] text-white px-2.5 py-1 rounded-[6px] text-xs font-semibold tracking-wide">
-                        <Sparkles className="opacity-80 size-3.5" />
-                        SMART INSIGHTS
+            <div className="min-w-0 flex-1 space-y-4">
+                <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex items-center gap-1.5 bg-primary/10 text-foreground px-2.5 py-1 rounded-[6px] text-xs font-semibold tracking-wide">
+                        <Sparkles className="text-primary size-3.5" />
+                        Smart insights
                     </div>
                     <span className="text-[13px] font-medium text-muted-foreground">
                         {reviewCount} reviews analyzed
@@ -28,10 +28,10 @@ export function SmartInsightsCardHeader({
                 </div>
 
                 <div>
-                    <h2 className="text-[32px] md:text-[36px] font-serif leading-[1.05] tracking-[-0.02em] text-[rgb(28,46,32)] dark:text-[rgb(226,232,240)]">
+                    <h2 className="text-2xl md:text-3xl font-semibold font-sans leading-[1.05] tracking-[-0.02em] text-foreground">
                         {firstPart}
                         {secondPart && (
-                            <span className="block text-[rgb(218,84,59)] dark:text-[rgb(251,146,60)]">
+                            <span className="block text-primary">
                                 {secondPart}
                             </span>
                         )}
@@ -39,7 +39,7 @@ export function SmartInsightsCardHeader({
                 </div>
 
                 <p className="text-sm text-foreground/70 leading-relaxed max-w-lg mt-2">
-                    We read every review and pulled out what matters. Here&apos;s the pulse of your restaurant this
+                    We read every review and pulled out what matters. Here&apos;s the pulse of your business this
                     month.
                 </p>
             </div>
@@ -49,10 +49,10 @@ export function SmartInsightsCardHeader({
                 style={{ width: 112, height: 112 }}
             >
                 <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                    <span className="text-2xl font-serif font-bold text-[rgb(28,46,32)] dark:text-[rgb(226,232,240)]">
+                    <span className="text-2xl font-sans font-bold text-foreground">
                         {positivePct}%
                     </span>
-                    <span className="text-[9px] uppercase tracking-widest text-[rgba(28,46,32,0.6)] font-bold dark:text-[rgba(226,232,240,0.7)]">
+                    <span className="text-[9px] uppercase tracking-widest text-muted-foreground font-bold">
                         POSITIVE
                     </span>
                 </div>
@@ -67,10 +67,11 @@ export function SmartInsightsCardHeader({
                 >
                     <PolarAngleAxis type="number" domain={[0, 100]} dataKey="value" angleAxisId={0} tick={false} />
                     <RadialBar
-                        background={{ fill: "rgb(232,236,233)" }}
+                        background={{ fill: "var(--secondary)" }}
+                        isAnimationActive={false}
                         dataKey="value"
                         cornerRadius={10}
-                        fill="rgb(39,50,41)"
+                        fill="var(--primary)"
                     />
                 </RadialBarChart>
             </div>

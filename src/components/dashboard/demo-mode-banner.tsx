@@ -1,53 +1,30 @@
-"use client";
-
 import { Sparkles, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-interface DemoModeBannerProps {
-    className?: string;
-}
-
-export function DemoModeBanner({ className = "" }: DemoModeBannerProps) {
+export function DemoModeBanner({ className = "" }: { className?: string }) {
     return (
-        <div className={`relative group overflow-hidden bg-gradient-to-r from-primary via-chart-1 to-sync-action rounded-2xl p-6 ${className}`}>
-            <div
-                className="absolute inset-0 bg-[size:20px_20px] opacity-30"
-                style={{
-                    backgroundImage:
-                        "linear-gradient(to right, color-mix(in oklab, var(--primary-foreground) 10%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--primary-foreground) 10%, transparent) 1px, transparent 1px)",
-                }}
-            />
-            <div className="absolute -right-20 -top-20 bg-background/10 rounded-full blur-3xl group-hover:bg-background/20 transition-colors duration-700 size-64"></div>
-            
-            <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className="flex items-center gap-5 text-primary-foreground">
-                    <div className="bg-background/20 backdrop-blur-md p-3 rounded-xl border border-background/30">
-                        <Sparkles className="text-primary-foreground animate-pulse size-8" />
+        <aside className={`rounded-2xl border border-border bg-card p-5 sm:p-6 ${className}`} aria-label="Demo workspace">
+            <div className="flex flex-col items-start justify-between gap-5 lg:flex-row lg:items-center">
+                <div className="flex items-start gap-4">
+                    <div className="rounded-xl bg-primary/10 p-3 text-primary">
+                        <Sparkles className="size-5" aria-hidden />
                     </div>
-                    <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                            <h3 className="text-xl font-bold tracking-tight">Experience Zyene in Action</h3>
-                            <Badge variant="secondary" className="bg-primary-foreground/15 hover:bg-primary-foreground/25 text-primary-foreground border-none backdrop-blur-sm text-[10px] uppercase tracking-wider py-0 px-2 h-5">
-                                Demo Mode
-                            </Badge>
+                    <div className="space-y-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="text-lg font-semibold tracking-tight">Explore your workspace</h3>
+                            <Badge variant="secondary">Demo</Badge>
                         </div>
-                        <p className="text-primary-foreground/85 text-sm max-w-lg leading-relaxed">
-                            You&apos;re currently viewing <span className="font-semibold text-primary-foreground">simulated data</span>. Connect your Google Business Profile to unlock real-time reputation management and automated review requests.
+                        <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+                            You&apos;re viewing sample data. Connect your Google Business Profile to manage your reviews and send review requests.
                         </p>
                     </div>
                 </div>
-                
-                <div className="flex items-center gap-3 shrink-0">
-                    <Link href="/settings/integrations">
-                        <Button size="lg" className="bg-background text-foreground hover:bg-background/90 font-bold border-none px-6 h-12 rounded-xl group/btn">
-                            Connect Real Profile
-                            <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform size-4" />
-                        </Button>
-                    </Link>
-                </div>
+                <Button asChild className="h-11 shrink-0 rounded-lg px-5">
+                    <Link href="/settings/integrations">Connect your profile <ArrowRight className="size-4" aria-hidden /></Link>
+                </Button>
             </div>
-        </div>
+        </aside>
     );
 }

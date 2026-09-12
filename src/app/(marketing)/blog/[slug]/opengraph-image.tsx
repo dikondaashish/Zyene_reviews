@@ -15,10 +15,10 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
         (
             <div style={{ width: "1200px", height: "630px", display: "flex", flexDirection: "column", justifyContent: "flex-end", background: "linear-gradient(135deg, #1a0f0f 0%, #2d1515 60%, #1a0f0f 100%)", fontFamily: "system-ui, -apple-system, sans-serif", padding: "0", position: "relative", overflow: "hidden" }}>
                 <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize: "40px 40px" }} />
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "3px", background: "linear-gradient(90deg, #4ade80, #22c55e)" }} />
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "3px", background: "#ff4f00" }} />
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "60px 72px", position: "relative", zIndex: 10 }}>
                     <div style={{ display: "flex", gap: "12px", marginBottom: "24px", alignItems: "center" }}>
-                        <div style={{ background: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.3)", borderRadius: "8px", padding: "6px 16px", color: "#4ade80", fontSize: "13px", fontWeight: "700", letterSpacing: "0.05em", textTransform: "uppercase" }}>{pillar}</div>
+                        <div style={{ background: "rgba(255,79,0,0.1)", border: "1px solid rgba(255,79,0,0.3)", borderRadius: "8px", padding: "6px 16px", color: "#ff4f00", fontSize: "13px", fontWeight: "700", letterSpacing: "0.05em", textTransform: "uppercase" }}>{pillar}</div>
                         {read && <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "13px" }}>{read}</div>}
                     </div>
                     <div style={{ fontSize: title.length > 60 ? "38px" : "46px", fontWeight: "800", color: "#ffffff", lineHeight: "1.15", marginBottom: "24px", maxWidth: "900px" }}>{title}</div>

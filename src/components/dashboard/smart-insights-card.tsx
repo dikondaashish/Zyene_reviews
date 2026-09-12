@@ -1,12 +1,12 @@
 "use client";
 
-import { useSmartInsightsCard } from "./use-smart-insights-card";
-import { SmartInsightsCardLoading } from "./smart-insights-card-loading";
-import { SmartInsightsCardHeader } from "./smart-insights-card-header";
-import { SmartInsightsCardTabToggle } from "./smart-insights-card-tab-toggle";
-import { SmartInsightsCardThemesTab } from "./smart-insights-card-themes-tab";
-import { SmartInsightsCardSuggestionsTab } from "./smart-insights-card-suggestions-tab";
-import { SmartInsightsCardExamplesDialog } from "./smart-insights-card-examples-dialog";
+import { useSmartInsightsCard } from "@/components/dashboard/use-smart-insights-card";
+import { SmartInsightsCardLoading } from "@/components/dashboard/smart-insights-card-loading";
+import { SmartInsightsCardHeader } from "@/components/dashboard/smart-insights-card-header";
+import { SmartInsightsCardTabToggle } from "@/components/dashboard/smart-insights-card-tab-toggle";
+import { SmartInsightsCardThemesTab } from "@/components/dashboard/smart-insights-card-themes-tab";
+import { SmartInsightsCardSuggestionsTab } from "@/components/dashboard/smart-insights-card-suggestions-tab";
+import { SmartInsightsCardExamplesDialog } from "@/components/dashboard/smart-insights-card-examples-dialog";
 
 export function SmartInsightsCard({ businessName }: { businessName?: string }) {
     const s = useSmartInsightsCard(businessName);
@@ -17,7 +17,7 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
     if (!s.selectedTheme) return null;
 
     return (
-        <div className="rounded-[24px] bg-gradient-to-br from-[rgb(255,255,255)] via-[rgb(255,251,243)] to-[rgba(255,171,92,0.1)] border border-border/60 p-6 lg:p-8 flex flex-col h-full shadow-sm relative overflow-hidden dark:from-[rgb(15,23,42)] dark:via-[rgb(17,24,39)] dark:to-[rgba(30,41,59,0.9)] dark:border-white/10">
+        <div className="rounded-2xl bg-card border border-border/60 p-6 lg:p-8 flex flex-col h-full shadow-sm relative overflow-hidden">
             <SmartInsightsCardHeader
                 reviewCount={s.data.reviewCount}
                 firstPart={s.firstPart}

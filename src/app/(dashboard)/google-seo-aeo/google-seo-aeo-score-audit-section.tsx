@@ -67,9 +67,9 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
                                 <div className="min-w-0 flex-1">
                                     <div className="flex flex-wrap items-center gap-2">
                                         {a.status === "pass" ? (
-                                            <CheckCircle2 className="text-chart-2 size-4" />
+                                            <CheckCircle2 className="text-success size-4" />
                                         ) : (
-                                            <XCircle className="text-sync-action size-4" />
+                                            <XCircle className="text-destructive size-4" />
                                         )}
                                         <p className="font-medium">{a.label}</p>
                                         <Badge variant={a.status === "pass" ? "secondary" : "destructive"}>

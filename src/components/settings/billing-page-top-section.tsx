@@ -24,7 +24,7 @@ export function BillingPageTopSection(props: {
             </div>
 
             {!canManageBilling && (
-                <div className="rounded-lg border border-chart-4/35 bg-chart-4/12 dark:bg-chart-4/20 dark:border-chart-4/40 px-4 py-3 flex gap-3 text-sm text-chart-4 dark:text-chart-4">
+                <div className="rounded-lg border border-chart-4/35 bg-chart-4/12 dark:bg-chart-4/20 dark:border-chart-4/40 px-4 py-3 flex gap-3 text-sm text-warning-foreground dark:text-warning-foreground">
                     <Lock className="shrink-0 mt-0.5 size-4" aria-hidden />
                     <p>{b.no_billing_permission}</p>
                 </div>

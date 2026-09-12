@@ -46,9 +46,9 @@ export function DashboardViewExtendedStats({
                             !hasSentimentData
                                 ? "text-muted-foreground"
                                 : positivePercent > 60
-                                  ? "text-chart-2"
+                                  ? "text-success"
                                   : positivePercent >= 40
-                                    ? "text-chart-4"
+                                    ? "text-warning-foreground"
                                     : "text-destructive"
                         }`}
                     >
@@ -99,7 +99,7 @@ export function DashboardViewExtendedStats({
                                     ? "text-destructive"
                                     : maxRequestsPerMonth > 0 &&
                                         requestsThisMonth / maxRequestsPerMonth > 0.8
-                                      ? "text-chart-4"
+                                      ? "text-warning-foreground"
                                       : ""
                             }`}
                         >

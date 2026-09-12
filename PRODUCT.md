@@ -16,6 +16,8 @@ Zyene Reviews gives location-based businesses one reliable workspace for review 
 
 Warm, approachable, and professional. The interface should feel organized and human while remaining efficient for repeated operational use.
 
+The brand orange is **#ff4f00**. Preserve this exact primary accent across marketing and dashboard work; use the existing `--primary` / `--brand-orange` tokens. Keep primary actions and selected reply tones orange. Do not substitute purple, a different orange, or monochrome primary buttons during redesigns. Neutral surfaces and semantic status colors may support the brand.
+
 ## Anti-references
 
 Avoid cold monochrome developer-tool styling, decorative glass effects, excessive shadows, generic SaaS card grids, ambiguous labels, and visual novelty that slows task completion. Do not use decoration where a clear label or familiar control is sufficient.

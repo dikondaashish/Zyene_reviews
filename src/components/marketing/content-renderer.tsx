@@ -74,7 +74,7 @@ export function ContentRenderer({ sections, className }: { sections: ContentSect
                     case "warning":
                         return (
                             <div key={sectionKey} className="flex gap-3 rounded-xl border border-chart-4/20 bg-chart-4/5 px-5 py-4">
-                                <AlertTriangle className="shrink-0 text-chart-4 mt-0.5 size-5" />
+                                <AlertTriangle className="shrink-0 text-warning-foreground mt-0.5 size-5" />
                                 <p className="text-sm text-foreground leading-relaxed">{section.text}</p>
                             </div>
                         );

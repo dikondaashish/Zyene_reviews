@@ -24,7 +24,7 @@ export default function OgImage() {
                     ZYENE REVIEWS
                 </div>
                 <div style={{ fontSize: "60px", fontWeight: 700, color: "#ffffff", marginBottom: "24px" }}>
-                    <span style={{ color: "#4ade80" }}>Partners</span> &amp; Agencies
+                    <span style={{ color: "#ff4f00" }}>Partners</span> &amp; Agencies
                 </div>
                 <div style={{ fontSize: "24px", color: "rgba(255,255,255,0.55)", maxWidth: "800px", textAlign: "center" }}>
                     Referral program · POS integrations · Zapier · Co-marketing

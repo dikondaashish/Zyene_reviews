@@ -37,7 +37,7 @@ export function MarketingHomeNextSteps() {
             {[
               "Review monitoring across Google, Facebook, and Yelp",
               "SMS and email review requests",
-              "AI reply suggestions and competitor tracking",
+              "AI drafts, automatic Google replies & competitor tracking",
             ].map((item) => (
               <li key={item} className="flex items-start gap-2">
                 <Check className="mt-0.5 size-4 shrink-0" aria-hidden="true" />

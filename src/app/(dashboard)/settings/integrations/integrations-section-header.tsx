@@ -30,7 +30,7 @@ export function IntegrationsStatusBadge({ count, label }: { count: number; label
         <span
             className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
                 count > 0
-                    ? "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2"
+                    ? "bg-chart-2/15 text-success dark:bg-chart-2/20 dark:text-success"
                     : "bg-muted text-muted-foreground"
             }`}
         >

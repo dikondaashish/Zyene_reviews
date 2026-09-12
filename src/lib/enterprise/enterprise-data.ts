@@ -23,7 +23,7 @@ export const ENTERPRISE_VALUE_PROPS = [
     {
         title: "Rollout planning",
         description:
-            "Plan request campaigns, response workflows, and reporting ownership before rollout across your locations.",
+            "Plan campaigns and reporting ownership across locations. Configure automatic Google replies for each selected business with its own tone and rating threshold.",
     },
     {
         title: "Support planning",

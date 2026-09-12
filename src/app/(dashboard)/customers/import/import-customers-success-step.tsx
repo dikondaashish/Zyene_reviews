@@ -16,7 +16,7 @@ export function ImportSuccessStep({
         <Card className="border-chart-2/30">
             <CardContent className="py-12 flex flex-col items-center justify-center text-center">
                 <div className="bg-chart-2/15 rounded-full flex items-center justify-center mb-4 size-16">
-                    <CheckCircle2 className="text-chart-2 size-8" />
+                    <CheckCircle2 className="text-success size-8" />
                 </div>
                 <h3 className="text-2xl font-bold text-foreground">Import Complete!</h3>
 
@@ -37,7 +37,7 @@ export function ImportSuccessStep({
                 </div>
 
                 {importResults.failed > 0 && (
-                    <p className="text-sm text-chart-4 mt-4 max-w-md">
+                    <p className="text-sm text-warning-foreground mt-4 max-w-md">
                         Some rows were skipped because they either already exist or were missing valid
                         contact information.
                     </p>

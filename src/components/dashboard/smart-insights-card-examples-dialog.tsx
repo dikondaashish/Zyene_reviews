@@ -5,7 +5,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import type { SmartInsightsSuggestion, SmartInsightsTheme } from "./smart-insights-card-types";
+import type { SmartInsightsSuggestion, SmartInsightsTheme } from "@/components/dashboard/smart-insights-card-types";
 
 interface SmartInsightsCardExamplesDialogProps {
     open: boolean;
@@ -43,7 +43,7 @@ export function SmartInsightsCardExamplesDialog({
                             <div key={`${theme.name}-${ti}`} className="space-y-2">
                                 <div className="flex flex-wrap items-center gap-2">
                                     <span className="text-sm font-semibold text-foreground">{theme.name}</span>
-                                    <span className="rounded-md bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground dark:bg-[rgb(51,65,85)] dark:text-[rgb(203,213,225)]">
+                                    <span className="rounded-md bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
                                         {theme.mentions} mentions
                                     </span>
                                 </div>
@@ -52,7 +52,7 @@ export function SmartInsightsCardExamplesDialog({
                                         {quotes.map((q, qi) => (
                                             <li
                                                 key={qi}
-                                                className="border-l-[3px] border-[rgba(64,86,66,0.45)] bg-[rgb(252,250,247)] py-2.5 pl-3 pr-3 text-[13px] leading-relaxed text-foreground/85 dark:border-[rgba(148,163,184,0.5)] dark:bg-[rgb(15,23,42)] dark:text-[rgb(226,232,240)]"
+                                                className="rounded-lg border border-border/60 bg-canvas-elevated py-2.5 pl-3 pr-3 text-[13px] leading-relaxed text-foreground/85"
                                             >
                                                 &ldquo;{q}&rdquo;
                                             </li>

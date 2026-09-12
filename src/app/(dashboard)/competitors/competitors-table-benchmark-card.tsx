@@ -29,7 +29,7 @@ export function CompetitorsTableBenchmarkCard({
                     Your average rating uses reviews received in this period. Competitors use the latest
                     snapshot in this period (or current totals if no snapshot yet).{" "}
                     {!activeBenchmarkRange.marketBenchmarkAvailable && competitorsCount > 0 ? (
-                        <span className="text-chart-4 dark:text-chart-4">
+                        <span className="text-warning-foreground dark:text-warning-foreground">
                             Competitor ratings are not loaded yet - run Sync from Google or wait for the
                             next sync.
                         </span>

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { LandingHero } from "@/components/marketing/landing-hero";
+import { AutomaticRepliesFeature } from "@/components/marketing/automatic-replies-feature";
 import { ProductTour } from "@/components/marketing/product-tour/product-tour";
 import { FEATURE_VISUALS } from "@/components/marketing/feature-visual-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
@@ -24,7 +25,7 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
         eyebrow={pillar.title}
         title={visual.headline}
         description={pillar.tagline}
-        visual={visual.tab ? <ProductTour initialTab={visual.tab} /> : undefined}
+        visual={visual.tab ? <><h2 className="sr-only">Explore the interactive demo</h2><ProductTour initialTab={visual.tab} /></> : undefined}
         image={visual.tab ? undefined : { src: visual.image, alt: visual.alt }}
         primary={{ label: "Start free trial", href: "/signup" }}
         secondary={{ label: "Book a walkthrough", href: "/demo" }}
@@ -56,6 +57,7 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
           </div>
         </div>
       </section>
+      {pillar.slug === "ai-replies" && <AutomaticRepliesFeature />}
       {pillar.slug === "review-collection" && (
         <section className="marketing-section">
           <div className="marketing-container grid gap-12 lg:grid-cols-2">

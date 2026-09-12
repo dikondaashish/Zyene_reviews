@@ -12,14 +12,14 @@ export function useDemoTyping() {
     setPreview(null);
   };
   useEffect(() => () => { if (timer.current !== null) clearTimeout(timer.current); }, []);
-  function start(text: string, animate = true) {
+  function start(text: string, animate = true, onComplete?: () => void) {
     cancel();
-    if (!animate || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!animate || window.matchMedia("(prefers-reduced-motion: reduce)").matches) { onComplete?.(); return; }
     let count = 0;
     setPreview("");
     const tick = () => {
       count = Math.min(text.length, count + 3);
-      if (count === text.length) { cancel(); return; }
+      if (count === text.length) { cancel(); onComplete?.(); return; }
       setPreview(text.slice(0, count));
       timer.current = setTimeout(tick, 24);
     };

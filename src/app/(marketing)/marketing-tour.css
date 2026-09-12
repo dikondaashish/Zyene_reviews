@@ -2,6 +2,7 @@
 @import "./marketing-tour-tablet.css";
 @import "./marketing-tour-story.css";
 @import "./marketing-tour-inbox.css";
+@import "./marketing-tour-auto-reply.css";
 @import "./marketing-tour-request.css";
 @import "./marketing-tour-report.css";
 
@@ -37,6 +38,7 @@
 .tour-tabs button[aria-selected=true] { color: var(--foreground); border-color: var(--border); background: var(--background); box-shadow: 0 2px 4px oklch(0.25 0.02 40 / .04); }
 .tour-panel { min-height: 570px; }
 .tour-panel[hidden] { display: none; }
+@media (min-width: 768px) { .landing-hero-product .tour-panel { height: 570px; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; } }
 .review-demo, .request-demo, .report-demo { padding: 26px; }
 .tour-page-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
 .tour-overline { display: block; color: var(--muted-foreground); font-size: 10px; letter-spacing: .08em; font-weight: 600; margin-bottom: 7px; }
@@ -48,7 +50,7 @@
 .tour-segment button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 8px 10px; border-radius: 7px; color: var(--muted-foreground); font-size: 12px; white-space: nowrap; }
 .tour-segment button[aria-pressed=true] { background: var(--brand-wash); color: var(--foreground); }
 .tour-segment button > span { font-size: 10px; opacity: .75; }
-.tour-action { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 10px 16px; border-radius: 8px; background: var(--foreground); color: var(--background); font-size: 13px !important; font-weight: 550; }
+.tour-action { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 10px 16px; border-radius: 8px; background: var(--primary); color: var(--primary-foreground); font-size: 13px !important; font-weight: 550; }
 .tour-action-notice { min-height: 36px; margin-top: 12px; color: var(--muted-foreground); font-size: 12px; line-height: 1.5; }
 .tour-text-button { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 4px; }
 .tour-sandbox-note { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 22px; border-top: 1px solid var(--border); background: var(--muted); font-size: 12px; color: var(--muted-foreground); }
@@ -59,7 +61,7 @@
 .product-tour, .workflow-product { --chart-2: #267861; --chart-4: #906021; --destructive: #b42318; }
 .product-tour[data-pointer-motion=true] :is(.tour-review-detail, .tour-published-reply, .tour-panel:not([hidden]), .tour-rating-confirmation, .tour-demo-delivered) { animation: tour-demo-enter 200ms var(--ease-out); }
 @keyframes tour-demo-enter { from { opacity: .3; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-@media (hover: hover) and (pointer: fine) { .tour-reset:hover { background: var(--muted); } .tour-action:hover:not(:disabled) { background: color-mix(in oklab, var(--foreground), var(--primary) 20%); } }
+@media (hover: hover) and (pointer: fine) { .tour-reset:hover { background: var(--muted); } .tour-action:hover:not(:disabled) { background: var(--primary); filter: brightness(.95); } }
 @container (max-width: 700px) {
   .tour-toolbar { padding: 14px; gap: 10px; flex-wrap: wrap; }
   .tour-wordmark { font-size: 20px; }

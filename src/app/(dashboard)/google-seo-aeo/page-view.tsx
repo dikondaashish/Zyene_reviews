@@ -28,7 +28,7 @@ export default async function GoogleSeoAeoPage() {
     if (data.kind === "no-platform") {
         return (
             <div className="space-y-6">
-                <h2 className="text-3xl font-bold tracking-tight">Google SEO/AEO</h2>
+                <h1 className="text-3xl font-bold tracking-tight">Google SEO/AEO</h1>
                 <Card>
                     <CardContent className="py-8">
                         <p className="text-sm text-muted-foreground">

@@ -29,9 +29,9 @@ export function DashboardViewGoogleHealthLodging({
                         googleLodgingHealthScore === null
                             ? "text-muted-foreground"
                             : googleLodgingHealthScore >= 80
-                              ? "text-chart-2"
+                              ? "text-success"
                               : googleLodgingHealthScore >= 40
-                                ? "text-chart-4"
+                                ? "text-warning-foreground"
                                 : "text-destructive"
                     }`}
                 >

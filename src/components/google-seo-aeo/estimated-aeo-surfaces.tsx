@@ -12,8 +12,8 @@ import type { GoogleSeoAeoContentProps } from "@/app/(dashboard)/google-seo-aeo/
 export function EstimatedAeoSurfaces({ content }: { content: GoogleSeoAeoContentProps }) {
     return (
         <>
-            <div className="border-sync-action/40 bg-sync-action/5 flex gap-3 rounded-lg border p-4">
-                <AlertTriangle className="text-sync-action mt-0.5 size-4 shrink-0" />
+            <div className="border-warning/40 bg-warning/5 flex gap-3 rounded-lg border p-4">
+                <AlertTriangle className="text-warning-foreground mt-0.5 size-4 shrink-0" />
                 <p className="text-sm">{ESTIMATED_SURFACE_DISCLOSURE}</p>
             </div>
 

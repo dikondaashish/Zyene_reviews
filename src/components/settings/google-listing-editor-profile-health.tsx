@@ -24,7 +24,7 @@ export function GoogleListingEditorProfileHealth({
                 {profileHealth.checks.map((c) => (
                     <li key={c.id} className="flex items-start gap-2 text-sm">
                         {c.ok ? (
-                            <CheckCircle2 className="text-chart-2 shrink-0 mt-0.5 size-4" />
+                            <CheckCircle2 className="text-success shrink-0 mt-0.5 size-4" />
                         ) : (
                             <Circle className="text-muted-foreground shrink-0 mt-0.5 size-4" />
                         )}

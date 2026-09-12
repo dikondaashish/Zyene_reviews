@@ -303,8 +303,8 @@ const guide2: ResourceGuide = {
             "Never use the same template twice in a row: vary your opening phrase at minimum. Readers can spot template patterns.",
             "Read it out loud before publishing: if anything sounds robotic, defensive, or insincere - edit it.",
         ]},
-        { type: "tip", text: "Zyene's AI reply feature generates customized response drafts for every review - positive and negative - that you then personalize before publishing. It uses the structure of these templates as a foundation and adapts the language to each specific review." },
-        { type: "cta", ctaLabel: "Try AI-powered review replies with Zyene →", ctaHref: "/signup" },
+        { type: "tip", text: "Zyene offers AI drafts you can personalize before publishing and optional automatic Google replies for eligible new reviews. Use drafts you review yourself for complaints needing individual attention; choose a tone and rating threshold for automatic mode." },
+        { type: "cta", ctaLabel: "Explore AI drafts and automatic Google replies →", ctaHref: "/features/ai-replies" },
     ],
 };
 

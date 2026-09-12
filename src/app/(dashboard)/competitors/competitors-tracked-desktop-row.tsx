@@ -67,7 +67,7 @@ export function CompetitorsTrackedDesktopRow({
                         <span className="text-muted-foreground">,</span>
                     ) : (
                         <>
-                            <Star className="text-chart-4 fill-chart-4 mr-1 size-4" />
+                            <Star className="text-warning-foreground fill-chart-4 mr-1 size-4" />
                             {competitor.average_rating || "-"}
                         </>
                     )}
