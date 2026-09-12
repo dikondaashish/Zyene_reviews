@@ -20,11 +20,9 @@ export function MarketingHomeClient() {
       <MarketingScrollReveal className="home-scroll-section" intensity="subtle">
         <IllustrativeBrandsBar />
       </MarketingScrollReveal>
-      <MarketingScrollReveal className="home-scroll-section" delay={40}>
-        <div id="home-product-tour" className="w-full">
-          <ProductShowcase />
-        </div>
-      </MarketingScrollReveal>
+      <div id="home-product-tour" className="w-full">
+        <ProductShowcase />
+      </div>
       <MarketingScrollReveal className="home-scroll-section" intensity="subtle">
         <MarketingHomeTrustStrip />
       </MarketingScrollReveal>

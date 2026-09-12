@@ -49,7 +49,7 @@ export function ReviewDemo() {
           <div className="tour-stars" aria-label={`${selected.rating} out of 5 stars`}>{[1, 2, 3, 4, 5].map(star => <Star key={star} size={16} fill={star <= selected.rating ? "currentColor" : "none"} aria-hidden="true" />)}</div>
           <p className="tour-review-content">{selected.content}</p>
           {draft.published && <div className="tour-published-reply"><strong><CheckCheck size={16} aria-hidden="true" />Your reply · demo only</strong><p>{draft.published}</p></div>}
-          <DemoReplyComposer key={selected.id} draft={draft} dispatch={dispatch} />
+          <DemoReplyComposer key={selected.id} draft={draft} replies={selected.replies} dispatch={dispatch} />
         </div>
       </div>
     </div>
