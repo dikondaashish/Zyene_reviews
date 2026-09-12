@@ -67,6 +67,7 @@ export function MarketingLayoutHeader({ pending = false, pendingLabel = "Opening
           signupUrl={SIGNUP_URL}
           openMenu={openMenu}
           onToggleMenu={toggleMenu}
+          onOpenMenu={(menu: MarketingNavMenu) => setOpenMenu(menu)}
           onCloseMenu={() => setOpenMenu(null)}
         />
         <Button

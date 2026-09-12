@@ -18,6 +18,7 @@ export function MarketingLayoutNavDropdown({
   links,
   open,
   onToggle,
+  onOpen,
   onClose,
 }: {
   label: string;
@@ -26,6 +27,7 @@ export function MarketingLayoutNavDropdown({
   links: MarketingNavLink[];
   open: boolean;
   onToggle: () => void;
+  onOpen: () => void;
   onClose: () => void;
 }) {
   const feature = FEATURE[menu];
@@ -34,6 +36,8 @@ export function MarketingLayoutNavDropdown({
   return (
     <div
       className="mega-nav-item"
+      onMouseEnter={onOpen}
+      onMouseLeave={onClose}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) onClose();
       }}
