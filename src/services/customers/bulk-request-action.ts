@@ -1,3 +1,4 @@
+import { isTestContact } from "@/lib/customers/test-contact";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
@@ -6,6 +7,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 type CustomerRow = {
     id: string;
+    tags?: string[] | null;
     first_name: string | null;
     last_name: string | null;
     phone: string | null;
@@ -45,11 +47,11 @@ export async function runBulkReviewRequestAction(
         return { status: 400 as const, body: { error: "No valid customers found" } };
     }
 
-    const eligibleCustomers = (customersToRequest as CustomerRow[]).filter((c) => !c.is_opted_out);
+    const eligibleCustomers = (customersToRequest as CustomerRow[]).filter((c) => !c.is_opted_out && !isTestContact(c) && c.phone);
     if (eligibleCustomers.length === 0) {
         return {
             status: 400 as const,
-            body: { error: "Selected customers are opted out of review requests" },
+            body: { error: "No eligible contacts: check opt-outs, test tags and phone numbers" },
         };
     }
 
@@ -134,7 +136,10 @@ export async function runBulkReviewRequestAction(
         })
     );
     const successCount = outcomes.filter((o) => o === "success").length;
-    const failCount = outcomes.filter((o) => o === "fail").length;
+    const failedIds = actualBatch.flatMap((customer, index) => outcomes[index] === "fail" ? [customer.id] : []);
+    const attemptedIds = new Set(actualBatch.map(customer => customer.id));
+    const skippedIds = ids.filter(id => !attemptedIds.has(id));
+    const failCount = failedIds.length;
 
     return {
         status: 200 as const,
@@ -143,6 +148,9 @@ export async function runBulkReviewRequestAction(
             sent: successCount,
             failed: failCount,
             limitReached: batchSize < eligibleCustomers.length,
+            skipped: ids.length - actualBatch.length,
+            failedIds,
+            skippedIds,
         },
     };
 }

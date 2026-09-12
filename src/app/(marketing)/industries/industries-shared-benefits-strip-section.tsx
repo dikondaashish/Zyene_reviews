@@ -3,7 +3,7 @@ import { BarChart3, Bot, MessageSquare, Shield } from "lucide-react";
 const BENEFITS = [
     {
         icon: MessageSquare,
-        title: "Fair review requests",
+        title: "Branded review requests",
         desc: "Invite customers by SMS, email, shareable link, or QR code after a visit or completed service.",
     },
     {

@@ -45,7 +45,7 @@ export function MarketingLayoutFooterResourcesColumn() {
             </li>
             <li>
                 <Link href="/case-studies" className="hover:text-primary transition-colors">
-                    Case Studies
+                    Example Workflows
                 </Link>
             </li>
             <li>

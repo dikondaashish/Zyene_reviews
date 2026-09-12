@@ -15,6 +15,7 @@ interface ReviewsFiltersProps {
         status: string;
         rating: string;
         sort: string;
+        q?: string;
     };
     onFilterChange: (key: string, value: string) => void;
 }

@@ -5,6 +5,8 @@ const ROOT = process.cwd();
 const SKIP_SEGMENTS = [
   `${path.sep}resend${path.sep}templates${path.sep}`,
 ];
+// Color arithmetic and its fixtures require actual sRGB inputs, not CSS tokens.
+const LITERAL_COLOR_FILES = new Set(["src/lib/design/contrast.ts", "tests/unit/brand-contrast.test.ts"]);
 
 const SKIP_BASENAMES = new Set([
   "qr-code-card.tsx",
@@ -42,6 +44,7 @@ const TAILWIND_PALETTE_RE =
 const HEX_RE = /#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g;
 
 function isSkipped(filePath) {
+  if (LITERAL_COLOR_FILES.has(path.relative(ROOT, filePath).split(path.sep).join("/"))) return true;
   if (SKIP_BASENAMES.has(path.basename(filePath))) return true;
   return SKIP_SEGMENTS.some((segment) => filePath.includes(segment));
 }

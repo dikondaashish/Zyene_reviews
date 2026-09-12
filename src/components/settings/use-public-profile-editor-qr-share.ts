@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { getReviewCaptureOrigin } from "@/config/env";
 import { toast } from "sonner";
 
 export function usePublicProfileEditorQrShare(
@@ -14,7 +15,7 @@ export function usePublicProfileEditorQrShare(
     const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
     const [qrLoading, setQrLoading] = useState(false);
 
-    const fullUrl = `https://${previewUrl}`;
+    const fullUrl = `${new URL(getReviewCaptureOrigin()).protocol}//${previewUrl}`;
 
     useEffect(() => {
         setQrDataUrl(null);

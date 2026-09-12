@@ -64,7 +64,7 @@ export const STEPS = [
             "SMS, email, shareable-link, and QR review requests",
             "Optional follow-up reminders for customers who have not engaged",
             "Private feedback alerts for timely service recovery",
-            "Fair public review requests with no review gating",
+            "Configurable feedback and service-recovery workflows",
             "Use the API or a secure webhook to trigger requests from your workflow",
         ],
         mockupLines: [

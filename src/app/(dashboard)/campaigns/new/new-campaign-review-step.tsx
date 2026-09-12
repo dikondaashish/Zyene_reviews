@@ -1,21 +1,28 @@
+import { renderCampaignPreview, type CampaignPreviewContext } from "@/lib/campaigns/preview";
 import { DELAY_OPTIONS } from "./new-campaign-constants";
 import type { CampaignForm } from "./new-campaign-form-types";
 
 interface NewCampaignReviewStepProps {
+    context: CampaignPreviewContext;
     form: CampaignForm;
+    customerCount?: number;
 }
 
-export function NewCampaignReviewStep({ form }: NewCampaignReviewStepProps) {
+export function NewCampaignReviewStep({ form, context, customerCount = 0 }: NewCampaignReviewStepProps) {
     return (
         <div className="space-y-6">
             <div>
-                <h2 className="text-lg font-semibold mb-1">Review & Launch</h2>
+                <h2 className="text-lg font-semibold mb-1">Review campaign</h2>
                 <p className="text-sm text-muted-foreground">
-                    Review your campaign settings before launching.
+                    Preview for {context.businessName}, using a sample customer. Business timezone: {context.timezone}. Message length and delivery eligibility vary by recipient; usage counts against your plan allowances.
                 </p>
             </div>
 
             <div className="space-y-4">
+                <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+                    <p className="font-semibold">{customerCount ? `${customerCount} selected customers` : "No recipients added yet"}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{customerCount ? "Queueing starts this campaign for eligible contacts. Opted-out customers and contacts without the selected channel are skipped. Saving the campaign only does not save or send to this selection." : "Create this campaign, then add contacts from its details page to start sending."}</p>
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                     <div className="rounded-lg border p-4">
                         <p className="text-xs text-muted-foreground mb-1">Campaign Name</p>
@@ -40,16 +47,16 @@ export function NewCampaignReviewStep({ form }: NewCampaignReviewStepProps) {
                 {(form.channel === "sms" || form.channel === "both") && (
                     <div className="rounded-lg border p-4">
                         <p className="text-xs text-muted-foreground mb-2">SMS Template</p>
-                        <p className="text-sm whitespace-pre-wrap font-mono bg-muted/50 rounded p-3">{form.sms_template}</p>
+                        <p className="text-sm whitespace-pre-wrap font-mono bg-muted/50 rounded p-3">{renderCampaignPreview(form.sms_template, context)}</p>
                     </div>
                 )}
 
                 {(form.channel === "email" || form.channel === "both") && (
                     <div className="rounded-lg border p-4">
                         <p className="text-xs text-muted-foreground mb-1">Email Subject</p>
-                        <p className="text-sm font-semibold mb-2">{form.email_subject}</p>
+                        <p className="text-sm font-semibold mb-2">{renderCampaignPreview(form.email_subject, context)}</p>
                         <p className="text-xs text-muted-foreground mb-2">Email Body</p>
-                        <div className="text-sm bg-muted/50 rounded p-3 font-mono whitespace-pre-wrap">{form.email_template}</div>
+                        <div className="text-sm bg-muted/50 rounded p-3 font-mono whitespace-pre-wrap">{renderCampaignPreview(form.email_template, context)}</div>
                     </div>
                 )}
 
@@ -57,17 +64,17 @@ export function NewCampaignReviewStep({ form }: NewCampaignReviewStepProps) {
                     <div className="rounded-lg border border-primary/20 p-4">
                         <p className="text-xs text-muted-foreground mb-1">Reminder drip</p>
                         <p className="text-sm">
-                            Day 0 → Day 7 → Day 14. Stops if they click or leave a review.
+                            Day 0 → Day 7 → Day 14. Stops after a tracked click or completed request; publication is not verified.
                         </p>
                         <p className="text-xs text-muted-foreground mt-3 mb-1">Step 2 (Day 7)</p>
                         <p className="text-sm font-mono bg-muted/50 rounded p-3 whitespace-pre-wrap">
-                            {form.follow_up_template}
+                            {renderCampaignPreview(form.follow_up_template, context)}
                         </p>
                         {form.drip_step3_template.trim() ? (
                             <>
                                 <p className="text-xs text-muted-foreground mt-3 mb-1">Step 3 (Day 14)</p>
                                 <p className="text-sm font-mono bg-muted/50 rounded p-3 whitespace-pre-wrap">
-                                    {form.drip_step3_template}
+                                    {renderCampaignPreview(form.drip_step3_template, context)}
                                 </p>
                             </>
                         ) : (

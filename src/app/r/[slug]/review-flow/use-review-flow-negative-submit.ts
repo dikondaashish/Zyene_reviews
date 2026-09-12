@@ -89,7 +89,6 @@ export function useReviewFlowNegativeSubmit(options: {
             }
 
             await trackRequestUpdate({
-                review_left: true,
                 rating_given: rating,
                 selected_staff: selectedStaff,
                 status: "feedback_left",

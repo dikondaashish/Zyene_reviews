@@ -1,28 +1,17 @@
 import Link from "next/link";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { TestimonialCard } from "@/lib/social-proof/social-proof-data";
+import { CASE_STUDY_MAP } from "@/lib/social-proof/case-study-data";
 
 export function SocialProofTestimonialCard({ t }: { t: TestimonialCard }) {
-    return (
-        <div className="bg-card border border-border rounded-2xl p-6 flex flex-col h-full hover:border-primary/30 transition-colors">
-            <div className="flex gap-0.5 mb-4">
-                {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} className="fill-primary text-primary size-4" />
-                ))}
-            </div>
-            <p className="text-sm text-foreground leading-relaxed flex-1 mb-5">&ldquo;{t.quote}&rdquo;</p>
-            <div className="border-t border-border pt-4">
-                <p className="text-sm font-semibold text-foreground">{t.author}</p>
-                <p className="text-xs text-muted-foreground">
-                    {t.role}, {t.company}
-                </p>
-                <Link
-                    href={`/case-studies/${t.caseStudySlug}`}
-                    className="inline-flex items-center gap-1 text-xs font-medium text-primary mt-2 hover:brightness-90"
-                >
-                    Read case study <ArrowRight className="size-3" />
-                </Link>
-            </div>
-        </div>
-    );
+    const study = CASE_STUDY_MAP[t.caseStudySlug];
+    if (!study) return null;
+    return <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-6">
+        <p className="text-xs font-medium text-muted-foreground">Illustrative workflow</p>
+        <h3 className="mt-3 font-semibold">{study.headline}</h3>
+        <p className="mt-3 flex-1 text-sm text-muted-foreground">{study.excerpt}</p>
+        <Link href={`/case-studies/${study.slug}`} className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-primary">
+            Explore the workflow <ArrowRight className="size-4" aria-hidden="true" />
+        </Link>
+    </article>;
 }

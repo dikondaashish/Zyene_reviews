@@ -143,7 +143,7 @@ export const post16: BlogPost = {
         },
         {
             type: "warning",
-            text: "Beware of review gating penalties. Google's Terms of Service and FTC guidelines strictly forbid offering financial incentives, discounts, or filtering public reviews based on sentiment without giving customers an open choice."
+            text: "Avoid offering financial incentives or discounts tied to a rating or review text. Document your customer-feedback process and check the current terms that apply to your business before sending review outreach."
         },
         {
             type: "h2",
@@ -151,7 +151,7 @@ export const post16: BlogPost = {
         },
         {
             type: "p",
-            text: "Manually copying links and sending individual texts wastes hours every week. Zyene Reviews automates customer review collection via SMS and email, provides branded QR codes, and routes negative feedback privately before it hits your public rating."
+            text: "Manually copying links and sending individual texts wastes hours every week. Zyene Reviews automates customer review collection via SMS and email, provides branded QR codes, and routes lower ratings to private feedback for service recovery."
         },
         {
             type: "cta",

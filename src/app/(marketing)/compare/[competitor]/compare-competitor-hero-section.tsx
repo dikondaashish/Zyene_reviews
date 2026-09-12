@@ -26,7 +26,7 @@ export function CompareCompetitorHeroSection({ data }: { data: CompetitorData })
                     <h2 className="mb-5 text-2xl">Starting price at a glance</h2>
                     <dl className="divide-y divide-border">
                         <div className="flex items-baseline justify-between gap-5 py-4"><dt>Zyene Reviews</dt><dd className="text-xl font-semibold">$29.99<span className="text-sm font-normal text-muted-foreground"> /mo</span></dd></div>
-                        <div className="flex items-baseline justify-between gap-5 py-4"><dt>{data.name}</dt><dd className="text-xl font-semibold">{data.price}<span className="text-sm font-normal text-muted-foreground"> /mo</span></dd></div>
+                        <div className="flex items-baseline justify-between gap-5 py-4"><dt>{data.name}</dt><dd className="text-xl font-semibold">{data.price}{data.price.startsWith("$") && <span className="text-sm font-normal text-muted-foreground"> /mo</span>}</dd></div>
                     </dl>
                     <p className="mt-3 text-sm text-muted-foreground">Zyene has no annual contract. {competitorBillingTerms}</p>
                     {data.pricingSource ? (

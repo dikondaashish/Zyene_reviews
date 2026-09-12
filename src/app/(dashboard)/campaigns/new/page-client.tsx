@@ -1,10 +1,12 @@
 "use client";
 
+import type { CampaignPreviewContext } from "@/lib/campaigns/preview";
+
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import { NewCampaignForm } from "./new-campaign-form";
 
-export default function NewCampaignPage() {
+export default function NewCampaignPage({ context }: { context: CampaignPreviewContext }) {
     return (
         <Suspense
             fallback={
@@ -13,7 +15,7 @@ export default function NewCampaignPage() {
                 </div>
             }
         >
-            <NewCampaignForm />
+            <NewCampaignForm context={context} />
         </Suspense>
     );
 }

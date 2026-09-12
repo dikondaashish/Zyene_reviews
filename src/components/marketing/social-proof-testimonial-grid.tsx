@@ -4,8 +4,8 @@ import { FEATURED_TESTIMONIALS } from "@/lib/social-proof/social-proof-data";
 import { SocialProofTestimonialCard } from "./social-proof-testimonial-card";
 
 export function TestimonialGrid({
-    title = "What local business owners say",
-    subtitle = "Real outcomes from restaurants, dental practices, home services, and more.",
+    title = "Example review workflows",
+    subtitle = "Illustrative workflows for local businesses. These are not verified customer outcomes.",
     limit,
 }: {
     title?: string;
@@ -30,7 +30,7 @@ export function TestimonialGrid({
                         href="/case-studies"
                         className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:brightness-90"
                     >
-                        View all case studies <ArrowRight className="size-4" />
+                        Explore all workflows <ArrowRight className="size-4" />
                     </Link>
                 </div>
             </div>

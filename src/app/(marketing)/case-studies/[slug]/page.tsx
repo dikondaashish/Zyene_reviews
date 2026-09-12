@@ -13,7 +13,7 @@ export async function generateMetadata(
     const study = CASE_STUDY_MAP[slug];
     if (!study) return {};
     const title = `Illustrative ${study.industry} Review Workflow`;
-    const description = `An illustrative ${study.industry.toLowerCase()} review-management workflow using Zyene Reviews. This composite example is educational, not a verified customer testimonial.`;
+    const description = `Explore an example ${study.industry.toLowerCase()} review workflow with Zyene Reviews. Educational guidance, not customer results or an endorsement.`;
     return mergeMarketingSocial({
         title,
         description,

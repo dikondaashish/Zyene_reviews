@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { CopyResultButton } from "@/components/marketing/free-tools/copy-result-button";
 import { Loader2 } from "lucide-react";
 
 export function ReviewResponseGeneratorClient() {
@@ -61,8 +62,8 @@ export function ReviewResponseGeneratorClient() {
                 setError(json.error ?? "Failed");
                 return;
             }
-            setResponse(json.response);
-            setBonusSent(true);
+            setBonusSent(Boolean(json.bonusSent));
+            if (!json.bonusSent) setError("Email could not be sent. Your editable draft is still available below.");
         } catch {
             setError("Network error");
         } finally {
@@ -77,7 +78,7 @@ export function ReviewResponseGeneratorClient() {
                     <Link href="/tools" className="text-sm text-primary hover:underline">← All free tools</Link>
                     <h1 className="text-3xl md:text-4xl font-bold mt-4 mb-3">Review Response Generator</h1>
                     <p className="text-muted-foreground">
-                        Paste a review, pick a star rating, and get a professional draft reply. Email for 5 bonus templates.
+                        Choose a rating to build a template-based reply. Edit it for the customer’s specific feedback, then copy it. Email is optional.
                     </p>
                 </div>
             </section>
@@ -86,11 +87,10 @@ export function ReviewResponseGeneratorClient() {
                     <h2 className="text-xl font-bold text-foreground">Respond professionally to every review</h2>
                     <p className="text-muted-foreground leading-relaxed">
                         Replying to Google reviews shows customers how you handle feedback. Google does not publish
-                        response rate as a separate ranking factor. This generator drafts a reply from the rating and
-                        review text you provide.
+                        response rate as a separate ranking factor. This free tool selects a reusable template by rating; it does not analyze the meaning of the review text.
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
-                        For one-click AI replies on every new review, tone control, and optional auto-commenter, use
+                        For one-click AI replies on every new review, tone control, and optional automatic replies, use
                         Zyene Reviews AI reply feature on all paid plans with a 7-day free trial.
                     </p>
                 </div>
@@ -99,6 +99,7 @@ export function ReviewResponseGeneratorClient() {
                 <div className="container mx-auto max-w-2xl space-y-6">
                     <div className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-4">
                         <input
+                            aria-label="Business name"
                             value={businessName}
                             onChange={(e) => setBusinessName(e.target.value)}
                             placeholder="Your business name"
@@ -107,6 +108,7 @@ export function ReviewResponseGeneratorClient() {
                         <div>
                             <label className="text-sm font-medium mb-2 block">Star rating</label>
                             <select
+                                aria-label="Star rating"
                                 value={rating}
                                 onChange={(e) => setRating(Number(e.target.value))}
                                 className="w-full h-11 rounded-lg border border-border px-4 text-sm bg-background"
@@ -117,6 +119,7 @@ export function ReviewResponseGeneratorClient() {
                             </select>
                         </div>
                         <textarea
+                            aria-label="Customer review"
                             value={reviewText}
                             onChange={(e) => setReviewText(e.target.value)}
                             placeholder="Paste the customer review here (optional)"
@@ -129,8 +132,9 @@ export function ReviewResponseGeneratorClient() {
                     </div>
                     {response && (
                         <div className="bg-card border border-border rounded-2xl p-6">
-                            <p className="text-sm font-medium mb-2">Suggested reply</p>
-                            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">{response}</p>
+                            <label htmlFor="editable-reply" className="text-sm font-medium mb-2 block">Edit your template reply</label>
+                            <textarea id="editable-reply" value={response} onChange={(e) => setResponse(e.target.value)} rows={6} className="w-full rounded-lg border border-border bg-background p-3 text-sm" />
+                            <CopyResultButton text={response} />
                         </div>
                     )}
                     {response && !bonusSent && (
@@ -138,6 +142,8 @@ export function ReviewResponseGeneratorClient() {
                             <p className="text-sm font-medium">Get 5 more templates by email</p>
                             <input
                                 type="email"
+                                aria-label="Email address"
+                                autoComplete="email"
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -148,7 +154,7 @@ export function ReviewResponseGeneratorClient() {
                             </Button>
                         </form>
                     )}
-                    {bonusSent && <p className="text-sm text-chart-2 text-center">Bonus templates sent to your inbox.</p>}
+                    {bonusSent && <p className="text-sm text-chart-2 text-center">Bonus templates accepted for email delivery.</p>}
                     {error && <p className="text-sm text-destructive text-center">{error}</p>}
                 </div>
             </section>

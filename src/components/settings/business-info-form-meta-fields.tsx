@@ -30,7 +30,7 @@ export function BusinessInfoFormMetaFields({ form }: { form: UseFormReturn<Busin
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Select timezone" />
+                                    <SelectValue placeholder="Choose the business’s local timezone" />
                                 </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -41,6 +41,7 @@ export function BusinessInfoFormMetaFields({ form }: { form: UseFormReturn<Busin
                                 <SelectItem value="UTC">UTC</SelectItem>
                             </SelectContent>
                         </Select>
+                        {field.value === "UTC" && <p className="text-xs text-muted-foreground">UTC is selected. Choose your location’s local timezone if customer schedules and alert quiet hours should follow local time.</p>}
                         <FormMessage />
                     </FormItem>
                 )}

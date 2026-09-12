@@ -54,19 +54,19 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["restaurant review management", "google reviews for restaurants", "restaurant reputation management", "how to get more restaurant reviews"],
         painPoints: [
             {
-                stat: "One 1-star drop",
-                title: "One bad review costs you 30+ covers",
-                description: "Harvard Business School research found a 1-star drop in Yelp rating costs restaurants 5-9% of revenue. In a 100-cover restaurant, that's 5-9 empty tables every night.",
+                stat: "First impressions",
+                title: "Reviews shape first impressions",
+                description: "Diners can read recent feedback before booking. Respond to service issues with specific, useful information instead of leaving complaints unanswered.",
             },
             {
-                stat: "93% of diners",
-                title: "Diners research you before they walk in",
-                description: "93% of consumers check restaurant reviews before choosing where to eat. If your last 3 reviews are negative and unanswered, they're going to the place next door.",
+                stat: "Recent feedback",
+                title: "Keep your profile current",
+                description: "A steady request process gives diners more recent experiences to read when choosing a restaurant.",
             },
             {
-                stat: "53% expect",
-                title: "Slow responses damage your brand",
-                description: "53% of customers expect a business to reply to reviews within a week. Most restaurants respond to fewer than 30% of their reviews - or not at all.",
+                stat: "Reply backlog",
+                title: "Make time for responses",
+                description: "Busy service periods can leave reviews unanswered. A shared inbox helps staff see which replies still need attention.",
             },
         ],
         solutions: [
@@ -99,9 +99,9 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["dental practice reviews", "dentist reputation management", "dental google reviews", "how to get more dental patient reviews"],
         painPoints: [
             {
-                stat: "77% of patients",
-                title: "New patients check reviews before booking",
-                description: "77% of patients use online reviews as their first step in finding a new dentist. If your Google profile has fewer than 20 reviews or a rating below 4.5, most potential patients will choose a competitor.",
+                stat: "Patient research",
+                title: "Help patients evaluate your practice",
+                description: "Prospective patients may read reviews before contacting a dentist. Recent feedback and thoughtful replies help them understand the practice.",
             },
             {
                 stat: "1 bad review",
@@ -109,9 +109,9 @@ export const INDUSTRIES: IndustryData[] = [
                 description: "In healthcare, trust is everything. A single unanswered 1-star review about a billing issue or wait time can quietly turn away dozens of prospective patients who read it and choose elsewhere.",
             },
             {
-                stat: "72% of practices",
-                title: "Most practices never respond to their reviews",
-                description: "72% of dental practices don't respond to any of their Google reviews. Every unanswered review - positive or negative - signals to prospective patients that you don't care about feedback.",
+                stat: "Reply workflow",
+                title: "Build a consistent response routine",
+                description: "Give staff a clear process for responding without confirming patient relationships or sharing details of care.",
             },
         ],
         solutions: [
@@ -144,9 +144,9 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["auto repair google reviews", "mechanic reputation management", "auto shop reviews", "car repair reputation management"],
         painPoints: [
             {
-                stat: "90% of customers",
-                title: "Customers Google your shop before they call",
-                description: "90% of consumers read online reviews for local businesses before making a decision. For auto repair - where trust is everything - a profile with fewer than 4.5 stars or outdated reviews means the phone doesn't ring.",
+                stat: "Trust before booking",
+                title: "Make your service visible",
+                description: "Vehicle owners may compare recent reviews before requesting an estimate. Explain how customers can resolve concerns with your team.",
             },
             {
                 stat: "Estimate disputes",
@@ -155,8 +155,8 @@ export const INDUSTRIES: IndustryData[] = [
             },
             {
                 stat: "Repeat business",
-                title: "Your reputation drives return visits more than price",
-                description: "68% of auto repair customers say they chose a shop based on reviews and reputation over price. A current review profile gives prospective customers more evidence before they book.",
+                title: "Keep customer relationships active",
+                description: "Feedback from returning customers helps you identify service problems and understand what keeps people coming back.",
             },
         ],
         solutions: [
@@ -189,9 +189,9 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["salon review management", "spa google reviews", "hair salon reputation management", "beauty salon reviews"],
         painPoints: [
             {
-                stat: "86% of clients",
-                title: "Clients book based on reviews and photos",
-                description: "86% of women say online reviews are just as trustworthy as personal recommendations when choosing a salon. Your Google profile and review count is your storefront - before anyone walks in.",
+                stat: "Choosing a salon",
+                title: "Show what clients experience",
+                description: "Recent feedback can help new clients understand your salon’s service and atmosphere before making an appointment.",
             },
             {
                 stat: "1 bad color job",
@@ -234,9 +234,9 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["plumber reviews", "HVAC reputation management", "home services google reviews", "electrician review management", "contractor reputation management"],
         painPoints: [
             {
-                stat: "82% of homeowners",
-                title: "Homeowners only hire who they trust online",
-                description: "82% of homeowners say they won't hire a home services company without reading reviews first. Letting a stranger into your home is a big decision - your Google reviews are the trust signal that makes or breaks the call.",
+                stat: "Trust at home",
+                title: "Help homeowners choose confidently",
+                description: "Homeowners need confidence in the people entering their property. Recent reviews and clear responses give them more information before a call.",
             },
             {
                 stat: "Seasonal spikes",
@@ -279,9 +279,9 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["doctor review management", "clinic reputation management", "medical practice reviews", "healthcare reputation management", "physician google reviews"],
         painPoints: [
             {
-                stat: "71% of patients",
-                title: "Patients find their doctor online first",
-                description: "71% of patients use online reviews as the first step to finding a new doctor or specialist. A practice with fewer than 4.5 stars or thin review count loses new patients to competitors before the first call.",
+                stat: "Finding care",
+                title: "Support informed patient choices",
+                description: "Online feedback can be part of a patient’s research. Keep public replies general and move individual care discussions to an appropriate private channel.",
             },
             {
                 stat: "Wait times",
@@ -290,8 +290,8 @@ export const INDUSTRIES: IndustryData[] = [
             },
             {
                 stat: "Multiple platforms",
-                title: "Patients review you across Google, Healthgrades, and more",
-                description: "Healthcare practices face reviews on more platforms than almost any other industry. Managing them separately is time-consuming and inconsistent - most practices respond to under 20% of their reviews.",
+                title: "Keep a manageable review routine",
+                description: "Check which platforms your practice uses and which connections support monitoring or replies. Assign someone to follow up on each channel.",
             },
         ],
         solutions: [
@@ -324,14 +324,14 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["hotel review management", "hospitality reviews", "hotel reputation management", "hotel google reviews", "hotel response management"],
         painPoints: [
             {
-                stat: "95% of travelers",
-                title: "Guests research you before every booking",
-                description: "95% of travelers read online reviews before booking a hotel. On OTA platforms and Google both, your rating and recency of reviews are the primary decision factor - before price.",
+                stat: "Before booking",
+                title: "Help guests understand the stay",
+                description: "Travelers may compare recent feedback on rooms, cleanliness and service. Keep those conversations visible to the team that can act on them.",
             },
             {
-                stat: "33% more bookings",
-                title: "Responding to reviews drives 33% more reservations",
-                description: "Hotels that respond to reviews see 33% more bookings on average. Guests aren't just reading reviews - they're watching whether and how you respond to unhappy ones.",
+                stat: "Guest responses",
+                title: "Respond with useful information",
+                description: "Prospective guests can read how you handle problems. A specific response explains the next step without promising a booking increase.",
             },
             {
                 stat: "Room complaints",

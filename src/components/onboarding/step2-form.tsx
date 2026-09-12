@@ -22,6 +22,7 @@ export function Step2Form(props: Step2FormProps) {
                 onSaveAndNext={c.onSaveAndNext}
                 form={c.form}
                 setGoogleState={c.setGoogleState}
+                onRetry={c.onGoogleConnectionErrorConsumed}
             />
         );
     }

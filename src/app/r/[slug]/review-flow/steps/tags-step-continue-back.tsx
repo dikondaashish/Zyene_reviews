@@ -15,8 +15,7 @@ export function TagsStepContinueButton({ hasTagSelection, onContinue }: TagsStep
                 type="button"
                 className={cn(
                     "w-full min-h-12 rounded-xl text-base font-semibold text-primary-foreground transition-all duration-300",
-                    "dark:text-white",
-                    "bg-gradient-to-r from-primary to-primary/90 hover:from-primary/95 hover:to-primary",
+                                        "bg-gradient-to-r from-primary to-primary/90 hover:from-primary/95 hover:to-primary",
                     "shadow-lg shadow-primary/20 hover:shadow-primary/30",
                     "active:scale-[0.98] flex items-center justify-center gap-2"
                 )}

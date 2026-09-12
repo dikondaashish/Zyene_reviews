@@ -1,9 +1,11 @@
+import { reviewSearchFilter } from "@/lib/reviews/search-filter";
+import { z } from "zod";
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { NextResponse, type NextRequest } from "next/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 
-export async function handleReviewsList(request: NextRequest) {
+async function handleValidatedRequest(request: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
@@ -16,6 +18,14 @@ export async function handleReviewsList(request: NextRequest) {
     }
 
     const url = request.nextUrl;
+    const input = z.object({
+        q: z.string().max(200).optional(), type: z.enum(["public", "private"]).optional(),
+        status: z.enum(["all", "needs_response", "responded", "ignored"]).optional(),
+        rating: z.enum(["all", "1", "2", "3", "4", "5"]).optional(),
+        sort: z.enum(["newest", "oldest", "highest", "lowest"]).optional(),
+        page: z.coerce.number().int().min(1).max(100000).optional(),
+    }).safeParse(Object.fromEntries(url.searchParams));
+    if (!input.success) return NextResponse.json({ error: "Invalid review filters; search must be 200 characters or fewer" }, { status: 400 });
     const type = url.searchParams.get("type") || "public";
     const pageRaw = Number.parseInt(url.searchParams.get("page") || "1", 10);
     const page = Number.isFinite(pageRaw) && pageRaw >= 1 ? pageRaw : 1;
@@ -39,7 +49,7 @@ export async function handleReviewsList(request: NextRequest) {
     let count = 0;
 
     if (type === "private") {
-        const { data, count: totalCount } = await supabase
+        const { data, count: totalCount, error } = await supabase
             .from("private_feedback")
             .select(`
                 *,
@@ -53,6 +63,7 @@ export async function handleReviewsList(request: NextRequest) {
             .order("created_at", { ascending: false })
             .range(from, to);
 
+        if (error) return NextResponse.json({ error: "Could not load reviews. Try again." }, { status: 503 });
         reviews = data || [];
         count = totalCount || 0;
     } else {
@@ -62,6 +73,8 @@ export async function handleReviewsList(request: NextRequest) {
             .eq("business_id", businessId)
             .eq("is_visible", true);
 
+        const searchFilter = reviewSearchFilter(input.data.q);
+        if (searchFilter) query = query.or(searchFilter);
         const statusRaw = url.searchParams.get("status") || "all";
         const statusMap: Record<string, string> = {
             "needs_response": "pending",
@@ -93,6 +106,7 @@ export async function handleReviewsList(request: NextRequest) {
         if (error) {
             logger.error({ err: error }, "[Reviews API] Failed to load reviews:");
         }
+        if (error) return NextResponse.json({ error: "Could not load reviews. Try again." }, { status: 503 });
         reviews = data || [];
         count = totalCount || 0;
     }
@@ -114,4 +128,9 @@ export async function handleReviewsList(request: NextRequest) {
             },
         }
     );
+}
+
+export async function handleReviewsList(request: NextRequest) {
+    try { return await handleValidatedRequest(request); }
+    catch { return NextResponse.json({ error: "The request could not be completed. Try again." }, { status: 503 }); }
 }

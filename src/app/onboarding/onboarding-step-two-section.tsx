@@ -13,6 +13,8 @@ type OnboardingStepTwoSectionProps = {
     setGoogleConnected: (connected: boolean) => void;
     pendingGoogleCode: string | null;
     setPendingGoogleCode: (code: string | null) => void;
+    googleConnectionError: string | null;
+    setGoogleConnectionError: (message: string | null) => void;
     handleBusinessUpdate: (updated: Partial<OnboardingBusiness>) => void;
 };
 
@@ -24,6 +26,8 @@ export function OnboardingStepTwoSection({
     setGoogleConnected,
     pendingGoogleCode,
     setPendingGoogleCode,
+    googleConnectionError,
+    setGoogleConnectionError,
     handleBusinessUpdate,
 }: OnboardingStepTwoSectionProps) {
     if (!business) {
@@ -62,6 +66,8 @@ export function OnboardingStepTwoSection({
                         phone={business.phone ?? ""}
                         pendingGoogleCode={pendingGoogleCode}
                         onGoogleCodeConsumed={() => setPendingGoogleCode(null)}
+                        googleConnectionError={googleConnectionError}
+                        onGoogleConnectionErrorConsumed={() => setGoogleConnectionError(null)}
                         onBusinessUpdate={handleBusinessUpdate}
                         initialConnected={googleConnected}
                         onNext={async () => {

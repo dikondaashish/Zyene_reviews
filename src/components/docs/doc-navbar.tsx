@@ -1,5 +1,6 @@
 "use client";
 
+import { DocMobileNavigation } from "@/components/docs/doc-mobile-navigation";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { ZyeneReviewsLogoMark } from "@/components/brand/zyene-reviews-logo-mark";
@@ -14,6 +15,7 @@ export function DocNavbar() {
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
             <div className="mx-auto flex h-16 min-w-0 max-w-[1400px] items-center gap-4 px-4 md:gap-8 md:px-8">
+                <DocMobileNavigation />
                 <Link href="/" className="group flex shrink-0 items-center gap-2">
                     <ZyeneReviewsLogoMark size={32} priority className="group-hover:ring-primary/50 transition-colors" />
                 </Link>

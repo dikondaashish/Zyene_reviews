@@ -39,8 +39,7 @@ export default async function AeoPromptsPage() {
                     <AlertDescription>
                         <strong>{data.activeCount} active prompt{data.activeCount === 1 ? "" : "s"},
                         but sampling is switched off.</strong>{" "}
-                        Nothing will run until <code>AEO_LIVE_SAMPLING</code> is enabled for this
-                        deployment, so no data will appear and nothing is being charged.
+                        New samples are currently unavailable. Your prompts are saved; contact support for availability. No sampling charges are incurred while this is off.
                     </AlertDescription>
                 </Alert>
             ) : null}

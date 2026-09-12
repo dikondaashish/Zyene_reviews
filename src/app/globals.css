@@ -69,10 +69,11 @@
   --card-foreground: #201515;
   --popover: #fffefb;
   --popover-foreground: #201515;
+  --brand-accent: #ff4f00;
   --primary: #ff4f00;
-  /* Light text on saturated primary - matches intent of .text-primary-foreground on orange */
+  /* Preserve Zyene’s original brand orange for actions in both themes. */
   --primary-foreground: #ffffff;
-  --cta: #ff4f00;
+  --cta: var(--primary);
   --cta-foreground: #fffefb;
   --secondary: #eceae3;
   --secondary-foreground: #36342e;
@@ -98,12 +99,12 @@
   --chart-5: oklch(0.75 0.15 60);
   --sidebar: #fffefb;
   --sidebar-foreground: #201515;
-  --sidebar-primary: #ff4f00;
+  --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #eceae3;
   --sidebar-accent-foreground: #201515;
   --sidebar-border: #c5c0b1;
-  --sidebar-ring: #ff4f00;
+  --sidebar-ring: var(--ring);
   --canvas: #f7f5ef;
   --canvas-elevated: #f9f7f3;
   --marketing-footer-bg: #201515;
@@ -180,8 +181,8 @@
   --primary: #ff4f00;
   /* Keep primary button text readable on orange in dark mode */
   --primary-foreground: #ffffff;
-  --cta: #ff4f00;
-  --cta-foreground: #fffefb;
+  --cta: var(--primary);
+  --cta-foreground: var(--primary-foreground);
   --secondary: #36342e;
   --secondary-foreground: #fffefb;
   --muted: #2d2d2e;
@@ -204,12 +205,12 @@
   --chart-5: oklch(0.8 0.12 60);
   --sidebar: #201515;
   --sidebar-foreground: #fffefb;
-  --sidebar-primary: #ff4f00;
-  --sidebar-primary-foreground: #ffffff;
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
   --sidebar-accent: #36342e;
   --sidebar-accent-foreground: #fffefb;
   --sidebar-border: #4a4540;
-  --sidebar-ring: #ff4f00;
+  --sidebar-ring: var(--ring);
   --canvas: var(--background);
   --canvas-elevated: var(--card);
   --marketing-footer-bg: var(--card);
@@ -367,7 +368,8 @@
   }
 
   .pro-card {
-    @apply bg-card/80 backdrop-blur-xl border border-border rounded-2xl;
+    @apply bg-card border border-border rounded-2xl;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 3%, transparent);
   }
 
   /* Translucent chrome (nav/toolbars/sheets) - content scrolls underneath.
@@ -381,7 +383,7 @@
     backdrop-filter: blur(20px) saturate(180%);
   }
 
-  /* Primary CTA - border-first, Zapier orange (docs/DESIGN.md §4 Buttons) */
+  /* Zyene brand action color; see docs/DESIGN.md. */
   .cta-button {
     @apply bg-primary text-primary-foreground border border-primary rounded-[4px] px-4 py-2.5 font-semibold
            hover:brightness-95 active:brightness-90;

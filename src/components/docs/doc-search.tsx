@@ -49,6 +49,7 @@ export function DocSearchTrigger({
                 type="button"
                 className={className}
                 onClick={() => setOpen(true)}
+                aria-label="Search documentation"
                 aria-haspopup="dialog"
                 aria-expanded={open}
             >

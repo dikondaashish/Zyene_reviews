@@ -35,7 +35,7 @@ export function RatingStep({
     const ratingControlProps = { rating, hoverRating, onRate, onHoverRating };
 
     return (
-        <div className="px-8 py-10 space-y-8">
+        <div className="px-4 py-8 sm:px-8 sm:py-10 space-y-8">
             <RatingStepBusinessHeader
                 businessName={businessName}
                 logoUrl={logoUrl}

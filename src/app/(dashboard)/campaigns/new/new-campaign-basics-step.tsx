@@ -13,11 +13,12 @@ import { Label } from "@/components/ui/label";
 import type { CampaignForm } from "./new-campaign-form-types";
 
 interface NewCampaignBasicsStepProps {
+    audienceSelected?: boolean;
     form: CampaignForm;
     updateForm: (updates: Partial<CampaignForm>) => void;
 }
 
-export function NewCampaignBasicsStep({ form, updateForm }: NewCampaignBasicsStepProps) {
+export function NewCampaignBasicsStep({ form, updateForm, audienceSelected }: NewCampaignBasicsStepProps) {
     return (
         <div className="space-y-6">
             <div>
@@ -45,6 +46,8 @@ export function NewCampaignBasicsStep({ form, updateForm }: NewCampaignBasicsSte
                     ]).map((ch) => (
                         <button
                             key={ch.value}
+                            type="button"
+                            aria-pressed={form.channel === ch.value}
                             onClick={() => updateForm({ channel: ch.value })}
                             className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-colors
                                 ${form.channel === ch.value
@@ -60,7 +63,7 @@ export function NewCampaignBasicsStep({ form, updateForm }: NewCampaignBasicsSte
                 </div>
             </div>
 
-            <div className="space-y-3">
+            {!audienceSelected && <div className="space-y-3">
                 <Label>Trigger Type</Label>
                 <div className="grid grid-cols-1 gap-3">
                     {([
@@ -70,6 +73,8 @@ export function NewCampaignBasicsStep({ form, updateForm }: NewCampaignBasicsSte
                     ]).map((tr) => (
                         <button
                             key={tr.value}
+                            type="button"
+                            aria-pressed={form.trigger_type === tr.value}
                             disabled={!tr.available}
                             onClick={() => tr.available && updateForm({ trigger_type: tr.value })}
                             className={`flex items-center gap-4 rounded-lg border-2 p-4 text-left transition-colors
@@ -91,7 +96,7 @@ export function NewCampaignBasicsStep({ form, updateForm }: NewCampaignBasicsSte
                         </button>
                     ))}
                 </div>
-            </div>
+            </div>}
         </div>
     );
 }

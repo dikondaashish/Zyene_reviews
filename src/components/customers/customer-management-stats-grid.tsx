@@ -12,7 +12,7 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
                 </div>
                 <div className="min-w-0 flex-1">
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        Total Customers
+                        Customers (excludes test tags)
                     </p>
                     <h3 className="text-xl font-semibold text-foreground">{stats?.totalCustomers ?? "-"}</h3>
                 </div>
@@ -23,12 +23,12 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
                 </div>
                 <div className="min-w-0 flex-1">
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        Review conversion
+                        Request completion
                     </p>
                     <h3 className="text-xl font-semibold text-foreground">
                         {stats != null ? `${stats.reviewConversionPercent}%` : "-"}
                     </h3>
-                    <p className="text-[10px] text-muted-foreground">Of those who got a request</p>
+                    <p className="text-[10px] text-muted-foreground">Feedback or Google handoff; publication unverified</p>
                 </div>
             </div>
             <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
@@ -37,10 +37,10 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
                 </div>
                 <div className="min-w-0 flex-1">
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        Never reviewed
+                        Not completed
                     </p>
                     <h3 className="text-xl font-semibold text-foreground">{stats?.neverReviewedCount ?? "-"}</h3>
-                    <p className="text-[10px] text-muted-foreground">Got a request, no review yet</p>
+                    <p className="text-[10px] text-muted-foreground">No completed request yet</p>
                 </div>
             </div>
             <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">

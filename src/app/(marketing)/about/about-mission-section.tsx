@@ -54,8 +54,7 @@ export function AboutMissionSection() {
                             <div>
                                 <h2 className="font-semibold text-foreground mb-1">Our Values</h2>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
-                                    We believe in ethical review practices. We never engage in review gating, incentivized reviews,
-                                    or any practice that violates platform policies.
+                                    We build tools for authentic customer feedback, thoughtful responses, and prompt service recovery.
                                 </p>
                             </div>
                         </div>

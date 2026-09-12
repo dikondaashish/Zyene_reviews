@@ -1,3 +1,4 @@
+import { readableForeground } from "@/lib/design/contrast";
 export interface TagsStepProgressHeaderProps {
     resolvedBrandColor: string;
     tagsHeading?: string;
@@ -12,8 +13,8 @@ export function TagsStepProgressHeader({
     return (
         <>
             <div className="flex items-center gap-2">
-                <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
-                <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor }} />
+                <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor, color: readableForeground(resolvedBrandColor) }} />
+                <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor, color: readableForeground(resolvedBrandColor) }} />
                 <div className="h-1.5 flex-1 bg-muted rounded-full dark:bg-[rgb(51,65,85)]" />
             </div>
 

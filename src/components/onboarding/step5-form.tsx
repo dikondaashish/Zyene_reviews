@@ -35,7 +35,7 @@ export function Step5Form({
                 businessId={businessId}
                 googleConnected={googleConnected}
             />
-            <Step5FormCta isLoading={isLoading} isCompleting={isCompleting} onGoToDashboard={handleGoToDashboard} />
+            <Step5FormCta isLoading={isLoading} isCompleting={isCompleting} onGoToDashboard={() => void handleGoToDashboard()} onFirstRequest={() => void handleGoToDashboard("requests")} />
         </div>
     );
 }

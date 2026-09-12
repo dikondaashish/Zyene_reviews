@@ -1,12 +1,5 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// Case Study Data - Phase 5
-// Representative customer outcomes (composite stories based on typical results).
-// Replace with permissioned customer stories as they become available.
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** Shown on index + detail pages - not verified individual customers. */
-export const CASE_STUDY_COMPOSITE_DISCLAIMER =
-    "This story illustrates typical outcomes local businesses see with Zyene Reviews. Names, locations, quotes, and metrics are composite for education - not a verified testimonial from a named customer unless we publish an updated, permissioned story.";
+// Educational workflow examples. Existing slugs remain stable for inbound links.
+export const CASE_STUDY_COMPOSITE_DISCLAIMER = "An educational workflow example, not a named customer engagement, testimonial, or promised result.";
 
 export interface CaseStudyMetric {
     label: string;
@@ -39,185 +32,152 @@ export interface CaseStudy {
 }
 
 export const CASE_STUDIES: CaseStudy[] = [
-    {
-        slug: "sunrise-dental-austin",
-        company: "Sunrise Dental",
-        industry: "Dental",
-        industrySlug: "dental",
-        location: "Austin, TX",
-        size: "2 locations · 12 staff",
-        headline: "From 23 to 89 Google reviews in 90 days - without hiring marketing staff",
-        excerpt: "A two-location dental practice used Zyene Reviews' Negative Feedback Shield and automated review requests to grow their Google rating from 4.1 to 4.7 stars.",
-        resultsSummary:
-            "Results in brief: Over 90 days on Starter on Zyene Reviews, Sunrise Dental grew from 23 to 89 Google reviews and raised average rating from 4.1 to 4.7 stars. The team reached full review response coverage and cut typical reply time from about six days to four hours - using SMS requests, Negative Feedback Shield, and HIPAA-aware AI replies at two Austin locations.",
-        challenge:
-            "Sunrise Dental had strong chair-side satisfaction but only 23 Google reviews after five years in business. Negative billing complaints occasionally went public because the front desk had no system to intercept unhappy patients before they posted. The office manager spent 45 minutes per week trying to respond to reviews manually.",
-        solutionFeatures: [
-            "Automated SMS review requests after every checkout",
-            "Negative Feedback Shield routing 1-3 star experiences to private resolution",
-            "AI reply suggestions with HIPAA-safe tone defaults",
-            "Multi-location dashboard for both Austin offices",
-        ],
-        metrics: [
-            { label: "Google reviews", before: "23", after: "89", change: "+287%" },
-            { label: "Average rating", before: "4.1 ★", after: "4.7 ★", change: "+0.6" },
-            { label: "Response rate", before: "12%", after: "100%", change: "Full coverage" },
-            { label: "Avg. response time", before: "6 days", after: "4 hours", change: "−96%" },
-        ],
-        quote:
-            "We stopped dreading Google reviews. Unhappy patients reach us privately first, and our happy patients actually leave reviews now - we went from asking randomly to a system that runs every day.",
-        quoteAuthor: "Dr. Priya Mehta",
-        quoteRole: "Owner, Sunrise Dental",
-        timeline: "90 days on Starter on Zyene Reviews",
-        metaTitle: "Sunrise Dental Case Study - 23 to 89 Google Reviews",
-        metaDescription:
-            "How Sunrise Dental grew from 23 to 89 Google reviews in 90 days using Zyene Reviews' Negative Feedback Shield, SMS review requests, and AI replies.",
-        keywords: ["dental review management case study", "google reviews dental practice", "zyene reviews case study"],
-    },
-    {
-        slug: "wolfpack-bbq-charlotte",
-        company: "Wolfpack BBQ",
-        industry: "Restaurants",
-        industrySlug: "restaurants",
-        location: "Charlotte, NC",
-        size: "1 location · 28 staff",
-        headline: "A Charlotte BBQ joint added 64 five-star reviews in 60 days",
-        excerpt: "Wolfpack BBQ turned inconsistent review collection into a post-checkout SMS habit - and protected their 4.6-star rating with the Negative Feedback Shield.",
-        resultsSummary:
-            "Results in brief: In 60 days on Professional on Zyene Reviews, Wolfpack BBQ grew from 41 to 105 Google reviews and logged 64 new five-star reviews in that window. Negative Feedback Shield helped intercept unhappy guests before public posts. Local map pack rank moved from #7 to #2 for their BBQ category alongside post-checkout SMS requests.",
-        challenge:
-            "Weekend rushes meant managers forgot to ask for reviews. A few cold-food complaints became public 2-star reviews before the team could make it right. Competitors on the same block had 200+ reviews; Wolfpack had 41.",
-        solutionFeatures: [
-            "SMS review requests 2 hours after dine-in checkout",
-            "Table tent QR codes linked to the same review flow",
-            "Auto-commenter for 4-5 star Google reviews",
-            "Competitor tracking for three nearby BBQ restaurants",
-        ],
-        metrics: [
-            { label: "Google reviews", before: "41", after: "105", change: "+156%" },
-            { label: "5-star reviews (60 days)", before: " - ", after: "+64", change: "New" },
-            { label: "1-star reviews prevented", before: " - ", after: "11", change: "Shield" },
-            { label: "Local map pack rank", before: "#7", after: "#2", change: "↑ 5 spots" },
-        ],
-        quote:
-            "The SMS after dinner works better than anything we tried before. And when something goes wrong, we hear about it in private - not on Google the next morning.",
-        quoteAuthor: "Marcus Webb",
-        quoteRole: "Owner, Wolfpack BBQ",
-        timeline: "60 days on Professional on Zyene Reviews",
-        metaTitle: "Wolfpack BBQ Case Study - Restaurant Review Growth",
-        metaDescription:
-            "How Wolfpack BBQ added 64 five-star Google reviews in 60 days with automated SMS requests and the Negative Feedback Shield.",
-        keywords: ["restaurant review management case study", "get more restaurant google reviews", "zyene restaurant reviews"],
-    },
-    {
-        slug: "apex-hvac-denver",
-        company: "Apex HVAC & Plumbing",
-        industry: "Home Services",
-        industrySlug: "home-services",
-        location: "Denver, CO",
-        size: "1 location · 18 technicians",
-        headline: "Home services company cut public 1-stars by 70% in the first quarter",
-        excerpt: "Apex HVAC used private feedback routing and Zapier-triggered review requests after job completion to grow trust before the first phone call.",
-        resultsSummary:
-            "Results in brief: In their first 90 days on Starter on Zyene Reviews, Apex HVAC grew Google reviews from 34 to 112 and average rating from 4.0 to 4.8 stars. Public one-star reviews fell from about eight per quarter to two. Zapier-triggered post-job SMS requests and Shield routing handled billing disputes before they hit Google.",
-        challenge:
-            "Technicians finished great work but never asked for reviews. Billing disputes and no-show confusion occasionally became 1-star Google reviews. The owner responded to reviews once a month, if at all.",
-        solutionFeatures: [
-            "Zapier trigger when jobs marked complete in their CRM",
-            "Negative Feedback Shield on every review request link",
-            "AI replies mentioning service type and neighborhood",
-            "GBP keyword performance tracking",
-        ],
-        metrics: [
-            { label: "Google reviews", before: "34", after: "112", change: "+229%" },
-            { label: "Average rating", before: "4.0 ★", after: "4.8 ★", change: "+0.8" },
-            { label: "Public 1-star reviews", before: "8/qtr", after: "2/qtr", change: "−70%" },
-            { label: "Review request conversion", before: " - ", after: "22%", change: "SMS" },
-        ],
-        quote:
-            "Homeowners choose us from Google before they call. More reviews and faster responses mean we win jobs we used to lose to bigger franchises.",
-        quoteAuthor: "James Ortiz",
-        quoteRole: "Owner, Apex HVAC & Plumbing",
-        timeline: "First 90 days on Starter on Zyene Reviews",
-        metaTitle: "Apex HVAC Case Study - Home Services Reputation",
-        metaDescription:
-            "How Apex HVAC grew Google reviews 229% and cut public 1-star reviews 70% with Zyene Reviews review automation and the Negative Feedback Shield.",
-        keywords: ["home services review management", "hvac google reviews", "zyene case study"],
-    },
-    {
-        slug: "bellas-salon-portland",
-        company: "Bella's Salon & Spa",
-        industry: "Salons & Spas",
-        industrySlug: "salons",
-        location: "Portland, OR",
-        size: "1 location · 9 stylists",
-        headline: "Salon doubled review velocity and hit 4.9 stars in 45 days",
-        excerpt: "Bella's Salon automated post-appointment review requests and used AI replies to thank every client - without spending evenings on Google.",
-        resultsSummary:
-            "Results in brief: In 45 days on Starter on Zyene Reviews, Bella's Salon grew from 56 to 118 Google reviews and lifted average rating from 4.4 to 4.9 stars. New reviews moved from about two or three per month to 14-18, while owner time on Google dropped from roughly three hours per week to about twenty minutes.",
-        challenge:
-            "Stylists relied on walk-ins from Instagram but Google was an afterthought. A single viral bad review about wait times sat unanswered for three weeks. Review count stalled at 56 after two years.",
-        solutionFeatures: [
-            "Email + SMS review requests after appointments",
-            "AI replies personalized with stylist and service names",
-            "Review inbox alerts for reviews under 4 stars",
-            "Website review carousel widget on booking page",
-        ],
-        metrics: [
-            { label: "Google reviews", before: "56", after: "118", change: "+111%" },
-            { label: "Average rating", before: "4.4 ★", after: "4.9 ★", change: "+0.5" },
-            { label: "Monthly new reviews", before: "2-3", after: "14-18", change: "6×" },
-            { label: "Owner time on reviews", before: "3 hrs/wk", after: "20 min/wk", change: "−89%" },
-        ],
-        quote:
-            "Clients mention their stylist in reviews now because our replies feel personal - but I'm not writing them from scratch at 10pm anymore.",
-        quoteAuthor: "Isabella Chen",
-        quoteRole: "Owner, Bella's Salon & Spa",
-        timeline: "45 days on Starter on Zyene Reviews",
-        metaTitle: "Bella's Salon Case Study - Salon Review Management",
-        metaDescription:
-            "How Bella's Salon doubled Google review velocity and reached 4.9 stars in 45 days with Zyene Reviews automated requests and AI replies.",
-        keywords: ["salon review management", "google reviews salon spa", "zyene reviews salon"],
-    },
-    {
-        slug: "precision-auto-works-phoenix",
-        company: "Precision Auto Works",
-        industry: "Auto Repair",
-        industrySlug: "auto-repair",
-        location: "Phoenix, AZ",
-        size: "1 location · 6 bays",
-        headline: "Auto shop went from invisible on Google to top-3 in local search",
-        excerpt: "Precision Auto Works combined review requests at vehicle pickup with competitor benchmarks to close the gap with chain shops.",
-        resultsSummary:
-            "Results in brief: Over 120 days on Starter on Zyene Reviews, Precision Auto Works grew from 19 to 94 Google reviews and average rating from 3.9 to 4.6 stars. They reached top-three local map visibility and raised review response rate from about 5% to 98% - using pickup SMS requests, competitor tracking, and Shield for warranty disputes.",
-        challenge:
-            "Chain competitors dominated Google Maps with 300+ reviews. Precision had 19 reviews and a 3.9 average after a run of unresponded warranty complaints. The service manager had no marketing background.",
-        solutionFeatures: [
-            "SMS review request when keys returned at pickup",
-            "Competitor tracking vs. three nearby shops",
-            "Negative Feedback Shield for warranty disputes",
-            "PDF monthly report for owner review",
-        ],
-        metrics: [
-            { label: "Google reviews", before: "19", after: "94", change: "+395%" },
-            { label: "Average rating", before: "3.9 ★", after: "4.6 ★", change: "+0.7" },
-            { label: "Map pack position", before: "Not ranked", after: "Top 3", change: "Visible" },
-            { label: "Response rate", before: "5%", after: "98%", change: "+93 pts" },
-        ],
-        quote:
-            "We're not a franchise - but on Google we look like we belong next to them now. The competitor dashboard alone was worth it.",
-        quoteAuthor: "Tom Reyes",
-        quoteRole: "Service Manager, Precision Auto Works",
-        timeline: "120 days on Starter on Zyene Reviews",
-        metaTitle: "Precision Auto Works Case Study - Auto Repair SEO",
-        metaDescription:
-            "How Precision Auto Works grew Google reviews 395% and reached top-3 local map rankings with Zyene Reviews review requests and competitor tracking.",
-        keywords: ["auto repair review management", "mechanic google reviews", "zyene auto repair case study"],
-    },
+  {
+    "slug": "sunrise-dental-austin",
+    "company": "Dental workflow",
+    "industry": "Dental",
+    "industrySlug": "dental",
+    "location": "Illustrative scenario",
+    "size": "Adapt to your business",
+    "headline": "Follow up after an appointment",
+    "excerpt": "Patients may have questions about scheduling or billing that need a staff response. Keep public replies general and move individual care details to a private conversation.",
+    "resultsSummary": "Example workflow: Send a request after a completed appointment → Review private feedback and assign follow-up → Draft replies without confirming patient or treatment details. Measure your own results; no rating or review-growth outcome is guaranteed.",
+    "challenge": "Patients may have questions about scheduling or billing that need a staff response. Keep public replies general and move individual care details to a private conversation.",
+    "solutionFeatures": [
+      "Send a request after a completed appointment",
+      "Review private feedback and assign follow-up",
+      "Draft replies without confirming patient or treatment details",
+      "Compare locations on a plan that includes multiple businesses"
+    ],
+    "metrics": [],
+    "quote": "",
+    "quoteAuthor": "",
+    "quoteRole": "",
+    "timeline": "A repeatable routine, not a promised timeline",
+    "metaTitle": "Dental Review Workflow Example",
+    "metaDescription": "Explore a practical dental review workflow with requests, feedback, and replies. An educational example, not a customer testimonial.",
+    "keywords": [
+      "dental review management",
+      "dental review requests"
+    ]
+  },
+  {
+    "slug": "wolfpack-bbq-charlotte",
+    "company": "Restaurants workflow",
+    "industry": "Restaurants",
+    "industrySlug": "restaurants",
+    "location": "Illustrative scenario",
+    "size": "Adapt to your business",
+    "headline": "Build a post-visit review routine",
+    "excerpt": "During busy service, review requests and replies can be easy to miss. A repeatable handoff helps managers follow up on guest feedback.",
+    "resultsSummary": "Example workflow: Send a request after a completed visit → Share a branded QR code on receipts or at the counter → Review food and service feedback with the team. Measure your own results; no rating or review-growth outcome is guaranteed.",
+    "challenge": "During busy service, review requests and replies can be easy to miss. A repeatable handoff helps managers follow up on guest feedback.",
+    "solutionFeatures": [
+      "Send a request after a completed visit",
+      "Share a branded QR code on receipts or at the counter",
+      "Review food and service feedback with the team",
+      "Check the needs-reply inbox before the next shift"
+    ],
+    "metrics": [],
+    "quote": "",
+    "quoteAuthor": "",
+    "quoteRole": "",
+    "timeline": "A repeatable routine, not a promised timeline",
+    "metaTitle": "Restaurants Review Workflow Example",
+    "metaDescription": "Explore a practical restaurants review workflow with requests, feedback, and replies. An educational example, not a customer testimonial.",
+    "keywords": [
+      "restaurants review management",
+      "restaurants review requests"
+    ]
+  },
+  {
+    "slug": "apex-hvac-denver",
+    "company": "Home Services workflow",
+    "industry": "Home Services",
+    "industrySlug": "home-services",
+    "location": "Illustrative scenario",
+    "size": "Adapt to your business",
+    "headline": "Ask for feedback after the job",
+    "excerpt": "Service teams need to know which customer experiences require follow-up after technicians leave the site.",
+    "resultsSummary": "Example workflow: Trigger a request from a completed-job workflow → Check the actual request audience before sending → Assign private feedback to the right team member. Measure your own results; no rating or review-growth outcome is guaranteed.",
+    "challenge": "Service teams need to know which customer experiences require follow-up after technicians leave the site.",
+    "solutionFeatures": [
+      "Trigger a request from a completed-job workflow",
+      "Check the actual request audience before sending",
+      "Assign private feedback to the right team member",
+      "Draft a reply and verify details before publishing"
+    ],
+    "metrics": [],
+    "quote": "",
+    "quoteAuthor": "",
+    "quoteRole": "",
+    "timeline": "A repeatable routine, not a promised timeline",
+    "metaTitle": "Home Services Review Workflow Example",
+    "metaDescription": "Explore a practical home services review workflow with requests, feedback, and replies. An educational example, not a customer testimonial.",
+    "keywords": [
+      "home services review management",
+      "home services review requests"
+    ]
+  },
+  {
+    "slug": "bellas-salon-portland",
+    "company": "Salons & Spas workflow",
+    "industry": "Salons & Spas",
+    "industrySlug": "salons",
+    "location": "Illustrative scenario",
+    "size": "Adapt to your business",
+    "headline": "Follow up after each appointment",
+    "excerpt": "A salon can make feedback collection part of its appointment routine without asking staff to write every reply from scratch.",
+    "resultsSummary": "Example workflow: Send an appointment follow-up request → Preview the message with the salon name and link → Review feedback themes with staff. Measure your own results; no rating or review-growth outcome is guaranteed.",
+    "challenge": "A salon can make feedback collection part of its appointment routine without asking staff to write every reply from scratch.",
+    "solutionFeatures": [
+      "Send an appointment follow-up request",
+      "Preview the message with the salon name and link",
+      "Review feedback themes with staff",
+      "Share original customer reviews in a website widget"
+    ],
+    "metrics": [],
+    "quote": "",
+    "quoteAuthor": "",
+    "quoteRole": "",
+    "timeline": "A repeatable routine, not a promised timeline",
+    "metaTitle": "Salons & Spas Review Workflow Example",
+    "metaDescription": "Explore a practical salons & spas review workflow with requests, feedback, and replies. An educational example, not a customer testimonial.",
+    "keywords": [
+      "salons & spas review management",
+      "salons & spas review requests"
+    ]
+  },
+  {
+    "slug": "precision-auto-works-phoenix",
+    "company": "Auto Repair workflow",
+    "industry": "Auto Repair",
+    "industrySlug": "auto-repair",
+    "location": "Illustrative scenario",
+    "size": "Adapt to your business",
+    "headline": "Close the loop after vehicle pickup",
+    "excerpt": "Customers may have questions about communication, timing, or the repair experience. Give the service desk a consistent way to follow up.",
+    "resultsSummary": "Example workflow: Request feedback after vehicle pickup → Review open requests and customer contact preferences → Respond to service concerns privately. Measure your own results; no rating or review-growth outcome is guaranteed.",
+    "challenge": "Customers may have questions about communication, timing, or the repair experience. Give the service desk a consistent way to follow up.",
+    "solutionFeatures": [
+      "Request feedback after vehicle pickup",
+      "Review open requests and customer contact preferences",
+      "Respond to service concerns privately",
+      "Track response coverage and request completion separately"
+    ],
+    "metrics": [],
+    "quote": "",
+    "quoteAuthor": "",
+    "quoteRole": "",
+    "timeline": "A repeatable routine, not a promised timeline",
+    "metaTitle": "Auto Repair Review Workflow Example",
+    "metaDescription": "Explore a practical auto repair review workflow with requests, feedback, and replies. An educational example, not a customer testimonial.",
+    "keywords": [
+      "auto repair review management",
+      "auto repair review requests"
+    ]
+  }
 ];
 
-export const CASE_STUDY_MAP: Record<string, CaseStudy> = Object.fromEntries(
-    CASE_STUDIES.map((c) => [c.slug, c])
-);
-
-export const CASE_STUDY_SLUGS = CASE_STUDIES.map((c) => c.slug);
+export const CASE_STUDY_MAP = Object.fromEntries(CASE_STUDIES.map((study) => [study.slug, study])) as Record<string, CaseStudy>;
+export const CASE_STUDY_SLUGS = CASE_STUDIES.map((study) => study.slug);

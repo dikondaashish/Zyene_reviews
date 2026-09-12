@@ -1,3 +1,4 @@
+import { readableForeground } from "@/lib/design/contrast";
 import {
     Loader2,
     Copy,
@@ -58,6 +59,7 @@ export function AiReviewStep({
                     </div>
                 </div>
                 <textarea
+                    aria-label="Your review — edit before copying to Google"
                     value={reviewText}
                     onChange={(e) => onReviewTextChange(e.target.value)}
                     className="w-full min-h-[140px] text-base p-4 pt-5 rounded-2xl border-2 border-primary/20 focus:border-primary focus:ring-0 outline-none resize-none transition-colors bg-primary/10 leading-relaxed dark:bg-primary/15 dark:text-foreground"
@@ -72,7 +74,7 @@ export function AiReviewStep({
                         : "text-primary-foreground shadow-lg hover:shadow-xl active:scale-[0.98]",
                     !isRedirecting && "disabled:opacity-60 disabled:cursor-not-allowed"
                 )}
-                style={{ backgroundColor: isRedirecting ? "var(--muted)" : resolvedBrandColor }}
+                style={{ color: isRedirecting ? undefined : readableForeground(resolvedBrandColor), backgroundColor: isRedirecting ? "var(--muted)" : resolvedBrandColor }}
                 onClick={onPostToGoogle}
                 disabled={isSubmitting || isRedirecting || !reviewText.trim()}
             >
@@ -94,7 +96,7 @@ export function AiReviewStep({
                         </div>
                     </>
                 ) : isSubmitting ? (
-                    <Loader2 className="animate-spin text-primary-foreground size-5" />
+                    <Loader2 className="animate-spin size-5" />
                 ) : (
                     <div className="flex items-center justify-center gap-2">
                         <Copy className="size-4" />

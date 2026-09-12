@@ -43,7 +43,7 @@ const guide1: ResourceGuide = {
         "The Google Reviews guide for local businesses: collection strategy, response best practices, ranking impact, and reputation protection in one place.",
     keywords: ["google reviews guide", "google reviews for businesses", "how google reviews work", "complete guide to google reviews", "google reviews local business"],
     openingSummary:
-        "This guide covers how Google Reviews work for local businesses: why they matter for Maps visibility, when and how to ask customers fairly, how to respond to positive and negative feedback, and how to protect your rating without policy violations. Use it as your reference before automating outreach with review software.",
+        "This guide covers how Google Reviews work for local businesses: why they matter for Maps visibility, when and how to ask customers for feedback, how to respond to positive and negative feedback, and how to organize service recovery. Use it as a starting point before automating outreach with review software.",
     internalLinks: [
         { label: "Review collection features", href: "/features/review-collection" },
         { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
@@ -76,7 +76,7 @@ const guide1: ResourceGuide = {
         {
             question: "Is it okay to ask customers for Google reviews?",
             answer:
-                "Yes, when you ask for honest feedback without incentives, without dictating review text, and without sending links only to happy customers. Ask soon after a positive visit and follow Google's outreach rules.",
+                "Yes. Ask for honest feedback without incentives or dictated review text, and use messaging and routing that match your business's documented review process. Check the current rules that apply to your business before sending outreach.",
         },
     ],
     tableOfContents: [
@@ -104,9 +104,9 @@ const guide1: ResourceGuide = {
         ]},
         { type: "h2", text: "How to Get More Reviews" },
         { type: "h3", text: "The Fundamental Rule: Ask" },
-        { type: "p", text: "The most impactful thing you can do to increase your review count is to ask for reviews systematically. 70-80% of customers who have a positive experience will leave a review if asked directly - but most businesses never ask, leaving the vast majority of happy customers silent while the occasional unhappy customer takes the initiative to write a 1-star review." },
+        { type: "p", text: "A consistent, welcome request process helps customers share feedback while the experience is still clear. Track your own delivery, engagement, and review trends rather than relying on a universal response-rate benchmark." },
         { type: "h3", text: "When to Ask (Timing Is Everything)" },
-        { type: "p", text: "Ask within 1-3 hours of a positive interaction. This is when customer satisfaction is highest, the experience is vivid, and the likelihood of a review is greatest. Review requests sent days later see 60-70% lower conversion rates." },
+        { type: "p", text: "Choose a timing that fits the service, the customer's expectations, and your documented outreach process. The experience is often easier to recall soon after service, but response rates vary by business, audience, and channel." },
         { type: "h3", text: "How to Ask (Channel and Script)" },
         { type: "table", table: {
             headers: ["Channel", "Best Timing", "Response Rate", "Script Length"],
@@ -119,11 +119,11 @@ const guide1: ResourceGuide = {
         }},
         { type: "h3", text: "Google's Rules on Review Collection" },
         { type: "ul", items: [
-            "Never offer incentives (discounts, freebies) in exchange for reviews - this violates Google's policies and can result in review removal or GBP suspension.",
-            "Never dictate specific review content to customers ('please say X in your review').",
-            "Never use review gating: you cannot filter customers to only send review requests to satisfied ones.",
-            "Asking customers who are in your premises on your business WiFi is against Google's policies.",
-            "You CAN ask all customers to leave honest reviews - positive and negative.",
+            "Do not offer incentives tied to a rating or review text.",
+            "Do not dictate specific review content to customers ('please say X in your review').",
+            "Document how your business will invite customers and configure the review-request flow to match that process.",
+            "Check the current platform terms that apply to your business before starting an outreach campaign.",
+            "Ask customers for their own, honest feedback.",
         ]},
         { type: "h2", text: "Responding to Reviews" },
         { type: "h3", text: "Why Responding Matters" },
@@ -155,8 +155,8 @@ const guide1: ResourceGuide = {
         ]},
         { type: "h2", text: "Protecting Your Rating" },
         { type: "h3", text: "The Negative Feedback Shield Approach" },
-        { type: "p", text: "A private feedback option gives customers a direct way to describe a problem to the business. It can help the team respond sooner, but it should not be used to discourage public reviews or selectively invite only satisfied customers." },
-        { type: "p", text: "Negative Feedback Shield adds that private feedback step to Zyene Reviews review requests. Use it for service recovery and follow-up, alongside fair review requests and public responses." },
+        { type: "p", text: "A private feedback option gives customers a direct way to describe a problem to the business. It can help the team respond sooner and organize service recovery." },
+        { type: "p", text: "Negative Feedback Shield adds that private feedback step to Zyene Reviews review requests. Use it for service recovery and follow-up alongside your business's documented review process and public-response routine." },
         { type: "h3", text: "How to Handle Fake Reviews" },
         { type: "ul", items: [
             "Document the review with screenshots before doing anything.",
@@ -322,7 +322,7 @@ const guide3: ResourceGuide = {
     keywords: ["local seo checklist", "local seo checklist 2026", "local business seo checklist", "google local seo", "local seo guide 2026"],
     resourceLabel: "Free Checklist",
     openingSummary:
-        "Work through this local SEO checklist section by section: Google Business Profile, citations and NAP, reviews, on-page website basics, local links, mobile speed, schema, and tracking. Check items off as you go; pair review velocity with fair outreach and compliant review requests.",
+        "Work through this local SEO checklist section by section: Google Business Profile, citations and NAP, reviews, on-page website basics, local links, mobile speed, schema, and tracking. Check items off as you go; pair review velocity with honest outreach and a documented review-request process.",
     internalLinks: [
         { label: "Review collection features", href: "/features/review-collection" },
         { label: "Google Reviews guide", href: "/resources/google-reviews-guide" },
@@ -369,7 +369,7 @@ const guide3: ResourceGuide = {
         },
         {
             name: "Set up review collection and responses",
-            text: "Ask customers fairly after visits, respond to every review within 48 hours, and use private feedback channels to resolve issues - not to block honest public reviews.",
+            text: "Ask customers for honest feedback after visits, respond to every review within 48 hours, and use private feedback channels to organize service recovery.",
         },
         {
             name: "Optimize location pages on your website",
@@ -429,7 +429,7 @@ const guide3: ResourceGuide = {
         { type: "h2", text: "Section 3: Reviews" },
         {
             type: "warning",
-            text: "Review outreach compliance: Ask customers honestly for feedback. Do not offer incentives tied to star ratings, do not send review links only to happy customers (review gating), and do not pressure people with repeated messages. Use private feedback to resolve issues - not to block legitimate public criticism.",
+            text: "Review outreach: Ask customers honestly for feedback. Do not offer incentives tied to star ratings, do not pressure people with repeated messages, and configure your request process to match your documented business policy. Use private feedback to organize service recovery.",
         },
         { type: "ul", items: [
             "☐ Google review count: 50+ (competitive minimum), 100+ (preferred)",

@@ -22,7 +22,7 @@ export function useNotificationForm(
     const form = useForm<NotificationFormValues>({
         resolver: zodResolver(notificationFormSchema),
         defaultValues: {
-            sms_enabled: initialPrefs?.sms_enabled ?? true,
+            sms_enabled: initialPrefs?.sms_enabled ?? Boolean(initialPrefs?.phone_number || initialPrefs?.sms_phone_number),
             phone_number:
                 initialPrefs?.phone_number ||
                 initialPrefs?.sms_phone_number ||
@@ -32,8 +32,8 @@ export function useNotificationForm(
             min_urgency_score: (
                 initialPrefs?.min_urgency_score ?? initialPrefs?.min_urgency_for_sms ?? 7
             ).toString(),
-            quiet_hours_start: initialPrefs?.quiet_hours_start || "",
-            quiet_hours_end: initialPrefs?.quiet_hours_end || "",
+            quiet_hours_start: initialPrefs?.quiet_hours_start?.slice(0, 5) || "",
+            quiet_hours_end: initialPrefs?.quiet_hours_end?.slice(0, 5) || "",
         },
     });
 
@@ -46,7 +46,7 @@ export function useNotificationForm(
                 sms_enabled: data.sms_enabled,
                 email_enabled: data.email_enabled,
                 digest_enabled: data.digest_enabled,
-                phone_number: data.phone_number?.trim() || null,
+                phone_number: data.phone_number?.replace(/[\s()-]/g, "") || null,
                 min_urgency_score: Number.isFinite(minUrgency) ? minUrgency : 7,
                 quiet_hours_start: data.quiet_hours_start?.trim() || null,
                 quiet_hours_end: data.quiet_hours_end?.trim() || null,
@@ -58,12 +58,15 @@ export function useNotificationForm(
                 body: JSON.stringify(payload),
             });
 
-            if (!res.ok) throw new Error("Failed to save settings");
+            if (!res.ok) {
+                const error = await res.json().catch(() => null);
+                throw new Error(typeof error?.error === "string" ? error.error : "Failed to save settings");
+            }
 
             toast.success("Notification settings saved");
             router.refresh();
-        } catch {
-            toast.error("Something went wrong");
+        } catch (err) {
+            toast.error(err instanceof Error ? err.message : "Could not save notification settings");
         } finally {
             setIsSaving(false);
         }

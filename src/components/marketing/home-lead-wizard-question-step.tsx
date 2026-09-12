@@ -1,5 +1,7 @@
 "use client";
 
+import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
+
 import { ArrowRight, BookOpen, Check } from "lucide-react";
 
 const INDUSTRIES = [
@@ -70,16 +72,15 @@ export function HomeLeadWizardQuestionStep({
         <BookOpen size={15} aria-hidden="true" /> Free guide for local
         businesses
       </p>
-      <h2 id="home-lead-wizard-title">
-        Turn customer feedback into regional growth.
-      </h2>
-      <p
-        id="home-lead-wizard-description"
-        className="home-lead-wizard-description"
-      >
-        Answer two quick questions and we’ll point you to the most useful
-        starting points.
-      </p>
+      <DialogTitle asChild>
+        <h2>Turn customer feedback into regional growth.</h2>
+      </DialogTitle>
+      <DialogDescription asChild>
+        <p className="home-lead-wizard-description">
+          Answer two quick questions and we’ll point you to the most useful
+          starting points.
+        </p>
+      </DialogDescription>
       <OptionGroup
         label="What kind of business do you run?"
         options={INDUSTRIES}

@@ -31,7 +31,7 @@ export default function OgImage() {
                         Security &amp; <span style={{ color: "#4ade80" }}>Trust</span>
                     </div>
                     <div style={{ fontSize: "24px", color: "rgba(255,255,255,0.55)", lineHeight: "1.5", maxWidth: "800px" }}>
-                        RLS multi-tenant isolation · 256-bit encryption · GDPR · No review gating
+                        RLS multi-tenant isolation · 256-bit encryption · Privacy controls · Secure OAuth
                     </div>
                 </div>
             </div>

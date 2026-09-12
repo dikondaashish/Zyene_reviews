@@ -21,11 +21,17 @@ export function useStep2FormController({
     phone = "",
     pendingGoogleCode,
     onGoogleCodeConsumed,
+    googleConnectionError,
+    onGoogleConnectionErrorConsumed,
     onBusinessUpdate,
     initialConnected = false,
 }: Step2FormProps) {
     const [mounted, setMounted] = useState(false);
     const [googleState, setGoogleState] = useState<GoogleConnectionState>({ status: "idle" });
+    const visibleGoogleState: GoogleConnectionState =
+        googleConnectionError && googleState.status === "idle"
+            ? { status: "error", errorMessage: googleConnectionError }
+            : googleState;
 
     const form = useForm<StepBusinessLocationFormData>({
         resolver: zodResolver(stepBusinessLocationSchema),
@@ -61,10 +67,7 @@ export function useStep2FormController({
 
     const [advancing, setAdvancing] = useState(false);
 
-    const updateFormAndParent = (
-        info: OnboardingGoogleLocationInfo,
-        reviews?: { reviewCount?: number; averageRating?: number }
-    ) => {
+    const updateFormAndParent = (info: OnboardingGoogleLocationInfo) => {
         const newBusinessName = info.businessName || form.getValues("businessName");
         const newAddress = info.address || form.getValues("address");
         const newCity = info.city || form.getValues("city");
@@ -95,7 +98,7 @@ export function useStep2FormController({
         pendingGoogleCode,
         onGoogleCodeConsumed,
         mounted,
-        googleState,
+        googleState: visibleGoogleState,
         setGoogleState,
         updateFormAndParent,
         setAdvancing,
@@ -123,13 +126,14 @@ export function useStep2FormController({
 
     return {
         mounted,
-        googleState,
+        googleState: visibleGoogleState,
         setGoogleState,
         form,
         advancing,
         availableLocations: google.availableLocations,
         handleSelection: google.handleSelection,
         handleConnectClick,
+        onGoogleConnectionErrorConsumed,
         onSaveAndNext,
         handleSkip,
         updateFormAndParent,

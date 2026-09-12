@@ -56,6 +56,7 @@ function SettingsTabLinks(props: { items: NavItem[]; pathname: string; access: S
       <Link
         key={item.href}
         href={item.href}
+        aria-current={isActive ? "page" : undefined}
         className={cn(
           "-mb-px flex items-center gap-1.5 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium transition-colors",
           isActive
@@ -78,14 +79,14 @@ export function SettingsNavigation(props: { children: React.ReactNode; access: S
     <div className="flex min-w-0 flex-col gap-0 overflow-x-hidden p-4 sm:p-6">
       <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Settings</h2>
       <nav
-        className="-mx-1 mb-6 flex flex-col gap-5 border-b border-border px-1 pb-0 sm:flex-row sm:items-end sm:gap-8"
+        className="-mx-1 mb-6 flex flex-col gap-5 border-b border-border px-1 pb-0 xl:flex-row xl:items-end xl:gap-8"
         aria-label="Settings sections"
       >
         <div className="flex min-w-0 flex-col gap-1">
           <span className="px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
             Organization
           </span>
-          <div className="flex items-center gap-1 overflow-x-auto">
+          <div className="flex flex-wrap items-center gap-1">
             <SettingsTabLinks items={organizationNavItems} pathname={pathname} access={props.access} />
           </div>
         </div>
@@ -93,7 +94,7 @@ export function SettingsNavigation(props: { children: React.ReactNode; access: S
         <div className="flex min-w-0 flex-1 flex-col gap-1">
           <span className="px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Business</span>
           <span className="sr-only">Applies to the business selected in the header.</span>
-          <div className="flex items-center gap-1 overflow-x-auto">
+          <div className="flex flex-wrap items-center gap-1">
             <SettingsTabLinks items={businessNavItems} pathname={pathname} access={props.access} />
           </div>
         </div>

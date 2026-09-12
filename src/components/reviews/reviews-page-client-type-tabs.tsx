@@ -62,7 +62,7 @@ export function ReviewsPageClientTypeTabs({
                                 Queuing AI...
                             </>
                         ) : (
-                            "Analyze Missing AI"
+                            "Analyze unprocessed reviews"
                         )}
                     </Button>
                 )}

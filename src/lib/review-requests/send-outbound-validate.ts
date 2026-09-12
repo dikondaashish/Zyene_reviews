@@ -1,3 +1,4 @@
+import { isTestContact } from "@/lib/customers/test-contact";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import {
@@ -119,13 +120,13 @@ export async function prepareOutboundReviewRequest(
     if ((channel === "sms" || channel === "both") && phoneNorm) {
         const { data: contact } = await admin
             .from("customers")
-            .select("last_request_sent_at, is_opted_out")
+            .select("last_request_sent_at, is_opted_out, tags")
             .eq("business_id", b.id)
             .eq("phone", phoneNorm)
             .maybeSingle();
 
-        if (contact?.is_opted_out) {
-            return fail(400, channel, "This contact opted out of review requests.");
+        if (contact?.is_opted_out || isTestContact(contact)) {
+            return fail(400, channel, "This contact is opted out or tagged zyene:test and cannot receive review requests.");
         }
         if (contact?.last_request_sent_at) {
             const lastSent = new Date(contact.last_request_sent_at);
@@ -152,13 +153,13 @@ export async function prepareOutboundReviewRequest(
     if ((channel === "email" || channel === "both") && emailNorm) {
         const { data: contact } = await admin
             .from("customers")
-            .select("last_request_sent_at, is_opted_out")
+            .select("last_request_sent_at, is_opted_out, tags")
             .eq("business_id", b.id)
             .eq("email", emailNorm)
             .maybeSingle();
 
-        if (contact?.is_opted_out) {
-            return fail(400, channel, "This contact opted out of review requests.");
+        if (contact?.is_opted_out || isTestContact(contact)) {
+            return fail(400, channel, "This contact is opted out or tagged zyene:test and cannot receive review requests.");
         }
         if (contact?.last_request_sent_at) {
             const lastSent = new Date(contact.last_request_sent_at);

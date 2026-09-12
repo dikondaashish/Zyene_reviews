@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ReviewCard } from "./review-card";
+import { CompactReviewRow } from "@/components/reviews/compact-review-row";
 import { BulkReviewActionBar } from "./bulk-review-action-bar";
 import { Button } from "@/components/ui/button";
 import { CheckSquare, Square } from "lucide-react";
@@ -33,7 +33,7 @@ export function ReviewManagement({
     };
 
     const toggleSelectAll = () => {
-        if (selectedIds.size === reviews.length) {
+        if (reviews.every((review) => selectedIds.has(review.id))) {
             setSelectedIds(new Set());
         } else {
             setSelectedIds(new Set(reviews.map(r => r.id)));
@@ -44,7 +44,8 @@ export function ReviewManagement({
         setSelectedIds(new Set());
     };
 
-    const selectedCount = selectedIds.size;
+    const visibleSelectedIds = reviews.filter(review => selectedIds.has(review.id)).map(review => review.id);
+    const selectedCount = visibleSelectedIds.length;
     const allSelected = reviews.length > 0 && selectedCount === reviews.length;
 
     return (
@@ -71,9 +72,9 @@ export function ReviewManagement({
 
             <div className="grid gap-4">
                 {reviews.map((review) => (
-                    <ReviewCard
+                    <CompactReviewRow
                         key={review.id}
-                        review={review as never}
+                        review={review}
                         googleMapsListingUrl={googleMapsListingUrl}
                         planAllowsAiReplies={planAllowsAiReplies}
                         isSelected={selectedIds.has(review.id)}
@@ -84,7 +85,7 @@ export function ReviewManagement({
             </div>
 
             <BulkReviewActionBar
-                selectedIds={Array.from(selectedIds)}
+                selectedIds={visibleSelectedIds}
                 onClearSelection={clearSelection}
                 businessId={businessId}
                 onRefresh={onRefresh}

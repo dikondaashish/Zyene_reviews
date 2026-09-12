@@ -3,10 +3,12 @@
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { finalizeOnboardingStripeCheckout } from "@/app/actions/onboarding";
+import { getGoogleOAuthCallbackOutcome } from "./google-oauth-callback";
 
 type UseOnboardingUrlEffectsArgs = {
     setCurrentStep: (step: number) => void;
     setPendingGoogleCode: (code: string | null) => void;
+    setGoogleConnectionError: (message: string | null) => void;
     setIsStepResolved: (resolved: boolean) => void;
     setShowPaymentCancelled: (show: boolean) => void;
     setCheckoutVerifying: (verifying: boolean) => void;
@@ -15,21 +17,28 @@ type UseOnboardingUrlEffectsArgs = {
 export function useOnboardingUrlEffects({
     setCurrentStep,
     setPendingGoogleCode,
+    setGoogleConnectionError,
     setIsStepResolved,
     setShowPaymentCancelled,
     setCheckoutVerifying,
 }: UseOnboardingUrlEffectsArgs) {
     useEffect(() => {
         if (typeof window === "undefined") return;
-        const params = new URLSearchParams(window.location.search);
-        const code = params.get("code");
-        if (code) {
-            setPendingGoogleCode(code);
+        const outcome = getGoogleOAuthCallbackOutcome(window.location.search);
+        if (outcome.kind === "code") {
+            setPendingGoogleCode(outcome.code);
+            setCurrentStep(2);
+            setIsStepResolved(true);
+            window.history.replaceState({}, document.title, window.location.pathname);
+            return;
+        }
+        if (outcome.kind === "error") {
+            setGoogleConnectionError(outcome.message);
             setCurrentStep(2);
             setIsStepResolved(true);
             window.history.replaceState({}, document.title, window.location.pathname);
         }
-    }, [setCurrentStep, setPendingGoogleCode, setIsStepResolved]);
+    }, [setCurrentStep, setGoogleConnectionError, setPendingGoogleCode, setIsStepResolved]);
 
     useEffect(() => {
         if (typeof window === "undefined") return;

@@ -1,6 +1,8 @@
+import { isTestContact } from "@/lib/customers/test-contact";
 import type { SegmentCounts } from "@/components/customers/customer-segment-tabs";
 
 export type CustomerSegmentInput = {
+    tags?: string[] | null;
     email: string | null;
     phone: string | null;
     total_requests_sent: number | null;
@@ -59,6 +61,7 @@ export function computeCustomerSegmentCounts(
 
 export function computeCustomerManagementMetrics(customers: CustomerSegmentInput[]) {
     const segmentCounts = computeCustomerSegmentCounts(customers);
+    customers = customers.filter(customer => !isTestContact(customer));
     const totalCustomers = customers.length;
     const sumRequests = customers.reduce((acc, c) => acc + (c.total_requests_sent ?? 0), 0);
     const avgRequestsSent = totalCustomers > 0 ? sumRequests / totalCustomers : 0;

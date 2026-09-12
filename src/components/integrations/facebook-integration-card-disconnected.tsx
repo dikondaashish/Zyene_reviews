@@ -44,7 +44,7 @@ export function FacebookIntegrationCardDisconnected({
                     Connect Facebook Page
                 </Button>
                 <p className="text-[10px] text-muted-foreground text-center">
-                    Requires Facebook App Review for production use
+                    Limited availability. Contact support to confirm Facebook connection access.
                 </p>
             </CardContent>
         </Card>

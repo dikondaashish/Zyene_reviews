@@ -33,8 +33,7 @@ export default async function AeoAlertsPage() {
                 <Alert>
                     <AlertTitle>Alerting is switched off</AlertTitle>
                     <AlertDescription>
-                        Nothing new will appear here until <code>AEO_LIVE_ALERTING</code> is enabled for
-                        this deployment.
+                        Monitoring is currently off. Historical alerts may appear below; an empty list does not mean monitoring found no issues.
                     </AlertDescription>
                 </Alert>
             )}

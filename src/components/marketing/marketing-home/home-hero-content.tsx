@@ -10,15 +10,14 @@ export function HomeHeroContent() {
       </p>
       <h1 id="home-hero-title">
         <span className="hero-enter" style={{ animationDelay: "250ms" }}>
-          Happy customers.
+          More reviews.
         </span>
         <span className="hero-enter" style={{ animationDelay: "350ms" }}>
-          Your next big thing.
+          Less busywork.
         </span>
       </h1>
       <p className="home-hero-description hero-enter" style={{ animationDelay: "550ms" }}>
-        Turn great experiences into more reviews, thoughtful replies, and a stronger local reputation that
-        brings people through your door.
+        Collect customer feedback by text, email, or QR code. Manage reviews and draft thoughtful replies in one workspace built for local businesses.
       </p>
       <div className="home-hero-actions">
         <div className="hero-enter" style={{ animationDelay: "700ms" }}>
@@ -27,8 +26,8 @@ export function HomeHeroContent() {
           </Link>
         </div>
         <div className="hero-enter" style={{ animationDelay: "780ms" }}>
-          <Link href="/demo" className="marketing-button marketing-button-secondary">
-            Let’s show you around <ArrowRight size={22} aria-hidden="true" />
+          <Link href="#home-product-tour" className="marketing-button marketing-button-secondary">
+            Try the product tour <ArrowRight size={22} aria-hidden="true" />
           </Link>
         </div>
       </div>

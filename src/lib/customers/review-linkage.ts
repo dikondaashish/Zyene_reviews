@@ -43,7 +43,7 @@ export async function fetchReviewLeftRows(
         .from("review_requests")
         .select("customer_phone, customer_email")
         .eq("business_id", businessId)
-        .eq("review_left", true);
+        .or("review_left.eq.true,completed_at.not.is.null,status.in.(completed,feedback_left)");
 
     if (error) throw error;
     return data ?? [];

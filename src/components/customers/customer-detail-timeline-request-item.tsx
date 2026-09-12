@@ -34,12 +34,12 @@ export function CustomerDetailTimelineRequestItem({ item }: { item: TimelineRequ
                             ? format(parseISO(item.sent_at), "MMM d, yyyy · h:mm a")
                             : format(parseISO(item.sortAt), "MMM d, yyyy · h:mm a")}
                     </span>
-                    {item.review_left ? (
+                    {(item.review_left || item.completed_at) ? (
                         <>
                             <span className="hidden sm:inline" aria-hidden>
                                 ·
                             </span>
-                            <span className="text-chart-2">Review completed</span>
+                            <span className="text-chart-2">Request completed; publication unverified</span>
                         </>
                     ) : null}
                 </p>

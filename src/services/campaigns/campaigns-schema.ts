@@ -22,5 +22,8 @@ export const campaignSendSchema = z.object({
             phone: z.string().optional(),
             email: z.string().email().optional(),
         })
-    ).min(1).max(500),
+    ).min(1).max(500).optional(),
+    customerIds: z.array(z.uuid()).min(1).max(500).optional(),
+}).refine(value => Boolean(value.contacts) !== Boolean(value.customerIds), {
+    message: "Provide either contacts or selected customers, not both.",
 });

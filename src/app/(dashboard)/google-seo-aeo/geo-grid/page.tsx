@@ -58,7 +58,7 @@ export default async function GeoGridPage() {
                                 {run.status === "running"
                                     ? "running…"
                                     : run.averageRank !== null
-                                      ? `avg rank ${run.averageRank.toFixed(1)} · found in ${run.foundCells} of ${run.searchedCells} searched cells`
+                                      ? `${run.searchedCells ? Math.round(run.foundCells / run.searchedCells * 100) : 0}% coverage · found in ${run.foundCells}/${run.searchedCells} cells · average rank ${run.averageRank.toFixed(1)} where found`
                                       : `not in the local pack in any of ${run.searchedCells} searched cells`}
                             </span>
                         ) : null}

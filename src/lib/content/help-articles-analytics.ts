@@ -27,12 +27,12 @@ export const an1: HelpArticle = {
             "Delivered: Requests that were successfully delivered (SMS: not bounced; Email: not bounced).",
             "Opened (Email only): Percentage of email requests that were opened.",
             "Link Clicked: Percentage of recipients who clicked your Google review link.",
-            "Reviews Generated: Reviews received within 14 days of a request (attributed).",
-            "Conversion Rate: Reviews Generated ÷ Requests Sent.",
+            "Request completion: private feedback submitted or a handoff to Google. Publication is not verified.",
+            "Completion Rate: completed request flows ÷ requests sent.",
         ]},
         { type: "h2", text: "Competitor Comparison" },
         { type: "p", text: "The Competitor section of analytics shows your average rating and review count relative to added competitors. The chart displays ranking changes over time." },
-        { type: "tip", text: "A falling conversion rate (reviews generated per request sent) over time can indicate request fatigue - customers receiving too many requests - or an issue with your review link. Check both when you see a decline." },
+        { type: "tip", text: "A falling conversion rate (completed flows per request sent) over time can indicate request fatigue - customers receiving too many requests - or an issue with your review link. Check both when you see a decline." },
     ],
 };
 
@@ -43,7 +43,7 @@ export const an2: HelpArticle = {
     excerpt: "How to interpret your review request funnel - from send to delivery to click to review - and identify where you're losing customers.",
     readMinutes: 4,
     body: [
-        { type: "p", text: "The Engagement Funnel shows you how customers move through the review request process from initial send to posted review. Each stage of the funnel has a drop-off rate - understanding where drop-off happens tells you where to improve." },
+        { type: "p", text: "The Engagement Funnel shows you how customers move through the review request process from initial send to completion of the request flow. Each stage of the funnel has a drop-off rate - understanding where drop-off happens tells you where to improve." },
         { type: "h2", text: "Funnel Stages" },
         { type: "ol", items: [
             "Sent: Total requests sent.",
@@ -51,7 +51,7 @@ export const an2: HelpArticle = {
             "Opened (email only): Messages opened by the recipient.",
             "Clicked: Recipients who clicked the review link.",
             "Visited review page: Recipients who arrived at your Google review page.",
-            "Review submitted: Recipients who completed and submitted a review.",
+            "Request completed: feedback submitted or a Google handoff; not proof of a published review.",
         ]},
         { type: "h2", text: "Interpreting Drop-Off" },
         { type: "table", table: {
@@ -68,31 +68,14 @@ export const an2: HelpArticle = {
 };
 
 export const an3: HelpArticle = {
-    slug: "generating-pdf-reports",
-    category: "analytics",
-    title: "Generating PDF Reports",
-    excerpt:
-        "Generate and download PDF performance reports from Zyene to share review growth, response rates, and trends with your team.",
-    readMinutes: 2,
+    slug: "generating-pdf-reports", category: "analytics", title: "Exporting Analytics Reports",
+    excerpt: "Export analytics as CSV and understand which reporting options are available in your workspace.", readMinutes: 2,
     body: [
-        { type: "p", text: "Zyene can generate PDF performance reports summarizing your review performance, campaign results, and competitor comparison for any date range." },
-        { type: "h2", text: "How to Generate a Report" },
-        { type: "ol", items: [
-            "Go to Analytics in the left navigation.",
-            "Set your desired date range using the date picker.",
-            "Click 'Export Report' in the top right.",
-            "Choose 'PDF Report'.",
-            "The PDF will generate and download automatically.",
-        ]},
-        { type: "h2", text: "What's Included in the PDF Report" },
-        { type: "ul", items: [
-            "Period summary: review count, average rating, change vs. previous period",
-            "Review velocity chart",
-            "Campaign performance: requests sent, conversion rate, reviews generated",
-            "Response rate and average response time",
-            "Competitor comparison snapshot",
-            "Top positive and negative review themes (if AI analysis is enabled)",
-        ]},
-        { type: "tip", text: "For agencies or multi-location businesses, enable white-label reporting in Settings to include your brand name and logo on generated reports." },
+        { type: "p", text: "Analytics provides a CSV export for the selected reporting range. PDF and branded reports are not offered by that export control." },
+        { type: "h2", text: "Export a CSV" },
+        { type: "ol", items: ["Open Analytics for the business selected in the header.", "Choose the date range.", "Select Export CSV.", "Open the downloaded file in a spreadsheet and preserve its date range and metric labels when sharing."] },
+        { type: "h2", text: "Understand the metrics" },
+        { type: "p", text: "Request completion records feedback submission or a handoff to Google. It does not confirm publication. Review counts and response coverage come from the synced review inventory." },
+        { type: "tip", text: "For a custom PDF or branded reporting requirement, contact support to confirm available options before purchasing a plan for that purpose." },
     ],
 };

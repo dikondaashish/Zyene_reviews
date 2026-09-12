@@ -24,19 +24,20 @@ function overlap(a: Set<string>, b: Set<string>): number {
     return shared / Math.min(a.size, b.size);
 }
 
-/** Conservative lexical evidence pass; model-assisted paraphrases are stored only after this candidate gate. */
+/** Text similarity candidates, never proof that an engine used or cited a review. */
 export function matchReviewCorpus(answer: string, reviews: readonly ReviewText[]): ReviewCitationMatch[] {
     const answerNormalized = normalized(answer);
     const answerTerms = terms(answer);
     const matches: ReviewCitationMatch[] = [];
     for (const review of reviews) {
         const reviewNormalized = normalized(review.text);
-        if (reviewNormalized.length < 20) continue;
+        const reviewTerms = terms(review.text);
+        if (reviewNormalized.length < 20 || reviewTerms.size < 5) continue;
         if (answerNormalized.includes(reviewNormalized)) {
             matches.push({ reviewId: review.id, answerExcerpt: review.text, reviewExcerpt: review.text, matchKind: "quote", confidence: 1 });
             continue;
         }
-        const score = overlap(answerTerms, terms(review.text));
+        const score = overlap(answerTerms, reviewTerms);
         if (score >= 0.72) matches.push({ reviewId: review.id, answerExcerpt: answer.slice(0, 500), reviewExcerpt: review.text.slice(0, 500), matchKind: "paraphrase", confidence: Number(score.toFixed(3)) });
     }
     return matches.sort((a, b) => b.confidence - a.confidence);

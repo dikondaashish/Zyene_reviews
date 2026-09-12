@@ -25,19 +25,17 @@ export function EnterpriseSection5Section({ enterprisePlan }: { enterprisePlan: 
                     <div className="bg-card border border-border rounded-2xl p-8">
                         <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
                             <FileText className="text-primary size-5" />
-                            Sales deck
+                            Plan your rollout
                         </h3>
                         <p className="text-sm text-muted-foreground mb-4">
-                            Product overview, case studies, pricing framework, and security summary for your
-                            procurement team, maintained in{" "}
-                            <code className="text-xs bg-muted px-1 rounded">docs/ENTERPRISE_SALES_DECK.md</code>.
+                            Discuss your locations, team access, integrations, and reporting needs with our team.
                         </p>
                         <p className="text-sm text-muted-foreground mb-6">
-                            Request the latest PDF/Notion export from sales when you book a demo.
+                            We will confirm the available features, implementation scope, and pricing before you commit.
                         </p>
                         <Button className="w-full gap-2" asChild>
                             <Link href="/demo">
-                                <Sparkles className="size-4" /> Request demo + sales deck
+                                <Sparkles className="size-4" /> Book an enterprise demo
                             </Link>
                         </Button>
                         <Link href="/security" className="block mt-4 text-sm text-primary hover:underline text-center">

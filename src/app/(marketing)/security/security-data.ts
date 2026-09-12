@@ -32,13 +32,13 @@ export const SECURITY_SECTIONS = [
     },
     {
         icon: ShieldCheck,
-        title: "No review gating policy",
-        body: "Zyene does not filter which customers may leave a public review based on star rating. Our Negative Feedback Shield routes low ratings to private resolution first - but we never block legitimate public reviews. This aligns with Google and FTC guidance on deceptive review practices.",
+        title: "Configurable feedback workflows",
+        body: "Negative Feedback Shield records lower-rating feedback privately so your team can respond quickly. Businesses configure the customer journey for their own review and service-recovery process.",
     },
     {
         icon: KeyRound,
         title: "Secure Google OAuth (Limited Use)",
-        body: "Google Business Profile access uses official OAuth 2.0 with the minimum scopes required. We comply with Google's API Services User Data Policy and Limited Use requirements - your Google data is used only to sync and reply to reviews you authorize, never for advertising or unrelated purposes.",
+        body: "Google Business Profile access uses official OAuth 2.0 and the scopes required for the connected features. Your Google data is used only to sync and reply to reviews you authorize, never for advertising or unrelated purposes.",
     },
     {
         icon: FileCheck,

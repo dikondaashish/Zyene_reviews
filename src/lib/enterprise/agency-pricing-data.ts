@@ -17,9 +17,9 @@ export const AGENCY_PRICING_TIERS: AgencyPricingTier[] = [
         id: "agency_partner",
         name: "Agency Partner",
         clientRange: "1-4 client locations",
-        priceLabel: "Per-client pricing at Professional rates −10%",
+        priceLabel: "Request a quote for your client locations",
         highlights: [
-            "20% referral commission on first-year revenue",
+            "Confirm referral terms with partnerships",
             "White-label widgets on Enterprise client accounts",
             "Partner support channel",
         ],
@@ -29,9 +29,9 @@ export const AGENCY_PRICING_TIERS: AgencyPricingTier[] = [
         id: "agency_growth",
         name: "Agency Growth",
         clientRange: "5-15 client locations",
-        priceLabel: "Bulk license from $249/mo platform fee + per-location",
+        priceLabel: "Request volume pricing",
         highlights: [
-            "Volume discounts on SMS & email request bundles",
+            "Scope SMS and email allowances for each client",
             "Co-branded onboarding for your clients",
             "Priority roadmap input for agency dashboard",
         ],
@@ -43,10 +43,10 @@ export const AGENCY_PRICING_TIERS: AgencyPricingTier[] = [
         clientRange: "16+ locations or white-label resale",
         priceLabel: "Custom contract - contact partnerships",
         highlights: [
-            "Dedicated partner manager",
+            "Discuss dedicated support requirements",
             "Custom white-label & hide branding across all clients",
-            "Multi-client dashboard (beta waitlist)",
-            "Revenue share or wholesale billing models",
+            "Confirm multi-client access requirements",
+            "Agree billing and resale terms in writing",
         ],
         cta: "Talk to partnerships",
     },
@@ -56,17 +56,17 @@ export const WHITE_LABEL_FEATURES = [
     {
         title: "Hide Zyene branding",
         description:
-            "Use hide_branding on review collection pages so end-customers see your agency or client brand only - already available on Enterprise accounts.",
+            "Enterprise accounts can hide Zyene branding on review collection pages. Confirm the branding scope for each client before rollout.",
     },
     {
         title: "Embeddable widgets",
         description:
-            "Review carousels and rating badges on client websites, with optional PLG footer removed for white-label deployments.",
+            "Review carousels and rating badges on client websites, with branding options agreed for your client deployment.",
     },
     {
         title: "Custom review page branding",
         description:
-            "Logo, colors, and footer links on collectratings.com/{slug} flows - position your agency as the reputation expert.",
+            "Logo, colors, and footer links on your public review pages - position your agency as the reputation expert.",
     },
 ] as const;
 

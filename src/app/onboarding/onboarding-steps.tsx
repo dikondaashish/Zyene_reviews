@@ -19,6 +19,8 @@ type OnboardingStepsProps = {
     setGoogleConnected: (connected: boolean) => void;
     pendingGoogleCode: string | null;
     setPendingGoogleCode: (code: string | null) => void;
+    googleConnectionError: string | null;
+    setGoogleConnectionError: (message: string | null) => void;
     showPaymentCancelled: boolean;
     handleBusinessUpdate: (updated: Partial<OnboardingBusiness>) => void;
     handleStep1Next: () => void;
@@ -39,6 +41,8 @@ export function OnboardingSteps(props: OnboardingStepsProps) {
                     setGoogleConnected={props.setGoogleConnected}
                     pendingGoogleCode={props.pendingGoogleCode}
                     setPendingGoogleCode={props.setPendingGoogleCode}
+                    googleConnectionError={props.googleConnectionError}
+                    setGoogleConnectionError={props.setGoogleConnectionError}
                     handleBusinessUpdate={props.handleBusinessUpdate}
                 />
             )}

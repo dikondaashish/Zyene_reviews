@@ -1,3 +1,4 @@
+import { readableForeground } from "@/lib/design/contrast";
 import { Pencil, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MAX_CUSTOM_TAG_CHIPS, normalizeCustomTagInput } from "@/lib/review-flow/tags-for-ai";
@@ -35,10 +36,12 @@ export function TagsStepCustomInput({
                     TAG_ACTION_BTN_CLASS,
                     "flex items-center justify-center gap-2",
                     showCustomInput || addedCustomTags.length > 0
-                        ? "text-primary-foreground dark:text-white dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] shadow-md"
+                        ? "text-primary-foreground dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] shadow-md"
                         : "text-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
                 )}
+                aria-expanded={showCustomInput}
                 style={{
+                    color: showCustomInput || addedCustomTags.length > 0 ? readableForeground(resolvedBrandColor) : undefined,
                     backgroundColor:
                         showCustomInput || addedCustomTags.length > 0
                             ? resolvedBrandColor
@@ -86,7 +89,8 @@ export function TagsStepCustomInput({
                                 addedCustomTags.length >= MAX_CUSTOM_TAG_CHIPS
                             }
                             className="h-11 px-4 rounded-xl text-sm font-semibold text-primary-foreground bg-primary disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
-                            style={{ backgroundColor: resolvedBrandColor }}
+                            style={{ backgroundColor: resolvedBrandColor,
+                                color: readableForeground(resolvedBrandColor) }}
                         >
                             Add
                         </button>
@@ -104,9 +108,10 @@ export function TagsStepCustomInput({
                     {addedCustomTags.map((tag, index) => (
                         <span
                             key={tag}
-                            className="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1.5 rounded-full text-sm font-medium border-2 text-primary-foreground dark:text-white"
+                            className="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1.5 rounded-full text-sm font-medium border-2 text-primary-foreground"
                             style={{
                                 backgroundColor: resolvedBrandColor,
+                                color: readableForeground(resolvedBrandColor),
                                 borderColor: resolvedBrandColor,
                             }}
                         >

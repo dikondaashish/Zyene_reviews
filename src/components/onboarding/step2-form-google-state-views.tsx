@@ -15,6 +15,7 @@ export function Step2FormGoogleStateViews({
     onSaveAndNext,
     form,
     setGoogleState,
+    onRetry,
 }: {
     googleState: GoogleConnectionState;
     availableLocations: OnboardingGoogleLocationInfo[];
@@ -23,6 +24,7 @@ export function Step2FormGoogleStateViews({
     onSaveAndNext: () => void | Promise<void>;
     form: UseFormReturn<StepBusinessLocationFormData>;
     setGoogleState: React.Dispatch<React.SetStateAction<GoogleConnectionState>>;
+    onRetry?: () => void;
 }) {
     if (googleState.status === "connecting") {
         return (
@@ -104,7 +106,10 @@ export function Step2FormGoogleStateViews({
                 <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setGoogleState({ status: "idle" })}
+                    onClick={() => {
+                        onRetry?.();
+                        setGoogleState({ status: "idle" });
+                    }}
                     className="w-full h-12 rounded-2xl font-semibold border-2 cursor-pointer"
                 >
                     <RefreshCw className="mr-2 size-4" /> Try again

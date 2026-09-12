@@ -1,4 +1,5 @@
 /** Dispatches real-time review alerts via email, SMS, and in-app channels. */
+import { isInQuietHours } from "@/lib/notifications/quiet-hours";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendSMS } from "@/services/twilio/send-sms";
@@ -22,7 +23,7 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
     // 1. Get Organization ID from Business
     const { data: business } = await admin
         .from("businesses")
-        .select("organization_id, name, slug")
+        .select("organization_id, name, slug, timezone")
         .eq("id", review.business_id)
         .single();
 
@@ -96,24 +97,7 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
             const smsThreshold = userPref?.min_urgency_for_sms ?? 7;
             const meetsSmsUrgency = urgency >= smsThreshold || rating <= 2;
             if (meetsSmsUrgency && userPref?.sms_enabled && userPref.sms_phone_number) {
-                let inQuietHours = false;
-                if (userPref.quiet_hours_start && userPref.quiet_hours_end) {
-                    const now = new Date();
-                    const currentHours = now.getHours();
-                    const currentMinutes = now.getMinutes();
-                    const currentTime = currentHours * 60 + currentMinutes;
-
-                    const [startH, startM] = userPref.quiet_hours_start.split(":").map(Number);
-                    const [endH, endM] = userPref.quiet_hours_end.split(":").map(Number);
-                    const startTime = startH * 60 + startM;
-                    const endTime = endH * 60 + endM;
-
-                    if (startTime < endTime) {
-                        inQuietHours = currentTime >= startTime && currentTime <= endTime;
-                    } else {
-                        inQuietHours = currentTime >= startTime || currentTime <= endTime;
-                    }
-                }
+                const inQuietHours = isInQuietHours(new Date(), userPref.quiet_hours_start, userPref.quiet_hours_end, business.timezone);
 
                 if (!inQuietHours) {
                     const snippet = review.text ? review.text.substring(0, 80) : "";

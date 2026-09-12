@@ -132,7 +132,7 @@
   justify-content: space-between;
   gap: 20px;
   margin-bottom: 10px;
-  color: #8a817c;
+  color: #716965;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -163,7 +163,7 @@
   align-items: center;
   gap: 8px;
   margin: 0 0 17px;
-  color: #d74605;
+  color: #ff4f00;
   font-size: 11px;
   font-weight: 750;
   letter-spacing: 0.08em;
@@ -210,7 +210,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  min-height: 42px;
+  min-height: 44px;
   padding: 8px 12px 8px 14px;
   border: 1px solid #e2dcd6;
   border-radius: 10px;
@@ -287,7 +287,7 @@
   cursor: not-allowed;
   opacity: 0.46;
 }
-.home-lead-wizard-backdrop[data-state="idle"]
+.home-lead-wizard[data-state="idle"]
   .home-lead-wizard-primary:disabled {
   background: #eaded5;
   color: #6c5a50;
@@ -340,7 +340,7 @@
 .home-lead-wizard-privacy {
   max-width: 360px;
   margin: 22px auto 0;
-  color: #938984;
+  color: #716965;
   font-size: 11px;
   line-height: 1.5;
   text-align: center;
@@ -419,8 +419,7 @@
     border-radius: 20px;
   }
   .home-lead-wizard-visual {
-    min-height: 218px;
-    padding: 26px 26px 24px;
+    display: none;
   }
   .home-lead-wizard-visual-header {
     margin-bottom: 0;
@@ -435,20 +434,20 @@
     display: none;
   }
   .home-lead-wizard-content {
-    padding: 30px 24px 28px;
+    padding: 76px 24px 28px;
   }
   .home-lead-wizard-progress {
     margin-bottom: 28px;
   }
   .home-lead-wizard h2 {
-    font-size: 34px;
+    font-size: 28px;
   }
   .home-lead-wizard-description {
     margin: 14px 0 24px;
     font-size: 14px;
   }
 }
-@media (max-width: 420px) {
+@media (max-width: 360px) {
   .home-lead-wizard-options {
     grid-template-columns: 1fr;
   }
@@ -469,3 +468,10 @@
     transition: none;
   }
 }
+
+/* The offer is opt-in; the portal remains keyboard-contained above the page. */
+.home-guide-offer { display:flex; align-items:center; justify-content:space-between; gap:32px; max-width:1200px; margin:0 auto; padding:64px 28px; border-top:1px solid var(--border); }
+.home-lead-wizard-dialog { position:fixed; top:50%; left:50%; translate:-50% -50%; z-index:91; width:min(980px,calc(100% - 32px)); outline:none; }
+.home-lead-wizard-close { width:44px; height:44px; }
+.home-lead-wizard :focus-visible { outline:2px solid #ff4f00; outline-offset:4px; }
+@media (max-width:767px) { .home-guide-offer { align-items:flex-start; flex-direction:column; padding:40px 24px; } }

@@ -4,10 +4,10 @@ import { useCallback, useTransition } from "react";
 
 export function useReviewsPageListHandlers(
     type: string,
-    filters: { status: string; rating: string; sort: string },
+    filters: { status: string; rating: string; sort: string; q?: string },
     page: number,
-    fetchReviews: (p: { type: string; status: string; rating: string; sort: string; page: number }) => void,
-    setFilters: (v: { status: string; rating: string; sort: string }) => void,
+    fetchReviews: (p: { type: string; status: string; rating: string; sort: string; q?: string; page: number }) => void,
+    setFilters: (v: { status: string; rating: string; sort: string; q?: string }) => void,
     setPage: (v: number) => void,
     setType: (v: string) => void,
 ) {
@@ -32,8 +32,8 @@ export function useReviewsPageListHandlers(
             startTransition(() => {
                 setType(newType);
                 setPage(1);
-                setFilters({ status: "all", rating: "all", sort: "newest" });
-                fetchReviews({ type: newType, status: "all", rating: "all", sort: "newest", page: 1 });
+                setFilters({ status: newType === "public" ? "needs_response" : "all", rating: "all", sort: "newest", q: "" });
+                fetchReviews({ type: newType, status: newType === "public" ? "needs_response" : "all", rating: "all", sort: "newest", q: "", page: 1 });
             });
         },
         [fetchReviews, setType, setPage, setFilters],

@@ -71,8 +71,6 @@ export type PublicPlaceMetrics = {
     averageRating: number;
     totalReviews: number;
     reviewLink: string;
-    /** Heuristic: businesses with more reviews often respond more - public estimate only */
-    estimatedResponseRatePct: number;
 };
 
 export async function fetchPublicPlaceMetrics(placeId: string): Promise<PublicPlaceMetrics | null> {
@@ -80,7 +78,7 @@ export async function fetchPublicPlaceMetrics(placeId: string): Promise<PublicPl
     if (!apiKey) return null;
 
     const id = placeId.replace(/^places\//, "");
-    const response = await fetchWithTimeout(`${PLACES_DETAILS_BASE}/${id}`, {
+    const response = await fetchWithTimeout(`${PLACES_DETAILS_BASE}/${encodeURIComponent(id)}`, {
         headers: {
             "X-Goog-Api-Key": apiKey,
             "X-Goog-FieldMask": "id,displayName,rating,userRatingCount",
@@ -101,15 +99,11 @@ export async function fetchPublicPlaceMetrics(placeId: string): Promise<PublicPl
     const averageRating = normalizeCompetitorPlacesRating(place.rating);
     const name = place.displayName?.text?.trim() || "Your business";
 
-    const estimatedResponseRatePct =
-        totalReviews === 0 ? 0 : Math.min(95, Math.round(35 + Math.log10(totalReviews + 1) * 18));
-
     return {
         placeId: id,
         name,
         averageRating,
         totalReviews,
-        reviewLink: `https://search.google.com/local/writereview?placeid=${id}`,
-        estimatedResponseRatePct,
+        reviewLink: `https://search.google.com/local/writereview?placeid=${encodeURIComponent(id)}`,
     };
 }

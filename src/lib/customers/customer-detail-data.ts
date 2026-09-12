@@ -1,5 +1,6 @@
 import type { Database } from "@/lib/db/supabase/database.types";
 import { requestMatchesCustomer } from "@/lib/customers/review-linkage";
+import { isCompletedRequest } from "@/lib/metrics/business-metrics";
 
 type CustomerRow = Database["public"]["Tables"]["customers"]["Row"];
 type ReviewRequestRow = Database["public"]["Tables"]["review_requests"]["Row"];
@@ -57,8 +58,8 @@ export function humanizeRequestStatus(status: string): string {
         sent: "Sent",
         opened: "Opened",
         clicked: "Clicked",
-        review_left: "Review left",
-        completed: "Completed",
+        review_left: "Request completed (legacy)",
+        completed: "Request completed",
         feedback_left: "Feedback left",
         skipped: "Skipped",
     };
@@ -71,7 +72,7 @@ export function humanizeRequestStatus(status: string): string {
 
 export function lastRequestEngagementLabel(r: ReviewRequestRow | null | undefined): string {
     if (!r) return " - ";
-    if (r.review_left || r.completed_at) return "Reviewed";
+    if (isCompletedRequest(r)) return "Request completed";
     if (r.clicked_at) return "Clicked";
     if (r.opened_at) return "Opened";
     if (r.sent_at) return "Sent";
@@ -79,13 +80,13 @@ export function lastRequestEngagementLabel(r: ReviewRequestRow | null | undefine
 }
 
 export function computeReviewsLeftCount(
-    requests: Pick<ReviewRequestRow, "id" | "review_left">[],
+    requests: (Pick<ReviewRequestRow, "id" | "review_left"> & Partial<Pick<ReviewRequestRow, "completed_at" | "status">>)[],
     feedback: Pick<PrivateFeedbackRow, "review_request_id">[]
 ): number {
     const fbReqIds = new Set(
         feedback.map((f) => f.review_request_id).filter((id): id is string => id != null && id.length > 0)
     );
-    const fromRequests = requests.filter((r) => r.review_left && !fbReqIds.has(r.id)).length;
+    const fromRequests = requests.filter((r) => isCompletedRequest(r) && !fbReqIds.has(r.id)).length;
     return feedback.length + fromRequests;
 }
 
@@ -160,10 +161,10 @@ export function computeDetailStats(
     return {
         totalRequestsSent: customer.total_requests_sent ?? 0,
         reviewsLeftCount: computeReviewsLeftCount(
-            matchedRequests.map((r) => ({ id: r.id, review_left: r.review_left })),
+            matchedRequests,
             matchedFeedback.map((f) => ({ review_request_id: f.review_request_id }))
         ),
-        lastContactedAt: customer.last_request_sent_at,
+        lastContactedAt: customer.last_request_sent_at || sorted.find((r) => r.sent_at)?.sent_at || null,
         lastRequestStatus: lastRequestEngagementLabel(last),
     };
 }

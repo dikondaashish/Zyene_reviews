@@ -1,5 +1,7 @@
 "use client";
 
+import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
+
 import { ArrowRight, Check } from "lucide-react";
 
 type HomeLeadWizardSuccessProps = {
@@ -19,14 +21,15 @@ export function HomeLeadWizardSuccess({
         <Check size={22} aria-hidden="true" />
       </div>
       <p className="home-lead-wizard-kicker">You’re all set</p>
-      <h2 id="home-lead-wizard-title">Your guide is ready.</h2>
-      <p
-        id="home-lead-wizard-description"
-        className="home-lead-wizard-description"
-      >
-        {emailSent ? "We also sent a copy to your inbox. " : ""}Download it now
-        and start building a stronger review workflow.
-      </p>
+      <DialogTitle asChild>
+        <h2>Your guide is ready.</h2>
+      </DialogTitle>
+      <DialogDescription asChild>
+        <p className="home-lead-wizard-description">
+          {emailSent ? "We also sent a copy to your inbox. " : ""}Download it
+          now and start building a stronger review workflow.
+        </p>
+      </DialogDescription>
       <a
         className="home-lead-wizard-primary"
         href={downloadUrl}

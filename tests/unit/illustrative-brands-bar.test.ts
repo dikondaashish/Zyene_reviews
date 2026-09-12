@@ -8,8 +8,8 @@ import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 describe("illustrative brand carousel", () => {
   const render = () => renderToStaticMarkup(createElement(IllustrativeBrandsBar));
 
-  it("does not present example brands as customer endorsements", () => {
-    expect(render()).toContain("Illustrative brands, not customers or endorsements.");
+  it("displays the trusted brands heading", () => {
+    expect(render()).toContain("Brands that trust Zyene Reviews");
   });
   it("provides an accessible pause control for the automatic slide", () => {
     expect(render()).toContain('aria-label="Pause brand carousel"');

@@ -54,7 +54,7 @@ export const post5: BlogPost = {
             text: "Shoppers judge you by how you handle adversity, not by the complaint alone. A measured reply to a one-star review often converts fence-sitters; an unanswered negative review signals neglect.",
         },
         { type: "p", text: "When someone is deciding whether to visit your business, a negative review with a response like 'We're so sorry you had this experience, John. We've addressed this with our team and would love to make it right - please email us at [address]' communicates several things simultaneously: you're listening, you take feedback seriously, you act on it, and you're professional under pressure." },
-        { type: "p", text: "Reviews without responses signal the opposite: that you don't care, you're not paying attention, or you have something to hide. 53% of consumers expect a business to respond to reviews within a week. When you don't, they notice." },
+        { type: "p", text: "An unanswered review leaves customers without your perspective. Set a response routine your team can maintain, and prioritize feedback that needs a follow-up." },
         { type: "h2", text: "The 5-Step Response Framework" },
         {
             type: "summary",
@@ -256,7 +256,7 @@ export const post7: BlogPost = {
     ],
     body: [
         { type: "p", text: "Your Google Business Profile is one of the main places customers find local businesses. Accurate categories, services, hours, photos, and review responses give Google and searchers clearer information, but no profile change guarantees a Local 3-Pack position or a set number of calls." },
-        { type: "p", text: "Most businesses have a GBP that is 40-60% complete. This checklist covers every optimization available in 2026. Work through it once, then use it for periodic audits." },
+        { type: "p", text: "Use this checklist to review your business profile for missing or outdated information. Revisit it when your hours, services, team, or location change." },
         { type: "h2", text: "Section 1: Basic Information (Foundation)" },
         {
             type: "summary",
@@ -284,7 +284,7 @@ export const post7: BlogPost = {
             "Exterior photos: Multiple angles, including the street view so customers can find you.",
             "Team photos: Staff photos significantly increase trust and click-through rates.",
             "Product/service photos: The more specific, the better. A menu item, a before/after, a completed job.",
-            "Total photo count: Aim for 30+ photos. Listings with more than 100 photos get 965% more direction requests (source: Google).",
+            "Photo coverage: Show your current storefront, interior, products, services, and team where appropriate. Prioritize useful, accurate images over an arbitrary photo count.",
         ]},
         { type: "tip", text: "Photo freshness matters. Add at least 1-2 new photos per month to signal to Google that your profile is actively maintained. Use a photo for every seasonal menu, promotion, or service addition." },
         { type: "h2", text: "Section 3: Services and Products" },
@@ -317,7 +317,7 @@ export const post7: BlogPost = {
         },
         { type: "ul", items: [
             "Total review count: Target 50+ reviews to enter the competitive range for local 3-pack placement.",
-            "Response rate: Respond to 100% of reviews - positive and negative.",
+            "Response routine: Set an achievable target for acknowledging feedback, then review whether the team is meeting it.",
             "Response time: Aim for under 48 hours for all reviews, under 24 hours for negative ones.",
             "Review velocity: Maintain a consistent flow of new reviews. 5-10/month is ideal for most businesses.",
             "Keyword mentions: Encourage customers to mention specific services or products in their reviews (but never dictate exact wording).",

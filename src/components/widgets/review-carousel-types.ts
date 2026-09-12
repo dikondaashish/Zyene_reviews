@@ -5,6 +5,7 @@ export interface CarouselReview {
     content: string;
     platform: string;
     created_at: string;
+    external_url?: string;
 }
 
 export interface ReviewCarouselProps {

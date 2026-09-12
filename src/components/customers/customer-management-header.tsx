@@ -24,7 +24,7 @@ export function CustomerManagementHeader({
                     <h1 className="text-xl font-bold tracking-tight text-foreground lg:text-2xl">Customers</h1>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                    Manage your customer database and trigger review campaigns.
+                    Manage contacts and campaigns. To exclude a test contact from sends, select it and add the tag zyene:test. Test-tagged contacts are also excluded from customer KPIs. Remove the tag to include them again.
                 </p>
             </div>
 

@@ -1,9 +1,12 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { isBusinessWebsitePage } from "@/services/aeo/content-briefs/owned-page";
 import { mineReviewThemes } from "./review-mining";
 import { rankFreshnessQueue } from "./freshness-queue";
 import { loadRecommendationSnapshot, recommendationDelta, type RecommendationSnapshot } from "./recommendation-impact";
 
 export async function refreshRecommendations(db: SupabaseClient, businessId: string): Promise<void> {
+    const { data: business, error } = await db.from("businesses").select("website").eq("id", businessId).single();
+    if (error) throw new Error("Unable to verify the business website");
     const [existing, changes, reviews, briefs, applied] = await Promise.all([
         db.from("aeo_recommendations").select("title" as never).eq("business_id" as never, businessId as never),
         db.from("aeo_citation_changes").select("normalized_url, change_type, detected_at" as never).eq("business_id" as never, businessId as never).gte("detected_at" as never, new Date(Date.now() - 90 * 86_400_000).toISOString() as never),
@@ -22,7 +25,7 @@ export async function refreshRecommendations(db: SupabaseClient, businessId: str
         ...freshness.slice(0, 10).map((row) => ({ recommendation_type: "freshness", title: `Refresh ${row.url}`, target_url: row.url, detail: row })),
         ...themes.slice(0, 5).map((row) => ({ recommendation_type: "review_brief", title: `Build content around “${row.theme}”`, target_url: null, detail: row })),
         ...briefRows.filter((row) => row.rewrite_after).map((row) => ({ recommendation_type: "rewrite", title: `Apply rewrite for ${row.target_page_url ?? "a new page"}`, target_url: row.target_page_url, detail: { briefId: row.id, rewrite: row.rewrite_after }, prompt_id: row.prompt_id, content_brief_id: row.id })),
-    ].filter((row) => !titles.has(row.title));
+    ].filter((row) => !titles.has(row.title) && (!row.target_url || isBusinessWebsitePage(row.target_url, business?.website)));
     if (candidates.length) await db.from("aeo_recommendations").upsert(candidates.map((row) => ({ business_id: businessId, ...row })), { onConflict: "business_id,recommendation_type,title", ignoreDuplicates: true });
     const appliedRows = (applied as unknown as { data: { id: string; target_url: string | null; baseline: RecommendationSnapshot }[] | null }).data ?? [];
     for (const row of appliedRows) {

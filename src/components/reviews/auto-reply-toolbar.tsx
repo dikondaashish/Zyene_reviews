@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { AutoReplyEnableDialog } from "@/components/reviews/auto-reply-enable-dialog";
 import { UpgradeModal } from "@/components/settings/upgrade-modal";
 import { AutoReplyToolbarControls } from "./auto-reply-toolbar-controls";
 import type { AutoReplySettingsState } from "./auto-reply-toolbar-types";
@@ -18,6 +20,7 @@ export function AutoReplyToolbar({
     planAllowsAutoCommenter: boolean;
     initial: AutoReplySettingsState;
 }) {
+    const [confirmOpen, setConfirmOpen] = useState(false);
     const t = useAutoReplyToolbar(businessId, planAllowsAutoCommenter, initial);
 
     if (!googleConnected) {
@@ -36,10 +39,11 @@ export function AutoReplyToolbar({
                 minRating={t.minRating}
                 tone={t.tone}
                 saving={t.saving}
-                onToggle={t.onToggle}
+                onToggle={on => on && planAllowsAutoCommenter ? setConfirmOpen(true) : void t.onToggle(on)}
                 onMinRatingChange={t.onMinRatingChange}
                 onToneChange={t.onToneChange}
             />
+            <AutoReplyEnableDialog open={confirmOpen} onOpenChange={setConfirmOpen} minRating={t.minRating} tone={t.tone} onConfirm={() => { setConfirmOpen(false); void t.onToggle(true); }} />
         </>
     );
 }

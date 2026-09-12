@@ -5,7 +5,7 @@ export function EnterpriseHeroSection() {
         <LandingHero
             eyebrow="Zyene for enterprise"
             title="A review routine that fits your locations."
-            description="Set a clear standard for fair review requests, thoughtful responses, private feedback follow-up, and reporting—then tailor an Enterprise plan around your organization."
+            description="Set a clear standard for review requests, thoughtful responses, private feedback follow-up, and reporting—then tailor an Enterprise plan around your organization."
             image={{ src: "/marketing/about/team-collaboration.png", alt: "A team planning work across business locations" }}
             primary={{ label: "Book a demo", href: "/demo" }}
             secondary={{ label: "Contact sales", href: "mailto:sales@zyenereviews.com" }}

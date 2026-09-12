@@ -86,7 +86,7 @@ export function customerTableMetricColumns(
                 const date = row.original.last_request_sent_at;
                 return (
                     <div className="text-xs text-muted-foreground whitespace-nowrap">
-                        {date ? formatDistanceToNow(new Date(date), { addSuffix: true }) : "Never"}
+                        {date ? formatDistanceToNow(new Date(date), { addSuffix: true }) : "Not recorded"}
                     </div>
                 );
             },

@@ -20,6 +20,7 @@ export function AnalyticsPageClientHero({
     platform,
     setPlatform,
     setRange,
+    exportsDisabled,
 }: {
     businessId: string;
     businessName: string;
@@ -30,16 +31,15 @@ export function AnalyticsPageClientHero({
     platform: string;
     setPlatform: (id: string) => void;
     setRange: (r: AnalyticsRange) => void;
+    exportsDisabled: boolean;
 }) {
     return (
         <>
-            <div className="absolute top-0 right-0 bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none size-[500px]" />
-            <div className="absolute bottom-0 left-0 bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none size-[500px]" />
 
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="space-y-1">
-                        <h1 className="flex flex-wrap items-center gap-2 text-2xl font-extrabold tracking-tight sm:gap-3 sm:text-4xl">
+                        <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold tracking-tight sm:gap-3 sm:text-3xl">
                             <Gauge className="text-primary size-9" />
                             Analytics
                             {isDemo && (
@@ -53,15 +53,16 @@ export function AnalyticsPageClientHero({
                             )}
                         </h1>
                         <p className="text-muted-foreground font-medium">
-                            Real-time performance metrics for{" "}
+                            Review performance for{" "}
                             <span className="font-bold">{businessName || "your business"}</span>
                         </p>
                     </div>
 
-                    <div className="flex w-full flex-col gap-2 rounded-xl border border-border/50 bg-muted/40 p-1 backdrop-blur-md sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+                    <fieldset disabled={exportsDisabled} className="flex w-full flex-col gap-2 disabled:opacity-50 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+                        <legend className="sr-only">Export the displayed analytics</legend>
                         <AnalyticsReportGenerator businessName={businessName || undefined} dateRange={d.rangeLabel} />
-                        <ExportDataButton businessId={businessId} range={range} platform={platform} />
-                    </div>
+                        <ExportDataButton businessId={businessId} range={d.range} platform={d.platform} />
+                    </fieldset>
                 </div>
 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-4 border-y border-border/30">

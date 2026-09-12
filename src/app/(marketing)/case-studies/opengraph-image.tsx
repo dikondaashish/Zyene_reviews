@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Customer Case Studies - Zyene Reviews";
+export const alt = "Example Workflows - Zyene Reviews";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -28,10 +28,10 @@ export default function OgImage() {
                         ZYENE REVIEWS
                     </div>
                     <div style={{ fontSize: "60px", fontWeight: "700", color: "#ffffff", lineHeight: "1.1", marginBottom: "24px", letterSpacing: "-0.02em" }}>
-                        Customer <span style={{ color: "#4ade80" }}>Case Studies</span>
+                        Example <span style={{ color: "#ff4f00" }}>Workflows</span>
                     </div>
                     <div style={{ fontSize: "24px", color: "rgba(255,255,255,0.55)", lineHeight: "1.5", maxWidth: "800px" }}>
-                        Before/after metrics from local businesses growing Google reviews
+                        Illustrative review-management workflows for local businesses
                     </div>
                 </div>
             </div>

@@ -24,10 +24,12 @@ export function CSVImportModal(props: CsvImportModalProps) {
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Import Customers</DialogTitle>
-                    <DialogDescription>Upload a CSV file. Required columns: name or email.</DialogDescription>
+                    <DialogDescription>Upload a CSV file. Include email or phone for every row; name is optional. Up to 5,000 rows and 5 MB. Preview before importing.</DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-4 py-4">
+                    <p className="text-sm text-muted-foreground">Matching email or phone updates an existing contact. Use the merge action to resolve duplicates that have different contact details.</p>
+                    <a className="text-sm text-primary underline" download="customers-template.csv" href="/templates/customers-template.csv">Download CSV template</a>
                     <CsvImportModalUpload
                         fileName={m.fileName}
                         fileInputRef={m.fileInputRef}

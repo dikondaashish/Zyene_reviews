@@ -22,6 +22,11 @@ export function computeRepeatVariance(observations: readonly boolean[]): RepeatV
 
     const variance = (attempts * rate * (1 - rate)) / (attempts - 1);
     const standardError = Math.sqrt(variance / attempts);
+    // Wilson score interval remains informative at zero/all successes and small n.
+    const z2 = 1.96 ** 2;
+    const denominator = 1 + z2 / attempts;
+    const center = (rate + z2 / (2 * attempts)) / denominator;
+    const margin = 1.96 * Math.sqrt(rate * (1 - rate) / attempts + z2 / (4 * attempts ** 2)) / denominator;
     return {
         attempts,
         namedCount,
@@ -29,8 +34,8 @@ export function computeRepeatVariance(observations: readonly boolean[]): RepeatV
         variance,
         standardError,
         confidence95: {
-            low: Math.max(0, rate - 1.96 * standardError),
-            high: Math.min(1, rate + 1.96 * standardError),
+            low: namedCount === 0 ? 0 : Math.max(0, center - margin),
+            high: namedCount === attempts ? 1 : Math.min(1, center + margin),
         },
     };
 }

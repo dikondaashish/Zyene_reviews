@@ -20,12 +20,11 @@ export function ReviewCarousel({ reviews, businessName }: ReviewCarouselProps) {
         );
     }
 
-    const displayReviews = [...reviews, ...reviews, ...reviews, ...reviews].slice(0, Math.max(10, reviews.length * 2));
 
     return (
         <div className="relative w-full overflow-hidden bg-transparent font-sans py-4">
             <ReviewCarouselHeader businessName={businessName} />
-            <ReviewCarouselMarquee reviews={reviews} displayReviews={displayReviews} mounted={mounted} />
+            <ReviewCarouselMarquee reviews={reviews} mounted={mounted} />
         </div>
     );
 }

@@ -22,7 +22,10 @@ export function CompareCompetitorFinalCtaSection({ data }: { data: CompetitorDat
                     </Button>
                     <p className="mt-5 text-sm text-muted-foreground">
                         Already using {data.name}?{" "}
-                        <a href="mailto:hello@zyenereviews.com?subject=Switching%20from%20{data.name}" className="underline hover:text-foreground">
+                        <a
+                            href={`mailto:hello@zyenereviews.com?subject=${encodeURIComponent(`Switching from ${data.name}`)}`}
+                            className="underline hover:text-foreground"
+                        >
                             Talk to us about migration →
                         </a>
                     </p>

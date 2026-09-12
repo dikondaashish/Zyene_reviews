@@ -22,8 +22,8 @@ export const COMPARE_HUB_BUYER_GUIDES: { title: string; body: string; pick?: str
     },
     {
         title: "Review-focused buyer",
-        body: "Your KPI is Google rating, response rate, and review velocity - not inbox payments. Prioritize monitoring, AI-assisted replies, fair review requests, and optional private feedback capture.",
-        pick: "Zyene Reviews; read /blog/negative-feedback-shield for Shield compliance positioning.",
+        body: "Your KPI is Google rating, response rate, and review velocity - not inbox payments. Prioritize monitoring, AI-assisted replies, review requests, and optional private feedback capture.",
+        pick: "Zyene Reviews; read /blog/negative-feedback-shield for an explanation of the Shield workflow.",
     },
     {
         title: "Messaging / payment-focused buyer",

@@ -39,7 +39,7 @@ export const post9: BlogPost = {
         },
         {
             question: "How does Negative Feedback Shield help restaurants?",
-            answer: "Zyene Reviews routes low ratings on your branded collectratings.com page to private feedback first, so you can fix cold food or service issues before they become public one-stars on Google.",
+            answer: "Zyene Reviews routes low ratings on your branded collectratings.com page to private feedback first, so your team can respond to cold food or service issues quickly.",
         },
         {
             question: "Can Zyene Reviews manage reviews for multiple restaurant locations?",
@@ -47,9 +47,9 @@ export const post9: BlogPost = {
         },
     ],
     body: [
-        { type: "p", text: "No industry is more directly impacted by Google Reviews than restaurants. A Harvard Business School study found that a 1-star drop in Yelp rating cost independent restaurants 5-9% of revenue. Google has an even stronger influence - 93% of diners check online reviews before choosing where to eat." },
+        { type: "p", text: "Restaurant reviews help prospective guests understand food, service, atmosphere, and value. Use recent feedback to improve the experience; a rating change alone does not establish a revenue impact." },
         { type: "p", text: "This guide is for restaurant owners and managers who want a practical, no-fluff system for growing their Google review count, responding professionally, and protecting their rating." },
-        { type: "h2", text: "Why Restaurants Live and Die by Reviews" },
+        { type: "h2", text: "Why Restaurant Reviews Deserve Attention" },
         {
             type: "summary",
             text: "Diners choose in seconds from map results - star average, review count, and the latest comments matter more than your menu PDF. Thin profiles lose covers to competitors who look busier and more trusted online.",
@@ -65,23 +65,23 @@ export const post9: BlogPost = {
             "At payment: A QR code on the receipt or payment terminal that goes directly to your Google review page. Keep it simple: 'Enjoyed your meal? Leave us a quick Google review →'",
             "Table tent or menu card: A small card at every table with your review QR code and a friendly ask. Change the copy seasonally to keep it fresh.",
             "SMS follow-up: Send a text 1-2 hours after a reservation-based meal when the experience is still fresh. For walk-in customers, collect numbers through your loyalty program or WiFi login.",
-            "Email after catering or private events: Private dining and catering customers are your highest-satisfaction segment. A personal thank-you email with a review request converts at 20-30%.",
+            "Email after catering or private events: Thank the organizer and invite feedback after the event. Compare engagement with your own previous requests rather than assuming a response rate.",
             "Loyalty program touchpoint: If you have a loyalty app or email list, send a periodic review request to members who haven't reviewed you yet.",
         ]},
         { type: "h2", text: "What Diner Reviews Actually Talk About" },
         {
             type: "summary",
-            text: "Food, service, ambiance, waits, and value dominate guest write-ups - percentages in the table are directional themes, not a single survey of your house. Train staff and kitchen off the topics you see repeated.",
+            text: "Food, service, ambiance, waits, and value are useful themes to look for. The table is a review checklist; measure how often these topics appear in your own feedback.",
         },
         { type: "p", text: "Understanding what diners write about in reviews helps you both solicit better ones and respond to them effectively." },
         { type: "table", table: {
-            headers: ["Topic", "% of Reviews", "Implication"],
+            headers: ["Topic", "Look for", "Next step"],
             rows: [
-                ["Food quality and presentation", "~55%", "Encourage reviewers to mention specific dishes"],
-                ["Service and staff attitude", "~30%", "Staff training impacts review sentiment most"],
-                ["Ambiance and cleanliness", "~15%", "Photos and cleanliness directly feed review content"],
-                ["Wait time and seating", "~20%", "Peak hours = most negative timing reviews"],
-                ["Value for money", "~15%", "Price justification needs to be felt, not just stated"],
+                ["Food quality and presentation", "Specific dishes or preparation", "Share actionable feedback with the kitchen"],
+                ["Service and staff attitude", "Communication and attentiveness", "Discuss repeated patterns with the team"],
+                ["Ambiance and cleanliness", "Comfort and upkeep", "Check the areas guests mention"],
+                ["Wait time and seating", "Expectations and delays", "Review queue updates and staffing"],
+                ["Value for money", "Portion, price, and experience", "Understand the expectation behind the feedback"],
             ],
         }},
         { type: "h2", text: "Responding to Food Quality Complaints" },
@@ -102,10 +102,10 @@ export const post9: BlogPost = {
         { type: "h2", text: "Protecting Your Rating with the Negative Feedback Shield" },
         {
             type: "summary",
-            text: "Shield catches unhappy guests on your Zyene Reviews review page before they vent on Google - giving you a private chance to remake the dish or comp the meal. It is built into Zyene Reviews paid plans for restaurants using collectratings.com links.",
+            text: "Shield gives guests with low ratings a private feedback path on your Zyene Reviews review page, giving your team a chance to organize service recovery. It is built into Zyene Reviews paid plans for restaurants using collectratings.com links.",
         },
         { type: "p", text: "The hardest reviews to deal with are the ones that come from fixable problems - a cold dish, a wrong order, a long wait - where the customer didn't mention it to the server. By the time you see the review, it's too late." },
-        { type: "p", text: "The Negative Feedback Shield adds a private feedback step after a low rating on a Zyene review page. When a customer taps 'Not satisfied', they can describe the problem to the business so the team can follow up. It does not replace fair public review requests or guarantee that a customer will change their mind." },
+        { type: "p", text: "The Negative Feedback Shield adds a private feedback step after a low rating on a Zyene review page. When a customer taps 'Not satisfied', they can describe the problem to the business so the team can follow up. It does not guarantee a customer outcome." },
         { type: "cta", ctaLabel: "See how Zyene Reviews works for restaurants →", ctaHref: "/industries/restaurants" },
     ],
 };
@@ -113,7 +113,7 @@ export const post9: BlogPost = {
 export const post10: BlogPost = {
     slug: "dental-practice-reputation-management-2026",
     title: "Dental Practice Reputation Management: The 2026 Guide",
-    excerpt: "77% of dental patients check reviews before choosing a dentist. Here's the complete reputation management guide for dental practices - including HIPAA-aware response strategies.",
+    excerpt: "A practical reputation-management guide for dental practices, covering feedback requests, service follow-up, and privacy-conscious public responses.",
     pillar: "industry-specific",
     pillarLabel: "Industry Specific",
     publishedAt: "2026-05-12",
@@ -153,7 +153,7 @@ export const post10: BlogPost = {
         },
     ],
     body: [
-        { type: "p", text: "Choosing a dentist is one of the most trust-sensitive decisions a consumer makes. 77% of patients say they use online reviews as their first step in finding a new dental provider. For dental practices, reputation management isn't a marketing tactic - it's patient acquisition." },
+        { type: "p", text: "People choosing a dental practice may use reviews to understand communication, scheduling, and the overall experience. Listen to that feedback without assuming it represents every patient." },
         { type: "h2", text: "The Dental Patient Review Journey" },
         {
             type: "summary",
@@ -177,12 +177,12 @@ export const post10: BlogPost = {
         },
         { type: "p", text: "Across dental practices, the top sources of negative reviews are consistent:" },
         { type: "ul", items: [
-            "Wait time (30-40% of negative reviews): Patients who waited significantly longer than expected, especially for scheduled appointments.",
-            "Billing surprises (25-35%): Insurance coverage misunderstandings, unexpected out-of-pocket costs, billing errors.",
-            "Front desk experience (20-25%): Rude or dismissive front desk staff, poor communication about scheduling.",
-            "Pain/discomfort (10-15%): Post-procedure pain, anesthesia issues, feeling rushed.",
+            "Wait time: Patients who waited significantly longer than expected, especially for scheduled appointments.",
+            "Billing surprises: Insurance coverage misunderstandings, unexpected out-of-pocket costs, billing errors.",
+            "Front desk experience: Rude or dismissive front desk staff, poor communication about scheduling.",
+            "Pain/discomfort: Post-procedure pain, anesthesia issues, feeling rushed.",
         ]},
-        { type: "p", text: "The important insight here: 75-80% of dental negative reviews are about operational issues (wait time, billing, front desk) rather than clinical quality. This means the solution is largely operational - not clinical." },
+        { type: "p", text: "Group feedback by topic and review the actual pattern in your practice. Operational complaints and clinical concerns need appropriate follow-up; do not assume their frequency or cause from an industry-wide percentage." },
         { type: "h2", text: "How to Get More Patient Reviews" },
         {
             type: "summary",
@@ -240,7 +240,7 @@ export const post11: BlogPost = {
         },
         {
             question: "How does Negative Feedback Shield reduce reputation cost?",
-            answer: "Shield routes low ratings to private feedback on your Zyene Reviews review page so you can save the relationship before Google sees a one-star. Fewer public disasters mean less compounding damage.",
+            answer: "Shield routes low ratings to private feedback on your Zyene Reviews review page so your team can organize service recovery. Outcomes depend on the service issue, the response, and the customer.",
         },
         {
             question: "Is reputation management software worth $30 per month?",
@@ -256,7 +256,7 @@ export const post11: BlogPost = {
             text: "A weaker star profile versus the competitor beside you in Maps bleeds clicks you never see. The example math uses published consumer research and your own impressions - plug real numbers, not industry averages alone.",
         },
         { type: "p", text: "Let's start with the most direct cost. If your Google rating is 3.9 stars versus a competitor's 4.5 stars, you lose a significant percentage of potential customers at the decision point - without even knowing it happened." },
-        { type: "p", text: "Research from ReviewTrackers shows that 94% of consumers say an online review has convinced them to avoid a business. If 100 people see your listing per month and 30% choose a competitor because of your rating (a conservative estimate), that's 30 lost customers per month. At a $50 average transaction value, that's $1,500/month or $18,000/year - from a single rating differential." },
+        { type: "p", text: "Reviews can influence a decision, but listing views and rating differences do not reveal how much revenue was lost. Use your own inquiry and booking data before assigning a monetary impact to reputation work." },
         { type: "h2", text: "Cost #2: Lost Repeat Customers" },
         {
             type: "summary",
@@ -274,23 +274,23 @@ export const post11: BlogPost = {
         { type: "h2", text: "Cost #4: The Compounding Effect of Negative Reviews" },
         {
             type: "summary",
-            text: "One visible one-star keeps influencing new visitors for months. Cited consumer-behavior research describes outsized weight on negatives - answer them and bury them with fresh positives.",
+            text: "An unresolved complaint can remain visible to future customers. Respond with useful context and address the underlying issue; do not assume new reviews erase its impact.",
         },
-        { type: "p", text: "Negative reviews have a disproportionate psychological impact. Research on consumer decision-making shows that one 1-star review requires approximately 12 positive 5-star reviews to neutralize its impact on purchase probability." },
-        { type: "p", text: "This means every unaddressed 1-star review is not a static cost - it's a compounding liability. Each new visitor who reads it is influenced. Over 12 months, a single unanswered 1-star review from a high-visibility time period can be read by hundreds of potential customers." },
+        { type: "p", text: "There is no reliable universal number of positive reviews that cancels out a negative one. Customers consider the content, recency, context, and your response." },
+        { type: "p", text: "Treat an unanswered complaint as an opportunity to clarify what happened and improve the service. Review visibility and customer reactions vary, so avoid assigning a fixed financial cost to one review." },
         { type: "h2", text: "Calculating Your Reputation Risk" },
         {
             type: "summary",
-            text: "Use GBP Insights impressions, your average sale, and a conservative conversion gap versus competitors to estimate monthly and annual revenue at risk. The table is a worksheet - you supply the numbers.",
+            text: "Use your own inquiry, booking, and transaction records to explore a hypothetical revenue scenario. The worksheet is not a forecast and cannot attribute changes to reviews on its own.",
         },
         { type: "table", table: {
             headers: ["Metric", "Your Business", "Formula"],
             rows: [
-                ["Monthly new customer searches (GBP impressions)", " - ", "From your GBP Insights dashboard"],
-                ["Estimated conversion rate loss vs competitor", " - ", "~15-30% if rating is < 0.5 stars lower"],
+                ["Monthly eligible inquiries", " - ", "Use your own inquiry records; profile views are not customers"],
+                ["Assumed booking-rate difference", " - ", "Your explicit scenario assumption, not a rating-based benchmark"],
                 ["Average transaction value", " - ", "Your average ticket"],
-                ["Lost customers/month", " - ", "Impressions × conversion loss %"],
-                ["Monthly revenue impact", " - ", "Lost customers × avg transaction"],
+                ["Hypothetical booking difference", " - ", "Eligible inquiries × assumed booking-rate difference"],
+                ["Hypothetical monthly revenue difference", " - ", "Booking difference × average transaction"],
                 ["Annual revenue impact", " - ", "Monthly × 12"],
             ],
         }},
@@ -299,7 +299,7 @@ export const post11: BlogPost = {
             type: "summary",
             text: "Compare annual reputation risk you calculated to Starter on Zyene Reviews at $29.99 per month - about $360 per year. The question is active risk today, not whether software sounds nice.",
         },
-        { type: "p", text: "Most reputation management tools pay for themselves in the first recovered customer. If losing a 1-star review prevents even one $50 customer per month, that's $600/year in preserved revenue. Zyene Reviews' Starter plan at $29.99/month is $359.88/year - and it protects against dozens of potential negative reviews per year, not just one." },
+        { type: "p", text: "Compare the subscription cost with observed time savings and service improvements. Starter at $29.99 per month totals $359.88 over twelve months before applicable taxes. No number of recovered customers, prevented negative reviews, or financial return is guaranteed." },
         { type: "p", text: "If you are on an enterprise stack billed at $299+/mo annually, compare that spend to review-first alternatives in our Birdeye pricing breakdown before you renew - vendor pricing may vary; use your actual invoice, not list prices alone." },
         { type: "p", text: "The better question isn't 'can we afford reputation management?' - it's 'what is our active reputation risk today, and what's it costing us?'" },
         { type: "cta", ctaLabel: "Protect your revenue with Zyene Reviews' Negative Feedback Shield →", ctaHref: "/features" },

@@ -13,12 +13,15 @@ export function RatingStepNumber({ rating, hoverRating, onRate, onHoverRating }:
             {[1, 2, 3, 4, 5].map((num) => (
                 <button
                     key={num}
+                    type="button"
+                    aria-label={`Rate ${num} out of 5 stars`}
+                    aria-pressed={rating === num}
                     onClick={() => onRate(num)}
                     onMouseEnter={() => onHoverRating(num)}
                     onMouseLeave={() => onHoverRating(null)}
                     className={cn(
                         "sm:w-14 sm:h-14 flex items-center justify-center rounded-full text-lg sm:text-xl font-bold transition-all duration-200 shadow-sm size-12",
-                        "border-2 focus:outline-none focus:ring-2 focus:ring-primary/40",
+                        "border-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus:ring-2 focus:ring-primary/40",
                         rating === num
                             ? "border-primary bg-primary text-primary-foreground scale-110 shadow-md ring-4 ring-primary/20 z-10"
                             : hoverRating === num

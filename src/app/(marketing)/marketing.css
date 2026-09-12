@@ -16,7 +16,7 @@
  --background:#fffefb; --foreground:#201515; --card:#fffefb; --card-foreground:#201515;
  --popover:#fffefb; --popover-foreground:#201515; --muted:#f5f4f0; --muted-foreground:#68615e;
  --secondary:#f0efeb; --secondary-foreground:#201515; --accent:#f0efeb; --accent-foreground:#201515;
- --primary:#ff4f00; --primary-foreground:#ffffff; --cta-foreground:#ffffff; --border:#e4e1da; --input:#e4e1da; --ring:#ff4f00;
+ --primary:#ff4f00; --cta:var(--primary); --primary-foreground:#ffffff; --cta-foreground:#ffffff; --border:#e4e1da; --input:#e4e1da; --ring:#ff4f00;
  --canvas:#f5f4f0; --brand-wash:#ffede4; --brand-orange:#ff4f00;
  --marketing-footer-bg:#201515; --marketing-footer-fg:#fffefb; --marketing-footer-muted:#c5c0b1;
  --marketing-footer-list:#eceae3; --marketing-footer-subtle:#b3aaa6; --marketing-footer-border:#493b35;

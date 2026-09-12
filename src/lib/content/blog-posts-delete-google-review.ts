@@ -302,7 +302,7 @@ export const post17: BlogPost = {
         },
         {
             type: "p",
-            text: "Zyene Reviews helps local businesses collect genuine customer feedback through automated SMS and email follow-ups, route unhappy customers to a private resolution channel before they post publicly, and monitor new reviews across Google, Facebook, and industry directories in real time.",
+            text: "Zyene Reviews helps local businesses collect customer feedback through automated SMS and email follow-ups, route lower ratings to a private resolution channel, and monitor new reviews across Google, Facebook, and industry directories in real time.",
         },
         {
             type: "cta",

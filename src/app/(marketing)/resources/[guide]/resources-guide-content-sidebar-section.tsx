@@ -92,7 +92,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                                 <div className="bg-primary/5 border border-primary/25 rounded-2xl p-6">
                                     <p className="text-sm font-bold text-foreground mb-2">Full swipe file</p>
                                     <p className="text-xs text-muted-foreground mb-4">
-                                        Email the complete pack - fair outreach only, no review gating.
+                                        Email the complete pack - practical templates for customer feedback outreach.
                                     </p>
                                     <Button size="sm" variant="outline" className="w-full" asChild>
                                         <a href="#template-pack-capture">

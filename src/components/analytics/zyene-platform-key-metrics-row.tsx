@@ -57,9 +57,9 @@ export function ZyenePlatformKeyMetricsRow({
             icon: MousePointer2,
           },
           {
-            title: "Review Conversion",
+            title: "Request completion",
             value: `${allSourceConversionRate}%`,
-            desc: `${allSourcePostedToGoogle} completed of ${totalSent} sent`,
+            desc: `${allSourcePostedToGoogle} completed of ${totalSent} sent; publication unverified`,
             delta: getDelta(
               pct(allSourcePostedToGoogle, totalSent),
               pct(prevAllSourcePostedToGoogle, prevSent),

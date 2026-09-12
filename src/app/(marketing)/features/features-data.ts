@@ -50,7 +50,7 @@ export const PILLARS = [
             "Branded review requests by SMS, email, shareable link, or QR code",
             "Optional follow-up reminders for customers who have not engaged",
             "Private feedback and team alerts for timely service recovery",
-            "Fair public review requests with no review gating",
+            "Configurable feedback and service-recovery workflows",
             "Use the API or a secure webhook to trigger requests from your workflow",
         ],
         cta: { label: "See pricing", href: "/pricing" },

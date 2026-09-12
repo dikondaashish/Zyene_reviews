@@ -96,7 +96,9 @@ export function SignupFormFields(props: SignupFormFieldsProps) {
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        aria-pressed={showPassword}
+                        className="flex size-11 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:ring-ring absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     >
                         {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
                     </button>

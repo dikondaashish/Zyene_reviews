@@ -60,7 +60,7 @@ export function ImportMapStep({ state }: { state: ImportState }) {
                                     setMapping((prev) => ({ ...prev, [field]: val === "skip" ? "" : val }))
                                 }
                             >
-                                <SelectTrigger className="bg-card">
+                                <SelectTrigger aria-label={`CSV column for ${fieldLabels[field]}`} className="bg-card">
                                     <SelectValue placeholder="Skip this field" />
                                 </SelectTrigger>
                                 <SelectContent>

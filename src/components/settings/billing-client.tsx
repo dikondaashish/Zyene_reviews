@@ -1,5 +1,6 @@
 "use client";
 
+import { BillingRenewalSummary } from "@/components/settings/billing-renewal-summary";
 import { useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useLanguage } from "@/lib/language-context";
@@ -18,6 +19,7 @@ import { BillingPlanPickerSection } from "@/components/settings/billing-plan-pic
 import { BillingPlanChangeDialog } from "@/components/settings/billing-plan-change-dialog";
 
 export function BillingClient({
+    renewalSummary,
     currentPlan,
     organizationPlanId,
     planStatus,
@@ -93,6 +95,7 @@ export function BillingClient({
                 loadingPortal={loadingPortal}
                 onManageSubscription={() => void handleManageSubscription()}
             />
+            <BillingRenewalSummary summary={renewalSummary} />
             <BillingCurrentPlanCard
                 billing={b}
                 currentPlan={currentPlan}

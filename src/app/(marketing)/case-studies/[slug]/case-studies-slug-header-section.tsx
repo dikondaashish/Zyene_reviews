@@ -1,5 +1,6 @@
 import { MarketingGeoSummary } from "@/components/marketing/marketing-geo-summary";
 import Image from "next/image";
+import { getIndustryImage } from "@/lib/industries/industry-imagery";
 import Link from "next/link";
 import { ArrowDown, ArrowRight, ChevronRight, MapPin } from "lucide-react";
 import { CASE_STUDY_COMPOSITE_DISCLAIMER, CASE_STUDY_MAP } from "@/lib/social-proof/case-study-data";
@@ -11,7 +12,7 @@ export function CaseStudiesSlugHeaderSection({ study }: { study: (typeof CASE_ST
         <header className="border-b border-border bg-muted/25">
             <div className="container mx-auto max-w-6xl px-4 pb-16 pt-10 sm:px-8 lg:pb-20 lg:pt-12">
                 <nav className="mb-8 flex items-center gap-2 text-sm text-muted-foreground" aria-label="Breadcrumb">
-                    <Link href="/case-studies" className="transition-colors hover:text-foreground">Case studies</Link>
+                    <Link href="/case-studies" className="transition-colors hover:text-foreground">Example workflows</Link>
                     <ChevronRight className="size-4" aria-hidden="true" />
                     <span className="truncate text-foreground">{study.company}</span>
                 </nav>
@@ -37,22 +38,22 @@ export function CaseStudiesSlugHeaderSection({ study }: { study: (typeof CASE_ST
                                 See the workflow <ArrowDown className="size-4" aria-hidden="true" />
                             </Link>
                             <Link href="/case-studies" className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-5 py-3 font-semibold text-foreground transition-colors hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                                All case studies <ArrowRight className="size-4" aria-hidden="true" />
+                                All workflows <ArrowRight className="size-4" aria-hidden="true" />
                             </Link>
                         </div>
                     </div>
 
                     <figure className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
                         <Image
-                            src="/images/industries/window-installation.webp"
-                            alt="Stock photograph of a tradesperson fitting a window frame with a drill"
+                            src={getIndustryImage(({ Dental: "dental", Restaurants: "restaurants", "Home Services": "home-services", "Salons & Spas": "salons", "Auto Repair": "auto-repair" } as Record<string, string>)[study.industry] || "home-services").src}
+                            alt={`Illustrative ${study.industry.toLowerCase()} business photograph`}
                             width={1600}
                             height={1068}
                             priority
                             className="aspect-[4/3] w-full object-cover"
                         />
                         <figcaption className="absolute bottom-3 left-3 rounded-full bg-background/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-sm">
-                            Illustrative home-services scenario
+                            Illustrative business photograph
                         </figcaption>
                     </figure>
                 </div>

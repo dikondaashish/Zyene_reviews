@@ -32,7 +32,7 @@ export function DocSidebar() {
             <nav className="flex flex-col gap-8">
                 {DOC_NAV_GROUPS.map((group) => (
                     <div key={group.title} className="flex flex-col gap-3">
-                        <h4 className="text-sm font-semibold tracking-tight text-foreground">{group.title}</h4>
+                        <h2 className="text-sm font-semibold tracking-tight text-foreground">{group.title}</h2>
                         <div className="flex flex-col gap-1">
                             {group.items.map((item) => {
                                 const active = isActivePath(pathname, item.href);
@@ -41,6 +41,7 @@ export function DocSidebar() {
                                     <Link
                                         key={item.href}
                                         href={item.href}
+                                        aria-current={active ? "page" : undefined}
                                         className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors ${
                                             active
                                                 ? "bg-secondary font-medium text-primary"

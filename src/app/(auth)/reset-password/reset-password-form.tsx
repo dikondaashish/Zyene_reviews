@@ -58,8 +58,10 @@ export function ResetPasswordForm() {
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                            tabIndex={-1}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        aria-pressed={showPassword}
+                            className="flex size-11 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:ring-ring absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+
                         >
                             {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
                         </button>
@@ -88,8 +90,10 @@ export function ResetPasswordForm() {
                         <button
                             type="button"
                             onClick={() => setShowConfirm(!showConfirm)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                            tabIndex={-1}
+                        aria-label={showConfirm ? "Hide password" : "Show password"}
+                        aria-pressed={showConfirm}
+                            className="flex size-11 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:ring-ring absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+
                         >
                             {showConfirm ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
                         </button>

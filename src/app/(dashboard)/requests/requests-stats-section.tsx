@@ -74,7 +74,7 @@ export function RequestsStatsSection({
             <Card className="border-l-4 border-l-yellow-500">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                        Review Conversion
+                        Request completion
                     </CardTitle>
                     <Star className="text-chart-4 size-4" />
                 </CardHeader>
@@ -83,7 +83,7 @@ export function RequestsStatsSection({
                         {stats.conversionRate.toFixed(1)}%
                     </div>
                     <p className="text-xs text-muted-foreground">
-                        {stats.reviews} of {stats.totalSent} sent
+                        {stats.reviews} completed of {stats.totalSent} sent; publication unverified
                     </p>
                 </CardContent>
             </Card>

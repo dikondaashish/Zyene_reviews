@@ -27,7 +27,7 @@ export function CustomerTableMobileMetrics({
                 <dd className="mt-0.5 text-muted-foreground">
                     {customer.last_request_sent_at
                         ? formatDistanceToNow(new Date(customer.last_request_sent_at), { addSuffix: true })
-                        : "Never"}
+                        : "Not recorded"}
                 </dd>
             </div>
             {showVisitsSpend ? (

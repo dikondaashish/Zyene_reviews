@@ -1,3 +1,4 @@
+import { readableForeground } from "@/lib/design/contrast";
 import { cn } from "@/lib/utils";
 import { UserRound } from "lucide-react";
 
@@ -16,6 +17,7 @@ export function TagsStepStaffSection({
 }: TagsStepStaffSectionProps) {
     if (staffNames.length === 0) return null;
 
+    const selected = new Set(selectedStaff);
     return (
         <div className="pt-3 border-t border-border dark:border-white/10">
             <p className="text-center text-sm font-medium text-foreground mb-2">
@@ -27,17 +29,19 @@ export function TagsStepStaffSection({
                     <button
                         key={name}
                         type="button"
+                        aria-pressed={selected.has(name)}
                         onClick={() => onToggleStaff(name)}
                         className={cn(
                             "flex items-center gap-1.5 px-3.5 py-2 min-h-10 rounded-full text-sm font-medium transition-all duration-200",
                             "border-2 active:scale-95",
-                            selectedStaff.includes(name)
-                                ? "text-primary-foreground dark:text-white dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] scale-105 shadow-md"
+                            selected.has(name)
+                                ? "text-primary-foreground dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] scale-105 shadow-md"
                                 : "bg-background text-muted-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
                         )}
                         style={{
-                            backgroundColor: selectedStaff.includes(name) ? resolvedBrandColor : undefined,
-                            borderColor: selectedStaff.includes(name) ? resolvedBrandColor : undefined,
+                            backgroundColor: selected.has(name) ? resolvedBrandColor : undefined,
+                            color: selected.has(name) ? readableForeground(resolvedBrandColor) : undefined,
+                            borderColor: selected.has(name) ? resolvedBrandColor : undefined,
                         }}
                     >
                         <UserRound className="size-4" aria-hidden="true" />

@@ -11,8 +11,9 @@ describe("agency pricing", () => {
         ]);
     });
 
-    it("documents white-label hide_branding", () => {
+    it("describes branding in customer-facing terms", () => {
         const hide = WHITE_LABEL_FEATURES.find((f) => f.title.includes("Hide"));
-        expect(hide?.description).toMatch(/hide_branding/i);
+        expect(hide?.description).toMatch(/Enterprise.*hide Zyene branding/);
+        expect(hide?.description).not.toContain("hide_branding");
     });
 });

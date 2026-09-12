@@ -37,7 +37,7 @@ export function buildZyenePlatformFunnelSteps(base: {
             color: "var(--chart-5)",
         },
         {
-            label: "Posted to Google",
+            label: "Google handoff",
             count: base.totalPostedToGoogle,
             icon: Star,
             color: "var(--chart-2)",

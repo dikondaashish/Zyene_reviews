@@ -22,5 +22,6 @@ export interface ReviewsPageClientProps {
         status: string;
         rating: string;
         sort: string;
+        q?: string;
     };
 }

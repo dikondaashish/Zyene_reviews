@@ -25,7 +25,7 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
     ],
     resourceLabel: "Free Template Pack",
     openingSummary:
-        "This pack gives local owners 20+ short SMS and email scripts for honest Google review requests - plus reminders, thank-yous, and private feedback follow-ups. Use it to start outreach today; automate fair campaigns and alerts with Zyene Reviews when manual copy-paste stops scaling.",
+        "This pack gives local owners 20+ short SMS and email scripts for honest Google review requests - plus reminders, thank-yous, and private feedback follow-ups. Use it to start outreach today; automate campaigns and alerts with Zyene Reviews when manual copy-paste stops scaling.",
     internalLinks: [
         { label: "Review collection features", href: "/features/review-collection" },
         { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
@@ -40,9 +40,9 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
                 "Yes. Preview templates on this page are ungated - copy any script and replace [Name], [Business Name], and [link]. Optional email capture sends a dedicated message with a link back to this page (no PDF attachment yet).",
         },
         {
-            question: "Is it okay to only send review requests to happy customers?",
+            question: "How should I use these review-request templates?",
             answer:
-                "No. Selectively asking only satisfied customers is review gating and violates Google policies. Ask customers fairly, avoid incentives for positive reviews, and use private feedback channels (like Zyene Reviews' Negative Feedback Shield) to resolve issues - not to block honest public reviews.",
+                "Use the templates with real customers, avoid incentives tied to a rating or review text, and adapt the timing, language, and routing to your business's documented review process. Negative Feedback Shield can organize private feedback for service recovery.",
         },
         {
             question: "How many follow-ups should I send?",
@@ -61,7 +61,7 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
         },
     ],
     tableOfContents: [
-        { anchor: "compliance-fair-outreach", label: "Compliance: Fair Outreach" },
+        { anchor: "responsible-outreach", label: "Responsible Outreach" },
         { anchor: "sms-review-request-templates", label: "SMS Templates" },
         { anchor: "email-review-request-templates", label: "Email Templates" },
         { anchor: "industry-specific-templates", label: "Industry-Specific" },
@@ -77,15 +77,15 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
         },
         {
             name: "Send within a few hours of a positive visit",
-            text: "Deliver the first request soon after service while the experience is fresh. One polite reminder is enough - avoid repeated pressure.",
+            text: "Deliver the first request at a time that fits your service and documented outreach process. One polite reminder is enough - avoid repeated pressure.",
         },
         {
             name: "Follow compliance rules on every send",
-            text: "Do not offer discounts for reviews, do not dictate review text, and do not ask only satisfied customers. Keep outreach fair and honest.",
+            text: "Do not offer discounts tied to a rating or review text, and do not dictate review text. Keep outreach honest and aligned with your documented process.",
         },
         {
             name: "Respond to reviews and route unhappy customers privately",
-            text: "Reply to new Google reviews promptly. Use private feedback (e.g., Zyene Reviews Negative Feedback Shield) to resolve low scores before issues escalate - not to suppress public reviews.",
+            text: "Reply to new Google reviews promptly. Use private feedback (e.g., Zyene Reviews Negative Feedback Shield) to organize service recovery when issues arise.",
         },
         {
             name: "Automate at scale when manual copy-paste stops working",

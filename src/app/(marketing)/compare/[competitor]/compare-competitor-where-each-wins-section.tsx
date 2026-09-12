@@ -5,7 +5,7 @@ export function CompareCompetitorWhereEachWinsSection({ data }: { data: Competit
     return (
         <section className="py-20 px-4 bg-background border-t border-border">
                 <div className="container mx-auto max-w-5xl">
-                    <h2 className="text-3xl font-bold text-foreground text-center mb-12">Where each one wins</h2>
+                    <h2 className="text-3xl font-bold text-foreground text-center mb-12">What to evaluate</h2>
                     <div className="grid md:grid-cols-2 gap-8">
                         {/* Competitor wins */}
                         <div className="bg-card border border-border rounded-2xl p-8">
@@ -13,7 +13,7 @@ export function CompareCompetitorWhereEachWinsSection({ data }: { data: Competit
                                 <div className="bg-muted rounded-xl flex items-center justify-center font-bold text-foreground text-sm shrink-0 size-10">
                                     {data.name.slice(0, 2)}
                                 </div>
-                                <h3 className="text-xl font-bold text-foreground">Where {data.name} wins</h3>
+                                <h3 className="text-xl font-bold text-foreground">{data.name} capabilities</h3>
                             </div>
                             <ul className="space-y-3">
                                 {data.winsForCompetitor.map((item, i) => (
@@ -31,7 +31,7 @@ export function CompareCompetitorWhereEachWinsSection({ data }: { data: Competit
                                 <div className="bg-primary/10 rounded-xl flex items-center justify-center shrink-0 size-10">
                                     <ShieldCheck className="text-primary size-5" />
                                 </div>
-                                <h3 className="text-xl font-bold text-foreground">Where Zyene Reviews wins</h3>
+                                <h3 className="text-xl font-bold text-foreground">Zyene Reviews capabilities</h3>
                             </div>
                             <ul className="space-y-3">
                                 {data.winsForZyene.map((item, i) => (

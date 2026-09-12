@@ -111,8 +111,8 @@ export async function checkLimit(
         current = businessCount;
     } else {
         const startOfMonth = new Date();
-        startOfMonth.setDate(1);
-        startOfMonth.setHours(0, 0, 0, 0);
+        startOfMonth.setUTCDate(1);
+        startOfMonth.setUTCHours(0, 0, 0, 0);
 
         const { data: businesses } = await supabase
             .from("businesses")

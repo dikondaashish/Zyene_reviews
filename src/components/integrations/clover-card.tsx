@@ -17,7 +17,7 @@ const CLOVER_ERROR_MESSAGES: Record<string, string> = {
     auth: "You must be signed in to connect Clover.",
     forbidden: "You do not have access to connect Clover for this business.",
     no_merchant: "Clover did not return a merchant ID.",
-    token_failed: "Could not exchange the Clover authorization code. Check App ID/Secret.",
+    token_failed: "Could not complete the connection. Try again or contact support.",
 };
 
 export type CloverConnectionSummary = {
@@ -39,7 +39,7 @@ export function CloverCard({ businessId, connection, configured }: CloverCardPro
 
     useEffect(() => {
         if (searchParams.get("clover_connected") === "1") {
-            toast.success("Clover connected (sandbox).");
+            toast.success("Clover test connection ready.");
             router.replace("/settings/integrations");
         }
         const err = searchParams.get("clover_error");
@@ -51,7 +51,7 @@ export function CloverCard({ businessId, connection, configured }: CloverCardPro
 
     function handleConnect() {
         if (!configured) {
-            toast.error("Clover is not configured yet. Add CLOVER_APP_ID and CLOVER_APP_SECRET.");
+            toast.error("Clover early access is not available for this workspace. Contact support.");
             return;
         }
         setConnecting(true);
@@ -79,7 +79,7 @@ export function CloverCard({ businessId, connection, configured }: CloverCardPro
                         <div>
                             <p className="text-base font-semibold">Clover</p>
                             <p className="text-sm text-muted-foreground">
-                                Auto-detect payments and resolve customer contact (sandbox spike)
+                                Early access: test payment and customer matching
                             </p>
                         </div>
                     </div>
@@ -103,7 +103,7 @@ export function CloverCard({ businessId, connection, configured }: CloverCardPro
                     </p>
                 ) : (
                     <p className="text-xs text-muted-foreground">
-                        Phase 1 logs resolved email/phone from payments - does not send review
+                        Early access logs resolved email/phone from payments - does not send review
                         requests yet.
                     </p>
                 )}

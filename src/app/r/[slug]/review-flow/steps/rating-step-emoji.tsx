@@ -14,13 +14,16 @@ export function RatingStepEmoji({ rating, hoverRating, onRate, onHoverRating }: 
             {RATINGS.map((r) => (
                 <button
                     key={r.value}
+                    type="button"
+                    aria-label={`Rate ${r.value} out of 5 stars`}
+                    aria-pressed={rating === r.value}
                     onClick={() => onRate(r.value)}
                     onMouseEnter={() => onHoverRating(r.value)}
                     onMouseLeave={() => onHoverRating(null)}
                     className={cn(
-                        "flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-300",
+                        "flex flex-col items-center gap-2 min-w-0 px-1 py-3 rounded-2xl transition-all duration-300",
                         "border-2 hover:border-primary/40 hover:bg-primary/10",
-                        "focus:outline-none focus:ring-2 focus:ring-primary/40",
+                        "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus:ring-2 focus:ring-primary/40",
                         rating !== r.value && "active:scale-95",
                         hoverRating === r.value && rating !== r.value
                             ? "border-primary/50 bg-primary/10 scale-105 shadow-md"
@@ -34,7 +37,7 @@ export function RatingStepEmoji({ rating, hoverRating, onRate, onHoverRating }: 
                             "text-3xl sm:text-4xl transition-all duration-500",
                             hoverRating === r.value && rating !== r.value && "scale-110 ease-out",
                             rating === r.value
-                                ? "scale-[1.6] sm:scale-[1.8] -translate-y-2 drop-shadow-2xl ease-[cubic-bezier(0.34,1.56,0.64,1)] z-20 relative"
+                                ? "scale-110 drop-shadow-2xl ease-[cubic-bezier(0.34,1.56,0.64,1)] z-20 relative"
                                 : "ease-out"
                         )}
                     >
@@ -46,7 +49,7 @@ export function RatingStepEmoji({ rating, hoverRating, onRate, onHoverRating }: 
                             hoverRating === r.value || rating === r.value
                                 ? "text-primary"
                                 : "text-muted-foreground",
-                            rating === r.value && "opacity-0"
+                            rating === r.value && "font-bold"
                         )}
                     >
                         {r.label}

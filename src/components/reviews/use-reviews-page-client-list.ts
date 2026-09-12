@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { toast } from "sonner";
+import { useState, useCallback, useRef } from "react";
 import { useGoogleSyncRemoteState } from "@/hooks/use-google-sync-remote-state";
-import { fetchReviewsPageData } from "./reviews-page-client-fetch";
+import { fetchReviewsPageData, updateReviewsPageUrl } from "@/components/reviews/reviews-page-client-fetch";
 import type { ReviewsPageClientProps } from "./reviews-page-client-types";
 import { useReviewsPageHydrateFromServerProps } from "./use-reviews-page-hydrate-from-server-props";
 import { useReviewsPageGoogleImportPoll } from "./use-reviews-page-google-import-poll";
@@ -24,6 +25,9 @@ export function useReviewsPageClientList(props: ReviewsPageClientProps) {
         initialFilters,
     } = props;
 
+    const requestVersion = useRef(0);
+    const currentBusinessId = useRef(businessId);
+    currentBusinessId.current = businessId;
     const [reviews, setReviews] = useState(initialReviews);
     const [count, setCount] = useState(initialCount);
     const [totalPages, setTotalPages] = useState(initialTotalPages);
@@ -64,10 +68,14 @@ export function useReviewsPageClientList(props: ReviewsPageClientProps) {
     });
 
     const fetchReviews = useCallback(
-        async (params: { type: string; status: string; rating: string; sort: string; page: number }) => {
+        async (params: { type: string; status: string; rating: string; sort: string; q?: string; page: number }) => {
+            const version = ++requestVersion.current;
+            const requestedBusinessId = currentBusinessId.current;
             setIsFetching(true);
             try {
                 const data = await fetchReviewsPageData(params);
+                if (version !== requestVersion.current || requestedBusinessId !== currentBusinessId.current) return;
+                updateReviewsPageUrl(params);
                 setReviews(data.reviews);
                 setCount(data.count);
                 setTotalPages(data.totalPages);
@@ -75,9 +83,9 @@ export function useReviewsPageClientList(props: ReviewsPageClientProps) {
                 setPublicCount(data.publicCount);
                 setPrivateCount(data.privateCount);
             } catch {
-                /* keep UI stable */
+                if (version === requestVersion.current) toast.error("Could not update reviews. Previous results are still shown; try again.");
             } finally {
-                setIsFetching(false);
+                if (version === requestVersion.current) setIsFetching(false);
             }
         },
         [],

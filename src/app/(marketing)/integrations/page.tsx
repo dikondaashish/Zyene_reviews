@@ -4,7 +4,7 @@ import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 export const metadata: Metadata = mergeMarketingSocial({
     title: "Review Platform Integrations",
     description:
-        "Sync Google, Facebook, and Yelp reviews. Trigger fair review requests from your workflow with Zyene’s REST API or generic inbound webhook.",
+        "Sync Google, Facebook, and Yelp reviews. Trigger configurable review requests from your workflow with Zyene’s REST API or generic inbound webhook.",
     alternates: { canonical: "https://www.zyenereviews.com/integrations" },
     openGraph: {
         title: "Review Platform Integrations",

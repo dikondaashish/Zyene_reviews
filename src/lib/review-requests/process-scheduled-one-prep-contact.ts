@@ -1,3 +1,4 @@
+import { isTestContact } from "@/lib/customers/test-contact";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { BusinessRow, DueRow } from "./scheduled-queue-types";
 import { patchRequest } from "./scheduled-queue-patch";
@@ -36,15 +37,15 @@ export async function validateScheduledSendContact(
 
         const { data: contact } = await admin
             .from("customers")
-            .select("last_request_sent_at, is_opted_out")
+            .select("last_request_sent_at, is_opted_out, tags")
             .eq("business_id", businessId)
             .eq("phone", phoneNorm)
             .maybeSingle();
 
-        if (contact?.is_opted_out) {
+        if (contact?.is_opted_out || isTestContact(contact)) {
             await patchRequest(admin, businessId, requestId, {
                 status: "failed",
-                error_message: "Contact opted out of review requests.",
+                error_message: "Contact is opted out or tagged zyene:test.",
                 sent_at: null,
             });
             return "failed";
@@ -86,15 +87,15 @@ export async function validateScheduledSendContact(
 
         const { data: contact } = await admin
             .from("customers")
-            .select("last_request_sent_at, is_opted_out")
+            .select("last_request_sent_at, is_opted_out, tags")
             .eq("business_id", businessId)
             .eq("email", emailNorm)
             .maybeSingle();
 
-        if (contact?.is_opted_out) {
+        if (contact?.is_opted_out || isTestContact(contact)) {
             await patchRequest(admin, businessId, requestId, {
                 status: "failed",
-                error_message: "Contact opted out of review requests.",
+                error_message: "Contact is opted out or tagged zyene:test.",
                 sent_at: null,
             });
             return "failed";
