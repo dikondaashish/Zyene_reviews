@@ -32,7 +32,7 @@ export function MarketingLayoutMobileNav({ loginUrl, signupUrl, onNavigate }: {
                 </details>
             ))}
             <div className="grid grid-cols-2 gap-x-4 py-3">
-                {[["Pricing", "/pricing"], ["Book a demo", "/demo"], ["About us", "/about"], ["Contact", "/contact"]].map(([label, href]) => (
+                {[["Pricing", "/pricing"], ["Book an appointment", "/demo"], ["About us", "/about"], ["Contact", "/contact"]].map(([label, href]) => (
                     <Link key={href} href={href} onClick={onNavigate} className="py-3 text-sm font-medium">{label}</Link>
                 ))}
             </div>

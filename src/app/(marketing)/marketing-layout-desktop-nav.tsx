@@ -55,6 +55,9 @@ export const MarketingLayoutDesktopNav = forwardRef<
         <Link href="/pricing" className="mega-trigger" onClick={onCloseMenu}>
           Pricing
         </Link>
+        <Link href="/demo" className="mega-trigger premium-nav-appointment" onClick={onCloseMenu}>
+          Book an appointment
+        </Link>
       </div>
       <div className="premium-nav-auth">
         <MarketingHeaderAuth loginUrl={loginUrl} signupUrl={signupUrl} />

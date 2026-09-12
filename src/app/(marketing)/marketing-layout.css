@@ -4,6 +4,8 @@
 .premium-nav-links { display:flex; align-items:center; }
 .premium-nav-auth { display:flex; align-items:center; }
 .mega-trigger { display:flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:12px 14px; border-radius:8px; cursor:pointer; color:var(--foreground); transition:background-color 160ms; }
+.premium-nav-appointment { color:var(--primary); font-weight:600; }
+.premium-nav-appointment:hover { background:var(--brand-wash); }
 .mega-trigger:hover { background:var(--muted); }
 .mega-trigger-highlight { background:var(--muted); }
 .mega-trigger svg { transition:transform 180ms var(--ease-out); }
