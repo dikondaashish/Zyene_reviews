@@ -53,25 +53,25 @@
 .product-tour-section { padding-block: clamp(52px, 6vw, 84px); }
 .product-tour-section .marketing-section-heading { margin-bottom: 34px; }
 .product-tour-section .marketing-section-heading h2 { font-size: clamp(32px, 3.5vw, 48px); }
-.product-tour-section .product-showcase-frame { max-width: 900px; padding: 20px; border-radius: 26px; }
-.product-tour-section .product-tour { max-width: 860px; margin: auto; font-size: 13px; border-radius: 16px; }
-.product-tour-section .tour-toolbar { padding: 15px 20px; }
-.product-tour-section .tour-wordmark { font-size: 20px; }
-.product-tour-section .tour-tabs { padding: 7px 18px; }
-.product-tour-section .tour-panel { min-height: 500px; }
-.product-tour-section :is(.review-demo, .request-demo, .report-demo) { padding: 22px; }
-.product-tour-section .tour-page-heading { margin-bottom: 20px; }
-.product-tour-section .tour-page-heading :is(h2, h3) { font-size: 22px; }
-.product-tour-section .tour-sandbox-note { padding-block: 11px; }
-.product-tour-section .tour-request-layout { gap: 32px; }
-.product-tour-section .tour-preview-column { padding: 16px; }
-.product-tour-section .request-example { min-height: 380px; padding: 16px; border-radius: 18px; }
-.product-tour-section .tour-message-bubble { margin-top: 16px; padding: 12px; }
-.product-tour-section .tour-inbox { grid-template-columns: 250px minmax(0, 1fr); }
-.product-tour-section .tour-review-option { padding: 12px 14px; }
-.product-tour-section .tour-review-detail { padding: 20px; }
-.product-tour-section .tour-composer { margin-top: 20px; padding-top: 16px; }
-.product-tour-section .tour-bar-chart { height: 190px; }
+.product-tour-section .product-showcase-frame { max-width: 800px; padding: 16px; border-radius: 24px; }
+.product-tour-section .product-tour { max-width: 760px; margin: auto; font-size: 12px; border-radius: 14px; }
+.product-tour-section .tour-toolbar { padding: 12px 16px; }
+.product-tour-section .tour-wordmark { font-size: 18px; }
+.product-tour-section .tour-tabs { padding: 6px 14px; }
+.product-tour-section .tour-panel { min-height: 450px; }
+.product-tour-section :is(.review-demo, .request-demo, .report-demo) { padding: 18px; }
+.product-tour-section .tour-page-heading { margin-bottom: 16px; }
+.product-tour-section .tour-page-heading :is(h2, h3) { font-size: 20px; }
+.product-tour-section .tour-sandbox-note { padding-block: 10px; font-size: 11px; }
+.product-tour-section .tour-request-layout { gap: 24px; }
+.product-tour-section .tour-preview-column { padding: 14px; }
+.product-tour-section .request-example { min-height: 340px; padding: 14px; border-radius: 16px; }
+.product-tour-section .tour-message-bubble { margin-top: 14px; padding: 10px; }
+.product-tour-section .tour-inbox { grid-template-columns: 220px minmax(0, 1fr); }
+.product-tour-section .tour-review-option { padding: 10px 12px; }
+.product-tour-section .tour-review-detail { padding: 16px; }
+.product-tour-section .tour-composer { margin-top: 16px; padding-top: 14px; }
+.product-tour-section .tour-bar-chart { height: 160px; }
 .product-tour, .workflow-product { --chart-2: #267861; --chart-4: #906021; --destructive: #b42318; }
 .product-tour[data-pointer-motion=true] :is(.tour-review-detail, .tour-published-reply, .tour-panel:not([hidden]), .tour-rating-confirmation, .tour-demo-delivered) { animation: tour-demo-enter 200ms var(--ease-out); }
 @keyframes tour-demo-enter { from { opacity: .3; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
