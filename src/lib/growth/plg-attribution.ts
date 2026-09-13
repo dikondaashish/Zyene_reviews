@@ -20,7 +20,7 @@ export function buildPlgMarketingUrl(source: PlgRefSource): string {
 export const PLG_FOOTER_LABEL = "Zyene Reviews";
 
 export function plgSmsFooter(): string {
-    return `\n\nReview management powered by Zyene Reviews - ${buildPlgMarketingUrl("review-request")}`;
+    return `\n\nReview management powered by Zyene Reviews - ${buildPlgMarketingUrl("review-request")}\nReply STOP to opt out.`;
 }
 
 export function plgEmailFooterHtml(): string {

@@ -1,10 +1,16 @@
 import { logger } from "@/lib/logger";
-import { getTwilioClient, TWILIO_PHONE_NUMBER } from "./client";
+import { getTwilioClient, TWILIO_MESSAGING_SERVICE_SID, TWILIO_PHONE_NUMBER } from "./client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { buildTwilioMessageParams, ensureSmsOptOutText } from "./message-params";
 
 export async function sendSMS(to: string, body: string) {
-    if (!TWILIO_PHONE_NUMBER) {
-        return { sent: false, error: "Twilio phone number not configured" };
+    const messageParams = buildTwilioMessageParams(to, ensureSmsOptOutText(body), {
+        messagingServiceSid: TWILIO_MESSAGING_SERVICE_SID,
+        phoneNumber: TWILIO_PHONE_NUMBER,
+    });
+
+    if (!messageParams) {
+        return { sent: false, error: "Twilio sender not configured" };
     }
 
     try {
@@ -21,11 +27,7 @@ export async function sendSMS(to: string, body: string) {
             return { sent: false, error: "Recipient opted out" };
         }
 
-        await getTwilioClient().messages.create({
-            body,
-            from: TWILIO_PHONE_NUMBER,
-            to,
-        });
+        await getTwilioClient().messages.create(messageParams);
 
         return { sent: true };
     } catch (error: unknown) {

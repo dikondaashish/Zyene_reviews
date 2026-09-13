@@ -178,6 +178,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: "yearly",
             priority: 0.55,
         },
+        {
+            url: `${BASE_URL}/sms-consent`,
+            changeFrequency: "yearly",
+            priority: 0.5,
+        },
     ];
 
     // ─────────────────────────────────────────────

@@ -69,7 +69,9 @@ Missing **required** vars accessed via `required()` throw at use/import time wit
 
 | Variable | Purpose |
 |----------|---------|
-| `TWILIO_ACCOUNT_SID`, `AUTH_TOKEN`, `PHONE_NUMBER` | SMS |
+| `TWILIO_ACCOUNT_SID`, `AUTH_TOKEN` | SMS credentials |
+| `TWILIO_MESSAGING_SERVICE_SID` | Preferred SMS/RCS sender pool; supports SMS fallback |
+| `TWILIO_PHONE_NUMBER` | Legacy SMS sender fallback |
 | `RESEND_API_KEY`, `RESEND_FROM` | Product email |
 | `RESEND_WEBHOOK_SECRET` | Delivery events |
 | `RESEND_COLLECTRATINGS_API_KEY` / `FROM` | Review-request From domain |
