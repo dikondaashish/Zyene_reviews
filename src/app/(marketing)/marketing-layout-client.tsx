@@ -10,6 +10,7 @@ import { AdLandingBanner } from "@/components/marketing/ad-landing-banner";
 import { MarketingLayoutHeader } from "@/app/(marketing)/marketing-layout-header";
 import { MarketingLayoutFooter } from "@/app/(marketing)/marketing-layout-footer";
 import { useMarketingNavigation } from "@/hooks/use-marketing-navigation";
+import { getInteriorHeroTheme } from "@/lib/marketing/interior-hero-theme";
 
 function isGrowthOperationsPath(pathname: string | null): boolean {
   return pathname === "/growth" || (pathname?.startsWith("/growth/") ?? false);
@@ -22,6 +23,7 @@ export function MarketingLayoutClient({
 }) {
     const pathname = usePathname();
     const growthDashboard = isGrowthOperationsPath(pathname);
+    const interiorHeroTheme = getInteriorHeroTheme(pathname);
     const navigation = useMarketingNavigation();
 
     return (
@@ -38,7 +40,14 @@ export function MarketingLayoutClient({
                 </Suspense>
             )}
             {pathname === "/" ? <MarketingLayoutHeader key={pathname} pending={navigation.pending} pendingLabel={navigation.label} /> : null}
-            <main id="main-content" tabIndex={-1} className="marketing-content min-w-0 flex-1">{children}</main>
+            <main
+                id="main-content"
+                tabIndex={-1}
+                data-interior-hero={interiorHeroTheme ?? undefined}
+                className={`marketing-content min-w-0 flex-1${interiorHeroTheme ? ` marketing-content--interior marketing-content--hero-${interiorHeroTheme}` : ""}`}
+            >
+                {children}
+            </main>
             {growthDashboard ? null : <MarketingLayoutFooter />}
         </div>
     );
