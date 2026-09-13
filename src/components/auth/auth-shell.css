@@ -90,3 +90,21 @@
   .auth-header > a > span { font-size: 18px; }
   .auth-main { padding-inline: 20px; }
 }
+
+/* Keep the complete auth action visible on shorter browser viewports. */
+@media (max-height: 780px) {
+  .auth-header { min-height: 72px; padding-block: 12px; }
+  .auth-layout { min-height: calc(100svh - 72px); padding-bottom: 12px; }
+  .auth-main { padding-block: 16px; }
+  .auth-footer { padding-block: 8px 4px; }
+  .auth-brand { gap: 24px; padding: 32px; }
+  .auth-brand h2 { font-size: 38px; }
+}
+@media (max-width: 899px) and (max-height: 780px) {
+  .auth-header { min-height: 64px; padding-block: 10px; }
+  .auth-layout, .auth-main-column { min-height: calc(100svh - 64px); }
+  .auth-layout { padding-bottom: 0; }
+  .auth-main { padding: 10px 20px 12px; }
+  .auth-footer { gap: 10px 14px; padding: 8px 16px 4px; font-size: 11px; }
+  .auth-footer nav { gap: 10px; }
+}

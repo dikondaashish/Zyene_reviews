@@ -39,6 +39,19 @@ for (const path of ["/login", "/signup", "/forgot-password"]) {
   });
 }
 
+for (const path of ["/login", "/signup", "/forgot-password"]) {
+  test(`${path} fits a short mobile viewport without page scrolling`, async ({ page }) => {
+    await page.goto(path, { waitUntil: "domcontentloaded" });
+    for (const width of [320, 390]) {
+      await page.setViewportSize({ width, height: 720 });
+      await page.evaluate(() => document.fonts.ready);
+      await expect(page.locator("h1")).toHaveCount(1);
+      const dimensions = await page.evaluate(() => ({ scrollHeight: document.documentElement.scrollHeight, innerHeight }));
+      expect(dimensions.scrollHeight <= dimensions.innerHeight + 1, JSON.stringify(dimensions)).toBe(true);
+    }
+  });
+}
+
 test("login keeps password controls, invitation context, and recoverable errors", async ({ page }) => {
   await page.goto("/login?invite=test-invitation&next=%2Freviews", { waitUntil: "domcontentloaded" });
   await expect(page.getByRole("link", { name: "Create an account" })).toHaveAttribute(
