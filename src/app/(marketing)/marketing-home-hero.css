@@ -78,6 +78,16 @@
 }
 .home-hero-scene-layer {
   min-width: 0;
+  transform: translate3d(0, var(--home-hero-scroll-y, 0), 0);
+  transition: transform 220ms var(--ease-out);
+}
+.home-hero-pointer-layer {
+  transform: translate3d(
+    var(--home-hero-pointer-x, 0),
+    var(--home-hero-pointer-y, 0),
+    0
+  );
+  transition: transform 180ms var(--ease-out);
 }
 .home-hero-content {
   padding-block: 16px;

@@ -5,18 +5,18 @@ import { SIGNUP_URL } from "@/config/env";
 export function HomeHeroContent() {
   return (
     <div className="home-hero-content">
-      <p className="home-hero-eyebrow hero-enter" style={{ animationDelay: "150ms" }}>
+      <p className="home-hero-eyebrow">
         <Star size={18} aria-hidden="true" /> Big love for local businesses
       </p>
       <h1 id="home-hero-title">
-        <span className="hero-enter" style={{ animationDelay: "250ms" }}>
+        <span>
           More reviews.
         </span>
-        <span className="hero-enter" style={{ animationDelay: "350ms" }}>
+        <span>
           Less busywork.
         </span>
       </h1>
-      <p className="home-hero-description hero-enter" style={{ animationDelay: "550ms" }}>
+      <p className="home-hero-description">
         Collect customer feedback by text, email, or QR code. Manage reviews and draft thoughtful replies in one workspace built for local businesses.
       </p>
       <div className="home-hero-actions">

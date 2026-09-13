@@ -13,7 +13,7 @@ export const post17: BlogPost = {
     author: { name: "Marcus Vance", role: "Local SEO & Reputation" },
     metaTitle: "Can You Delete or Remove a Google Review? (2026 Guide)",
     metaDescription:
-        "Can you delete a Google review? Learn how to report fake or inappropriate reviews, dispute ratings via Google's Review Management Tool, appeal rejections, and manage negative feedback.",
+        "Learn when Google will remove a review, how to report policy violations, appeal a rejected report, and respond to legitimate negative feedback.",
     keywords: [
         "can you delete a google review",
         "how to remove a google review",
@@ -35,11 +35,11 @@ export const post17: BlogPost = {
         "true-cost-of-bad-online-reputation",
     ],
     internalLinks: [
-        { label: "Negative Feedback Shield", href: "/features/feedback-shield" },
+        { label: "Negative Feedback Shield", href: "/features/review-collection" },
         { label: "Fake Google Reviews Guide", href: "/blog/how-to-handle-fake-google-reviews" },
         { label: "Responding to 1-Star Reviews", href: "/blog/how-to-respond-to-a-1-star-review" },
         { label: "Google Review Link Guide", href: "/blog/how-to-get-a-google-review-link" },
-        { label: "Review Management Platform", href: "/product" },
+        { label: "Review Management Platform", href: "/features" },
         { label: "Local SEO & Map Pack Impact", href: "/blog/how-reviews-impact-local-map-pack-ranking" },
     ],
     faqs: [
@@ -80,7 +80,7 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/delete-google-review-hero.jpg",
+                src: "/images/blog/covers/delete-google-review-hero.webp",
                 alt: "Small business owner reviewing customer feedback on a laptop at a cafe counter",
                 width: 1672,
                 height: 941,
@@ -117,7 +117,7 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/google-review-policy-research.jpg",
+                src: "/images/blog/covers/google-review-policy-research.webp",
                 alt: "Business manager reading Google's review content policies on a desktop monitor in a modern office",
                 width: 1672,
                 height: 941,
@@ -161,7 +161,7 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/reporting-google-review-laptop.jpg",
+                src: "/images/blog/covers/reporting-google-review-laptop.webp",
                 alt: "Close-up of hands using a laptop to navigate the Google Business Profile review reporting interface",
                 width: 1672,
                 height: 941,
@@ -236,7 +236,7 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/responding-to-negative-review.jpg",
+                src: "/images/blog/covers/responding-to-negative-review.webp",
                 alt: "Restaurant owner composing a thoughtful response to a negative customer review on a tablet",
                 width: 1672,
                 height: 941,
@@ -275,7 +275,7 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/team-review-management.jpg",
+                src: "/images/blog/covers/team-review-management.webp",
                 alt: "Local business team discussing customer feedback and review response strategy around a conference table",
                 width: 1672,
                 height: 941,
@@ -293,7 +293,7 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/five-star-review-collection.jpg",
+                src: "/images/blog/covers/five-star-review-collection.webp",
                 alt: "Salon receptionist helping a customer leave honest feedback on a tablet at checkout",
                 width: 1672,
                 height: 941,
@@ -312,7 +312,7 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/reputation-dashboard-overview.jpg",
+                src: "/images/blog/covers/reputation-dashboard-overview.webp",
                 alt: "Zyene Reviews reputation management dashboard showing review trends and response tools on a desktop monitor",
                 width: 1672,
                 height: 941,

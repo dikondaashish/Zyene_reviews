@@ -27,7 +27,7 @@ const STORIES = [
     title: "Your reputation has a story. See the next move.",
     label: "03 / LEARN WITH CLARITY",
     text: "See request activity, rating and response trends, local competitor context, and the feedback that deserves a closer look—then improve the experience that comes next.",
-    image: "/marketing/about/team-collaboration.png",
+    image: "/marketing/about/team-collaboration.webp",
     alt: "A business team reviewing its work together",
     href: "/features/analytics",
     link: "See what’s moving your business",

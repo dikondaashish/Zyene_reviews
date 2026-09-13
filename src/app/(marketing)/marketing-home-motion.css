@@ -27,7 +27,7 @@
 @keyframes hero-draw { from { stroke-dashoffset:1; } to { stroke-dashoffset:0; } }
 
 /* OptiMonk-style section choreography: reveal on entry, then drift gently with the scroll. */
-.marketing-scroll-reveal { width:100%; }
+.marketing-scroll-reveal { width:100%; transform:translate3d(0,var(--marketing-scroll-y,0),0); }
 .marketing-scroll-reveal-content {
   width:100%;
   transition:opacity 720ms var(--ease-out),transform 720ms var(--ease-out);

@@ -7,7 +7,6 @@ import { LanguageProvider } from "@/lib/language-context";
 import { CookieBanner } from "@/components/ui/cookie-banner";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { ConditionalWebSiteJsonLd } from "@/components/seo/conditional-website-json-ld";
 import { MetaPixel } from "@/components/analytics/meta-pixel";
 import Script from "next/script";
 import "./globals.css";
@@ -25,6 +24,7 @@ const inter = Inter({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  preload: false,
 });
 
 /** Display / marketing hero face ,  geometric, Degular-like; UI stays Inter per docs/DESIGN.md */
@@ -57,7 +57,6 @@ export default function RootLayout({
           <LanguageProvider>
             <QueryProvider>
               <MotionProvider>
-                <ConditionalWebSiteJsonLd />
                 {children}
                 <Toaster />
                 <CookieBanner />

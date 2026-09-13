@@ -26,7 +26,7 @@ for (const viewport of VIEWPORTS) {
     await page.evaluate(() => document.fonts.ready);
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator(".home-hero h1")).toHaveText(
-      "Happy customers.Your next big thing.",
+      "More reviews.Less busywork.",
     );
     const shellStyle = await page
       .locator(".home-hero-shell")
@@ -154,8 +154,8 @@ test("existing navigation, trial links and product tour remain available", async
   await expect(
     page
       .locator(".home-hero-actions")
-      .getByRole("link", { name: "Let’s show you around" }),
-  ).toHaveAttribute("href", "/demo");
+      .getByRole("link", { name: "Try the product tour" }),
+  ).toHaveAttribute("href", "#home-product-tour");
   const platform = page
     .getByRole("navigation", { name: "Main navigation" })
     .getByRole("button", { name: "Platform", exact: true });
@@ -163,7 +163,10 @@ test("existing navigation, trial links and product tour remain available", async
   await expect(platform).toHaveAttribute("aria-expanded", "true");
   await page.keyboard.press("Escape");
   await expect(platform).toHaveAttribute("aria-expanded", "false");
-  await page.locator(".hero-reviews-heading a").click();
+  await page
+    .locator(".home-hero-actions")
+    .getByRole("link", { name: "Try the product tour" })
+    .click();
   await expect(page.locator("#home-product-tour")).toBeInViewport();
   await page.getByRole("tab", { name: "Review requests", exact: true }).click();
   await expect(

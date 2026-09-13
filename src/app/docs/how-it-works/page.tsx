@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "How Zyene Works",
     description: "Understand the Zyene Reviews architecture, how review sync pipelines, AI reply generation, feedback routing, and campaign triggers work under the hood.",
     alternates: { canonical: "https://www.zyenereviews.com/docs/how-it-works" },
     openGraph: { title: "How Zyene Works, Docs", description: "Review sync pipelines, AI replies, feedback routing, and campaign automation explained.", url: "https://www.zyenereviews.com/docs/how-it-works" },
     twitter: { card: "summary_large_image", title: "How Zyene Works, Docs", description: "Review sync pipelines, AI replies, feedback routing, and campaign automation." },
-};
+});
 
 export default function DocsHowItWorksPage() {
     const toc: TocItem[] = [

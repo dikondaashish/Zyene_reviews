@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import Link from "next/link";
 import { DocCodeBlock } from "@/components/docs/doc-code-block";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 import { getAppBaseUrl, getAppIntegrationsUrl } from "@/config/env";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Quickstart Guide",
     description: "Get Zyene Reviews set up in minutes. Connect your Google Business Profile, configure review requests, and start monitoring reviews from day one.",
     alternates: { canonical: "https://www.zyenereviews.com/docs/quickstart" },
     openGraph: { title: "Quickstart, Zyene Reviews Docs", description: "Connect GBP, configure review requests, and start monitoring reviews.", url: "https://www.zyenereviews.com/docs/quickstart" },
     twitter: { card: "summary_large_image", title: "Quickstart, Zyene Reviews Docs", description: "Connect GBP, configure review requests, and start monitoring reviews." },
-};
+});
 
 export default function DocsQuickstartPage() {
     const base = getAppBaseUrl();

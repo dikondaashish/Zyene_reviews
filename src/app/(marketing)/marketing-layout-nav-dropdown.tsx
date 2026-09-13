@@ -57,7 +57,12 @@ export function MarketingLayoutNavDropdown({
             type="button"
             aria-expanded={open}
             aria-controls={`marketing-menu-${menu}`}
-            onClick={onToggle}
+            onClick={(event) => {
+              // A fine pointer opens the menu on hover before its click fires.
+              // Keep that click open; keyboard activation still toggles it.
+              if (event.detail > 0) onOpen();
+              else onToggle();
+            }}
             className="mega-trigger"
           >
             {label}

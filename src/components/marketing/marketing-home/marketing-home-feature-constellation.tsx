@@ -75,7 +75,7 @@ export function MarketingHomeFeatureConstellation() {
           <article className="home-feature-card home-feature-card-analytics">
             <div className="home-feature-card-title"><Activity size={18} aria-hidden="true" /><h3>Reputation analytics</h3></div>
             <div className="home-feature-metrics"><MiniMetric label="Average rating" value="4.8" trend="+12%" /><MiniMetric label="Total reviews" value="248" trend="+28%" /></div>
-            <div className="home-feature-chart" aria-label="Reviews trend rising over the last 30 days"><i className="chart-bar-one" /><i className="chart-bar-two" /><i className="chart-bar-three" /><i className="chart-bar-four" /><i className="chart-dot" /></div>
+            <div className="home-feature-chart" role="img" aria-label="Reviews trend rising over the last 30 days"><i className="chart-bar-one" /><i className="chart-bar-two" /><i className="chart-bar-three" /><i className="chart-bar-four" /><i className="chart-dot" /></div>
           </article>
 
           <article className="home-feature-card home-feature-card-widget">

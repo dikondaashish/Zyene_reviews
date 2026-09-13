@@ -13,6 +13,7 @@ export type FeaturePillarSlug =
 /** Legacy slug from early features page - redirect to competitor-tracking */
 export const FEATURE_PILLAR_ALIASES: Record<string, FeaturePillarSlug> = {
     "competitor-intelligence": "competitor-tracking",
+    "feedback-shield": "review-collection",
 };
 
 export interface FeaturePillarPage {

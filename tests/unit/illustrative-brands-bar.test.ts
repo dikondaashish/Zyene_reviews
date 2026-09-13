@@ -20,7 +20,7 @@ describe("illustrative brand carousel", () => {
   it("renders all seven real logo URLs with readable industry labels", () => {
     const html = render();
     for (const brand of ILLUSTRATIVE_BRANDS) {
-      expect(html).toContain(getBrandLogoUrl(brand.domain).replaceAll("&", "&amp;"));
+      expect(html).toContain(encodeURIComponent(getBrandLogoUrl(brand.domain)));
       expect(html).toContain(brand.industry.replaceAll("&", "&amp;"));
     }
   });

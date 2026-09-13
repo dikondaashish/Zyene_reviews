@@ -19,6 +19,7 @@ export function ProductJsonLd({
         "@type": "Product",
         name,
         description,
+        image: [`${JSON_LD_BASE_URL}/og/og-default.png`],
         brand: {
             "@type": "Brand",
             name: "Zyene Reviews",

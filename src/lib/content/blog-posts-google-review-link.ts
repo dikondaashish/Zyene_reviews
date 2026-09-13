@@ -13,7 +13,7 @@ export const post16: BlogPost = {
     author: { name: "Jamie Rivera", role: "Product Marketing" },
     metaTitle: "How to Get a Google Review Link for Your Business (2026)",
     metaDescription:
-        "Step-by-step guide to finding and sharing your direct Google review link. Learn the 2026 Google Search method, Place ID formula, and how to convert more customers.",
+        "Find your Google review link using Google Search or a Place ID. Follow the steps, create a QR code, and help customers leave a review.",
     keywords: [
         "how to get a google review link",
         "google review link for business",
@@ -24,12 +24,12 @@ export const post16: BlogPost = {
     relatedSlugs: [
         "why-google-reviews-matter-in-2026",
         "how-to-respond-to-a-positive-review",
-        "how-negative-feedback-shield-protects-ratings",
+        "negative-feedback-shield",
     ],
     internalLinks: [
         { label: "Google Reviews Guide", href: "/resources/google-reviews-guide" },
-        { label: "Negative Feedback Shield", href: "/features/feedback-shield" },
-        { label: "Collect Ratings Capture Flow", href: "/product" },
+        { label: "Negative Feedback Shield", href: "/features/review-collection" },
+        { label: "Collect Ratings Capture Flow", href: "/how-it-works" },
     ],
     faqs: [
         {

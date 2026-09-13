@@ -36,10 +36,10 @@ export function DocToc({ items }: { items: TocItem[] }) {
 
     return (
         <aside className="sticky top-16 hidden h-[calc(100vh-4rem)] w-56 shrink-0 overflow-y-auto py-8 pl-6 xl:block">
-            <h4 className="mb-4 text-sm font-semibold tracking-tight text-foreground flex items-center gap-2">
+            <p className="mb-4 text-sm font-semibold tracking-tight text-foreground flex items-center gap-2">
                 <span className="rounded-full bg-border size-3" />
                 On this page
-            </h4>
+            </p>
             <div className="flex flex-col gap-2.5">
                 {items.map((item) => {
                     const isActive = activeId === item.href;
@@ -60,9 +60,9 @@ export function DocToc({ items }: { items: TocItem[] }) {
             </div>
             
             <div className="mt-8 border-t border-border pt-6">
-                <h4 className="mb-4 text-xs font-semibold tracking-tight text-foreground uppercase text-muted-foreground">
+                <p className="mb-4 text-xs font-semibold tracking-tight text-foreground uppercase text-muted-foreground">
                     Next steps
-                </h4>
+                </p>
                 <div className="flex flex-col gap-2.5">
                     <Link href="/docs/api" className="text-[13px] text-muted-foreground hover:text-foreground transition-colors">
                         Check API Reference

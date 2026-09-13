@@ -4,7 +4,7 @@ import { buildOrganizationSchema } from "@/lib/seo/organization-schema";
 import { JSON_LD_BASE_URL } from "./json-ld-constants";
 import { JsonLdScript } from "./json-ld-script";
 
-/** Industry vertical landing pages - LocalBusiness / ProfessionalService for local SEO relevance. */
+/** This page describes software for an industry, not a physical local business. */
 export function IndustryLocalBusinessJsonLd({
     data,
     slug,
@@ -16,18 +16,18 @@ export function IndustryLocalBusinessJsonLd({
 
     const schema = {
         "@context": "https://schema.org",
-        "@type": "LocalBusiness",
-        "@id": `${url}#localbusiness`,
+        "@type": "Service",
+        "@id": `${url}#service`,
         name: `Zyene Reviews for ${data.name}`,
         description: data.metaDescription,
         url,
         image: `${JSON_LD_BASE_URL}${ZYENE_REVIEWS_LOGO_SRC}`,
-        areaServed: {
-            "@type": "AdministrativeArea",
-            name: data.name,
+        audience: {
+            "@type": "BusinessAudience",
+            audienceType: data.name,
         },
-        parentOrganization: buildOrganizationSchema(),
-        knowsAbout: data.targetKeywords,
+        provider: buildOrganizationSchema(),
+        serviceType: "Review management software",
     };
 
     return <JsonLdScript schema={schema} />;

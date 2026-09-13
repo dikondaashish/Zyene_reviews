@@ -35,10 +35,10 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                             {resource.slug === "review-request-templates" ? (
                                 <p className="mb-8 text-sm text-muted-foreground">
                                     Want the full pack in your inbox?{" "}
-                                    <a href="#template-pack-capture" className="font-medium text-primary hover:underline">
+                                    <a href="#resource-lead-capture" className="font-medium text-primary hover:underline">
                                         Get the 20 templates by email
                                     </a>
-                                    - preview scripts below stay visible for SEO.
+                                    — browse a sample of the templates below.
                                 </p>
                             ) : null}
 
@@ -95,7 +95,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                                         Email the complete pack - practical templates for customer feedback outreach.
                                     </p>
                                     <Button size="sm" variant="outline" className="w-full" asChild>
-                                        <a href="#template-pack-capture">
+                                        <a href="#resource-lead-capture">
                                             Get the 20 templates
                                         </a>
                                     </Button>

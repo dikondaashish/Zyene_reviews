@@ -32,7 +32,7 @@ export function DocSidebar() {
             <nav className="flex flex-col gap-8">
                 {DOC_NAV_GROUPS.map((group) => (
                     <div key={group.title} className="flex flex-col gap-3">
-                        <h2 className="text-sm font-semibold tracking-tight text-foreground">{group.title}</h2>
+                        <p className="text-sm font-semibold tracking-tight text-foreground">{group.title}</p>
                         <div className="flex flex-col gap-1">
                             {group.items.map((item) => {
                                 const active = isActivePath(pathname, item.href);

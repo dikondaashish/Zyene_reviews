@@ -56,7 +56,7 @@ export function DocSearchTrigger({
                 {children}
             </button>
 
-            <CommandDialog
+            {open && <CommandDialog
                 open={open}
                 onOpenChange={setOpen}
                 title="Search documentation"
@@ -83,7 +83,7 @@ export function DocSearchTrigger({
                         </CommandGroup>
                     ))}
                 </CommandList>
-            </CommandDialog>
+            </CommandDialog>}
         </>
     );
 }

@@ -12,7 +12,7 @@ export function PricingClientComparisonSection() {
                 <p className="text-muted-foreground text-center mb-10">
                     Enterprise features at owner-operator pricing - no annual contracts required.
                 </p>
-                <div role="region" aria-label="Platform feature comparison" tabIndex={0} className="overflow-x-auto rounded-xl border border-border bg-card">
+                <div role="region" aria-label="Platform feature comparison" tabIndex={0} className="relative overflow-x-auto rounded-xl border border-border bg-card">
                     <table className="min-w-[640px] w-full text-sm text-left border-collapse">
                         <thead>
                             <tr className="bg-muted">
