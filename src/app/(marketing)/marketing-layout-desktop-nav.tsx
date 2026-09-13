@@ -16,8 +16,9 @@ export const MarketingLayoutDesktopNav = forwardRef<
     onToggleMenu: (menu: MarketingNavMenu) => void;
     onOpenMenu: (menu: MarketingNavMenu) => void;
     onCloseMenu: () => void;
+    onBookAppointment: () => void;
   }
->(function MarketingLayoutDesktopNav({ loginUrl, signupUrl, openMenu, onToggleMenu, onOpenMenu, onCloseMenu }, ref) {
+>(function MarketingLayoutDesktopNav({ loginUrl, signupUrl, openMenu, onToggleMenu, onOpenMenu, onCloseMenu, onBookAppointment }, ref) {
   const motionGroup = useId();
   return (
     <nav ref={ref} className="premium-desktop-nav" aria-label="Main navigation">
@@ -55,9 +56,9 @@ export const MarketingLayoutDesktopNav = forwardRef<
         <Link href="/pricing" className="mega-trigger" onClick={onCloseMenu}>
           Pricing
         </Link>
-        <Link href="/demo" className="mega-trigger premium-nav-appointment" onClick={onCloseMenu}>
+        <button type="button" className="mega-trigger premium-nav-appointment" onClick={onBookAppointment}>
           Book an appointment
-        </Link>
+        </button>
       </div>
       <div className="premium-nav-auth">
         <MarketingHeaderAuth loginUrl={loginUrl} signupUrl={signupUrl} />
