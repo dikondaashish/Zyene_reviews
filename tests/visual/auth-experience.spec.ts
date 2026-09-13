@@ -39,15 +39,18 @@ for (const path of ["/login", "/signup", "/forgot-password"]) {
   });
 }
 
-for (const path of ["/login", "/signup", "/forgot-password"]) {
-  test(`${path} fits a short mobile viewport without page scrolling`, async ({ page }) => {
+for (const path of ["/login", "/signup?next=%2Fdashboard", "/forgot-password"]) {
+  test(`${path} fits desktop and mobile viewports without page scrolling`, async ({ page }) => {
     await page.goto(path, { waitUntil: "domcontentloaded" });
-    for (const width of [320, 390]) {
-      await page.setViewportSize({ width, height: 720 });
+    for (const [width, height] of [[1440, 900], [1280, 720], [1024, 768], [900, 720], [390, 844], [390, 720], [320, 720]]) {
+      await page.setViewportSize({ width, height });
       await page.evaluate(() => document.fonts.ready);
       await expect(page.locator("h1")).toHaveCount(1);
       const dimensions = await page.evaluate(() => ({ scrollHeight: document.documentElement.scrollHeight, innerHeight }));
-      expect(dimensions.scrollHeight <= dimensions.innerHeight + 1, JSON.stringify(dimensions)).toBe(true);
+      expect(dimensions.scrollHeight <= dimensions.innerHeight + 1, `${width}×${height}: ${JSON.stringify(dimensions)}`).toBe(true);
+      await expect(page.locator('button[type="submit"]')).toBeInViewport({ ratio: 1 });
+      await expect(page.locator('button[type="submit"]')).toHaveCSS("color", "rgb(255, 255, 255)");
+      await expect(page.getByRole("contentinfo")).toBeInViewport({ ratio: 1 });
     }
   });
 }

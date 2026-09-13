@@ -77,16 +77,28 @@
   .auth-help:hover, .auth-footer a:hover, .auth-password-toggle:hover { color: var(--foreground); }
 }
 @media (max-width: 374px) { .auth-form-heading h1 { font-size: 28px; } }
-@media (max-height: 780px) {
-  .auth-form-stack { gap: 18px; }
+@media (max-height: 900px) {
+  .auth-form-stack { gap: 14px; }
   .auth-form-heading h1 { font-size: 28px; margin-bottom: 8px; }
   .auth-form-heading p { font-size: 14px; line-height: 1.45; }
-  .auth-fields { gap: 12px; }
+  .auth-fields { gap: 10px; }
   .auth-field { gap: 6px; }
   .auth-input, .auth-submit { min-height: 44px; height: 44px; }
   .auth-password-toggle { width: 40px; height: 40px; }
+  .auth-google-note { display: none; }
+  .auth-legal { font-size: 11px; line-height: 1.45; }
 }
-@media (max-width: 899px) and (max-height: 780px) {
+@media (max-height: 780px) {
+  .auth-form-stack { gap: 8px; }
+  .auth-fields { gap: 8px; }
+  .auth-field { gap: 4px; }
+  .auth-field label, .auth-label { font-size: 12px; }
+  .auth-hint { font-size: 11px; line-height: 1.4; }
+  .auth-switch { font-size: 13px; line-height: 1.4; }
+  .auth-optional { padding-block: 0; }
+  .auth-optional summary { min-height: 36px; }
+}
+@media (max-width: 960px) and (max-height: 780px) {
   .auth-form-stack { gap: 10px; }
   .auth-form-heading h1 { font-size: 28px; margin-bottom: 6px; }
   .auth-form-heading p { font-size: 13px; line-height: 1.35; }

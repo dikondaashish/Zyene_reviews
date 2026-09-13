@@ -75,7 +75,7 @@
   .auth-brand h2 { font-size: 38px; }
   .auth-main { padding-inline: 32px; }
 }
-@media (max-width: 899px) {
+@media (max-width: 960px) {
   .auth-header { min-height: 88px; padding: 20px 28px; }
   .auth-layout { display: block; min-height: calc(100svh - 88px); padding: 0; }
   .auth-brand { display: none; }
@@ -91,16 +91,26 @@
   .auth-main { padding-inline: 20px; }
 }
 
-/* Keep the complete auth action visible on shorter browser viewports. */
-@media (max-height: 780px) {
+/* Compact both columns together so the preview cannot push the form offscreen. */
+@media (max-height: 900px) {
   .auth-header { min-height: 72px; padding-block: 12px; }
   .auth-layout { min-height: calc(100svh - 72px); padding-bottom: 12px; }
-  .auth-main { padding-block: 16px; }
+  .auth-main { padding-block: 12px; }
   .auth-footer { padding-block: 8px 4px; }
-  .auth-brand { gap: 24px; padding: 32px; }
-  .auth-brand h2 { font-size: 38px; }
+  .auth-brand { min-height: calc(100svh - 84px); gap: 20px; padding: 28px; }
+  .auth-brand h2 { font-size: clamp(28px, 2.8vw, 38px); margin-block: 14px 12px; }
+  .auth-brand-copy > p:last-child { font-size: 14px; line-height: 1.5; }
+  .auth-preview-top { padding-block: 12px; }
+  .auth-review { padding: 16px 20px; }
+  .auth-review blockquote { margin-top: 12px; line-height: 1.5; }
+  .auth-reply { padding: 14px; }
+  .auth-reply p { line-height: 1.5; margin-block: 8px 10px; }
+  .auth-preview figcaption { padding-block: 10px; }
 }
-@media (max-width: 899px) and (max-height: 780px) {
+@media (max-height: 780px) {
+  .auth-main { padding-block: 8px; }
+}
+@media (max-width: 960px) and (max-height: 900px) {
   .auth-header { min-height: 64px; padding-block: 10px; }
   .auth-layout, .auth-main-column { min-height: calc(100svh - 64px); }
   .auth-layout { padding-bottom: 0; }
