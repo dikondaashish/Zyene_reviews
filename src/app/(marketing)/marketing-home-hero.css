@@ -57,7 +57,7 @@
 .home-hero {
   width: 100%;
   overflow: clip;
-  padding: 48px 0 64px;
+  padding: 40px 0 32px;
 }
 .home-hero-container {
   width: calc(100% - 88px);
@@ -192,6 +192,12 @@
 @media (min-width: 1200px) and (max-width: 1439px) {
   .home-hero-container {
     width: calc(100% - 88px);
+  }
+}
+@media (min-width: 1200px) {
+  .home-hero-scene-layer {
+    width: 94%;
+    margin-left: auto;
   }
 }
 @media (max-width: 1199px) {
