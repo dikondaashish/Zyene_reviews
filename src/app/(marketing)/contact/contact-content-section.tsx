@@ -7,7 +7,7 @@ import { ContactForm } from "@/app/(marketing)/contact/contact-form";
 export function ContactContentSection() {
     return (
         <>
-            <LandingHero eyebrow="Let’s talk" title="Real people. Ready to help." description="From your first review request to your next location, we’re here to help you get more from Zyene." />
+            <LandingHero eyebrow="Let’s talk" title="Real people. Ready to help." description="From your first review request to your next location, we’re here to help you get more from Zyene." variant="conversion" media={{ kind: "none" }} />
             <section className="marketing-section">
                 <div className="marketing-container grid grid-cols-1 gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
                     <div className="space-y-8">

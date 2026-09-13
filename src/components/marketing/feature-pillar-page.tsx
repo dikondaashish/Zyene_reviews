@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { LandingHero } from "@/components/marketing/landing-hero";
+import { FeatureDemoFrame } from "@/components/marketing/interior/feature-demo-frame";
 import { AutomaticRepliesFeature } from "@/components/marketing/automatic-replies-feature";
 import { ProductTour } from "@/components/marketing/product-tour/product-tour";
 import { FEATURE_VISUALS } from "@/components/marketing/feature-visual-data";
@@ -25,8 +26,19 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
         eyebrow={pillar.title}
         title={visual.headline}
         description={pillar.tagline}
-        visual={visual.tab ? <><h2 className="sr-only">Explore the interactive demo</h2><ProductTour initialTab={visual.tab} /></> : undefined}
-        image={visual.tab ? undefined : { src: visual.image, alt: visual.alt }}
+        variant={visual.tab ? "product" : "story"}
+        media={visual.tab
+          ? {
+              kind: "product",
+              label: `${pillar.title} interactive sample`,
+              node: (
+                <FeatureDemoFrame label={`${pillar.title} product demonstration`} caption="Fictional business data. Safe to explore.">
+                  <h2 className="sr-only">Explore the interactive demo</h2>
+                  <ProductTour initialTab={visual.tab} />
+                </FeatureDemoFrame>
+              ),
+            }
+          : { kind: "photo", src: visual.image, alt: visual.alt }}
         primary={{ label: "Start free trial", href: "/signup" }}
         secondary={{ label: "Book a walkthrough", href: "/demo" }}
       >

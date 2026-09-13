@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+
+import { HeroMedia as HeroMediaView } from "@/components/marketing/interior/hero-media";
 import { SIGNUP_URL } from "@/config/env";
+import type { HeroMedia, InteriorHeroVariant } from "@/types/marketing-interior";
 
 type HeroAction = { label: string; href: string };
 
@@ -10,16 +12,39 @@ interface LandingHeroProps {
     eyebrow: string;
     title: ReactNode;
     description: string;
-    image?: { src: string; alt: string };
+    variant?: InteriorHeroVariant;
+    media?: HeroMedia;
+    image?: { src: string; alt: string; caption?: string; objectPosition?: string };
     visual?: ReactNode;
     primary?: HeroAction;
     secondary?: HeroAction;
     children?: ReactNode;
 }
 
-export function LandingHero({ eyebrow, title, description, image, visual, primary, secondary, children }: LandingHeroProps) {
+function resolveHeroMedia(media: HeroMedia | undefined, visual: ReactNode, image: LandingHeroProps["image"]): HeroMedia {
+    if (media) return media;
+    if (visual) return { kind: "product", node: visual, label: "Interactive product demonstration" };
+    if (image) return { kind: "photo", ...image };
+    return { kind: "none" };
+}
+
+function resolveHeroVariant(variant: InteriorHeroVariant | undefined, media: HeroMedia): InteriorHeroVariant {
+    if (variant) return variant;
+    if (media.kind === "product") return "product";
+    if (media.kind === "photo") return "story";
+    return "directory";
+}
+
+export function LandingHero({ eyebrow, title, description, variant, media, image, visual, primary, secondary, children }: LandingHeroProps) {
+    const resolvedMedia = resolveHeroMedia(media, visual, image);
+    const resolvedVariant = resolveHeroVariant(variant, resolvedMedia);
+    const hasMedia = resolvedMedia.kind !== "none";
+
     return (
-        <section className={`landing-hero ${image || visual ? "landing-hero-with-image" : ""}`}>
+        <section
+            className={`landing-hero landing-hero--${resolvedVariant}${hasMedia ? " landing-hero-with-image" : ""}`}
+            data-hero-media={resolvedMedia.kind}
+        >
             <div className="marketing-container landing-hero-layout">
                 <div className="landing-hero-copy">
                     <p className="marketing-eyebrow">{eyebrow}</p>
@@ -37,12 +62,7 @@ export function LandingHero({ eyebrow, title, description, image, visual, primar
                     )}
                     {children && <div className="landing-hero-extra">{children}</div>}
                 </div>
-                {visual && <div className="landing-hero-product">{visual}</div>}
-                {image && !visual && (
-                    <div className="landing-hero-image">
-                        <Image src={image.src} alt={image.alt} fill priority sizes="(max-width: 767px) 100vw, 45vw" className="object-cover" />
-                    </div>
-                )}
+                {hasMedia && <HeroMediaView media={resolvedMedia} />}
             </div>
         </section>
     );

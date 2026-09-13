@@ -1,0 +1,151 @@
+path,host,source_template,packet,treatment,redirect_target,browser_observation,implementation_status
+/about,marketing,src/app/(marketing)/about/page.tsx,M24a,audience/story,,loaded; automated checks only,planned
+/agencies,marketing,src/app/(marketing)/agencies/page.tsx,M24b,audience/story,,loaded; automated checks only,planned
+/blog,marketing,src/app/(marketing)/blog/page.tsx,M14,compact directory,,loaded; automated checks only,planned
+/blog/ai-reply-mistakes-to-avoid,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/ai-visibility-audit-local-businesses,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/birdeye-alternatives-for-local-businesses,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/birdeye-pricing-breakdown-2026,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/can-you-delete-a-google-review,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/dental-practice-reputation-management-2026,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/google-business-profile-optimization-checklist,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/how-reviews-impact-local-map-pack-ranking,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/how-to-get-50-google-reviews-in-30-days,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,timeout/incomplete,planned
+/blog/how-to-get-a-google-review-link,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/how-to-handle-fake-google-reviews,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/how-to-respond-to-a-1-star-review,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/how-to-respond-to-a-positive-review,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/negative-feedback-shield,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/restaurant-owners-guide-to-google-reviews,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/true-cost-of-bad-online-reputation,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/blog/why-google-reviews-matter-in-2026,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
+/case-studies,marketing,src/app/(marketing)/case-studies/page.tsx,M23,compact directory,,loaded; automated checks only,planned
+/case-studies/apex-hvac-denver,marketing,src/app/(marketing)/case-studies/[slug]/page.tsx,M23,illustrative workflow,,not attempted,planned
+/case-studies/bellas-salon-portland,marketing,src/app/(marketing)/case-studies/[slug]/page.tsx,M23,illustrative workflow,,not attempted,planned
+/case-studies/precision-auto-works-phoenix,marketing,src/app/(marketing)/case-studies/[slug]/page.tsx,M23,illustrative workflow,,not attempted,planned
+/case-studies/sunrise-dental-austin,marketing,src/app/(marketing)/case-studies/[slug]/page.tsx,M23,illustrative workflow,,not attempted,planned
+/case-studies/wolfpack-bbq-charlotte,marketing,src/app/(marketing)/case-studies/[slug]/page.tsx,M23,illustrative workflow,,not attempted,planned
+/compare,marketing,src/app/(marketing)/compare/page.tsx,M22,compact directory,,loaded; automated checks only,planned
+/compare/birdeye,marketing,src/app/(marketing)/compare/[competitor]/page.tsx,M22,comparison,,not attempted,planned
+/compare/gatherup,marketing,src/app/(marketing)/compare/[competitor]/page.tsx,M22,comparison,,not attempted,planned
+/compare/nicejob,marketing,src/app/(marketing)/compare/[competitor]/page.tsx,M22,comparison,,not attempted,planned
+/compare/podium,marketing,src/app/(marketing)/compare/[competitor]/page.tsx,M22,comparison,,not attempted,planned
+/compare/prosperly,marketing,src/app/(marketing)/compare/[competitor]/page.tsx,M22,comparison,,not attempted,planned
+/contact,marketing,src/app/(marketing)/contact/page.tsx,M25a,conversion,,loaded; automated checks only,planned
+/customers,marketing production only,src/lib/routing/platform-routes.ts,M23,preserve redirect,/case-studies,not attempted,planned
+/customers/apex-hvac-denver,marketing production only,src/lib/routing/platform-routes.ts,M23,preserve redirect,/case-studies/apex-hvac-denver,not attempted,planned
+/customers/bellas-salon-portland,marketing production only,src/lib/routing/platform-routes.ts,M23,preserve redirect,/case-studies/bellas-salon-portland,not attempted,planned
+/customers/precision-auto-works-phoenix,marketing production only,src/lib/routing/platform-routes.ts,M23,preserve redirect,/case-studies/precision-auto-works-phoenix,not attempted,planned
+/customers/sunrise-dental-austin,marketing production only,src/lib/routing/platform-routes.ts,M23,preserve redirect,/case-studies/sunrise-dental-austin,not attempted,planned
+/customers/wolfpack-bbq-charlotte,marketing production only,src/lib/routing/platform-routes.ts,M23,preserve redirect,/case-studies/wolfpack-bbq-charlotte,not attempted,planned
+/data-retention,marketing,src/app/(marketing)/data-retention/page.tsx,M26b,reading,,loaded; automated checks only,planned
+/demo,marketing,src/app/(marketing)/demo/page.tsx,M25b,conversion,,loaded; automated checks only,planned
+/docs,marketing,src/app/docs/page.tsx,M27,docs reading,,not attempted,planned
+/docs/api,marketing,src/app/docs/api/page.tsx,M27,docs reading,,not attempted,planned
+/docs/changelog,marketing,src/app/docs/changelog/page.tsx,M27,docs reading,,not attempted,planned
+/docs/content-types,marketing,src/app/docs/content-types/page.tsx,M27,docs reading,,not attempted,planned
+/docs/cookbook,marketing,src/app/docs/cookbook/page.tsx,M27,docs reading,,not attempted,planned
+/docs/graph,marketing,src/app/docs/graph/page.tsx,M27,docs reading,,not attempted,planned
+/docs/how-it-works,marketing,src/app/docs/how-it-works/page.tsx,M27,docs reading,,not attempted,planned
+/docs/install,marketing,src/app/docs/install/page.tsx,M27,docs reading,,not attempted,planned
+/docs/plugins,marketing,src/app/docs/plugins/page.tsx,M27,docs reading,,not attempted,planned
+/docs/quickstart,marketing,src/app/docs/quickstart/page.tsx,M27,docs reading,,not attempted,planned
+/docs/sync,marketing,src/app/docs/sync/page.tsx,M27,docs reading,,not attempted,planned
+/enterprise,marketing,src/app/(marketing)/enterprise/page.tsx,M24c,audience/story,,loaded; automated checks only,planned
+/es/industries,marketing,src/app/(marketing)/es/industries/page.tsx,M20,compact directory,,timeout/incomplete,planned
+/es/industries/dental,marketing,src/app/(marketing)/es/industries/[industry]/page.tsx,M20,story,,not attempted,planned
+/es/industries/gimnasios,marketing,src/app/(marketing)/es/industries/[industry]/page.tsx,M20,story,,not attempted,planned
+/es/industries/hoteles,marketing,src/app/(marketing)/es/industries/[industry]/page.tsx,M20,story,,not attempted,planned
+/es/industries/medicos,marketing,src/app/(marketing)/es/industries/[industry]/page.tsx,M20,story,,not attempted,planned
+/es/industries/reparacion-automotriz,marketing,src/app/(marketing)/es/industries/[industry]/page.tsx,M20,story,,not attempted,planned
+/es/industries/restaurantes,marketing,src/app/(marketing)/es/industries/[industry]/page.tsx,M20,story,,not attempted,planned
+/es/industries/salones,marketing,src/app/(marketing)/es/industries/[industry]/page.tsx,M20,story,,not attempted,planned
+/es/industries/servicios-hogar,marketing,src/app/(marketing)/es/industries/[industry]/page.tsx,M20,story,,not attempted,planned
+/features,marketing,src/app/(marketing)/features/page.tsx,M09,product,,loaded; automated checks only,planned
+/features/ai-replies,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M04; M09,product,,loaded; automated checks only,planned
+/features/analytics,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M06; M09,product,,loaded; automated checks only,planned
+/features/competitor-intelligence,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M09,preserve redirect,/features/competitor-tracking,not attempted,planned
+/features/competitor-tracking,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M07; M09,product,,loaded; automated checks only,planned
+/features/feedback-shield,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M09,preserve redirect,/features/review-collection,not attempted,planned
+/features/local-seo,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M08; M09,product,,loaded; automated checks only,planned
+/features/review-collection,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M05; M09,product,,loaded; automated checks only,planned
+/features/review-monitoring,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M03; M09,product,,loaded; automated checks only,planned
+/help,marketing,src/app/(marketing)/help/page.tsx,M12,support/search,,loaded; automated checks only,planned
+/help/analytics,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13a,reading,,timeout/incomplete,planned
+/help/analytics/generating-pdf-reports,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/analytics/reading-the-engagement-funnel,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/analytics/understanding-your-analytics-dashboard,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/billing,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13a,reading,,timeout/incomplete,planned
+/help/billing/canceling-your-subscription,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/billing/plans-and-pricing,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/billing/understanding-usage-limits,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/billing/upgrading-your-plan,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/campaign-templates,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/campaigns/campaign-templates,not attempted,planned
+/help/campaigns,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13a,reading,,timeout/incomplete,planned
+/help/campaigns/campaign-templates,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/campaigns/creating-a-review-request-campaign,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/campaigns/follow-up-messages,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/campaigns/sms-vs-email-campaigns,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/canceling-your-subscription,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/billing/canceling-your-subscription,not attempted,planned
+/help/connecting-google,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/integrations/connecting-google,not attempted,planned
+/help/connecting-google-business-profile,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/getting-started/connecting-google-business-profile,not attempted,planned
+/help/creating-a-review-request-campaign,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/campaigns/creating-a-review-request-campaign,not attempted,planned
+/help/creating-your-account,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/getting-started/creating-your-account,not attempted,planned
+/help/embedding-review-widgets,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/integrations/embedding-review-widgets,not attempted,planned
+/help/exporting-reviews,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/reviews/exporting-reviews,not attempted,planned
+/help/follow-up-messages,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/campaigns/follow-up-messages,not attempted,planned
+/help/generating-pdf-reports,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/analytics/generating-pdf-reports,not attempted,planned
+/help/getting-started,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13a,reading,,timeout/incomplete,planned
+/help/getting-started/connecting-google-business-profile,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,timeout/incomplete,planned
+/help/getting-started/creating-your-account,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,timeout/incomplete,planned
+/help/getting-started/sending-your-first-review-request,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,timeout/incomplete,planned
+/help/getting-started/understanding-your-dashboard,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,timeout/incomplete,planned
+/help/integrations,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13a,reading,,timeout/incomplete,planned
+/help/integrations/connecting-google,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/integrations/embedding-review-widgets,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/integrations/setting-up-zapier,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/integrations/using-the-api,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/plans-and-pricing,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/billing/plans-and-pricing,not attempted,planned
+/help/reading-the-engagement-funnel,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/analytics/reading-the-engagement-funnel,not attempted,planned
+/help/reading-your-review-inbox,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/reviews/reading-your-review-inbox,not attempted,planned
+/help/reviews,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13a,reading,,timeout/incomplete,planned
+/help/reviews/exporting-reviews,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/reviews/reading-your-review-inbox,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/reviews/setting-up-auto-commenter,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/reviews/using-ai-replies,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
+/help/sending-your-first-review-request,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/getting-started/sending-your-first-review-request,not attempted,planned
+/help/setting-up-auto-commenter,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/reviews/setting-up-auto-commenter,not attempted,planned
+/help/setting-up-zapier,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/integrations/setting-up-zapier,not attempted,planned
+/help/sms-vs-email-campaigns,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/campaigns/sms-vs-email-campaigns,not attempted,planned
+/help/understanding-usage-limits,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/billing/understanding-usage-limits,not attempted,planned
+/help/understanding-your-analytics-dashboard,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/analytics/understanding-your-analytics-dashboard,not attempted,planned
+/help/understanding-your-dashboard,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/getting-started/understanding-your-dashboard,not attempted,planned
+/help/upgrading-your-plan,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/billing/upgrading-your-plan,not attempted,planned
+/help/using-ai-replies,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/reviews/using-ai-replies,not attempted,planned
+/help/using-the-api,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/integrations/using-the-api,not attempted,planned
+/how-it-works,marketing,src/app/(marketing)/how-it-works/page.tsx,M10,product,,loaded; automated checks only,planned
+/industries,marketing,src/app/(marketing)/industries/page.tsx,M19,compact directory,,loaded; automated checks only,planned
+/industries/auto-repair,marketing,src/app/(marketing)/industries/[industry]/page.tsx,M19,story,,loaded; automated checks only,planned
+/industries/dental,marketing,src/app/(marketing)/industries/[industry]/page.tsx,M19,story,,loaded; automated checks only,planned
+/industries/fitness,marketing,src/app/(marketing)/industries/[industry]/page.tsx,M19,story,,loaded; automated checks only,planned
+/industries/home-services,marketing,src/app/(marketing)/industries/[industry]/page.tsx,M19,story,,loaded; automated checks only,planned
+/industries/hotels,marketing,src/app/(marketing)/industries/[industry]/page.tsx,M19,story,,loaded; automated checks only,planned
+/industries/medical,marketing,src/app/(marketing)/industries/[industry]/page.tsx,M19,story,,loaded; automated checks only,planned
+/industries/restaurants,marketing,src/app/(marketing)/industries/[industry]/page.tsx,M19,story,,loaded; automated checks only,planned
+/industries/salons,marketing,src/app/(marketing)/industries/[industry]/page.tsx,M19,story,,loaded; automated checks only,planned
+/integrations,marketing,src/app/(marketing)/integrations/page.tsx,M21,compact directory,,timeout/incomplete,planned
+/partners,marketing,src/app/(marketing)/partners/page.tsx,M24d,compact directory,,loaded; automated checks only,planned
+/pricing,marketing,src/app/(marketing)/pricing/page.tsx,M11,compact pricing,,loaded; automated checks only,planned
+/privacy,marketing,src/app/(marketing)/privacy/page.tsx,M26b,reading,,loaded; automated checks only,planned
+/product,marketing,next.config.ts,M09,preserve redirect,/features,not attempted,planned
+/resources,marketing,src/app/(marketing)/resources/page.tsx,M15,compact directory,,loaded; automated checks only,planned
+/resources/google-reviews-guide,marketing,src/app/(marketing)/resources/[guide]/page.tsx,M15,reading,,timeout/incomplete,planned
+/resources/local-seo-checklist,marketing,src/app/(marketing)/resources/[guide]/page.tsx,M15,reading,,timeout/incomplete,planned
+/resources/negative-review-templates,marketing,src/app/(marketing)/resources/[guide]/page.tsx,M15,reading,,timeout/incomplete,planned
+/resources/review-request-templates,marketing,src/app/(marketing)/resources/[guide]/page.tsx,M15,reading,,timeout/incomplete,planned
+/security,marketing,src/app/(marketing)/security/page.tsx,M26a,reading,,loaded; automated checks only,planned
+/terms,marketing,src/app/(marketing)/terms/page.tsx,M26b,reading,,loaded; automated checks only,planned
+/tools,marketing,src/app/(marketing)/tools/page.tsx,M16,compact directory,,loaded; automated checks only,planned
+/tools/reputation-score-checker,marketing,src/app/(marketing)/tools/reputation-score-checker/page.tsx,M18a,functional tool,,timeout/incomplete,planned
+/tools/review-link-generator,marketing,src/app/(marketing)/tools/review-link-generator/page.tsx,M17,functional tool,,timeout/incomplete,planned
+/tools/review-response-generator,marketing,src/app/(marketing)/tools/review-response-generator/page.tsx,M18b,functional tool,,timeout/incomplete,planned

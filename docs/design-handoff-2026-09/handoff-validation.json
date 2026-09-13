@@ -1,0 +1,21 @@
+{
+  "scope": "Planning artifacts only; not implementation acceptance",
+  "date": "2026-09-13",
+  "checks": {
+    "markdown_links": "passed",
+    "route_source_paths": "passed",
+    "unique_route_assignments": 150,
+    "protected_route_templates": 43,
+    "task_groups": "M00 through M28 present",
+    "audit_script_syntax": "passed",
+    "wireframe_sections": 6,
+    "wireframe_overflow": {
+      "320": false,
+      "390": false,
+      "768": false,
+      "1024": false,
+      "1440": false
+    }
+  },
+  "website_tests": "Not run for documentation-only additions. Browser baseline limitations are recorded in AUDIT_FINDINGS.md."
+}

@@ -20,7 +20,7 @@ export default function DemoPage() {
                 ]}
             />
 
-            <LandingHero eyebrow="See Zyene in action" title="See your review routine in action." description="Walk through fair SMS, email, link, and QR-code requests, AI drafts and automatic Google replies, private feedback follow-up, and reporting with our team." />
+            <LandingHero eyebrow="See Zyene in action" title="See your review routine in action." description="Walk through fair SMS, email, link, and QR-code requests, AI drafts and automatic Google replies, private feedback follow-up, and reporting with our team." variant="conversion" media={{ kind: "none" }} />
 
             <p className="marketing-container"><Link href="/#home-product-tour" className="inline-flex min-h-11 items-center font-semibold underline underline-offset-4">Try automatic replies in the interactive demo before booking →</Link></p>
             <section className="py-16 px-4">

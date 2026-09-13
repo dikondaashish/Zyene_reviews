@@ -8,6 +8,8 @@ export function HowItWorksHeroSection() {
             eyebrow="From first request to next improvement"
             title="A review routine your team can keep."
             description="Connect your profile, invite feedback fairly, respond with care, and use the signals to improve the next customer experience."
+            variant="product"
+            media={{ kind: "none" }}
             primary={{ label: "Start free trial", href: "/signup" }}
             secondary={{ label: "Book a demo", href: "/demo" }}
         >

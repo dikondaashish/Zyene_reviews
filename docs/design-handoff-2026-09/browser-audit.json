@@ -1,0 +1,4855 @@
+{
+  "generatedAt": "2026-09-13T17:35:55.944Z",
+  "scope": "Local preview, current working tree; no backend or form verification",
+  "rows": [
+    {
+      "path": "/about",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/about",
+      "title": "About Us | Zyene Reviews",
+      "h1": [
+        "For the people behind local business."
+      ],
+      "h2": [
+        "About Zyene Reviews",
+        "Our Mission",
+        "Who We Serve",
+        "Our Values",
+        "Get in Touch",
+        "What Zyene Reviews Does"
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Zyene Reviews helps local businesses build a review routine: invite feedback, respond with AI assistance, follow up privately, and learn from trends.",
+      "canonical": "https://www.zyenereviews.com/about",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Fabout%2Fteam-collaboration.webp&w=3840&q=75",
+          "alt": "A team collaborating on business software",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Zyene, Inc",
+          "href": "https://zyene.com"
+        },
+        {
+          "tag": "A",
+          "text": "support@zyenereviews.com",
+          "href": "mailto:support@zyenereviews.com"
+        },
+        {
+          "tag": "A",
+          "text": "See all features",
+          "href": "/#features"
+        },
+        {
+          "tag": "A",
+          "text": "View pricing",
+          "href": "/#pricing"
+        },
+        {
+          "tag": "A",
+          "text": "Read the docs",
+          "href": "/docs"
+        },
+        {
+          "tag": "A",
+          "text": "Google API Services User Data Policy",
+          "href": "https://developers.google.com/terms/api-services-user-data-policy"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/agencies",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/agencies",
+      "title": "Agency Review Management & White-Label Widgets | Zyene Reviews",
+      "h1": [
+        "A better review routine for the clients who trust you."
+      ],
+      "h2": [
+        "White-label branding",
+        "Agency pricing tiers",
+        "Multi-client agency dashboard"
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Build a more consistent reputation service with branded review request flows and white-label review widgets for Enterprise client accounts.",
+      "canonical": "https://www.zyenereviews.com/agencies",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Fabout%2Fteam-collaboration.webp&w=3840&q=75",
+          "alt": "An agency team collaborating around a table",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Explore partnerships",
+          "href": "/partners"
+        },
+        {
+          "tag": "A",
+          "text": "Talk to our team",
+          "href": "/contact"
+        },
+        {
+          "tag": "A",
+          "text": "See automatic Google replies →",
+          "href": "/features/ai-replies"
+        },
+        {
+          "tag": "A",
+          "text": "Apply as agency partner",
+          "href": "mailto:partners@zyenereviews.com?subject=Apply%20as%20agency%20partner"
+        },
+        {
+          "tag": "A",
+          "text": "Request Growth pricing",
+          "href": "mailto:partners@zyenereviews.com?subject=Request%20Growth%20pricing"
+        },
+        {
+          "tag": "A",
+          "text": "Talk to partnerships",
+          "href": "mailto:partners@zyenereviews.com?subject=Talk%20to%20partnerships"
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Join waitlist",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "partners page",
+          "href": "/partners"
+        },
+        {
+          "tag": "A",
+          "text": "Enterprise for 16+ locations",
+          "href": "/enterprise"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog",
+      "title": "Blog, Review Management & Local SEO for Local Businesses | Zyene Reviews",
+      "h1": [
+        "The Zyene Reviews Blog"
+      ],
+      "h2": [
+        "Fresh ideas for a stronger reputation.",
+        "Get the latest guides in your inbox."
+      ],
+      "mainCount": 1,
+      "heroType": "generic-scene",
+      "h1Size": "61.92px",
+      "description": "Practical guides on Google reviews, local SEO, responding to reviews, and reputation management. Written for local business owners who want to grow.",
+      "canonical": "https://www.zyenereviews.com/blog",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Finterior%2Fguidance-hero.webp&w=3840&q=75",
+          "alt": "An open notebook and checklist on a sunlit desk",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freview-software-pricing-comparison.webp&w=3840&q=75",
+          "alt": "Small business owner comparing review management software costs at a worktable",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fbirdeye-alternatives-cost-comparison.webp&w=3840&q=75",
+          "alt": "Local business manager evaluating an affordable reputation management setup on a laptop",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fresponding-to-one-star-review.webp&w=3840&q=75",
+          "alt": "Restaurant owner thoughtfully drafting a calm response to a one-star review on a laptop",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fai-review-reply-oversight.webp&w=3840&q=75",
+          "alt": "Retail business owner reviewing an AI-drafted customer reply before publishing it",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-business-profile-audit.webp&w=3840&q=75",
+          "alt": "Bakery owner cross-checking Google Business Profile details against a printed checklist",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Flocal-map-pack-visibility.webp&w=3840&q=75",
+          "alt": "Local business owner checking map visibility on a smartphone outside a neighborhood storefront",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Frestaurant-review-management.webp&w=3840&q=75",
+          "alt": "Restaurant owner managing customer feedback during a busy dinner service",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "BUTTON",
+          "text": "All",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Google Reviews",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Responding to Reviews",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Local SEO",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reputation Management",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Industry Specific",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Competitor Analysis",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "Google ReviewsHow to Get 50 Google Reviews in 30 DaysBuild a repeatable review-request process over ",
+          "href": "/blog/how-to-get-50-google-reviews-in-30-days"
+        },
+        {
+          "tag": "A",
+          "text": "Google ReviewsWhy Google Reviews Matter More Than Ever in 2026How Google Reviews support local searc",
+          "href": "/blog/why-google-reviews-matter-in-2026"
+        },
+        {
+          "tag": "A",
+          "text": "Competitor AnalysisBirdeye Pricing vs Zyene Reviews (2026): Honest Comparison for Local BusinessesSi",
+          "href": "/blog/birdeye-pricing-breakdown-2026"
+        },
+        {
+          "tag": "A",
+          "text": "Competitor Analysis5 Cheaper Birdeye Alternatives for Local Businesses (2026)Paying $299+/mo for Bir",
+          "href": "/blog/birdeye-alternatives-for-local-businesses"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/case-studies",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/case-studies",
+      "title": "Illustrative Review Workflows for Local Businesses | Zyene Reviews",
+      "h1": [
+        "See what a better review routine can look like."
+      ],
+      "h2": [
+        "Dental workflow",
+        "Restaurants workflow",
+        "Home Services workflow",
+        "Salons & Spas workflow",
+        "Auto Repair workflow",
+        "Ready to build your own review routine?"
+      ],
+      "mainCount": 1,
+      "heroType": "generic-scene",
+      "h1Size": "61.92px",
+      "description": "Explore illustrative review-management workflows for dental, restaurant, salon, HVAC, and auto teams. Composite examples are educational.",
+      "canonical": "https://www.zyenereviews.com/case-studies",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Finterior%2Flocal-business-hero.webp&w=3840&q=75",
+          "alt": "A café owner reviewing feedback on her tablet",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Explore workflow",
+          "href": "/case-studies/sunrise-dental-austin"
+        },
+        {
+          "tag": "A",
+          "text": "Explore workflow",
+          "href": "/case-studies/wolfpack-bbq-charlotte"
+        },
+        {
+          "tag": "A",
+          "text": "Explore workflow",
+          "href": "/case-studies/apex-hvac-denver"
+        },
+        {
+          "tag": "A",
+          "text": "Explore workflow",
+          "href": "/case-studies/bellas-salon-portland"
+        },
+        {
+          "tag": "A",
+          "text": "Explore workflow",
+          "href": "/case-studies/precision-auto-works-phoenix"
+        },
+        {
+          "tag": "A",
+          "text": "Start Your Free Trial",
+          "href": "/signup"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/compare",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/compare",
+      "title": "Compare Zyene Reviews vs Review Platforms, 2026 | Zyene Reviews",
+      "h1": [
+        "The right review platform for your business."
+      ],
+      "h2": [
+        "Pick a comparison",
+        "Side-by-side comparison matrix",
+        "How to choose",
+        "Compare pages & buyer guides",
+        "Frequently asked questions",
+        "Ready to switch - or start fresh?"
+      ],
+      "mainCount": 1,
+      "heroType": "generic-scene",
+      "h1Size": "61.92px",
+      "description": "Compare Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp, and Prosperly: pricing, AI replies, review workflows, and buyer-fit tradeoffs.",
+      "canonical": "https://www.zyenereviews.com/compare",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Finterior%2Fproduct-hero.webp&w=3840&q=75",
+          "alt": "A tablet ready for the working day on a sunlit desk",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Try Zyene free",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Explore pricing",
+          "href": "/pricing"
+        },
+        {
+          "tag": "A",
+          "text": "Birdeye pricing breakdown",
+          "href": "/blog/birdeye-pricing-breakdown-2026"
+        },
+        {
+          "tag": "A",
+          "text": "Full Birdeye comparison",
+          "href": "/compare/birdeye"
+        },
+        {
+          "tag": "A",
+          "text": "Full Prosperly comparison",
+          "href": "/compare/prosperly"
+        },
+        {
+          "tag": "A",
+          "text": "Negative Feedback Shield guide",
+          "href": "/blog/negative-feedback-shield"
+        },
+        {
+          "tag": "A",
+          "text": "vs BirdeyeCustom quote/moBirdeye starting priceCompare review workflows, allowances and the current ",
+          "href": "/compare/birdeye"
+        },
+        {
+          "tag": "A",
+          "text": "Birdeye pricing deep dive (2026) →",
+          "href": "/blog/birdeye-pricing-breakdown-2026"
+        },
+        {
+          "tag": "A",
+          "text": "vs PodiumCustom quote/moPodium starting priceCompare review workflows, allowances and the current Po",
+          "href": "/compare/podium"
+        },
+        {
+          "tag": "A",
+          "text": "vs NiceJob$75/moNiceJob starting priceCompare review workflows, allowances and the current NiceJob o",
+          "href": "/compare/nicejob"
+        },
+        {
+          "tag": "A",
+          "text": "vs GatherUp$99/moGatherUp starting priceCompare review workflows, allowances and the current GatherU",
+          "href": "/compare/gatherup"
+        },
+        {
+          "tag": "A",
+          "text": "vs Prosperly$119/moProsperly starting priceBroad local-business review operations vs a law- and insu",
+          "href": "/compare/prosperly"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/contact",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/contact",
+      "title": "Contact Us | Zyene Reviews",
+      "h1": [
+        "Real people. Ready to help."
+      ],
+      "h2": [
+        "How can we help?",
+        "Send us a message"
+      ],
+      "mainCount": 1,
+      "heroType": "generic-scene",
+      "h1Size": "61.92px",
+      "description": "Reach out to the Zyene Reviews team for support, sales, or general inquiries. We typically respond within 24 hours, Monday through Friday.",
+      "canonical": "https://www.zyenereviews.com/contact",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Finterior%2Flocal-business-hero.webp&w=3840&q=75",
+          "alt": "A café owner reviewing feedback on her tablet",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Fabout%2Fteam-collaboration.webp&w=3840&q=75",
+          "alt": "A small business team working through ideas together",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "support@zyenereviews.com",
+          "href": "mailto:support@zyenereviews.com"
+        },
+        {
+          "tag": "A",
+          "text": "Book a demo",
+          "href": "/demo"
+        },
+        {
+          "tag": "A",
+          "text": "Browse the Help Center",
+          "href": "/help"
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Select a topic",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Send message",
+          "href": null
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/data-retention",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/data-retention",
+      "title": "Data Retention Policy | Zyene Reviews",
+      "h1": [
+        "Data Retention Policy"
+      ],
+      "h2": [
+        "Aggressive Retention Limits",
+        "Anonymization",
+        "1. Information We Store",
+        "2. Retention Periods",
+        "3. Deletion Rights (Right to be Forgotten)"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Zyene Reviews data retention policy. How long we store your data, when it is deleted, and how to request deletion. GDPR and CCPA compliant.",
+      "canonical": "https://www.zyenereviews.com/data-retention",
+      "images": [],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Home",
+          "href": "/"
+        },
+        {
+          "tag": "A",
+          "text": "Email Privacy Team",
+          "href": "mailto:privacy@zyenereviews.com"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/demo",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/demo",
+      "title": "Book a Review Management Demo | Zyene Reviews",
+      "h1": [
+        "See your review routine in action."
+      ],
+      "h2": [
+        "Pick a time that suits you",
+        "Or send us your details"
+      ],
+      "mainCount": 1,
+      "heroType": "generic-scene",
+      "h1Size": "61.92px",
+      "description": "Book a walkthrough of review requests, AI-assisted Google replies, private feedback follow-up, and reporting for your local business or locations.",
+      "canonical": "https://www.zyenereviews.com/demo",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Finterior%2Fproduct-hero.webp&w=3840&q=75",
+          "alt": "A tablet ready for the working day on a sunlit desk",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Try automatic replies in the interactive demo before booking →",
+          "href": "/#home-product-tour"
+        },
+        {
+          "tag": "A",
+          "text": "Open the booking page",
+          "href": "https://cal.com/zyene/30-min-meeting"
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Request a demo",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "Email sales directly",
+          "href": "mailto:sales@zyenereviews.com?subject=Enterprise%20demo%20request"
+        },
+        {
+          "tag": "A",
+          "text": "Enterprise overview",
+          "href": "/enterprise"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/enterprise",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/enterprise",
+      "title": "Enterprise Review Management for Multi-Location Teams | Zyene Reviews",
+      "h1": [
+        "A review routine that fits your locations."
+      ],
+      "h2": [
+        "Built for scale",
+        "Rollout & support planning",
+        "Plan comparison",
+        "What's included",
+        "Ready to talk?"
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Coordinate review requests, private feedback follow-up, AI-assisted replies, and reporting with an Enterprise plan built around your business.",
+      "canonical": "https://www.zyenereviews.com/enterprise",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Fabout%2Fteam-collaboration.webp&w=3840&q=75",
+          "alt": "A team planning work across business locations",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Book a demo",
+          "href": "/demo"
+        },
+        {
+          "tag": "A",
+          "text": "Contact sales",
+          "href": "mailto:sales@zyenereviews.com"
+        },
+        {
+          "tag": "A",
+          "text": "Book an enterprise demo",
+          "href": "/demo"
+        },
+        {
+          "tag": "A",
+          "text": "Security & trust center →",
+          "href": "/security"
+        },
+        {
+          "tag": "A",
+          "text": "/demo",
+          "href": "/demo"
+        },
+        {
+          "tag": "A",
+          "text": "Schedule a demo",
+          "href": "/demo"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/es/industries",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/es/industries\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/features",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/features",
+      "title": "Features | Zyene Reviews",
+      "h1": [
+        "A complete review routine. From the ask to the next action."
+      ],
+      "h2": [
+        "Meet your new everyday workspace.",
+        "Every review moment.One connected routine.",
+        "Built for teams, locations, and integrations",
+        "All features. One platform. One price."
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Invite fair feedback, manage reviews, reply with AI, and act on local insights in one connected review-management platform.",
+      "canonical": "https://www.zyenereviews.com/features",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Fhome%2Fcafe-conversation.webp&w=3840&q=75",
+          "alt": "A barista listening to a customer at a café counter",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2FMain%2520logo.png&w=64&q=75",
+          "alt": "Zyene Reviews",
+          "loaded": true
+        },
+        {
+          "src": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://google.com&size=256",
+          "alt": "Google Business Profile logo",
+          "loaded": true
+        },
+        {
+          "src": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://facebook.com&size=256",
+          "alt": "Facebook Reviews logo",
+          "loaded": true
+        },
+        {
+          "src": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://yelp.com&size=256",
+          "alt": "Yelp logo",
+          "loaded": true
+        },
+        {
+          "src": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://zapier.com&size=256",
+          "alt": "Zapier logo",
+          "loaded": true
+        },
+        {
+          "src": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://squareup.com&size=256",
+          "alt": "Square logo",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Explore pricing",
+          "href": "/pricing"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "01Replies",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "02Requests",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "03Insights",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reviews & replies",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Review requests",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reporting",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reset demo",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "professional",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "friendly",
+          "href": null
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/help",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/help",
+      "title": "Help Center | Zyene Reviews",
+      "h1": [
+        "A little guidance goes a long way."
+      ],
+      "h2": [
+        "Start with the essentials.",
+        "Getting Started",
+        "Reviews",
+        "Campaigns",
+        "Analytics",
+        "Billing",
+        "Integrations",
+        "Still need help?"
+      ],
+      "mainCount": 1,
+      "heroType": "product",
+      "h1Size": "61.92px",
+      "description": "Find guides and answers to common questions about Zyene Reviews. Getting started, reviews, campaigns, analytics, billing, and integrations.",
+      "canonical": "https://www.zyenereviews.com/help",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Finterior%2Fguidance-hero.webp&w=3840&q=75",
+          "alt": "A notebook and checklist ready for your next step",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Email support",
+          "href": "mailto:support@zyenereviews.com"
+        },
+        {
+          "tag": "A",
+          "text": "01Connect your Google Business Profile",
+          "href": "/help/getting-started/connecting-google-business-profile"
+        },
+        {
+          "tag": "A",
+          "text": "02Send your first review request",
+          "href": "/help/getting-started/sending-your-first-review-request"
+        },
+        {
+          "tag": "A",
+          "text": "03Set up automatic Google replies",
+          "href": "/help/reviews/setting-up-auto-commenter"
+        },
+        {
+          "tag": "A",
+          "text": "Getting StartedSet up Zyene Reviews, connect Google Business Profile, send your first review request",
+          "href": "/help/getting-started"
+        },
+        {
+          "tag": "A",
+          "text": "Creating Your AccountHow to sign up for Zyene Reviews, choose your plan, connect your business, and ",
+          "href": "/help/getting-started/creating-your-account"
+        },
+        {
+          "tag": "A",
+          "text": "Connecting Your Google Business ProfileConnect your Google Business Profile to Zyene so new reviews ",
+          "href": "/help/getting-started/connecting-google-business-profile"
+        },
+        {
+          "tag": "A",
+          "text": "Sending Your First Review RequestCreate and send your first review request manually or with an autom",
+          "href": "/help/getting-started/sending-your-first-review-request"
+        },
+        {
+          "tag": "A",
+          "text": "Understanding Your DashboardAn overview of every section of the Zyene Reviews dashboard - what each ",
+          "href": "/help/getting-started/understanding-your-dashboard"
+        },
+        {
+          "tag": "A",
+          "text": "ReviewsMonitor your unified review inbox, publish AI replies, configure automatic Google replies, an",
+          "href": "/help/reviews"
+        },
+        {
+          "tag": "A",
+          "text": "Reading and Managing Your Review InboxHow to use the Zyene review inbox - filtering, sorting, markin",
+          "href": "/help/reviews/reading-your-review-inbox"
+        },
+        {
+          "tag": "A",
+          "text": "Using AI Reply SuggestionsGenerate a business reply, choose your tone, edit the draft, and publish i",
+          "href": "/help/reviews/using-ai-replies"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/how-it-works",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/how-it-works",
+      "title": "How It Works | Zyene Reviews",
+      "h1": [
+        "A review routine your team can keep."
+      ],
+      "h2": [
+        "Connect your profile and make the first request easy",
+        "See what needs a response while it is still fresh",
+        "Invite feedback. Follow up thoughtfully.",
+        "Turn review patterns into your next improvement",
+        "Know what progresslooks like.",
+        "Ready to try it yourself?"
+      ],
+      "mainCount": 1,
+      "heroType": "generic-scene",
+      "h1Size": "61.92px",
+      "description": "Connect your profile, invite fair feedback, respond with AI, and use review and request signals to improve your local reputation in four steps.",
+      "canonical": "https://www.zyenereviews.com/how-it-works",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Finterior%2Fproduct-hero.webp&w=3840&q=75",
+          "alt": "A tablet ready for the working day on a sunlit desk",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Fhome%2Fcafe-conversation.webp&w=3840&q=75",
+          "alt": "A barista and customer talking across a café counter",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Book a demo",
+          "href": "/demo"
+        },
+        {
+          "tag": "A",
+          "text": "01Connect",
+          "href": "#step-01"
+        },
+        {
+          "tag": "A",
+          "text": "02Monitor",
+          "href": "#step-02"
+        },
+        {
+          "tag": "A",
+          "text": "03Collect",
+          "href": "#step-03"
+        },
+        {
+          "tag": "A",
+          "text": "04Improve",
+          "href": "#step-04"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "professional",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "friendly",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "concise",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Preview a new review",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/industries",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/industries",
+      "title": "Review Management by Industry | Zyene Reviews",
+      "h1": [
+        "A clearer review routine for your industry."
+      ],
+      "h2": [
+        "Choose your industry",
+        "One practical review routine for every local business",
+        "Turn customer moments into a stronger reputation."
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Explore Zyene workflows for restaurants, dental, auto, salons, and more: branded review requests, AI-assisted replies, private feedback, and useful trends.",
+      "canonical": "https://www.zyenereviews.com/industries",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fwindow-installation.webp&w=3840&q=75",
+          "alt": "A tradesperson fitting a window frame with a cordless drill",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Frestaurant-guests.webp&w=3840&q=75",
+          "alt": "Guests sharing a meal and conversation at a restaurant",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fdental.webp&w=3840&q=75",
+          "alt": "Dental Practices business environment",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fauto-repair.webp&w=3840&q=75",
+          "alt": "Auto Repair Shops business environment",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fsalons.webp&w=3840&q=75",
+          "alt": "Salons & Spas business environment",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fwindow-installation.webp&w=3840&q=75",
+          "alt": "A tradesperson fitting a window frame with a cordless drill",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fmedical.webp&w=3840&q=75",
+          "alt": "Medical & Healthcare business environment",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fhotels.webp&w=3840&q=75",
+          "alt": "Hotels & Hospitality business environment",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Ffitness.webp&w=3840&q=75",
+          "alt": "Fitness & Gyms business environment",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Find your industry",
+          "href": "#industry-grid"
+        },
+        {
+          "tag": "A",
+          "text": "Explore pricing",
+          "href": "/pricing"
+        },
+        {
+          "tag": "A",
+          "text": "Ver soluciones en español",
+          "href": "/es/industries"
+        },
+        {
+          "tag": "A",
+          "text": "RestaurantsRestaurant owners use Zyene Reviews to send post-visit requests, respond to Google review",
+          "href": "/industries/restaurants"
+        },
+        {
+          "tag": "A",
+          "text": "Dental PracticesDental practices use Zyene Reviews to attract new patients, respond to reviews profe",
+          "href": "/industries/dental"
+        },
+        {
+          "tag": "A",
+          "text": "Auto Repair ShopsAuto repair shops use Zyene Reviews to build trust with new customers, respond to r",
+          "href": "/industries/auto-repair"
+        },
+        {
+          "tag": "A",
+          "text": "Salons & SpasSalon and spa owners use Zyene Reviews to grow their 5-star review count, respond to cl",
+          "href": "/industries/salons"
+        },
+        {
+          "tag": "A",
+          "text": "Home ServicesPlumbers, HVAC technicians, electricians, and other home services professionals use Zye",
+          "href": "/industries/home-services"
+        },
+        {
+          "tag": "A",
+          "text": "Medical & HealthcareDoctors, clinics, and healthcare providers use Zyene Reviews to attract new pati",
+          "href": "/industries/medical"
+        },
+        {
+          "tag": "A",
+          "text": "Hotels & HospitalityHotels and hospitality businesses use Zyene Reviews to respond to guests faster,",
+          "href": "/industries/hotels"
+        },
+        {
+          "tag": "A",
+          "text": "Fitness & GymsGyms, fitness studios, and personal trainers use Zyene Reviews to attract new members,",
+          "href": "/industries/fitness"
+        },
+        {
+          "tag": "A",
+          "text": "Start your 7-day free trial",
+          "href": "/signup"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/integrations",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/integrations\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/partners",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/partners",
+      "title": "Partners, Agencies, POS, Zapier & More | Zyene Reviews",
+      "h1": [
+        "Help local businesses put their best foot forward."
+      ],
+      "h2": [
+        "Find the right way to work together",
+        "Tell us about your customers"
+      ],
+      "mainCount": 1,
+      "heroType": "generic-scene",
+      "h1Size": "61.92px",
+      "description": "Partner with Zyene Reviews: agency referral program, POS marketplace integrations, Zapier automation, and local business association co-marketing.",
+      "canonical": "https://www.zyenereviews.com/partners",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Finterior%2Flocal-business-hero.webp&w=3840&q=75",
+          "alt": "A café owner reviewing feedback on her tablet",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Contact partnerships",
+          "href": "mailto:partners@zyenereviews.com?subject=Partnership%20inquiry"
+        },
+        {
+          "tag": "A",
+          "text": "Explore the agency program",
+          "href": "/agencies"
+        },
+        {
+          "tag": "A",
+          "text": "Contact partnerships",
+          "href": "mailto:partners@zyenereviews.com?subject=Partnership%20inquiry"
+        },
+        {
+          "tag": "A",
+          "text": "Explore supported integrations",
+          "href": "/integrations"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/pricing",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/pricing",
+      "title": "Pricing | Zyene Reviews",
+      "h1": [
+        "A better reputation.At a sensible price."
+      ],
+      "h2": [
+        "Starter",
+        "Professional",
+        "Enterprise",
+        "How Professional scales per location",
+        "See how we compare",
+        "Explore example workflows",
+        "Frequently Asked Questions",
+        "Ready to grow your reviews?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "60px",
+      "description": "Zyene Reviews plans starting at $29.99/mo. No annual contracts. No hidden fees. 7-day free trial on every plan. Compare Starter, Professional, and Enterprise.",
+      "canonical": "https://www.zyenereviews.com/pricing",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Finterior%2Fproduct-hero.webp&w=3840&q=75",
+          "alt": "A tablet and coffee on a desk in a local business",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "Start 7-day free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Start 7-day free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Talk to sales",
+          "href": "/demo"
+        },
+        {
+          "tag": "A",
+          "text": "Terms of Service",
+          "href": "/terms"
+        },
+        {
+          "tag": "A",
+          "text": "NiceJob",
+          "href": "https://help.nicejob.com/en/articles/10324617-ai-review-replies"
+        },
+        {
+          "tag": "A",
+          "text": "Birdeye",
+          "href": "https://support.birdeye.com/en/articles/12654785-how-to-configure-and-use-the-review-response-agent"
+        },
+        {
+          "tag": "A",
+          "text": "Zyene Reviews vs Birdeye",
+          "href": "/compare/birdeye"
+        },
+        {
+          "tag": "A",
+          "text": "Birdeye pricing breakdown",
+          "href": "/blog/birdeye-pricing-breakdown-2026"
+        },
+        {
+          "tag": "A",
+          "text": "All comparisons",
+          "href": "/compare"
+        },
+        {
+          "tag": "A",
+          "text": "Free review request templates",
+          "href": "/resources/review-request-templates"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/privacy",
+      "title": "Privacy Policy | Zyene Reviews",
+      "h1": [
+        "Privacy Policy"
+      ],
+      "h2": [
+        "1. Information We Collect",
+        "2. Integration with Third-Party Platforms",
+        "2a. Google API Limited Use Disclosure",
+        "3. How We Use Your Information",
+        "4. Sharing Your Information",
+        "5. Cookies & Tracking Technologies",
+        "6. Data Security",
+        "7. Your Data Rights",
+        "8. Changes to Our Privacy Policy",
+        "9. SMS Communications",
+        "10. Regional Privacy Rights (GDPR, CCPA, LGPD)",
+        "11. Contact Information"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "How Zyene Reviews collects, uses, and protects your data: GDPR compliance, Google API Limited Use, secure OAuth, and transparent privacy practices.",
+      "canonical": "https://www.zyenereviews.com/privacy",
+      "images": [],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Zyene, Inc",
+          "href": "https://zyene.com"
+        },
+        {
+          "tag": "A",
+          "text": "Google API Services User Data Policy",
+          "href": "https://developers.google.com/terms/api-services-user-data-policy"
+        },
+        {
+          "tag": "A",
+          "text": "Google Account security settings",
+          "href": "https://myaccount.google.com/permissions"
+        },
+        {
+          "tag": "A",
+          "text": "support@zyenereviews.com",
+          "href": "mailto:support@zyenereviews.com"
+        },
+        {
+          "tag": "A",
+          "text": "privacy@zyenereviews.com",
+          "href": "mailto:privacy@zyenereviews.com"
+        },
+        {
+          "tag": "A",
+          "text": "support@zyenereviews.com",
+          "href": "mailto:support@zyenereviews.com"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/resources",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/resources",
+      "title": "Resources, Free Guides for Local Business Owners | Zyene Reviews",
+      "h1": [
+        "Small steps. A stronger local presence."
+      ],
+      "h2": [
+        "The Complete Guide to Google Reviews",
+        "Negative Review Response Templates (20+ Ready-to-Use)",
+        "Local SEO Checklist for 2026 (40+ Action Items)",
+        "20 Review Request Templates for Local Businesses",
+        "Looking for shorter reads?",
+        "Ready to put this into practice?"
+      ],
+      "mainCount": 1,
+      "heroType": "generic-scene",
+      "h1Size": "61.92px",
+      "description": "Free, in-depth guides on Google reviews, local SEO, review request templates, and reputation management. Everything a local business owner needs in one place.",
+      "canonical": "https://www.zyenereviews.com/resources",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Finterior%2Fguidance-hero.webp&w=3840&q=75",
+          "alt": "An open notebook and checklist on a sunlit desk",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "A guide to thoughtful customer review requests",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fresponding-to-one-star-review.webp&w=3840&q=75",
+          "alt": "Preparing a thoughtful response to customer feedback",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-business-profile-audit.webp&w=3840&q=75",
+          "alt": "Reviewing a business profile and local search presence",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Fhome%2Fcafe-service.webp&w=3840&q=75",
+          "alt": "A barista serving iced coffee to a customer",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "The Complete Guide to Google ReviewsA practical guide to Google Reviews for local businesses, coveri",
+          "href": "/resources/google-reviews-guide"
+        },
+        {
+          "tag": "A",
+          "text": "Negative Review Response Templates (20+ Ready-to-Use)20+ ready-to-use templates for responding to ne",
+          "href": "/resources/negative-review-templates"
+        },
+        {
+          "tag": "A",
+          "text": "Local SEO Checklist for 2026 (40+ Action Items)The complete 2026 local SEO checklist. 40+ action ite",
+          "href": "/resources/local-seo-checklist"
+        },
+        {
+          "tag": "A",
+          "text": "20 Review Request Templates for Local Businesses22 copy-paste review request templates (SMS, email, ",
+          "href": "/resources/review-request-templates"
+        },
+        {
+          "tag": "A",
+          "text": "Browse the Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/security",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/security",
+      "title": "Security & Trust | Zyene Reviews",
+      "h1": [
+        "Your reputation is in good hands."
+      ],
+      "h2": [
+        "Row Level Security (RLS)",
+        "256-bit encryption",
+        "GDPR, CCPA & LGPD",
+        "Configurable feedback workflows",
+        "Secure Google OAuth (Limited Use)",
+        "SOC 2 readiness",
+        "Infrastructure & availability",
+        "Responsible disclosure",
+        "Questions about security?"
+      ],
+      "mainCount": 1,
+      "heroType": "generic-scene",
+      "h1Size": "61.92px",
+      "description": "Zyene Reviews protects your data with multi-tenant RLS, encryption, regional privacy controls, feedback workflows, and secure Google OAuth.",
+      "canonical": "https://www.zyenereviews.com/security",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Finterior%2Fguidance-hero.webp&w=3840&q=75",
+          "alt": "An open notebook and checklist on a sunlit desk",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Data retention policy",
+          "href": "/data-retention"
+        },
+        {
+          "tag": "A",
+          "text": "Privacy policy",
+          "href": "/privacy"
+        },
+        {
+          "tag": "A",
+          "text": "security@zyenereviews.com",
+          "href": "mailto:security@zyenereviews.com?subject=Security%20inquiry"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/terms",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/terms",
+      "title": "Terms of Service | Zyene Reviews",
+      "h1": [
+        "Terms of Service"
+      ],
+      "h2": [
+        "1. Description of Services",
+        "2. Account Registration",
+        "3. Subscriptions and Payments",
+        "4. Compliance with Communication Laws",
+        "5. Third-Party Integrations",
+        "6. Acceptable Use",
+        "7. Termination",
+        "8. Limitation of Liability",
+        "9. Intellectual Property",
+        "10. Customer Data Ownership",
+        "11. Service Availability",
+        "12. Governing Law & Jurisdiction",
+        "13. Contact Us"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Zyene Reviews Terms of Service. Read our usage policies, subscription terms, 7-day trial conditions, TCPA/CAN-SPAM compliance, and acceptable use policy.",
+      "canonical": "https://www.zyenereviews.com/terms",
+      "images": [],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Zyene, Inc",
+          "href": "https://zyene.com"
+        },
+        {
+          "tag": "A",
+          "text": "Zyene, Inc",
+          "href": "https://zyene.com"
+        },
+        {
+          "tag": "A",
+          "text": "Zyene, Inc",
+          "href": "https://zyene.com"
+        },
+        {
+          "tag": "A",
+          "text": "support@zyenereviews.com",
+          "href": "mailto:support@zyenereviews.com"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/tools",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/tools",
+      "title": "Free Review Tools for Local Businesses | Zyene Reviews",
+      "h1": [
+        "A useful next step. On us."
+      ],
+      "h2": [
+        "Google Review Link Generator",
+        "Reputation Score Checker",
+        "Review Response Generator",
+        "Free review tools for local businesses",
+        "Want automation behind these tools?"
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Free tools for local businesses: generate a Google review link, check your reputation score, and draft professional review responses. No signup required to try.",
+      "canonical": "https://www.zyenereviews.com/tools",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Fhome%2Fcafe-conversation.webp&w=3840&q=75",
+          "alt": "A barista talking with a customer at work",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Google Review Link GeneratorFind your business on Google Maps and get a direct “Write a review” link",
+          "href": "/tools/review-link-generator"
+        },
+        {
+          "tag": "A",
+          "text": "Reputation Score CheckerSee your public Google rating, review count, and a quick response-rate estim",
+          "href": "/tools/reputation-score-checker"
+        },
+        {
+          "tag": "A",
+          "text": "Review Response GeneratorPaste any review and get a professional AI draft reply. Enter your email to",
+          "href": "/tools/review-response-generator"
+        },
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/tools/reputation-score-checker",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/tools/reputation-score-checker\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/tools/review-link-generator",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/tools/review-link-generator\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/tools/review-response-generator",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/tools/review-response-generator\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/features/review-monitoring",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/features/review-monitoring",
+      "title": "Review Monitoring & Inbox | Zyene Reviews",
+      "h1": [
+        "Every review. One clear view."
+      ],
+      "h2": [
+        "Explore the interactive demo",
+        "Stay close to your customers. Wherever they share.",
+        "More possibility.Less busywork."
+      ],
+      "mainCount": 1,
+      "heroType": "product",
+      "h1Size": "61.92px",
+      "description": "Centralized Google, Facebook, and Yelp review inbox with alerts, sentiment analysis, and filters for local businesses.",
+      "canonical": "https://www.zyenereviews.com/features/review-monitoring",
+      "images": [
+        {
+          "src": "/_next/image?url=%2FMain%2520logo.png&w=64&q=75",
+          "alt": "Zyene Reviews",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Fhome%2Fcafe-conversation.webp&w=3840&q=75",
+          "alt": "A barista speaking with a customer at a café counter",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Book a walkthrough",
+          "href": "/demo"
+        },
+        {
+          "tag": "A",
+          "text": "Explore the whole platform",
+          "href": "/features"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reviews & replies",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Review requests",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reporting",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reset demo",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "professional",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "friendly",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "concise",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Preview a new review",
+          "href": null
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/features/ai-replies",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/features/ai-replies",
+      "title": "AI-Powered Review Replies | Zyene Reviews",
+      "h1": [
+        "Thoughtful replies. Without the blank page."
+      ],
+      "h2": [
+        "Explore the interactive demo",
+        "Sound like yourself. Get your time back.",
+        "Your voice. Even when you’re busy.",
+        "More possibility.Less busywork."
+      ],
+      "mainCount": 1,
+      "heroType": "product",
+      "h1Size": "61.92px",
+      "description": "Draft replies in your voice or automatically reply to new Google reviews. Choose star ratings and a Professional, Friendly, or Concise tone.",
+      "canonical": "https://www.zyenereviews.com/features/ai-replies",
+      "images": [
+        {
+          "src": "/_next/image?url=%2FMain%2520logo.png&w=64&q=75",
+          "alt": "Zyene Reviews",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Fhome%2Fcafe-service.webp&w=3840&q=75",
+          "alt": "A smiling barista serving coffee to a customer",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Book a walkthrough",
+          "href": "/demo"
+        },
+        {
+          "tag": "A",
+          "text": "Explore the whole platform",
+          "href": "/features"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reviews & replies",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Review requests",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reporting",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reset demo",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "professional",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "friendly",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "concise",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Preview a new review",
+          "href": null
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/features/review-collection",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/features/review-collection",
+      "title": "Review Collection & Negative Feedback Shield | Zyene Reviews",
+      "h1": [
+        "Good experiences deserve to be heard."
+      ],
+      "h2": [
+        "Explore the interactive demo",
+        "Make the next review a natural part of the visit.",
+        "Negative Feedback Shield",
+        "More possibility.Less busywork."
+      ],
+      "mainCount": 1,
+      "heroType": "product",
+      "h1Size": "61.92px",
+      "description": "Send branded SMS, email, link, and QR review requests with optional reminders and a private feedback path for timely follow-up.",
+      "canonical": "https://www.zyenereviews.com/features/review-collection",
+      "images": [
+        {
+          "src": "/_next/image?url=%2FMain%2520logo.png&w=64&q=75",
+          "alt": "Zyene Reviews",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fsalons.webp&w=3840&q=75",
+          "alt": "A stylist caring for a salon client",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Book a walkthrough",
+          "href": "/demo"
+        },
+        {
+          "tag": "A",
+          "text": "Explore the whole platform",
+          "href": "/features"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reviews & replies",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Review requests",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reporting",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reset demo",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "professional",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "friendly",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "concise",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Preview a new review",
+          "href": null
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/features/competitor-tracking",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/features/competitor-tracking",
+      "title": "Competitor Tracking | Zyene Reviews",
+      "h1": [
+        "Get to know your competitive edge."
+      ],
+      "h2": [
+        "A clearer picture of your local market.",
+        "More possibility.Less busywork."
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Track competitor ratings, review volume, and trends with AI market briefs and alerts on every paid plan. See where you rank locally.",
+      "canonical": "https://www.zyenereviews.com/features/competitor-tracking",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Fhome%2Fstorefront.webp&w=3840&q=75",
+          "alt": "An independent local business storefront",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Fhome%2Fstorefront.webp&w=3840&q=75",
+          "alt": "An independent local business storefront",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Book a walkthrough",
+          "href": "/demo"
+        },
+        {
+          "tag": "A",
+          "text": "Explore the whole platform",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Explore pricing",
+          "href": "/pricing"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/features/local-seo",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/features/local-seo",
+      "title": "Local SEO Dashboard | Zyene Reviews",
+      "h1": [
+        "Help your next customer find you."
+      ],
+      "h2": [
+        "Your neighborhood is searching. Show up prepared.",
+        "More possibility.Less busywork."
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "GBP keyword performance, search insights, and actionable SEO fixes - included on Starter, not locked behind enterprise tiers.",
+      "canonical": "https://www.zyenereviews.com/features/local-seo",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fwindow-installation.webp&w=3840&q=75",
+          "alt": "A tradesperson fitting a window frame with a cordless drill",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fwindow-installation.webp&w=3840&q=75",
+          "alt": "A tradesperson fitting a window frame with a cordless drill",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Book a walkthrough",
+          "href": "/demo"
+        },
+        {
+          "tag": "A",
+          "text": "Explore the whole platform",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "See pricing",
+          "href": "/pricing"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/features/analytics",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/features/analytics",
+      "title": "Analytics & Reporting | Zyene Reviews",
+      "h1": [
+        "Your reputation, in perspective."
+      ],
+      "h2": [
+        "Explore the interactive demo",
+        "See the progress behind your everyday work.",
+        "More possibility.Less busywork."
+      ],
+      "mainCount": 1,
+      "heroType": "product",
+      "h1Size": "61.92px",
+      "description": "Review trends, sentiment, engagement funnel, PDF reports, and CSV exports - analytics for local teams on Zyene Reviews from $29.99/mo.",
+      "canonical": "https://www.zyenereviews.com/features/analytics",
+      "images": [
+        {
+          "src": "/_next/image?url=%2FMain%2520logo.png&w=64&q=75",
+          "alt": "Zyene Reviews",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fmarketing%2Fabout%2Fteam-collaboration.webp&w=3840&q=75",
+          "alt": "A small business team reviewing their work",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Book a walkthrough",
+          "href": "/demo"
+        },
+        {
+          "tag": "A",
+          "text": "Explore the whole platform",
+          "href": "/features"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reviews & replies",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Review requests",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reporting",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Reset demo",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "professional",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "friendly",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "concise",
+          "href": null
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Preview a new review",
+          "href": null
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/industries/restaurants",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/industries/restaurants",
+      "title": "Restaurant Review Management | Zyene Reviews",
+      "h1": [
+        "Review Management Built for Restaurants"
+      ],
+      "h2": [
+        "The reputation challenges restaurants face",
+        "Built around yourworking day.",
+        "A better day at your restaurant.",
+        "Pricing built for restaurants",
+        "Join other restaurant owners on Zyene"
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Zyene Reviews helps restaurants get more Google reviews, respond faster with AI, and protect reputation with the Negative Feedback Shield. From $29.99/mo.",
+      "canonical": "https://www.zyenereviews.com/industries/restaurants",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Frestaurant-guests.webp&w=3840&q=75",
+          "alt": "Guests sharing a meal and conversation at a restaurant",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Frestaurant-guests.webp&w=3840&q=75",
+          "alt": "Guests sharing a meal and conversation at a restaurant",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Explore pricing",
+          "href": "/pricing"
+        },
+        {
+          "tag": "A",
+          "text": "Explore all industries",
+          "href": "/industries"
+        },
+        {
+          "tag": "A",
+          "text": "Ver en español",
+          "href": "/es/industries/restaurantes"
+        },
+        {
+          "tag": "A",
+          "text": "Explore AI drafts and automatic Google replies →",
+          "href": "/features/ai-replies"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Contact Sales",
+          "href": "mailto:sales@zyenereviews.com?subject=Enterprise%20Plan%20Inquiry"
+        },
+        {
+          "tag": "A",
+          "text": "Start Your Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "See all features →",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "How it works →",
+          "href": "/how-it-works"
+        },
+        {
+          "tag": "A",
+          "text": "Other industries →",
+          "href": "/industries"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/industries/dental",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/industries/dental",
+      "title": "Dental Practice Review Management | Zyene Reviews",
+      "h1": [
+        "Review Management Built for Dental Practices"
+      ],
+      "h2": [
+        "The reputation challenges dental practices face",
+        "Built around yourworking day.",
+        "A better day at your dental practice.",
+        "Pricing built for dental practices",
+        "Join other dental practices on Zyene"
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Dental practices get more Google reviews with HIPAA-aware AI replies, the Negative Feedback Shield, and competitor tracking. From $29.99/mo.",
+      "canonical": "https://www.zyenereviews.com/industries/dental",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fdental.webp&w=3840&q=75",
+          "alt": "Dental Practices business environment",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fdental.webp&w=3840&q=75",
+          "alt": "Dental Practices business environment",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Explore pricing",
+          "href": "/pricing"
+        },
+        {
+          "tag": "A",
+          "text": "Explore all industries",
+          "href": "/industries"
+        },
+        {
+          "tag": "A",
+          "text": "Ver en español",
+          "href": "/es/industries/dental"
+        },
+        {
+          "tag": "A",
+          "text": "Explore AI drafts and automatic Google replies →",
+          "href": "/features/ai-replies"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Contact Sales",
+          "href": "mailto:sales@zyenereviews.com?subject=Enterprise%20Plan%20Inquiry"
+        },
+        {
+          "tag": "A",
+          "text": "Start Your Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "See all features →",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "How it works →",
+          "href": "/how-it-works"
+        },
+        {
+          "tag": "A",
+          "text": "Other industries →",
+          "href": "/industries"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/industries/auto-repair",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/industries/auto-repair",
+      "title": "Auto Repair Review Management | Zyene Reviews",
+      "h1": [
+        "Review Management Built for Auto Repair Shops"
+      ],
+      "h2": [
+        "The reputation challenges auto repair shops face",
+        "Built around yourworking day.",
+        "A better day at your auto repair shop.",
+        "Pricing built for auto repair shops",
+        "Join other auto repair shops on Zyene"
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Auto repair shops build trust with more Google reviews, AI replies, and the Negative Feedback Shield. Built for independent mechanics from $29.99/mo.",
+      "canonical": "https://www.zyenereviews.com/industries/auto-repair",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fauto-repair.webp&w=3840&q=75",
+          "alt": "Auto Repair Shops business environment",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fauto-repair.webp&w=3840&q=75",
+          "alt": "Auto Repair Shops business environment",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Explore pricing",
+          "href": "/pricing"
+        },
+        {
+          "tag": "A",
+          "text": "Explore all industries",
+          "href": "/industries"
+        },
+        {
+          "tag": "A",
+          "text": "Ver en español",
+          "href": "/es/industries/reparacion-automotriz"
+        },
+        {
+          "tag": "A",
+          "text": "Explore AI drafts and automatic Google replies →",
+          "href": "/features/ai-replies"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Contact Sales",
+          "href": "mailto:sales@zyenereviews.com?subject=Enterprise%20Plan%20Inquiry"
+        },
+        {
+          "tag": "A",
+          "text": "Start Your Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "See all features →",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "How it works →",
+          "href": "/how-it-works"
+        },
+        {
+          "tag": "A",
+          "text": "Other industries →",
+          "href": "/industries"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/industries/salons",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/industries/salons",
+      "title": "Salon & Spa Review Management | Zyene Reviews",
+      "h1": [
+        "Review Management Built for Salons & Spas"
+      ],
+      "h2": [
+        "The reputation challenges salons & spas face",
+        "Built around yourworking day.",
+        "A better day at your salon or spa.",
+        "Pricing built for salons & spas",
+        "Join other salon and spa owners on Zyene"
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Salons and spas grow Google reviews with automated requests, AI replies, and the Negative Feedback Shield. Built for beauty businesses from $29.99/mo.",
+      "canonical": "https://www.zyenereviews.com/industries/salons",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fsalons.webp&w=3840&q=75",
+          "alt": "Salons & Spas business environment",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fsalons.webp&w=3840&q=75",
+          "alt": "Salons & Spas business environment",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Explore pricing",
+          "href": "/pricing"
+        },
+        {
+          "tag": "A",
+          "text": "Explore all industries",
+          "href": "/industries"
+        },
+        {
+          "tag": "A",
+          "text": "Ver en español",
+          "href": "/es/industries/salones"
+        },
+        {
+          "tag": "A",
+          "text": "Explore AI drafts and automatic Google replies →",
+          "href": "/features/ai-replies"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Contact Sales",
+          "href": "mailto:sales@zyenereviews.com?subject=Enterprise%20Plan%20Inquiry"
+        },
+        {
+          "tag": "A",
+          "text": "Start Your Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "See all features →",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "How it works →",
+          "href": "/how-it-works"
+        },
+        {
+          "tag": "A",
+          "text": "Other industries →",
+          "href": "/industries"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/industries/home-services",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/industries/home-services",
+      "title": "Home Services Review Management | Zyene Reviews",
+      "h1": [
+        "Review Management Built for Home Services"
+      ],
+      "h2": [
+        "The reputation challenges home services face",
+        "Built around yourworking day.",
+        "A better day at your home services business.",
+        "Pricing built for home services",
+        "Join other home services professionals on Zyene"
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Plumbers, HVAC, and electricians win more jobs with review automation, AI replies, and private negative feedback routing. From $29.99/mo.",
+      "canonical": "https://www.zyenereviews.com/industries/home-services",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fwindow-installation.webp&w=3840&q=75",
+          "alt": "A tradesperson fitting a window frame with a cordless drill",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fwindow-installation.webp&w=3840&q=75",
+          "alt": "A tradesperson fitting a window frame with a cordless drill",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Explore pricing",
+          "href": "/pricing"
+        },
+        {
+          "tag": "A",
+          "text": "Explore all industries",
+          "href": "/industries"
+        },
+        {
+          "tag": "A",
+          "text": "Ver en español",
+          "href": "/es/industries/servicios-hogar"
+        },
+        {
+          "tag": "A",
+          "text": "Explore AI drafts and automatic Google replies →",
+          "href": "/features/ai-replies"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Contact Sales",
+          "href": "mailto:sales@zyenereviews.com?subject=Enterprise%20Plan%20Inquiry"
+        },
+        {
+          "tag": "A",
+          "text": "Start Your Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "See all features →",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "How it works →",
+          "href": "/how-it-works"
+        },
+        {
+          "tag": "A",
+          "text": "Other industries →",
+          "href": "/industries"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/industries/medical",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/industries/medical",
+      "title": "Medical Practice Review Management | Zyene Reviews",
+      "h1": [
+        "Review Management Built for Medical Practices"
+      ],
+      "h2": [
+        "The reputation challenges medical & healthcare face",
+        "Built around yourworking day.",
+        "A better day at your medical practice.",
+        "Pricing built for medical & healthcare",
+        "Join other medical practices on Zyene"
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Medical practices attract patients with ethical review requests, HIPAA-aware AI replies, and the Negative Feedback Shield. From $29.99/mo.",
+      "canonical": "https://www.zyenereviews.com/industries/medical",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fmedical.webp&w=3840&q=75",
+          "alt": "Medical & Healthcare business environment",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fmedical.webp&w=3840&q=75",
+          "alt": "Medical & Healthcare business environment",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Explore pricing",
+          "href": "/pricing"
+        },
+        {
+          "tag": "A",
+          "text": "Explore all industries",
+          "href": "/industries"
+        },
+        {
+          "tag": "A",
+          "text": "Ver en español",
+          "href": "/es/industries/medicos"
+        },
+        {
+          "tag": "A",
+          "text": "Explore AI drafts and automatic Google replies →",
+          "href": "/features/ai-replies"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Contact Sales",
+          "href": "mailto:sales@zyenereviews.com?subject=Enterprise%20Plan%20Inquiry"
+        },
+        {
+          "tag": "A",
+          "text": "Start Your Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "See all features →",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "How it works →",
+          "href": "/how-it-works"
+        },
+        {
+          "tag": "A",
+          "text": "Other industries →",
+          "href": "/industries"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/industries/hotels",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/industries/hotels",
+      "title": "Hotel Review Management | Zyene Reviews",
+      "h1": [
+        "Review Management Built for Hotels & Hospitality"
+      ],
+      "h2": [
+        "The reputation challenges hotels & hospitality face",
+        "Built around yourworking day.",
+        "A better day at your hotel.",
+        "Pricing built for hotels & hospitality",
+        "Join other hotels and hospitality businesses on Zyene"
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Hotels respond faster, collect post-stay reviews, and protect ratings with AI replies and the Negative Feedback Shield. From $29.99/mo.",
+      "canonical": "https://www.zyenereviews.com/industries/hotels",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fhotels.webp&w=3840&q=75",
+          "alt": "Hotels & Hospitality business environment",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Fhotels.webp&w=3840&q=75",
+          "alt": "Hotels & Hospitality business environment",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Explore pricing",
+          "href": "/pricing"
+        },
+        {
+          "tag": "A",
+          "text": "Explore all industries",
+          "href": "/industries"
+        },
+        {
+          "tag": "A",
+          "text": "Ver en español",
+          "href": "/es/industries/hoteles"
+        },
+        {
+          "tag": "A",
+          "text": "Explore AI drafts and automatic Google replies →",
+          "href": "/features/ai-replies"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Contact Sales",
+          "href": "mailto:sales@zyenereviews.com?subject=Enterprise%20Plan%20Inquiry"
+        },
+        {
+          "tag": "A",
+          "text": "Start Your Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "See all features →",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "How it works →",
+          "href": "/how-it-works"
+        },
+        {
+          "tag": "A",
+          "text": "Other industries →",
+          "href": "/industries"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/industries/fitness",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/industries/fitness",
+      "title": "Gym & Fitness Review Management | Zyene Reviews",
+      "h1": [
+        "Review Management Built for Fitness & Gyms"
+      ],
+      "h2": [
+        "The reputation challenges fitness & gyms face",
+        "Built around yourworking day.",
+        "A better day at your fitness business.",
+        "Pricing built for fitness & gyms",
+        "Join other gym and fitness studio owners on Zyene"
+      ],
+      "mainCount": 1,
+      "heroType": "existing-photo",
+      "h1Size": "61.92px",
+      "description": "Gyms and studios attract members with automated review requests, AI replies, and the Negative Feedback Shield. Built for fitness from $29.99/mo.",
+      "canonical": "https://www.zyenereviews.com/industries/fitness",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Ffitness.webp&w=3840&q=75",
+          "alt": "Fitness & Gyms business environment",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Findustries%2Ffitness.webp&w=3840&q=75",
+          "alt": "Fitness & Gyms business environment",
+          "loaded": true
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Start free trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Explore pricing",
+          "href": "/pricing"
+        },
+        {
+          "tag": "A",
+          "text": "Explore all industries",
+          "href": "/industries"
+        },
+        {
+          "tag": "A",
+          "text": "Ver en español",
+          "href": "/es/industries/gimnasios"
+        },
+        {
+          "tag": "A",
+          "text": "Explore AI drafts and automatic Google replies →",
+          "href": "/features/ai-replies"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Contact Sales",
+          "href": "mailto:sales@zyenereviews.com?subject=Enterprise%20Plan%20Inquiry"
+        },
+        {
+          "tag": "A",
+          "text": "Start Your Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "See all features →",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "How it works →",
+          "href": "/how-it-works"
+        },
+        {
+          "tag": "A",
+          "text": "Other industries →",
+          "href": "/industries"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/how-to-get-50-google-reviews-in-30-days",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/blog/how-to-get-50-google-reviews-in-30-days\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/blog/why-google-reviews-matter-in-2026",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/why-google-reviews-matter-in-2026",
+      "title": "Why Google Reviews Matter More Than Ever in 2026 | Zyene Reviews",
+      "h1": [
+        "Why Google Reviews Matter More Than Ever in 2026"
+      ],
+      "h2": [
+        "Table of Contents",
+        "Reviews Still Matter as Search Adds AI Features",
+        "The Local 3-Pack: Your Revenue Engine",
+        "Consumer Psychology: The Numbers Behind Reviews",
+        "The Trust Gap: New vs. Established Businesses",
+        "Review Recency and Customer Confidence",
+        "Response Rate: A Customer Trust Signal",
+        "What This Means for Your Business Today",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Google Reviews in 2026: how they support local search visibility, customer trust, and better reputation operations for local businesses.",
+      "canonical": "https://www.zyenereviews.com/blog/why-google-reviews-matter-in-2026",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Flocal-map-pack-visibility.webp&w=3840&q=75",
+          "alt": "Local business owner checking map visibility on a smartphone outside a neighborhood storefront",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freview-software-pricing-comparison.webp&w=3840&q=75",
+          "alt": "Small business owner comparing review management software costs at a worktable",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fbirdeye-alternatives-cost-comparison.webp&w=3840&q=75",
+          "alt": "Local business manager evaluating an affordable reputation management setup on a laptop",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "Reviews Still Matter as Search Adds AI Features",
+          "href": "#reviews-still-matter-as-search-adds-ai-features"
+        },
+        {
+          "tag": "A",
+          "text": "The Local 3-Pack: Your Revenue Engine",
+          "href": "#the-local-3-pack-your-revenue-engine"
+        },
+        {
+          "tag": "A",
+          "text": "Consumer Psychology: The Numbers Behind Reviews",
+          "href": "#consumer-psychology-the-numbers-behind-reviews"
+        },
+        {
+          "tag": "A",
+          "text": "The Trust Gap: New vs. Established Businesses",
+          "href": "#the-trust-gap-new-vs-established-businesses"
+        },
+        {
+          "tag": "A",
+          "text": "Review Recency and Customer Confidence",
+          "href": "#review-recency-and-customer-confidence"
+        },
+        {
+          "tag": "A",
+          "text": "Response Rate: A Customer Trust Signal",
+          "href": "#response-rate-a-customer-trust-signal"
+        },
+        {
+          "tag": "A",
+          "text": "What This Means for Your Business Today",
+          "href": "#what-this-means-for-your-business-today"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "Learn about Zyene Reviews' review monitoring",
+          "href": "/features"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/birdeye-pricing-breakdown-2026",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/birdeye-pricing-breakdown-2026",
+      "title": "Birdeye vs Zyene Reviews Pricing 2026 | Zyene Reviews",
+      "h1": [
+        "Birdeye Pricing vs Zyene Reviews (2026): Honest Comparison for Local Businesses"
+      ],
+      "h2": [
+        "Table of Contents",
+        "Zyene Reviews vs Birdeye at a Glance",
+        "Where Birdeye Is Stronger",
+        "Where Zyene Reviews Is Stronger",
+        "Local Business Workflow (Zyene Reviews)",
+        "The Headline: What Birdeye Actually Costs",
+        "What You Actually Get at Each Tier",
+        "The Hidden Costs Most People Don't Anticipate",
+        "Annual Cost Snapshot (Published List Prices Only)",
+        "How to Evaluate a Birdeye Quote Before You Sign",
+        "Renewal Decision Workflow",
+        "Who Birdeye Is Actually Built For",
+        "The Value Question: What Are You Actually Getting?",
+        "The Bottom Line",
+        "Next Steps for Buyers",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Honest Birdeye vs Zyene Reviews: pricing, contracts, strengths, and comparison tables for local businesses. Confirm Birdeye pricing with the vendor.",
+      "canonical": "https://www.zyenereviews.com/blog/birdeye-pricing-breakdown-2026",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fbirdeye-alternatives-cost-comparison.webp&w=3840&q=75",
+          "alt": "Local business manager evaluating an affordable reputation management setup on a laptop",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fonline-reputation-business-impact.webp&w=3840&q=75",
+          "alt": "Local restaurant owner reflecting on customer feedback in a quiet dining room before opening",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "Zyene Reviews vs Birdeye at a Glance",
+          "href": "#zyene-reviews-vs-birdeye-at-a-glance"
+        },
+        {
+          "tag": "A",
+          "text": "Where Birdeye Is Stronger",
+          "href": "#where-birdeye-is-stronger"
+        },
+        {
+          "tag": "A",
+          "text": "Where Zyene Reviews Is Stronger",
+          "href": "#where-zyene-reviews-is-stronger"
+        },
+        {
+          "tag": "A",
+          "text": "Local Business Workflow (Zyene Reviews)",
+          "href": "#local-business-workflow-zyene-reviews"
+        },
+        {
+          "tag": "A",
+          "text": "The Headline: What Birdeye Actually Costs",
+          "href": "#the-headline-what-birdeye-actually-costs"
+        },
+        {
+          "tag": "A",
+          "text": "What You Actually Get at Each Tier",
+          "href": "#what-you-actually-get-at-each-tier"
+        },
+        {
+          "tag": "A",
+          "text": "The Hidden Costs Most People Don't Anticipate",
+          "href": "#the-hidden-costs-most-people-don-t-anticipate"
+        },
+        {
+          "tag": "A",
+          "text": "Annual Cost Snapshot (Published List Prices Only)",
+          "href": "#annual-cost-snapshot-published-list-prices-only"
+        },
+        {
+          "tag": "A",
+          "text": "How to Evaluate a Birdeye Quote Before You Sign",
+          "href": "#how-to-evaluate-a-birdeye-quote-before-you-sign"
+        },
+        {
+          "tag": "A",
+          "text": "Renewal Decision Workflow",
+          "href": "#renewal-decision-workflow"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/birdeye-alternatives-for-local-businesses",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/birdeye-alternatives-for-local-businesses",
+      "title": "5 Cheaper Birdeye Alternatives for Local Businesses (2026) | Zyene Reviews",
+      "h1": [
+        "5 Cheaper Birdeye Alternatives for Local Businesses (2026)"
+      ],
+      "h2": [
+        "Table of Contents",
+        "1. Zyene Reviews - Best Overall for Local Businesses",
+        "2. NiceJob - Best for Simplicity",
+        "3. GatherUp - Best for Survey-Focused Businesses",
+        "4. Podium - Best for Businesses That Need Messaging + Reviews",
+        "5. Reputation.com - Best for Large Enterprises Wanting to Leave Birdeye",
+        "The Comparison Table",
+        "The Verdict",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "The 5 best Birdeye alternatives for local businesses in 2026. Compare pricing, features, and fit for owner-operators looking for affordable review management.",
+      "canonical": "https://www.zyenereviews.com/blog/birdeye-alternatives-for-local-businesses",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freview-software-pricing-comparison.webp&w=3840&q=75",
+          "alt": "Small business owner comparing review management software costs at a worktable",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fresponding-to-one-star-review.webp&w=3840&q=75",
+          "alt": "Restaurant owner thoughtfully drafting a calm response to a one-star review on a laptop",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "1. Zyene Reviews - Best Overall for Local Businesses",
+          "href": "#1-zyene-reviews-best-overall-for-local-businesses"
+        },
+        {
+          "tag": "A",
+          "text": "2. NiceJob - Best for Simplicity",
+          "href": "#2-nicejob-best-for-simplicity"
+        },
+        {
+          "tag": "A",
+          "text": "3. GatherUp - Best for Survey-Focused Businesses",
+          "href": "#3-gatherup-best-for-survey-focused-businesses"
+        },
+        {
+          "tag": "A",
+          "text": "4. Podium - Best for Businesses That Need Messaging + Reviews",
+          "href": "#4-podium-best-for-businesses-that-need-messaging-reviews"
+        },
+        {
+          "tag": "A",
+          "text": "5. Reputation.com - Best for Large Enterprises Wanting to Leave Birdeye",
+          "href": "#5-reputation-com-best-for-large-enterprises-wanting-to-leave-birdeye"
+        },
+        {
+          "tag": "A",
+          "text": "The Comparison Table",
+          "href": "#the-comparison-table"
+        },
+        {
+          "tag": "A",
+          "text": "The Verdict",
+          "href": "#the-verdict"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Birdeye pricing breakdown (line items & quote checklist)",
+          "href": "/blog/birdeye-pricing-breakdown-2026"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/how-to-respond-to-a-1-star-review",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/how-to-respond-to-a-1-star-review",
+      "title": "How to Respond to a 1-Star Google Review (5 Templates) | Zyene Reviews",
+      "h1": [
+        "How to Respond to a 1-Star Review (With 5 Real Templates)"
+      ],
+      "h2": [
+        "Table of Contents",
+        "Why Your Response Matters More Than the Review",
+        "The 5-Step Response Framework",
+        "Template 1: Service Quality Complaint",
+        "Template 2: Wait Time / Speed Complaint",
+        "Template 3: Billing or Pricing Dispute",
+        "Template 4: Rude Staff Complaint",
+        "Template 5: Vague or Unclear Complaint",
+        "What NOT to Do",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Proven 5-step framework and 5 ready-to-use templates for responding to 1-star Google reviews. Turn bad reviews into trust signals for new customers.",
+      "canonical": "https://www.zyenereviews.com/blog/how-to-respond-to-a-1-star-review",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fai-review-reply-oversight.webp&w=3840&q=75",
+          "alt": "Retail business owner reviewing an AI-drafted customer reply before publishing it",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freview-software-pricing-comparison.webp&w=3840&q=75",
+          "alt": "Small business owner comparing review management software costs at a worktable",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "Why Your Response Matters More Than the Review",
+          "href": "#why-your-response-matters-more-than-the-review"
+        },
+        {
+          "tag": "A",
+          "text": "The 5-Step Response Framework",
+          "href": "#the-5-step-response-framework"
+        },
+        {
+          "tag": "A",
+          "text": "Template 1: Service Quality Complaint",
+          "href": "#template-1-service-quality-complaint"
+        },
+        {
+          "tag": "A",
+          "text": "Template 2: Wait Time / Speed Complaint",
+          "href": "#template-2-wait-time-speed-complaint"
+        },
+        {
+          "tag": "A",
+          "text": "Template 3: Billing or Pricing Dispute",
+          "href": "#template-3-billing-or-pricing-dispute"
+        },
+        {
+          "tag": "A",
+          "text": "Template 4: Rude Staff Complaint",
+          "href": "#template-4-rude-staff-complaint"
+        },
+        {
+          "tag": "A",
+          "text": "Template 5: Vague or Unclear Complaint",
+          "href": "#template-5-vague-or-unclear-complaint"
+        },
+        {
+          "tag": "A",
+          "text": "What NOT to Do",
+          "href": "#what-not-to-do"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/resources/negative-review-templates"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/ai-reply-mistakes-to-avoid",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/ai-reply-mistakes-to-avoid",
+      "title": "5 AI Reply Mistakes to Avoid for Google Reviews | Zyene Reviews",
+      "h1": [
+        "5 AI Reply Mistakes to Avoid When Responding to Reviews"
+      ],
+      "h2": [
+        "Table of Contents",
+        "Mistake 1: Publishing AI Replies Without Editing",
+        "Mistake 2: Using the Same Opening Phrase for Every Review",
+        "Mistake 3: Ignoring 3-Star Reviews",
+        "Mistake 4: Defensive Responses to Negative Reviews",
+        "Mistake 5: Not Using Responses to Mention Key Services",
+        "How to Use AI Replies Correctly",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Using AI to respond to reviews? Avoid these 5 common mistakes that make AI replies backfire. Learn how to use AI reply tools correctly for Google reviews.",
+      "canonical": "https://www.zyenereviews.com/blog/ai-reply-mistakes-to-avoid",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fresponding-to-one-star-review.webp&w=3840&q=75",
+          "alt": "Restaurant owner thoughtfully drafting a calm response to a one-star review on a laptop",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freview-software-pricing-comparison.webp&w=3840&q=75",
+          "alt": "Small business owner comparing review management software costs at a worktable",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "Mistake 1: Publishing AI Replies Without Editing",
+          "href": "#mistake-1-publishing-ai-replies-without-editing"
+        },
+        {
+          "tag": "A",
+          "text": "Mistake 2: Using the Same Opening Phrase for Every Review",
+          "href": "#mistake-2-using-the-same-opening-phrase-for-every-review"
+        },
+        {
+          "tag": "A",
+          "text": "Mistake 3: Ignoring 3-Star Reviews",
+          "href": "#mistake-3-ignoring-3-star-reviews"
+        },
+        {
+          "tag": "A",
+          "text": "Mistake 4: Defensive Responses to Negative Reviews",
+          "href": "#mistake-4-defensive-responses-to-negative-reviews"
+        },
+        {
+          "tag": "A",
+          "text": "Mistake 5: Not Using Responses to Mention Key Services",
+          "href": "#mistake-5-not-using-responses-to-mention-key-services"
+        },
+        {
+          "tag": "A",
+          "text": "How to Use AI Replies Correctly",
+          "href": "#how-to-use-ai-replies-correctly"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/features/ai-replies"
+        },
+        {
+          "tag": "A",
+          "text": "Try Zyene Reviews' AI reply feature",
+          "href": "/features/ai-replies"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/google-business-profile-optimization-checklist",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/google-business-profile-optimization-checklist",
+      "title": "Google Business Profile Optimization Checklist 2026 | Zyene Reviews",
+      "h1": [
+        "Google Business Profile Optimization Checklist for 2026"
+      ],
+      "h2": [
+        "Table of Contents",
+        "Section 1: Basic Information (Foundation)",
+        "Section 2: Photos (High Impact)",
+        "Section 3: Services and Products",
+        "Section 4: Business Attributes",
+        "Section 5: Reviews (Most Important Long-Term Signal)",
+        "Section 6: Q&A Section",
+        "Section 7: Google Posts",
+        "Section 8: Messaging and Booking",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Google Business Profile optimization checklist for 2026: 30+ steps to improve profile completeness, visibility fundamentals, and customer actions.",
+      "canonical": "https://www.zyenereviews.com/blog/google-business-profile-optimization-checklist",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Flocal-map-pack-visibility.webp&w=3840&q=75",
+          "alt": "Local business owner checking map visibility on a smartphone outside a neighborhood storefront",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freview-software-pricing-comparison.webp&w=3840&q=75",
+          "alt": "Small business owner comparing review management software costs at a worktable",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "Section 1: Basic Information (Foundation)",
+          "href": "#section-1-basic-information-foundation"
+        },
+        {
+          "tag": "A",
+          "text": "Section 2: Photos (High Impact)",
+          "href": "#section-2-photos-high-impact"
+        },
+        {
+          "tag": "A",
+          "text": "Section 3: Services and Products",
+          "href": "#section-3-services-and-products"
+        },
+        {
+          "tag": "A",
+          "text": "Section 4: Business Attributes",
+          "href": "#section-4-business-attributes"
+        },
+        {
+          "tag": "A",
+          "text": "Section 5: Reviews (Most Important Long-Term Signal)",
+          "href": "#section-5-reviews-most-important-long-term-signal"
+        },
+        {
+          "tag": "A",
+          "text": "Section 6: Q&A Section",
+          "href": "#section-6-q-a-section"
+        },
+        {
+          "tag": "A",
+          "text": "Section 7: Google Posts",
+          "href": "#section-7-google-posts"
+        },
+        {
+          "tag": "A",
+          "text": "Section 8: Messaging and Booking",
+          "href": "#section-8-messaging-and-booking"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/features"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/how-reviews-impact-local-map-pack-ranking",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/how-reviews-impact-local-map-pack-ranking",
+      "title": "How Google Reviews Impact Local Map Pack Ranking | Zyene Reviews",
+      "h1": [
+        "How Reviews Impact Your Google Local Map Pack Ranking"
+      ],
+      "h2": [
+        "Table of Contents",
+        "Google's Three Local Ranking Factors",
+        "What Google Documents About Reviews",
+        "What This Means in Practice",
+        "The Compounding Effect",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Learn how Google reviews relate to local Map Pack visibility, which factors Google documents, and which common ranking claims remain unverified.",
+      "canonical": "https://www.zyenereviews.com/blog/how-reviews-impact-local-map-pack-ranking",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-business-profile-audit.webp&w=3840&q=75",
+          "alt": "Bakery owner cross-checking Google Business Profile details against a printed checklist",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freview-software-pricing-comparison.webp&w=3840&q=75",
+          "alt": "Small business owner comparing review management software costs at a worktable",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "Google's Three Local Ranking Factors",
+          "href": "#google-s-three-local-ranking-factors"
+        },
+        {
+          "tag": "A",
+          "text": "What Google Documents About Reviews",
+          "href": "#what-google-documents-about-reviews"
+        },
+        {
+          "tag": "A",
+          "text": "What This Means in Practice",
+          "href": "#what-this-means-in-practice"
+        },
+        {
+          "tag": "A",
+          "text": "The Compounding Effect",
+          "href": "#the-compounding-effect"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Zyene Reviews GBP keyword tracking",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "How to get more reviews fast",
+          "href": "/blog/how-to-get-50-google-reviews-in-30-days"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "",
+          "href": "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.zyenereviews.com%2Fblog%2Fhow-reviews-impact-local-map-pack-ranking"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/restaurant-owners-guide-to-google-reviews",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/restaurant-owners-guide-to-google-reviews",
+      "title": "Restaurant Owner's Guide to Google Reviews 2026 | Zyene Reviews",
+      "h1": [
+        "Restaurant Owner's Guide to Google Reviews (2026 Edition)"
+      ],
+      "h2": [
+        "Table of Contents",
+        "Why Restaurant Reviews Deserve Attention",
+        "The 5 Moments to Ask for a Review",
+        "What Diner Reviews Actually Talk About",
+        "Responding to Food Quality Complaints",
+        "The Multi-Location Restaurant Challenge",
+        "Protecting Your Rating with the Negative Feedback Shield",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "The complete Google review guide for restaurant owners. How to get more reviews, respond to complaints, protect your rating, and track competitors in 2026.",
+      "canonical": "https://www.zyenereviews.com/blog/restaurant-owners-guide-to-google-reviews",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fresponding-to-one-star-review.webp&w=3840&q=75",
+          "alt": "Restaurant owner thoughtfully drafting a calm response to a one-star review on a laptop",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freview-software-pricing-comparison.webp&w=3840&q=75",
+          "alt": "Small business owner comparing review management software costs at a worktable",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "Why Restaurant Reviews Deserve Attention",
+          "href": "#why-restaurant-reviews-deserve-attention"
+        },
+        {
+          "tag": "A",
+          "text": "The 5 Moments to Ask for a Review",
+          "href": "#the-5-moments-to-ask-for-a-review"
+        },
+        {
+          "tag": "A",
+          "text": "What Diner Reviews Actually Talk About",
+          "href": "#what-diner-reviews-actually-talk-about"
+        },
+        {
+          "tag": "A",
+          "text": "Responding to Food Quality Complaints",
+          "href": "#responding-to-food-quality-complaints"
+        },
+        {
+          "tag": "A",
+          "text": "The Multi-Location Restaurant Challenge",
+          "href": "#the-multi-location-restaurant-challenge"
+        },
+        {
+          "tag": "A",
+          "text": "Protecting Your Rating with the Negative Feedback Shield",
+          "href": "#protecting-your-rating-with-the-negative-feedback-shield"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/industries/restaurants"
+        },
+        {
+          "tag": "A",
+          "text": "Zyene Reviews for Restaurants",
+          "href": "/industries/restaurants"
+        },
+        {
+          "tag": "A",
+          "text": "Review tool pricing comparison (Birdeye vs Zyene Reviews)",
+          "href": "/blog/birdeye-pricing-breakdown-2026"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/dental-practice-reputation-management-2026",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/dental-practice-reputation-management-2026",
+      "title": "Dental Practice Reputation Management Guide 2026 | Zyene Reviews",
+      "h1": [
+        "Dental Practice Reputation Management: The 2026 Guide"
+      ],
+      "h2": [
+        "Table of Contents",
+        "The Dental Patient Review Journey",
+        "HIPAA and Review Responses: What You Need to Know",
+        "Where Most Dental Negative Reviews Come From",
+        "How to Get More Patient Reviews",
+        "Managing Reviews Across Multiple Platforms",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "2026 reputation guide for dental practices: HIPAA-aware review responses, more patient reviews, and protecting your practice from negative feedback.",
+      "canonical": "https://www.zyenereviews.com/blog/dental-practice-reputation-management-2026",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fresponding-to-one-star-review.webp&w=3840&q=75",
+          "alt": "Restaurant owner thoughtfully drafting a calm response to a one-star review on a laptop",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freview-software-pricing-comparison.webp&w=3840&q=75",
+          "alt": "Small business owner comparing review management software costs at a worktable",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "The Dental Patient Review Journey",
+          "href": "#the-dental-patient-review-journey"
+        },
+        {
+          "tag": "A",
+          "text": "HIPAA and Review Responses: What You Need to Know",
+          "href": "#hipaa-and-review-responses-what-you-need-to-know"
+        },
+        {
+          "tag": "A",
+          "text": "Where Most Dental Negative Reviews Come From",
+          "href": "#where-most-dental-negative-reviews-come-from"
+        },
+        {
+          "tag": "A",
+          "text": "How to Get More Patient Reviews",
+          "href": "#how-to-get-more-patient-reviews"
+        },
+        {
+          "tag": "A",
+          "text": "Managing Reviews Across Multiple Platforms",
+          "href": "#managing-reviews-across-multiple-platforms"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/industries/dental"
+        },
+        {
+          "tag": "A",
+          "text": "Zyene Reviews for Dental Practices",
+          "href": "/industries/dental"
+        },
+        {
+          "tag": "A",
+          "text": "Compare enterprise review tool pricing",
+          "href": "/blog/birdeye-pricing-breakdown-2026"
+        },
+        {
+          "tag": "A",
+          "text": "Start your free trial",
+          "href": "/signup"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/true-cost-of-bad-online-reputation",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/true-cost-of-bad-online-reputation",
+      "title": "True Cost of Bad Online Reputation (Local Business) | Zyene Reviews",
+      "h1": [
+        "The True Cost of a Bad Online Reputation for Local Businesses"
+      ],
+      "h2": [
+        "Table of Contents",
+        "Cost #1: Lost New Customer Acquisition",
+        "Cost #2: Lost Repeat Customers",
+        "Cost #3: Higher Cost Per Acquisition",
+        "Cost #4: The Compounding Effect of Negative Reviews",
+        "Calculating Your Reputation Risk",
+        "The Investment vs. Cost Calculation",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Calculate the real revenue cost of a bad online reputation. Lost customers, higher ad costs, and compounding effects explained for local business owners.",
+      "canonical": "https://www.zyenereviews.com/blog/true-cost-of-bad-online-reputation",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fresponding-to-one-star-review.webp&w=3840&q=75",
+          "alt": "Restaurant owner thoughtfully drafting a calm response to a one-star review on a laptop",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freview-software-pricing-comparison.webp&w=3840&q=75",
+          "alt": "Small business owner comparing review management software costs at a worktable",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "Cost #1: Lost New Customer Acquisition",
+          "href": "#cost-1-lost-new-customer-acquisition"
+        },
+        {
+          "tag": "A",
+          "text": "Cost #2: Lost Repeat Customers",
+          "href": "#cost-2-lost-repeat-customers"
+        },
+        {
+          "tag": "A",
+          "text": "Cost #3: Higher Cost Per Acquisition",
+          "href": "#cost-3-higher-cost-per-acquisition"
+        },
+        {
+          "tag": "A",
+          "text": "Cost #4: The Compounding Effect of Negative Reviews",
+          "href": "#cost-4-the-compounding-effect-of-negative-reviews"
+        },
+        {
+          "tag": "A",
+          "text": "Calculating Your Reputation Risk",
+          "href": "#calculating-your-reputation-risk"
+        },
+        {
+          "tag": "A",
+          "text": "The Investment vs. Cost Calculation",
+          "href": "#the-investment-vs-cost-calculation"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "See how Zyene Reviews protects your reputation",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "Negative Feedback Shield workflow",
+          "href": "/features/review-collection"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/how-to-handle-fake-google-reviews",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/how-to-handle-fake-google-reviews",
+      "title": "How to Handle Fake Google Reviews: Step-by-Step Guide | Zyene Reviews",
+      "h1": [
+        "How to Handle Fake Google Reviews: A Step-by-Step Guide"
+      ],
+      "h2": [
+        "Table of Contents",
+        "How to Identify a Fake Review",
+        "Step 1: Don't Respond in Anger",
+        "Step 2: Flag the Review for Removal",
+        "Step 3: Use the Google Business Profile Support Team",
+        "Step 4: Respond Strategically While You Wait",
+        "What to Do If Google Won't Remove the Review",
+        "The Best Defense: Review Monitoring",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "How to handle fake Google reviews: identify, flag, report, and respond to suspicious reviews while protecting your rating during Google's review.",
+      "canonical": "https://www.zyenereviews.com/blog/how-to-handle-fake-google-reviews",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fonline-reputation-business-impact.webp&w=3840&q=75",
+          "alt": "Local restaurant owner reflecting on customer feedback in a quiet dining room before opening",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fresponding-to-one-star-review.webp&w=3840&q=75",
+          "alt": "Restaurant owner thoughtfully drafting a calm response to a one-star review on a laptop",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "How to Identify a Fake Review",
+          "href": "#how-to-identify-a-fake-review"
+        },
+        {
+          "tag": "A",
+          "text": "Step 1: Don't Respond in Anger",
+          "href": "#step-1-don-t-respond-in-anger"
+        },
+        {
+          "tag": "A",
+          "text": "Step 2: Flag the Review for Removal",
+          "href": "#step-2-flag-the-review-for-removal"
+        },
+        {
+          "tag": "A",
+          "text": "Step 3: Use the Google Business Profile Support Team",
+          "href": "#step-3-use-the-google-business-profile-support-team"
+        },
+        {
+          "tag": "A",
+          "text": "Step 4: Respond Strategically While You Wait",
+          "href": "#step-4-respond-strategically-while-you-wait"
+        },
+        {
+          "tag": "A",
+          "text": "What to Do If Google Won't Remove the Review",
+          "href": "#what-to-do-if-google-won-t-remove-the-review"
+        },
+        {
+          "tag": "A",
+          "text": "The Best Defense: Review Monitoring",
+          "href": "#the-best-defense-review-monitoring"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/features"
+        },
+        {
+          "tag": "A",
+          "text": "Zyene Reviews review monitoring",
+          "href": "/features"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/negative-feedback-shield",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/negative-feedback-shield",
+      "title": "Negative Feedback Shield Explained | Zyene Reviews",
+      "h1": [
+        "Negative Feedback Shield: How It Works for Local Businesses"
+      ],
+      "h2": [
+        "Table of Contents",
+        "What Negative Feedback Shield Does",
+        "Step-by-Step Workflow",
+        "What You See in Zyene Reviews",
+        "How This Differs From Basic Review Requests",
+        "Comparison Table",
+        "Honest Limits (What Shield Is Not)",
+        "Where Shield Fits in Zyene Reviews Plans",
+        "Next Steps for Local Businesses",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Negative Feedback Shield: capture private feedback early, respond fast, and configure a rating-based feedback path for service recovery.",
+      "canonical": "https://www.zyenereviews.com/blog/negative-feedback-shield",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fresponding-to-one-star-review.webp&w=3840&q=75",
+          "alt": "Restaurant owner thoughtfully drafting a calm response to a one-star review on a laptop",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fonline-reputation-business-impact.webp&w=3840&q=75",
+          "alt": "Local restaurant owner reflecting on customer feedback in a quiet dining room before opening",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freview-software-pricing-comparison.webp&w=3840&q=75",
+          "alt": "Small business owner comparing review management software costs at a worktable",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "What Negative Feedback Shield Does",
+          "href": "#what-negative-feedback-shield-does"
+        },
+        {
+          "tag": "A",
+          "text": "Step-by-Step Workflow",
+          "href": "#step-by-step-workflow"
+        },
+        {
+          "tag": "A",
+          "text": "What You See in Zyene Reviews",
+          "href": "#what-you-see-in-zyene-reviews"
+        },
+        {
+          "tag": "A",
+          "text": "How This Differs From Basic Review Requests",
+          "href": "#how-this-differs-from-basic-review-requests"
+        },
+        {
+          "tag": "A",
+          "text": "Comparison Table",
+          "href": "#comparison-table"
+        },
+        {
+          "tag": "A",
+          "text": "Honest Limits (What Shield Is Not)",
+          "href": "#honest-limits-what-shield-is-not"
+        },
+        {
+          "tag": "A",
+          "text": "Where Shield Fits in Zyene Reviews Plans",
+          "href": "#where-shield-fits-in-zyene-reviews-plans"
+        },
+        {
+          "tag": "A",
+          "text": "Next Steps for Local Businesses",
+          "href": "#next-steps-for-local-businesses"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/signup"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/ai-visibility-audit-local-businesses",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/ai-visibility-audit-local-businesses",
+      "title": "AI Visibility Audit for Local Businesses (2026) | Zyene Reviews",
+      "h1": [
+        "AI Visibility Audit for Local Businesses: What to Check in 2026"
+      ],
+      "h2": [
+        "Table of Contents",
+        "What to include in your audit",
+        "Sample audit checklist",
+        "Traditional SEO vs reputation vs AI visibility",
+        "How this connects to Zyene Reviews",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Run an AI visibility audit: brand mentions in ChatGPT, Perplexity, Gemini, and Google AI Overviews plus local SEO, reviews, and structured data checks.",
+      "canonical": "https://www.zyenereviews.com/blog/ai-visibility-audit-local-businesses",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freview-software-pricing-comparison.webp&w=3840&q=75",
+          "alt": "Small business owner comparing review management software costs at a worktable",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fprivate-feedback-service-recovery.webp&w=3840&q=75",
+          "alt": "Local business owner listening to a customer during a private service recovery conversation",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Flocal-map-pack-visibility.webp&w=3840&q=75",
+          "alt": "Local business owner checking map visibility on a smartphone outside a neighborhood storefront",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "What to include in your audit",
+          "href": "#what-to-include-in-your-audit"
+        },
+        {
+          "tag": "A",
+          "text": "Sample audit checklist",
+          "href": "#sample-audit-checklist"
+        },
+        {
+          "tag": "A",
+          "text": "Traditional SEO vs reputation vs AI visibility",
+          "href": "#traditional-seo-vs-reputation-vs-ai-visibility"
+        },
+        {
+          "tag": "A",
+          "text": "How this connects to Zyene Reviews",
+          "href": "#how-this-connects-to-zyene-reviews"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Compare review platforms",
+          "href": "/compare"
+        },
+        {
+          "tag": "A",
+          "text": "Birdeye pricing breakdown",
+          "href": "/blog/birdeye-pricing-breakdown-2026"
+        },
+        {
+          "tag": "A",
+          "text": "Negative Feedback Shield guide",
+          "href": "/blog/negative-feedback-shield"
+        },
+        {
+          "tag": "A",
+          "text": "Local SEO checklist (40+ items)",
+          "href": "/resources/local-seo-checklist"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/how-to-respond-to-a-positive-review",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/how-to-respond-to-a-positive-review",
+      "title": "How to Respond to Positive Google Reviews (15 Examples) | Zyene Reviews",
+      "h1": [
+        "How to Respond to Positive Google Reviews (15 Examples)"
+      ],
+      "h2": [
+        "Table of Contents",
+        "Why You Need to Respond to Positive Reviews",
+        "The 3-Step Formula for the Perfect Response",
+        "15 Positive Review Response Examples",
+        "The Role of AI in Review Responses",
+        "Start Responding Like a Pro",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Responding to positive Google reviews builds customer loyalty and local SEO. Use these 15 templates to craft perfect review responses in seconds.",
+      "canonical": "https://www.zyenereviews.com/blog/how-to-respond-to-a-positive-review",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fresponding-to-one-star-review.webp&w=3840&q=75",
+          "alt": "Restaurant owner thoughtfully drafting a calm response to a one-star review on a laptop",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fai-review-reply-oversight.webp&w=3840&q=75",
+          "alt": "Retail business owner reviewing an AI-drafted customer reply before publishing it",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "Why You Need to Respond to Positive Reviews",
+          "href": "#why-you-need-to-respond-to-positive-reviews"
+        },
+        {
+          "tag": "A",
+          "text": "The 3-Step Formula for the Perfect Response",
+          "href": "#the-3-step-formula-for-the-perfect-response"
+        },
+        {
+          "tag": "A",
+          "text": "15 Positive Review Response Examples",
+          "href": "#15-positive-review-response-examples"
+        },
+        {
+          "tag": "A",
+          "text": "The Role of AI in Review Responses",
+          "href": "#the-role-of-ai-in-review-responses"
+        },
+        {
+          "tag": "A",
+          "text": "Start Responding Like a Pro",
+          "href": "#start-responding-like-a-pro"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/features/ai-replies"
+        },
+        {
+          "tag": "A",
+          "text": "AI Review Replies",
+          "href": "/features/ai-replies"
+        },
+        {
+          "tag": "A",
+          "text": "Google Reviews Guide",
+          "href": "/resources/google-reviews-guide"
+        },
+        {
+          "tag": "A",
+          "text": "Start Free Trial",
+          "href": "/signup"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/how-to-get-a-google-review-link",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/how-to-get-a-google-review-link",
+      "title": "How to Get a Google Review Link for Your Business (2026) | Zyene Reviews",
+      "h1": [
+        "How to Get a Google Review Link for Your Business (2026)"
+      ],
+      "h2": [
+        "Table of Contents",
+        "Method 1: The Direct Google Search Method (Fastest)",
+        "Method 2: The Google Place ID Formula (For Agencies & CRMs)",
+        "Comparing Google Review Link Methods",
+        "3 High-Converting Ways to Share Your Link",
+        "Scale Your Google Reviews Automatically",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Find your Google review link using Google Search or a Place ID. Follow the steps, create a QR code, and help customers leave a review.",
+      "canonical": "https://www.zyenereviews.com/blog/how-to-get-a-google-review-link",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fgoogle_review_link.jpg&w=3840&q=75",
+          "alt": "Smartphone displaying a direct Google review rating pop-up with five stars ready for customer feedback",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fwhy-google-reviews-matter.webp&w=3840&q=75",
+          "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fpositive-google-review-response.webp&w=3840&q=75",
+          "alt": "Local business owner writing a thankful response to a positive customer review on a smartphone",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fprivate-feedback-service-recovery.webp&w=3840&q=75",
+          "alt": "Local business owner listening to a customer during a private service recovery conversation",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-request-playbook.webp&w=3840&q=75",
+          "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "Method 1: The Direct Google Search Method (Fastest)",
+          "href": "#method-1-the-direct-google-search-method-fastest"
+        },
+        {
+          "tag": "A",
+          "text": "Method 2: The Google Place ID Formula (For Agencies & CRMs)",
+          "href": "#method-2-the-google-place-id-formula-for-agencies-crms"
+        },
+        {
+          "tag": "A",
+          "text": "Comparing Google Review Link Methods",
+          "href": "#comparing-google-review-link-methods"
+        },
+        {
+          "tag": "A",
+          "text": "3 High-Converting Ways to Share Your Link",
+          "href": "#3-high-converting-ways-to-share-your-link"
+        },
+        {
+          "tag": "A",
+          "text": "Scale Your Google Reviews Automatically",
+          "href": "#scale-your-google-reviews-automatically"
+        },
+        {
+          "tag": "A",
+          "text": "FAQ",
+          "href": "#faq"
+        },
+        {
+          "tag": "A",
+          "text": "Get Started",
+          "href": "/signup"
+        },
+        {
+          "tag": "A",
+          "text": "Google Reviews Guide",
+          "href": "/resources/google-reviews-guide"
+        },
+        {
+          "tag": "A",
+          "text": "Negative Feedback Shield",
+          "href": "/features/review-collection"
+        },
+        {
+          "tag": "A",
+          "text": "Collect Ratings Capture Flow",
+          "href": "/how-it-works"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/blog/can-you-delete-a-google-review",
+      "status": 200,
+      "finalUrl": "http://localhost:3000/blog/can-you-delete-a-google-review",
+      "title": "Can You Delete or Remove a Google Review? (2026 Guide) | Zyene Reviews",
+      "h1": [
+        "Can You Delete or Remove a Google Review? (What Actually Works)"
+      ],
+      "h2": [
+        "Table of Contents",
+        "What Types of Reviews Will Google Remove?",
+        "Google Review Removal Eligibility: Quick Reference",
+        "How to Report an Inappropriate Google Review (Step-by-Step)",
+        "How to Appeal a Rejected Review Removal Request",
+        "Can You Remove a Fake Google Review?",
+        "Can You Remove a 1-Star Google Review?",
+        "Can You Remove a Competitor's Google Review?",
+        "Can You Remove a Former Employee's Google Review?",
+        "Can You Remove a Review if the Customer Never Visited?",
+        "Can You Remove a Legitimate Negative Google Review?",
+        "Beware of 'Google Review Removal Services'",
+        "When Removal Isn't Possible: How to Respond Effectively",
+        "Build a Stronger Reputation Through Consistent Review Collection",
+        "Frequently asked questions",
+        "Keep exploring",
+        "Ready to make review work easier?",
+        "Share this article",
+        "Related articles",
+        "Written by",
+        "What should you do next?"
+      ],
+      "mainCount": 1,
+      "heroType": "custom",
+      "h1Size": "76px",
+      "description": "Learn when Google will remove a review, how to report policy violations, appeal a rejected report, and respond to legitimate negative feedback.",
+      "canonical": "https://www.zyenereviews.com/blog/can-you-delete-a-google-review",
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fdelete-google-review-hero.webp&w=3840&q=75",
+          "alt": "Small business owner reviewing customer feedback on a laptop at a cafe counter",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fgoogle-review-policy-research.webp&w=3840&q=75",
+          "alt": "Business manager reading Google's review content policies on a desktop monitor in a modern office",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freporting-google-review-laptop.webp&w=3840&q=75",
+          "alt": "Close-up of hands using a laptop to navigate the Google Business Profile review reporting interface",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fresponding-to-negative-review.webp&w=3840&q=75",
+          "alt": "Restaurant owner composing a thoughtful response to a negative customer review on a tablet",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fteam-review-management.webp&w=3840&q=75",
+          "alt": "Local business team discussing customer feedback and review response strategy around a conference table",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Ffive-star-review-collection.webp&w=3840&q=75",
+          "alt": "Salon receptionist helping a customer leave honest feedback on a tablet at checkout",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Freputation-dashboard-overview.webp&w=3840&q=75",
+          "alt": "Zyene Reviews reputation management dashboard showing review trends and response tools on a desktop monitor",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Ffake-review-evidence.webp&w=3840&q=75",
+          "alt": "Business manager organizing receipts and notes to document a suspicious online review",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fresponding-to-one-star-review.webp&w=3840&q=75",
+          "alt": "Restaurant owner thoughtfully drafting a calm response to a one-star review on a laptop",
+          "loaded": false
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fgoogle_review_link.jpg&w=3840&q=75",
+          "alt": "Smartphone displaying a direct Google review rating pop-up with five stars ready for customer feedback",
+          "loaded": true
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fblog%2Fcovers%2Fonline-reputation-business-impact.webp&w=3840&q=75",
+          "alt": "Local restaurant owner reflecting on customer feedback in a quiet dining room before opening",
+          "loaded": false
+        }
+      ],
+      "topActions": [
+        {
+          "tag": "A",
+          "text": "Blog",
+          "href": "/blog"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Table of Contents",
+          "href": null
+        },
+        {
+          "tag": "A",
+          "text": "What Types of Reviews Will Google Remove?",
+          "href": "#what-types-of-reviews-will-google-remove"
+        },
+        {
+          "tag": "A",
+          "text": "Google Review Removal Eligibility: Quick Reference",
+          "href": "#google-review-removal-eligibility-quick-reference"
+        },
+        {
+          "tag": "A",
+          "text": "How to Report an Inappropriate Google Review (Step-by-Step)",
+          "href": "#how-to-report-an-inappropriate-google-review-step-by-step"
+        },
+        {
+          "tag": "A",
+          "text": "How to Appeal a Rejected Review Removal Request",
+          "href": "#how-to-appeal-a-rejected-review-removal-request"
+        },
+        {
+          "tag": "A",
+          "text": "Can You Remove a Fake Google Review?",
+          "href": "#can-you-remove-a-fake-google-review"
+        },
+        {
+          "tag": "A",
+          "text": "Can You Remove a 1-Star Google Review?",
+          "href": "#can-you-remove-a-1-star-google-review"
+        },
+        {
+          "tag": "A",
+          "text": "Can You Remove a Competitor's Google Review?",
+          "href": "#can-you-remove-a-competitor-s-google-review"
+        },
+        {
+          "tag": "A",
+          "text": "Can You Remove a Former Employee's Google Review?",
+          "href": "#can-you-remove-a-former-employee-s-google-review"
+        },
+        {
+          "tag": "A",
+          "text": "Can You Remove a Review if the Customer Never Visited?",
+          "href": "#can-you-remove-a-review-if-the-customer-never-visited"
+        },
+        {
+          "tag": "A",
+          "text": "Can You Remove a Legitimate Negative Google Review?",
+          "href": "#can-you-remove-a-legitimate-negative-google-review"
+        }
+      ],
+      "desktopOverflow": false,
+      "mobileOverflow": false
+    },
+    {
+      "path": "/resources/google-reviews-guide",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/resources/google-reviews-guide\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/resources/negative-review-templates",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/resources/negative-review-templates\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/resources/local-seo-checklist",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/resources/local-seo-checklist\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/resources/review-request-templates",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/resources/review-request-templates\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/help/getting-started",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/help/getting-started\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/help/reviews",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/help/reviews\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/help/campaigns",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/help/campaigns\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/help/analytics",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/help/analytics\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/help/billing",
+      "error": "Error: page.goto: net::ERR_ABORTED at http://localhost:3000/help/billing\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/help/billing\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/help/integrations",
+      "error": "Error: page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/help/integrations\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "path": "/help/getting-started/creating-your-account",
+      "error": "Error: page.setViewportSize: Target page, context or browser has been closed"
+    },
+    {
+      "path": "/help/getting-started/connecting-google-business-profile",
+      "error": "Error: page.setViewportSize: Target page, context or browser has been closed"
+    },
+    {
+      "path": "/help/getting-started/sending-your-first-review-request",
+      "error": "Error: page.setViewportSize: Target page, context or browser has been closed"
+    },
+    {
+      "path": "/help/getting-started/understanding-your-dashboard",
+      "error": "Error: page.setViewportSize: Target page, context or browser has been closed"
+    }
+  ]
+}

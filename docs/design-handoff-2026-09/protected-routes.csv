@@ -1,0 +1,44 @@
+route_template,source,surface,treatment
+/forgot-password,src/app/(auth)/forgot-password/page.tsx,auth/onboarding,preserve; no redesign in this handoff
+/login,src/app/(auth)/login/page.tsx,auth/onboarding,preserve; no redesign in this handoff
+/reset-password,src/app/(auth)/reset-password/page.tsx,auth/onboarding,preserve; no redesign in this handoff
+/signup,src/app/(auth)/signup/page.tsx,auth/onboarding,preserve; no redesign in this handoff
+/analytics,src/app/(dashboard)/analytics/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/businesses/add,src/app/(dashboard)/businesses/add/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/businesses,src/app/(dashboard)/businesses/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/campaigns/[id],src/app/(dashboard)/campaigns/[id]/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/campaigns/new,src/app/(dashboard)/campaigns/new/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/campaigns,src/app/(dashboard)/campaigns/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/competitors,src/app/(dashboard)/competitors/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/customers/[customerId],src/app/(dashboard)/customers/[customerId]/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/customers/import,src/app/(dashboard)/customers/import/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/customers,src/app/(dashboard)/customers/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/dashboard,src/app/(dashboard)/dashboard/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/google-seo-aeo/alerts,src/app/(dashboard)/google-seo-aeo/alerts/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/google-seo-aeo/audit,src/app/(dashboard)/google-seo-aeo/audit/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/google-seo-aeo/geo-grid,src/app/(dashboard)/google-seo-aeo/geo-grid/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/google-seo-aeo,src/app/(dashboard)/google-seo-aeo/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/google-seo-aeo/phase-2,src/app/(dashboard)/google-seo-aeo/phase-2/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/google-seo-aeo/phase-3,src/app/(dashboard)/google-seo-aeo/phase-3/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/google-seo-aeo/prompts/[promptId],src/app/(dashboard)/google-seo-aeo/prompts/[promptId]/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/google-seo-aeo/prompts,src/app/(dashboard)/google-seo-aeo/prompts/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/questions,src/app/(dashboard)/questions/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/requests,src/app/(dashboard)/requests/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/review-requests,src/app/(dashboard)/review-requests/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/reviews,src/app/(dashboard)/reviews/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/settings/billing,src/app/(dashboard)/settings/billing/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/settings/business-information,src/app/(dashboard)/settings/business-information/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/settings/competitor-alerts,src/app/(dashboard)/settings/competitor-alerts/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/settings/general,src/app/(dashboard)/settings/general/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/settings/integrations,src/app/(dashboard)/settings/integrations/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/settings/integrations/zapier,src/app/(dashboard)/settings/integrations/zapier/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/settings/notifications,src/app/(dashboard)/settings/notifications/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/settings,src/app/(dashboard)/settings/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/settings/public-profile,src/app/(dashboard)/settings/public-profile/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/settings/team,src/app/(dashboard)/settings/team/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
+/growth,src/app/(marketing)/growth/page.tsx,internal operations,preserve; no redesign in this handoff
+/newsletter/unsubscribe,src/app/(marketing)/newsletter/unsubscribe/page.tsx,transactional unsubscribe,preserve; no redesign in this handoff
+/,src/app/(marketing)/page.tsx,homepage,preserve; no redesign in this handoff
+/onboarding,src/app/onboarding/page.tsx,auth/onboarding,preserve; no redesign in this handoff
+/r/[slug],src/app/r/[slug]/page.tsx,public review capture,preserve; no redesign in this handoff
+/w/[slug],src/app/w/[slug]/page.tsx,public widget,preserve; no redesign in this handoff

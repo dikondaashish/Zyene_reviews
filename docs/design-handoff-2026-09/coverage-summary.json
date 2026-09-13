@@ -1,0 +1,10 @@
+{
+  "marketing_templates": 37,
+  "all_page_templates": 88,
+  "public_design_urls": 118,
+  "alias_urls": 32,
+  "protected_templates": 43,
+  "browser_attempted": 70,
+  "browser_loaded": 50,
+  "browser_incomplete": 20
+}

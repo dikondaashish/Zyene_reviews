@@ -41,7 +41,7 @@
   line-height: 18px;
 }
 .planHeading {
-  min-height: 92px;
+  margin-bottom: 24px;
 }
 .planHeading h2 {
   margin-bottom: 10px;
@@ -55,16 +55,17 @@
 .priceDisplay,
 .priceContent {
   display: grid;
-  grid-template-rows: 72px 132px 52px;
+  gap: 8px;
 }
 .priceContent {
-  grid-row: 1 / -1;
   animation: price-fade 180ms ease-out;
+}
+.priceSpacer {
+  display: none;
 }
 .billingPrice {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   font-variant-numeric: tabular-nums;
 }
 .referencePrice {
@@ -77,12 +78,14 @@
 }
 .monthlyPrice {
   color: var(--foreground);
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 27px;
+  font-size: clamp(32px, 3vw, 40px);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
 }
 .monthlyPrice > span:not(:first-child) {
-  font-size: 15px;
+  font-size: 16px;
+  letter-spacing: normal;
 }
 .equivalentLabel {
   color: var(--muted-foreground);
@@ -94,43 +97,41 @@
   line-height: 24px;
 }
 .dailyPrice {
-  align-self: center;
-  color: var(--foreground);
+  color: var(--muted-foreground);
+  font-size: 14px;
 }
 .dailyPrefix {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 15px;
+  display: inline;
+  font-size: 14px;
   font-weight: 500;
-  line-height: 24px;
+  line-height: 22px;
 }
 .dailyAmount {
-  display: flex;
+  display: inline-flex;
   align-items: baseline;
-  gap: 7px;
+  gap: 3px;
+  margin-left: 3px;
   white-space: nowrap;
 }
 .dailyNumber {
-  font-size: clamp(64px, 6vw, 80px);
+  font-size: 18px;
   font-weight: 600;
-  letter-spacing: -0.065em;
-  line-height: 1;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
   font-variant-numeric: tabular-nums;
 }
 .dailyPeriod {
   color: var(--muted-foreground);
-  font-size: 22px;
+  font-size: 14px;
   font-weight: 400;
   letter-spacing: -0.02em;
 }
 .billingNote {
-  align-self: center;
   color: var(--muted-foreground);
   font-size: 14px;
   line-height: 22px;
 }
 .customPrice {
-  align-self: center;
   font-size: clamp(36px, 3.8vw, 46px);
   font-weight: 550;
   letter-spacing: -0.05em;
@@ -138,7 +139,7 @@
 }
 .cta {
   width: 100%;
-  margin: 8px 0 28px;
+  margin: 22px 0 28px;
   gap: 12px;
   padding-inline: 16px;
 }
@@ -248,6 +249,32 @@
   .grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+  .planHeading {
+    min-height: 92px;
+    margin-bottom: 0;
+  }
+  .priceDisplay,
+  .priceContent {
+    grid-template-rows: 118px 56px 52px;
+    gap: 0;
+  }
+  .priceContent {
+    grid-row: 1 / -1;
+  }
+  .priceSpacer {
+    display: block;
+  }
+  .billingPrice {
+    justify-content: center;
+  }
+  .dailyPrice,
+  .billingNote,
+  .customPrice {
+    align-self: center;
+  }
+  .cta {
+    margin-top: 8px;
+  }
 }
 @media (max-width: 374px) {
   .card {
@@ -256,9 +283,6 @@
   .toggleLabel {
     padding-inline: 9px;
     font-size: 13px;
-  }
-  .dailyNumber {
-    font-size: 62px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -10,6 +10,8 @@ export function CompareHeroSection() {
                 eyebrow="Find your fit"
                 title="The right review platform for your business."
                 description="Compare Zyene Reviews with Birdeye, Podium, NiceJob, GatherUp, and Prosperly. See pricing, workflows, and tradeoffs in one place."
+                variant="directory"
+                media={{ kind: "none" }}
                 primary={{ label: "Try Zyene free", href: "/signup" }}
                 secondary={{ label: "Explore pricing", href: "/pricing" }}
             />

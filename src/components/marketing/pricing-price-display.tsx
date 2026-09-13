@@ -8,7 +8,7 @@ export function PricingPriceDisplay({ plan }: { plan: Pick<Plan, "price" | "orig
   if (!price) {
     return (
       <div className={styles.priceDisplay}>
-        <div aria-hidden="true" />
+        <div className={styles.priceSpacer} aria-hidden="true" />
         <div className={styles.customPrice}>Let’s talk</div>
         <p className={styles.billingNote}>A plan built around your business</p>
       </div>

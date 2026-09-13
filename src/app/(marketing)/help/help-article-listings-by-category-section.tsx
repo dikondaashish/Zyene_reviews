@@ -10,7 +10,7 @@ import { HelpCategoryIcon } from "@/components/marketing/help-category-icon";
 
 export function HelpArticleListingsByCategorySection() {
     return (
-        <section className="py-20 px-4 bg-background">
+        <section id="help-topics" className="py-20 px-4 bg-background">
                 <div className="container mx-auto max-w-5xl space-y-16">
                     {CATEGORY_ORDER.map((categoryKey) => {
                         const catInfo = HELP_CATEGORIES[categoryKey];
