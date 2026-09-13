@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import type { CustomerPortalCardProps } from "@/components/dashboard/customer-portal-card-types";
 
 const ReviewTrendChart = dynamic(
     () => import("@/components/dashboard/review-trend-chart").then((m) => m.ReviewTrendChart),
@@ -30,14 +31,11 @@ const AnimatedReviewCards = dynamic(
 export type TrendDataPoint = { day: string; count: number };
 export type RatingDataPoint = { rating: number; count: number };
 
-export function DashboardQrCodeLazy(props: {
-    businessId: string;
-    businessSlug: string;
-    businessName: string;
-    businessLogoUrl: string | null;
-    brandColor: string | null;
-    reviewPageBackgroundColor: string | null;
-}) {
+export function DashboardQrCodeLazy(props: CustomerPortalCardProps) {
+    return <DashboardCustomerPortalCard {...props} />;
+}
+
+export function DashboardCustomerPortalCard(props: CustomerPortalCardProps) {
     return <CustomerPortalCard {...props} />;
 }
 

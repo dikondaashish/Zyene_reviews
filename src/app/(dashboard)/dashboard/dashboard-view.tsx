@@ -5,8 +5,6 @@ import {
     hasSentReviewRequest,
     shouldShowGettingStartedBanner,
 } from "@/components/dashboard/getting-started-visibility";
-import { SmartInsightsCard } from "@/components/dashboard/smart-insights-card";
-import { DashboardQrCodeLazy } from "@/components/dashboard/dashboard-ssr-false-blocks";
 import { DashboardViewBottomRow } from "./dashboard-view-bottom-row";
 import { DashboardViewCharts } from "./dashboard-view-charts";
 import { DashboardViewExtendedStats } from "./dashboard-view-extended-stats";
@@ -14,6 +12,7 @@ import { DashboardViewGoogleHealth } from "./dashboard-view-google-health";
 import { DashboardViewGooglePerformance } from "./dashboard-view-google-performance";
 import { DashboardViewHeader } from "./dashboard-view-header";
 import { DashboardViewStatCards } from "./dashboard-view-stat-cards";
+import { DashboardViewTopRow } from "./dashboard-view-top-row";
 import type { DashboardViewProps } from "./types";
 
 export function DashboardView(props: DashboardViewProps) {
@@ -58,34 +57,13 @@ export function DashboardView(props: DashboardViewProps) {
                 </div>
             )}
 
+            <DashboardViewTopRow business={business} />
             <DashboardViewStatCards {...props} />
-            <DashboardViewBottomRow {...props} />
-            <SmartInsightsCard businessName={business.name || ""} />
-
             <DashboardViewGoogleHealth {...props} />
             <DashboardViewGooglePerformance {...props} />
             <DashboardViewExtendedStats {...props} />
             <DashboardViewCharts {...props} />
-            {business.slug && (
-                <details className="group rounded-2xl border border-border bg-card p-5">
-                    <summary className="cursor-pointer rounded-md font-semibold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
-                        Share your review link
-                    </summary>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                        Download a QR code for your counter, receipts, or next customer visit.
-                    </p>
-                    <div className="mt-5 max-w-lg">
-                        <DashboardQrCodeLazy
-                            businessId={business.id}
-                            businessSlug={business.slug}
-                            businessName={business.name || "Business"}
-                            businessLogoUrl={business.logo_url ?? null}
-                            brandColor={business.brand_color ?? null}
-                            reviewPageBackgroundColor={business.review_page_background_color ?? null}
-                        />
-                    </div>
-                </details>
-            )}
+            <DashboardViewBottomRow {...props} />
         </div>
     );
 }
