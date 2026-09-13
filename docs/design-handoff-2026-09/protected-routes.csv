@@ -38,7 +38,7 @@ route_template,source,surface,treatment
 /settings/team,src/app/(dashboard)/settings/team/page.tsx,authenticated dashboard,preserve; no redesign in this handoff
 /growth,src/app/(marketing)/growth/page.tsx,internal operations,preserve; no redesign in this handoff
 /newsletter/unsubscribe,src/app/(marketing)/newsletter/unsubscribe/page.tsx,transactional unsubscribe,preserve; no redesign in this handoff
-/,src/app/(marketing)/page.tsx,homepage,preserve; no redesign in this handoff
+/,src/app/(marketing)/page.tsx,homepage,preserve; excluded from the interior-page rollout
 /onboarding,src/app/onboarding/page.tsx,auth/onboarding,preserve; no redesign in this handoff
 /r/[slug],src/app/r/[slug]/page.tsx,public review capture,preserve; no redesign in this handoff
 /w/[slug],src/app/w/[slug]/page.tsx,public widget,preserve; no redesign in this handoff

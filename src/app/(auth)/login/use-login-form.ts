@@ -14,6 +14,7 @@ export function useLoginForm() {
     const nextPath = safeNextPath(searchParams.get("next"));
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [formError, setFormError] = useState<string | null>(null);
     const supabase = createClient();
 
     useEffect(() => {
@@ -26,6 +27,8 @@ export function useLoginForm() {
 
     async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+        if (isLoading) return;
+        setFormError(null);
         setIsLoading(true);
 
         try {
@@ -38,34 +41,32 @@ export function useLoginForm() {
             });
 
             if (signInError) {
-                toast.error("Error", { description: signInError.message });
-                return;
-            }
-
-            if (inviteToken) {
-                const acceptRes = await fetch("/api/team/accept-invite", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ token: inviteToken }),
-                });
-                if (!acceptRes.ok) {
-                    const payload = (await acceptRes.json().catch(() => ({}))) as { error?: string };
-                    toast.error("Invite acceptance failed", {
-                        description: payload?.error || "Please ask for a new invite.",
+                setFormError("We couldn’t log you in. Check your email and password, then try again.");
+            } else {
+                if (inviteToken) {
+                    const acceptRes = await fetch("/api/team/accept-invite", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ token: inviteToken }),
                     });
+                    if (!acceptRes.ok) {
+                        const payload = (await acceptRes.json().catch(() => ({}))) as { error?: string };
+                        toast.error("Invite acceptance failed", {
+                            description: payload?.error || "Please ask for a new invite.",
+                        });
+                    }
                 }
+                const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+                window.location.href = `${getAppSiteOrigin(rootDomain, process.env.NEXT_PUBLIC_APP_URL)}${nextPath}`;
             }
-
-            const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
-            window.location.href = `${getAppSiteOrigin(rootDomain, process.env.NEXT_PUBLIC_APP_URL)}${nextPath}`;
         } catch {
-            toast.error("Sign-in failed", { description: "Please try again." });
-        } finally {
-            setIsLoading(false);
+            setFormError("We couldn’t connect. Check your connection and try again.");
         }
+        setIsLoading(false);
     }
 
     return {
+        formError,
         isLoading,
         showPassword,
         setShowPassword,

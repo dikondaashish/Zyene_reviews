@@ -3,6 +3,13 @@ import { expect, test } from "@playwright/test";
 const LANDING_HERO_PAGES = [
   { path: "/help", variant: "support", media: "product" },
   { path: "/industries/restaurants", variant: "story", media: "photo" },
+  { path: "/features/ai-replies", variant: "product", media: "product" },
+  { path: "/features", variant: "directory", media: "none" },
+  { path: "/how-it-works", variant: "product", media: "none" },
+  { path: "/compare", variant: "directory", media: "none" },
+  { path: "/contact", variant: "conversion", media: "none" },
+  { path: "/demo", variant: "conversion", media: "none" },
+  { path: "/security", variant: "reading", media: "none" },
   { path: "/blog", variant: "directory", media: "none" },
   { path: "/resources", variant: "directory", media: "none" },
 ] as const;
@@ -16,8 +23,12 @@ for (const { path, variant, media } of LANDING_HERO_PAGES) {
   test(`${path} uses its ${variant} hero contract on desktop and mobile`, async ({ page }) => {
     test.setTimeout(60000);
     await page.goto(path, { waitUntil: "domcontentloaded" });
+    await expect(page).toHaveTitle(/\S+/);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /\S+/);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /^https:\/\/www\.zyenereviews\.com\//);
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", /\S+/);
 
-    for (const width of [1440, 390]) {
+    for (const width of [1440, 390, 320]) {
       await page.setViewportSize({ width, height: 1000 });
       await page.evaluate(() => document.fonts.ready);
 
@@ -38,7 +49,7 @@ for (const { path, variant, media } of LANDING_HERO_PAGES) {
       }
 
       if (media === "product") {
-        await expect(hero.getByRole("region", { name: "Search Zyene help" })).toBeVisible();
+        await expect(hero.locator(".landing-hero-product")).toBeVisible();
       }
 
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);

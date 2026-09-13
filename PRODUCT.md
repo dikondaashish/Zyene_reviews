@@ -29,6 +29,7 @@ Avoid cold monochrome developer-tool styling, decorative glass effects, excessiv
 3. Keep repeated workflows compact, predictable, and easy to scan.
 4. Use warm, restrained visual structure with borders and focused accent color.
 5. Surface trustworthy state and actionable recovery when data or integrations fail.
+6. Keep the daily equivalent as the dominant price in every marketing plan card. Show crossed-out and current monthly or annual charges as small supporting billing details; do not reverse this hierarchy.
 
 ## Accessibility & Inclusion
 

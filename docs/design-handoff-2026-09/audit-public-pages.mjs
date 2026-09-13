@@ -23,8 +23,16 @@ const context = await browser.newContext({viewport:{width:1440,height:1000}, red
 await context.addInitScript(() => localStorage.setItem('cookie-consent','declined'));
 const page = await context.newPage();
 const auditFile = `${output}/browser-audit.json`;
+function readResumeRows(file) {
+ try {
+  const saved = JSON.parse(readFileSync(file, 'utf8'));
+  return saved && typeof saved === 'object' && Array.isArray(saved.rows) ? saved.rows : [];
+ } catch {
+  return [];
+ }
+}
 const rows = process.argv.includes('--resume') && existsSync(auditFile)
- ? JSON.parse(readFileSync(auditFile, 'utf8')).rows : [];
+ ? readResumeRows(auditFile) : [];
 let consecutiveErrors = 0;
 for (const path of paths) {
  if(rows.some(row => row.path === path && !row.error)) continue;

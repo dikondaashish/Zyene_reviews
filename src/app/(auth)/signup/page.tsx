@@ -1,4 +1,7 @@
 import SignupPage from "./page-client";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Create an account", description: "Create your Zyene Reviews account and start your 7-day free trial." };
 
 export default function Page() {
     const googleClientId =

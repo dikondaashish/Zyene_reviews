@@ -1,4 +1,4 @@
-import { createElement } from "react";
+import { jsx } from "react/jsx-runtime";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
@@ -6,14 +6,11 @@ import { FeatureDemoFrame } from "@/components/marketing/interior/feature-demo-f
 
 describe("FeatureDemoFrame", () => {
     it("provides an accessible label and visible sample context", () => {
-        const html = renderToStaticMarkup(createElement(
-            FeatureDemoFrame,
-            {
-                label: "AI reply sample",
-                caption: "Fictional review. No reply is sent.",
-                children: createElement("button", { type: "button" }, "Try a tone"),
-            },
-        ));
+        const html = renderToStaticMarkup(jsx(FeatureDemoFrame, {
+            label: "AI reply sample",
+            caption: "Fictional review. No reply is sent.",
+            children: jsx("button", { type: "button", children: "Try a tone" }),
+        }));
 
         expect(html).toContain('aria-label="AI reply sample"');
         expect(html).toContain("app.zyenereviews.com");

@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { Loader2, Eye, EyeOff } from "lucide-react";
-import { useResetPasswordForm } from "./use-reset-password-form";
-import { ResetPasswordExpiredSection } from "./reset-password-expired-section";
-import { ResetPasswordSuccessSection } from "./reset-password-success-section";
+import { useResetPasswordForm } from "@/app/(auth)/reset-password/use-reset-password-form";
+import { ResetPasswordExpiredSection } from "@/app/(auth)/reset-password/reset-password-expired-section";
+import { ResetPasswordSuccessSection } from "@/app/(auth)/reset-password/reset-password-success-section";
 
 export function ResetPasswordForm() {
     const {
@@ -32,18 +32,18 @@ export function ResetPasswordForm() {
     }
 
     return (
-        <div className="space-y-8">
-            <div className="space-y-2">
+        <div className="auth-form-stack">
+            <div className="auth-form-heading">
                 <h1 className="text-3xl font-bold tracking-tight text-foreground">Set new password</h1>
                 <p className="text-muted-foreground">Choose a strong password for your account.</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="space-y-1.5">
+            <form onSubmit={handleSubmit} className="auth-fields">
+                <div className="auth-field">
                     <label htmlFor="password" className="block text-sm font-medium text-foreground">
                         New password
                     </label>
-                    <div className="relative">
+                    <div className="auth-password">
                         <input
                             id="password"
                             type={showPassword ? "text" : "password"}
@@ -53,14 +53,14 @@ export function ResetPasswordForm() {
                             required
                             disabled={isLoading || !sessionReady}
                             autoComplete="new-password"
-                            className="w-full h-12 px-4 pr-12 bg-background border border-input rounded-[5px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-all disabled:opacity-50"
+                            className="auth-input pr-12"
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
                         aria-label={showPassword ? "Hide password" : "Show password"}
                         aria-pressed={showPassword}
-                            className="flex size-11 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:ring-ring absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                            className="auth-password-toggle"
 
                         >
                             {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
@@ -68,14 +68,14 @@ export function ResetPasswordForm() {
                     </div>
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="auth-field">
                     <label
                         htmlFor="confirm-password"
                         className="block text-sm font-medium text-foreground"
                     >
                         Confirm new password
                     </label>
-                    <div className="relative">
+                    <div className="auth-password">
                         <input
                             id="confirm-password"
                             type={showConfirm ? "text" : "password"}
@@ -85,14 +85,14 @@ export function ResetPasswordForm() {
                             required
                             disabled={isLoading || !sessionReady}
                             autoComplete="new-password"
-                            className="w-full h-12 px-4 pr-12 bg-background border border-input rounded-[5px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-all disabled:opacity-50"
+                            className="auth-input pr-12"
                         />
                         <button
                             type="button"
                             onClick={() => setShowConfirm(!showConfirm)}
                         aria-label={showConfirm ? "Hide password" : "Show password"}
                         aria-pressed={showConfirm}
-                            className="flex size-11 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:ring-ring absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                            className="auth-password-toggle"
 
                         >
                             {showConfirm ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
@@ -103,18 +103,18 @@ export function ResetPasswordForm() {
                 <button
                     type="submit"
                     disabled={isLoading || !sessionReady}
-                    className="w-full h-12 bg-primary hover:brightness-95 border border-primary text-primary-foreground font-semibold rounded-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                    className="auth-submit"
                 >
                     {isLoading && <Loader2 className="mr-2 animate-spin size-4" />}
                     {!sessionReady && !sessionError ? "Verifying link…" : "Update password"}
                 </button>
             </form>
 
-            <p className="text-center text-sm text-muted-foreground">
+            <p className="auth-switch">
                 Remember your password?{" "}
                 <Link
                     href="/login"
-                    className="font-semibold text-primary hover:brightness-90 transition-colors"
+                    className="auth-text-link"
                 >
                     Log in
                 </Link>

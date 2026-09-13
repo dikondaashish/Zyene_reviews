@@ -22,7 +22,7 @@ export function PricingClientPlansSection({ starter, pro, enterprise, signupUrl 
           <PricingClientPlanCard plan={enterprise} isPopular={false} signupUrl={signupUrl} />
         </div>
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          Daily equivalents use a 30-day month or 365-day year. Plans are billed monthly or annually.
+          Daily equivalents are display estimates. Plans are billed monthly or annually.
         </p>
         <p className="text-center text-xs text-muted-foreground mt-8">
           All prices in USD. Taxes may apply. By starting a trial you agree to our{" "}

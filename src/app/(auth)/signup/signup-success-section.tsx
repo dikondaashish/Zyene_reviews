@@ -1,74 +1,44 @@
 "use client";
 
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+import { ArrowLeft, MailCheck } from "lucide-react";
 import { createClient } from "@/lib/db/supabase/client";
-import { toast } from "sonner";
+import { AuthError, AuthHeading } from "@/components/auth/auth-form-ui";
 
 export function SignupSuccessSection({ email }: { email: string }) {
+    const [resendState, setResendState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+    async function resend() {
+        if (resendState === "sending" || resendState === "sent") return;
+        setResendState("sending");
+        try {
+            const { error } = await createClient().auth.resend({ type: "signup", email });
+            setResendState(error ? "error" : "sent");
+        } catch {
+            setResendState("error");
+        }
+    }
     return (
-        <div className="text-center space-y-6">
-            <div className="mx-auto bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20 size-16">
-                <CheckCircle2 className="text-primary size-8" />
-            </div>
-            <div className="space-y-2">
-                <h2 className="text-2xl font-bold text-foreground">Check your inbox</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                    We sent a verification link to{" "}
-                    <span className="font-semibold text-foreground">{email}</span>.
-                </p>
-            </div>
-
-            <div className="text-left bg-muted rounded-xl p-5 space-y-3 border border-border">
-                {[
-                    {
-                        step: "1",
-                        text: "Open your email inbox (check Spam/Junk if you don't see it within a minute).",
-                    },
-                    {
-                        step: "2",
-                        text: 'Click the "Confirm your account" link in the email from Zyene Reviews.',
-                    },
-                    {
-                        step: "3",
-                        text: "You'll be taken directly into your dashboard to connect your Google Business Profile.",
-                    },
-                ].map((item) => (
-                    <div key={item.step} className="flex items-start gap-3">
-                        <span className="flex-shrink-0 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold flex items-center justify-center mt-0.5 size-6">
-                            {item.step}
-                        </span>
-                        <p className="text-sm text-muted-foreground leading-relaxed">{item.text}</p>
-                    </div>
-                ))}
-            </div>
-
-            <p className="text-xs text-muted-foreground">
-                Didn&apos;t receive the email?{" "}
-                <button
-                    type="button"
-                    onClick={async () => {
-                        const supabase = createClient();
-                        const { error } = await supabase.auth.resend({ type: "signup", email });
-                        if (error) {
-                            toast.error("Could not resend. Please try again in a moment.");
-                        } else {
-                            toast.success("Verification email re-sent. Check your inbox.");
-                        }
-                    }}
-                    className="font-medium text-primary hover:brightness-90 transition-colors underline underline-offset-2"
-                >
-                    Resend verification email
+        <div className="auth-form-stack">
+            <div className="auth-status-icon"><MailCheck size={24} aria-hidden="true" /></div>
+            <AuthHeading title="Check your inbox">
+                We sent a verification link to <span className="auth-status-email">{email}</span>.
+            </AuthHeading>
+            <ol className="auth-fields auth-hint list-decimal pl-4">
+                <li>Open the email from Zyene Reviews. Check your spam folder if you don’t see it.</li>
+                <li>Select “Confirm your account” to verify your email and continue to your workspace.</li>
+            </ol>
+            <AuthError message={resendState === "error" ? "We couldn’t resend the email. Please wait a moment and try again." : null} />
+            <div className="auth-hint">
+                <p>Didn’t receive it?</p>
+                <button type="button" onClick={resend} className="auth-text-link min-h-11"
+                    disabled={resendState === "sending" || resendState === "sent"}>
+                    {resendState === "sending" ? "Sending…" : resendState === "sent" ? "Verification email sent" : "Resend verification email"}
                 </button>
-            </p>
-
-            <Link href="/login">
-                <button
-                    type="button"
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                    ← Back to Login
-                </button>
+                <span className="sr-only" role="status">{resendState === "sent" ? "Verification email sent. Check your inbox." : ""}</span>
+            </div>
+            <Link href="/login" className="auth-text-link inline-flex items-center gap-2 justify-self-start">
+                <ArrowLeft size={15} aria-hidden="true" /> Back to log in
             </Link>
         </div>
     );

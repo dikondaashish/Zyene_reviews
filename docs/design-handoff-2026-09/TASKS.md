@@ -89,7 +89,7 @@ Done: user can follow connection → request/reply → measurement; links land o
 
 Dependencies: M01. Allowed: `src/components/marketing/pricing-client-*.tsx`, `pricing-price-display.tsx`, `pricing.module.css`; read-only authoritative `src/services/stripe/plan-catalog.ts`.
 
-Remove pricing desk photo. Use compact intro, billing toggle and equal plan columns per PAGE_PLAN. Make actual billed monthly/annual amount primary; daily equivalent secondary. Preserve trial text, plan limits, discounts and checkout/signup destinations exactly as catalog dictates. Do not hardcode a new price or change Stripe logic.
+Remove pricing desk photo. Use compact intro, billing toggle and equal plan columns per PAGE_PLAN. Make the daily equivalent the large primary price; keep crossed-out and current monthly/annual charges small but clear. Preserve trial text, plan limits, discounts and checkout/signup destinations exactly as catalog dictates. Store approved display equivalents in the catalog and do not change Stripe billing logic.
 
 Done: both intervals and every CTA checked against catalog, responsive stack, prices readable at mobile, plans appear promptly. Run existing pricing tests plus fast checks; no real checkout.
 

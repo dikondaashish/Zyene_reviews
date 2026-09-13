@@ -1,7 +1,7 @@
 path,host,source_template,packet,treatment,redirect_target,browser_observation,implementation_status
 /about,marketing,src/app/(marketing)/about/page.tsx,M24a,audience/story,,loaded; automated checks only,planned
 /agencies,marketing,src/app/(marketing)/agencies/page.tsx,M24b,audience/story,,loaded; automated checks only,planned
-/blog,marketing,src/app/(marketing)/blog/page.tsx,M14,compact directory,,loaded; automated checks only,planned
+/blog,marketing,src/app/(marketing)/blog/page.tsx,M14,compact directory,,loaded; automated checks only,hero foundation implemented
 /blog/ai-reply-mistakes-to-avoid,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
 /blog/ai-visibility-audit-local-businesses,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
 /blog/birdeye-alternatives-for-local-businesses,marketing,src/app/(marketing)/blog/[slug]/page.tsx,M14b,reading,,loaded; automated checks only,planned
@@ -25,13 +25,13 @@ path,host,source_template,packet,treatment,redirect_target,browser_observation,i
 /case-studies/precision-auto-works-phoenix,marketing,src/app/(marketing)/case-studies/[slug]/page.tsx,M23,illustrative workflow,,not attempted,planned
 /case-studies/sunrise-dental-austin,marketing,src/app/(marketing)/case-studies/[slug]/page.tsx,M23,illustrative workflow,,not attempted,planned
 /case-studies/wolfpack-bbq-charlotte,marketing,src/app/(marketing)/case-studies/[slug]/page.tsx,M23,illustrative workflow,,not attempted,planned
-/compare,marketing,src/app/(marketing)/compare/page.tsx,M22,compact directory,,loaded; automated checks only,planned
+/compare,marketing,src/app/(marketing)/compare/page.tsx,M22,compact directory,,loaded; automated checks only,hero foundation implemented
 /compare/birdeye,marketing,src/app/(marketing)/compare/[competitor]/page.tsx,M22,comparison,,not attempted,planned
 /compare/gatherup,marketing,src/app/(marketing)/compare/[competitor]/page.tsx,M22,comparison,,not attempted,planned
 /compare/nicejob,marketing,src/app/(marketing)/compare/[competitor]/page.tsx,M22,comparison,,not attempted,planned
 /compare/podium,marketing,src/app/(marketing)/compare/[competitor]/page.tsx,M22,comparison,,not attempted,planned
 /compare/prosperly,marketing,src/app/(marketing)/compare/[competitor]/page.tsx,M22,comparison,,not attempted,planned
-/contact,marketing,src/app/(marketing)/contact/page.tsx,M25a,conversion,,loaded; automated checks only,planned
+/contact,marketing,src/app/(marketing)/contact/page.tsx,M25a,conversion,,loaded; automated checks only,hero foundation implemented
 /customers,marketing production only,src/lib/routing/platform-routes.ts,M23,preserve redirect,/case-studies,not attempted,planned
 /customers/apex-hvac-denver,marketing production only,src/lib/routing/platform-routes.ts,M23,preserve redirect,/case-studies/apex-hvac-denver,not attempted,planned
 /customers/bellas-salon-portland,marketing production only,src/lib/routing/platform-routes.ts,M23,preserve redirect,/case-studies/bellas-salon-portland,not attempted,planned
@@ -39,7 +39,7 @@ path,host,source_template,packet,treatment,redirect_target,browser_observation,i
 /customers/sunrise-dental-austin,marketing production only,src/lib/routing/platform-routes.ts,M23,preserve redirect,/case-studies/sunrise-dental-austin,not attempted,planned
 /customers/wolfpack-bbq-charlotte,marketing production only,src/lib/routing/platform-routes.ts,M23,preserve redirect,/case-studies/wolfpack-bbq-charlotte,not attempted,planned
 /data-retention,marketing,src/app/(marketing)/data-retention/page.tsx,M26b,reading,,loaded; automated checks only,planned
-/demo,marketing,src/app/(marketing)/demo/page.tsx,M25b,conversion,,loaded; automated checks only,planned
+/demo,marketing,src/app/(marketing)/demo/page.tsx,M25b,conversion,,loaded; automated checks only,hero foundation implemented
 /docs,marketing,src/app/docs/page.tsx,M27,docs reading,,not attempted,planned
 /docs/api,marketing,src/app/docs/api/page.tsx,M27,docs reading,,not attempted,planned
 /docs/changelog,marketing,src/app/docs/changelog/page.tsx,M27,docs reading,,not attempted,planned
@@ -61,16 +61,16 @@ path,host,source_template,packet,treatment,redirect_target,browser_observation,i
 /es/industries/restaurantes,marketing,src/app/(marketing)/es/industries/[industry]/page.tsx,M20,story,,not attempted,planned
 /es/industries/salones,marketing,src/app/(marketing)/es/industries/[industry]/page.tsx,M20,story,,not attempted,planned
 /es/industries/servicios-hogar,marketing,src/app/(marketing)/es/industries/[industry]/page.tsx,M20,story,,not attempted,planned
-/features,marketing,src/app/(marketing)/features/page.tsx,M09,product,,loaded; automated checks only,planned
-/features/ai-replies,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M04; M09,product,,loaded; automated checks only,planned
-/features/analytics,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M06; M09,product,,loaded; automated checks only,planned
+/features,marketing,src/app/(marketing)/features/page.tsx,M09,compact directory,,loaded; automated checks only,hero foundation implemented
+/features/ai-replies,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M04; M09,product,,loaded; automated checks only,hero foundation implemented
+/features/analytics,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M06; M09,product,,loaded; automated checks only,hero foundation implemented
 /features/competitor-intelligence,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M09,preserve redirect,/features/competitor-tracking,not attempted,planned
-/features/competitor-tracking,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M07; M09,product,,loaded; automated checks only,planned
+/features/competitor-tracking,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M07; M09,product,,loaded; automated checks only,hero foundation implemented
 /features/feedback-shield,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M09,preserve redirect,/features/review-collection,not attempted,planned
-/features/local-seo,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M08; M09,product,,loaded; automated checks only,planned
-/features/review-collection,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M05; M09,product,,loaded; automated checks only,planned
-/features/review-monitoring,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M03; M09,product,,loaded; automated checks only,planned
-/help,marketing,src/app/(marketing)/help/page.tsx,M12,support/search,,loaded; automated checks only,planned
+/features/local-seo,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M08; M09,product,,loaded; automated checks only,hero foundation implemented
+/features/review-collection,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M05; M09,product,,loaded; automated checks only,hero foundation implemented
+/features/review-monitoring,marketing,src/app/(marketing)/features/[pillar]/page.tsx,M03; M09,product,,loaded; automated checks only,hero foundation implemented
+/help,marketing,src/app/(marketing)/help/page.tsx,M12,support/search,,loaded; automated checks only,implemented
 /help/analytics,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13a,reading,,timeout/incomplete,planned
 /help/analytics/generating-pdf-reports,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
 /help/analytics/reading-the-engagement-funnel,marketing,src/app/(marketing)/help/[slug]/[article]/page.tsx,M13,reading,,not attempted,planned
@@ -123,7 +123,7 @@ path,host,source_template,packet,treatment,redirect_target,browser_observation,i
 /help/upgrading-your-plan,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/billing/upgrading-your-plan,not attempted,planned
 /help/using-ai-replies,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/reviews/using-ai-replies,not attempted,planned
 /help/using-the-api,marketing,src/app/(marketing)/help/[slug]/page.tsx,M13,preserve redirect,/help/integrations/using-the-api,not attempted,planned
-/how-it-works,marketing,src/app/(marketing)/how-it-works/page.tsx,M10,product,,loaded; automated checks only,planned
+/how-it-works,marketing,src/app/(marketing)/how-it-works/page.tsx,M10,product,,loaded; automated checks only,hero foundation implemented
 /industries,marketing,src/app/(marketing)/industries/page.tsx,M19,compact directory,,loaded; automated checks only,planned
 /industries/auto-repair,marketing,src/app/(marketing)/industries/[industry]/page.tsx,M19,story,,loaded; automated checks only,planned
 /industries/dental,marketing,src/app/(marketing)/industries/[industry]/page.tsx,M19,story,,loaded; automated checks only,planned
@@ -135,15 +135,15 @@ path,host,source_template,packet,treatment,redirect_target,browser_observation,i
 /industries/salons,marketing,src/app/(marketing)/industries/[industry]/page.tsx,M19,story,,loaded; automated checks only,planned
 /integrations,marketing,src/app/(marketing)/integrations/page.tsx,M21,compact directory,,timeout/incomplete,planned
 /partners,marketing,src/app/(marketing)/partners/page.tsx,M24d,compact directory,,loaded; automated checks only,planned
-/pricing,marketing,src/app/(marketing)/pricing/page.tsx,M11,compact pricing,,loaded; automated checks only,planned
+/pricing,marketing,src/app/(marketing)/pricing/page.tsx,M11,compact pricing,,loaded; automated checks only,implemented
 /privacy,marketing,src/app/(marketing)/privacy/page.tsx,M26b,reading,,loaded; automated checks only,planned
 /product,marketing,next.config.ts,M09,preserve redirect,/features,not attempted,planned
-/resources,marketing,src/app/(marketing)/resources/page.tsx,M15,compact directory,,loaded; automated checks only,planned
+/resources,marketing,src/app/(marketing)/resources/page.tsx,M15,compact directory,,loaded; automated checks only,hero foundation implemented
 /resources/google-reviews-guide,marketing,src/app/(marketing)/resources/[guide]/page.tsx,M15,reading,,timeout/incomplete,planned
 /resources/local-seo-checklist,marketing,src/app/(marketing)/resources/[guide]/page.tsx,M15,reading,,timeout/incomplete,planned
 /resources/negative-review-templates,marketing,src/app/(marketing)/resources/[guide]/page.tsx,M15,reading,,timeout/incomplete,planned
 /resources/review-request-templates,marketing,src/app/(marketing)/resources/[guide]/page.tsx,M15,reading,,timeout/incomplete,planned
-/security,marketing,src/app/(marketing)/security/page.tsx,M26a,reading,,loaded; automated checks only,planned
+/security,marketing,src/app/(marketing)/security/page.tsx,M26a,reading,,loaded; automated checks only,hero foundation implemented
 /terms,marketing,src/app/(marketing)/terms/page.tsx,M26b,reading,,loaded; automated checks only,planned
 /tools,marketing,src/app/(marketing)/tools/page.tsx,M16,compact directory,,loaded; automated checks only,planned
 /tools/reputation-score-checker,marketing,src/app/(marketing)/tools/reputation-score-checker/page.tsx,M18a,functional tool,,timeout/incomplete,planned

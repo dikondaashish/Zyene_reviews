@@ -37,9 +37,9 @@ Use `how-it-works-steps-section.tsx`, `how-it-works-data.ts`, proof-points secti
 
 ### /pricing — M11
 
-Current: intro with product desk photo and monthly/yearly control, plan cards, location scale, comparison, illustrative workflow grid, FAQ, closing CTA. Target: compact 160–220px intro, billing selector, plan cards immediately visible; remove desk photo because choosing a plan is the primary job. Compare actual monthly/annual charges first; any daily-equivalent price remains secondary and accurately labeled.
+Current: compact intro with monthly/yearly control, plan cards, location scale, comparison, illustrative workflow grid, FAQ, closing CTA. Keep plan cards immediately visible. The daily equivalent is the dominant display price; crossed-out and current monthly/annual charges are small supporting billing details. Label the daily figure as an estimate and keep the billed amount clear.
 
-Three equal columns >=1024, stacked below 1024. Same plan-card section ordering: plan/use case → actual charge/billing period → limits → CTA → included features. Do not make a carousel. Retain real catalog data and existing `PricingClient*` components. Show location/request limits from the authoritative plan catalog, never duplicate prices in image/copy. FAQ explains trial, billing and cancellation accurately. Preserve interval switching and signup URLs. Optional desktop sticky comparison label is secondary, not required.
+Three equal columns >=1024, stacked below 1024. Same plan-card section ordering: plan/use case → daily equivalent with supporting billed amount → limits → CTA → included features. Do not make a carousel. Retain real catalog data and existing `PricingClient*` components. Show location/request limits from the authoritative plan catalog, never duplicate prices in image/copy. FAQ explains trial, billing and cancellation accurately. Preserve interval switching and signup URLs. Optional desktop sticky comparison label is secondary, not required.
 
 ### /compare and all five /compare/[competitor] — M22
 

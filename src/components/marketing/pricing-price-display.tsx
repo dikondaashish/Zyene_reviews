@@ -2,7 +2,11 @@ import type { Plan } from "@/services/stripe/plan-catalog";
 import { getPricingPresentation } from "@/lib/marketing/pricing-presentation";
 import styles from "@/components/marketing/pricing.module.css";
 
-export function PricingPriceDisplay({ plan }: { plan: Pick<Plan, "price" | "originalPrice" | "interval"> }) {
+export function PricingPriceDisplay({
+  plan,
+}: {
+  plan: Pick<Plan, "price" | "originalPrice" | "dailyEquivalent" | "interval">;
+}) {
   const price = getPricingPresentation(plan);
 
   if (!price) {

@@ -4,13 +4,13 @@ import { getPricingPresentation } from "@/lib/marketing/pricing-presentation";
 
 describe("marketing pricing presentation", () => {
   it.each([
-    ["starter_monthly", "$29.99", "$1", "$49.99"],
-    ["professional_monthly", "$59.99", "$2", "$89.99"],
+    ["starter_monthly", "$29.99", "$0.99", "$49.99"],
+    ["professional_monthly", "$59.99", "$1.98", "$89.99"],
   ])("keeps the actual monthly charge and catalog reference for %s", (id, monthly, daily, reference) => {
     expect(getPricingPresentation(PLAN_MAP[id])).toMatchObject({
       monthlyPrice: monthly,
       dailyPrice: daily,
-      dailyPrefix: "Less than",
+      dailyPrefix: "Daily equivalent",
       referencePrice: reference,
       annualCharge: null,
       billingText: "Billed monthly. Cancel anytime.",
@@ -42,7 +42,7 @@ describe("marketing pricing presentation", () => {
   });
 
   it("derives billing amounts from the supplied plan without mutating it", () => {
-    const plan = { ...PLAN_MAP.starter_yearly, price: 365, originalPrice: null };
+    const plan = { ...PLAN_MAP.starter_yearly, price: 365, originalPrice: null, dailyEquivalent: 1 };
     const before = structuredClone(plan);
     expect(getPricingPresentation(plan)).toMatchObject({ annualCharge: "$365.00", dailyPrice: "$1.00" });
     expect(plan).toEqual(before);

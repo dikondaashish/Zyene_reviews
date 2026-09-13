@@ -22,6 +22,8 @@ export interface Plan {
     interval: "month" | "year" | null; // null = enterprise / contact sales
     price: number | null;
     originalPrice: number | null;
+    /** Display-only daily equivalent; customers are billed by interval, never by day. */
+    dailyEquivalent: number | null;
     stripePriceId: string | null;
     limits: PlanLimits;
     features: string[];
@@ -104,6 +106,7 @@ export const PLANS: Plan[] = [
         interval: "month",
         price: 29.99,
         originalPrice: 49.99,
+        dailyEquivalent: 0.99,
         stripePriceId: process.env.STRIPE_STARTER_MONTHLY_PRICE_ID || null,
         limits: STARTER_LIMITS,
         features: STARTER_FEATURES,
@@ -114,6 +117,7 @@ export const PLANS: Plan[] = [
         interval: "year",
         price: 299.99,
         originalPrice: 499.99,
+        dailyEquivalent: 0.82,
         stripePriceId: process.env.STRIPE_STARTER_YEARLY_PRICE_ID || null,
         limits: STARTER_LIMITS,
         features: STARTER_FEATURES,
@@ -124,6 +128,7 @@ export const PLANS: Plan[] = [
         interval: "month",
         price: 59.99,
         originalPrice: 89.99,
+        dailyEquivalent: 1.98,
         stripePriceId: process.env.STRIPE_PRO_MONTHLY_PRICE_ID || null,
         limits: PRO_LIMITS,
         features: PRO_FEATURES,
@@ -134,6 +139,7 @@ export const PLANS: Plan[] = [
         interval: "year",
         price: 599.99,
         originalPrice: 899.99,
+        dailyEquivalent: 1.64,
         stripePriceId: process.env.STRIPE_PRO_YEARLY_PRICE_ID || null,
         limits: PRO_LIMITS,
         features: PRO_FEATURES,
@@ -144,6 +150,7 @@ export const PLANS: Plan[] = [
         interval: null,
         price: null,
         originalPrice: null,
+        dailyEquivalent: null,
         stripePriceId: null,
         limits: ENTERPRISE_LIMITS,
         features: ENTERPRISE_FEATURES,
