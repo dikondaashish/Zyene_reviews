@@ -42,7 +42,7 @@ export async function GET(request: Request) {
             const now = new Date();
             const [due, promptEnrollment] = await Promise.all([
                 loadDueBusinesses(db, now),
-                loadDuePromptEnrollmentBusinesses(db, now),
+                loadDuePromptEnrollmentBusinesses(db),
             ]);
 
             const events = [

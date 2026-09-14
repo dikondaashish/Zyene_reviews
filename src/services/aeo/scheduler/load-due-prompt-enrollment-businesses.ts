@@ -2,7 +2,6 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/lib/db/supabase/database.types";
 import { PLAN_CREDIT_GRANTS_MICRO_USD } from "../billing/billing-constants";
-import { isBusinessDueNow } from "./is-business-due-now";
 
 type Admin = SupabaseClient<Database>;
 
@@ -11,13 +10,12 @@ export type DuePromptEnrollmentBusiness = { businessId: string; organizationId: 
 const AEO_ELIGIBLE_PLAN_IDS = Object.keys(PLAN_CREDIT_GRANTS_MICRO_USD);
 
 /**
- * Paid businesses with grant history but no active prompt get one attempt in
- * their normal sampling slot. Reusing the slot prevents an all-customer launch
- * from creating an external Google API burst or a future test-charge herd.
+ * Paid businesses with grant history but no active prompt are enrolled on the
+ * next scheduler pass. This makes a global rollout available to every eligible
+ * business promptly; sampling remains independently spread by its weekly slot.
  */
 export async function loadDuePromptEnrollmentBusinesses(
-    db: Admin,
-    now: Date
+    db: Admin
 ): Promise<DuePromptEnrollmentBusiness[]> {
     const { data: orgs, error: orgsError } = await db
         .from("organizations")
@@ -54,6 +52,5 @@ export async function loadDuePromptEnrollmentBusinesses(
     const withActivePrompts = new Set((activePrompts ?? []).map((prompt) => prompt.business_id));
     return businesses
         .filter((business) => !withActivePrompts.has(business.id))
-        .filter((business) => isBusinessDueNow(business.id, now))
         .map((business) => ({ businessId: business.id, organizationId: business.organization_id }));
 }
