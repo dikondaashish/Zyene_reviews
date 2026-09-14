@@ -1,13 +1,14 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BookOpen, X } from "lucide-react";
 import { HomeLeadWizardEmailStep } from "@/components/marketing/home-lead-wizard-email-step";
 import { HomeLeadWizardProgress } from "@/components/marketing/home-lead-wizard-progress";
 import { HomeLeadWizardQuestionStep } from "@/components/marketing/home-lead-wizard-question-step";
 import { HomeLeadWizardSuccess } from "@/components/marketing/home-lead-wizard-success";
 import { HomeLeadWizardVisual } from "@/components/marketing/home-lead-wizard-visual";
+import { useHomeLeadWizardTiming } from "@/components/marketing/use-home-lead-wizard-timing";
 import { Dialog as DialogPrimitive } from "radix-ui";
 
 export function HomeLeadWizard() {
@@ -20,9 +21,12 @@ export function HomeLeadWizard() {
     const [message, setMessage] = useState("");
     const [downloadUrl, setDownloadUrl] = useState("");
     const [emailSent, setEmailSent] = useState(false);
-    useEffect(() => {
-        if (new URLSearchParams(window.location.search).get("qa") === "wizard") setOpen(true);
-    }, []);
+    const cancelDelayedOpen = useHomeLeadWizardTiming(setOpen);
+
+    function handleOpenChange(nextOpen: boolean) {
+        if (nextOpen) cancelDelayedOpen();
+        setOpen(nextOpen);
+    }
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -51,7 +55,7 @@ export function HomeLeadWizard() {
     }
 
     return (
-        <DialogPrimitive.Root open={open} onOpenChange={setOpen}>
+        <DialogPrimitive.Root open={open} onOpenChange={handleOpenChange}>
             <section className="home-guide-offer" aria-labelledby="home-guide-heading">
                 <div>
                     <p className="text-sm font-medium text-primary">The local business guide</p>
