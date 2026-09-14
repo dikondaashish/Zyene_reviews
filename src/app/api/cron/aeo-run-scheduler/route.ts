@@ -6,6 +6,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
 import { runCronJob } from "@/lib/cron/run-cron-job";
 import { loadDueBusinesses } from "@/services/aeo/scheduler/load-due-businesses";
+import { loadDuePromptEnrollmentBusinesses } from "@/services/aeo/scheduler/load-due-prompt-enrollment-businesses";
 
 /**
  * E-10 fan-out - the trigger the sampling scheduler never had.
@@ -39,24 +40,35 @@ export async function GET(request: Request) {
         try {
             const db = createAdminClient();
             const now = new Date();
-            const due = await loadDueBusinesses(db, now);
+            const [due, promptEnrollment] = await Promise.all([
+                loadDueBusinesses(db, now),
+                loadDuePromptEnrollmentBusinesses(db, now),
+            ]);
 
-            if (due.length > 0) {
-                await inngest.send(
-                    due.map((d) => ({
-                        id: `cron:aeo-run-scheduler:${occurrenceKey}:${d.businessId}`,
-                        name: "aeo/run.requested" as const,
-                        data: {
-                            businessId: d.businessId,
-                            organizationId: d.organizationId,
-                            trigger: "scheduled" as const,
-                            scheduledFor: now.toISOString(),
-                        },
-                    })),
-                );
-            }
+            const events = [
+                ...promptEnrollment.map((business) => ({
+                    id: `cron:aeo-run-scheduler:enroll:${occurrenceKey}:${business.businessId}`,
+                    name: "aeo/prompt-enrollment.requested" as const,
+                    data: business,
+                })),
+                ...due.map((business) => ({
+                    id: `cron:aeo-run-scheduler:${occurrenceKey}:${business.businessId}`,
+                    name: "aeo/run.requested" as const,
+                    data: {
+                        ...business,
+                        trigger: "scheduled" as const,
+                        scheduledFor: now.toISOString(),
+                    },
+                })),
+            ];
 
-            return NextResponse.json({ success: true, dispatched: due.length });
+            if (events.length > 0) await inngest.send(events);
+
+            return NextResponse.json({
+                success: true,
+                dispatched: due.length,
+                promptEnrollmentRequested: promptEnrollment.length,
+            });
         } catch (error: unknown) {
             logger.error({ err: error }, "[cron/aeo-run-scheduler] fan-out failed:");
             return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

@@ -23,6 +23,7 @@ import {
     marketingNurtureWorker,
 } from "@/services/inngest/growth-functions";
 import { aeoRunPlanner } from "@/services/inngest/aeo/aeo-run-planner";
+import { aeoPromptEnrollmentWorker } from "@/services/inngest/aeo/aeo-prompt-enrollment-worker";
 import { aeoDispatchWorker } from "@/services/inngest/aeo/aeo-dispatch-worker";
 import { aeoGeoGridWorker } from "@/services/inngest/aeo/aeo-geo-grid-worker";
 import { aeoYearlyCreditResetWorker } from "@/services/inngest/aeo/aeo-yearly-credit-reset-worker";
@@ -32,7 +33,6 @@ import { aeoAlertDigestWorker } from "@/services/inngest/aeo/aeo-alert-digest-wo
 import { aeoPageDiagnosticWorker } from "@/services/inngest/aeo/aeo-page-diagnostic-worker";
 import { aeoReportWorker } from "@/services/inngest/aeo/aeo-report-worker";
 import { aeoPhase3RefreshWorker } from "@/services/inngest/aeo/aeo-phase3-refresh-worker";
-
 /**
  * Inngest registers the callback URL it will use to invoke functions. On Vercel,
  * inferred host can be *.vercel.app while users browse app.example.com; deployment
@@ -74,6 +74,7 @@ export const { GET, POST, PUT } = serve({
         // E-7 sampling. Both refuse to run unless AEO_LIVE_SAMPLING is exactly
         // "true", so registering them here does not by itself enable spending.
         aeoRunPlanner,
+        aeoPromptEnrollmentWorker,
         aeoDispatchWorker,
         aeoGeoGridWorker,
         // E-9.1: refuses to run unless AEO_METERED_BILLING_LIVE is exactly
