@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
-import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
+import { runCronJob } from "@/lib/cron/run-cron-job";
 import { loadDueCrawlBusinesses } from "@/services/aeo/scheduler/load-due-crawl-businesses";
 
 /**
@@ -27,33 +27,31 @@ import { loadDueCrawlBusinesses } from "@/services/aeo/scheduler/load-due-crawl-
  * fetched. Two switches, deliberately independent.
  */
 export async function GET(request: Request) {
-    if (!isAuthorizedCronRequest(request)) {
-        return new NextResponse("Unauthorized", { status: 401 });
-    }
+    return runCronJob(request, { name: "aeo-crawl-scheduler", cadence: "hourly" }, async ({ occurrenceKey }) => {
+        try {
+            const db = createAdminClient();
+            const due = await loadDueCrawlBusinesses(db, new Date());
 
-    try {
-        const db = createAdminClient();
-        const due = await loadDueCrawlBusinesses(db, new Date());
+            if (due.length > 0) {
+                await inngest.send(
+                    due.map((d) => ({
+                        id: `cron:aeo-crawl-scheduler:${occurrenceKey}:${d.businessId}`,
+                        name: "aeo/crawl.requested" as const,
+                        data: {
+                            businessId: d.businessId,
+                            organizationId: d.organizationId,
+                            origin: d.origin,
+                            planId: d.planId,
+                            trigger: "scheduled" as const,
+                        },
+                    })),
+                );
+            }
 
-        if (due.length > 0) {
-            await inngest.send(
-                due.map((d) => ({
-                    name: "aeo/crawl.requested" as const,
-                    data: {
-                        businessId: d.businessId,
-                        organizationId: d.organizationId,
-                        origin: d.origin,
-                        planId: d.planId,
-                        trigger: "scheduled" as const,
-                    },
-                }))
-            );
+            return NextResponse.json({ success: true, dispatched: due.length });
+        } catch (error: unknown) {
+            logger.error({ err: error }, "[cron/aeo-crawl-scheduler] fan-out failed:");
+            return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
         }
-
-        return NextResponse.json({ success: true, dispatched: due.length });
-    } catch (error: unknown) {
-        logger.error({ err: error }, "[cron/aeo-crawl-scheduler] fan-out failed:");
-        const message = error instanceof Error ? error.message : "Internal server error";
-        return NextResponse.json({ error: message }, { status: 500 });
-    }
+    });
 }

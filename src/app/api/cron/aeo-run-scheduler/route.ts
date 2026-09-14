@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
-import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
+import { runCronJob } from "@/lib/cron/run-cron-job";
 import { loadDueBusinesses } from "@/services/aeo/scheduler/load-due-businesses";
 
 /**
@@ -35,33 +35,31 @@ import { loadDueBusinesses } from "@/services/aeo/scheduler/load-due-businesses"
  * explicit step.
  */
 export async function GET(request: Request) {
-    if (!isAuthorizedCronRequest(request)) {
-        return new NextResponse("Unauthorized", { status: 401 });
-    }
+    return runCronJob(request, { name: "aeo-run-scheduler", cadence: "hourly" }, async ({ occurrenceKey }) => {
+        try {
+            const db = createAdminClient();
+            const now = new Date();
+            const due = await loadDueBusinesses(db, now);
 
-    try {
-        const db = createAdminClient();
-        const now = new Date();
-        const due = await loadDueBusinesses(db, now);
+            if (due.length > 0) {
+                await inngest.send(
+                    due.map((d) => ({
+                        id: `cron:aeo-run-scheduler:${occurrenceKey}:${d.businessId}`,
+                        name: "aeo/run.requested" as const,
+                        data: {
+                            businessId: d.businessId,
+                            organizationId: d.organizationId,
+                            trigger: "scheduled" as const,
+                            scheduledFor: now.toISOString(),
+                        },
+                    })),
+                );
+            }
 
-        if (due.length > 0) {
-            await inngest.send(
-                due.map((d) => ({
-                    name: "aeo/run.requested" as const,
-                    data: {
-                        businessId: d.businessId,
-                        organizationId: d.organizationId,
-                        trigger: "scheduled" as const,
-                        scheduledFor: now.toISOString(),
-                    },
-                }))
-            );
+            return NextResponse.json({ success: true, dispatched: due.length });
+        } catch (error: unknown) {
+            logger.error({ err: error }, "[cron/aeo-run-scheduler] fan-out failed:");
+            return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
         }
-
-        return NextResponse.json({ success: true, dispatched: due.length });
-    } catch (error: unknown) {
-        logger.error({ err: error }, "[cron/aeo-run-scheduler] fan-out failed:");
-        const message = error instanceof Error ? error.message : "Internal server error";
-        return NextResponse.json({ error: message }, { status: 500 });
-    }
+    });
 }

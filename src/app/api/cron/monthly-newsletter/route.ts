@@ -1,13 +1,8 @@
 export const dynamic = "force-dynamic";
 
-import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/db/supabase/admin";
-import { sendEmail } from "@/services/resend/send-email";
-import { monthlyNewsletterEmail } from "@/services/resend/templates/growth-marketing-emails";
-import { getMonthlyNewsletterEdition } from "@/lib/campaign-content/monthly-newsletter-content";
-import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
-import { marketingCanonicalUrl } from "@/lib/seo/marketing-site-url";
+import { runCronJob } from "@/lib/cron/run-cron-job";
+import { runMonthlyNewsletter } from "@/services/cron/monthly-newsletter-run";
 
 /**
  * Monthly marketing newsletter to blog/partners subscribers.
@@ -15,59 +10,7 @@ import { marketingCanonicalUrl } from "@/lib/seo/marketing-site-url";
  * (e.g. cron-jobs.org: "0 10 1 * *")
  */
 export async function GET(request: Request) {
-    if (!isAuthorizedCronRequest(request)) {
-        return new NextResponse("Unauthorized", { status: 401 });
-    }
-
-    const admin = createAdminClient();
-    const { data: subscribers, error } = await admin
-        .from("marketing_subscribers")
-        .select("id, email")
-        .is("unsubscribed_at", null);
-
-    if (error) {
-        logger.error({ err: error }, "[cron/monthly-newsletter] fetch failed:");
-        return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    if (!subscribers?.length) {
-        return NextResponse.json({ message: "No active subscribers", sent: 0 });
-    }
-
-    const edition = getMonthlyNewsletterEdition();
-    const monthLabel = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
-    const caseStudyLink = marketingCanonicalUrl(`/case-studies/${edition.caseStudySlug}`);
-
-    const sendResults = await Promise.all(
-        subscribers.map(async (sub) => {
-            const unsubscribeUrl = `${marketingCanonicalUrl("/newsletter/unsubscribe")}?id=${sub.id}`;
-            const { subject, html } = monthlyNewsletterEmail({
-                monthLabel,
-                productUpdate: edition.productUpdate,
-                tipTitle: edition.tipTitle,
-                tipBody: edition.tipBody,
-                caseStudyLink,
-                caseStudyTitle: edition.caseStudyTitle,
-                unsubscribeUrl,
-            });
-
-            try {
-                await sendEmail({ to: sub.email, subject, html });
-                return "sent" as const;
-            } catch (err) {
-                logger.error({ err: err }, `[cron/monthly-newsletter] failed for ${sub.email}:`);
-                return "failed" as const;
-            }
-        })
+    return runCronJob(request, { name: "monthly-newsletter", cadence: "monthly", leaseSeconds: 1800 }, async () =>
+        NextResponse.json({ success: true, ...(await runMonthlyNewsletter()) }),
     );
-    const sent = sendResults.filter((r) => r === "sent").length;
-    const failed = sendResults.filter((r) => r === "failed").length;
-
-    return NextResponse.json({
-        success: true,
-        sent,
-        failed,
-        total: subscribers.length,
-        monthLabel,
-    });
 }

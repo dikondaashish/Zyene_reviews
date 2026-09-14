@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { isAuthorizedCronRequest } from "../../src/lib/cron/authorize-cron-request";
+import { authorizeCronRequest, isAuthorizedCronRequest } from "../../src/lib/cron/authorize-cron-request";
 
 const originalSecret = process.env.CRON_SECRET;
 
@@ -34,8 +34,24 @@ describe("isAuthorizedCronRequest", () => {
             isAuthorizedCronRequest(
                 new Request("https://example.com/api/cron/test", {
                     headers: { Authorization: "Bearer wrong-secret" },
-                })
-            )
+                }),
+            ),
         ).toBe(false);
+    });
+});
+
+describe("authorizeCronRequest", () => {
+    it("reports a missing server secret separately while failing closed", () => {
+        delete process.env.CRON_SECRET;
+
+        expect(authorizeCronRequest(new Request("https://example.com/api/cron/test"))).toBe("misconfigured");
+    });
+
+    it("rejects malformed authorization before work can start", () => {
+        const request = new Request("https://example.com/api/cron/test", {
+            headers: { Authorization: "production-cron-secret" },
+        });
+
+        expect(authorizeCronRequest(request)).toBe("unauthorized");
     });
 });
