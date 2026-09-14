@@ -69,9 +69,12 @@ export function AeoVisibilitySection({ content }: { content: AeoVisibilityConten
                 </div>
             </div>
 
-            <div className="grid gap-px border-t border-border bg-border sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid border-t border-border sm:grid-cols-2 xl:grid-cols-3">
                 {content.tiles.map((tile) => (
-                    <div key={tile.engineId} className="min-w-0 bg-card p-4 sm:p-5">
+                    <div
+                        key={tile.engineId}
+                        className="min-w-0 border-b border-border p-4 sm:[&:nth-child(odd)]:border-r sm:p-5 xl:[&:nth-child(odd)]:border-r-0 xl:[&:not(:nth-child(3n))]:border-r"
+                    >
                         <div className="flex items-center justify-between gap-2">
                             <p className="truncate font-medium text-foreground">{tile.label}</p>
                             <div className="flex shrink-0 items-center gap-1.5">
