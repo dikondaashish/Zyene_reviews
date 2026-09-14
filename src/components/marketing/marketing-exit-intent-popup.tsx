@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight, Sparkles, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { EXIT_INTENT_SOURCE } from "@/lib/marketing/exit-intent-events";
@@ -68,7 +68,12 @@ export function MarketingExitIntentPopup() {
     };
 
     return (
-        <aside className="marketing-exit-popup" role="dialog" aria-labelledby="marketing-exit-popup-title">
+        <aside
+            className="marketing-exit-popup"
+            role="dialog"
+            aria-labelledby="marketing-exit-popup-title"
+            aria-describedby="marketing-exit-popup-description"
+        >
             <button
                 type="button"
                 className="marketing-exit-popup-close"
@@ -80,9 +85,12 @@ export function MarketingExitIntentPopup() {
             >
                 <X className="size-4" aria-hidden="true" />
             </button>
-            <p className="marketing-exit-popup-kicker">Before you go</p>
-            <h2 id="marketing-exit-popup-title">Get more reviews without more busywork.</h2>
-            <p>See how Zyene Reviews brings requests, replies, and reputation insights into one calmer workflow.</p>
+            <div className="marketing-exit-popup-kicker">
+                <span className="marketing-exit-popup-kicker-mark" aria-hidden="true"><Sparkles className="size-3" /></span>
+                <span>Before you go</span>
+            </div>
+            <h2 id="marketing-exit-popup-title">More reviews. Less busywork.</h2>
+            <p id="marketing-exit-popup-description">See how Zyene Reviews brings requests, replies, and reputation insights into one calmer workflow.</p>
             <Link
                 href="/demo"
                 className="marketing-exit-popup-cta"
@@ -90,6 +98,7 @@ export function MarketingExitIntentPopup() {
             >
                 See it in action <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
+            <p className="marketing-exit-popup-note">A quick look, no pressure.</p>
         </aside>
     );
 }
