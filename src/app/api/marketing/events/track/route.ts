@@ -12,6 +12,7 @@ import {
     TEMPLATE_PACK_PAGE_PATH,
     TEMPLATE_PACK_SOURCE,
 } from "@/lib/marketing/template-pack-events";
+import { EXIT_INTENT_SOURCE, isExitIntentEventName } from "@/lib/marketing/exit-intent-events";
 
 const trackSchema = z.object({
     event_name: z.string().min(1).max(80),
@@ -40,8 +41,9 @@ export async function POST(request: Request) {
 
     const isTemplatePack = isTemplatePackEventName(event_name);
     const isLocalSeo = isLocalSeoChecklistEventName(event_name);
+    const isExitIntent = isExitIntentEventName(event_name);
 
-    if (!isTemplatePack && !isLocalSeo) {
+    if (!isTemplatePack && !isLocalSeo && !isExitIntent) {
         return NextResponse.json({ error: "Unknown event" }, { status: 400 });
     }
 
@@ -52,13 +54,20 @@ export async function POST(request: Request) {
     if (isLocalSeo && page_path && page_path !== LOCAL_SEO_CHECKLIST_PAGE_PATH) {
         return NextResponse.json({ error: "Invalid page path" }, { status: 400 });
     }
+    if (isExitIntent && page_path && !page_path.startsWith("/")) {
+        return NextResponse.json({ error: "Invalid page path" }, { status: 400 });
+    }
 
-    const resolvedPagePath = isLocalSeo
-        ? (page_path ?? LOCAL_SEO_CHECKLIST_PAGE_PATH)
-        : (page_path ?? TEMPLATE_PACK_PAGE_PATH);
-    const resolvedSource = isLocalSeo
-        ? (source ?? LOCAL_SEO_CHECKLIST_SOURCE)
-        : (source ?? TEMPLATE_PACK_SOURCE);
+    const resolvedPagePath = isExitIntent
+        ? (page_path ?? "/")
+        : isLocalSeo
+            ? (page_path ?? LOCAL_SEO_CHECKLIST_PAGE_PATH)
+            : (page_path ?? TEMPLATE_PACK_PAGE_PATH);
+    const resolvedSource = isExitIntent
+        ? (source ?? EXIT_INTENT_SOURCE)
+        : isLocalSeo
+            ? (source ?? LOCAL_SEO_CHECKLIST_SOURCE)
+            : (source ?? TEMPLATE_PACK_SOURCE);
 
     try {
         await recordMarketingEvent({
