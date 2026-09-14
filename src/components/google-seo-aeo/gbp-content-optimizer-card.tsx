@@ -6,10 +6,7 @@ import { Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-
-type ServiceDraft = { name: string; description: string };
-type PostDraft = { topicType: string; summary: string; rationale: string };
+import { GbpContentDraftLists, type PostDraft, type ServiceDraft } from "./gbp-content-draft-lists";
 
 /**
  * F6.6 - the services and posts arms of the GBP optimizer, alongside the
@@ -19,13 +16,7 @@ type PostDraft = { topicType: string; summary: string; rationale: string };
  * Google listing is a Phase 2 decision (F6.10) and needs its own confirmation
  * step; nothing here touches their public profile.
  */
-export function GbpContentOptimizerCard({
-    businessId,
-    topKeywords,
-}: {
-    businessId: string;
-    topKeywords: string[];
-}) {
+export function GbpContentOptimizerCard({ businessId, topKeywords }: { businessId: string; topKeywords: string[] }) {
     const [pending, setPending] = React.useState<"services" | "posts" | null>(null);
     const [services, setServices] = React.useState<ServiceDraft[]>([]);
     const [posts, setPosts] = React.useState<PostDraft[]>([]);
@@ -57,22 +48,33 @@ export function GbpContentOptimizerCard({
         if (!window.confirm("Publish this post to your live Google Business Profile now?")) return;
         setPublishingIndex(index);
         try {
-            const response = await fetch("/api/google/local-posts", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ businessId, summary: post.summary, topicType: post.topicType }) });
+            const response = await fetch("/api/google/local-posts", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    businessId,
+                    summary: post.summary,
+                    topicType: post.topicType,
+                }),
+            });
             const result = await response.json();
             if (!response.ok) throw new Error(result.error ?? "Publish failed");
             toast.success("Post published to Google.");
-        } catch (error) { toast.error(error instanceof Error ? error.message : "Publish failed"); }
-        finally { setPublishingIndex(null); }
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : "Publish failed");
+        } finally {
+            setPublishingIndex(null);
+        }
     }
 
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Services &amp; posts optimizer</CardTitle>
+                <CardTitle>Services &amp; Google posts</CardTitle>
                 <CardDescription>
-                    Drafts built from your real Google category and the services you already list.
-                    Anything we cannot verify comes back as a <code>{"{{placeholder}}"}</code> for you
-                    to fill. Publishing always requires a separate confirmation.
+                    Drafts built from your real Google category and the services you already list. Anything we cannot
+                    verify comes back as a <code>{"{{placeholder}}"}</code> for you to fill. Publishing always requires
+                    a separate confirmation.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -86,42 +88,18 @@ export function GbpContentOptimizerCard({
                         <Sparkles className="mr-2 size-4" />
                         {pending === "services" ? "Writing…" : "Describe my services"}
                     </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => generate("posts")}
-                        disabled={pending !== null}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => generate("posts")} disabled={pending !== null}>
                         <Sparkles className="mr-2 size-4" />
                         {pending === "posts" ? "Drafting…" : "Draft posts"}
                     </Button>
                 </div>
 
-                {services.length > 0 ? (
-                    <ul className="space-y-3">
-                        {services.map((service) => (
-                            <li key={service.name} className="rounded-lg border p-3">
-                                <p className="text-sm font-medium">{service.name}</p>
-                                <p className="text-muted-foreground mt-1 text-sm">{service.description}</p>
-                            </li>
-                        ))}
-                    </ul>
-                ) : null}
-
-                {posts.length > 0 ? (
-                    <ul className="space-y-3">
-                        {posts.map((post, index) => (
-                            <li key={`${post.topicType}:${post.summary}`} className="rounded-lg border p-3">
-                                <Badge variant="secondary" className="text-xs">
-                                    {post.topicType}
-                                </Badge>
-                                <p className="mt-2 text-sm">{post.summary}</p>
-                                <p className="text-muted-foreground mt-1 text-xs">{post.rationale}</p>
-                                <Button className="mt-2" size="sm" onClick={() => publishPost(post, index)} disabled={publishingIndex !== null}>{publishingIndex === index ? "Publishing…" : "Publish to Google"}</Button>
-                            </li>
-                        ))}
-                    </ul>
-                ) : null}
+                <GbpContentDraftLists
+                    services={services}
+                    posts={posts}
+                    publishingIndex={publishingIndex}
+                    onPublishPost={publishPost}
+                />
             </CardContent>
         </Card>
     );

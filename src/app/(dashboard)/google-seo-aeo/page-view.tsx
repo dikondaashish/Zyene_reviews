@@ -44,7 +44,7 @@ export default async function GoogleSeoAeoPage() {
     }
 
     return (
-        <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
+        <div className="min-w-0 space-y-8 overflow-x-hidden p-4 md:p-8">
             <GoogleSeoAeoSubnav active="/google-seo-aeo" />
             <GoogleSeoAeoScoreAuditSection content={data.content} />
             {/*
@@ -52,15 +52,9 @@ export default async function GoogleSeoAeoPage() {
              * visibility card would read as "measured, and you are nowhere",
              * which is the opposite of "we have not looked yet".
              */}
-            {data.content.aeoVisibility ? (
-                <AeoVisibilitySection content={data.content.aeoVisibility} />
-            ) : null}
-            {data.content.shareOfVoice ? (
-                <ShareOfVoiceSection result={data.content.shareOfVoice} />
-            ) : null}
-            {data.content.searchConsole ? (
-                <SearchConsoleSection content={data.content.searchConsole} />
-            ) : null}
+            {data.content.aeoVisibility ? <AeoVisibilitySection content={data.content.aeoVisibility} /> : null}
+            {data.content.shareOfVoice ? <ShareOfVoiceSection result={data.content.shareOfVoice} /> : null}
+            {data.content.searchConsole ? <SearchConsoleSection content={data.content.searchConsole} /> : null}
             <GoogleSeoAeoBottomSection content={data.content} />
             <DataExportsSection />
         </div>

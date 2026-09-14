@@ -15,24 +15,32 @@ const TABS = [
 /** Shared across every google-seo-aeo page - none of them linked to each other before this. */
 export function GoogleSeoAeoSubnav({ active }: { active: (typeof TABS)[number]["href"] }) {
     return (
-        <nav aria-label="Google visibility sections" className="flex max-w-full gap-1 overflow-x-auto border-b border-border pb-1">
-            {TABS.filter((tab) => tab.href === active ||
-                (tab.href !== "/google-seo-aeo/audit" || isLiveCrawlingEnabled()) &&
-                (tab.href !== "/google-seo-aeo/alerts" || isLiveAlertingEnabled())).map((tab) => (
-                <Link
-                    key={tab.href}
-                    href={tab.href}
-                    aria-current={active === tab.href ? "page" : undefined}
-                    className={cn(
-                        "shrink-0 whitespace-nowrap px-3 py-3 text-sm font-medium border-b-2 -mb-px transition-colors",
-                        active === tab.href
-                            ? "border-primary text-foreground"
-                            : "border-transparent text-muted-foreground hover:text-foreground"
-                    )}
-                >
-                    {tab.label}
-                </Link>
-            ))}
+        <nav
+            aria-label="Google visibility sections"
+            className="max-w-full overflow-x-auto rounded-lg border bg-muted/35 p-1"
+        >
+            <div className="flex min-w-max gap-1">
+                {TABS.filter(
+                    (tab) =>
+                        tab.href === active ||
+                        ((tab.href !== "/google-seo-aeo/audit" || isLiveCrawlingEnabled()) &&
+                            (tab.href !== "/google-seo-aeo/alerts" || isLiveAlertingEnabled())),
+                ).map((tab) => (
+                    <Link
+                        key={tab.href}
+                        href={tab.href}
+                        aria-current={active === tab.href ? "page" : undefined}
+                        className={cn(
+                            "shrink-0 whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                            active === tab.href
+                                ? "bg-background text-foreground shadow-sm"
+                                : "text-muted-foreground hover:bg-background/70 hover:text-foreground",
+                        )}
+                    >
+                        {tab.label}
+                    </Link>
+                ))}
+            </div>
         </nav>
     );
 }

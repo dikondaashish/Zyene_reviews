@@ -10,44 +10,58 @@ import type { GoogleSeoAeoContentProps } from "./google-seo-aeo-content-props";
 export function GoogleSeoAeoBottomSection({ content }: { content: GoogleSeoAeoContentProps }) {
     return (
         <>
-            <div id="description-optimizer">
-                <DescriptionOptimizerCard
-                    businessId={content.businessId}
-                    currentDescription={content.listingDescription}
-                    topKeywords={content.topKeywordList}
-                />
-            </div>
+            <section className="space-y-5" aria-labelledby="content-workspace-title">
+                <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+                        Turn insight into action
+                    </p>
+                    <h2 id="content-workspace-title" className="mt-2 text-xl font-semibold tracking-tight">
+                        Google profile workspace
+                    </h2>
+                    <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                        Create a stronger profile from the opportunities above. Review every draft before it reaches
+                        Google.
+                    </p>
+                </div>
+                <div className="grid items-start gap-6 xl:grid-cols-2">
+                    <div id="description-optimizer">
+                        <DescriptionOptimizerCard
+                            businessId={content.businessId}
+                            currentDescription={content.listingDescription}
+                            topKeywords={content.topKeywordList}
+                        />
+                    </div>
+                    <div id="gbp-content-optimizer">
+                        <GbpContentOptimizerCard businessId={content.businessId} topKeywords={content.topKeywordList} />
+                    </div>
+                </div>
+            </section>
 
-            {/* F6.6 - the same optimizer idea extended past the description. */}
-            <div id="gbp-content-optimizer">
-                <GbpContentOptimizerCard
-                    businessId={content.businessId}
-                    topKeywords={content.topKeywordList}
-                />
-            </div>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>Top Competitors</CardTitle>
-                    <CardDescription>Public Google profile benchmark snapshot.</CardDescription>
+            <Card className="overflow-hidden border">
+                <CardHeader className="border-b bg-muted/25">
+                    <CardTitle>Local competitor snapshot</CardTitle>
+                    <CardDescription>Public Google profile benchmarks for your tracked competitors.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-2">
+                <CardContent className="p-0">
                     {content.competitors.length === 0 ? (
-                        <p className="text-sm text-muted-foreground">No tracked competitors yet.</p>
+                        <p className="px-6 py-6 text-sm text-muted-foreground">No tracked competitors yet.</p>
                     ) : (
                         content.competitors.map((c, i) => (
                             <div
                                 key={c.id}
-                                className="flex flex-col gap-2 rounded-lg border p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3"
+                                className="flex flex-col gap-3 border-b px-5 py-4 last:border-b-0 sm:flex-row sm:items-center sm:justify-between sm:px-6"
                             >
-                                <div className="min-w-0">
-                                    <p className="font-medium">
-                                        #{i + 1} {c.name}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground">
-                                        {Number(c.average_rating || 0).toFixed(1)} (
-                                        {(c.total_reviews || 0).toLocaleString()} reviews)
-                                    </p>
+                                <div className="flex min-w-0 items-center gap-3">
+                                    <span className="grid size-7 shrink-0 place-items-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
+                                        {i + 1}
+                                    </span>
+                                    <div className="min-w-0">
+                                        <p className="truncate font-medium">{c.name}</p>
+                                        <p className="mt-0.5 text-sm text-muted-foreground">
+                                            {Number(c.average_rating || 0).toFixed(1)} (
+                                            {(c.total_reviews || 0).toLocaleString()} reviews)
+                                        </p>
+                                    </div>
                                 </div>
                                 {c.google_url ? (
                                     <Button asChild size="sm" variant="ghost">

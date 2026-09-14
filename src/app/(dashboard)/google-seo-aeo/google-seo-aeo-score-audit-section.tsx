@@ -1,12 +1,10 @@
-import Link from "next/link";
-import { CheckCircle2, XCircle } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { RunAuditControls } from "@/components/google-seo-aeo/run-audit-controls";
 import { areEstimatedAeoSurfacesEnabled } from "@/lib/features/aeo-surfaces";
-import { getAuditFixAction, isScoredAudit, type AuditStatus } from "./google-seo-aeo-audit-utils";
+import { getAuditFixAction, type AuditStatus } from "./google-seo-aeo-audit-utils";
 import type { GoogleSeoAeoContentProps } from "./google-seo-aeo-content-props";
+import { AuditCheckRow } from "./audit-check-row";
+import { summarizeAudits } from "./audit-presentation";
+import { AeoProfileHealthSummary } from "./aeo-profile-health-summary";
 
 /** Why a row carries no score. Distinct wording per cause, never a blanket one. */
 const UNSCORED_LABEL: Partial<Record<AuditStatus, string>> = {
@@ -16,103 +14,100 @@ const UNSCORED_LABEL: Partial<Record<AuditStatus, string>> = {
 };
 
 export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoAeoContentProps }) {
-    // Unscored checks are listed separately: showing them beside real pass/fail
-    // rows with a Fix button implies we audited something we never looked at.
-    const measured = content.audits.filter(isScoredAudit);
-    const unmeasured = content.audits.filter((a) => !isScoredAudit(a));
+    const summary = summarizeAudits(content.audits);
+    const firstPriority = summary.needsAttention[0];
 
     return (
-        <>
-            <div className="flex min-w-0 flex-col gap-2">
-                <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Google SEO/AEO</h2>
-                <p className="text-sm text-muted-foreground">
-                    Optimization diagnostics and direct Google-ready fixes for {content.businessName}.
-                </p>
-            </div>
+        <section className="space-y-5" aria-labelledby="google-visibility-title">
+            <header className="flex flex-col gap-3 border-b border-border pb-5 lg:flex-row lg:items-end lg:justify-between">
+                <div className="min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Local discovery</p>
+                    <h1
+                        id="google-visibility-title"
+                        className="mt-2 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
+                    >
+                        Google SEO &amp; AI visibility
+                    </h1>
+                    <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                        A practical view of what will strengthen {content.businessName} in Google Search and answer
+                        engines.
+                    </p>
+                </div>
+                {areEstimatedAeoSurfacesEnabled() ? <RunAuditControls businessId={content.businessId} /> : null}
+            </header>
 
-            {/* Sync only drives the estimated surfaces; the audit below refreshes on load. */}
-            {areEstimatedAeoSurfacesEnabled() ? <RunAuditControls businessId={content.businessId} /> : null}
+            <AeoProfileHealthSummary content={content} summary={summary} priorityAudit={firstPriority} />
 
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                        <span>Optimization Score</span>
-                        <span className="text-3xl font-bold">{content.score}%</span>
-                    </CardTitle>
-                    <CardDescription>
-                        {content.businessName} · {content.businessAddress} · {content.googleAvgLive.toFixed(1)}/5 ·{" "}
-                        {content.googleCountLive.toLocaleString()} reviews (visible in Zyene)
-                        {" · "}
-                        Scored on {content.measuredCount} of {content.audits.length} checks
-                        {unmeasured.length > 0 ? ` · ${unmeasured.length} not scored` : ""}.
-                    </CardDescription>
-                </CardHeader>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>Audit Results</CardTitle>
-                    <CardDescription>
-                        SEO/AEO requirements with pass/fail status and direct fix actions.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                    {measured.map((a) => {
-                        const fixAction = getAuditFixAction(a.id);
-                        return (
-                            <div
-                                key={a.id}
-                                className="flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-center sm:justify-between"
-                            >
-                                <div className="min-w-0 flex-1">
-                                    <div className="flex flex-wrap items-center gap-2">
-                                        {a.status === "pass" ? (
-                                            <CheckCircle2 className="text-success size-4" />
-                                        ) : (
-                                            <XCircle className="text-destructive size-4" />
-                                        )}
-                                        <p className="font-medium">{a.label}</p>
-                                        <Badge variant={a.status === "pass" ? "secondary" : "destructive"}>
-                                            {a.status === "pass" ? "Pass" : "Fail"}
-                                        </Badge>
-                                    </div>
-                                    <p className="text-xs text-muted-foreground mt-1">{a.detail}</p>
-                                </div>
-                                <Button asChild size="sm" variant="outline" className="w-full shrink-0 sm:w-auto">
-                                    <Link href={fixAction.href}>{fixAction.label}</Link>
-                                </Button>
-                            </div>
-                        );
-                    })}
-                </CardContent>
-            </Card>
-
-            {unmeasured.length > 0 ? (
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Not scored</CardTitle>
-                        <CardDescription>
-                            These checks are excluded from your score, each for the reason shown. They are listed
-                            here so the audit is not mistaken for full coverage.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                        {unmeasured.map((a) => (
-                            <div
-                                key={a.id}
-                                className="flex flex-col gap-1 rounded-lg border border-dashed p-3"
-                            >
-                                <div className="flex flex-wrap items-center gap-2">
-                                    <span className="border-muted-foreground/40 inline-flex size-4 shrink-0 rounded-full border" />
-                                    <p className="text-sm font-medium">{a.label}</p>
-                                    <Badge variant="outline">{UNSCORED_LABEL[a.status] ?? "Not scored"}</Badge>
-                                </div>
-                                <p className="text-muted-foreground pl-6 text-xs">{a.detail}</p>
-                            </div>
+            <section className="overflow-hidden rounded-xl border bg-card" aria-labelledby="audit-results-title">
+                <div className="flex flex-col gap-2 border-b border-border px-5 py-5 sm:px-6 sm:py-6">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                        <h2 id="audit-results-title" className="text-lg font-semibold">
+                            What to work on
+                        </h2>
+                        <span className="text-sm text-muted-foreground">Direct Google-ready actions</span>
+                    </div>
+                    <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+                        Improvements lead the list. Completed checks stay visible below, with their related workflow one
+                        click away.
+                    </p>
+                </div>
+                {summary.needsAttention.length > 0 ? (
+                    <div className="divide-y divide-border">
+                        {summary.needsAttention.map((audit) => (
+                            <AuditCheckRow
+                                key={audit.id}
+                                audit={audit}
+                                action={getAuditFixAction(audit.id)}
+                                statusLabel="Needs attention"
+                            />
                         ))}
-                    </CardContent>
-                </Card>
+                    </div>
+                ) : (
+                    <div className="px-5 py-6 text-sm text-muted-foreground sm:px-6">
+                        Every measured check is currently on track.
+                    </div>
+                )}
+                {summary.onTrack.length > 0 ? (
+                    <div className="border-t border-border bg-muted/25">
+                        <div className="px-5 py-3 text-sm font-medium text-muted-foreground sm:px-6">On track</div>
+                        <div className="divide-y divide-border">
+                            {summary.onTrack.map((audit) => (
+                                <AuditCheckRow
+                                    key={audit.id}
+                                    audit={audit}
+                                    action={getAuditFixAction(audit.id)}
+                                    statusLabel="On track"
+                                />
+                            ))}
+                        </div>
+                    </div>
+                ) : null}
+            </section>
+
+            {summary.unscored.length > 0 ? (
+                <section
+                    className="overflow-hidden rounded-xl border border-dashed bg-muted/20"
+                    aria-labelledby="unscored-checks-title"
+                >
+                    <div className="border-b border-dashed border-border px-5 py-4 sm:px-6">
+                        <h2 id="unscored-checks-title" className="font-medium text-foreground">
+                            Outside the score
+                        </h2>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            These checks have a distinct status and do not affect profile health.
+                        </p>
+                    </div>
+                    <div className="divide-y divide-dashed divide-border">
+                        {summary.unscored.map((audit) => (
+                            <AuditCheckRow
+                                key={audit.id}
+                                audit={audit}
+                                statusLabel={UNSCORED_LABEL[audit.status] ?? "Not scored"}
+                            />
+                        ))}
+                    </div>
+                </section>
             ) : null}
-        </>
+        </section>
     );
 }
