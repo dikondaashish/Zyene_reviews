@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Step2Form } from "@/components/onboarding/step2-form";
 import type { OnboardingBusiness } from "./onboarding-types";
@@ -39,13 +38,7 @@ export function OnboardingStepTwoSection({
     }
 
     return (
-        <motion.div
-            key="step-2-outer"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.3 }}
-        >
+        <div>
             <button
                 type="button"
                 onClick={() => setCurrentStep(1)}
@@ -81,6 +74,6 @@ export function OnboardingStepTwoSection({
                     />
                 </div>
             </div>
-        </motion.div>
+        </div>
     );
 }

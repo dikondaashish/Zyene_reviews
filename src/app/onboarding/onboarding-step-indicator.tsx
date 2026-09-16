@@ -1,9 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ONBOARDING_STEPS } from "./onboarding-types";
 
 export function OnboardingStepIndicator({ currentStep }: { currentStep: number }) {
+    const reduceMotion = useReducedMotion() ?? false;
+
     return (
         <div className="flex items-center justify-center gap-0">
             {ONBOARDING_STEPS.map((step, index) => {
@@ -15,18 +17,11 @@ export function OnboardingStepIndicator({ currentStep }: { currentStep: number }
                 return (
                     <div key={step.label} className="flex items-center">
                         <div className="flex flex-col items-center gap-2">
-                            <motion.div
-                                className={`rounded-2xl flex items-center justify-center transition-all duration-300 cursor-default ${ isCompleted ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" : isActive ? "bg-primary/10 text-primary ring-2 ring-primary/30 shadow-sm" : "bg-secondary/60 text-muted-foreground" } size-10`}
-                                animate={isActive ? { scale: [1, 1.05, 1] } : {}}
-                                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                            <div
+                                className={`rounded-2xl flex items-center justify-center transition-all duration-300 cursor-default ${isCompleted ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" : isActive ? "bg-primary/10 text-primary ring-2 ring-primary/30 shadow-sm" : "bg-secondary/60 text-muted-foreground"} size-10`}
                             >
                                 {isCompleted ? (
-                                    <svg
-                                        className="size-4"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
+                                    <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path
                                             strokeLinecap="round"
                                             strokeLinejoin="round"
@@ -37,7 +32,7 @@ export function OnboardingStepIndicator({ currentStep }: { currentStep: number }
                                 ) : (
                                     <StepIcon className="size-4" />
                                 )}
-                            </motion.div>
+                            </div>
                             <span
                                 className={`text-[11px] font-semibold tracking-wide hidden sm:block ${
                                     isActive
@@ -57,7 +52,7 @@ export function OnboardingStepIndicator({ currentStep }: { currentStep: number }
                                     className="h-full bg-primary rounded-full"
                                     initial={false}
                                     animate={{ width: isCompleted ? "100%" : "0%" }}
-                                    transition={{ duration: 0.4 }}
+                                    transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
                                 />
                             </div>
                         )}
