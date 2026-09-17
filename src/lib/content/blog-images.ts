@@ -126,6 +126,13 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         height: 941,
         caption: "Understanding Google's review policies is the first step toward protecting your business reputation.",
     },
+    "hvac-home-services-reputation-management": {
+        src: `${BLOG_IMAGE_BASE}/hvac-technician-customer-handshake.jpg`,
+        alt: "HVAC technician shaking hands with a satisfied homeowner at the front door after completing a service call",
+        width: 1672,
+        height: 941,
+        caption: "The moment after a successful service call is the best time to earn a genuine customer review.",
+    },
 };
 
 export function getBlogImage(slug: string): ContentImage {

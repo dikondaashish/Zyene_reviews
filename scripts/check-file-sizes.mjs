@@ -55,6 +55,10 @@ const BASELINE = {
     max: 323,
     why: "content dataset — comprehensive SEO guide with long-tail Q&A sections",
   },
+  "src/lib/content/blog-posts-home-services.ts": {
+    max: 299,
+    why: "content dataset — industry-specific guide with trade-specific sections",
+  },
   "src/lib/content/resource-data.ts": { max: 505, why: "content dataset" },
   "src/lib/comparisons/competitor-data.ts": {
     max: 455,
