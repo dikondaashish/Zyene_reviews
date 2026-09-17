@@ -61,10 +61,6 @@ const BASELINE = {
     why: "content dataset",
   },
   "src/lib/industries/industry-data.ts": { max: 454, why: "content dataset" },
-  "src/lib/social-proof/case-study-data.ts": {
-    max: 229,
-    why: "content dataset",
-  },
   "src/lib/growth/kpi-definitions.ts": { max: 225, why: "content dataset" },
   "src/lib/growth/implementation-matrix.ts": {
     max: 242,

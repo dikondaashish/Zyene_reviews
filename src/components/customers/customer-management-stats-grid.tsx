@@ -12,40 +12,40 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
                 </div>
                 <div className="min-w-0 flex-1">
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        Total Customers
+                        Customers (excludes test tags)
                     </p>
                     <h3 className="text-xl font-semibold text-foreground">{stats?.totalCustomers ?? "-"}</h3>
                 </div>
             </div>
             <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
                 <div className="flex shrink-0 items-center justify-center rounded-lg bg-chart-2/10 size-9">
-                    <Percent className="text-chart-2 size-4" />
+                    <Percent className="text-success size-4" />
                 </div>
                 <div className="min-w-0 flex-1">
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        Review conversion
+                        Request completion
                     </p>
                     <h3 className="text-xl font-semibold text-foreground">
                         {stats != null ? `${stats.reviewConversionPercent}%` : "-"}
                     </h3>
-                    <p className="text-[10px] text-muted-foreground">Of those who got a request</p>
+                    <p className="text-[10px] text-muted-foreground">Feedback or Google handoff; publication unverified</p>
                 </div>
             </div>
             <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
                 <div className="flex shrink-0 items-center justify-center rounded-lg bg-chart-4/10 size-9">
-                    <MessageCircleOff className="text-chart-4 size-4" />
+                    <MessageCircleOff className="text-warning-foreground size-4" />
                 </div>
                 <div className="min-w-0 flex-1">
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        Never reviewed
+                        Not completed
                     </p>
                     <h3 className="text-xl font-semibold text-foreground">{stats?.neverReviewedCount ?? "-"}</h3>
-                    <p className="text-[10px] text-muted-foreground">Got a request, no review yet</p>
+                    <p className="text-[10px] text-muted-foreground">No completed request yet</p>
                 </div>
             </div>
             <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
                 <div className="flex shrink-0 items-center justify-center rounded-lg bg-chart-4/15 size-9">
-                    <BarChart3 className="text-chart-4 size-4" />
+                    <BarChart3 className="text-warning-foreground size-4" />
                 </div>
                 <div className="min-w-0 flex-1">
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">

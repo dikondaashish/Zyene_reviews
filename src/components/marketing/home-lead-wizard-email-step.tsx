@@ -1,5 +1,7 @@
 "use client";
 
+import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
+
 import type { FormEvent } from "react";
 import { ArrowRight, Loader2, Sparkles } from "lucide-react";
 
@@ -26,14 +28,15 @@ export function HomeLeadWizardEmailStep({
         <Sparkles size={15} aria-hidden="true" /> One useful download, straight
         to you
       </p>
-      <h2 id="home-lead-wizard-title">Where should we send your guide?</h2>
-      <p
-        id="home-lead-wizard-description"
-        className="home-lead-wizard-description"
-      >
-        Enter your email to unlock the Zyene Reviews reputation management
-        guide.
-      </p>
+      <DialogTitle asChild>
+        <h2>Where should we send your guide?</h2>
+      </DialogTitle>
+      <DialogDescription asChild>
+        <p className="home-lead-wizard-description">
+          Enter your email to unlock the Zyene Reviews reputation management
+          guide.
+        </p>
+      </DialogDescription>
       <label htmlFor="home-lead-wizard-email">Email address</label>
       <input
         id="home-lead-wizard-email"

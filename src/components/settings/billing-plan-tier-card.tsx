@@ -99,7 +99,7 @@ export function BillingPlanTierCard(props: {
                     <PricingCard.Period>{intervalLabel}</PricingCard.Period>
                 </PricingCard.Price>
                 {!treatsAsReturningForCta && checkoutOffersTrial && (
-                    <p className="text-xs font-medium text-chart-2 dark:text-chart-2 mb-3">{b.trial_included}</p>
+                    <p className="text-xs font-medium text-success dark:text-success mb-3">{b.trial_included}</p>
                 )}
                 {showProProratedHint && (
                     <p className="text-xs text-muted-foreground mb-3">{b.pro_prorated_no_trial_badge}</p>
@@ -125,7 +125,7 @@ export function BillingPlanTierCard(props: {
                     </Button>
                 )}
                 {showTrialEndsOnUpgradeHint && (
-                    <p className="text-xs text-chart-4 dark:text-chart-4 mt-2 leading-snug">{b.trial_ends_on_upgrade_notice}</p>
+                    <p className="text-xs text-warning-foreground dark:text-warning-foreground mt-2 leading-snug">{b.trial_ends_on_upgrade_notice}</p>
                 )}
             </PricingCard.Header>
             <PricingCard.Body className="space-y-3 p-2">
@@ -133,7 +133,7 @@ export function BillingPlanTierCard(props: {
                     {plan.features.map((feature) => (
                         <PricingCard.ListItem key={feature} className="text-xs gap-2">
                             <span className="mt-0.5 shrink-0">
-                                <CheckCircle2 className="text-chart-2 size-3.5" aria-hidden />
+                                <CheckCircle2 className="text-success size-3.5" aria-hidden />
                             </span>
                             <span>{feature}</span>
                         </PricingCard.ListItem>

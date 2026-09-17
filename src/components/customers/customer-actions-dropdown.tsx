@@ -1,5 +1,6 @@
 "use client";
 
+import { isTestContact } from "@/lib/customers/test-contact";
 import Link from "next/link";
 import {
     MoreHorizontal,
@@ -81,7 +82,7 @@ export function CustomerActionsDropdown({
                         </DropdownMenuItem>
                     )}
                     <DropdownMenuSeparator />
-                    {customer.is_opted_out ? (
+                    {(customer.is_opted_out || isTestContact(customer)) ? (
                         <TooltipProvider delayDuration={200}>
                             <Tooltip>
                                 <TooltipTrigger asChild>
@@ -93,7 +94,7 @@ export function CustomerActionsDropdown({
                                     </span>
                                 </TooltipTrigger>
                                 <TooltipContent side="left" className="max-w-xs">
-                                    This contact opted out of review requests.
+                                    This contact is opted out or tagged zyene:test and cannot receive review requests.
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>

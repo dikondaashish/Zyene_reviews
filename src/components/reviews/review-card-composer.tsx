@@ -47,6 +47,7 @@ export function ReviewCardComposer({
                             <button
                                 key={tone}
                                 type="button"
+                                aria-pressed={activeTone === tone}
                                 onClick={() => onToneClick(tone)}
                                 disabled={loadingTone !== null}
                                 className={cn(
@@ -73,6 +74,7 @@ export function ReviewCardComposer({
 
             <div className="relative mb-4">
                 <Textarea
+                    aria-label="Your reply to this review"
                     placeholder="Write a response or click a tone above for an AI draft..."
                     className={cn(
                         "min-h-[120px] bg-background text-sm resize-none focus-visible:ring-primary border-border focus:border-primary placeholder:text-muted-foreground",

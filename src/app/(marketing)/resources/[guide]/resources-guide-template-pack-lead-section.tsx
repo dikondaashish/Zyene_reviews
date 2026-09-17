@@ -4,14 +4,14 @@ import { Download, ListChecks } from "lucide-react";
 
 const REVIEW_COMPLIANCE_ITEMS = [
     "No discounts, gifts, or incentives for positive reviews.",
-    "Do not ask only happy customers for reviews - keep outreach fair and honest.",
+    "Use outreach language that matches your business's documented review process.",
     "One polite follow-up per visit is enough; do not pressure people with repeated messages.",
 ] as const;
 
 const CHECKLIST_COMPLIANCE_ITEMS = [
-    "Review requests must be fair - do not gate unhappy customers away from Google.",
+    "Set request messaging and routing to match your documented customer-feedback process.",
     "No incentives tied to star ratings or review text.",
-    "Use private feedback to resolve issues, not to suppress public criticism.",
+    "Use private feedback to organize timely service recovery.",
 ] as const;
 
 function leadCopy(slug: string): {

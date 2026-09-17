@@ -95,7 +95,7 @@ export function ReviewCardHeader({
                         <span
                             className={cn(
                                 "text-[10px] font-medium px-2 py-0.5 rounded-full border capitalize",
-                                review.sentiment === "positive" && "bg-chart-2/10 text-chart-2 border-chart-2/20",
+                                review.sentiment === "positive" && "bg-chart-2/10 text-success border-chart-2/20",
                                 review.sentiment === "negative" &&
                                     "bg-destructive/10 text-destructive border-destructive/20",
                                 review.sentiment === "neutral" && "bg-muted text-muted-foreground border-border",

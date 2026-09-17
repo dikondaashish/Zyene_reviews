@@ -16,10 +16,10 @@ export interface GoogleIdentityApi {
         parent: HTMLElement,
         options: {
             type: "standard";
-            theme: "filled_black";
+            theme: "filled_black" | "outline";
             size: "large";
             text: "signin_with" | "signup_with";
-            shape: "pill";
+            shape: "pill" | "rectangular";
             logo_alignment: "left";
             width: number;
         },

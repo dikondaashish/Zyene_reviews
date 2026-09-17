@@ -18,6 +18,7 @@ export function MarketingLayoutNavDropdown({
   links,
   open,
   onToggle,
+  onOpen,
   onClose,
 }: {
   label: string;
@@ -26,6 +27,7 @@ export function MarketingLayoutNavDropdown({
   links: MarketingNavLink[];
   open: boolean;
   onToggle: () => void;
+  onOpen: () => void;
   onClose: () => void;
 }) {
   const feature = FEATURE[menu];
@@ -34,6 +36,8 @@ export function MarketingLayoutNavDropdown({
   return (
     <div
       className="mega-nav-item"
+      onMouseEnter={onOpen}
+      onMouseLeave={onClose}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) onClose();
       }}
@@ -53,7 +57,12 @@ export function MarketingLayoutNavDropdown({
             type="button"
             aria-expanded={open}
             aria-controls={`marketing-menu-${menu}`}
-            onClick={onToggle}
+            onClick={(event) => {
+              // A fine pointer opens the menu on hover before its click fires.
+              // Keep that click open; keyboard activation still toggles it.
+              if (event.detail > 0) onOpen();
+              else onToggle();
+            }}
             className="mega-trigger"
           >
             {label}

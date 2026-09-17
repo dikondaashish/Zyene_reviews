@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { prepareCsvImport } from "@/lib/customers/prepare-csv-import";
 import Papa from "papaparse";
 import { toast } from "sonner";
 
@@ -10,7 +11,8 @@ import type { CsvImportModalProps, CsvImportModalRow } from "./csv-import-modal-
 export function useCsvImportModal({
     onOpenChange,
     onSuccess,
-}: Pick<CsvImportModalProps, "onOpenChange" | "onSuccess">) {
+    businessId,
+}: Pick<CsvImportModalProps, "onOpenChange" | "onSuccess" | "businessId">) {
     const [isLoading, setIsLoading] = useState(false);
     const [fileName, setFileName] = useState<string | null>(null);
     const [csvData, setCSVData] = useState<CsvImportModalRow[]>([]);
@@ -31,21 +33,29 @@ export function useCsvImportModal({
         const file = event.target.files?.[0];
         if (!file) return;
 
-        if (!file.name.endsWith(".csv")) {
+        setCSVData([]);
+        setFileName(null);
+        setHasConsent(false);
+        if (!file.name.toLowerCase().endsWith(".csv")) {
             toast.error("Please upload a CSV file");
             return;
         }
 
+        if (file.size > 5 * 1024 * 1024) { toast.error("Maximum file size is 5 MB."); return; }
         setFileName(file.name);
 
         Papa.parse(file, {
             header: true,
             skipEmptyLines: true,
+            transformHeader: (header) => header.trim().toLowerCase(),
             complete: (results) => {
                 if (results.data.length === 0) {
                     toast.error("CSV file is empty");
                     return;
                 }
+                if (results.errors.length) { toast.error("Invalid CSV format. Check delimiters and quoted fields."); return; }
+                try { prepareCsvImport(results.data as CsvImportModalRow[]); }
+                catch (err) { toast.error(err instanceof Error ? err.message : "Invalid CSV"); return; }
                 setCSVData(results.data as CsvImportModalRow[]);
                 toast.success(`CSV loaded: ${results.data.length} rows`);
             },
@@ -68,35 +78,12 @@ export function useCsvImportModal({
 
         setIsLoading(true);
         try {
-            const customersToImport = csvData.reduce<
-                Array<{
-                    first_name: string | null;
-                    last_name: string | null;
-                    email: string | null;
-                    phone: string | null;
-                }>
-            >((acc, row) => {
-                if (!row.email && !row.name) return acc;
-                const nameParts = (row.name || "").trim().split(/\s+/);
-                acc.push({
-                    first_name: nameParts[0] || null,
-                    last_name: nameParts.slice(1).join(" ") || null,
-                    email: row.email || null,
-                    phone: row.phone || null,
-                });
-                return acc;
-            }, []);
-
-            if (customersToImport.length === 0) {
-                toast.error("No valid customers found in CSV");
-                setIsLoading(false);
-                return;
-            }
+            const customersToImport = prepareCsvImport(csvData);
 
             const response = await fetch("/api/customers/import", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ customers: customersToImport }),
+                body: JSON.stringify({ customers: customersToImport, businessId }),
             });
 
             if (!response.ok) {

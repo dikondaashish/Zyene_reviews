@@ -72,7 +72,10 @@ export function DashboardLayoutClient({
 
     return (
         <DashboardTourProvider>
-            <div className="flex min-h-[calc(100vh-4rem)] min-w-0 flex-1 flex-col bg-canvas">
+            <div
+                data-dashboard-shell
+                className="flex min-h-[calc(100vh-4rem)] min-w-0 flex-1 flex-col bg-canvas"
+            >
             <header className="flex h-16 min-w-0 shrink-0 items-center gap-2 border-b border-border/70 bg-card px-3 max-lg:gap-1.5 lg:px-4">
                 {/* Sidebar trigger on tablet and mobile (FAB also toggles the same sheet) */}
                 {(isTablet || isMobile) && (
@@ -94,10 +97,10 @@ export function DashboardLayoutClient({
                 {header}
             </header>
 
-            <main className="flex min-w-0 flex-1 flex-col gap-3 overflow-x-hidden p-3 sm:p-4 max-md:pb-20 max-lg:pb-[max(1rem,env(safe-area-inset-bottom,0px))] lg:gap-4 lg:p-6 lg:overflow-x-visible lg:pb-6">
+            <main className="flex min-w-0 flex-1 flex-col gap-4 overflow-x-hidden p-4 sm:gap-5 sm:p-5 max-md:pb-20 max-lg:pb-[max(1rem,env(safe-area-inset-bottom,0px))] lg:p-6 lg:overflow-x-visible lg:pb-6">
                 {children}
             </main>
-            <footer className="mt-auto shrink-0 flex flex-col gap-3 border-t border-border bg-canvas px-3 py-4 text-[11.5px] text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-5 lg:px-6">
+            <footer className="mt-auto shrink-0 flex flex-col gap-3 border-t border-border bg-canvas px-3 py-4 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-5 lg:px-6">
                 <div className="shrink-0 text-center sm:text-left">
                     © {new Date().getFullYear()} Zyene, Inc. · Local to Global
                 </div>

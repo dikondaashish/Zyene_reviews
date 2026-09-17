@@ -40,7 +40,7 @@ export function Step4SubscriptionEnterpriseCard({ enterprisePlan }: { enterprise
                     {enterprisePlan.features.map((feature) => (
                         <PricingCard.ListItem key={feature}>
                             <span className="mt-0.5 shrink-0">
-                                <CheckCircle2 className="text-chart-2 size-4" aria-hidden />
+                                <CheckCircle2 className="text-success size-4" aria-hidden />
                             </span>
                             <span>{feature}</span>
                         </PricingCard.ListItem>

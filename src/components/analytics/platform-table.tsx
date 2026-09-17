@@ -81,10 +81,10 @@ export function PlatformTable({ data }: { data: PlatformData[] }) {
                                         className={cn(
                                             "font-bold tabular-nums",
                                             row.responseRate >= 90
-                                                ? "bg-chart-2/10 text-chart-2 border-chart-2/30 dark:bg-chart-2/20 dark:text-chart-2 dark:border-chart-2/30"
+                                                ? "bg-chart-2/10 text-success border-chart-2/30 dark:bg-chart-2/20 dark:text-success dark:border-chart-2/30"
                                                 : row.responseRate >= 50 
                                                     ? "bg-primary/10 text-primary border-primary/20" 
-                                                    : "bg-sync-action/10 text-sync-action border-sync-action/30 dark:bg-sync-action/20 dark:text-sync-action dark:border-sync-action/30"
+                                                    : "bg-destructive/10 text-destructive border-destructive/30 dark:bg-destructive/20 dark:text-destructive dark:border-destructive/30"
                                         )}
                                     >
                                         {row.responseRate.toFixed(0)}%

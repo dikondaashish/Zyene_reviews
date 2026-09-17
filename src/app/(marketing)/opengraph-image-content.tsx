@@ -30,7 +30,7 @@ export function OpenGraphImageContent() {
                     left: "10%",
                     width: "400px",
                     height: "400px",
-                    background: "radial-gradient(circle, rgba(74,222,128,0.12) 0%, transparent 70%)",
+                    background: "radial-gradient(circle, rgba(255,79,0,0.12) 0%, transparent 70%)",
                     borderRadius: "50%",
                 }}
             />
@@ -41,7 +41,7 @@ export function OpenGraphImageContent() {
                     right: "5%",
                     width: "300px",
                     height: "300px",
-                    background: "radial-gradient(circle, rgba(74,222,128,0.08) 0%, transparent 70%)",
+                    background: "radial-gradient(circle, rgba(255,79,0,0.08) 0%, transparent 70%)",
                     borderRadius: "50%",
                 }}
             />
@@ -61,8 +61,8 @@ export function OpenGraphImageContent() {
                     style={{
                         width: "64px",
                         height: "64px",
-                        background: "rgba(74,222,128,0.15)",
-                        border: "1px solid rgba(74,222,128,0.3)",
+                        background: "rgba(255,79,0,0.15)",
+                        border: "1px solid rgba(255,79,0,0.3)",
                         borderRadius: "16px",
                         display: "flex",
                         alignItems: "center",
@@ -97,7 +97,7 @@ export function OpenGraphImageContent() {
                 >
                     Reputation Management
                     <br />
-                    <span style={{ color: "#4ade80" }}>for Local Businesses</span>
+                    <span style={{ color: "#ff4f00" }}>for Local Businesses</span>
                 </div>
                 <div
                     style={{
@@ -115,12 +115,12 @@ export function OpenGraphImageContent() {
                         <div
                             key={pill}
                             style={{
-                                background: "rgba(74,222,128,0.1)",
-                                border: "1px solid rgba(74,222,128,0.25)",
+                                background: "rgba(255,79,0,0.1)",
+                                border: "1px solid rgba(255,79,0,0.25)",
                                 borderRadius: "100px",
                                 padding: "8px 20px",
                                 fontSize: "16px",
-                                color: "#4ade80",
+                                color: "#ff4f00",
                                 fontWeight: "500",
                             }}
                         >

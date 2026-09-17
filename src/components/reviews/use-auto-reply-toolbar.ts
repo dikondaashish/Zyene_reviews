@@ -49,7 +49,7 @@ export function useAutoReplyToolbar(
         setEnabled(on);
         try {
             await persist({ auto_reply_enabled: on });
-            toast.success(on ? "Auto commenter on" : "Auto commenter off");
+            toast.success(on ? "Automatic replies on" : "Automatic replies off");
         } catch {
             setEnabled(prev);
         }

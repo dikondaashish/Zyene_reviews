@@ -9,6 +9,7 @@ import type {
     AeoGeoGridRequestedEvent,
     AeoPageDiagnosticRequestedEvent,
     AeoPhase3RefreshRequestedEvent,
+    AeoPromptEnrollmentRequestedEvent,
     AeoReportRequestedEvent,
     AeoRunRequestedEvent,
 } from "./aeo/aeo-events";
@@ -166,6 +167,7 @@ type Events = {
     "growth/winback.start": WinbackStartEvent;
     "growth/marketing-nurture.start": MarketingNurtureStartEvent;
     "aeo/run.requested": AeoRunRequestedEvent;
+    "aeo/prompt-enrollment.requested": AeoPromptEnrollmentRequestedEvent;
     "aeo/dispatch.requested": AeoDispatchRequestedEvent;
     "aeo/geo-grid.requested": AeoGeoGridRequestedEvent;
     "aeo/credit-reset.requested": AeoCreditResetRequestedEvent;

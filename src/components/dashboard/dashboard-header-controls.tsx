@@ -45,7 +45,7 @@ export function DashboardHeaderControls({
         <div className="flex flex-1 items-center justify-between gap-2 min-w-0 lg:gap-3">
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                 <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2 lg:gap-2">
-                    <div className="hidden min-w-0 sm:block">
+                    <div className="min-w-0 shrink-0">
                         <OrganizationSwitcher
                             organizations={orgSwitcherItems}
                             activeOrganizationId={organization?.id ?? null}

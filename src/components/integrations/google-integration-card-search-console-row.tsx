@@ -29,7 +29,7 @@ export function GoogleIntegrationCardSearchConsoleRow({
                 </div>
             </div>
             {connected ? (
-                <Badge className="bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2 gap-1.5 border-0 shrink-0">
+                <Badge className="bg-chart-2/15 text-success dark:bg-chart-2/20 dark:text-success gap-1.5 border-0 shrink-0">
                     <CheckCircle2 className="size-3" />
                     Connected
                 </Badge>

@@ -40,7 +40,7 @@ export function IllustrativeBrandsBar({
                                         width={36}
                                         height={36}
                                         className="home-brand-logo"
-                                        unoptimized
+                                        sizes="36px"
                                     />
                                     <div>
                                         <p className="home-brand-name">{brand.name}</p>

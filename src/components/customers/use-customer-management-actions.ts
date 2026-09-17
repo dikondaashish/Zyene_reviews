@@ -1,5 +1,6 @@
 "use client";
 
+import { isTestContact } from "@/lib/customers/test-contact";
 import { useCallback } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
@@ -63,8 +64,8 @@ export function useCustomerManagementActions(params: {
     const sendRequestToCustomer = useCallback(
         async (customer: Customer) => {
             if (!businessId) return;
-            if (customer.is_opted_out) {
-                toast.error("This contact opted out of review requests.");
+            if (customer.is_opted_out || isTestContact(customer)) {
+                toast.error("This contact is opted out or tagged zyene:test and cannot receive review requests.");
                 return;
             }
             if (!customer.phone) {
@@ -78,7 +79,7 @@ export function useCustomerManagementActions(params: {
                     body: JSON.stringify({ ids: [customer.id], businessId, action: "request" }),
                 });
                 const json = await response.json();
-                if (!response.ok) throw new Error(json.error || "Failed to send request");
+                if (!response.ok || json.sent !== 1) throw new Error(json.error || "The request was not sent. Check contact eligibility and try again.");
                 toast.success("Review request sent!");
                 await fetchCustomers({ silent: true });
             } catch (e) {

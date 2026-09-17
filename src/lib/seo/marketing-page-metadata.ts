@@ -73,7 +73,7 @@ export function buildMarketingMetadata(input: MarketingMetadataInput): Metadata 
         title: input.title,
         description: input.description,
         keywords: input.keywords,
-        alternates: input.alternates ?? { canonical },
+        alternates: { canonical, ...input.alternates },
         openGraph: {
             title: ogTitle,
             description: ogDescription,

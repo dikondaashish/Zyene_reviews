@@ -25,7 +25,7 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ p
                 >
                     <ArrowLeft className="size-3.5" /> Prompt library
                 </Link>
-                <h2 className="mt-1 break-words text-2xl font-bold tracking-tight">{data.promptText}</h2>
+                <h1 className="mt-1 break-words text-2xl font-bold tracking-tight">{data.promptText}</h1>
             </div>
 
             <Card>

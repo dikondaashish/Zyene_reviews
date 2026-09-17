@@ -5,6 +5,8 @@ const ROOT = process.cwd();
 const SKIP_SEGMENTS = [
   `${path.sep}resend${path.sep}templates${path.sep}`,
 ];
+// Color arithmetic and its fixtures require actual sRGB inputs, not CSS tokens.
+const LITERAL_COLOR_FILES = new Set(["src/lib/design/contrast.ts", "tests/unit/brand-contrast.test.ts"]);
 
 const SKIP_BASENAMES = new Set([
   "qr-code-card.tsx",
@@ -39,9 +41,12 @@ const SKIP_BASENAMES = new Set([
 const TAILWIND_PALETTE_RE =
   /\b(?:bg|text|border|from|to|via|ring|stroke|fill)-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-[0-9]{2,3}\b/g;
 
+const MALFORMED_OPACITY_RE = /\b(?:bg|text|border|ring)-[\w-]+\/\d+\/\d+\b/g;
+
 const HEX_RE = /#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g;
 
 function isSkipped(filePath) {
+  if (LITERAL_COLOR_FILES.has(path.relative(ROOT, filePath).split(path.sep).join("/"))) return true;
   if (SKIP_BASENAMES.has(path.basename(filePath))) return true;
   return SKIP_SEGMENTS.some((segment) => filePath.includes(segment));
 }
@@ -86,6 +91,10 @@ function scanFile(filePath) {
   for (let i = 0; i < lines.length; i += 1) {
     const line = lines[i];
 
+    for (const match of line.matchAll(MALFORMED_OPACITY_RE)) {
+      hits.push({ type: "malformed-opacity", token: match[0], line: i + 1 });
+    }
+
     for (const match of line.matchAll(TAILWIND_PALETTE_RE)) {
       hits.push({
         type: "tailwind-palette",
@@ -111,7 +120,7 @@ const allFiles = collectFiles(ROOT).filter((f) => !isSkipped(f));
 const violations = allFiles.map(scanFile).filter((r) => r.hits.length > 0);
 
 if (violations.length === 0) {
-  console.log("OK: no raw hex colors or Tailwind palette utilities found.");
+  console.log("OK: no raw hex colors, Tailwind palette utilities, or chained opacity modifiers found.");
   process.exit(0);
 }
 

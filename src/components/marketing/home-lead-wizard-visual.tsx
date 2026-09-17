@@ -9,7 +9,7 @@ export function HomeLeadWizardVisual() {
       </div>
       <div className="home-lead-wizard-cover">
         <Image
-          src="/marketing/home/zyene-overview-cover.png"
+          src="/marketing/home/zyene-overview-cover.webp"
           alt="Zyene Reviews guide cover"
           fill
           sizes="(max-width: 680px) 74vw, 380px"

@@ -10,6 +10,7 @@ import {
 } from "@/services/clover/webhook-parse";
 import { processCloverAppEvent } from "@/services/clover/process-app-event";
 import { processCloverPaymentEvent } from "@/services/clover/process-payment-event";
+import { secretsMatch } from "@/lib/auth/constant-time-compare";
 
 /**
  * POST /api/webhooks/clover
@@ -31,7 +32,10 @@ export async function POST(request: Request) {
             { verificationCode: payload.verificationCode },
             "[clover] webhook verification code received - paste this into Clover dashboard",
         );
-        return NextResponse.json({ ok: true, verificationCode: payload.verificationCode });
+        return NextResponse.json({
+            ok: true,
+            verificationCode: payload.verificationCode,
+        });
     }
 
     if (!expectedAuth) {
@@ -39,7 +43,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Webhook unavailable" }, { status: 503 });
     }
 
-    if (headerAuth !== expectedAuth) {
+    if (!secretsMatch(headerAuth, expectedAuth)) {
         logger.warn({}, "[clover] webhook auth mismatch");
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

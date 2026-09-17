@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 import { Loader2 } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/db/supabase/client";
 import {
@@ -29,6 +29,7 @@ export function GoogleIdentityButton({
     const initializedRef = useRef(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [loadFailed, setLoadFailed] = useState(false);
+    const [isReady, setIsReady] = useState(false);
 
     const initializeGoogleButton = useCallback(async () => {
         const button = buttonRef.current;
@@ -66,37 +67,43 @@ export function GoogleIdentityButton({
                     }
                 },
             });
-            button.replaceChildren();
-            googleIdentity.renderButton(button, {
-                type: "standard",
-                theme: "filled_black",
-                size: "large",
-                text: intent === "signin" ? "signin_with" : "signup_with",
-                shape: "pill",
-                logo_alignment: "left",
-                width: Math.min(button.clientWidth || 400, 400),
-            });
+            setIsReady(true);
         } catch {
             initializedRef.current = false;
             setLoadFailed(true);
             toast.error("Google sign-in could not be initialized. Please try again.");
         }
-    }, [clientId, intent]);
+    }, [clientId]);
+
+    useEffect(() => {
+        const button = buttonRef.current;
+        if (!isReady || !button) return;
+        let lastWidth = 0;
+        const observer = new ResizeObserver(() => {
+            const width = Math.min(Math.floor(button.clientWidth), 400);
+            if (!width || width === lastWidth) return;
+            lastWidth = width;
+            button.replaceChildren();
+            window.google?.accounts.id.renderButton(button, {
+                type: "standard", theme: "outline", size: "large",
+                text: intent === "signin" ? "signin_with" : "signup_with",
+                shape: "rectangular", logo_alignment: "left", width,
+            });
+        });
+        observer.observe(button);
+        return () => observer.disconnect();
+    }, [isReady, intent]);
 
     if (!clientId) {
         return (
-            <button
-                type="button"
-                disabled
-                className="flex h-12 w-full items-center justify-center rounded-full bg-foreground text-sm font-medium text-background opacity-50"
-            >
-                Google sign-in is unavailable
-            </button>
+            <p className="auth-google-unavailable" role="status">
+                Google sign-in is unavailable. Continue with email below.
+            </p>
         );
     }
 
     return (
-        <div className="relative flex min-h-10 w-full justify-center" aria-busy={isSubmitting}>
+        <div className="auth-google" aria-busy={isSubmitting}>
             <Script
                 src="https://accounts.google.com/gsi/client"
                 strategy="afterInteractive"
@@ -109,16 +116,17 @@ export function GoogleIdentityButton({
                     toast.error("Google sign-in could not be loaded. Please try again.");
                 }}
             />
-            <div ref={buttonRef} className="flex min-h-10 w-full justify-center" />
+            <div ref={buttonRef} className="auth-google-button" inert={isSubmitting || loadFailed} />
             <form
                 ref={completionFormRef}
                 action={buildGoogleAuthCompletionPath(inviteToken, nextPath)}
                 method="post"
                 className="hidden"
             />
-            {(isSubmitting || loadFailed) && (
-                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-foreground text-background">
-                    {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : "Google unavailable"}
+            {(!isReady || isSubmitting || loadFailed) && (
+                <div className="auth-google-placeholder" role="status">
+                    {!loadFailed && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
+                    {loadFailed ? "Google unavailable. Use email below." : isSubmitting ? "Completing sign-in…" : "Loading Google sign-in…"}
                 </div>
             )}
         </div>

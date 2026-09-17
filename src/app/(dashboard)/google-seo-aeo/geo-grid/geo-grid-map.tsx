@@ -12,9 +12,9 @@ import type { GeoGridPoint } from "./load-geo-grid-page-data";
 function cellClass(rank: number | null, searched: boolean): string {
     if (!searched) return "border border-dashed bg-transparent text-muted-foreground";
     if (rank === null) return "bg-muted text-muted-foreground";
-    if (rank <= 3) return "bg-chart-2 text-white";
-    if (rank <= 10) return "bg-chart-4 text-white";
-    return "bg-sync-action text-white";
+    if (rank <= 3) return "bg-success text-success-foreground";
+    if (rank <= 10) return "bg-warning/15 text-warning-foreground";
+    return "bg-destructive/15 text-destructive";
 }
 
 export function GeoGridMap({ size, points }: { size: number; points: GeoGridPoint[] }) {
@@ -65,13 +65,13 @@ export function GeoGridMap({ size, points }: { size: number; points: GeoGridPoin
 
             <div className="text-muted-foreground flex flex-wrap items-center gap-3 text-xs">
                 <span className="flex items-center gap-1">
-                    <span className="bg-chart-2 inline-block size-3 rounded" /> Top 3
+                    <span className="bg-success inline-block size-3 rounded" /> Top 3
                 </span>
                 <span className="flex items-center gap-1">
-                    <span className="bg-chart-4 inline-block size-3 rounded" /> 4-10
+                    <span className="bg-warning inline-block size-3 rounded" /> 4-10
                 </span>
                 <span className="flex items-center gap-1">
-                    <span className="bg-sync-action inline-block size-3 rounded" /> 11-20
+                    <span className="bg-destructive inline-block size-3 rounded" /> 11-20
                 </span>
                 <span className="flex items-center gap-1">
                     <span className="bg-muted inline-block size-3 rounded border" /> Not in local pack

@@ -13,7 +13,7 @@ export default function OgImage() {
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "0 80px", position: "relative", zIndex: 10 }}>
                     <div style={{ fontSize: "15px", fontWeight: "700", color: "rgba(255,255,255,0.4)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "20px" }}>ZYENE REVIEWS · INTEGRATIONS</div>
                     <div style={{ fontSize: "58px", fontWeight: "800", color: "#ffffff", lineHeight: "1.05", marginBottom: "24px" }}>
-                        Connects with the tools<br /><span style={{ color: "#4ade80" }}>you already use</span>
+                        Connects with the tools<br /><span style={{ color: "#ff4f00" }}>you already use</span>
                     </div>
                     <div style={{ display: "flex", gap: "12px", marginBottom: "24px", flexWrap: "wrap", justifyContent: "center" }}>
                         {[

@@ -20,9 +20,9 @@ export function OnboardingContent(props: OnboardingContentProps) {
                     className="absolute top-[-10%] left-[-10%] size-[120%]"
                     style={{
                         background: `
-              radial-gradient(circle at 50% 50%, rgba(249, 115, 22, 0.08) 0%, transparent 60%),
-              radial-gradient(circle at 20% 20%, rgba(249, 115, 22, 0.05) 0%, transparent 40%),
-              radial-gradient(circle at 80% 80%, rgba(249, 115, 22, 0.05) 0%, transparent 40%)
+              radial-gradient(circle at 50% 50%, rgba(255, 79, 0, 0.08) 0%, transparent 60%),
+              radial-gradient(circle at 20% 20%, rgba(255, 79, 0, 0.05) 0%, transparent 40%),
+              radial-gradient(circle at 80% 80%, rgba(255, 79, 0, 0.05) 0%, transparent 40%)
             `,
                     }}
                 />

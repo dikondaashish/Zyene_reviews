@@ -14,7 +14,7 @@ const PLANS = [
         period: "/mo",
         locations: "1 location",
         features: [
-            "AI reply suggestions",
+            "AI drafts & automatic Google replies",
             "Negative Feedback Shield",
             "Review monitoring",
             "SMS & email campaigns",

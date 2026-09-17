@@ -25,6 +25,7 @@ export async function runDashboardStatsQueries(auth: DashboardAuthContext) {
             .eq("is_visible", true)
             .eq("response_status", "pending")
             .or("rating.lte.2,urgency_score.gte.7")
+            .order("review_date", { ascending: false })
             .order("urgency_score", { ascending: false, nullsFirst: false })
             .limit(5),
         fetchAllReviewRowsPaginated(1000, (from, to) =>

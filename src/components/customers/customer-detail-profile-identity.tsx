@@ -89,7 +89,7 @@ export function CustomerDetailProfileIdentity({
                             {customer.is_opted_out ? (
                                 <Badge
                                     variant="outline"
-                                    className="mt-2 w-fit border-chart-4/40 bg-chart-4/10 text-chart-4"
+                                    className="mt-2 w-fit border-chart-4/40 bg-chart-4/10 text-warning-foreground"
                                 >
                                     Opted out of review requests
                                 </Badge>

@@ -12,7 +12,7 @@ export const HOME_FAQS = [
     {
         question: "Does Zyene post AI replies directly to Google?",
         answer:
-            "Zyene generates AI-powered reply suggestions in one click. You can review, edit, and post them to Google, keeping you in full control of your responses. The Auto commenter feature can post replies automatically on your behalf.",
+            "Yes. You can review and publish AI drafts yourself, or enable automatic replies for new, unanswered Google reviews at the selected business. Choose eligible star ratings and a Professional, Friendly, or Concise tone. Automatic replies publish publicly without individual approval; existing reviews are excluded. Business replies have no monthly quota on eligible active or trialing paid plans. You can turn it off anytime; replies already processing may still finish.",
     },
     {
         question: "Can I manage multiple locations?",

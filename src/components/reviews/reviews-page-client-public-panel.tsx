@@ -1,5 +1,6 @@
 "use client";
 
+import { ReviewSearch } from "@/components/reviews/review-search";
 import { ReviewsFilters } from "./reviews-filters";
 import { ReviewManagement } from "./review-management";
 import { MessageSquare } from "lucide-react";
@@ -10,7 +11,7 @@ interface ReviewsPageClientPublicPanelProps {
     businessId: string;
     googleMapsListingUrl?: string | null;
     planAllowsAiReplies: boolean;
-    filters: { status: string; rating: string; sort: string };
+    filters: { status: string; rating: string; sort: string; q?: string };
     loading: boolean;
     reviews: ReviewManagementItem[];
     isImportingGoogleReviews: boolean;
@@ -33,6 +34,7 @@ export function ReviewsPageClientPublicPanel({
 }: ReviewsPageClientPublicPanelProps) {
     return (
         <>
+            <ReviewSearch key={filters.q || ""} query={filters.q || ""} onSearch={(q) => onFilterChange("q", q)} />
             <ReviewsFilters filters={filters} onFilterChange={onFilterChange} />
             <div className={loading ? "opacity-60 pointer-events-none transition-opacity" : "transition-opacity"}>
                 {reviews && reviews.length > 0 ? (

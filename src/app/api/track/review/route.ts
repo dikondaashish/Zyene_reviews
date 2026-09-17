@@ -9,8 +9,8 @@ const updateSchema = z.object({
     requestId: z.string().uuid(),
     trackData: z
         .object({
-            status: z.string().max(50).optional(),
-            review_left: z.boolean().optional(),
+            status: z.enum(["rated_positive", "rated_negative", "completed", "feedback_left"]).optional(),
+            // Public clients cannot attest that Google published a review.
             rating_given: z.number().int().min(1).max(5).optional(),
             tags_selected: z.array(z.string().max(80)).max(20).optional(),
             selected_staff: z.array(z.string().max(120)).max(100).optional(),
@@ -51,8 +51,8 @@ export async function POST(request: Request) {
             throw error;
         }
 
-        if (trackData.review_left === true) {
-            await terminateReviewRequestDrip(supabase, requestId, "review_left");
+        if (trackData.completed_at || trackData.status === "completed" || trackData.status === "feedback_left") {
+            await terminateReviewRequestDrip(supabase, requestId, "clicked");
         }
 
         return NextResponse.json({ success: true });

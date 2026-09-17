@@ -18,6 +18,8 @@ interface SendEmailProps {
     /** Custom MIME headers (e.g. Importance, Auto-Submitted). */
     headers?: Record<string, string>;
     attachments?: Array<{ filename: string; content: string }>;
+    /** Provider-side replay protection for an irreversible outbound email. */
+    idempotencyKey?: string;
 }
 
 /**
@@ -47,10 +49,7 @@ function getDefaultFrom(): string {
  *   buildFromLine({})
  *     → "Zyene Reviews <hello@zyenereviews.com>" (or whatever RESEND_FROM is)
  */
-export function buildFromLine(input: {
-    senderName?: string | null;
-    businessName?: string | null;
-}): string {
+export function buildFromLine(input: { senderName?: string | null; businessName?: string | null }): string {
     const fallback = getDefaultFrom();
     const sender = (input.senderName || "").trim();
     const biz = (input.businessName || "").trim();
@@ -64,7 +63,7 @@ export function buildFromLine(input: {
     return `${safeName} <${mailbox}>`;
 }
 
-export async function sendEmail({ to, subject, html, text, from, replyTo, headers, attachments }: SendEmailProps) {
+export async function sendEmail({ to, subject, html, text, from, replyTo, headers, attachments, idempotencyKey }: SendEmailProps) {
     const apiKey = process.env.RESEND_API_KEY?.trim();
     if (!apiKey) {
         logger.error("Resend API Key missing");
@@ -77,8 +76,7 @@ export async function sendEmail({ to, subject, html, text, from, replyTo, header
             : (Array.isArray(replyTo) ? replyTo : [replyTo]).filter((a) => typeof a === "string" && a.trim().length > 0);
     const replyToPayload = replyList.length > 0 ? { reply_to: replyList } : {};
 
-    const headersPayload =
-        headers && Object.keys(headers).length > 0 ? { headers } : {};
+    const headersPayload = headers && Object.keys(headers).length > 0 ? { headers } : {};
 
     try {
         const { data, error } = await resend.emails.send({
@@ -90,6 +88,7 @@ export async function sendEmail({ to, subject, html, text, from, replyTo, header
             ...(attachments?.length ? { attachments } : {}),
             ...replyToPayload,
             ...headersPayload,
+            ...(idempotencyKey ? { idempotencyKey } : {}),
         });
 
         if (error) {
@@ -103,6 +102,9 @@ export async function sendEmail({ to, subject, html, text, from, replyTo, header
         return { sent: true, id: data?.id };
     } catch (error: unknown) {
         logger.error({ err: error }, "Send Email Exception:");
-        return { sent: false, error: error instanceof Error ? error.message : "Unknown error" };
+        return {
+            sent: false,
+            error: error instanceof Error ? error.message : "Unknown error",
+        };
     }
 }

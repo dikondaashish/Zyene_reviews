@@ -25,7 +25,7 @@ export function CsvImportDialogMappingStep({
 }) {
     return (
         <div className="space-y-6 py-4">
-            <div className="flex items-center gap-2 text-sm bg-chart-2/10 text-chart-2 p-3 rounded-lg border border-chart-2/20 dark:bg-chart-2/20 dark:text-chart-2 dark:border-chart-2/30">
+            <div className="flex items-center gap-2 text-sm bg-chart-2/10 text-success p-3 rounded-lg border border-chart-2/20 dark:bg-chart-2/20 dark:text-success dark:border-chart-2/30">
                 <Check className="size-4" />
                 File parsed successfully: {rowCount} rows found.
             </div>
@@ -84,7 +84,7 @@ export function CsvImportDialogMappingStep({
             </div>
 
             {!mapping.email && !mapping.phone && (
-                <div className="flex items-start gap-2 text-xs text-chart-4 bg-chart-4/12 p-3 rounded-lg dark:bg-chart-4/20 dark:text-chart-4">
+                <div className="flex items-start gap-2 text-xs text-warning-foreground bg-chart-4/12 p-3 rounded-lg dark:bg-chart-4/20 dark:text-warning-foreground">
                     <AlertCircle className="shrink-0 mt-0.5 size-4" />
                     Please map at least one contact method (Email or Phone).
                 </div>

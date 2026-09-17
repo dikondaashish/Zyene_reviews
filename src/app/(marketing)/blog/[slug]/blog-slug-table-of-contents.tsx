@@ -3,16 +3,13 @@
 import { ChevronDown } from "lucide-react";
 import type { BlogFaq, ContentSection } from "@/lib/content/blog-types";
 import { useState } from "react";
-
-function slugifyHeading(text: string) {
-    return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-}
+import { headingAnchor } from "@/lib/content/heading-anchor";
 
 export function BlogSlugTableOfContents({ sections, faqs = [] }: { sections: ContentSection[]; faqs?: BlogFaq[] }) {
     const [isOpen, setIsOpen] = useState(false);
     const headings = sections
         .filter((section) => section.type === "h2" && section.text)
-        .map((section) => ({ label: section.text!, href: `#${slugifyHeading(section.text!)}` }));
+        .map((section) => ({ label: section.text!, href: `#${headingAnchor(section)}` }));
     const hasFaqHeading = headings.some(({ label }) => label.toLowerCase().includes("frequently asked"));
     const items = faqs.length > 0 && !hasFaqHeading
         ? [...headings, { label: "FAQ", href: "#faq" }]

@@ -47,7 +47,7 @@ export function AuditRunControls({
                 <AlertTriangle className="size-4" />
                 <AlertTitle>Technical audits are switched off</AlertTitle>
                 <AlertDescription>
-                    Nothing will run until <code>AEO_LIVE_CRAWLING</code> is enabled for this deployment.
+                    New audits are currently unavailable. Any findings below are historical. Contact support for availability.
                 </AlertDescription>
             </Alert>
         );
@@ -97,7 +97,7 @@ export function AuditRunControls({
 
             {latestRun?.status === "success" && (
                 <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                    <CheckCircle2 className="size-4 text-chart-2" />
+                    <CheckCircle2 className="size-4 text-success" />
                     Last ran {new Date(latestRun.startedAt).toLocaleString()} - {latestRun.pagesCrawled} pages
                     crawled.
                 </p>

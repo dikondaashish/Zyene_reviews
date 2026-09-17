@@ -14,6 +14,7 @@ export type ReviewsPageSearchParams = {
     sort?: string;
     page?: string;
     type?: string;
+    q?: string;
 };
 
 export type ReviewsPageLoadResult =
@@ -40,7 +41,7 @@ export type ReviewsPageLoadResult =
           initialPublicCount: number;
           initialPrivateCount: number;
           initialType: string;
-          initialFilters: { status: string; rating: string; sort: string };
+          initialFilters: { status: string; rating: string; sort: string; q?: string };
       };
 
 export async function loadReviewsPageData(
@@ -61,7 +62,8 @@ export async function loadReviewsPageData(
     const isGoogleConnected = isGoogleBusinessConnected(business?.review_platforms);
     const isDemo = !isGoogleConnected;
 
-    const page = parseInt(searchParams.page || "1");
+    const pageRaw = Number(searchParams.page || "1");
+    const page = Number.isSafeInteger(pageRaw) && pageRaw > 0 ? Math.min(pageRaw, 100000) : 1;
     const pageSize = 20;
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
@@ -133,7 +135,8 @@ export async function loadReviewsPageData(
         initialPrivateCount: privateCount || 0,
         initialType: searchParams.type || "public",
         initialFilters: {
-            status: searchParams.status || "all",
+            status: searchParams.status || "needs_response",
+            q: searchParams.q?.slice(0, 200) || "",
             rating: searchParams.rating || "all",
             sort: searchParams.sort || "newest",
         },

@@ -37,7 +37,7 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey, canManage }: 
                         </div>
                     </div>
                     {d.apiKey && !d.apiKey.revokedAt && (
-                        <Badge className="bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2 border-0 text-xs">
+                        <Badge className="bg-chart-2/15 text-success dark:bg-chart-2/20 dark:text-success border-0 text-xs">
                             Active
                         </Badge>
                     )}

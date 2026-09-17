@@ -9,7 +9,7 @@ export function ProStatCardRatingStarSlot({ fill }: { fill: number }) {
                 aria-hidden
             />
             <span className="absolute left-0 top-0 h-full overflow-hidden" style={{ width: `${f * 100}%` }}>
-                <Star className="pointer-events-none shrink-0 fill-chart-4 text-chart-4 size-4" aria-hidden />
+                <Star className="pointer-events-none shrink-0 fill-chart-4 text-warning-foreground size-4" aria-hidden />
             </span>
         </span>
     );

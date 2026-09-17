@@ -2,7 +2,7 @@ export function CompetitorsPageHeader({ recentAlertsCount }: { recentAlertsCount
     return (
         <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
             <div className="min-w-0 flex-1">
-                <h2 className="text-xl font-bold tracking-tight sm:text-2xl lg:text-3xl">Competitor Monitoring</h2>
+                <h1 className="text-xl font-bold tracking-tight sm:text-2xl lg:text-3xl">Competitor Monitoring</h1>
                 <p className="text-sm text-muted-foreground lg:text-base">
                     Keep track of your competitors&apos; review performance to stay ahead.
                 </p>

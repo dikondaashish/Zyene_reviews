@@ -1,11 +1,14 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = Number(process.env.PLAYWRIGHT_PORT ?? 3000);
-const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${PORT}`;
+const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${PORT}`;
 
 export default defineConfig({
   testDir: "./tests/visual",
   fullyParallel: false,
+  // The suite shares one Next.js development server; serial execution prevents
+  // concurrent page compilation from making interaction checks flaky.
+  workers: 1,
   timeout: 30_000,
   expect: {
     timeout: 10_000,

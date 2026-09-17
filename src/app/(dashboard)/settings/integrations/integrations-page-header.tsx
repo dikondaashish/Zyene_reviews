@@ -27,7 +27,7 @@ export function IntegrationsPageHeader({
                         </span>
                     </div>
                     <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
-                        <Star className="text-chart-4 size-4" />
+                        <Star className="text-warning-foreground size-4" />
                         <span className="text-sm font-medium">
                             {`${totalReviews.toLocaleString("en-US")} review${totalReviews !== 1 ? "s" : ""} in Zyene`}
                         </span>

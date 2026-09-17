@@ -1,5 +1,6 @@
 "use client";
 
+import { getReviewCaptureOrigin } from "@/config/env";
 import { useState, useEffect, useCallback } from "react";
 import { DEFAULT_REVIEW_PAGE_BACKGROUND_HEX, reviewPageBackdropGradient } from "@/lib/utils/review-page-background";
 import type { PublicProfileBusinessRecord, PublicProfilePreviewValues } from "@/types/components";
@@ -52,8 +53,8 @@ export function usePublicProfileEditorPreview(business: PublicProfileBusinessRec
         [handleValuesChange],
     );
 
-    const previewUrl = `zyenereviews.com/${previewState.slug || initialSlug}`;
-    const fullUrl = `https://${previewUrl}`;
+    const fullUrl = `${getReviewCaptureOrigin()}/${encodeURIComponent(previewState.slug || initialSlug)}`;
+    const previewUrl = fullUrl.replace(/^https?:\/\//, "");
     const previewBackdrop =
         previewState.review_page_background_color &&
         /^#([0-9A-F]{3}){1,2}$/i.test(previewState.review_page_background_color)

@@ -52,7 +52,6 @@ export function useReviewFlowGooglePost(options: {
         try {
             const trackData = {
                 status: "completed",
-                review_left: true,
                 rating_given: rating,
                 tags_selected: buildTagsSelected(selectedTags, addedCustomTags),
                 ai_review_text: reviewText,

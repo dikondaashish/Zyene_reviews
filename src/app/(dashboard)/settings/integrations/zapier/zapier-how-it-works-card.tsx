@@ -19,14 +19,14 @@ export function ZapierHowItWorksCard() {
                 <HowItWorksStep
                     index={1}
                     icon={Store}
-                    iconWrapClass="bg-chart-4/15 text-chart-4 ring-chart-4/25"
+                    iconWrapClass="bg-chart-4/15 text-warning-foreground ring-chart-4/25"
                     title="Your POS or CRM fires the trigger"
                     description="When a job is completed, an invoice is paid, or a row is added to a sheet ,  pick whatever signals 'service is done'."
                 />
                 <HowItWorksStep
                     index={2}
                     icon={Link2}
-                    iconWrapClass="bg-chart-2/15 text-chart-2 ring-chart-2/25"
+                    iconWrapClass="bg-chart-2/15 text-success ring-chart-2/25"
                     title="Zapier sends customer details to Zyene"
                     description="Map the customer's details into JSON and authenticate with a Bearer API key header. The URL never contains the secret."
                 />

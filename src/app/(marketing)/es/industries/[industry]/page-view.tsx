@@ -78,6 +78,7 @@ export default async function EsIndustryPage({
                     </div>
                     <div>
                         <h2 className="text-2xl font-bold text-foreground mb-3">Empieza hoy</h2>
+                        <p className="mb-4 text-muted-foreground">Revisa un borrador de IA antes de publicarlo, o activa respuestas automáticas para nuevas reseñas de Google que cumplan tu puntuación mínima. Elige el tono para cada negocio. <Link href="/features/ai-replies" className="underline underline-offset-4">Ver cómo funciona (en inglés)</Link>.</p>
                         <p className="text-muted-foreground leading-relaxed mb-6">
                             Prueba Zyene Reviews gratis durante 7 días. Sin contrato anual - planes desde $29.99/mes
                             con escudo de feedback negativo y respuestas con IA incluidas.

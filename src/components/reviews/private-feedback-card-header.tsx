@@ -37,8 +37,8 @@ export function PrivateFeedbackCardHeader({
                         status === "open"
                             ? "bg-destructive/10 text-destructive border-destructive/20"
                             : status === "contacted"
-                              ? "bg-chart-4/12 text-chart-4 border-chart-4/30"
-                              : "bg-chart-2/10 text-chart-2 border-chart-2/20",
+                              ? "bg-chart-4/12 text-warning-foreground border-chart-4/30"
+                              : "bg-chart-2/10 text-success border-chart-2/20",
                     )}
                 >
                     <User className="size-5" />
@@ -70,8 +70,8 @@ export function PrivateFeedbackCardHeader({
                             status === "open"
                                 ? "bg-destructive/10 text-destructive"
                                 : status === "contacted"
-                                  ? "bg-chart-4/12 text-chart-4"
-                                  : "bg-chart-2/10 text-chart-2",
+                                  ? "bg-chart-4/12 text-warning-foreground"
+                                  : "bg-chart-2/10 text-success",
                         )}
                     >
                         <SelectValue />

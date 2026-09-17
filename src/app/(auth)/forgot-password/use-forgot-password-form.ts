@@ -2,20 +2,20 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/db/supabase/client";
-import { toast } from "sonner";
 import {
     isSupabaseEmailSendRateLimited,
-    toastAuthEmailRateLimit,
 } from "@/lib/auth/supabase-email-rate-limit";
 
 export function useForgotPasswordForm() {
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [formError, setFormError] = useState<string | null>(null);
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (isLoading) return;
+        setFormError(null);
         setIsLoading(true);
         try {
             const supabase = createClient();
@@ -23,19 +23,20 @@ export function useForgotPasswordForm() {
                 redirectTo: `${window.location.origin}/api/auth/callback?next=/reset-password`,
             });
             if (error) {
-                if (isSupabaseEmailSendRateLimited(error)) toastAuthEmailRateLimit(toast);
-                else toast.error(error.message);
-                return;
+                setFormError(isSupabaseEmailSendRateLimited(error)
+                    ? "Too many reset emails have been requested. Please wait before requesting another link."
+                    : "We couldn’t send the reset link. Please try again in a moment.");
+            } else {
+                setIsSuccess(true);
             }
-            setIsSuccess(true);
         } catch {
-            toast.error("Unable to send a password reset email. Please try again.");
-        } finally {
-            setIsLoading(false);
+            setFormError("We couldn’t connect. Check your connection and try again.");
         }
+        setIsLoading(false);
     }
 
     return {
+        formError,
         email,
         setEmail,
         isLoading,

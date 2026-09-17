@@ -63,12 +63,12 @@ export function requestStatusTone(status: string): { className: string; dot: str
         };
     if (s === "sending" || s === "queued" || s === "pending")
         return {
-            className: "border-chart-4/35 bg-chart-4/10 text-chart-4",
+            className: "border-chart-4/35 bg-chart-4/10 text-warning-foreground",
             dot: "bg-chart-4 animate-pulse",
         };
     if (s === "sent" || s === "delivered" || s === "opened" || s === "clicked" || s === "completed" || s === "review_left")
         return {
-            className: "border-chart-2/35 bg-chart-2/10 text-chart-2",
+            className: "border-chart-2/35 bg-chart-2/10 text-success",
             dot: "bg-chart-2",
         };
     return {

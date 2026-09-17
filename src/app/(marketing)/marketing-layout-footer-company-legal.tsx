@@ -79,6 +79,11 @@ export function MarketingLayoutFooterLegalColumn() {
                 </Link>
             </li>
             <li>
+                <Link href="/sms-consent" className="hover:text-primary transition-colors">
+                    SMS Consent
+                </Link>
+            </li>
+            <li>
                 <button
                     type="button"
                     className="cursor-pointer bg-transparent p-0 text-sm text-muted-foreground hover:text-primary transition-colors text-left"

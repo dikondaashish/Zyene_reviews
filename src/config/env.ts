@@ -130,10 +130,19 @@ export function getGoogleCredentials() {
 }
 
 export function getTwilioCredentials() {
+    const phoneNumber = process.env.TWILIO_PHONE_NUMBER;
+    const messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID;
+    if (!phoneNumber && !messagingServiceSid) {
+        throw new Error(
+            "Missing Twilio sender. Set TWILIO_MESSAGING_SERVICE_SID or TWILIO_PHONE_NUMBER."
+        );
+    }
+
     return {
         accountSid: required("TWILIO_ACCOUNT_SID"),
         authToken: required("TWILIO_AUTH_TOKEN"),
-        phoneNumber: required("TWILIO_PHONE_NUMBER"),
+        phoneNumber,
+        messagingServiceSid,
     };
 }
 

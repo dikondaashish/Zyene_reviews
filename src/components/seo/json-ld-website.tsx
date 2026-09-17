@@ -10,14 +10,6 @@ export function WebSiteJsonLd() {
         name: "Zyene Reviews",
         url: JSON_LD_BASE_URL,
         publisher: buildOrganizationSchema(),
-        potentialAction: {
-            "@type": "SearchAction",
-            target: {
-                "@type": "EntryPoint",
-                urlTemplate: `${JSON_LD_BASE_URL}/docs?q={search_term_string}`,
-            },
-            "query-input": "required name=search_term_string",
-        },
     };
 
     return <JsonLdScript schema={schema} />;

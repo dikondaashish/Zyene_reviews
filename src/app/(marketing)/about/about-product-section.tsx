@@ -9,7 +9,7 @@ export function AboutProductSection() {
                         <p className="text-muted-foreground leading-relaxed mb-4">
                             Zyene Reviews is a SaaS platform that connects to your Google Business Profile through
                             Google&apos;s official OAuth authorization. It helps your team build a consistent reputation routine,
-                            from a fair review request to a thoughtful response and the next improvement:
+                            from a branded review request to a thoughtful response and the next improvement:
                         </p>
                         <ul className="space-y-2 text-muted-foreground mb-8">
                             <li className="flex items-start gap-2">
@@ -18,11 +18,11 @@ export function AboutProductSection() {
                             </li>
                             <li className="flex items-start gap-2">
                                 <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
-                                Draft AI-assisted Google review replies, then tailor each response to the customer and your voice
+                                Edit AI reply drafts yourself or automatically publish replies to eligible new Google reviews in your chosen tone
                             </li>
                             <li className="flex items-start gap-2">
                                 <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />
-                                Send fair review requests by email, SMS, shareable link, or QR code, with a private feedback path for customers who need help
+                                Send review requests by email, SMS, shareable link, or QR code, with a private feedback path for customers who need help
                             </li>
                             <li className="flex items-start gap-2">
                                 <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden="true" />

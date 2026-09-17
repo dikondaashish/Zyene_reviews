@@ -8,7 +8,7 @@ const SEVERITY_ORDER: CrawlFindingSeverity[] = ["critical", "high", "medium", "l
 
 const SEVERITY_STYLE: Record<CrawlFindingSeverity, string> = {
     critical: "bg-destructive/15 text-destructive border-0",
-    high: "bg-chart-4/20 text-chart-4 border-0",
+    high: "bg-chart-4/20 text-warning-foreground border-0",
     medium: "bg-warning/15 text-warning-foreground border-0",
     low: "bg-muted text-muted-foreground border-0",
 };
@@ -37,7 +37,7 @@ export function AuditFindingsList({ findings }: { findings: AuditFinding[] }) {
     if (findings.length === 0) {
         return (
             <div className="flex items-center gap-2 py-6 text-sm text-muted-foreground">
-                <CheckCircle2 className="size-4 text-chart-2" />
+                <CheckCircle2 className="size-4 text-success" />
                 No findings - this crawl found nothing to flag.
             </div>
         );

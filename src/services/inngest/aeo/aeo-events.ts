@@ -29,6 +29,17 @@ export type AeoRunRequestedEvent = {
     };
 };
 
+/**
+ * Global AEO launch: an eligible business that has never selected a prompt
+ * receives five deterministic, GBP-grounded defaults before its next run.
+ */
+export type AeoPromptEnrollmentRequestedEvent = {
+    data: {
+        businessId: string;
+        organizationId: string;
+    };
+};
+
 export type AeoDispatchRequestedEvent = {
     data: {
         runId: string;

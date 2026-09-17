@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -7,6 +8,7 @@ import { completeOnboarding } from "@/app/actions/onboarding";
 import { fireOnboardingConfetti } from "./step5-form-confetti";
 
 export function useStep5Form(businessId: string, onNext: () => void) {
+    const router = useRouter();
     const [mounted, setMounted] = useState(false);
     const [isCompleting, setIsCompleting] = useState(false);
 
@@ -15,7 +17,7 @@ export function useStep5Form(businessId: string, onNext: () => void) {
         void fireOnboardingConfetti();
     }, []);
 
-    const handleGoToDashboard = async () => {
+    const handleGoToDashboard = async (destination?: "requests") => {
         setIsCompleting(true);
         try {
             const result = await completeOnboarding(businessId);
@@ -23,7 +25,8 @@ export function useStep5Form(businessId: string, onNext: () => void) {
                 toast.error(result.error || "Could not finish setup. Please try again.");
                 return;
             }
-            onNext();
+            if (destination === "requests") router.push("/requests");
+            else onNext();
         } catch {
             toast.error("Something went wrong. Please try again.");
         } finally {

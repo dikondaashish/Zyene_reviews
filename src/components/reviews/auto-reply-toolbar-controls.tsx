@@ -1,24 +1,11 @@
 "use client";
 
-import { Bot, CircleHelp, Loader2, Star } from "lucide-react";
-
+import { Bot, Loader2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { AUTO_COMMENTER_HELP, AUTO_REPLY_TONES, type AutoReplyTone } from "./auto-reply-toolbar-types";
+import { AUTO_REPLY_TONES, type AutoReplyTone } from "@/components/reviews/auto-reply-toolbar-types";
 
 export function AutoReplyToolbarControls({
     enabled,
@@ -34,93 +21,83 @@ export function AutoReplyToolbarControls({
     tone: AutoReplyTone;
     saving: boolean;
     onToggle: (on: boolean) => void;
-    onMinRatingChange: (v: string) => void;
-    onToneChange: (t: AutoReplyTone) => void;
+    onMinRatingChange: (value: string) => void;
+    onToneChange: (tone: AutoReplyTone) => void;
 }) {
     return (
-        <div className="flex min-w-0 flex-col gap-2 rounded-lg border border-border bg-muted/80 px-3 py-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
-            <div className="flex items-center gap-2 min-w-0">
-                <Bot className="shrink-0 text-sync-action size-4" aria-hidden />
-                <Label htmlFor="auto-reply-enabled" className="text-xs font-semibold text-foreground cursor-pointer">
-                    Auto commenter
-                </Label>
-                <TooltipProvider delayDuration={200}>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <button
-                                type="button"
-                                className="inline-flex shrink-0 rounded-full text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
-                                aria-label="How auto commenter works"
-                            >
-                                <CircleHelp className="size-3.5" aria-hidden />
-                            </button>
-                        </TooltipTrigger>
-                        <TooltipContent
-                            side="top"
-                            sideOffset={6}
-                            className="max-w-[min(280px,calc(100vw-2rem))] px-3 py-2 text-left text-xs leading-snug"
-                        >
-                            {AUTO_COMMENTER_HELP}
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
+        <section
+            aria-label="Automatic Google replies"
+            className="w-full space-y-4 rounded-xl border border-border bg-card p-4 sm:max-w-xl"
+        >
+            <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                    <Bot className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
+                    <div>
+                        <Label htmlFor="auto-reply-enabled" className="cursor-pointer text-sm font-semibold">
+                            Automatically publish AI replies to Google
+                        </Label>
+                        <p id="auto-reply-explanation" className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                            For new, unanswered reviews at the selected business. Choose your settings before turning it
+                            on.
+                        </p>
+                    </div>
+                </div>
                 <Switch
                     id="auto-reply-enabled"
+                    aria-describedby="auto-reply-explanation"
                     checked={enabled}
-                    onCheckedChange={(v) => void onToggle(!!v)}
+                    onCheckedChange={onToggle}
                     disabled={saving}
                 />
-                {saving && <Loader2 className="animate-spin text-muted-foreground size-3.5" aria-hidden />}
             </div>
-
-            {enabled && (
-                <>
-                    <div className="flex w-full min-w-0 flex-col gap-1.5 sm:w-auto sm:flex-row sm:items-center sm:gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                            Min stars
-                        </span>
-                        <Select
-                            value={String(minRating)}
-                            onValueChange={(v) => void onMinRatingChange(v)}
-                            disabled={saving}
-                        >
-                            <SelectTrigger className="h-9 w-full bg-background text-sm sm:w-[130px] md:h-8 md:text-xs">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {[3, 4, 5].map((rating) => (
-                                    <SelectItem key={rating} value={String(rating)}>
-                                        <Star className="mr-2 size-3.5 fill-chart-4 text-chart-4" aria-hidden="true" />
-                                        {rating} stars {rating === 5 ? "only" : "and up"}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mr-1">
-                            Tone
-                        </span>
-                        {AUTO_REPLY_TONES.map((t) => (
+            <div className="flex flex-wrap items-end gap-4">
+                <div className="space-y-1.5">
+                    <Label htmlFor="auto-reply-rating" className="text-xs">
+                        Reviews to reply to
+                    </Label>
+                    <Select value={String(minRating)} onValueChange={onMinRatingChange} disabled={saving}>
+                        <SelectTrigger id="auto-reply-rating" className="min-h-10 w-40">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {[3, 4, 5].map((rating) => (
+                                <SelectItem key={rating} value={String(rating)}>
+                                    {rating} stars {rating === 5 ? "only" : "and up"}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <fieldset className="space-y-1.5" disabled={saving}>
+                    <legend className="mb-1.5 text-xs font-medium">Reply tone</legend>
+                    <div className="flex flex-wrap gap-1.5">
+                        {AUTO_REPLY_TONES.map((option) => (
                             <button
-                                key={t.id}
+                                key={option.id}
                                 type="button"
-                                disabled={saving}
-                                onClick={() => void onToneChange(t.id)}
+                                aria-pressed={tone === option.id}
+                                onClick={() => onToneChange(option.id)}
                                 className={cn(
-                                    "px-2.5 py-1 rounded-md text-[11px] font-semibold border transition-colors",
-                                    tone === t.id
-                                        ? "bg-primary text-primary-foreground border-primary"
-                                        : "bg-background text-muted-foreground border-border hover:border-foreground/30",
+                                    "min-h-10 rounded-lg border px-3 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50",
+                                    tone === option.id
+                                        ? "border-primary bg-primary text-primary-foreground"
+                                        : "border-border bg-background text-foreground hover:bg-accent",
                                 )}
                             >
-                                {t.label}
+                                {option.label}
                             </button>
                         ))}
                     </div>
-                </>
-            )}
-        </div>
+                </fieldset>
+            </div>
+            <p role="status" className="flex items-center gap-2 text-xs text-muted-foreground">
+                {saving && <Loader2 className="size-3 animate-spin" aria-hidden="true" />}
+                {saving
+                    ? "Saving settings…"
+                    : enabled
+                      ? "Automatic publishing is on. You can turn it off at any time."
+                      : "Automatic publishing is off. No replies will be posted automatically."}
+            </p>
+        </section>
     );
 }

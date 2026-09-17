@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Changelog",
     description: "Zyene Reviews product changelog, new features, improvements, API changes, and bug fixes listed by release date.",
     alternates: { canonical: "https://www.zyenereviews.com/docs/changelog" },
     openGraph: { title: "Changelog, Zyene Reviews", description: "New features, improvements, API changes, and bug fixes by release date.", url: "https://www.zyenereviews.com/docs/changelog" },
     twitter: { card: "summary_large_image", title: "Changelog, Zyene Reviews", description: "New features, API changes, and bug fixes by release date." },
-};
+});
 
 export default function DocsChangelogPage() {
     const toc: TocItem[] = [

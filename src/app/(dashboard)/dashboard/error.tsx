@@ -22,9 +22,9 @@ export default function DashboardError({
                 <AlertCircle className="text-destructive size-8" />
             </div>
             <div className="space-y-2 max-w-sm">
-                <h2 className="text-2xl font-semibold tracking-tight">
+                <h1 className="text-2xl font-semibold tracking-tight">
                     Something went wrong
-                </h2>
+                </h1>
                 <p className="text-sm text-muted-foreground">
                     We encountered an error while loading your dashboard data. Please try again.
                 </p>

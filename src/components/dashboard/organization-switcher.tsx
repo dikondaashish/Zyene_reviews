@@ -53,8 +53,8 @@ export function OrganizationSwitcher({
                 className="pointer-events-none hidden min-w-0 max-w-[min(42vw,11rem)] justify-start sm:flex lg:max-w-[220px]"
                 tabIndex={-1}
             >
-                <Building2 className="mr-2 shrink-0 size-4" />
-                <span className="truncate font-medium">
+                <Building2 className="shrink-0 size-4 sm:mr-2" aria-hidden="true" />
+                <span className="hidden truncate font-medium sm:inline">
                     {activeOrg?.name || "Organization"}
                 </span>
             </Button>
@@ -66,7 +66,7 @@ export function OrganizationSwitcher({
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="outline"
-                    className="hidden min-w-0 max-w-[min(42vw,11rem)] justify-between sm:flex lg:max-w-[220px]"
+                    className="flex size-10 shrink-0 justify-center px-2 sm:h-10 sm:w-auto sm:max-w-[11rem] sm:justify-between lg:max-w-[220px]"
                     disabled={switching}
                     aria-label={
                         activeOrg
@@ -74,11 +74,11 @@ export function OrganizationSwitcher({
                             : "Select an organization. Open menu."
                     }
                 >
-                    <Building2 className="mr-2 shrink-0 size-4" />
-                    <span className="truncate font-medium">
+                    <Building2 className="shrink-0 size-4 sm:mr-2" aria-hidden="true" />
+                    <span className="hidden truncate font-medium sm:inline">
                         {switching ? "Switching..." : activeOrg?.name || "Organization"}
                     </span>
-                    <ChevronsUpDown className="ml-2 shrink-0 opacity-50 size-4" />
+                    <ChevronsUpDown className="ml-2 hidden shrink-0 opacity-50 size-4 sm:block" aria-hidden="true" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type CustomerPortalCardQrPreviewProps = {
     loading: boolean;
     qrDataUrl: string | null;
@@ -13,9 +15,12 @@ export function CustomerPortalCardQrPreview({ loading, qrDataUrl }: CustomerPort
                         Generating...
                     </div>
                 ) : qrDataUrl ? (
-                    <img
+                    <Image
                         src={qrDataUrl}
                         alt="Scan to Review"
+                        width={180}
+                        height={180}
+                        unoptimized
                         className="display-block size-[180px]"
                         style={{ imageRendering: "pixelated" }}
                     />

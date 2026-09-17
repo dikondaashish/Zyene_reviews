@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
 import { createLogger } from "@/lib/logger";
+import { secretsMatch } from "@/lib/auth/constant-time-compare";
 import { parseReviewLocationFromPayload, type PubSubPushBody } from "./google-pubsub-parse";
 
 const log = createLogger("webhook-google-pubsub");
@@ -23,7 +24,7 @@ export async function handleGooglePubsubPost(request: NextRequest) {
 
     const url = new URL(request.url);
     const token = trimEnv(url.searchParams.get("token"));
-    if (!token || token !== expectedToken) {
+    if (!secretsMatch(token, expectedToken)) {
         return new NextResponse("Unauthorized", { status: 401 });
     }
 
@@ -44,7 +45,7 @@ export async function handleGooglePubsubPost(request: NextRequest) {
             subscription: envelope.subscription,
             hasData: Boolean(envelope.message?.data),
         },
-        "Pub/Sub webhook received"
+        "Pub/Sub webhook received",
     );
 
     if (!envelope.message?.data) {
@@ -63,19 +64,13 @@ export async function handleGooglePubsubPost(request: NextRequest) {
 
     const parsed = parseReviewLocationFromPayload(payload);
     if (parsed.kind === "skip") {
-        log.info(
-            { messageId, reason: parsed.reason, payloadKeys: Object.keys(payload) },
-            "Pub/Sub webhook ignored notification"
-        );
+        log.info({ messageId, reason: parsed.reason, payloadKeys: Object.keys(payload) }, "Pub/Sub webhook ignored notification");
         return new NextResponse("OK", { status: 200 });
     }
 
     const { googleLocationId, notificationLabel } = parsed;
 
-    log.info(
-        { messageId, notificationType: notificationLabel, googleLocationId },
-        "Pub/Sub webhook parsed review notification"
-    );
+    log.info({ messageId, notificationType: notificationLabel, googleLocationId }, "Pub/Sub webhook parsed review notification");
 
     const admin = createAdminClient();
     const { data: platform, error: platformError } = await admin
@@ -115,7 +110,7 @@ export async function handleGooglePubsubPost(request: NextRequest) {
             platformId: platform.id,
             inngestEventId: eventId,
         },
-        "Pub/Sub webhook enqueued review/sync.platform"
+        "Pub/Sub webhook enqueued review/sync.platform",
     );
 
     return new NextResponse("OK", { status: 200 });

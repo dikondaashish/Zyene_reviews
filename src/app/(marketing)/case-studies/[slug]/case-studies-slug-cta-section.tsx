@@ -9,7 +9,7 @@ export function CaseStudiesSlugCtaSection({ related }: { related: (typeof CASE_S
                 <div className="mb-8 flex items-end justify-between gap-4">
                     <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">More case studies</h2>
                     <Link href="/case-studies" className="hidden items-center gap-2 text-sm font-semibold text-primary hover:underline sm:inline-flex">
-                        All case studies <ArrowLeft className="size-4" aria-hidden="true" />
+                        All workflows <ArrowLeft className="size-4" aria-hidden="true" />
                     </Link>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
@@ -27,7 +27,7 @@ export function CaseStudiesSlugCtaSection({ related }: { related: (typeof CASE_S
                     ))}
                 </div>
                 <Link href="/case-studies" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline sm:hidden">
-                    <ArrowLeft className="size-4" aria-hidden="true" /> All case studies
+                    <ArrowLeft className="size-4" aria-hidden="true" /> All workflows
                 </Link>
             </div>
         </section>

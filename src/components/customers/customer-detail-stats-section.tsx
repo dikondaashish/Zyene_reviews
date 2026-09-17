@@ -33,7 +33,7 @@ export function CustomerDetailStatsSection({
                         </div>
                         <div className="px-5 py-5 sm:px-6 sm:py-6">
                             <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                                Reviews left
+                                Completed requests / feedback
                             </p>
                             <p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-foreground">
                                 {stats.reviewsLeftCount}

@@ -73,8 +73,8 @@ export function NegativeStep({
             />
 
             <div className="space-y-2">
-                <label className="text-sm font-semibold text-foreground">Your feedback</label>
-                <textarea
+                <label htmlFor="private-feedback" className="text-sm font-semibold text-foreground">Your feedback</label>
+                <textarea id="private-feedback"
                     placeholder={negativeTextareaPlaceholder || "Tell us what happened..."}
                     className="w-full min-h-[140px] text-base p-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none resize-none transition-colors bg-muted placeholder:text-muted-foreground dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:text-foreground"
                     value={feedback}

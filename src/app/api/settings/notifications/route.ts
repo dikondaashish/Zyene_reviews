@@ -16,14 +16,16 @@ const notificationPreferencesSchema = z.object({
         .transform((n) => (typeof n === "number" && Number.isFinite(n) ? n : 7)),
     quiet_hours_start: z.string().max(5).optional().nullable(),
     quiet_hours_end: z.string().max(5).optional().nullable(),
+}).refine((data) => !data.sms_enabled || /^\+[1-9]\d{7,14}$/.test((data.phone_number || "").replace(/[\s()-]/g, "")), {
+    path: ["phone_number"], message: "A phone number with country code is required for text alerts.",
 });
 
-export async function POST(request: Request) {
+async function handleValidatedRequest(request: Request) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return apiError("Unauthorized", { status: 401 });
 
-    const parsed = notificationPreferencesSchema.safeParse(await request.json());
+    const parsed = notificationPreferencesSchema.safeParse(await request.json().catch(() => null));
     if (!parsed.success) {
            return apiError(parsed.error.issues[0].message, { status: 400 });
     }
@@ -34,7 +36,7 @@ export async function POST(request: Request) {
         return apiError("Forbidden", { status: 403 });
     }
 
-    const phone = body.phone_number?.trim() || null;
+    const phone = body.phone_number?.replace(/[\s()-]/g, "") || null;
     const smsPhone = body.sms_enabled && phone ? phone : null;
 
     const { error } = await supabase.from("notification_preferences").upsert(
@@ -59,4 +61,9 @@ export async function POST(request: Request) {
     }
 
     return apiOk({ saved: true });
+}
+
+export async function POST(request: Request) {
+    try { return await handleValidatedRequest(request); }
+    catch { return apiError("Could not save notification settings", { status: 503 }); }
 }

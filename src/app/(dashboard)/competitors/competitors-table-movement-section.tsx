@@ -45,9 +45,9 @@ export function CompetitorsTableMovementSection({
                                             <span className="text-muted-foreground">Rating change</span>
                                             <span className="inline-flex items-center gap-1 font-medium">
                                                 {ratingUp ? (
-                                                    <ArrowUp className="text-chart-2 size-3" />
+                                                    <ArrowUp className="text-success size-3" />
                                                 ) : (m.ratingDelta ?? 0) < 0 ? (
-                                                    <ArrowDown className="text-sync-action size-3" />
+                                                    <ArrowDown className="text-destructive size-3" />
                                                 ) : (
                                                     <Minus className="text-muted-foreground size-3" />
                                                 )}
@@ -58,9 +58,9 @@ export function CompetitorsTableMovementSection({
                                             <span className="text-muted-foreground">Review change</span>
                                             <span className="inline-flex items-center gap-1 font-medium">
                                                 {reviewsUp ? (
-                                                    <ArrowUp className="text-chart-2 size-3" />
+                                                    <ArrowUp className="text-success size-3" />
                                                 ) : (m.reviewsDelta ?? 0) < 0 ? (
-                                                    <ArrowDown className="text-sync-action size-3" />
+                                                    <ArrowDown className="text-destructive size-3" />
                                                 ) : (
                                                     <Minus className="text-muted-foreground size-3" />
                                                 )}

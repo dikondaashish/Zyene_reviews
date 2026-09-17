@@ -10,7 +10,7 @@ import { IntegrationsPanel } from "./integrations-panel";
 
 export async function Phase2Page() {
     const data = await loadPhase2PageData();
-    if (data.kind === "no-business") return <BusinessContextEmptyState icon={Building2} title="Add a business for competitive insights" description="Phase 2 data is scoped to the active business and organization." />;
+    if (data.kind === "no-business") return <BusinessContextEmptyState icon={Building2} title="Add a business for competitive insights" description="Compare how this business appears alongside local competitors." />;
     return (
         <div className="min-w-0 space-y-8 overflow-x-hidden p-4 md:p-8">
             <GoogleSeoAeoSubnav active="/google-seo-aeo/phase-2" />

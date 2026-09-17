@@ -9,6 +9,7 @@ export type WidgetReview = {
     content: string;
     platform: string;
     created_at: string;
+    external_url?: string;
 };
 
 export type WidgetPageData =
@@ -23,6 +24,15 @@ export type WidgetPageData =
           averageRating: number;
           formattedReviews: WidgetReview[];
       };
+
+export function sanitizeExternalReviewUrl(value: string | null | undefined): string | undefined {
+    try {
+        const url = new URL(value ?? "");
+        return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : undefined;
+    } catch {
+        return undefined;
+    }
+}
 
 export async function loadWidgetPageData(
     slug: string,
@@ -65,6 +75,7 @@ export async function loadWidgetPageData(
             id,
             rating,
             text,
+            external_url,
             author_name,
             created_at,
             review_platforms (
@@ -81,9 +92,10 @@ export async function loadWidgetPageData(
         id: r.id,
         author_name: r.author_name || "Customer",
         rating: r.rating ?? 5,
-        content: (r.text || "").trim() || "Excellent service!",
+        content: (r.text || "").trim(),
         platform: r.review_platforms?.platform || "Direct",
         created_at: r.created_at ?? "",
+        external_url: sanitizeExternalReviewUrl(r.external_url),
     }));
 
     const reviewCount = vr.totalVisible;
@@ -93,8 +105,8 @@ export async function loadWidgetPageData(
             : formattedReviews.length > 0
               ? formattedReviews.reduce((sum, review) => sum + (review.rating ?? 0), 0) /
                 formattedReviews.length
-              : 5;
-    const averageRating = Number.isFinite(rawAverage) ? rawAverage : 5;
+              : 0;
+    const averageRating = Number.isFinite(rawAverage) ? rawAverage : 0;
 
     return {
         kind: "ok",

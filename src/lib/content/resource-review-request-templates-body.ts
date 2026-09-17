@@ -4,12 +4,12 @@ import type { ContentSection } from "./blog-data";
 export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
     {
         type: "summary",
-        text: "Copy-paste SMS and email scripts for fair, honest review outreach - plus industry variants, one reminder, thank-you notes, and a private-feedback follow-up. Replace [Name], [Business Name], and [link] with your details.",
+        text: "Copy-paste SMS and email scripts for honest review outreach - plus industry variants, one reminder, thank-you notes, and a private-feedback follow-up. Replace [Name], [Business Name], and [link] with your details.",
     },
-    { type: "h2", text: "Compliance: Fair Outreach" },
+    { type: "h2", text: "Responsible Outreach" },
     {
         type: "warning",
-        text: "Do not selectively ask only happy customers for reviews. Do not offer discounts, gifts, or incentives for positive reviews. Do not pressure customers with repeated messages. Invite real customers honestly, keep outreach proportional (one follow-up max per visit), and follow Google review policies for your industry.",
+        text: "Do not offer discounts, gifts, or incentives tied to a rating or review text. Do not pressure customers with repeated messages. Invite real customers honestly, keep outreach proportional (one follow-up max per visit), and configure the process to match your business's documented review policy.",
     },
     { type: "h2", text: "SMS Review Request Templates" },
     { type: "h3", text: "1. General - short and direct" },
@@ -132,12 +132,12 @@ export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
     },
     { type: "ul", items: [
         "Upload customers or trigger requests from POS/Zapier when a job completes",
-        "Use your branded collectratings.com page with fair review paths and Negative Feedback Shield for private issue capture",
+        "Use your branded collectratings.com page and Negative Feedback Shield for private issue capture",
         "Get alerts for new Google, Facebook, and Yelp reviews in one inbox",
         "Draft replies with AI assistance - you approve before posting",
         "See campaign status without manual spreadsheet tracking",
     ]},
-    { type: "p", text: "Learn how Shield keeps outreach compliant on /blog/negative-feedback-shield. Compare platforms on /compare; public plans on /pricing." },
+    { type: "p", text: "Learn how Shield organizes private feedback on /blog/negative-feedback-shield. Compare platforms on /compare; public plans on /pricing." },
     { type: "h2", text: "Manual vs Spreadsheet vs Zyene Reviews" },
     {
         type: "table",

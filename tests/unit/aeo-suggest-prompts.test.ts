@@ -6,6 +6,7 @@ import {
     PROMPT_CLUSTERS,
     suggestPrompts,
 } from "../../src/services/aeo/prompts/suggest-prompts";
+import { selectDefaultSuggestions } from "../../src/services/aeo/prompts/default-prompt-enrollment";
 
 const WOLFPACK = {
     businessName: "Wolfpack BBQ",
@@ -91,5 +92,17 @@ describe("promptDedupeKey", () => {
         expect(promptDedupeKey("  Best   BBQ in Kansas City ")).toBe(
             promptDedupeKey("best bbq in kansas city")
         );
+    });
+});
+
+describe("global AEO enrollment defaults", () => {
+    it("enrols the five strongest deterministic suggestions for a business with no active prompts", () => {
+        const suggestions = suggestPrompts(WOLFPACK);
+
+        expect(selectDefaultSuggestions(suggestions, 0)).toEqual(suggestions.slice(0, 5));
+    });
+
+    it("never adds paid defaults when a business already has an active prompt", () => {
+        expect(selectDefaultSuggestions(suggestPrompts(WOLFPACK), 1)).toEqual([]);
     });
 });

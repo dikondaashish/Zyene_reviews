@@ -26,3 +26,4 @@ export function getTwilioClient(): ReturnType<typeof twilio> {
 export const twilioClient = null as ReturnType<typeof twilio> | null;
 
 export const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER;
+export const TWILIO_MESSAGING_SERVICE_SID = process.env.TWILIO_MESSAGING_SERVICE_SID;

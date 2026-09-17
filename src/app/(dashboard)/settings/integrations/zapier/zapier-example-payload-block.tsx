@@ -27,7 +27,7 @@ export function ZapierExamplePayloadBlock({
                 <Button variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={onCopy}>
                     {copied ? (
                         <>
-                            <Check className="mr-1 text-chart-2 size-3" />
+                            <Check className="mr-1 text-success size-3" />
                             Copied
                         </>
                     ) : (

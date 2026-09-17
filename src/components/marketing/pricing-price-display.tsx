@@ -2,13 +2,17 @@ import type { Plan } from "@/services/stripe/plan-catalog";
 import { getPricingPresentation } from "@/lib/marketing/pricing-presentation";
 import styles from "@/components/marketing/pricing.module.css";
 
-export function PricingPriceDisplay({ plan }: { plan: Pick<Plan, "price" | "originalPrice" | "interval"> }) {
+export function PricingPriceDisplay({
+  plan,
+}: {
+  plan: Pick<Plan, "price" | "originalPrice" | "dailyEquivalent" | "interval">;
+}) {
   const price = getPricingPresentation(plan);
 
   if (!price) {
     return (
       <div className={styles.priceDisplay}>
-        <div aria-hidden="true" />
+        <div className={styles.priceSpacer} aria-hidden="true" />
         <div className={styles.customPrice}>Let’s talk</div>
         <p className={styles.billingNote}>A plan built around your business</p>
       </div>

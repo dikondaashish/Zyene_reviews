@@ -46,6 +46,7 @@ export interface TableData {
 
 export interface ContentSection {
     type: SectionType;
+    id?: string;
     text?: string;
     items?: string[];
     table?: TableData;

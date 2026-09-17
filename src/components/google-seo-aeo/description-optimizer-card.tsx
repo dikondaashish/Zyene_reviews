@@ -1,12 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { DescriptionOptimizerFields } from "./description-optimizer-fields";
 
 export function DescriptionOptimizerCard({
     businessId,
@@ -75,60 +72,25 @@ export function DescriptionOptimizerCard({
     };
 
     return (
-        <Card>
+        <Card className="h-full overflow-hidden border">
             <CardHeader>
-                <CardTitle>Let us fix these issues</CardTitle>
+                <CardTitle>Business description workspace</CardTitle>
                 <CardDescription>
-                    Fully optimize your profile to rank higher in local Google search.
+                    Draft a clearer, keyword-aware description, review it, then save the version you approve to Google.
                 </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-5">
-                <div className="space-y-2">
-                    <p className="text-sm font-medium">Your current business description</p>
-                    <Textarea value={currentDescription} readOnly rows={4} className="bg-muted/30" />
-                </div>
-
-                <div className="space-y-2">
-                    <div className="flex items-center justify-between gap-2">
-                        <p className="text-sm font-medium">Suggested SEO-optimized description</p>
-                        <Button type="button" size="sm" variant="outline" onClick={applySuggested} disabled={!suggested}>
-                            Apply suggestion
-                        </Button>
-                    </div>
-                    <Button type="button" onClick={optimizeWithAi} disabled={optimizing} className="w-fit">
-                        {optimizing ? <Loader2 className="mr-2 animate-spin size-4" /> : null}
-                        Optimize with AI
-                    </Button>
-                    <Textarea
-                        value={suggested}
-                        readOnly
-                        rows={6}
-                        placeholder="Click “Optimize with AI” to generate an improved SEO/AEO description."
-                    />
-                </div>
-
-                <div className="space-y-2">
-                    <p className="text-sm font-medium">Editable draft (what will be saved)</p>
-                    <Textarea
-                        value={draft}
-                        onChange={(e) => setDraft(e.target.value)}
-                        rows={6}
-                        placeholder="Apply the AI suggestion, then edit before saving if needed."
-                    />
-                    <div className="flex flex-wrap gap-1.5">
-                        {topKeywords.slice(0, 8).map((k) => (
-                            <Badge key={k} variant="secondary" className="text-[11px]">
-                                {k}
-                            </Badge>
-                        ))}
-                    </div>
-                    <Button onClick={saveToGoogle} disabled={saving}>
-                        {saving ? <Loader2 className="mr-2 animate-spin size-4" /> : null}
-                        Save to Google
-                    </Button>
-                </div>
-            </CardContent>
+            <DescriptionOptimizerFields
+                currentDescription={currentDescription}
+                draft={draft}
+                suggested={suggested}
+                topKeywords={topKeywords}
+                optimizing={optimizing}
+                saving={saving}
+                onApplySuggested={applySuggested}
+                onDraftChange={setDraft}
+                onOptimizeWithAi={optimizeWithAi}
+                onSaveToGoogle={saveToGoogle}
+            />
         </Card>
     );
 }
-

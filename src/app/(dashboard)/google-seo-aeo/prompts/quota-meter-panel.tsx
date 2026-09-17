@@ -35,14 +35,12 @@ export function QuotaMeterPanel({ meter }: { meter: QuotaMeterResult }) {
                 <div className="flex items-start gap-2 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-xs text-warning-foreground">
                     <AlertTriangle className="size-4 shrink-0 mt-0.5" />
                     <span>
-                        Projected to exceed your plan&apos;s monthly allowance. The difference bills
-                        as metered overage once enabled.
+                        The full schedule exceeds your included allowance. Reduce active prompts or engines to fit your budget. This estimate is not a charge; paid overage requires an enabled billing policy.
                     </span>
                 </div>
             )}
             <p className="text-xs text-muted-foreground pt-1">
-                Based on the current weekly sampling cadence for every plan - the scheduler does not
-                yet run Professional daily.
+                Estimate assumes weekly sampling across the active prompts and available engines. Actual usage depends on successful runs and your configured budget.
             </p>
         </div>
     );

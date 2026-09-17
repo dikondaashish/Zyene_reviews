@@ -59,7 +59,7 @@ export function ZyenePlatformPrivateFeedbackCard({ privateFeedback }: { privateF
                                                         className={cn(
                                                             "size-3",
                                                             i < fb.rating
-                                                                ? "fill-chart-4 text-chart-4"
+                                                                ? "fill-chart-4 text-warning-foreground"
                                                                 : "text-muted-foreground/30"
                                                         )}
                                                     />

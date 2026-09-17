@@ -43,7 +43,7 @@ export function DemoRequestForm() {
 
     if (done) {
         return (
-            <p className="text-sm text-chart-2 text-center py-8">
+            <p className="text-sm text-success text-center py-8">
                 Thank you - our sales team will contact you within one business day.
             </p>
         );

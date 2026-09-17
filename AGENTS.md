@@ -225,6 +225,7 @@ Skills live in **`.agents/skills/<name>/SKILL.md`**. Invoke by name when the tas
 
 | Skill | When to use |
 |-------|-------------|
+| **apple-design** | UI/UX and accessibility reviews grounded in Apple HIG; for our web app, apply the design principles and foundations. Source: [dickwu/apple-design-skill](https://github.com/dickwu/apple-design-skill) |
 | **impeccable** | Shape, critique, audit, polish, harden, animate UI — 23 sub-commands (`craft`, `audit`, `critique`, etc.); run `impeccable teach` once if `PRODUCT.md` / `DESIGN.md` are missing |
 | **emil-design-eng** | UI polish, component design, animation choices — Emil Kowalski’s design-engineering philosophy ([emilkowal.ski](https://emilkowal.ski)) |
 | **design-taste-frontend** | Marketing landings, portfolios, UI redesigns — anti-slop layout, typography, motion (Taste Skill v2) |

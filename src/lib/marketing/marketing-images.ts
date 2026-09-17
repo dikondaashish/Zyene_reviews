@@ -1,24 +1,24 @@
 export const marketingImages = {
   home: {
     hero: {
-      src: "/marketing/home/hero-local-owner.png",
+      src: "/marketing/home/hero-local-owner.webp",
       alt: "Local business owner reading a customer review on their phone with Zyene Reviews",
       width: 800,
       height: 600,
     },
-    featureMonitor: { src: "/marketing/home/storefront.png", alt: "Modern local business storefront managed by Zyene Reviews", width: 600, height: 300 },
-    featureAutomation: { src: "/marketing/home/customer-avatar.png", alt: "Happy customer leaving a review via Zyene Reviews", width: 100, height: 100 },
+    featureMonitor: { src: "/marketing/home/storefront.webp", alt: "Modern local business storefront managed by Zyene Reviews", width: 600, height: 300 },
+    featureAutomation: { src: "/marketing/home/customer-avatar.webp", alt: "Happy customer leaving a review via Zyene Reviews", width: 100, height: 100 },
     heroReviewAlerts: {
       fiveStar: {
         name: "Emily Carter",
-        src: "/marketing/home/alert-emily-carter.png",
+        src: "/marketing/home/alert-emily-carter.webp",
         alt: "Emily Carter left a 5-star review",
         width: 64,
         height: 64,
       },
       oneStar: {
         name: "Robert Hayes",
-        src: "/marketing/home/alert-robert-hayes.png",
+        src: "/marketing/home/alert-robert-hayes.webp",
         alt: "Robert Hayes - 1-star review alert",
         width: 64,
         height: 64,
@@ -26,31 +26,31 @@ export const marketingImages = {
     },
     testimonials: {
       // Michael T., Owner, Riverfront Dining
-      one: { src: "/marketing/home/testimonial-1.png", width: 100, height: 100 },
+      one: { src: "/marketing/home/testimonial-1.webp", width: 100, height: 100 },
       // Sarah Jenkins, Director, Apex Dental Care
-      two: { src: "/marketing/home/testimonial-2.png", width: 100, height: 100 },
+      two: { src: "/marketing/home/testimonial-2.webp", width: 100, height: 100 },
       // David Chen, Manager, Chen Auto Repair
-      three: { src: "/marketing/home/testimonial-3.png", width: 100, height: 100 },
+      three: { src: "/marketing/home/testimonial-3.webp", width: 100, height: 100 },
     },
   },
   about: {
-    hero: { src: "/marketing/about/team-collaboration.png", alt: "Zyene Reviews team collaborating on reputation management software", width: 900, height: 400 }
+    hero: { src: "/marketing/about/team-collaboration.webp", alt: "Zyene Reviews team collaborating on reputation management software", width: 900, height: 400 }
   },
   birdeyeCompare: {
     reviewAlertPositive: {
-      src: "/marketing/home/alert-emily-carter.png",
+      src: "/marketing/home/alert-emily-carter.webp",
       alt: "Illustrative Zyene Reviews in-app alert for a new 5-star Google review",
       width: 320,
       height: 120,
     },
     reviewAlertNegative: {
-      src: "/marketing/home/alert-robert-hayes.png",
+      src: "/marketing/home/alert-robert-hayes.webp",
       alt: "Illustrative Zyene Reviews in-app alert flagging a 1-star review for follow-up",
       width: 320,
       height: 120,
     },
     localOwnerWorkflow: {
-      src: "/marketing/home/hero-local-owner.png",
+      src: "/marketing/home/hero-local-owner.webp",
       alt: "Local business owner checking review notifications on a phone with Zyene Reviews",
       width: 800,
       height: 600,

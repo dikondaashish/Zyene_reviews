@@ -67,7 +67,7 @@ export function InviteMemberDialogContent({
                         Role
                     </Label>
                     <Select value={role} onValueChange={onRoleChange}>
-                        <SelectTrigger className="sm:col-span-3">
+                        <SelectTrigger id="role" className="sm:col-span-3">
                             <SelectValue placeholder="Select a role" />
                         </SelectTrigger>
                         <SelectContent>

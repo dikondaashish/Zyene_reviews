@@ -16,9 +16,13 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = (await request.json().catch(() => null)) as
-        | { record?: { id?: string; scheduled_for?: string | null; status?: string | null } }
-        | null;
+    const body = (await request.json().catch(() => null)) as {
+        record?: {
+            id?: string;
+            scheduled_for?: string | null;
+            status?: string | null;
+        };
+    } | null;
 
     const id = body?.record?.id;
     const sendAt = body?.record?.scheduled_for;
@@ -29,10 +33,10 @@ export async function POST(request: Request) {
     }
 
     await inngest.send({
+        id: `review-request-scheduled:${id}`,
         name: "review-request/scheduled.send",
         data: { reviewRequestId: id, sendAt, trigger: "supabase-webhook" },
     });
 
     return NextResponse.json({ ok: true });
 }
-

@@ -29,10 +29,11 @@ export function AnalyticsPageClient({
     const seedInitial =
         range === initialPayload.range && platform === initialPayload.platform ? initialPayload : undefined;
 
-    const { data: queryData } = useAnalyticsFullRangeQuery(businessId, range as RangeKey, platform, seedInitial);
+    const { data: queryData, isFetching, isError, refetch } = useAnalyticsFullRangeQuery(businessId, range as RangeKey, platform, seedInitial);
 
     const d = queryData ?? initialPayload;
     const isDemo = d.isDemo;
+    const dataMatches = d.range === range && d.platform === platform;
     const isGoogleConnected = d.connectedPlatforms.includes("google");
 
     useAnalyticsPageUrlSync(range, platform);
@@ -58,20 +59,27 @@ export function AnalyticsPageClient({
                 platform={platform}
                 setPlatform={setPlatform}
                 setRange={setRange}
+                exportsDisabled={!dataMatches || isFetching || isError}
             />
 
             <MilestoneCelebration businessId={businessId} isDemo={isDemo} />
 
             {isDemo && <DemoModeBanner className="mb-2" />}
 
-            <div id="analytics-content" className="flex flex-col gap-8 w-full relative">
-                {platform === "zyene" ? (
+            {(isFetching || isError || !dataMatches) && (
+                <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm">
+                    <p>{isError ? "Could not update analytics." : "Updating analytics…"} Showing {d.rangeLabel} · {d.platform}.</p>
+                    {isError && <button type="button" onClick={() => void refetch()} className="min-h-10 rounded-lg px-3 font-semibold text-primary focus-visible:ring-2 focus-visible:ring-ring">Try again</button>}
+                </div>
+            )}
+            <div id="analytics-content" aria-busy={isFetching} className="flex flex-col gap-8 w-full relative">
+                {d.platform === "zyene" ? (
                     <AnalyticsPageZyeneBranch d={d} />
                 ) : (
                     <AnalyticsPageDefaultStack
                         d={d}
                         isDemo={isDemo}
-                        platform={platform}
+                        platform={d.platform}
                         isGoogleConnected={isGoogleConnected}
                         perfTotals={perfTotals}
                     />

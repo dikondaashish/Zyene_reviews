@@ -4,13 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PlaceSearchInput, type PlaceSuggestion } from "@/components/marketing/free-tools/place-search-input";
+import { CopyResultButton } from "@/components/marketing/free-tools/copy-result-button";
 import { Loader2 } from "lucide-react";
 
 export function ReviewLinkGeneratorClient() {
     const [place, setPlace] = useState<PlaceSuggestion | null>(null);
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<{ reviewLink: string; businessName: string } | null>(null);
+    const [result, setResult] = useState<{ reviewLink: string; businessName: string; emailSent: boolean } | null>(null);
     const [error, setError] = useState("");
 
     async function submit(e: React.FormEvent) {
@@ -32,7 +33,8 @@ export function ReviewLinkGeneratorClient() {
                 setError(json.error ?? "Something went wrong");
                 return;
             }
-            setResult({ reviewLink: json.reviewLink, businessName: json.businessName });
+            setResult({ reviewLink: json.reviewLink, businessName: json.businessName, emailSent: json.emailSent });
+            if (json.emailWarning) setError(json.emailWarning);
         } catch {
             setError("Network error");
         } finally {
@@ -47,7 +49,7 @@ export function ReviewLinkGeneratorClient() {
                     <Link href="/tools" className="text-sm text-primary hover:underline">← All free tools</Link>
                     <h1 className="text-3xl md:text-4xl font-bold mt-4 mb-3">Google Review Link Generator</h1>
                     <p className="text-muted-foreground">
-                        Find your business and we&apos;ll email you a direct &quot;Write a review&quot; link for Google Maps.
+                        Find your business and get a direct Google review link immediately. Email is optional.
                     </p>
                 </div>
             </section>
@@ -59,7 +61,7 @@ export function ReviewLinkGeneratorClient() {
                         feedback. They can tap once instead of searching for your business on Maps.
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
-                        Use this free generator to find your listing and receive the link by email. For automated SMS
+                        Use this free generator to find your listing and copy its review link. For automated SMS
                         and email campaigns after every visit, see Zyene Reviews review collection tools.
                     </p>
                 </div>
@@ -72,10 +74,11 @@ export function ReviewLinkGeneratorClient() {
                             <PlaceSearchInput onSelect={setPlace} />
                         </div>
                         <div>
-                            <label className="text-sm font-medium mb-2 block">Email to receive the link</label>
+                            <label className="text-sm font-medium mb-2 block">Email me a copy (optional)</label>
                             <input
                                 type="email"
-                                required
+                                aria-label="Email address"
+                                autoComplete="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full h-11 rounded-lg border border-border px-4 text-sm"
@@ -86,11 +89,12 @@ export function ReviewLinkGeneratorClient() {
                         {result && (
                             <div className="rounded-lg bg-primary/5 border border-primary/20 p-4 text-sm">
                                 <p className="font-medium text-foreground mb-2">
-                                    Link for {result.businessName} (also sent to your email):
+                                    Link for {result.businessName}{result.emailSent ? " (email accepted for delivery)" : ""}:
                                 </p>
-                                <a href={result.reviewLink} className="text-primary break-all underline" target="_blank" rel="noreferrer">
+                                <a href={result.reviewLink} className="text-primary break-all underline" target="_blank" rel="noopener noreferrer">
                                     {result.reviewLink}
                                 </a>
+                                <CopyResultButton text={result.reviewLink} />
                             </div>
                         )}
                         <Button type="submit" disabled={loading} className="w-full">

@@ -79,7 +79,7 @@ export function BillingPlanChangeDialog(props: {
                             {confirmPlanChange &&
                                 planStatus === "trialing" &&
                                 isPaidPlanTierUpgrade(currentPlan?.id, confirmPlanChange.plan.id) && (
-                                    <p className="text-chart-4 dark:text-chart-4 font-medium">{b.trial_ends_on_upgrade_notice}</p>
+                                    <p className="text-warning-foreground dark:text-warning-foreground font-medium">{b.trial_ends_on_upgrade_notice}</p>
                                 )}
                         </div>
                     </AlertDialogDescription>

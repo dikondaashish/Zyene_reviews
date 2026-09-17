@@ -9,7 +9,7 @@ import { platformLabel } from "@/components/customers/customer-detail-helpers";
 export function CustomerDetailTimelinePlatformReviewItem({ item }: { item: TimelinePlatformReviewItem }) {
     return (
         <div className="flex gap-4">
-            <div className="mt-0.5 flex shrink-0 items-center justify-center rounded-xl bg-chart-2/15 text-chart-2 shadow-inner size-11">
+            <div className="mt-0.5 flex shrink-0 items-center justify-center rounded-xl bg-chart-2/15 text-success shadow-inner size-11">
                 <Star className="size-5" />
             </div>
             <div className="min-w-0 flex-1 space-y-2">
@@ -21,7 +21,7 @@ export function CustomerDetailTimelinePlatformReviewItem({ item }: { item: Timel
                                 key={i}
                                 className={cn(
                                     "size-4",
-                                    i < item.rating ? "fill-chart-2 text-chart-2" : "text-muted-foreground/25"
+                                    i < item.rating ? "fill-chart-2 text-success" : "text-muted-foreground/25"
                                 )}
                             />
                         ))}

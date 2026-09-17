@@ -1,3 +1,4 @@
+import { reviewSearchFilter } from "@/lib/reviews/search-filter";
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import type { ReviewManagementItem } from "@/types/components";
@@ -51,7 +52,9 @@ export async function loadReviewsPageList(
         .eq("business_id", businessId)
         .eq("is_visible", true);
 
-    const statusRaw = searchParams.status || "all";
+    const searchFilter = reviewSearchFilter(searchParams.q);
+    if (searchFilter) query = query.or(searchFilter);
+    const statusRaw = searchParams.status || "needs_response";
     const statusMap: Record<string, string> = {
         needs_response: "pending",
         responded: "responded",
@@ -63,7 +66,7 @@ export async function loadReviewsPageList(
     }
 
     const rating = searchParams.rating;
-    if (rating && rating !== "all") {
+    if (rating && /^[1-5]$/.test(rating)) {
         query = query.eq("rating", parseInt(rating));
     }
 

@@ -1,8 +1,6 @@
 /** Paths blocked on the public marketing host (www). Allow everything else via `Allow: /`. */
 export const MARKETING_ROBOTS_DISALLOW = [
     "/api/",
-    "/_next/",
-    "/favicon_io/",
     "/growth",
     "/growth/",
     "/onboarding",

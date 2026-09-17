@@ -43,7 +43,7 @@ export default async function NotificationSettingsPage() {
     : {
         user_id: user.id,
         email_enabled: true,
-        sms_enabled: true,
+        sms_enabled: Boolean(profilePhone),
         digest_enabled: true,
         email_frequency: "instant",
         min_rating_threshold: 1,
@@ -60,7 +60,7 @@ export default async function NotificationSettingsPage() {
       <div>
         <h3 className="text-lg font-medium">Notification Settings</h3>
         <p className="text-sm text-muted-foreground">
-          Configure how and when you want to be alerted about new reviews.
+          Configure how and when you want to be alerted about new reviews. Quiet hours use the business timezone: {typeof activeContext.business?.timezone === "string" ? activeContext.business.timezone : "UTC"}. Change it in Business Information.
         </p>
         <p className="text-xs text-muted-foreground mt-2 max-w-lg">
           If you signed up with Google, add your mobile number below (and turn on SMS alerts) to receive urgent review

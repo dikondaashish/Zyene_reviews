@@ -1,5 +1,9 @@
 export const PRICING_FAQS = [
     {
+        question: "Are automatic Google replies included?",
+        answer: "Yes. Starter, Professional, and Enterprise include unlimited business reply suggestions and automatic Google replies while your subscription or trial is active. Choose Professional, Friendly, or Concise and a minimum star rating for each business. Automatic mode publishes eligible new Google replies without individual approval; existing reviews are excluded. AI customer review drafts have a separate plan allowance.",
+    },
+    {
         question: "How does the 7-day free trial work?",
         answer:
             "Sign up for Starter or Professional and get full access to every feature for 7 days. Cancel before the trial ends and you won't be charged. No credit card lock-in, no annual contracts - cancel anytime from your billing settings.",
@@ -46,7 +50,7 @@ export const COMPARISON_ROWS = [
     { feature: "Annual contract required", zyene: false, birdeye: true, podium: true, nicejob: false },
     { feature: "7-day free trial", zyene: true, birdeye: false, podium: false, nicejob: true },
     { feature: "AI reply suggestions", zyene: true, birdeye: "Add-on", podium: "Add-on", nicejob: false },
-    { feature: "Auto-commenter (hands-free)", zyene: true, birdeye: false, podium: false, nicejob: false },
+    { feature: "Automatic Google replies", zyene: "Included", birdeye: "Available; confirm plan", podium: "Confirm plan and scope", nicejob: "Pro plan" },
     { feature: "Negative Feedback Shield", zyene: true, birdeye: false, podium: false, nicejob: true },
     { feature: "SMS review requests", zyene: true, birdeye: true, podium: true, nicejob: true },
     { feature: "Competitor tracking", zyene: true, birdeye: "Premium tiers", podium: false, nicejob: false },

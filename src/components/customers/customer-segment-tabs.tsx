@@ -21,8 +21,8 @@ export type SegmentCounts = {
 
 const TABS: { id: SmartSegmentTab; label: string }[] = [
     { id: "all", label: "All" },
-    { id: "never_reviewed", label: "Never Reviewed" },
-    { id: "already_reviewed", label: "Already Reviewed" },
+    { id: "never_reviewed", label: "Not completed" },
+    { id: "already_reviewed", label: "Completed request" },
     { id: "recent", label: "Recent" },
     { id: "no_contact", label: "No Contact Info" },
     { id: "opted_out", label: "Opted Out" },

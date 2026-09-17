@@ -31,7 +31,7 @@ export async function handleCustomersStats(request: NextRequest) {
 
         const { data: customers, error: custErr } = await supabase
             .from("customers")
-            .select("id, email, phone, total_requests_sent, created_at, last_request_sent_at, is_opted_out")
+            .select("id, email, phone, total_requests_sent, created_at, last_request_sent_at, is_opted_out, tags")
             .eq("business_id", businessId);
 
         if (custErr) throw custErr;

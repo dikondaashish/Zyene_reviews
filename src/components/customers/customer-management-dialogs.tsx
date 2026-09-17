@@ -47,6 +47,7 @@ export function CustomerManagementDialogs({
                 businessId={businessId}
             />
             <CSVImportModal
+                businessId={businessId}
                 open={isImportModalOpen}
                 onOpenChange={onImportModalOpenChange}
                 onSuccess={onImportSuccess}

@@ -13,4 +13,4 @@ export const AUTO_REPLY_TONES: { id: AutoReplyTone; label: string }[] = [
 ];
 
 export const AUTO_COMMENTER_HELP =
-    "Only reviews that show up after you turn this on: if there is no reply yet and the stars meet your minimum, we draft a reply in your tone and post it on Google. Plan limits still apply.";
+    "Only reviews that show up after you turn this on: if there is no reply yet and the stars meet your minimum, we draft a reply in your tone and post it on Google. An active paid subscription or trial is required.";

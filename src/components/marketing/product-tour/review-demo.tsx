@@ -5,6 +5,7 @@ import { Search, Star, CheckCheck } from "lucide-react";
 import { DEMO_REVIEWS } from "@/lib/marketing/product-demo-data";
 import { DemoReplyComposer } from "@/components/marketing/product-tour/reply-composer";
 import { createReviewDemoState, reviewDemoReducer } from "@/lib/marketing/product-demo";
+import { AutomaticReplyDemo } from "@/components/marketing/product-tour/automatic-reply-demo";
 
 export function ReviewDemo() {
   const [state, dispatch] = useReducer(reviewDemoReducer, undefined, createReviewDemoState);
@@ -21,6 +22,7 @@ export function ReviewDemo() {
         <div><span className="tour-overline">YOUR REPUTATION, IN ONE PLACE</span><h3>Review inbox</h3></div>
         <span className="tour-status"><span />{pending} awaiting a reply</span>
       </div>
+      <AutomaticReplyDemo />
       <div className="tour-inbox">
         <aside className="tour-review-list" aria-label="Sample review inbox">
           <label className="tour-search"><Search size={16} aria-hidden="true" /><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search reviews" aria-label="Search sample reviews" /></label>
@@ -46,10 +48,10 @@ export function ReviewDemo() {
             <div><strong>{selected.name}</strong><p className="tour-detail-meta"><span className="tour-platform-name">{selected.platform}</span> · {selected.time}</p></div>
             <span className="tour-sample-badge">Sample review</span>
           </div>
-          <div className="tour-stars" aria-label={`${selected.rating} out of 5 stars`}>{[1, 2, 3, 4, 5].map(star => <Star key={star} size={16} fill={star <= selected.rating ? "currentColor" : "none"} aria-hidden="true" />)}</div>
+          <div className="tour-stars" role="img" aria-label={`${selected.rating} out of 5 stars`}>{[1, 2, 3, 4, 5].map(star => <Star key={star} size={16} fill={star <= selected.rating ? "currentColor" : "none"} aria-hidden="true" />)}</div>
           <p className="tour-review-content">{selected.content}</p>
           {draft.published && <div className="tour-published-reply"><strong><CheckCheck size={16} aria-hidden="true" />Your reply · demo only</strong><p>{draft.published}</p></div>}
-          <DemoReplyComposer key={selected.id} draft={draft} dispatch={dispatch} />
+          <DemoReplyComposer key={selected.id} draft={draft} replies={selected.replies} dispatch={dispatch} />
         </div>
       </div>
     </div>

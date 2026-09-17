@@ -1,0 +1,496 @@
+{
+  "features": [
+    {
+      "path": "/features/review-monitoring",
+      "title": "Review Monitoring & Inbox"
+    },
+    {
+      "path": "/features/ai-replies",
+      "title": "AI-Powered Review Replies"
+    },
+    {
+      "path": "/features/review-collection",
+      "title": "Review Collection & Negative Feedback Shield"
+    },
+    {
+      "path": "/features/competitor-tracking",
+      "title": "Competitor Intelligence"
+    },
+    {
+      "path": "/features/local-seo",
+      "title": "Local SEO Dashboard"
+    },
+    {
+      "path": "/features/analytics",
+      "title": "Analytics & Reporting"
+    }
+  ],
+  "featureAliases": {
+    "competitor-intelligence": "competitor-tracking",
+    "feedback-shield": "review-collection"
+  },
+  "industries": [
+    {
+      "path": "/industries/restaurants",
+      "title": "Restaurants"
+    },
+    {
+      "path": "/industries/dental",
+      "title": "Dental Practices"
+    },
+    {
+      "path": "/industries/auto-repair",
+      "title": "Auto Repair Shops"
+    },
+    {
+      "path": "/industries/salons",
+      "title": "Salons & Spas"
+    },
+    {
+      "path": "/industries/home-services",
+      "title": "Home Services"
+    },
+    {
+      "path": "/industries/medical",
+      "title": "Medical & Healthcare"
+    },
+    {
+      "path": "/industries/hotels",
+      "title": "Hotels & Hospitality"
+    },
+    {
+      "path": "/industries/fitness",
+      "title": "Fitness & Gyms"
+    }
+  ],
+  "blog": [
+    {
+      "path": "/blog/how-to-get-50-google-reviews-in-30-days",
+      "title": "How to Get 50 Google Reviews in 30 Days",
+      "image": {
+        "src": "/images/blog/covers/google-review-request-playbook.webp",
+        "alt": "Local cafe owner sending a customer review request from a smartphone after a busy shift",
+        "width": 1672,
+        "height": 941,
+        "caption": "A timely, personal review request fits naturally into a local business follow-up routine."
+      }
+    },
+    {
+      "path": "/blog/why-google-reviews-matter-in-2026",
+      "title": "Why Google Reviews Matter More Than Ever in 2026",
+      "image": {
+        "src": "/images/blog/covers/why-google-reviews-matter.webp",
+        "alt": "Customer reading local business reviews on a smartphone outside a neighborhood bakery",
+        "width": 1672,
+        "height": 941,
+        "caption": "Customers often check recent reviews before deciding which local business to visit."
+      }
+    },
+    {
+      "path": "/blog/birdeye-pricing-breakdown-2026",
+      "title": "Birdeye Pricing vs Zyene Reviews (2026): Honest Comparison for Local Businesses",
+      "image": {
+        "src": "/images/blog/covers/review-software-pricing-comparison.webp",
+        "alt": "Small business owner comparing review management software costs at a worktable",
+        "width": 1672,
+        "height": 941,
+        "caption": "A practical software comparison starts with locations, limits, and the work your team actually needs."
+      }
+    },
+    {
+      "path": "/blog/birdeye-alternatives-for-local-businesses",
+      "title": "5 Cheaper Birdeye Alternatives for Local Businesses (2026)",
+      "image": {
+        "src": "/images/blog/covers/birdeye-alternatives-cost-comparison.webp",
+        "alt": "Local business manager evaluating an affordable reputation management setup on a laptop",
+        "width": 1672,
+        "height": 941,
+        "caption": "Local teams can compare reputation tools by fit and total cost, not headline features alone."
+      }
+    },
+    {
+      "path": "/blog/how-to-respond-to-a-1-star-review",
+      "title": "How to Respond to a 1-Star Review (With 5 Real Templates)",
+      "image": {
+        "src": "/images/blog/covers/responding-to-one-star-review.webp",
+        "alt": "Restaurant owner thoughtfully drafting a calm response to a one-star review on a laptop",
+        "width": 1672,
+        "height": 941,
+        "caption": "A calm, specific response gives a business a chance to show how it handles a difficult experience."
+      }
+    },
+    {
+      "path": "/blog/ai-reply-mistakes-to-avoid",
+      "title": "5 AI Reply Mistakes to Avoid When Responding to Reviews",
+      "image": {
+        "src": "/images/blog/covers/ai-review-reply-oversight.webp",
+        "alt": "Retail business owner reviewing an AI-drafted customer reply before publishing it",
+        "width": 1672,
+        "height": 941,
+        "caption": "AI can speed up drafting, but a person should check every reply for accuracy and tone."
+      }
+    },
+    {
+      "path": "/blog/google-business-profile-optimization-checklist",
+      "title": "Google Business Profile Optimization Checklist for 2026",
+      "image": {
+        "src": "/images/blog/covers/google-business-profile-audit.webp",
+        "alt": "Bakery owner cross-checking Google Business Profile details against a printed checklist",
+        "width": 1672,
+        "height": 941,
+        "caption": "Accurate hours, services, and contact details make a local listing easier for customers to trust."
+      }
+    },
+    {
+      "path": "/blog/how-reviews-impact-local-map-pack-ranking",
+      "title": "How Reviews Impact Your Google Local Map Pack Ranking",
+      "image": {
+        "src": "/images/blog/covers/local-map-pack-visibility.webp",
+        "alt": "Local business owner checking map visibility on a smartphone outside a neighborhood storefront",
+        "width": 1672,
+        "height": 941,
+        "caption": "Local search visibility is best evaluated alongside relevance, distance, prominence, and customer experience."
+      }
+    },
+    {
+      "path": "/blog/restaurant-owners-guide-to-google-reviews",
+      "title": "Restaurant Owner's Guide to Google Reviews (2026 Edition)",
+      "image": {
+        "src": "/images/blog/covers/restaurant-review-management.webp",
+        "alt": "Restaurant owner managing customer feedback during a busy dinner service",
+        "width": 1672,
+        "height": 941,
+        "caption": "Restaurants can make review follow-up part of the same rhythm as service recovery and guest care."
+      }
+    },
+    {
+      "path": "/blog/dental-practice-reputation-management-2026",
+      "title": "Dental Practice Reputation Management: The 2026 Guide",
+      "image": {
+        "src": "/images/blog/covers/dental-practice-reputation.webp",
+        "alt": "Dental practice manager reviewing patient feedback and reputation notes in a clinic reception area",
+        "width": 1672,
+        "height": 941,
+        "caption": "Healthcare reputation work should pair attentive feedback handling with careful privacy practices."
+      }
+    },
+    {
+      "path": "/blog/true-cost-of-bad-online-reputation",
+      "title": "The True Cost of a Bad Online Reputation for Local Businesses",
+      "image": {
+        "src": "/images/blog/covers/online-reputation-business-impact.webp",
+        "alt": "Local restaurant owner reflecting on customer feedback in a quiet dining room before opening",
+        "width": 1672,
+        "height": 941,
+        "caption": "Online reputation can shape the trust and foot traffic a local business works to earn every day."
+      }
+    },
+    {
+      "path": "/blog/how-to-handle-fake-google-reviews",
+      "title": "How to Handle Fake Google Reviews: A Step-by-Step Guide",
+      "image": {
+        "src": "/images/blog/covers/fake-review-evidence.webp",
+        "alt": "Business manager organizing receipts and notes to document a suspicious online review",
+        "width": 1672,
+        "height": 941,
+        "caption": "Documenting dates, customer records, and other context helps a business make a factual platform report."
+      }
+    },
+    {
+      "path": "/blog/negative-feedback-shield",
+      "title": "Negative Feedback Shield: How It Works for Local Businesses",
+      "image": {
+        "src": "/images/blog/covers/private-feedback-service-recovery.webp",
+        "alt": "Local business owner listening to a customer during a private service recovery conversation",
+        "width": 1672,
+        "height": 941,
+        "caption": "Private feedback gives a team a focused place to listen, respond, and work toward service recovery."
+      }
+    },
+    {
+      "path": "/blog/ai-visibility-audit-local-businesses",
+      "title": "AI Visibility Audit for Local Businesses: What to Check in 2026",
+      "image": {
+        "src": "/images/blog/covers/ai-visibility-audit.webp",
+        "alt": "Local entrepreneur comparing AI search answers and taking notes for a visibility audit",
+        "width": 1672,
+        "height": 941,
+        "caption": "An AI visibility audit checks whether assistants can find and describe a local business accurately."
+      }
+    },
+    {
+      "path": "/blog/how-to-respond-to-a-positive-review",
+      "title": "How to Respond to Positive Google Reviews (15 Examples)",
+      "image": {
+        "src": "/images/blog/covers/positive-google-review-response.webp",
+        "alt": "Local business owner writing a thankful response to a positive customer review on a smartphone",
+        "width": 1672,
+        "height": 941,
+        "caption": "A specific thank-you helps turn a positive review into a genuine customer relationship moment."
+      }
+    },
+    {
+      "path": "/blog/how-to-get-a-google-review-link",
+      "title": "How to Get a Google Review Link for Your Business (2026)",
+      "image": {
+        "src": "/images/blog/google_review_link.jpg",
+        "alt": "Smartphone displaying a direct Google review rating pop-up with five stars ready for customer feedback",
+        "width": 800,
+        "height": 600,
+        "caption": "Direct Google review links open the review window immediately, eliminating customer friction."
+      }
+    },
+    {
+      "path": "/blog/can-you-delete-a-google-review",
+      "title": "Can You Delete or Remove a Google Review? (What Actually Works)",
+      "image": {
+        "src": "/images/blog/covers/delete-google-review-hero.webp",
+        "alt": "Small business owner reviewing customer feedback on a laptop at a cafe counter",
+        "width": 1672,
+        "height": 941,
+        "caption": "Understanding Google's review policies is the first step toward protecting your business reputation."
+      }
+    }
+  ],
+  "resources": [
+    {
+      "path": "/resources/google-reviews-guide",
+      "title": "The Complete Guide to Google Reviews"
+    },
+    {
+      "path": "/resources/negative-review-templates",
+      "title": "Negative Review Response Templates (20+ Ready-to-Use)"
+    },
+    {
+      "path": "/resources/local-seo-checklist",
+      "title": "Local SEO Checklist for 2026 (40+ Action Items)"
+    },
+    {
+      "path": "/resources/review-request-templates",
+      "title": "20 Review Request Templates for Local Businesses"
+    }
+  ],
+  "helpCategories": [
+    {
+      "path": "/help/getting-started"
+    },
+    {
+      "path": "/help/reviews"
+    },
+    {
+      "path": "/help/campaigns"
+    },
+    {
+      "path": "/help/analytics"
+    },
+    {
+      "path": "/help/billing"
+    },
+    {
+      "path": "/help/integrations"
+    }
+  ],
+  "helpArticles": [
+    {
+      "path": "/help/getting-started/creating-your-account",
+      "title": "Creating Your Account",
+      "legacyPath": "/help/creating-your-account"
+    },
+    {
+      "path": "/help/getting-started/connecting-google-business-profile",
+      "title": "Connecting Your Google Business Profile",
+      "legacyPath": "/help/connecting-google-business-profile"
+    },
+    {
+      "path": "/help/getting-started/sending-your-first-review-request",
+      "title": "Sending Your First Review Request",
+      "legacyPath": "/help/sending-your-first-review-request"
+    },
+    {
+      "path": "/help/getting-started/understanding-your-dashboard",
+      "title": "Understanding Your Dashboard",
+      "legacyPath": "/help/understanding-your-dashboard"
+    },
+    {
+      "path": "/help/reviews/reading-your-review-inbox",
+      "title": "Reading and Managing Your Review Inbox",
+      "legacyPath": "/help/reading-your-review-inbox"
+    },
+    {
+      "path": "/help/reviews/using-ai-replies",
+      "title": "Using AI Reply Suggestions",
+      "legacyPath": "/help/using-ai-replies"
+    },
+    {
+      "path": "/help/reviews/setting-up-auto-commenter",
+      "title": "Setting Up Automatic Google Replies",
+      "legacyPath": "/help/setting-up-auto-commenter"
+    },
+    {
+      "path": "/help/reviews/exporting-reviews",
+      "title": "Exporting Your Reviews",
+      "legacyPath": "/help/exporting-reviews"
+    },
+    {
+      "path": "/help/campaigns/creating-a-review-request-campaign",
+      "title": "Creating a Review Request Campaign",
+      "legacyPath": "/help/creating-a-review-request-campaign"
+    },
+    {
+      "path": "/help/campaigns/sms-vs-email-campaigns",
+      "title": "SMS vs. Email Campaigns: Which Should You Use?",
+      "legacyPath": "/help/sms-vs-email-campaigns"
+    },
+    {
+      "path": "/help/campaigns/campaign-templates",
+      "title": "Campaign Message Templates",
+      "legacyPath": "/help/campaign-templates"
+    },
+    {
+      "path": "/help/campaigns/follow-up-messages",
+      "title": "Setting Up Follow-Up Messages",
+      "legacyPath": "/help/follow-up-messages"
+    },
+    {
+      "path": "/help/analytics/understanding-your-analytics-dashboard",
+      "title": "Understanding Your Analytics Dashboard",
+      "legacyPath": "/help/understanding-your-analytics-dashboard"
+    },
+    {
+      "path": "/help/analytics/reading-the-engagement-funnel",
+      "title": "Reading the Review Request Engagement Funnel",
+      "legacyPath": "/help/reading-the-engagement-funnel"
+    },
+    {
+      "path": "/help/analytics/generating-pdf-reports",
+      "title": "Exporting Analytics Reports",
+      "legacyPath": "/help/generating-pdf-reports"
+    },
+    {
+      "path": "/help/billing/plans-and-pricing",
+      "title": "Plans and Pricing",
+      "legacyPath": "/help/plans-and-pricing"
+    },
+    {
+      "path": "/help/billing/upgrading-your-plan",
+      "title": "Upgrading or Changing Your Plan",
+      "legacyPath": "/help/upgrading-your-plan"
+    },
+    {
+      "path": "/help/billing/understanding-usage-limits",
+      "title": "Understanding Usage Limits",
+      "legacyPath": "/help/understanding-usage-limits"
+    },
+    {
+      "path": "/help/billing/canceling-your-subscription",
+      "title": "Canceling Your Subscription",
+      "legacyPath": "/help/canceling-your-subscription"
+    },
+    {
+      "path": "/help/integrations/connecting-google",
+      "title": "Connecting Your Google Account",
+      "legacyPath": "/help/connecting-google"
+    },
+    {
+      "path": "/help/integrations/setting-up-zapier",
+      "title": "Setting Up the Zapier Integration",
+      "legacyPath": "/help/setting-up-zapier"
+    },
+    {
+      "path": "/help/integrations/using-the-api",
+      "title": "Using the Zyene REST API",
+      "legacyPath": "/help/using-the-api"
+    },
+    {
+      "path": "/help/integrations/embedding-review-widgets",
+      "title": "Embedding Review Widgets on Your Website",
+      "legacyPath": "/help/embedding-review-widgets"
+    }
+  ],
+  "comparisons": [
+    {
+      "path": "/compare/birdeye",
+      "title": "Birdeye"
+    },
+    {
+      "path": "/compare/podium",
+      "title": "Podium"
+    },
+    {
+      "path": "/compare/nicejob",
+      "title": "NiceJob"
+    },
+    {
+      "path": "/compare/gatherup",
+      "title": "GatherUp"
+    },
+    {
+      "path": "/compare/prosperly",
+      "title": "Prosperly"
+    }
+  ],
+  "caseStudies": [
+    {
+      "path": "/case-studies/sunrise-dental-austin",
+      "title": "Follow up after an appointment"
+    },
+    {
+      "path": "/case-studies/wolfpack-bbq-charlotte",
+      "title": "Build a post-visit review routine"
+    },
+    {
+      "path": "/case-studies/apex-hvac-denver",
+      "title": "Ask for feedback after the job"
+    },
+    {
+      "path": "/case-studies/bellas-salon-portland",
+      "title": "Follow up after each appointment"
+    },
+    {
+      "path": "/case-studies/precision-auto-works-phoenix",
+      "title": "Close the loop after vehicle pickup"
+    }
+  ],
+  "spanish": [
+    {
+      "path": "/es/industries/restaurantes",
+      "englishPath": "/industries/restaurants",
+      "title": "Restaurantes"
+    },
+    {
+      "path": "/es/industries/dental",
+      "englishPath": "/industries/dental",
+      "title": "Clínicas dentales"
+    },
+    {
+      "path": "/es/industries/servicios-hogar",
+      "englishPath": "/industries/home-services",
+      "title": "Servicios del hogar"
+    },
+    {
+      "path": "/es/industries/salones",
+      "englishPath": "/industries/salons",
+      "title": "Salones y spas"
+    },
+    {
+      "path": "/es/industries/reparacion-automotriz",
+      "englishPath": "/industries/auto-repair",
+      "title": "Talleres mecánicos"
+    },
+    {
+      "path": "/es/industries/medicos",
+      "englishPath": "/industries/medical",
+      "title": "Consultorios médicos"
+    },
+    {
+      "path": "/es/industries/hoteles",
+      "englishPath": "/industries/hotels",
+      "title": "Hoteles y hospedaje"
+    },
+    {
+      "path": "/es/industries/gimnasios",
+      "englishPath": "/industries/fitness",
+      "title": "Gimnasios y fitness"
+    }
+  ]
+}

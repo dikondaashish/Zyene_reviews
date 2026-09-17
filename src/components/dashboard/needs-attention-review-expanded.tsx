@@ -68,7 +68,7 @@ export function NeedsAttentionReviewExpanded({
                     {isSent ? (
                         <Badge
                             variant="secondary"
-                            className="border-chart-2/30 bg-chart-2/15 text-chart-2 dark:bg-chart-2/20"
+                            className="border-chart-2/30 bg-chart-2/15 text-success dark:bg-chart-2/20"
                         >
                             <Check className="mr-1 size-3" aria-hidden />
                             {copy.sentToGoogle}

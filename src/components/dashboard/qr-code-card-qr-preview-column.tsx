@@ -70,7 +70,7 @@ export function QrCodeCardQrPreviewColumn({
                                 {domain}/{businessSlug}
                             </span>
                             {copied ? (
-                                <Check className="ml-1.5 text-chart-2 size-3.5" />
+                                <Check className="ml-1.5 text-success size-3.5" />
                             ) : (
                                 <Copy className="ml-1.5 size-3.5" />
                             )}

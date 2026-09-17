@@ -28,7 +28,7 @@ export default async function AeoPromptsPage() {
         <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
             <GoogleSeoAeoSubnav active="/google-seo-aeo/prompts" />
             <div>
-                <h2 className="text-3xl font-bold tracking-tight">Prompt library</h2>
+                <h1 className="text-3xl font-bold tracking-tight">Prompt library</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
                     The questions we ask answer engines on behalf of {data.businessName}.
                 </p>
@@ -39,8 +39,7 @@ export default async function AeoPromptsPage() {
                     <AlertDescription>
                         <strong>{data.activeCount} active prompt{data.activeCount === 1 ? "" : "s"},
                         but sampling is switched off.</strong>{" "}
-                        Nothing will run until <code>AEO_LIVE_SAMPLING</code> is enabled for this
-                        deployment, so no data will appear and nothing is being charged.
+                        New samples are currently unavailable. Your prompts are saved; contact support for availability. No sampling charges are incurred while this is off.
                     </AlertDescription>
                 </Alert>
             ) : null}

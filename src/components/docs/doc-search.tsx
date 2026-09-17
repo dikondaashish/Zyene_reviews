@@ -49,13 +49,14 @@ export function DocSearchTrigger({
                 type="button"
                 className={className}
                 onClick={() => setOpen(true)}
+                aria-label="Search documentation"
                 aria-haspopup="dialog"
                 aria-expanded={open}
             >
                 {children}
             </button>
 
-            <CommandDialog
+            {open && <CommandDialog
                 open={open}
                 onOpenChange={setOpen}
                 title="Search documentation"
@@ -82,7 +83,7 @@ export function DocSearchTrigger({
                         </CommandGroup>
                     ))}
                 </CommandList>
-            </CommandDialog>
+            </CommandDialog>}
         </>
     );
 }

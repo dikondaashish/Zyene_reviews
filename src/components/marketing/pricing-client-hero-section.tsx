@@ -12,7 +12,7 @@ export function PricingClientHeroSection({
 }) {
   return (
     <section className="pb-12 pt-12 md:pt-20">
-      <div className={styles.intro}>
+      <div className="interior-pricing-intro" data-hero-media="none">
         <div className={styles.introCopy}>
           <p className="marketing-eyebrow">Simple plans. Plenty of room to grow.</p>
           <h1 className="mb-5 max-w-2xl text-4xl md:text-6xl">
@@ -21,8 +21,8 @@ export function PricingClientHeroSection({
             At a sensible price.
           </h1>
           <p className="text-lg text-muted-foreground">Try any paid plan free for 7 days. Cancel anytime.</p>
+          <div className="mt-7"><BillingToggle interval={interval} onChange={onIntervalChange} /></div>
         </div>
-        <BillingToggle interval={interval} onChange={onIntervalChange} />
       </div>
     </section>
   );

@@ -1,3 +1,4 @@
+import { readableForeground } from "@/lib/design/contrast";
 export interface RatingStepBusinessHeaderProps {
     businessName: string;
     logoUrl?: string;
@@ -23,7 +24,7 @@ export function RatingStepBusinessHeader({
             ) : (
                 <div
                     className="rounded-2xl flex items-center justify-center shadow-lg text-primary-foreground size-20"
-                    style={{ backgroundColor: resolvedBrandColor }}
+                    style={{ backgroundColor: resolvedBrandColor, color: readableForeground(resolvedBrandColor) }}
                 >
                     <span className="text-2xl font-bold">{initials}</span>
                 </div>

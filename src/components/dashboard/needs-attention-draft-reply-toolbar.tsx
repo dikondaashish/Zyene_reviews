@@ -36,7 +36,7 @@ export function NeedsAttentionDraftReplyToolbar({
 }) {
     if (isSent) {
         return (
-            <p className="flex items-center gap-1 text-sm font-medium text-chart-2">
+            <p className="flex items-center gap-1 text-sm font-medium text-success">
                 <Check className="size-4" aria-hidden />
                 {copy.sent}
             </p>

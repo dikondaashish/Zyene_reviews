@@ -23,7 +23,7 @@ export default async function AeoAlertsPage() {
         <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
             <GoogleSeoAeoSubnav active="/google-seo-aeo/alerts" />
             <div>
-                <h2 className="text-3xl font-bold tracking-tight">Alerts</h2>
+                <h1 className="text-3xl font-bold tracking-tight">Alerts</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
                     Only shown when a change clears a statistical significance bar - not every sampling wobble.
                 </p>
@@ -33,8 +33,7 @@ export default async function AeoAlertsPage() {
                 <Alert>
                     <AlertTitle>Alerting is switched off</AlertTitle>
                     <AlertDescription>
-                        Nothing new will appear here until <code>AEO_LIVE_ALERTING</code> is enabled for
-                        this deployment.
+                        Monitoring is currently off. Historical alerts may appear below; an empty list does not mean monitoring found no issues.
                     </AlertDescription>
                 </Alert>
             )}

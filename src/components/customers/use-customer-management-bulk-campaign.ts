@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import confetti from "canvas-confetti";
+import { executeCustomerBulkAction } from "@/components/customers/customer-bulk-action-request";
 import type { Dispatch, SetStateAction } from "react";
 import type { Customer } from "@/components/customers/customer-table";
 import type { BulkActionPayload } from "@/components/customers/customer-management-types";
@@ -23,29 +23,27 @@ export function useCustomerManagementBulkAndCampaign(params: {
     const handleBulkAction = useCallback(
         async (action: "delete" | "tag" | "request", data?: BulkActionPayload) => {
             if (!businessId || selectedIds.length === 0) return;
-            const promise = fetch("/api/customers/bulk", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ids: selectedIds, businessId, action, data }),
-            });
-            toast.promise(promise, {
-                loading: `Processing bulk ${action}...`,
-                success: () => {
-                    if (action === "request") {
-                        const root = document.documentElement;
-                        const cs = getComputedStyle(root);
-                        const c1 = cs.getPropertyValue("--chart-1").trim() || "var(--primary)";
-                        const c2 = cs.getPropertyValue("--chart-2").trim() || "var(--primary)";
-                        const c3 = cs.getPropertyValue("--chart-3").trim() || "var(--primary)";
-                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [c1, c2, c3] });
-                        return "Review requests sent successfully!";
-                    }
-                    void fetchCustomers({ silent: true });
+            const toastId = toast.loading(action === "request" ? "Sending review requests…" : "Updating customers…");
+            try {
+                const result = await executeCustomerBulkAction({ ids: selectedIds, businessId, action, data });
+                if (action === "request") {
+                    const sent = result.sent ?? 0;
+                    const failed = result.failed ?? 0;
+                    const skipped = result.skipped ?? Math.max(0, selectedIds.length - sent - failed);
+                    const message = `${sent} sent · ${failed} failed · ${skipped} skipped`;
+                    if (failed || skipped) toast.warning(message, { id: toastId, description: "Unsent customers remain selected. Check request history before retrying." });
+                    else toast.success(message, { id: toastId });
+                    setSelectedIds(result.failedIds && result.skippedIds
+                        ? [...result.failedIds, ...result.skippedIds]
+                        : failed || skipped ? selectedIds : []);
+                } else {
+                    toast.success(action === "delete" ? "Customers deleted" : "Customer tags updated", { id: toastId });
                     setSelectedIds([]);
-                    return `Bulk ${action} completed!`;
-                },
-                error: "Failed to perform bulk action",
-            });
+                }
+                await fetchCustomers({ silent: true });
+            } catch (error) {
+                toast.error(error instanceof Error ? error.message : "Could not complete the action", { id: toastId });
+            }
         },
         [businessId, fetchCustomers, selectedIds, setSelectedIds]
     );

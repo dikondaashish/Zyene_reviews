@@ -57,9 +57,9 @@ export function ZyenePlatformKeyMetricsRow({
             icon: MousePointer2,
           },
           {
-            title: "Review Conversion",
+            title: "Request completion",
             value: `${allSourceConversionRate}%`,
-            desc: `${allSourcePostedToGoogle} completed of ${totalSent} sent`,
+            desc: `${allSourcePostedToGoogle} completed of ${totalSent} sent; publication unverified`,
             delta: getDelta(
               pct(allSourcePostedToGoogle, totalSent),
               pct(prevAllSourcePostedToGoogle, prevSent),
@@ -90,12 +90,12 @@ export function ZyenePlatformKeyMetricsRow({
           let trendColor = "text-muted-foreground bg-muted/20";
           if (isPositive)
             trendColor = metric.invertTrend
-              ? "text-sync-action bg-sync-action/10 dark:bg-sync-action/20"
-              : "text-chart-2 bg-chart-2/10 dark:bg-chart-2/20";
+              ? "text-destructive bg-destructive/10 dark:bg-destructive/20"
+              : "text-success bg-chart-2/10 dark:bg-chart-2/20";
           if (isNeg)
             trendColor = metric.invertTrend
-              ? "text-chart-2 bg-chart-2/10 dark:bg-chart-2/20"
-              : "text-sync-action bg-sync-action/10 dark:bg-sync-action/20";
+              ? "text-success bg-chart-2/10 dark:bg-chart-2/20"
+              : "text-destructive bg-destructive/10 dark:bg-destructive/20";
 
           return (
             <m.div

@@ -5,7 +5,6 @@ import { CaseStudiesSlugHeaderSection } from "./case-studies-slug-header-section
 import { CaseStudiesSlugChallengeSection } from "./case-studies-slug-challenge-section";
 import { CaseStudiesSlugApproachSection } from "./case-studies-slug-approach-section";
 import { CaseStudiesSlugResultsSection } from "./case-studies-slug-results-section";
-import { CaseStudiesSlugQuoteSection } from "./case-studies-slug-quote-section";
 import { CaseStudiesSlugRelatedSection } from "./case-studies-slug-related-section";
 import { CaseStudiesSlugCtaSection } from "./case-studies-slug-cta-section";
 
@@ -25,7 +24,7 @@ export default async function CaseStudyPage(
             <BreadcrumbJsonLd
                             items={[
                                 { name: "Home", url: "https://www.zyenereviews.com/" },
-                                { name: "Case Studies", url: "https://www.zyenereviews.com/case-studies" },
+                                { name: "Example Workflows", url: "https://www.zyenereviews.com/case-studies" },
                                 { name: study.company, url: `https://www.zyenereviews.com/case-studies/${slug}` },
                             ]}
                         />
@@ -33,7 +32,6 @@ export default async function CaseStudyPage(
             <CaseStudiesSlugChallengeSection study={study} />
             <CaseStudiesSlugApproachSection study={study} />
             <CaseStudiesSlugResultsSection study={study} />
-            <CaseStudiesSlugQuoteSection study={study} />
             <CaseStudiesSlugRelatedSection study={study} />
             <CaseStudiesSlugCtaSection related={related} />
         </>

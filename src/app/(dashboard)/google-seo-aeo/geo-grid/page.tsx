@@ -26,7 +26,7 @@ export default async function GeoGridPage() {
         <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
             <GoogleSeoAeoSubnav active="/google-seo-aeo/geo-grid" />
             <div>
-                <h2 className="text-3xl font-bold tracking-tight">Local geo-grid</h2>
+                <h1 className="text-3xl font-bold tracking-tight">Local geo-grid</h1>
                 <p className="text-muted-foreground mt-1 text-sm">
                     Where {data.businessName} actually ranks in Google Maps across real coordinates.
                 </p>
@@ -58,7 +58,7 @@ export default async function GeoGridPage() {
                                 {run.status === "running"
                                     ? "running…"
                                     : run.averageRank !== null
-                                      ? `avg rank ${run.averageRank.toFixed(1)} · found in ${run.foundCells} of ${run.searchedCells} searched cells`
+                                      ? `${run.searchedCells ? Math.round(run.foundCells / run.searchedCells * 100) : 0}% coverage · found in ${run.foundCells}/${run.searchedCells} cells · average rank ${run.averageRank.toFixed(1)} where found`
                                       : `not in the local pack in any of ${run.searchedCells} searched cells`}
                             </span>
                         ) : null}

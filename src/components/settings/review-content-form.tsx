@@ -109,7 +109,7 @@ export function ReviewContentForm({
 
                         <div className="border-t bg-muted/30 px-6 py-4 flex justify-end items-center gap-4">
                             {form.formState.isDirty && (
-                                <span className="text-sm text-chart-4 font-medium hidden sm:inline-block">
+                                <span className="text-sm text-warning-foreground font-medium hidden sm:inline-block">
                                     Unsaved changes
                                 </span>
                             )}

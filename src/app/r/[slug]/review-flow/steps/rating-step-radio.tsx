@@ -12,10 +12,13 @@ export function RatingStepRadio({ rating, onRate }: RatingStepRadioProps) {
             {RATINGS.map((r) => (
                 <button
                     key={r.value}
+                    type="button"
+                    aria-label={`Rate ${r.value} out of 5 stars`}
+                    aria-pressed={rating === r.value}
                     onClick={() => onRate(r.value)}
                     className={cn(
                         "flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-200 w-full text-left",
-                        "focus:outline-none focus:ring-2 focus:ring-primary/40 active:scale-[0.98]",
+                        "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus:ring-2 focus:ring-primary/40 active:scale-[0.98]",
                         rating === r.value
                             ? "border-primary bg-primary/10 shadow-sm"
                             : "border-border bg-background hover:border-primary/40 hover:bg-muted dark:border-white/10 dark:bg-[rgb(30,41,59)] dark:hover:bg-[rgb(51,65,85)]"

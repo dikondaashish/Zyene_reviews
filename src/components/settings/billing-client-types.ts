@@ -1,3 +1,4 @@
+import type { BillingRenewalSummary } from "@/services/stripe/billing-renewal-summary";
 import type { Plan } from "@/services/stripe/plans";
 
 export interface UsageStat {
@@ -6,6 +7,7 @@ export interface UsageStat {
 }
 
 export interface BillingClientProps {
+    renewalSummary?: BillingRenewalSummary | null;
     currentPlan: Plan | null;
     organizationPlanId: string;
     planStatus: string;

@@ -44,7 +44,7 @@ export function RequestsStatsSection({
                     <CardTitle className="text-sm font-medium">
                         Delivery Rate
                     </CardTitle>
-                    <CheckCircle2 className="text-chart-2 size-4" />
+                    <CheckCircle2 className="text-success size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
@@ -60,7 +60,7 @@ export function RequestsStatsSection({
                     <CardTitle className="text-sm font-medium">
                         Click Rate
                     </CardTitle>
-                    <MousePointerClick className="text-chart-4 size-4" />
+                    <MousePointerClick className="text-warning-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
@@ -74,16 +74,16 @@ export function RequestsStatsSection({
             <Card className="border-l-4 border-l-yellow-500">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                        Review Conversion
+                        Request completion
                     </CardTitle>
-                    <Star className="text-chart-4 size-4" />
+                    <Star className="text-warning-foreground size-4" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
                         {stats.conversionRate.toFixed(1)}%
                     </div>
                     <p className="text-xs text-muted-foreground">
-                        {stats.reviews} of {stats.totalSent} sent
+                        {stats.reviews} completed of {stats.totalSent} sent; publication unverified
                     </p>
                 </CardContent>
             </Card>

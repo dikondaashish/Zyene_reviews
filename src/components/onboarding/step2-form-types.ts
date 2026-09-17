@@ -12,6 +12,10 @@ export interface Step2FormProps {
     pendingGoogleCode?: string | null;
     /** Called after the pending code has been consumed so the parent can clear it */
     onGoogleCodeConsumed?: () => void;
+    /** OAuth cancellation or failure returned by Google before a connection is created. */
+    googleConnectionError?: string | null;
+    /** Clears a returned OAuth error when the user chooses to retry. */
+    onGoogleConnectionErrorConsumed?: () => void;
     /** Called when Google returns business info so the parent state stays in sync */
     onBusinessUpdate?: (info: {
         name?: string;

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
         template: "%s | Zyene Reviews",
     },
     description:
-        "Monitor, respond to, and grow your Google reviews with AI. Zyene Reviews gives local businesses a full reputation management platform starting at $29.99/mo, with no annual contracts.",
+        "Manage reviews, draft AI replies, and send review requests from one dashboard. Reputation management for local businesses from $29.99/month.",
     manifest: "/manifest.json",
     icons: {
         icon: [

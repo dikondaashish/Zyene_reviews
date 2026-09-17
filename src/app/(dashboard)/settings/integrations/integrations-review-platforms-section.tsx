@@ -16,7 +16,7 @@ export function IntegrationsReviewPlatformsSection({ data }: { data: OkData }) {
         <section className="space-y-5">
             <IntegrationsSectionHeader
                 title="Review Platforms"
-                description="Monitor and respond to reviews across all major platforms"
+                description="Connect supported sources. Sync and reply capabilities vary by platform."
                 icon={Star}
                 badge={<IntegrationsStatusBadge count={data.connectedCount} label="connected" />}
             />

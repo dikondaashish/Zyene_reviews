@@ -98,7 +98,7 @@ export function AiInsightsCard() {
             {/* Suggestions */}
             <div>
                 <div className="mb-3 flex items-center gap-2">
-                    <Lightbulb className="h-4 w-4 text-chart-4" />
+                    <Lightbulb className="h-4 w-4 text-warning-foreground" />
                     <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                         Suggestions
                     </span>

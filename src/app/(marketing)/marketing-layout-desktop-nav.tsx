@@ -14,9 +14,11 @@ export const MarketingLayoutDesktopNav = forwardRef<
     signupUrl: string;
     openMenu: MarketingNavMenu | null;
     onToggleMenu: (menu: MarketingNavMenu) => void;
+    onOpenMenu: (menu: MarketingNavMenu) => void;
     onCloseMenu: () => void;
+    onBookAppointment: () => void;
   }
->(function MarketingLayoutDesktopNav({ loginUrl, signupUrl, openMenu, onToggleMenu, onCloseMenu }, ref) {
+>(function MarketingLayoutDesktopNav({ loginUrl, signupUrl, openMenu, onToggleMenu, onOpenMenu, onCloseMenu, onBookAppointment }, ref) {
   const motionGroup = useId();
   return (
     <nav ref={ref} className="premium-desktop-nav" aria-label="Main navigation">
@@ -28,6 +30,7 @@ export const MarketingLayoutDesktopNav = forwardRef<
           links={PRODUCT_LINKS}
           open={openMenu === "product"}
           onToggle={() => onToggleMenu("product")}
+          onOpen={() => onOpenMenu("product")}
           onClose={onCloseMenu}
         />
         <MarketingLayoutNavDropdown
@@ -37,6 +40,7 @@ export const MarketingLayoutDesktopNav = forwardRef<
           links={SOLUTIONS_LINKS}
           open={openMenu === "solutions"}
           onToggle={() => onToggleMenu("solutions")}
+          onOpen={() => onOpenMenu("solutions")}
           onClose={onCloseMenu}
         />
         <MarketingLayoutNavDropdown
@@ -46,11 +50,15 @@ export const MarketingLayoutDesktopNav = forwardRef<
           links={RESOURCES_LINKS}
           open={openMenu === "resources"}
           onToggle={() => onToggleMenu("resources")}
+          onOpen={() => onOpenMenu("resources")}
           onClose={onCloseMenu}
         />
         <Link href="/pricing" className="mega-trigger" onClick={onCloseMenu}>
           Pricing
         </Link>
+        <button type="button" className="mega-trigger premium-nav-appointment" onClick={onBookAppointment}>
+          Book an appointment
+        </button>
       </div>
       <div className="premium-nav-auth">
         <MarketingHeaderAuth loginUrl={loginUrl} signupUrl={signupUrl} />

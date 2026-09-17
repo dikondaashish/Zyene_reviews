@@ -3,11 +3,9 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/db/supabase/client";
-import { toast } from "sonner";
 import { isPlausibleMobileNumber } from "@/lib/validations/phone";
 import {
     isSupabaseEmailSendRateLimited,
-    toastAuthEmailRateLimit,
 } from "@/lib/auth/supabase-email-rate-limit";
 import { useSignupSession } from "./use-signup-session";
 
@@ -22,19 +20,22 @@ export function useSignupForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [formError, setFormError] = useState<string | null>(null);
     const { checkingExistingSession } = useSignupSession(inviteToken);
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        if (isLoading) return;
+        setFormError(null);
 
         if (password.length < 6) {
-            toast.error("Password must be at least 6 characters");
+            setFormError("Use a password with at least 6 characters.");
             return;
         }
 
         const phoneTrimmed = phone.trim();
         if (phoneTrimmed && !isPlausibleMobileNumber(phoneTrimmed)) {
-            toast.error("Enter a valid mobile number with country code (e.g. +1 555 123 4567).");
+            setFormError("Check the mobile number under SMS review alerts. Include your country code, for example +1 555 123 4567.");
             return;
         }
 
@@ -60,22 +61,21 @@ export function useSignupForm() {
 
             if (error) {
                 if (isSupabaseEmailSendRateLimited(error)) {
-                    toastAuthEmailRateLimit(toast);
+                    setFormError("Too many emails have been requested. Wait a while before trying again, or sign up with Google.");
                 } else {
-                    toast.error(error.message);
+                    setFormError(error.message);
                 }
-                return;
+            } else {
+                setIsSuccess(true);
             }
-
-            setIsSuccess(true);
         } catch {
-            toast.error("Sign-up failed", { description: "Please try again." });
-        } finally {
-            setIsLoading(false);
+            setFormError("We couldn’t create your account. Check your connection and try again.");
         }
+        setIsLoading(false);
     }
 
     return {
+        formError,
         inviteToken,
         fullName,
         setFullName,

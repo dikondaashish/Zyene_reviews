@@ -124,7 +124,7 @@ export function GettingStartedBanner({
             <div
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors border ${
                 item.done
-                  ? "bg-chart-2/5 border-chart-2/30 text-chart-2 dark:text-chart-2"
+                  ? "bg-chart-2/5 border-chart-2/30 text-success dark:text-success"
                   : "bg-background border-border hover:border-primary/30 pro-hover"
               }`}
             >

@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = mergeMarketingSocial({
     title: "Content Types",
     description: "Reference for Zyene Reviews API objects: reviews, feedback submissions, campaign messages, locations, and team members.",
     alternates: { canonical: "https://www.zyenereviews.com/docs/content-types" },
     openGraph: { title: "Content Types, Zyene Reviews Docs", description: "API object reference: reviews, feedback, campaigns, locations, and team members.", url: "https://www.zyenereviews.com/docs/content-types" },
     twitter: { card: "summary_large_image", title: "Content Types, Zyene Reviews Docs", description: "API object reference: reviews, feedback, campaigns, locations, team members." },
-};
+});
 
 export default function DocsContentTypesPage() {
     const toc: TocItem[] = [

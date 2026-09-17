@@ -7,6 +7,7 @@ export type CsvImportModalRow = {
 };
 
 export type CsvImportModalProps = {
+    businessId: string;
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onSuccess?: () => void | Promise<void>;

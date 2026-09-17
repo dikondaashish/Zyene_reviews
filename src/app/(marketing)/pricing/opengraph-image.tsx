@@ -17,11 +17,11 @@ export default function OgImage() {
                 }}
             >
                 <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0)", backgroundSize: "40px 40px" }} />
-                <div style={{ position: "absolute", top: "10%", left: "15%", width: "350px", height: "350px", background: "radial-gradient(circle, rgba(74,222,128,0.12) 0%, transparent 70%)", borderRadius: "50%" }} />
+                <div style={{ position: "absolute", top: "10%", left: "15%", width: "350px", height: "350px", background: "radial-gradient(circle, rgba(255,79,0,0.12) 0%, transparent 70%)", borderRadius: "50%" }} />
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "0 80px", position: "relative", zIndex: 10 }}>
                     <div style={{ fontSize: "16px", fontWeight: "700", color: "rgba(255,255,255,0.4)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "20px" }}>ZYENE REVIEWS · PRICING</div>
                     <div style={{ fontSize: "62px", fontWeight: "800", color: "#ffffff", lineHeight: "1.05", marginBottom: "20px", letterSpacing: "-0.02em" }}>
-                        Simple, <span style={{ color: "#4ade80" }}>Transparent</span> Pricing
+                        Simple, <span style={{ color: "#ff4f00" }}>Transparent</span> Pricing
                     </div>
                     <div style={{ fontSize: "22px", color: "rgba(255,255,255,0.55)", marginBottom: "36px" }}>No annual contracts · No hidden fees · Cancel anytime</div>
                     <div style={{ display: "flex", gap: "16px" }}>
@@ -30,9 +30,9 @@ export default function OgImage() {
                             { label: "Professional", price: "$59.99/mo" },
                             { label: "Enterprise", price: "Custom" },
                         ].map((plan) => (
-                            <div key={plan.label} style={{ background: "rgba(74,222,128,0.08)", border: "1px solid rgba(74,222,128,0.25)", borderRadius: "14px", padding: "16px 24px", textAlign: "center" }}>
+                            <div key={plan.label} style={{ background: "rgba(255,79,0,0.08)", border: "1px solid rgba(255,79,0,0.25)", borderRadius: "14px", padding: "16px 24px", textAlign: "center" }}>
                                 <div style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", marginBottom: "6px" }}>{plan.label}</div>
-                                <div style={{ fontSize: "22px", fontWeight: "700", color: "#4ade80" }}>{plan.price}</div>
+                                <div style={{ fontSize: "22px", fontWeight: "700", color: "#ff4f00" }}>{plan.price}</div>
                             </div>
                         ))}
                     </div>

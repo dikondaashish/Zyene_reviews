@@ -1,5 +1,6 @@
 
 
+import Link from "next/link";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AGENCY_PRICING_TIERS } from "@/lib/enterprise/agency-pricing-data";
@@ -11,8 +12,9 @@ export function AgenciesSection3Section() {
                 <div className="container mx-auto max-w-5xl">
                     <h2 className="text-3xl font-bold mb-8">Agency pricing tiers</h2>
                     <p className="text-muted-foreground mb-10 max-w-2xl">
-                        Choose pricing that grows with your client roster. Our partnerships team will help you find the right fit and arrange your onboarding.
+                        Choose pricing that grows with your client roster. Configure automatic Google replies for each eligible client business with its own tone and star threshold. Our partnerships team can help scope your rollout.
                     </p>
+                    <Link href="/features/ai-replies" className="mb-6 inline-flex min-h-11 items-center font-semibold text-primary underline underline-offset-4">See automatic Google replies →</Link>
                     <div className="grid md:grid-cols-3 gap-6">
                         {AGENCY_PRICING_TIERS.map((tier) => (
                             <article

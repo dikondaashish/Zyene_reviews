@@ -5,6 +5,7 @@ import type { ContentSection } from "@/lib/content/blog-data";
 import { Button } from "@/components/ui/button";
 import { SIGNUP_URL } from "@/config/env";
 import { cn } from "@/lib/utils";
+import { headingAnchor } from "@/lib/content/heading-anchor";
 export function ContentRenderer({ sections, className }: { sections: ContentSection[]; className?: string }) {
     return (
         <div className={cn(className ? "text-foreground" : "prose-zyene space-y-5 text-foreground", className)}>
@@ -13,7 +14,7 @@ export function ContentRenderer({ sections, className }: { sections: ContentSect
                 switch (section.type) {
                     case "h2":
                         return (
-                            <h2 key={sectionKey} className="text-2xl font-bold text-foreground mt-10 mb-3 first:mt-0 scroll-mt-24" id={section.text?.toLowerCase().replace(/[^a-z0-9]+/g, "-")}>
+                            <h2 key={sectionKey} className="text-2xl font-bold text-foreground mt-10 mb-3 first:mt-0 scroll-mt-24" id={headingAnchor(section)}>
                                 {section.text}
                             </h2>
                         );
@@ -74,7 +75,7 @@ export function ContentRenderer({ sections, className }: { sections: ContentSect
                     case "warning":
                         return (
                             <div key={sectionKey} className="flex gap-3 rounded-xl border border-chart-4/20 bg-chart-4/5 px-5 py-4">
-                                <AlertTriangle className="shrink-0 text-chart-4 mt-0.5 size-5" />
+                                <AlertTriangle className="shrink-0 text-warning-foreground mt-0.5 size-5" />
                                 <p className="text-sm text-foreground leading-relaxed">{section.text}</p>
                             </div>
                         );
@@ -104,8 +105,8 @@ export function ContentRenderer({ sections, className }: { sections: ContentSect
                                 <Image
                                     src={section.image.src}
                                     alt={section.image.alt}
-                                    width={section.image.width}
-                                    height={section.image.height}
+                                    width={section.image.width} height={section.image.height}
+                                    sizes="(max-width: 768px) 100vw, 768px"
                                     className="w-full h-auto object-cover"
                                 />
                                 {section.image.caption ? (
@@ -144,7 +145,6 @@ export function ContentRenderer({ sections, className }: { sections: ContentSect
                         );
                     default: return null;
                 }
-            })}
-        </div>
+            })}</div>
     );
 }

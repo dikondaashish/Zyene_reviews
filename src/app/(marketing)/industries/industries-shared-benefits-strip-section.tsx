@@ -3,13 +3,13 @@ import { BarChart3, Bot, MessageSquare, Shield } from "lucide-react";
 const BENEFITS = [
     {
         icon: MessageSquare,
-        title: "Fair review requests",
+        title: "Branded review requests",
         desc: "Invite customers by SMS, email, shareable link, or QR code after a visit or completed service.",
     },
     {
         icon: Bot,
-        title: "AI-assisted Google replies",
-        desc: "Start with a relevant draft, then tailor a thoughtful response before you post.",
+        title: "AI drafts & automatic Google replies",
+        desc: "Edit a draft yourself, or automatically publish replies to eligible new Google reviews in your chosen tone.",
     },
     {
         icon: Shield,

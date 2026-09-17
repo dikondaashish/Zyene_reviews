@@ -1,3 +1,4 @@
+import { ApiResponseGuide } from "@/app/docs/api/api-response-guide";
 import Link from "next/link";
 import { DocCodeBlock } from "@/components/docs/doc-code-block";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
@@ -38,16 +39,14 @@ export function ApiContentSection() {
                             Each endpoint enforces the scope listed below.
                         </p>
                         <p className="text-sm text-muted-foreground">
-                            <strong>Postman / curl without Origin:</strong> If you see <code>403 Forbidden</code> on{" "}
-                            <code>POST</code> only, add header{" "}
-                            <code>Origin: {apiOrigin.replace(/\/$/, "")}</code> (must match your app host), or deploy the
-                            version that exempts <code>/api/v1</code> from browser-only CSRF checks for API-key traffic.
+                            Keep API keys on your server. If a request returns 403, verify the key’s scope and selected business.
+                            Contact support with the endpoint and status code if access still fails; never share the key itself.
                         </p>
 
                         <h2 id="base-url">Base URL</h2>
                         <p>
                             Point clients at the same host that serves your dashboard (for example <code>{apiOrigin}</code>).
-                            Cross-origin calls from browsers must satisfy the API CORS rules configured for your deployment.
+                            Use a server-side integration so your API key stays private.
                         </p>
 
                         <h2 id="endpoints">Endpoints</h2>
@@ -72,6 +71,7 @@ export function ApiContentSection() {
                             ))}
                         </div>
 
+                        <ApiResponseGuide />
                         <p className="mt-12 border-t border-border pt-6 text-sm text-muted-foreground">
                             Need a new key? Open{" "}
                             <Link

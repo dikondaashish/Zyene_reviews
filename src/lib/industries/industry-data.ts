@@ -54,24 +54,24 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["restaurant review management", "google reviews for restaurants", "restaurant reputation management", "how to get more restaurant reviews"],
         painPoints: [
             {
-                stat: "One 1-star drop",
-                title: "One bad review costs you 30+ covers",
-                description: "Harvard Business School research found a 1-star drop in Yelp rating costs restaurants 5-9% of revenue. In a 100-cover restaurant, that's 5-9 empty tables every night.",
+                stat: "First impressions",
+                title: "Reviews shape first impressions",
+                description: "Diners can read recent feedback before booking. Respond to service issues with specific, useful information instead of leaving complaints unanswered.",
             },
             {
-                stat: "93% of diners",
-                title: "Diners research you before they walk in",
-                description: "93% of consumers check restaurant reviews before choosing where to eat. If your last 3 reviews are negative and unanswered, they're going to the place next door.",
+                stat: "Recent feedback",
+                title: "Keep your profile current",
+                description: "A steady request process gives diners more recent experiences to read when choosing a restaurant.",
             },
             {
-                stat: "53% expect",
-                title: "Slow responses damage your brand",
-                description: "53% of customers expect a business to reply to reviews within a week. Most restaurants respond to fewer than 30% of their reviews - or not at all.",
+                stat: "Reply backlog",
+                title: "Make time for responses",
+                description: "Busy service periods can leave reviews unanswered. A shared inbox helps staff see which replies still need attention.",
             },
         ],
         solutions: [
             { title: "Never miss a new review", description: "Get instant SMS or email alerts the moment a new Google, Facebook, or Yelp review arrives - so you can respond before the diner even gets home." },
-            { title: "AI replies that sound like you", description: "One-click AI reply suggestions match your restaurant's tone - warm, professional, or apologetic - and can be published in seconds without sounding robotic." },
+            { title: "AI replies that sound like you", description: "During the morning rush, let automatic Google replies answer eligible new reviews in a Professional, Friendly, or Concise tone. Review and publish a draft yourself when a guest needs a personal response." },
             { title: "Follow up on low ratings", description: "The Negative Feedback Shield gives unhappy diners a private form to describe the problem and alerts your team. Use that feedback for service recovery while keeping public review requests fair." },
             { title: "Track nearby competitors", description: "See exactly how your star rating, review volume, and response rate compares to the restaurants around you - and identify where you're winning or falling behind." },
         ],
@@ -99,9 +99,9 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["dental practice reviews", "dentist reputation management", "dental google reviews", "how to get more dental patient reviews"],
         painPoints: [
             {
-                stat: "77% of patients",
-                title: "New patients check reviews before booking",
-                description: "77% of patients use online reviews as their first step in finding a new dentist. If your Google profile has fewer than 20 reviews or a rating below 4.5, most potential patients will choose a competitor.",
+                stat: "Patient research",
+                title: "Help patients evaluate your practice",
+                description: "Prospective patients may read reviews before contacting a dentist. Recent feedback and thoughtful replies help them understand the practice.",
             },
             {
                 stat: "1 bad review",
@@ -109,14 +109,14 @@ export const INDUSTRIES: IndustryData[] = [
                 description: "In healthcare, trust is everything. A single unanswered 1-star review about a billing issue or wait time can quietly turn away dozens of prospective patients who read it and choose elsewhere.",
             },
             {
-                stat: "72% of practices",
-                title: "Most practices never respond to their reviews",
-                description: "72% of dental practices don't respond to any of their Google reviews. Every unanswered review - positive or negative - signals to prospective patients that you don't care about feedback.",
+                stat: "Reply workflow",
+                title: "Build a consistent response routine",
+                description: "Give staff a clear process for responding without confirming patient relationships or sharing details of care.",
             },
         ],
         solutions: [
             { title: "Grow your review count automatically", description: "Send automated review requests via SMS or email after each appointment - timed to arrive when patient satisfaction is highest, like 2 hours after checkout." },
-            { title: "HIPAA-aware, professional AI replies", description: "Zyene's AI reply suggestions are designed for healthcare contexts - never referencing protected health information, always sounding professional and empathetic." },
+            { title: "Professional replies with team review", description: "Draft professional responses for your team to review. Keep public replies general and avoid patient details. Automatic Google replies are optional; use individual review when a response needs privacy-sensitive judgment." },
             { title: "Handle billing and wait-time complaints", description: "The Negative Feedback Shield gives patients a private feedback path for billing or wait-time concerns, so your team can review the issue and follow up." },
             { title: "Monitor every platform in one inbox", description: "Track your reviews across Google, Healthgrades context, and Facebook - from one dashboard. Identify which of your associates receives the best patient feedback." },
         ],
@@ -144,9 +144,9 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["auto repair google reviews", "mechanic reputation management", "auto shop reviews", "car repair reputation management"],
         painPoints: [
             {
-                stat: "90% of customers",
-                title: "Customers Google your shop before they call",
-                description: "90% of consumers read online reviews for local businesses before making a decision. For auto repair - where trust is everything - a profile with fewer than 4.5 stars or outdated reviews means the phone doesn't ring.",
+                stat: "Trust before booking",
+                title: "Make your service visible",
+                description: "Vehicle owners may compare recent reviews before requesting an estimate. Explain how customers can resolve concerns with your team.",
             },
             {
                 stat: "Estimate disputes",
@@ -155,13 +155,13 @@ export const INDUSTRIES: IndustryData[] = [
             },
             {
                 stat: "Repeat business",
-                title: "Your reputation drives return visits more than price",
-                description: "68% of auto repair customers say they chose a shop based on reviews and reputation over price. A current review profile gives prospective customers more evidence before they book.",
+                title: "Keep customer relationships active",
+                description: "Feedback from returning customers helps you identify service problems and understand what keeps people coming back.",
             },
         ],
         solutions: [
             { title: "Build trust before the first call", description: "Proactively grow your 5-star review count so new customers find a shop they feel confident about - before they've even called." },
-            { title: "AI replies that sound like a real shop owner", description: "Zyene AI crafts replies that are direct, honest, and professional - matching the tone of a real shop owner, not a corporate script." },
+            { title: "AI replies that sound like a real shop owner", description: "Keep up with feedback while your team works on the next vehicle. Automatically reply to eligible new Google reviews in your chosen tone, or edit an AI draft for a specific customer concern." },
             { title: "Follow up on estimate disputes", description: "When a customer is upset about their bill, the Negative Feedback Shield gives them a private way to explain the problem and alerts your team to follow up." },
             { title: "See how you compare to the shop down the street", description: "Track up to 10 nearby competitors. See their star rating, review volume, and response rate - and identify exactly what's driving customers to choose them over you." },
         ],
@@ -189,9 +189,9 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["salon review management", "spa google reviews", "hair salon reputation management", "beauty salon reviews"],
         painPoints: [
             {
-                stat: "86% of clients",
-                title: "Clients book based on reviews and photos",
-                description: "86% of women say online reviews are just as trustworthy as personal recommendations when choosing a salon. Your Google profile and review count is your storefront - before anyone walks in.",
+                stat: "Choosing a salon",
+                title: "Show what clients experience",
+                description: "Recent feedback can help new clients understand your salon’s service and atmosphere before making an appointment.",
             },
             {
                 stat: "1 bad color job",
@@ -206,7 +206,7 @@ export const INDUSTRIES: IndustryData[] = [
         ],
         solutions: [
             { title: "Automated requests after every appointment", description: "Send a branded review request via SMS or email automatically after each appointment - when the client is freshly satisfied and still glowing from the service." },
-            { title: "AI replies that sound personal, not generic", description: "Zyene AI crafts warm, personalized reply suggestions that sound like they came from you - not from a template. Edit in seconds and publish with one click." },
+            { title: "AI replies that sound personal, not generic", description: "Keep your salon’s voice in the conversation. Choose a tone and star threshold for automatic Google replies, while handling appointment concerns with a draft you review yourself." },
             { title: "Follow up on disappointed clients", description: "When a client isn't happy with their cut or color, the Negative Feedback Shield gives them a private way to explain what went wrong and alerts your team." },
             { title: "Stay ahead of nearby salons", description: "The competitor tracker monitors nearby salons and spas. Know when a competitor is getting more reviews than you - and respond before it affects your bookings." },
         ],
@@ -234,9 +234,9 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["plumber reviews", "HVAC reputation management", "home services google reviews", "electrician review management", "contractor reputation management"],
         painPoints: [
             {
-                stat: "82% of homeowners",
-                title: "Homeowners only hire who they trust online",
-                description: "82% of homeowners say they won't hire a home services company without reading reviews first. Letting a stranger into your home is a big decision - your Google reviews are the trust signal that makes or breaks the call.",
+                stat: "Trust at home",
+                title: "Help homeowners choose confidently",
+                description: "Homeowners need confidence in the people entering their property. Recent reviews and clear responses give them more information before a call.",
             },
             {
                 stat: "Seasonal spikes",
@@ -251,7 +251,7 @@ export const INDUSTRIES: IndustryData[] = [
         ],
         solutions: [
             { title: "Request reviews the moment the job is done", description: "Trigger a review request automatically when a job is marked complete - via SMS or email - when the homeowner's satisfaction is highest." },
-            { title: "AI replies that sound like a real professional", description: "Whether you're a solo plumber or a 10-truck HVAC company, Zyene AI crafts professional, specific replies - not generic copy-paste responses." },
+            { title: "AI replies that sound like a real professional", description: "Let automatic Google replies handle eligible new reviews while you are on the next job. Set a tone and star threshold for each business, and review complex service concerns yourself." },
             { title: "Follow up on pricing disputes", description: "The Negative Feedback Shield gives unhappy homeowners a private way to explain a pricing problem and alerts your team to follow up." },
             { title: "Win seasonal search ranking battles", description: "Track competitor review volume and freshness across your service area. Stay ahead before peak season hits by proactively collecting reviews during quieter months." },
         ],
@@ -279,9 +279,9 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["doctor review management", "clinic reputation management", "medical practice reviews", "healthcare reputation management", "physician google reviews"],
         painPoints: [
             {
-                stat: "71% of patients",
-                title: "Patients find their doctor online first",
-                description: "71% of patients use online reviews as the first step to finding a new doctor or specialist. A practice with fewer than 4.5 stars or thin review count loses new patients to competitors before the first call.",
+                stat: "Finding care",
+                title: "Support informed patient choices",
+                description: "Online feedback can be part of a patient’s research. Keep public replies general and move individual care discussions to an appropriate private channel.",
             },
             {
                 stat: "Wait times",
@@ -290,13 +290,13 @@ export const INDUSTRIES: IndustryData[] = [
             },
             {
                 stat: "Multiple platforms",
-                title: "Patients review you across Google, Healthgrades, and more",
-                description: "Healthcare practices face reviews on more platforms than almost any other industry. Managing them separately is time-consuming and inconsistent - most practices respond to under 20% of their reviews.",
+                title: "Keep a manageable review routine",
+                description: "Check which platforms your practice uses and which connections support monitoring or replies. Assign someone to follow up on each channel.",
             },
         ],
         solutions: [
             { title: "Automate review requests after each visit", description: "Send a review request via email or SMS after each appointment - timed to arrive when patient satisfaction is highest and the visit is still fresh." },
-            { title: "Professional, empathetic AI replies", description: "Zyene's AI reply suggestions are designed for healthcare - always professional and empathetic, never referencing protected health information." },
+            { title: "Professional, empathetic AI replies", description: "Draft empathetic responses and review them before publishing. Keep patient-specific information out of public replies. Automatic Google replies are optional and do not replace your practice’s review process." },
             { title: "Privately resolve front-desk and wait-time complaints", description: "The Negative Feedback Shield routes upset patients to a private feedback form. Most wait-time and billing complaints can be resolved before they become public 1-star reviews." },
             { title: "Monitor all platforms from one dashboard", description: "Track your Google, Facebook, and other review platforms from one inbox. Set up instant alerts so your team can respond within hours - not days." },
         ],
@@ -324,14 +324,14 @@ export const INDUSTRIES: IndustryData[] = [
         targetKeywords: ["hotel review management", "hospitality reviews", "hotel reputation management", "hotel google reviews", "hotel response management"],
         painPoints: [
             {
-                stat: "95% of travelers",
-                title: "Guests research you before every booking",
-                description: "95% of travelers read online reviews before booking a hotel. On OTA platforms and Google both, your rating and recency of reviews are the primary decision factor - before price.",
+                stat: "Before booking",
+                title: "Help guests understand the stay",
+                description: "Travelers may compare recent feedback on rooms, cleanliness and service. Keep those conversations visible to the team that can act on them.",
             },
             {
-                stat: "33% more bookings",
-                title: "Responding to reviews drives 33% more reservations",
-                description: "Hotels that respond to reviews see 33% more bookings on average. Guests aren't just reading reviews - they're watching whether and how you respond to unhappy ones.",
+                stat: "Guest responses",
+                title: "Respond with useful information",
+                description: "Prospective guests can read how you handle problems. A specific response explains the next step without promising a booking increase.",
             },
             {
                 stat: "Room complaints",
@@ -340,7 +340,7 @@ export const INDUSTRIES: IndustryData[] = [
             },
         ],
         solutions: [
-            { title: "Respond to every guest review - instantly with AI", description: "Zyene AI crafts personalized, professional replies that match your hotel's brand voice. Respond to dozens of reviews in minutes, not hours." },
+            { title: "AI drafts and automatic Google replies", description: "Automatically reply to eligible new Google reviews after a stay, using your selected tone and star threshold. Keep individual service issues in a manual draft-and-review workflow." },
             { title: "Private resolution for room complaints", description: "The Negative Feedback Shield gives unhappy guests a private channel to report issues before they write a public review. Resolving quickly drives loyalty, not churn." },
             { title: "Automate post-checkout review requests", description: "Send a branded review request via email or SMS automatically at checkout - when guests are most likely to write a positive review." },
             { title: "Track your competitive set", description: "Monitor the review volume, rating, and response rate of nearby hotels in the same class. Use the comparison to decide where to improve; Google Maps position depends on more than reviews." },
@@ -386,7 +386,7 @@ export const INDUSTRIES: IndustryData[] = [
         ],
         solutions: [
             { title: "Build review momentum before January", description: "Proactively collect reviews during quieter months so you enter January with a fresh, high-volume review profile that beats competitors in Google Maps results." },
-            { title: "AI replies that sound like a real community", description: "Zyene crafts fitness-appropriate reply suggestions - energetic, personal, and on-brand - so your responses feel like they came from a community manager, not a template." },
+            { title: "AI replies that sound like a real community", description: "Choose a Friendly, Professional, or Concise tone for automatic replies to eligible new Google reviews. Give membership concerns personal attention with drafts your team reviews." },
             { title: "Privately resolve cancellation and billing disputes", description: "The Negative Feedback Shield routes cancellation complaints and billing disputes to a private channel - where you can fix the issue before it becomes a 1-star review." },
             { title: "Track competitor gyms in your area", description: "See how nearby gyms compare on review volume and rating. Know when a competitor is gaining on you - and stay ahead with a proactive review collection strategy." },
         ],

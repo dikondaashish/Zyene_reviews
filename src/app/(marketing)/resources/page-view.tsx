@@ -22,10 +22,10 @@ export default function ResourcesHubPage() {
             />
 
             {/* ── Hero ── */}
-            <LandingHero eyebrow="The resource library" title="Small steps. A stronger local presence." description="Go deeper with practical guides to Google reviews, local SEO, and customer feedback. Free to read, ready to use." />
+            <LandingHero eyebrow="The resource library" title="Small steps. A stronger local presence." description="Go deeper with practical guides to Google reviews, local SEO, and customer feedback. Free to read, ready to use." variant="directory" media={{ kind: "none" }} />
 
             {/* ── Guide Grid ── */}
-            <section className="py-20 px-4 bg-background">
+            <section className="px-4 pb-20 pt-4 bg-background md:pt-8">
                 <div className="container mx-auto max-w-5xl">
                     <div className="grid md:grid-cols-2 gap-8">
                         {RESOURCE_GUIDES.map((guide) => {

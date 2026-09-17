@@ -13,7 +13,9 @@ export async function fetchCampaignDetail(
             onMissing();
             return;
         }
-        const data = await res.json();
+        const envelope = await res.json();
+        const data = envelope.data;
+        if (!data?.campaign) { onMissing(); return; }
         onSuccess(data.campaign, data.requests || []);
     } catch {
         onMissing();
@@ -38,12 +40,16 @@ export async function sendCampaignContacts(campaignId: string, contacts: { name?
         body: JSON.stringify({ contacts }),
     });
     const result = await res.json();
-    return { ok: res.ok, result };
+    return { ok: res.ok, result: res.ok ? result.data : result };
 }
 
 export function toastCampaignSendResult(
-    result: { sent?: number; skipped?: number; failed?: number },
+    result: { sent?: number; skipped?: number; failed?: number; queuedCount?: number; skippedCount?: number },
     verb: "Sent" | "Imported"
 ) {
-    toast.success(`${verb}: ${result.sent}, Skipped: ${result.skipped}, Failed: ${result.failed}`);
+    if (result.queuedCount !== undefined) {
+        toast.success(`${result.queuedCount} contacts queued · ${result.skippedCount ?? 0} skipped`);
+    } else {
+        toast.message(`${verb}: ${result.sent ?? 0} · Skipped: ${result.skipped ?? 0} · Failed: ${result.failed ?? 0}`);
+    }
 }

@@ -1,27 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { CheckCircle2, ArrowLeft } from "lucide-react";
+import { ArrowLeft, MailCheck } from "lucide-react";
+import { AuthHeading } from "@/components/auth/auth-form-ui";
 
 export function ForgotPasswordSuccessSection({ email }: { email: string }) {
     return (
-        <div className="text-center space-y-6">
-            <div className="mx-auto bg-secondary rounded-lg flex items-center justify-center border border-border size-16">
-                <CheckCircle2 className="text-primary size-8" />
-            </div>
-            <div className="space-y-2">
-                <h2 className="text-2xl font-bold text-foreground">Check your email</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                    If an account exists for{" "}
-                    <span className="font-medium text-foreground">{email}</span>,
-                    <br />
-                    we&apos;ve sent a password reset link.
-                </p>
-            </div>
-            <Link href="/login">
-                <button className="mt-2 inline-flex items-center gap-2 text-sm font-medium text-primary hover:brightness-90 transition-colors">
-                    <ArrowLeft className="size-4" /> Back to Login
-                </button>
+        <div className="auth-form-stack" role="status">
+            <div className="auth-status-icon"><MailCheck size={24} aria-hidden="true" /></div>
+            <AuthHeading title="Check your inbox">
+                If an account exists for <span className="auth-status-email">{email}</span>, we’ve sent a password reset link.
+            </AuthHeading>
+            <p className="auth-hint">Open the link in your email to choose a new password. If it hasn’t arrived after a few minutes, check your spam folder.</p>
+            <Link href="/login" className="auth-text-link inline-flex items-center gap-2 justify-self-start">
+                <ArrowLeft size={15} aria-hidden="true" /> Back to log in
             </Link>
         </div>
     );

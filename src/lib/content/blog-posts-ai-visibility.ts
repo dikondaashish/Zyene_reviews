@@ -63,7 +63,7 @@ export const post14: BlogPost = {
         {
             question: "Can Zyene Reviews guarantee AI Overview rankings?",
             answer:
-                "No. Zyene Reviews helps you collect reviews fairly, respond faster, and monitor reputation - it does not control Google, ChatGPT, or Perplexity outputs. Use this audit to improve fundamentals; treat any vendor promise of guaranteed AI placement as a red flag.",
+                "No. Zyene Reviews helps you collect reviews, respond faster, and monitor reputation - it does not control Google, ChatGPT, or Perplexity outputs. Use this audit to improve fundamentals; treat any vendor promise of guaranteed AI placement as a red flag.",
         },
     ],
     body: [

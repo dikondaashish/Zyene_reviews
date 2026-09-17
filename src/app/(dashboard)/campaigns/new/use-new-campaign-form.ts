@@ -1,9 +1,12 @@
 "use client";
 
+import { renderCampaignPreview, type CampaignPreviewContext } from "@/lib/campaigns/preview";
+
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CAMPAIGN_TEMPLATES } from "@/lib/campaigns/templates";
 import { toast } from "sonner";
+import { createAndQueueCampaign } from "@/app/(dashboard)/campaigns/new/create-and-queue-campaign";
 import {
     DEFAULT_EMAIL_BODY,
     DEFAULT_EMAIL_SUBJECT,
@@ -12,14 +15,16 @@ import {
 } from "./new-campaign-constants";
 import type { CampaignForm } from "./new-campaign-form-types";
 
-export function useNewCampaignForm() {
+export function useNewCampaignForm(context: CampaignPreviewContext) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const templateId = searchParams.get("templateId");
     const customerIdsParam = searchParams.get("customerIds");
-    const preselectedCustomerCount = customerIdsParam
-        ? customerIdsParam.split(",").filter((id) => id.trim().length > 0).length
-        : 0;
+    const customerIds = [...new Set((customerIdsParam ?? "").split(",").map(id => id.trim()).filter(Boolean))];
+    const preselectedCustomerCount = customerIds.length;
+    const [createdCampaignId, setCreatedCampaignId] = useState<string>();
+    const [saveError, setSaveError] = useState("");
+    const submitting = useRef(false);
     const [step, setStep] = useState(0);
     const [saving, setSaving] = useState(false);
 
@@ -44,21 +49,18 @@ export function useNewCampaignForm() {
                 setForm((prev) => ({
                     ...prev,
                     ...template.defaultValues,
+                    ...(customerIdsParam ? { trigger_type: "manual_batch" as const } : {}),
                 }));
             }
         }
-    }, [templateId]);
+    }, [templateId, customerIdsParam]);
 
     const updateForm = (updates: Partial<CampaignForm>) => {
         setForm((prev) => ({ ...prev, ...updates }));
     };
 
-    const smsCharCount = form.sms_template.length;
-
-    const previewSMS = form.sms_template
-        .replace(/\{customer_name\}/g, "Sarah")
-        .replace(/\{business_name\}/g, "Sunrise Café")
-        .replace(/\{review_link\}/g, `https://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/sunrise-cafe`);
+    const previewSMS = renderCampaignPreview(form.sms_template, context);
+    const smsCharCount = previewSMS.length;
 
     const canProceed = () => {
         switch (step) {
@@ -66,7 +68,7 @@ export function useNewCampaignForm() {
                 return form.name.trim().length > 0;
             case 1:
                 if (form.channel === "sms" || form.channel === "both") {
-                    return form.sms_template.trim().length > 0;
+                    return form.sms_template.trim().length > 0 && (form.channel !== "both" || Boolean(form.email_subject.trim() && form.email_template.trim()));
                 }
                 if (form.channel === "email") {
                     return form.email_subject.trim().length > 0 && form.email_template.trim().length > 0;
@@ -82,25 +84,24 @@ export function useNewCampaignForm() {
     };
 
     const saveCampaign = async (status: "draft" | "active") => {
+        if (submitting.current) return;
+        if (customerIds.length > 500) { setSaveError("Choose up to 500 customers for one campaign."); return; }
+        submitting.current = true;
         setSaving(true);
+        setSaveError("");
         try {
-            const res = await fetch("/api/campaigns", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...form, status }),
-            });
-
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.error || "Failed to create campaign");
-            }
-
-            toast.success(status === "active" ? "Campaign launched!" : "Campaign saved as draft");
-            router.push("/campaigns");
+            const result = await createAndQueueCampaign({ form, status, customerIds,
+                existingCampaignId: createdCampaignId, onCreated: setCreatedCampaignId });
+            toast.success(result.queuedCount > 0
+                ? `${result.queuedCount} contacts queued · ${result.skippedCount} skipped`
+                : status === "draft" ? "Campaign saved. Add recipients when you are ready." : "Campaign created. Add contacts to start sending.");
+            router.push(`/campaigns/${result.campaignId}`);
         } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : "An unexpected error occurred";
+            const message = err instanceof Error ? err.message : "Could not save the campaign. Try again.";
+            setSaveError(message);
             toast.error(message);
         } finally {
+            submitting.current = false;
             setSaving(false);
         }
     };
@@ -110,6 +111,8 @@ export function useNewCampaignForm() {
         step,
         setStep,
         saving,
+        createdCampaignId,
+        saveError,
         form,
         updateForm,
         preselectedCustomerCount,

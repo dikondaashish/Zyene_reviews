@@ -69,7 +69,7 @@ export function CustomerTableMobileCard({
                         {customer.is_opted_out ? (
                             <Badge
                                 variant="outline"
-                                className="h-5 border-chart-4/40 bg-chart-4/10 px-1.5 text-[10px] font-medium text-chart-4"
+                                className="h-5 border-chart-4/40 bg-chart-4/10 px-1.5 text-[10px] font-medium text-warning-foreground"
                             >
                                 Opted out
                             </Badge>

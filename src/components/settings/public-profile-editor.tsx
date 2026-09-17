@@ -12,16 +12,16 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
 
     return (
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_420px] gap-8 items-start">
-            <PublicProfileEditorFormColumn
+            <div className="min-w-0 order-2 xl:order-1"><PublicProfileEditorFormColumn
                 business={business}
                 initialSlug={initialSlug}
                 onSlugChange={p.handleSlugChange}
                 onValuesChange={p.handleValuesChange}
                 onLogoChange={p.handleLogoChange}
                 onTabChange={p.handleTabChange}
-            />
+            /></div>
 
-            <PublicProfileEditorPreviewColumn
+            <div className="min-w-0 order-1 xl:order-2 xl:sticky xl:top-6"><PublicProfileEditorPreviewColumn
                 business={business}
                 previewState={p.previewState}
                 previewStep={p.previewStep}
@@ -36,7 +36,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                 qrDataUrl={q.qrDataUrl}
                 onDownloadQr={() => q.handleDownloadQr(p.previewState.slug || initialSlug)}
                 onPrintQr={q.handlePrintQr}
-            />
+            /></div>
         </div>
     );
 }

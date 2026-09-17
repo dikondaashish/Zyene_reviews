@@ -6,7 +6,7 @@ const organizationSeller = buildOrganizationSchema();
 
 const PRICING_URL = `${JSON_LD_BASE_URL}/pricing`;
 
-function monthlyPlanOffer(planId: string) {
+export function monthlyPlanOffer(planId: string) {
     const plan = PLANS.find((p) => p.id === planId);
     if (!plan || plan.price == null) return null;
 
@@ -22,30 +22,18 @@ function monthlyPlanOffer(planId: string) {
     };
 }
 
-/** Product + Offer JSON-LD for Starter, Professional, and Enterprise (monthly list prices). */
+/** Only advertise offers with a public price; Enterprise requires a custom quote. */
 export function buildPricingProductSchema(): Record<string, unknown> {
     const starter = monthlyPlanOffer("starter_monthly");
     const professional = monthlyPlanOffer("professional_monthly");
-    const enterprise = PLANS.find((p) => p.id === "enterprise")!;
-
-    const offers = [
-        starter,
-        professional,
-        {
-            "@type": "Offer",
-            name: enterprise.name,
-            description: enterprise.features.join("; "),
-            priceCurrency: "USD",
-            availability: "https://schema.org/InStock",
-            url: PRICING_URL,
-            seller: organizationSeller,
-        },
-    ].filter(Boolean);
+    const offers = [starter, professional].filter(Boolean);
 
     return {
         "@context": "https://schema.org",
         "@type": "Product",
         name: "Zyene Reviews",
+        image: [`${JSON_LD_BASE_URL}/og/og-default.png`],
+        url: PRICING_URL,
         description:
             "Review management and local SEO platform for local businesses. Plans include review monitoring, AI replies, campaigns, and competitor tracking.",
         brand: {

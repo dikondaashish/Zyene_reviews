@@ -1,3 +1,4 @@
+import { isTestContact } from "@/lib/customers/test-contact";
 import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { User } from "@supabase/supabase-js";
@@ -94,13 +95,13 @@ export async function prepareExecuteSendReviewRequest(params: {
     if ((channel === "sms" || channel === "both") && phoneNorm) {
         const { data: contact } = await supabase
             .from("customers")
-            .select("last_request_sent_at, is_opted_out")
+            .select("last_request_sent_at, is_opted_out, tags")
             .eq("business_id", businessId)
             .eq("phone", phoneNorm)
             .maybeSingle();
 
-        if (contact?.is_opted_out) {
-            return apiError("This contact opted out of review requests.", { status: 400 });
+        if (contact?.is_opted_out || isTestContact(contact)) {
+            return apiError("This contact is opted out or tagged zyene:test and cannot receive review requests.", { status: 400 });
         }
 
         if (contact?.last_request_sent_at) {
@@ -117,13 +118,13 @@ export async function prepareExecuteSendReviewRequest(params: {
     if ((channel === "email" || channel === "both") && emailNorm) {
         const { data: contact } = await supabase
             .from("customers")
-            .select("last_request_sent_at, is_opted_out")
+            .select("last_request_sent_at, is_opted_out, tags")
             .eq("business_id", businessId)
             .eq("email", emailNorm)
             .maybeSingle();
 
-        if (contact?.is_opted_out) {
-            return apiError("This contact opted out of review requests.", { status: 400 });
+        if (contact?.is_opted_out || isTestContact(contact)) {
+            return apiError("This contact is opted out or tagged zyene:test and cannot receive review requests.", { status: 400 });
         }
 
         if (contact?.last_request_sent_at) {

@@ -12,7 +12,7 @@ type Anomaly = { eligible: boolean; anomalous: boolean; history_days: number } |
 
 export async function Phase3Page() {
     const data = await loadPhase3PageData();
-    if (data.kind === "no-business") return <BusinessContextEmptyState icon={Building2} title="Add a business for differentiation" description="Phase 3 measurements are scoped to the active business and organization." />;
+    if (data.kind === "no-business") return <BusinessContextEmptyState icon={Building2} title="Add a business to explore visibility insights" description="See what helps this business stand out in local search." />;
     const llms = data.llmsTxt as Llms;
     const anomaly = data.anomaly as Anomaly;
     const signals = [
@@ -29,7 +29,7 @@ export async function Phase3Page() {
         <GoogleSeoAeoSubnav active="/google-seo-aeo/phase-3" />
         <header className="flex flex-wrap items-start justify-between gap-4"><div><h1 className="text-3xl font-bold">Differentiation</h1>
             <p className="mt-1 text-sm text-muted-foreground">Advanced measurement and agency delivery for {data.businessName}.</p></div>
-            <form action={runPhase3Refresh}><Button type="submit"><RefreshCw className="mr-2 size-4" />Refresh Phase 3</Button></form></header>
+            <form action={runPhase3Refresh}><Button type="submit"><RefreshCw className="mr-2 size-4" />Refresh insights</Button></form></header>
         <section className="space-y-4" aria-labelledby="phase3-signals"><div><h2 id="phase3-signals" className="text-xl font-semibold">Operational signals</h2>
             <p className="text-sm text-muted-foreground">Measured results retain explicit unavailable and insufficient-history states.</p></div>
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{signals.map(([label, value]) => <Card key={label}>

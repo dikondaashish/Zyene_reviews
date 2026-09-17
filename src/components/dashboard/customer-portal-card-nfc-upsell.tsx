@@ -7,13 +7,12 @@ import { useNfcOrder } from "@/components/dashboard/use-nfc-order";
 
 export function CustomerPortalCardNfcUpsell({ businessName }: { businessName: string }) {
     const order = useNfcOrder();
-
     return (
         <div className="relative z-10 mb-4 w-full">
             <button
                 type="button"
                 onClick={() => order.setOpen(true)}
-                className="group relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-[22px] bg-[rgb(0,82,204)] px-8 py-5 text-left shadow-sm transition-transform duration-150 ease-out active:scale-[0.99]"
+                className="group relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-[22px] bg-[rgb(0,82,204)] px-8 py-5 text-left shadow-sm transition-transform duration-150 ease-out active:scale-[0.99] focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
             >
                 <div className="pointer-events-none absolute -top-10 -left-10 size-36 opacity-[0.05] select-none transition-transform duration-700 group-hover:scale-110">
                     <Image
@@ -71,7 +70,6 @@ export function CustomerPortalCardNfcUpsell({ businessName }: { businessName: st
                     </div>
                 </div>
             </button>
-
             <NfcOrderDialog businessName={businessName} order={order} />
         </div>
     );

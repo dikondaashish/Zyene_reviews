@@ -6,7 +6,7 @@ export function navigateToGoogleBusinessOAuthOnboarding(): void {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.trim();
     if (!clientId) {
         toast.error(
-            "Google sign-in is not configured. Please add NEXT_PUBLIC_GOOGLE_CLIENT_ID in your project settings (e.g. Vercel Environment Variables) and redeploy."
+            "Google connection is unavailable in this environment. Please enter your business details manually or contact support."
         );
         return;
     }

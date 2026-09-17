@@ -20,8 +20,8 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
     {
         number: 2,
         name: "AI-Powered Response",
-        value: "One-click AI drafts, auto-commenter, Q&A suggestions.",
-        whyTheyPay: "Save 5+ hours/week. Sound professional every time.",
+        value: "AI reply suggestions and automatic Google replies in your chosen tone.",
+        whyTheyPay: "Spend less time writing routine replies, with a choice of tone and eligible ratings.",
     },
     {
         number: 3,
@@ -91,7 +91,7 @@ export const PLAN_COMPARISON_ROWS = [
     { label: "Email requests/mo", free: "10", starter: "500", pro: "700 × locations", enterprise: "Unlimited" },
     { label: "SMS requests/mo", free: "0", starter: "500", pro: "700 × locations", enterprise: "Unlimited" },
     { label: "Link requests/mo", free: "25", starter: "1,500", pro: "2,000 × locations", enterprise: "Unlimited" },
-    { label: "AI replies/mo", free: "0", starter: "1,500", pro: "2,000 × locations", enterprise: "Unlimited" },
+    { label: "AI customer review drafts/mo", free: "0", starter: "1,500", pro: "2,000 × locations", enterprise: "Unlimited" },
     { label: "Team seats", free: "1", starter: "5", pro: "15", enterprise: "Unlimited" },
     { label: "Public review pages", free: "No", starter: "Yes", pro: "Yes", enterprise: "Yes + white-label" },
     { label: "Competitor tracking", free: "No", starter: "Yes", pro: "Yes", enterprise: "Yes" },
@@ -137,7 +137,7 @@ export const POSITIONING = {
 export const MARKET_COMPARISON_CAPABILITIES = [
     { capability: "Google/Yelp/FB sync", zyene: true, birdeye: true, podium: true, nicejob: true },
     { capability: "AI reply suggestions", zyene: "Included", birdeye: "Starter+", podium: "Add-on", nicejob: "Pro only" },
-    { capability: "Auto-reply bot", zyene: true, birdeye: true, podium: "Limited", nicejob: false },
+    { capability: "Automatic Google replies", zyene: "Included", birdeye: "Available; confirm plan", podium: "Confirm plan and scope", nicejob: "Pro plan" },
     { capability: "SMS review requests", zyene: true, birdeye: true, podium: true, nicejob: true },
     { capability: "Negative Feedback Shield", zyene: true, birdeye: "Surveys only", podium: false, nicejob: false },
     { capability: "Competitor tracking", zyene: true, birdeye: "Dominate tier", podium: false, nicejob: "Pro only" },

@@ -57,7 +57,7 @@
 .home-hero {
   width: 100%;
   overflow: clip;
-  padding: 48px 0 64px;
+  padding: 40px 0 32px;
 }
 .home-hero-container {
   width: calc(100% - 88px);
@@ -78,6 +78,16 @@
 }
 .home-hero-scene-layer {
   min-width: 0;
+  transform: translate3d(0, var(--home-hero-scroll-y, 0), 0);
+  transition: transform 220ms var(--ease-out);
+}
+.home-hero-pointer-layer {
+  transform: translate3d(
+    var(--home-hero-pointer-x, 0),
+    var(--home-hero-pointer-y, 0),
+    0
+  );
+  transition: transform 180ms var(--ease-out);
 }
 .home-hero-content {
   padding-block: 16px;
@@ -182,6 +192,12 @@
 @media (min-width: 1200px) and (max-width: 1439px) {
   .home-hero-container {
     width: calc(100% - 88px);
+  }
+}
+@media (min-width: 1200px) {
+  .home-hero-scene-layer {
+    width: 94%;
+    margin-left: auto;
   }
 }
 @media (max-width: 1199px) {

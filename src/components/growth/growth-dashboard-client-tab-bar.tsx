@@ -46,7 +46,7 @@ export function GrowthDashboardClientTabBar({ tab, onTab, auditErrors }: GrowthD
                             />
                         ) : null}
                         {t.id === "audit" && auditErrors === 0 && tab !== "audit" ? (
-                            <CheckCircle2 className="ml-1 inline-block size-3.5 text-chart-2" aria-hidden="true" />
+                            <CheckCircle2 className="ml-1 inline-block size-3.5 text-success" aria-hidden="true" />
                         ) : null}
                     </button>
                 );

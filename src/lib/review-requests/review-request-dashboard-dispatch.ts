@@ -1,3 +1,4 @@
+import { dashboardRequestSms } from "@/lib/review-requests/dashboard-request-message";
 import { sendSMS } from "@/services/twilio/send-sms";
 import { sendReviewRequestEmail } from "@/services/resend/send-review-request-email";
 import {
@@ -46,7 +47,7 @@ export async function dispatchDashboardReviewChannels(args: {
     let emailLegStatus: "sent" | "failed" | null = null;
 
     if (channel === "sms" && phoneNorm) {
-        const messageBody = `Hi ${displayName}! Thanks for visiting ${businessName}. We'd love your feedback - it only takes 30 seconds: ${reviewLink}`;
+        const messageBody = dashboardRequestSms(displayName, businessName, reviewLink);
         const r = await sendSMS(phoneNorm, messageBody);
         if (!r.sent) {
             sendStatus = "failed";
@@ -85,7 +86,7 @@ export async function dispatchDashboardReviewChannels(args: {
             emailLegStatus = "sent";
         }
     } else if (channel === "both" && phoneNorm && emailNorm) {
-        const messageBody = `Hi ${displayName}! Thanks for visiting ${businessName}. We'd love your feedback - it only takes 30 seconds: ${reviewLink}`;
+        const messageBody = dashboardRequestSms(displayName, businessName, reviewLink);
         const smsR = await sendSMS(phoneNorm, messageBody);
 
         const html = reviewRequestEmail({

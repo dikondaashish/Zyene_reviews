@@ -28,6 +28,7 @@ export function NewCampaignTimingStep({ form, updateForm }: NewCampaignTimingSte
                         <button
                             key={opt.value}
                             type="button"
+                            aria-pressed={form.delay_minutes === opt.value}
                             onClick={() => updateForm({ delay_minutes: opt.value })}
                             className={`rounded-lg border-2 px-3 py-2 text-sm font-medium transition-colors
                                 ${form.delay_minutes === opt.value
@@ -46,13 +47,14 @@ export function NewCampaignTimingStep({ form, updateForm }: NewCampaignTimingSte
             <div className="space-y-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <Label>Enable reminder drip</Label>
+                        <Label htmlFor="campaign-reminder">Enable reminder drip</Label>
                         <p className="text-xs text-muted-foreground mt-1">
                             3-step drip: Day 0 → Day 7 → Day 14. Stops automatically if they
                             click or leave a review.
                         </p>
                     </div>
                     <Switch
+                        id="campaign-reminder"
                         checked={form.follow_up_enabled}
                         onCheckedChange={(checked) => updateForm({ follow_up_enabled: checked })}
                     />

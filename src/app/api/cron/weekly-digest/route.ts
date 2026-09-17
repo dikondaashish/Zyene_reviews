@@ -4,12 +4,10 @@ import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
-import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
 import { pingWeeklyDigestHeartbeat } from "@/lib/monitoring/weekly-digest-heartbeat";
+import { runCronJob } from "@/lib/cron/run-cron-job";
 
-/** Rolling window of reviews to include in the weekly digest (matches email copy). */
 const DIGEST_LOOKBACK_MS = 7 * 24 * 60 * 60 * 1000;
-
 /**
  * Weekly digest fan-out. Schedule externally (e.g. cron-jobs.org): every Monday 09:00
  * in your chosen timezone, GET with Authorization: Bearer CRON_SECRET.
@@ -22,19 +20,16 @@ const DIGEST_LOOKBACK_MS = 7 * 24 * 60 * 60 * 1000;
  * or keep daily heartbeat via /api/cron/daily-digest.
  */
 export async function GET(request: Request) {
-    if (!isAuthorizedCronRequest(request)) {
-        await pingWeeklyDigestHeartbeat(false);
-        return new NextResponse("Unauthorized", { status: 401 });
-    }
+    return runCronJob(request, { name: "weekly-digest", cadence: "weekly" }, async ({ occurrenceKey }) => {
+        const admin = createAdminClient();
+        const now = new Date();
+        const weekAgo = new Date(now.getTime() - DIGEST_LOOKBACK_MS);
 
-    const admin = createAdminClient();
-    const now = new Date();
-    const weekAgo = new Date(now.getTime() - DIGEST_LOOKBACK_MS);
-
-    try {
-        const { data: recentReviews, error: reviewError } = await admin
-            .from("reviews")
-            .select(`
+        try {
+            const { data: recentReviews, error: reviewError } = await admin
+                .from("reviews")
+                .select(
+                    `
                 id,
                 rating,
                 text,
@@ -48,42 +43,46 @@ export async function GET(request: Request) {
                     organization_id,
                     slug
                 )
-            `)
-            .gte("created_at", weekAgo.toISOString())
-            .order("created_at", { ascending: false });
+            `,
+                )
+                .gte("created_at", weekAgo.toISOString())
+                .order("created_at", { ascending: false });
 
-        if (reviewError) {
-            await pingWeeklyDigestHeartbeat(false);
-            return NextResponse.json({ error: reviewError.message }, { status: 500 });
-        }
+            if (reviewError) {
+                await pingWeeklyDigestHeartbeat(false);
+                return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+            }
 
-        if (!recentReviews || recentReviews.length === 0) {
+            if (!recentReviews || recentReviews.length === 0) {
+                await pingWeeklyDigestHeartbeat(true);
+                return NextResponse.json({
+                    message: "No new reviews in the digest window",
+                });
+            }
+
+            const businessIds = Array.from(new Set(recentReviews.map((r) => r.business_id)));
+
+            if (businessIds.length > 0) {
+                await inngest.send(
+                    businessIds.map((id) => ({
+                        id: `cron:weekly-digest:${occurrenceKey}:${id}`,
+                        name: "cron/weekly-digest.business",
+                        data: { businessId: id },
+                    })),
+                );
+            }
+
             await pingWeeklyDigestHeartbeat(true);
-            return NextResponse.json({ message: "No new reviews in the digest window" });
+
+            return NextResponse.json({
+                success: true,
+                dispatched: businessIds.length,
+                message: "Weekly digest background jobs fanned out",
+            });
+        } catch (error: unknown) {
+            logger.error({ err: error }, "Weekly Digest CRON Error:");
+            await pingWeeklyDigestHeartbeat(false);
+            return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
         }
-
-        const businessIds = Array.from(new Set(recentReviews.map(r => r.business_id)));
-
-        if (businessIds.length > 0) {
-            await inngest.send(
-                businessIds.map((id) => ({
-                    name: "cron/weekly-digest.business",
-                    data: { businessId: id },
-                }))
-            );
-        }
-
-        await pingWeeklyDigestHeartbeat(true);
-
-        return NextResponse.json({
-            success: true,
-            dispatched: businessIds.length,
-            message: "Weekly digest background jobs fanned out",
-        });
-    } catch (error: unknown) {
-        logger.error({ err: error }, "Weekly Digest CRON Error:");
-        await pingWeeklyDigestHeartbeat(false);
-        const message = error instanceof Error ? error.message : "Internal server error";
-        return NextResponse.json({ error: message }, { status: 500 });
-    }
+    });
 }

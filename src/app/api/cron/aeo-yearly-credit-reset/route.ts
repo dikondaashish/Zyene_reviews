@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
-import { isAuthorizedCronRequest } from "@/lib/cron/authorize-cron-request";
+import { runCronJob } from "@/lib/cron/run-cron-job";
 import { loadYearlyResetCandidates } from "@/services/aeo/billing/load-yearly-reset-candidates";
 
 /**
@@ -21,27 +21,31 @@ import { loadYearlyResetCandidates } from "@/services/aeo/billing/load-yearly-re
  * monitoring an intentionally-inert job would only be noise until launch.
  */
 export async function GET(request: Request) {
-    if (!isAuthorizedCronRequest(request)) {
-        return new NextResponse("Unauthorized", { status: 401 });
-    }
+    return runCronJob(request, { name: "aeo-yearly-credit-reset", cadence: "daily" }, async ({ occurrenceKey }) => {
+        try {
+            const db = createAdminClient();
+            const candidates = await loadYearlyResetCandidates(db, new Date());
 
-    try {
-        const db = createAdminClient();
-        const candidates = await loadYearlyResetCandidates(db, new Date());
+            if (candidates.length > 0) {
+                await inngest.send(
+                    candidates.map((c) => ({
+                        id: `cron:aeo-yearly-credit-reset:${occurrenceKey}:${c.organizationId}`,
+                        name: "aeo/credit-reset.requested" as const,
+                        data: {
+                            organizationId: c.organizationId,
+                            grantedMicroUsd: c.grantedMicroUsd,
+                        },
+                    })),
+                );
+            }
 
-        if (candidates.length > 0) {
-            await inngest.send(
-                candidates.map((c) => ({
-                    name: "aeo/credit-reset.requested" as const,
-                    data: { organizationId: c.organizationId, grantedMicroUsd: c.grantedMicroUsd },
-                }))
-            );
+            return NextResponse.json({
+                success: true,
+                dispatched: candidates.length,
+            });
+        } catch (error: unknown) {
+            logger.error({ err: error }, "[cron/aeo-yearly-credit-reset] fan-out failed:");
+            return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
         }
-
-        return NextResponse.json({ success: true, dispatched: candidates.length });
-    } catch (error: unknown) {
-        logger.error({ err: error }, "[cron/aeo-yearly-credit-reset] fan-out failed:");
-        const message = error instanceof Error ? error.message : "Internal server error";
-        return NextResponse.json({ error: message }, { status: 500 });
-    }
+    });
 }

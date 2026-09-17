@@ -29,10 +29,10 @@ export function PublicProfileEditorPreviewDevice({
                 <HelpCircle className="text-muted-foreground/50 size-3.5" />
             </div>
 
-            <div className="mx-auto h-[700px] w-full rounded-[2.5rem] overflow-hidden relative border-[4px] border-foreground ring-1 ring-border">
+            <div className="mx-auto h-[min(700px,75dvh)] w-full max-w-[420px] rounded-[2.5rem] overflow-hidden relative border-[4px] border-foreground ring-1 ring-border">
                 <div className="h-8 w-full bg-transparent absolute top-0 z-20 pointer-events-none" />
 
-                <div className="overflow-y-auto no-scrollbar size-full" style={{ background: previewBackdrop }}>
+                <div className="overflow-y-auto size-full" style={{ background: previewBackdrop }}>
                     <PublicReviewFlow {...flowProps} />
                 </div>
             </div>

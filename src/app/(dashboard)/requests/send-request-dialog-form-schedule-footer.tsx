@@ -67,12 +67,12 @@ export function SendRequestDialogFormScheduleFooter({
                     {isLoading ? (
                         <>
                             <Loader2 className="mr-2 animate-spin size-4" />
-                            {scheduleEnabled ? "Scheduling…" : "Sending…"}
+                            {scheduleEnabled ? "Preparing…" : "Preparing…"}
                         </>
                     ) : scheduleEnabled ? (
-                        "Schedule request"
+                        "Review scheduled request"
                     ) : (
-                        "Send now"
+                        "Preview request"
                     )}
                 </Button>
             </DialogFooter>

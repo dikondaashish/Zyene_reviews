@@ -17,7 +17,7 @@ export function IndustriesCtaSection() {
                         Turn customer moments into a stronger reputation.
                     </h2>
                     <p className="text-xl text-muted-foreground mb-10">
-                        Start a 7-day free trial to send fair review requests, respond with AI assistance, follow up on private feedback, and learn from the trends.<br />
+                        Start a 7-day free trial to send review requests, respond with AI assistance, follow up on private feedback, and learn from the trends.<br />
                         Plans start at $29.99/month. Cancel anytime.
                     </p>
                     <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl" asChild>

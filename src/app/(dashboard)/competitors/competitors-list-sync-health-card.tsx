@@ -96,7 +96,7 @@ export function CompetitorsListSyncHealthCard({
                                 </div>
                             </div>
                             {latestRun.error_message ? (
-                                <p className="text-xs text-sync-action dark:text-sync-action">
+                                <p className="text-xs text-destructive dark:text-destructive">
                                     {latestRun.error_message}
                                 </p>
                             ) : null}

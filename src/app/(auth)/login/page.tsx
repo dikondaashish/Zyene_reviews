@@ -1,4 +1,7 @@
 import LoginPage from "./page-client";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Log in", description: "Log in to your Zyene Reviews workspace to manage reviews, replies, and customer feedback." };
 
 export default function Page() {
     const googleClientId =

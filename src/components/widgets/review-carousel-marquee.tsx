@@ -1,48 +1,43 @@
-import type { CarouselReview } from "./review-carousel-types";
-import { ReviewCarouselCard } from "./review-carousel-card";
+"use client";
 
-const marqueeKeyframes = (reviewCount: number) => `
-@keyframes review-carousel-marquee-scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-250px * ${reviewCount} - 1rem * ${reviewCount})); }
-}
-.review-carousel-marquee-track {
-    display: flex;
-    width: max-content;
-    animation: review-carousel-marquee-scroll 40s linear infinite;
-}
-.review-carousel-marquee-track:hover {
-    animation-play-state: paused;
-}
-.review-carousel-marquee-root .no-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-.review-carousel-marquee-root .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-`;
+import { useRef } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import type { CarouselReview } from "@/components/widgets/review-carousel-types";
+import { ReviewCarouselCard } from "@/components/widgets/review-carousel-card";
 
-export function ReviewCarouselMarquee({
-    reviews,
-    displayReviews,
-    mounted,
-}: {
-    reviews: CarouselReview[];
-    displayReviews: CarouselReview[];
-    mounted: boolean;
-}) {
+/** Manual browsing keeps every review available on touch, keyboard and reduced motion. */
+export function ReviewCarouselMarquee({ reviews, mounted }: { reviews: CarouselReview[]; mounted: boolean }) {
+    const track = useRef<HTMLUListElement>(null);
+    const move = (direction: number) =>
+        track.current?.scrollBy({ left: direction * track.current.clientWidth, behavior: "instant" });
     return (
-        <div className="review-carousel-marquee-root relative flex w-full overflow-hidden no-scrollbar fade-edges px-4">
-            <style dangerouslySetInnerHTML={{ __html: marqueeKeyframes(reviews.length) }} />
-            <div className="review-carousel-marquee-track flex gap-4 pr-4">
-                {displayReviews.map((review, i) => (
-                    <ReviewCarouselCard key={`${review.id}-${i}`} review={review} mounted={mounted} />
-                ))}
+        <section aria-label="Customer reviews" className="space-y-3">
+            <div className="flex items-center justify-between gap-4 px-4">
+                <p className="text-sm text-muted-foreground">
+                    {reviews.length} customer {reviews.length === 1 ? "review" : "reviews"}
+                </p>
+                <div className="flex gap-2">
+                    <Button variant="outline" size="icon" aria-label="Previous reviews" onClick={() => move(-1)}>
+                        <ArrowLeft aria-hidden="true" />
+                    </Button>
+                    <Button variant="outline" size="icon" aria-label="Next reviews" onClick={() => move(1)}>
+                        <ArrowRight aria-hidden="true" />
+                    </Button>
+                </div>
             </div>
-
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-white to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-white to-transparent" />
-        </div>
+            <ul
+                ref={track}
+                tabIndex={0}
+                aria-label="Scroll through customer reviews"
+                className="flex snap-x snap-proximity gap-4 overflow-x-auto px-4 pb-4 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring"
+            >
+                {reviews.map((review) => (
+                    <li key={review.id} className="flex snap-start">
+                        <ReviewCarouselCard review={review} mounted={mounted} />
+                    </li>
+                ))}
+            </ul>
+        </section>
     );
 }

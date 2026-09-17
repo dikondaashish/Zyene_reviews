@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Download, Printer, Share2, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -31,20 +32,22 @@ export function CustomerPortalCardActionsFooter({
 }: CustomerPortalCardActionsFooterProps) {
     return (
         <div className="relative z-10 w-full space-y-3">
-            <div
-                className="flex items-center justify-between bg-[rgb(47,61,47)] rounded-[10px] p-1.5 pl-4 border border-white/5 hover:bg-[rgb(56,71,56)] transition-colors cursor-pointer group"
+            <button
+                type="button"
+                aria-label={copied ? "Review link copied" : "Copy review link"}
+                className="flex w-full items-center justify-between bg-[rgb(47,61,47)] rounded-[10px] p-1.5 pl-4 border border-white/5 hover:bg-[rgb(56,71,56)] transition-colors group focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
                 onClick={onCopyLink}
             >
-                <div className="flex items-center gap-3 overflow-hidden text-white/80">
+                <span className="flex items-center gap-3 overflow-hidden text-white/80">
                     <Share2 className="text-white/40 shrink-0 size-4" />
                     <span className="text-[13px] truncate tracking-tight">
                         {domain}/{businessSlug}
                     </span>
-                </div>
-                <div className="bg-[rgb(26,37,26)] group-hover:bg-[rgba(26,37,26,0.8)] text-white/90 px-3 py-1.5 rounded-[6px] text-[12px] font-medium transition-colors flex items-center justify-center shrink-0">
+                </span>
+                <span aria-live="polite" className="bg-[rgb(26,37,26)] group-hover:bg-[rgba(26,37,26,0.8)] text-white/90 px-3 py-1.5 rounded-[6px] text-[12px] font-medium transition-colors flex items-center justify-center shrink-0">
                     {copied ? "Copied" : "Copy"}
-                </div>
-            </div>
+                </span>
+            </button>
 
             <div className="grid grid-cols-2 gap-2">
                 <Dialog open={showQr} onOpenChange={onShowQrChange}>
@@ -62,9 +65,12 @@ export function CustomerPortalCardActionsFooter({
                             {loading ? (
                                 <div className="text-sm text-muted-foreground">Loading...</div>
                             ) : qrDataUrl ? (
-                                <img
+                                <Image
                                     src={qrDataUrl}
                                     alt="QR Code"
+                                    width={240}
+                                    height={240}
+                                    unoptimized
                                     className="size-[240px]"
                                     style={{ imageRendering: "pixelated" }}
                                 />

@@ -1,3 +1,4 @@
+import { loadBillingRenewalSummary, type BillingRenewalSummary } from "@/services/stripe/billing-renewal-summary";
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
@@ -28,6 +29,7 @@ export type BillingPageData =
   | {
       kind: "ok";
       clientProps: {
+        renewalSummary: BillingRenewalSummary | null;
         currentPlan: (typeof PLANS)[number] | null;
         organizationPlanId: string;
         planStatus: string;
@@ -135,6 +137,7 @@ export async function loadBillingPageData(
   return {
     kind: "ok",
     clientProps: {
+      renewalSummary: canManageBilling ? await loadBillingRenewalSummary(orgLive.stripe_subscription_id) : null,
       currentPlan,
       organizationPlanId: orgPlanId,
       planStatus: orgLive.plan_status || "active",

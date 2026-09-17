@@ -66,7 +66,7 @@ export function GoogleIntegrationCardConnected({
     handleConnectSearchConsole: () => void;
 }) {
     return (
-        <Card className="border-chart-2/30/70 dark:border-chart-2/30 overflow-hidden">
+        <Card className="border-chart-2/70 dark:border-chart-2/30 overflow-hidden">
             <div className="h-1 bg-chart-2/100 w-full" />
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
@@ -79,7 +79,7 @@ export function GoogleIntegrationCardConnected({
                             {businessName && <p className="text-sm text-muted-foreground">{businessName}</p>}
                         </div>
                     </div>
-                    <Badge className="bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2 gap-1.5 border-0">
+                    <Badge className="bg-chart-2/15 text-success dark:bg-chart-2/20 dark:text-success gap-1.5 border-0">
                         <CheckCircle2 className="size-3" />
                         Connected
                     </Badge>

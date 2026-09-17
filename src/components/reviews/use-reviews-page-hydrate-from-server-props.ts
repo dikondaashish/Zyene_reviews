@@ -15,7 +15,7 @@ export function useReviewsPageHydrateFromServerProps(params: {
     initialPublicCount: number;
     initialPrivateCount: number;
     initialType: string;
-    initialFilters: { status: string; rating: string; sort: string };
+    initialFilters: { status: string; rating: string; sort: string; q?: string };
     setReviews: Dispatch<SetStateAction<ReviewsList>>;
     setCount: Dispatch<SetStateAction<number>>;
     setTotalPages: Dispatch<SetStateAction<number>>;
@@ -23,7 +23,7 @@ export function useReviewsPageHydrateFromServerProps(params: {
     setPublicCount: Dispatch<SetStateAction<number>>;
     setPrivateCount: Dispatch<SetStateAction<number>>;
     setType: Dispatch<SetStateAction<string>>;
-    setFilters: Dispatch<SetStateAction<{ status: string; rating: string; sort: string }>>;
+    setFilters: Dispatch<SetStateAction<{ status: string; rating: string; sort: string; q?: string }>>;
 }) {
     const {
         initialReviews,

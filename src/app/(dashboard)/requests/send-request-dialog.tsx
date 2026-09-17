@@ -1,5 +1,7 @@
 "use client";
 
+import { SendRequestPreview } from "@/app/(dashboard)/requests/send-request-preview";
+import { useRequestPreview } from "@/app/(dashboard)/requests/use-request-preview";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,8 +40,9 @@ export function SendRequestDialog({
         onSubmit,
     } = useSendRequestDialog({ businessId, initialCustomer, autoOpen });
 
+    const p = useRequestPreview(businessId);
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={(value) => { p.clear(); setOpen(value); }}>
             <DialogTrigger asChild>
                 {trigger ?? (
                     <Button className="w-full sm:w-auto">
@@ -54,18 +57,18 @@ export function SendRequestDialog({
                     <DialogTitle>Send Review Request</DialogTitle>
                     <DialogDescription>Send via SMS or Email.</DialogDescription>
                 </DialogHeader>
-                <SendRequestDialogForm
+                {p.preview ? <SendRequestPreview preview={p.preview.data} values={p.preview.values} loading={isLoading} onBack={p.clear} onConfirm={() => void onSubmit(p.preview!.values)} /> : <SendRequestDialogForm
                     form={form}
-                    onSubmit={onSubmit}
+                    onSubmit={p.prepare}
                     channel={channel}
                     scheduleEnabled={scheduleEnabled}
-                    isLoading={isLoading}
+                    isLoading={isLoading || p.loading}
                     nameWrapRef={nameWrapRef}
                     suggestions={suggestions}
                     suggestLoading={suggestLoading}
                     suggestOpen={suggestOpen}
                     applyCustomerPick={applyCustomerPick}
-                />
+                />}
             </DialogContent>
             <UpgradeModal
                 isOpen={showUpgradeModal}

@@ -44,7 +44,7 @@ export function YelpIntegrationCardConnectFlow({
                         <YelpCardIcon className="text-destructive size-6" />
                         <div>
                             <h3 className="font-semibold text-sm">Yelp</h3>
-                            <p className="text-xs text-muted-foreground">Monitor and respond to Yelp reviews</p>
+                            <p className="text-xs text-muted-foreground">Monitor Yelp reviews; publish replies on Yelp</p>
                         </div>
                     </div>
                 </div>

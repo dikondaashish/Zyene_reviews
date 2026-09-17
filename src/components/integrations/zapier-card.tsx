@@ -48,7 +48,7 @@ export function ZapierCard({ hasApiKey }: ZapierCardProps) {
                     <Badge
                         className={
                             hasApiKey
-                                ? "bg-chart-2/15 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2 gap-1 border-0 text-xs"
+                                ? "bg-chart-2/15 text-success dark:bg-chart-2/20 dark:text-success gap-1 border-0 text-xs"
                                 : "bg-muted text-muted-foreground gap-1 border-0 text-xs"
                         }
                     >
@@ -58,7 +58,7 @@ export function ZapierCard({ hasApiKey }: ZapierCardProps) {
             </CardHeader>
             <CardContent className="space-y-3 pb-3">
                 {!hasApiKey && (
-                    <div className="flex items-start gap-2 rounded-md border border-chart-4/35 bg-chart-4/12 p-3 text-xs text-chart-4">
+                    <div className="flex items-start gap-2 rounded-md border border-chart-4/35 bg-chart-4/12 p-3 text-xs text-warning-foreground">
                         <AlertTriangle className="shrink-0 mt-0.5 size-3.5" />
                         <p>
                             Generate an API key in the <span className="font-medium">Developer API</span>{" "}
@@ -85,7 +85,7 @@ export function ZapierCard({ hasApiKey }: ZapierCardProps) {
                             onClick={handleCopy}
                         >
                             {copied ? (
-                                <Check className="text-chart-2 size-4" />
+                                <Check className="text-success size-4" />
                             ) : (
                                 <Copy className="size-4" />
                             )}

@@ -40,7 +40,7 @@ export function DashboardViewGooglePerformance({
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Phone calls</CardTitle>
-                        <Phone className="text-chart-2 size-4" />
+                        <Phone className="text-success size-4" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">

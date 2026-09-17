@@ -20,8 +20,7 @@ export function PlatformPillarsSection() {
                         Built for teams, locations, and integrations
                     </h2>
                     <p className="text-muted-foreground">
-                        All ten product pillars from our foundation - six deep-dives above, plus CRM,
-                        multi-location, API, and collaboration on every paid plan.
+                        Organize contacts, work with your team, and connect the tools you use. Location and usage limits depend on your plan.
                     </p>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-6">
@@ -45,7 +44,7 @@ export function PlatformPillarsSection() {
                                     </div>
                                     <div>
                                         <p className="text-xs font-semibold text-muted-foreground mb-1">
-                                            Pillar {pillar.number}
+                                            {pillar.number === 8 ? "Professional and Enterprise" : "Your daily workflow"}
                                         </p>
                                         <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
                                             {pillar.name}

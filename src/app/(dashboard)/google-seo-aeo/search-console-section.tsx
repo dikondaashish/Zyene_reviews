@@ -9,14 +9,14 @@ function formatPercent(value: number): string {
 /** E-2: real Search Console query data, only ever rendered once a grant exists - see load-search-console-section.ts. */
 export function SearchConsoleSection({ content }: { content: SearchConsoleSectionContent }) {
     return (
-        <Card>
-            <CardHeader>
+        <Card className="overflow-hidden border">
+            <CardHeader className="border-b bg-muted/25">
                 <CardTitle className="flex items-center gap-2 text-lg">
                     <Search className="size-4" />
                     Search Console
                 </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-5 sm:p-6">
                 {content.kind === "error" && (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <AlertCircle className="size-4 shrink-0" />
@@ -25,8 +25,7 @@ export function SearchConsoleSection({ content }: { content: SearchConsoleSectio
                 )}
                 {content.kind === "no_properties" && (
                     <p className="text-sm text-muted-foreground">
-                        Search Console is connected, but this Google account has no verified
-                        properties for us to read.
+                        Search Console is connected, but this Google account has no verified properties for us to read.
                     </p>
                 )}
                 {content.kind === "ok" && (
@@ -35,32 +34,41 @@ export function SearchConsoleSection({ content }: { content: SearchConsoleSectio
                             {content.siteUrl} · {content.startDate} to {content.endDate}
                         </p>
                         {content.queries.length === 0 ? (
-                            <p className="text-sm text-muted-foreground">
-                                No search queries recorded for this window.
-                            </p>
+                            <p className="text-sm text-muted-foreground">No search queries recorded for this window.</p>
                         ) : (
-                            <table className="w-full text-sm">
-                                <thead>
-                                    <tr className="border-b text-left text-muted-foreground">
-                                        <th className="py-1.5 font-medium">Query</th>
-                                        <th className="py-1.5 font-medium text-right">Clicks</th>
-                                        <th className="py-1.5 font-medium text-right">Impressions</th>
-                                        <th className="py-1.5 font-medium text-right">CTR</th>
-                                        <th className="py-1.5 font-medium text-right">Avg. position</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {content.queries.map((row) => (
-                                        <tr key={row.query} className="border-b last:border-0">
-                                            <td className="py-1.5 truncate max-w-[240px]">{row.query}</td>
-                                            <td className="py-1.5 text-right">{row.clicks}</td>
-                                            <td className="py-1.5 text-right">{row.impressions}</td>
-                                            <td className="py-1.5 text-right">{formatPercent(row.ctr)}</td>
-                                            <td className="py-1.5 text-right">{row.position.toFixed(1)}</td>
+                            <div className="overflow-x-auto rounded-lg border">
+                                <table className="w-full min-w-[38rem] text-sm">
+                                    <thead>
+                                        <tr className="border-b bg-muted/40 text-left text-muted-foreground">
+                                            <th className="px-3 py-2.5 font-medium">Query</th>
+                                            <th className="px-3 py-2.5 text-right font-medium">Clicks</th>
+                                            <th className="px-3 py-2.5 text-right font-medium">Impressions</th>
+                                            <th className="px-3 py-2.5 text-right font-medium">CTR</th>
+                                            <th className="px-3 py-2.5 text-right font-medium">Avg. position</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {content.queries.map((row) => (
+                                            <tr
+                                                key={row.query}
+                                                className="border-b transition-colors last:border-0 hover:bg-muted/35"
+                                            >
+                                                <td className="max-w-[240px] truncate px-3 py-2.5">{row.query}</td>
+                                                <td className="px-3 py-2.5 text-right tabular-nums">{row.clicks}</td>
+                                                <td className="px-3 py-2.5 text-right tabular-nums">
+                                                    {row.impressions}
+                                                </td>
+                                                <td className="px-3 py-2.5 text-right tabular-nums">
+                                                    {formatPercent(row.ctr)}
+                                                </td>
+                                                <td className="px-3 py-2.5 text-right tabular-nums">
+                                                    {row.position.toFixed(1)}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         )}
                     </div>
                 )}

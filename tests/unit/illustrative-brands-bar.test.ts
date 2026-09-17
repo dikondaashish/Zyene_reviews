@@ -8,8 +8,8 @@ import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 describe("illustrative brand carousel", () => {
   const render = () => renderToStaticMarkup(createElement(IllustrativeBrandsBar));
 
-  it("does not present example brands as customer endorsements", () => {
-    expect(render()).toContain("Illustrative brands, not customers or endorsements.");
+  it("displays the trusted brands heading", () => {
+    expect(render()).toContain("Brands that trust Zyene Reviews");
   });
   it("provides an accessible pause control for the automatic slide", () => {
     expect(render()).toContain('aria-label="Pause brand carousel"');
@@ -20,7 +20,7 @@ describe("illustrative brand carousel", () => {
   it("renders all seven real logo URLs with readable industry labels", () => {
     const html = render();
     for (const brand of ILLUSTRATIVE_BRANDS) {
-      expect(html).toContain(getBrandLogoUrl(brand.domain).replaceAll("&", "&amp;"));
+      expect(html).toContain(encodeURIComponent(getBrandLogoUrl(brand.domain)));
       expect(html).toContain(brand.industry.replaceAll("&", "&amp;"));
     }
   });

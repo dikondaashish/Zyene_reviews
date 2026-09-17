@@ -14,7 +14,7 @@ export function CompetitorsListEmptyState({ businessId, onAddCompetitor }: Compe
                 <div className="flex flex-col items-center justify-center py-20 px-6 bg-gradient-to-br from-background to-primary/10 rounded-3xl border border-primary/20 relative overflow-hidden">
                     {/* Decorative Background Elements */}
                     <div className="absolute top-0 right-0 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32 size-64"></div>
-                    <div className="absolute bottom-0 left-0 bg-chart-4/18/10 dark:bg-chart-4/15 rounded-full blur-3xl -ml-32 -mb-32 size-64"></div>
+                    <div className="absolute bottom-0 left-0 bg-chart-4/10 dark:bg-chart-4/15 rounded-full blur-3xl -ml-32 -mb-32 size-64"></div>
 
                     <div className="relative z-10 flex flex-col items-center text-center max-w-lg">
                         <div className="bg-gradient-to-tr from-primary to-primary/70 rounded-2xl flex items-center justify-center mb-8 rotate-2 transform transition-transform hover:rotate-0 duration-500 size-20">
@@ -40,7 +40,7 @@ export function CompetitorsListEmptyState({ businessId, onAddCompetitor }: Compe
                                 Rating Tracking
                             </div>
                             <div className="flex flex-col items-center gap-2">
-                                <div className="p-2 bg-chart-4/120/10 rounded-lg text-chart-4"><BarChart className="size-4" /></div>
+                                <div className="p-2 bg-chart-4/10 rounded-lg text-warning-foreground"><BarChart className="size-4" /></div>
                                 Volume Growth
                             </div>
                             <div className="flex flex-col items-center gap-2">
@@ -48,7 +48,7 @@ export function CompetitorsListEmptyState({ businessId, onAddCompetitor }: Compe
                                 Market Share
                             </div>
                             <div className="flex flex-col items-center gap-2">
-                                <div className="p-2 bg-chart-2/10 rounded-lg text-chart-2"><ExternalLink className="size-4" /></div>
+                                <div className="p-2 bg-chart-2/10 rounded-lg text-success"><ExternalLink className="size-4" /></div>
                                 Direct Links
                             </div>
                         </div>

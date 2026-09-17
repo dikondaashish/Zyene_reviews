@@ -30,7 +30,7 @@ export function NeedsAttentionEmpty({
             </div>
             <div className="flex flex-col items-center justify-center gap-2 px-6 py-12 text-center">
                 <div className="rounded-full bg-chart-2/15 p-3 dark:bg-chart-2/10">
-                    <Check className="text-chart-2 size-6" aria-hidden />
+                    <Check className="text-success size-6" aria-hidden />
                 </div>
                 <p className="text-sm font-medium text-foreground">{copy.emptyTitle}</p>
                 <p className="max-w-xs text-sm text-muted-foreground">{copy.emptyDescription}</p>

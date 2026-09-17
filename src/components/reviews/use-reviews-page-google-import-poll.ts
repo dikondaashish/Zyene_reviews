@@ -6,8 +6,8 @@ export function useReviewsPageGoogleImportPoll(params: {
     isGoogleConnected: boolean;
     type: string;
     isImportingGoogleReviews: boolean;
-    fetchReviews: (p: { type: string; status: string; rating: string; sort: string; page: number }) => void;
-    filters: { status: string; rating: string; sort: string };
+    fetchReviews: (p: { type: string; status: string; rating: string; sort: string; q?: string; page: number }) => void;
+    filters: { status: string; rating: string; sort: string; q?: string };
     page: number;
 }) {
     const { isGoogleConnected, type, isImportingGoogleReviews, fetchReviews, filters, page } = params;

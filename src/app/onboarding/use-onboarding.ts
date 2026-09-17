@@ -20,6 +20,7 @@ export function useOnboarding() {
     const [googleConnected, setGoogleConnected] = useState(false);
     const [loadError, setLoadError] = useState<string | null>(null);
     const [pendingGoogleCode, setPendingGoogleCode] = useState<string | null>(null);
+    const [googleConnectionError, setGoogleConnectionError] = useState<string | null>(null);
     const [showPaymentCancelled, setShowPaymentCancelled] = useState(false);
     const [isStepResolved, setIsStepResolved] = useState(false);
     const [checkoutVerifying, setCheckoutVerifying] = useState(() => {
@@ -32,6 +33,7 @@ export function useOnboarding() {
     useOnboardingUrlEffects({
         setCurrentStep,
         setPendingGoogleCode,
+        setGoogleConnectionError,
         setIsStepResolved,
         setShowPaymentCancelled,
         setCheckoutVerifying,
@@ -71,6 +73,8 @@ export function useOnboarding() {
         loadError,
         pendingGoogleCode,
         setPendingGoogleCode,
+        googleConnectionError,
+        setGoogleConnectionError,
         showPaymentCancelled,
         isStepResolved,
         checkoutVerifying,

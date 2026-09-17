@@ -1,4 +1,5 @@
 import { PublicReviewFlow } from "./review-flow";
+import { resolveReviewFlowFooterBranding } from "@/lib/brand/review-flow-footer-branding";
 import type { ReviewPageData } from "./load-review-page-data";
 
 type ReviewPageFlowSectionProps = Extract<ReviewPageData, { kind: "ok" }>;
@@ -10,6 +11,12 @@ export function ReviewPageFlowSection({
     reviewPageBackgroundColor,
     ratingStyle,
 }: ReviewPageFlowSectionProps) {
+    const footerBranding = resolveReviewFlowFooterBranding({
+        footerLink: business.footer_link ?? undefined,
+        footerLogoUrl: business.footer_logo_url ?? undefined,
+        footerCompanyName: business.footer_company_name ?? undefined,
+    });
+
     return (
         <div className="review-page-wrapper">
             <PublicReviewFlow
@@ -56,9 +63,9 @@ export function ReviewPageFlowSection({
                 thankYouHeading={business.thank_you_heading ?? undefined}
                 thankYouMessage={business.thank_you_message ?? undefined}
                 footerText={business.footer_text ?? undefined}
-                footerCompanyName={business.footer_company_name ?? undefined}
-                footerLink={business.footer_link ?? undefined}
-                footerLogoUrl={business.footer_logo_url ?? undefined}
+                footerCompanyName={footerBranding.label}
+                footerLink={footerBranding.href}
+                footerLogoUrl={footerBranding.logoSrc}
                 hideBranding={business.hide_branding ?? undefined}
                 enableStaffSelection={business.enable_staff_selection ?? undefined}
                 staffNames={(business.staff_names as string[]) ?? undefined}
