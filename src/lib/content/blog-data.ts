@@ -26,6 +26,7 @@ import { BLOG_IMAGES } from "./blog-images";
 import { post16 } from "./blog-posts-google-review-link";
 import { post17 } from "./blog-posts-delete-google-review";
 import { post18 } from "./blog-posts-home-services";
+import { post19 } from "./blog-posts-podium-pricing";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Export
@@ -36,7 +37,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
     post5, post6, post7, post8,
     post9, post10, post11, post12,
     post13, post14, post15, post16,
-    post17, post18,
+    post17, post18, post19,
 ];
 
 export const BLOG_POSTS: BlogPost[] = RAW_BLOG_POSTS.map((post) => ({

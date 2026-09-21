@@ -133,6 +133,13 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         height: 941,
         caption: "The moment after a successful service call is the best time to earn a genuine customer review.",
     },
+    "podium-pricing-vs-zyene-reviews": {
+        src: `${BLOG_IMAGE_BASE}/podium-pricing-comparison-desk.jpg`,
+        alt: "Small business owner evaluating software pricing and features on a laptop in a modern office",
+        width: 1672,
+        height: 941,
+        caption: "Local business owners frequently evaluate whether bundled communication tools justify Podium's $399+/month annual contract.",
+    },
 };
 
 export function getBlogImage(slug: string): ContentImage {

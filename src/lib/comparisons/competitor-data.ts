@@ -125,6 +125,10 @@ export const COMPETITORS: CompetitorData[] = [
         "Local businesses evaluating a shared review inbox and request workflow with published plan allowances."
     ],
     "accentColor": "blue",
+    "deepDiveLink": {
+        "label": "Read the complete Podium pricing breakdown (2026)",
+        "href": "/blog/podium-pricing-vs-zyene-reviews"
+    },
     "pricingSource": {
         "label": "Podium official pricing",
         "href": "https://www.podium.com/getpricing",

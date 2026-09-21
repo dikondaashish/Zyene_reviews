@@ -59,6 +59,10 @@ const BASELINE = {
     max: 299,
     why: "content dataset — industry-specific guide with trade-specific sections",
   },
+  "src/lib/content/blog-posts-podium-pricing.ts": {
+    max: 291,
+    why: "content dataset — competitor comparison guide with pricing tables and buyer FAQs",
+  },
   "src/lib/content/resource-data.ts": { max: 505, why: "content dataset" },
   "src/lib/comparisons/competitor-data.ts": {
     max: 455,
