@@ -13,7 +13,7 @@ export const post18: BlogPost = {
     author: { name: "Marcus Vance", role: "Local SEO & Reputation" },
     metaTitle: "HVAC & Home Services Reputation Management (2026)",
     metaDescription:
-        "Reputation management guide for HVAC, plumbing, electrical, and roofing businesses. Learn how to collect Google reviews, respond to complaints, and win more local leads.",
+        "Reputation management guide for HVAC, plumbing, and roofing contractors. Collect Google reviews, handle complaints, and convert reputation into local leads.",
     keywords: [
         "hvac reputation management",
         "home services reputation management",
@@ -35,10 +35,10 @@ export const post18: BlogPost = {
     internalLinks: [
         { label: "Get 50 Google Reviews in 30 Days", href: "/blog/how-to-get-50-google-reviews-in-30-days" },
         { label: "Responding to 1-Star Reviews", href: "/blog/how-to-respond-to-a-1-star-review" },
-        { label: "Negative Feedback Shield", href: "/features/feedback-shield" },
+        { label: "Negative Feedback Shield", href: "/blog/negative-feedback-shield" },
         { label: "Google Review Link Guide", href: "/blog/how-to-get-a-google-review-link" },
         { label: "GBP Optimization Checklist", href: "/blog/google-business-profile-optimization-checklist" },
-        { label: "Review Management Platform", href: "/product" },
+        { label: "Review Management Features", href: "/features" },
     ],
     faqs: [
         {
