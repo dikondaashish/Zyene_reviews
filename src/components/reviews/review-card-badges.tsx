@@ -25,14 +25,14 @@ export function ReviewCardStatusBadge({ status }: { status: string }) {
 }
 
 export function ReviewCardStars({ rating }: { rating: number }) {
-    const colorClass = "text-warning-foreground fill-chart-4";
     return (
-        <span className="inline-flex gap-0.5" role="img" aria-label={`${rating} out of 5 stars`}>
+        <span className="inline-flex shrink-0 items-center gap-1" role="img" aria-label={`${rating} out of 5 stars`}>
             {[...Array(5)].map((_, i) => (
                 <Star
                     key={i}
                     aria-hidden="true"
-                    className={cn("size-3.5", i < rating ? colorClass : "text-muted-foreground/40 fill-muted")}
+                    strokeWidth={0}
+                    className={cn("size-4 fill-current", i < rating ? "text-warning" : "text-muted-foreground/25")}
                 />
             ))}
         </span>
