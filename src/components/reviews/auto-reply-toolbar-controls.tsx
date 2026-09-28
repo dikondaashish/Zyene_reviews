@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, Loader2 } from "lucide-react";
+import { Bot, ChevronDown, Loader2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -25,10 +25,22 @@ export function AutoReplyToolbarControls({
     onToneChange: (tone: AutoReplyTone) => void;
 }) {
     return (
-        <section
-            aria-label="Automatic Google replies"
-            className="w-full space-y-4 rounded-xl border border-border bg-card p-4 sm:max-w-xl"
-        >
+        <details className="group rounded-xl border border-border bg-card">
+            <summary className="flex min-h-16 cursor-pointer list-none items-center gap-3 rounded-xl px-4 py-3 focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted"><Bot className="size-4 text-muted-foreground" aria-hidden="true" /></span>
+                <span className="min-w-0 flex-1">
+                    <span className="flex flex-wrap items-center gap-2 text-sm font-medium">
+                        Automatic replies
+                        <span className={cn("rounded-md px-1.5 py-0.5 text-xs", enabled ? "bg-success/10 text-success" : "bg-muted text-muted-foreground")}>{enabled ? "On" : "Off"}</span>
+                    </span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">
+                        {enabled ? `Google · ${minRating === 5 ? "5-star reviews" : `${minRating} stars and up`} · ${tone.charAt(0).toUpperCase() + tone.slice(1)} tone` : "Save time with AI replies to new Google reviews."}
+                    </span>
+                </span>
+                <span className="hidden text-xs font-medium text-muted-foreground sm:inline">Settings</span>
+                <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180 motion-reduce:transition-none" aria-hidden="true" />
+            </summary>
+            <section aria-label="Automatic Google replies" className="space-y-4 border-t border-border p-4 sm:p-5">
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-3">
                     <Bot className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
@@ -98,6 +110,7 @@ export function AutoReplyToolbarControls({
                       ? "Automatic publishing is on. You can turn it off at any time."
                       : "Automatic publishing is off. No replies will be posted automatically."}
             </p>
-        </section>
+            </section>
+        </details>
     );
 }

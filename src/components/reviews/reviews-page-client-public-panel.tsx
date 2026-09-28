@@ -1,9 +1,10 @@
 "use client";
 
 import { ReviewSearch } from "@/components/reviews/review-search";
-import { ReviewsFilters } from "./reviews-filters";
-import { ReviewManagement } from "./review-management";
-import { MessageSquare } from "lucide-react";
+import { ReviewsFilters } from "@/components/reviews/reviews-filters";
+import { ReviewManagement } from "@/components/reviews/review-management";
+import { Button } from "@/components/ui/button";
+import { MessageSquare, SearchX } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import type { ReviewManagementItem } from "@/types/components";
 
@@ -16,6 +17,7 @@ interface ReviewsPageClientPublicPanelProps {
     reviews: ReviewManagementItem[];
     isImportingGoogleReviews: boolean;
     publicCount: number;
+    resultCount: number;
     onFilterChange: (key: string, value: string) => void;
     onRefresh: () => void;
 }
@@ -29,45 +31,54 @@ export function ReviewsPageClientPublicPanel({
     reviews,
     isImportingGoogleReviews,
     publicCount,
+    resultCount,
     onFilterChange,
     onRefresh,
 }: ReviewsPageClientPublicPanelProps) {
     return (
-        <>
+        <section aria-label="Public reviews inbox" className="min-w-0 overflow-hidden rounded-xl border border-border bg-card">
+            <div className="space-y-3 border-b border-border p-4">
             <ReviewSearch key={filters.q || ""} query={filters.q || ""} onSearch={(q) => onFilterChange("q", q)} />
             <ReviewsFilters filters={filters} onFilterChange={onFilterChange} />
-            <div className={loading ? "opacity-60 pointer-events-none transition-opacity" : "transition-opacity"}>
+            </div>
+            <div aria-busy={loading} inert={loading} className={loading ? "opacity-60 transition-opacity" : "transition-opacity"}>
                 {reviews && reviews.length > 0 ? (
                     <ReviewManagement
                         reviews={reviews}
+                        resultCount={resultCount}
+                        loading={loading}
                         businessId={businessId}
                         googleMapsListingUrl={googleMapsListingUrl}
                         planAllowsAiReplies={planAllowsAiReplies}
                         onRefresh={onRefresh}
                     />
                 ) : (
-                    <div className="text-center py-20 flex flex-col items-center justify-center border rounded-lg bg-muted/30 border-dashed">
+                    <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
                         <div className="bg-muted rounded-full flex items-center justify-center mb-4 size-12">
-                            <MessageSquare className="text-muted-foreground size-6" />
+                            {publicCount > 0 ? <SearchX className="size-6 text-muted-foreground" /> : <MessageSquare className="size-6 text-muted-foreground" />}
                         </div>
-                        <h3 className="text-lg font-medium text-foreground">
+                        <h2 className="text-lg font-medium text-foreground">
                             {isImportingGoogleReviews
                                 ? "Importing your Google reviews"
                                 : publicCount === 0
                                   ? "No reviews synced yet"
-                                  : "No reviews found"}
-                        </h3>
+                                  : filters.status === "needs_response" && filters.rating === "all" && !filters.q ? "You’re all caught up" : "No matching reviews"}
+                        </h2>
                         <p className="text-muted-foreground max-w-sm mt-1 mb-6">
                             {isImportingGoogleReviews
                                 ? "Your first reviews usually appear within a minute. This page refreshes automatically."
                                 : publicCount === 0
                                   ? "Connect your Google Business Profile to import and manage your reviews."
-                                  : "Try adjusting your filters or sync your reviews."}
+                                  : filters.status === "needs_response" && filters.rating === "all" && !filters.q ? "There are no reviews waiting for a reply. View all reviews to revisit your conversations." : "Try a different name, keyword, or rating to find the review you need."}
                         </p>
-                        <SyncButton businessId={businessId} />
+                        {publicCount === 0 ? <SyncButton businessId={businessId} /> : <div className="flex flex-wrap justify-center gap-2">
+                            {filters.q && <Button variant="outline" onClick={() => onFilterChange("q", "")}>Clear search</Button>}
+                            {filters.rating !== "all" && <Button variant="outline" onClick={() => onFilterChange("rating", "all")}>Show all ratings</Button>}
+                            {filters.status !== "all" && <Button variant="outline" onClick={() => onFilterChange("status", "all")}>View all reviews</Button>}
+                        </div>}
                     </div>
                 )}
             </div>
-        </>
+        </section>
     );
 }

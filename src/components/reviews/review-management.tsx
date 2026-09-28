@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CompactReviewRow } from "@/components/reviews/compact-review-row";
-import { BulkReviewActionBar } from "./bulk-review-action-bar";
+import { BulkReviewActionBar } from "@/components/reviews/bulk-review-action-bar";
 import { Button } from "@/components/ui/button";
 import { CheckSquare, Square } from "lucide-react";
 import type { ReviewManagementItem } from "@/types/components";
@@ -10,6 +10,8 @@ import type { ReviewManagementItem } from "@/types/components";
 interface ReviewManagementProps {
     reviews: ReviewManagementItem[];
     businessId: string;
+    resultCount?: number;
+    loading?: boolean;
     googleMapsListingUrl?: string | null;
     /** Starter+ / Professional / Enterprise ,  required for AI suggest-reply */
     planAllowsAiReplies: boolean;
@@ -18,11 +20,14 @@ interface ReviewManagementProps {
 
 export function ReviewManagement({
     reviews,
+    resultCount,
+    loading = false,
     businessId,
     googleMapsListingUrl = null,
     planAllowsAiReplies,
     onRefresh,
 }: ReviewManagementProps) {
+    const totalCount = resultCount ?? reviews.length;
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
     const toggleSelect = (id: string, selected: boolean) => {
@@ -49,10 +54,10 @@ export function ReviewManagement({
     const allSelected = reviews.length > 0 && selectedCount === reviews.length;
 
     return (
-        <div className="min-w-0 space-y-4">
+        <div className="min-w-0">
             {/* Selection Controls */}
             {reviews.length > 0 && (
-                <div className="mb-2 flex min-w-0 flex-wrap items-center gap-2">
+                <div className="flex min-w-0 flex-wrap items-center gap-2 border-b border-border bg-muted/25 px-3 py-2">
                     <Button
                         variant="ghost"
                         size="sm"
@@ -60,8 +65,11 @@ export function ReviewManagement({
                         className="text-xs text-muted-foreground hover:text-foreground h-8 px-2"
                     >
                         {allSelected ? <CheckSquare className="mr-2 text-primary size-3.5" /> : <Square className="mr-2 size-3.5" />}
-                        {allSelected ? "Deselect All" : "Select All on Page"}
+                        {allSelected ? "Deselect all" : "Select page"}
                     </Button>
+                    <span role="status" className="ml-auto text-xs tabular-nums text-muted-foreground">
+                        {loading ? "Updating reviews…" : `${totalCount.toLocaleString("en-US")} ${totalCount === 1 ? "review" : "reviews"}`}
+                    </span>
                     {selectedCount > 0 && (
                         <span className="text-xs text-muted-foreground">
                             {selectedCount} selected
@@ -70,7 +78,7 @@ export function ReviewManagement({
                 </div>
             )}
 
-            <div className="grid gap-4">
+            <div className="divide-y divide-border">
                 {reviews.map((review) => (
                     <CompactReviewRow
                         key={review.id}

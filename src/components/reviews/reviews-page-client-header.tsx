@@ -2,9 +2,9 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Download, Eye, Loader2 } from "lucide-react";
+import { Download, Eye } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
-import { AutoReplyToolbar, type AutoReplySettingsState } from "./auto-reply-toolbar";
+import { AutoReplyToolbar, type AutoReplySettingsState } from "@/components/reviews/auto-reply-toolbar";
 
 interface ReviewsPageClientHeaderProps {
     count: number;
@@ -16,60 +16,31 @@ interface ReviewsPageClientHeaderProps {
     autoReplyInitial: AutoReplySettingsState;
 }
 
-export function ReviewsPageClientHeader({
-    count,
-    isDemo,
-    businessId,
-    exportType,
-    isGoogleConnected,
-    autoCommenterPlanOk,
-    autoReplyInitial,
-}: ReviewsPageClientHeaderProps) {
+export function ReviewsPageClientHeader(props: ReviewsPageClientHeaderProps) {
     return (
-        <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div className="min-w-0 flex-1">
-                <h1 className="flex flex-wrap items-center gap-2 text-xl font-bold tracking-tight sm:gap-3 sm:text-2xl">
-                    Reviews
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-sm font-normal text-muted-foreground">
-                        {count || 0}
-                    </span>
-                    {isDemo && (
-                        <Badge
-                            variant="outline"
-                            className="flex items-center gap-1 border-primary/30 bg-primary/10 px-2.5 py-0.5 font-normal tracking-tight text-primary"
-                        >
-                            <Eye className="size-3" />
-                            Interactive Demo
-                        </Badge>
-                    )}
-                </h1>
-                <p className="mt-1 text-sm text-muted-foreground">Manage and respond to your customer reviews.</p>
-            </div>
-            <div className="flex w-full min-w-0 flex-col gap-3 sm:w-auto sm:items-end">
-                <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap">
-                    <Button variant="outline" className="w-full sm:w-auto" asChild>
-                        <a
-                            href={`/api/reviews/export?type=${exportType}`}
-                            className="flex w-full items-center justify-center"
-                        >
-                            <Download className="mr-2 size-4" />
-                            <span className="sm:hidden">Export</span>
-                            <span className="hidden sm:inline">Export CSV</span>
-                        </a>
-                    </Button>
-                    <div className="w-full sm:w-auto [&_button]:w-full sm:[&_button]:w-auto">
-                        <SyncButton businessId={businessId} />
+        <header className="space-y-5">
+            <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-3">
+                        <h1 className="text-2xl font-semibold tracking-tight">Reviews</h1>
+                        <span className="rounded-md border border-border bg-card px-2 py-0.5 text-xs font-medium tabular-nums text-muted-foreground">
+                            {props.count.toLocaleString("en-US")} total
+                        </span>
+                        {props.isDemo && <Badge variant="outline"><Eye className="mr-1 size-3" />Demo</Badge>}
                     </div>
+                    <p className="mt-1.5 text-sm text-muted-foreground">Every review, one place. Turn customer feedback into a conversation.</p>
                 </div>
-                {isGoogleConnected && (
-                    <AutoReplyToolbar
-                        businessId={businessId}
-                        googleConnected={isGoogleConnected}
-                        planAllowsAutoCommenter={autoCommenterPlanOk}
-                        initial={autoReplyInitial}
-                    />
-                )}
+                <div className="flex shrink-0 items-center gap-2">
+                    <Button variant="outline" asChild>
+                        <a href={`/api/reviews/export?type=${props.exportType}`}><Download className="size-4" />Export CSV</a>
+                    </Button>
+                    <SyncButton businessId={props.businessId} />
+                </div>
             </div>
-        </div>
+            {props.isGoogleConnected && (
+                <AutoReplyToolbar businessId={props.businessId} googleConnected={props.isGoogleConnected}
+                    planAllowsAutoCommenter={props.autoCommenterPlanOk} initial={props.autoReplyInitial} />
+            )}
+        </header>
     );
 }

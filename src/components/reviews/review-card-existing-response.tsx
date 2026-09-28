@@ -25,7 +25,7 @@ export function ReviewCardExistingResponse({
     }
 
     return (
-        <div className="relative z-10 mt-5 ml-0 animate-in rounded-md border-l-2 border-primary bg-muted p-3 text-sm fade-in zoom-in-95 duration-200 sm:ml-4">
+        <div className="relative z-10 my-4 rounded-lg bg-muted/60 p-4 text-sm">
             <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs text-foreground">
                     <CornerDownRight className="text-muted-foreground shrink-0 size-3" />

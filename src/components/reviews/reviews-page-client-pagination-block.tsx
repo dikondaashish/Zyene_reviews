@@ -18,7 +18,7 @@ export function ReviewsPageClientPaginationBlock({
     if (totalPages <= 1) return null;
 
     return (
-        <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-2 pb-8 sm:flex sm:justify-center sm:gap-3">
+        <nav aria-label="Reviews pagination" className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 pb-4 sm:flex sm:justify-end">
             <Button
                 variant="outline"
                 size="sm"
@@ -29,7 +29,7 @@ export function ReviewsPageClientPaginationBlock({
                 Previous
             </Button>
             <div className="text-center text-sm text-muted-foreground tabular-nums">
-                {page} / {totalPages}
+                Page {page} of {totalPages}
             </div>
             <Button
                 variant="outline"
@@ -40,6 +40,6 @@ export function ReviewsPageClientPaginationBlock({
             >
                 Next
             </Button>
-        </div>
+        </nav>
     );
 }

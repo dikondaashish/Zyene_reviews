@@ -29,6 +29,8 @@ export const REVIEW_CARD_TONES = ["professional", "friendly", "concise"] as cons
 export type ReviewCardTone = (typeof REVIEW_CARD_TONES)[number];
 
 export interface ReviewCardProps {
+    /** Render within an inbox row without duplicating its reviewer header. */
+    embedded?: boolean;
     review: Review;
     /** Business listing on Google Maps (from GBP link); used when review photos are not in the API. */
     googleMapsListingUrl?: string | null;

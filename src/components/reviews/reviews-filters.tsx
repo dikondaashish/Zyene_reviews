@@ -1,70 +1,47 @@
 "use client";
 
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Filter, SlidersHorizontal, Star } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ArrowDownWideNarrow, Star } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ReviewsFiltersProps {
-    filters: {
-        status: string;
-        rating: string;
-        sort: string;
-        q?: string;
-    };
+    filters: { status: string; rating: string; sort: string; q?: string };
     onFilterChange: (key: string, value: string) => void;
 }
 
 export function ReviewsFilters({ filters, onFilterChange }: ReviewsFiltersProps) {
     return (
-        <div className="sticky top-0 z-20 flex min-w-0 flex-col gap-2 rounded-lg border border-border bg-card/95 p-2 backdrop-blur-sm supports-[backdrop-filter]:bg-card/90 sm:flex-row sm:items-center sm:justify-between sm:p-1">
-            <div className="min-w-0 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                <Tabs value={filters.status || "all"} onValueChange={(val) => onFilterChange("status", val)} className="w-full min-w-max sm:w-auto">
-                    <TabsList className="h-9 w-full justify-start bg-transparent p-0 sm:w-auto">
-                        <TabsTrigger value="all" className="h-8 shrink-0 rounded-md border border-transparent px-2.5 text-xs data-[state=active]:border-border data-[state=active]:bg-muted sm:px-3">All</TabsTrigger>
-                        <TabsTrigger value="needs_response" className="h-8 shrink-0 rounded-md border border-transparent px-2.5 text-xs data-[state=active]:border-primary/20 data-[state=active]:bg-primary/10 data-[state=active]:text-primary sm:px-3">Needs reply</TabsTrigger>
-                        <TabsTrigger value="responded" className="h-8 shrink-0 rounded-md border border-transparent px-2.5 text-xs data-[state=active]:border-primary/20 data-[state=active]:bg-primary/10 data-[state=active]:text-primary sm:px-3">Responded</TabsTrigger>
-                        <TabsTrigger value="ignored" className="h-8 shrink-0 rounded-md border border-transparent px-2.5 text-xs data-[state=active]:border-border data-[state=active]:bg-muted sm:px-3">Ignored</TabsTrigger>
-                    </TabsList>
-                </Tabs>
+        <div className="flex min-w-0 flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+            <div role="group" aria-label="Response status" className="grid grid-cols-2 gap-1 rounded-lg bg-muted/60 p-1 min-[380px]:flex">
+                {[
+                    ["all", "All"], ["needs_response", "Needs reply"], ["responded", "Responded"], ["ignored", "Ignored"],
+                ].map(([value, label]) => (
+                    <button key={value} type="button" aria-pressed={(filters.status || "all") === value} onClick={() => onFilterChange("status", value)}
+                        className={cn("min-h-9 flex-1 whitespace-nowrap rounded-md px-2 text-xs sm:px-3 font-medium transition-colors focus-visible:outline-2 focus-visible:outline-ring sm:flex-none",
+                            (filters.status || "all") === value ? "bg-card text-foreground shadow-sm ring-1 ring-border/60" : "text-muted-foreground hover:text-foreground")}>
+                        {label}
+                    </button>
+                ))}
             </div>
-
-            <div className="grid min-w-0 grid-cols-1 gap-2 border-t border-border pt-2 sm:flex sm:flex-wrap sm:items-center sm:border-t-0 sm:pt-0 min-[480px]:grid-cols-2">
+            <div className="grid grid-cols-2 gap-2 sm:flex">
                 <Select value={filters.rating || "all"} onValueChange={(val) => onFilterChange("rating", val)}>
-                    <SelectTrigger className="h-9 w-full text-sm border-dashed focus:ring-0 sm:w-[130px] md:h-8 md:text-xs">
-                        <div className="flex items-center pointer-events-none">
-                            <Filter className="mr-2 text-muted-foreground size-3" />
-                            <SelectValue placeholder="Rating" />
-                        </div>
+                    <SelectTrigger aria-label="Filter by rating" className="h-10 w-full bg-card text-xs sm:w-36">
+                        <Star className="hidden size-3.5 shrink-0 text-muted-foreground min-[400px]:block" aria-hidden="true" /><SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="all">All Stars</SelectItem>
-                        {[5, 4, 3, 2, 1].map((rating) => (
-                            <SelectItem key={rating} value={String(rating)}>
-                                <Star className="mr-2 size-3.5 fill-chart-4 text-warning-foreground" aria-hidden="true" />
-                                {rating} {rating === 1 ? "Star" : "Stars"}
-                            </SelectItem>
-                        ))}
+                        <SelectItem value="all">All ratings</SelectItem>
+                        {[5, 4, 3, 2, 1].map((rating) => <SelectItem key={rating} value={String(rating)}>{rating} {rating === 1 ? "star" : "stars"}</SelectItem>)}
                     </SelectContent>
                 </Select>
-
                 <Select value={filters.sort || "newest"} onValueChange={(val) => onFilterChange("sort", val)}>
-                    <SelectTrigger className="h-9 w-full text-sm border-dashed focus:ring-0 sm:w-[150px] md:h-8 md:text-xs">
-                        <div className="flex items-center pointer-events-none">
-                            <SlidersHorizontal className="mr-2 text-muted-foreground size-3" />
-                            <SelectValue placeholder="Sort" />
-                        </div>
+                    <SelectTrigger aria-label="Sort reviews" className="h-10 w-full bg-card text-xs sm:w-40">
+                        <ArrowDownWideNarrow className="hidden size-3.5 shrink-0 text-muted-foreground min-[400px]:block" aria-hidden="true" /><SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="newest">Latest Reviews</SelectItem>
-                        <SelectItem value="oldest">Oldest Reviews</SelectItem>
-                        <SelectItem value="highest">Highest Rated</SelectItem>
-                        <SelectItem value="lowest">Lowest Rated</SelectItem>
+                        <SelectItem value="newest">Newest first</SelectItem>
+                        <SelectItem value="oldest">Oldest first</SelectItem>
+                        <SelectItem value="highest">Highest rated</SelectItem>
+                        <SelectItem value="lowest">Lowest rated</SelectItem>
                     </SelectContent>
                 </Select>
             </div>

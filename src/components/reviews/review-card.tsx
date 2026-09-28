@@ -17,6 +17,7 @@ export type { Review } from "@/components/reviews/review-card-types";
 
 export function ReviewCard({
     review,
+    embedded = false,
     googleMapsListingUrl = null,
     planAllowsAiReplies = true,
     isSelected = false,
@@ -44,13 +45,12 @@ export function ReviewCard({
     return (
         <div
             className={cn(
-                "relative group min-w-0 overflow-hidden rounded-xl border border-border bg-card p-3 transition-all duration-300 sm:p-4",
-                "hover:-translate-y-0.5 hover:shadow-lg hover:border-canvas-elevated/60",
-                isSelected && "border-primary/30 bg-primary/10 shadow-sm"
+                "relative group min-w-0",
+                !embedded && "rounded-xl border border-border bg-card p-4",
+                isSelected && "border-primary/30 bg-primary/5"
             )}
         >
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-canvas-elevated/35 via-canvas-elevated/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-            <ReviewCardHeader review={review} isSelected={isSelected} onSelect={onSelect} />
+            {!embedded && <ReviewCardHeader review={review} isSelected={isSelected} onSelect={onSelect} />}
             <ReviewCardBody
                 review={review}
                 isExpanded={isExpanded}
@@ -64,7 +64,7 @@ export function ReviewCard({
                 onStartEditReply={reply.startEditReply}
                 onOpenDeleteReply={() => setDeleteReplyOpen(true)}
             />
-            <ReviewCardActions
+            {!showReplyComposer && <ReviewCardActions
                 review={review}
                 isReplying={reply.isReplying}
                 activeTone={reply.activeTone}
@@ -78,7 +78,7 @@ export function ReviewCard({
                 onSetReplying={reply.setIsReplying}
                 onToneClick={reply.handleToneClick}
                 onSuggestProfessional={() => void reply.handleToneClick("professional")}
-            />
+            />}
             {showReplyComposer && (
                 <ReviewCardComposer
                     review={review}

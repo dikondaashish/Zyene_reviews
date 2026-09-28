@@ -31,7 +31,7 @@ export function ReviewCardComposer({
     onSubmit: () => void;
 }) {
     return (
-        <div className="relative z-10 mt-4 animate-in rounded-xl border border-border bg-muted p-3 slide-in-from-top-2 duration-200 sm:p-5">
+        <div className="relative z-10 mt-4 border-t border-border pt-4">
             {isEditingReply && (
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Edit reply</p>
             )}
@@ -40,7 +40,7 @@ export function ReviewCardComposer({
                 <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
                     <div className="flex items-center gap-2">
                         <Sparkles className="text-sync-action size-4" />
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">AI Tone</span>
+                        <span className="text-xs font-medium text-muted-foreground">Draft with AI</span>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                         {REVIEW_CARD_TONES.map((tone) => (
@@ -51,7 +51,7 @@ export function ReviewCardComposer({
                                 onClick={() => onToneClick(tone)}
                                 disabled={loadingTone !== null}
                                 className={cn(
-                                    "rounded-full border px-3 py-1.5 text-xs font-semibold capitalize transition-all sm:px-4",
+                                    "min-h-9 rounded-md border px-3 py-1.5 text-xs font-medium capitalize transition-colors focus-visible:outline-2 focus-visible:outline-ring sm:px-4",
                                     activeTone === tone
                                         ? "bg-primary text-primary-foreground border-primary"
                                         : "bg-background text-muted-foreground border-border hover:border-foreground/30 hover:bg-muted",

@@ -2,24 +2,24 @@
 
 import { UpgradeModal } from "@/components/settings/upgrade-modal";
 import type { ReviewManagementItem } from "@/types/components";
-import type { PrivateFeedback } from "./private-feedback-card";
-import type { ReviewsPageClientProps } from "./reviews-page-client-types";
-import { useReviewsPageClientList } from "./use-reviews-page-client-list";
-import { useReviewsPageClientBackfill } from "./use-reviews-page-client-backfill";
-import { ReviewsPageClientHeader } from "./reviews-page-client-header";
-import { ReviewsPageClientTypeTabs } from "./reviews-page-client-type-tabs";
-import { ReviewsPageClientPublicPanel } from "./reviews-page-client-public-panel";
-import { ReviewsPageClientPrivatePanel } from "./reviews-page-client-private-panel";
-import { ReviewsPageClientPaginationBlock } from "./reviews-page-client-pagination-block";
+import type { PrivateFeedback } from "@/components/reviews/private-feedback-card";
+import type { ReviewsPageClientProps } from "@/components/reviews/reviews-page-client-types";
+import { useReviewsPageClientList } from "@/components/reviews/use-reviews-page-client-list";
+import { useReviewsPageClientBackfill } from "@/components/reviews/use-reviews-page-client-backfill";
+import { ReviewsPageClientHeader } from "@/components/reviews/reviews-page-client-header";
+import { ReviewsPageClientTypeTabs } from "@/components/reviews/reviews-page-client-type-tabs";
+import { ReviewsPageClientPublicPanel } from "@/components/reviews/reviews-page-client-public-panel";
+import { ReviewsPageClientPrivatePanel } from "@/components/reviews/reviews-page-client-private-panel";
+import { ReviewsPageClientPaginationBlock } from "@/components/reviews/reviews-page-client-pagination-block";
 
 export function ReviewsPageClient(props: ReviewsPageClientProps) {
     const l = useReviewsPageClientList(props);
     const b = useReviewsPageClientBackfill(props.businessId);
 
     return (
-        <div className="min-w-0">
+        <div className="min-w-0 space-y-5">
             <ReviewsPageClientHeader
-                count={l.count}
+                count={l.publicCount + l.privateCount}
                 isDemo={props.isDemo}
                 businessId={props.businessId}
                 exportType={l.type}
@@ -49,6 +49,7 @@ export function ReviewsPageClient(props: ReviewsPageClientProps) {
                     reviews={l.reviews as ReviewManagementItem[]}
                     isImportingGoogleReviews={l.isImportingGoogleReviews}
                     publicCount={l.publicCount}
+                    resultCount={l.count}
                     onFilterChange={l.handleFilterChange}
                     onRefresh={l.refresh}
                 />

@@ -52,8 +52,7 @@ export function ReviewCardDetailsAndMenu({
                         <DialogHeader>
                             <DialogTitle>Review details</DialogTitle>
                             <DialogDescription>
-                                Google metadata synced from Business Profile. Customer photos only appear here when
-                                Google returns image URLs in the review payload (often it does not).
+                                Additional information and photos shared with this review.
                             </DialogDescription>
                         </DialogHeader>
                         <ReviewCardDetailsDialogBody
@@ -68,6 +67,7 @@ export function ReviewCardDetailsAndMenu({
                         <Button
                             variant="ghost"
                             size="sm"
+                            aria-label="More review actions"
                             className="p-0 hover:bg-muted text-muted-foreground hover:text-foreground rounded-full size-8"
                         >
                             <MoreHorizontal className="size-4" />
@@ -80,7 +80,7 @@ export function ReviewCardDetailsAndMenu({
                                 onClick={() => onUpdateStatus("pending")}
                                 disabled={isUpdatingStatus}
                             >
-                                Move to Pending
+                                Move to needs reply
                             </DropdownMenuItem>
                         ) : (
                             <DropdownMenuItem
@@ -91,9 +91,6 @@ export function ReviewCardDetailsAndMenu({
                                 Mark as Ignored
                             </DropdownMenuItem>
                         )}
-                        <DropdownMenuItem className="text-xs text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer">
-                            Report Review
-                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>

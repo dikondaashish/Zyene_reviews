@@ -1,7 +1,7 @@
 import { Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Review } from "@/components/reviews/review-card-types";
-import { ReviewCardGoogleIcon } from "@/components/reviews/review-card-google-icon";
+import { ReviewPlatform } from "@/components/reviews/review-platform";
 import { ReviewCardStatusBadge, ReviewCardStars } from "@/components/reviews/review-card-badges";
 import { getReviewAuthorInitial, getReviewAvatarUrl } from "@/components/reviews/review-card-derived";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -29,6 +29,7 @@ export function ReviewCardHeader({
                 >
                     <input
                         type="checkbox"
+                        aria-label={`Select review by ${review.author_name || "Anonymous"}`}
                         checked={isSelected}
                         onChange={(e) => onSelect(review.id, e.target.checked)}
                         className="rounded border-border text-primary focus:ring-primary cursor-pointer size-4"
@@ -68,25 +69,13 @@ export function ReviewCardHeader({
                                     ).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                                 </span>
                             )}
-                            {review.platform === "google" ? (
-                                <span
-                                    className="inline-flex items-center justify-center rounded border border-primary/20 bg-primary/10 size-5"
-                                    aria-label="Google"
-                                    title="Google"
-                                >
-                                    <ReviewCardGoogleIcon className="size-3.5" />
-                                </span>
-                            ) : (
-                                <span className="text-[10px] text-primary bg-primary/10 px-1.5 py-0.5 rounded uppercase font-semibold tracking-wide border border-primary/20">
-                                    {review.platform || "Google"}
-                                </span>
-                            )}
+                            <ReviewPlatform platform={review.platform} />
                         </div>
                     </div>
                 </div>
                 <div className="flex min-w-0 flex-wrap items-center gap-1.5 sm:max-w-[45%] sm:justify-end sm:gap-2">
                     {review.urgency_score && review.urgency_score >= 7 && (
-                        <span className="flex items-center gap-1 text-[10px] font-bold text-destructive bg-destructive/10 border border-destructive/20 px-2 py-0.5 rounded-full animate-pulse">
+                        <span className="flex items-center gap-1 text-[10px] font-bold text-destructive bg-destructive/10 border border-destructive/20 px-2 py-0.5 rounded-full">
                             <Zap className="fill-destructive size-3" />
                             URGENT
                         </span>
