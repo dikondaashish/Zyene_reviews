@@ -2,8 +2,10 @@ import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
-import { BusinessesPageHeader } from "./businesses-page-header";
-import { BusinessesCardsSection } from "./businesses-cards-section";
+import { BusinessesPageHeader } from "@/app/(dashboard)/businesses/businesses-page-header";
+import { BusinessesCardsSection } from "@/app/(dashboard)/businesses/businesses-cards-section";
+
+import { BusinessPlanUsage } from "@/components/businesses/business-plan-usage";
 
 export default async function BusinessesPage() {
     const supabase = await createClient();
@@ -22,13 +24,14 @@ export default async function BusinessesPage() {
     );
 
     return (
-        <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden">
-            <BusinessesPageHeader atLimit={atLimit} />
+        <div className="flex min-w-0 flex-col gap-7">
+            <BusinessesPageHeader atLimit={atLimit} organizationName={organization?.name} />
             <BusinessesCardsSection
                 businesses={businesses}
                 activeBusinessId={activeBusinessId}
                 visibleReviewStats={visibleReviewStats}
             />
+            <BusinessPlanUsage count={businesses.length} limit={maxLocations} />
         </div>
     );
 }

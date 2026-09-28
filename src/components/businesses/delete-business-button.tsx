@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
@@ -23,14 +23,17 @@ interface DeleteBusinessButtonProps {
     businessId: string;
     businessName: string;
     disabled?: boolean;
+    compact?: boolean;
 }
 
 export function DeleteBusinessButton({
     businessId,
     businessName,
     disabled = false,
+    compact = false,
 }: DeleteBusinessButtonProps) {
     const router = useRouter();
+    const confirmId = useId();
     const [open, setOpen] = useState(false);
     const [confirmName, setConfirmName] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
@@ -61,17 +64,23 @@ export function DeleteBusinessButton({
     };
 
     return (
-        <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialog open={open} onOpenChange={(nextOpen) => {
+            if (isDeleting) return;
+            setOpen(nextOpen);
+            setConfirmName("");
+        }}>
             <AlertDialogTrigger asChild>
                 <Button
                     type="button"
-                    variant="outline"
-                    size="sm"
+                    variant={compact ? "ghost" : "outline"}
+                    size={compact ? "icon" : "sm"}
                     disabled={disabled}
-                    className="h-7 px-2 border-destructive/30 text-destructive hover:text-destructive hover:bg-destructive/10"
+                    aria-label={`Delete ${businessName}`}
+                    title={disabled ? "Keep at least one business in your workspace" : `Delete ${businessName}`}
+                    className={compact ? "text-muted-foreground hover:bg-destructive/10 hover:text-destructive" : "h-7 px-2 border-destructive/30 text-destructive hover:text-destructive hover:bg-destructive/10"}
                 >
-                    <Trash2 className="mr-1 size-3.5" />
-                    Delete
+                    <Trash2 className="size-3.5" />
+                    {!compact && "Delete"}
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -83,10 +92,11 @@ export function DeleteBusinessButton({
                 </AlertDialogHeader>
 
                 <div className="space-y-2">
-                    <p className="text-xs text-muted-foreground">
+                    <label htmlFor={confirmId} className="text-xs text-muted-foreground">
                         Type: <span className="font-medium text-foreground">{businessName}</span>
-                    </p>
+                    </label>
                     <Input
+                        id={confirmId}
                         value={confirmName}
                         onChange={(e) => setConfirmName(e.target.value)}
                         placeholder="Enter business name"

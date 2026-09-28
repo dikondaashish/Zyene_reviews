@@ -1,141 +1,33 @@
-import { redirect } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
-import { Building2, Star, CheckCircle2, AlertCircle } from "lucide-react";
-import { BusinessesEmptyState } from "./businesses-empty-state";
-import { setActiveBusiness } from "@/lib/auth/business-context";
-import { DeleteBusinessButton } from "@/components/businesses/delete-business-button";
-import { emptyVisibleReviewRollup, type VisibleReviewRollup } from "@/lib/reviews/visible-review-rollups";
-import { isGoogleBusinessConnected } from "@/lib/google/is-google-connected";
-import type { BusinessContextReviewPlatform } from "@/types/business-context";
+import { BusinessesEmptyState } from "@/app/(dashboard)/businesses/businesses-empty-state";
+import { BusinessDirectory } from "@/components/businesses/business-directory";
+import { getGoogleConnectionStatus } from "@/lib/google/is-google-connected";
+import type { VisibleReviewRollup } from "@/lib/reviews/visible-review-rollups";
+import type { BusinessContextBusiness } from "@/types/business-context";
+import type { BusinessDirectoryEntry } from "@/types/business-directory";
 
-type BusinessCard = {
-    id: string;
-    name?: string | null;
-    category?: string | null;
-    status?: string | null;
-    review_platforms?: BusinessContextReviewPlatform[];
-};
-
-export function BusinessesCardsSection({
-    businesses,
-    activeBusinessId,
-    visibleReviewStats,
-}: {
-    businesses: BusinessCard[];
+export function BusinessesCardsSection({ businesses, activeBusinessId, visibleReviewStats }: {
+    businesses: BusinessContextBusiness[];
     activeBusinessId: string | null | undefined;
     visibleReviewStats: Map<string, VisibleReviewRollup>;
 }) {
-    if (businesses.length === 0) {
-        return <BusinessesEmptyState />;
-    }
+    if (businesses.length === 0) return <BusinessesEmptyState />;
 
-    return (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {businesses.map((business) => {
-                const isConnected = isGoogleBusinessConnected(business.review_platforms);
-                const cardStats = visibleReviewStats.get(business.id) ?? emptyVisibleReviewRollup();
-                const rating = cardStats.totalVisible > 0 ? cardStats.averageRatingVisible : null;
-                const totalReviews = cardStats.totalVisible;
-                const isActive = business.id === activeBusinessId;
-
-                return (
-                    <div
-                        key={business.id}
-                        className={`group relative border rounded-xl bg-card overflow-hidden transition-all duration-300 cursor-pointer ${
-                            isActive
-                                ? "ring-2 ring-primary border-primary/40 shadow-sm"
-                                : "hover:-translate-y-0.5 hover:border-canvas-elevated/60 hover:shadow-lg"
-                        }`}
-                    >
-                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-canvas-elevated/35 via-canvas-elevated/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                        <form
-                            action={async () => {
-                                "use server";
-                                await setActiveBusiness(business.id);
-                                redirect("/dashboard");
-                            }}
-                        >
-                            <button
-                                type="submit"
-                                className="relative z-10 w-full text-left p-5 flex flex-col gap-3 transition-colors duration-300 hover:bg-canvas-elevated/10 cursor-pointer"
-                            >
-                                <div className="flex items-start justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div
-                                            className={`rounded-lg flex items-center justify-center ${ isActive ? "bg-primary/15" : "bg-primary/10" } size-10`}
-                                        >
-                                            <Building2
-                                                className={`${isActive ? "text-primary" : "text-primary"} size-5`}
-                                            />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold text-sm">{business.name}</h3>
-                                            {business.category && (
-                                                <p className="text-xs text-muted-foreground capitalize">
-                                                    {business.category}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-col items-end gap-1">
-                                        {isActive && (
-                                            <Badge
-                                                variant="default"
-                                                className="text-xs font-medium"
-                                                title="This location is selected in Zyene (header switcher uses it for dashboard, reviews, etc.)"
-                                            >
-                                                Current
-                                            </Badge>
-                                        )}
-                                        {business.status &&
-                                            String(business.status).toLowerCase() !== "active" && (
-                                                <Badge variant="secondary" className="text-xs capitalize">
-                                                    {business.status}
-                                                </Badge>
-                                            )}
-                                    </div>
-                                </div>
-
-                                {rating != null && (
-                                    <div className="flex items-center gap-1.5 text-sm">
-                                        <Star className="text-warning-foreground fill-chart-4 size-4" />
-                                        <span className="font-medium">{Number(rating).toFixed(1)}</span>
-                                        {totalReviews > 0 && (
-                                            <span className="text-muted-foreground">({totalReviews} reviews)</span>
-                                        )}
-                                    </div>
-                                )}
-
-                                <div className="flex items-center gap-2 text-xs pt-1 border-t mt-1">
-                                    {isConnected ? (
-                                        <>
-                                            <CheckCircle2 className="text-success size-3.5" />
-                                            <span className="text-success dark:text-success">
-                                                Google Business Profile connected
-                                            </span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <AlertCircle className="text-warning-foreground size-3.5" />
-                                            <span className="text-warning-foreground dark:text-warning-foreground">Google not connected</span>
-                                        </>
-                                    )}
-                                </div>
-                            </button>
-                        </form>
-                        <div className="relative z-10 flex items-center justify-between border-t bg-muted/50 px-4 py-2 transition-colors duration-300 group-hover:bg-canvas-elevated/10">
-                            <span className="text-[11px] text-muted-foreground">
-                                Click card to set as current location
-                            </span>
-                            <DeleteBusinessButton
-                                businessId={business.id}
-                                businessName={business.name ?? "Business"}
-                                disabled={businesses.length <= 1}
-                            />
-                        </div>
-                    </div>
-                );
-            })}
-        </div>
-    );
+    // Project only display data across the client boundary, never platform credentials.
+    const entries: BusinessDirectoryEntry[] = businesses.map((business) => {
+        const stats = visibleReviewStats.get(business.id);
+        return {
+            id: business.id,
+            name: business.name || "Unnamed business",
+            category: business.category || "Business",
+            address: [business.address_line1, business.city, business.state]
+                .filter((part): part is string => typeof part === "string" && part.trim().length > 0).join(", "),
+            logoUrl: typeof business.logo_url === "string" ? business.logo_url : null,
+            status: business.status ?? null,
+            googleStatus: getGoogleConnectionStatus(business.review_platforms),
+            rating: stats?.totalVisible ? stats.averageRatingVisible : null,
+            reviewCount: stats?.totalVisible ?? 0,
+            pendingReviews: stats?.pendingVisible ?? 0,
+        };
+    });
+    return <BusinessDirectory businesses={entries} activeBusinessId={activeBusinessId} />;
 }
