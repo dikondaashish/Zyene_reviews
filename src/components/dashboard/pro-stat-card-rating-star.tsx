@@ -5,11 +5,12 @@ export function ProStatCardRatingStarSlot({ fill }: { fill: number }) {
     return (
         <span className="relative inline-block shrink-0 size-4">
             <Star
-                className="pointer-events-none absolute inset-0 fill-muted text-muted-foreground/45 size-4"
+                className="pointer-events-none absolute inset-0 size-4 fill-current text-muted-foreground/25"
+                strokeWidth={0}
                 aria-hidden
             />
             <span className="absolute left-0 top-0 h-full overflow-hidden" style={{ width: `${f * 100}%` }}>
-                <Star className="pointer-events-none shrink-0 fill-chart-4 text-warning-foreground size-4" aria-hidden />
+                <Star className="pointer-events-none size-4 shrink-0 fill-current text-warning" strokeWidth={0} aria-hidden />
             </span>
         </span>
     );

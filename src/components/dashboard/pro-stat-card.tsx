@@ -95,7 +95,7 @@ export function ProStatCard({
                     />
                     {showRatingStars && (
                         <div
-                            className="ml-2 flex items-center gap-0.5 pb-1"
+                            className="ml-2 flex items-center gap-1 pb-1"
                             aria-label={`${ratingClamped.toFixed(1)} out of 5 stars`}
                         >
                             {[1, 2, 3, 4, 5].map((i) => {
