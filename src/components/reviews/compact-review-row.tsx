@@ -5,7 +5,7 @@ import { ChevronDown, MessageSquare, ImageIcon } from "lucide-react";
 import type { ReviewManagementItem } from "@/types/components";
 import type { Review } from "@/components/reviews/review-card-types";
 import { ReviewCard } from "@/components/reviews/review-card";
-import { ReviewPlatform } from "@/components/reviews/review-platform";
+import { ReviewPlatform, ReviewPlatformIcon } from "@/components/reviews/review-platform";
 import { ReviewCardStars, ReviewCardStatusBadge } from "@/components/reviews/review-card-badges";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -37,10 +37,17 @@ export function CompactReviewRow(props: {
                 <button type="button" className="group min-w-0 flex-1 rounded-md text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
                     aria-expanded={open} aria-controls={detailId} onClick={() => { setHasOpened(true); setOpen(!open); }}>
                     <span className="flex min-w-0 items-start gap-3">
-                        <Avatar className="hidden size-10 shrink-0 border border-border sm:flex">
-                            {typeof review.author_avatar_url === "string" && <AvatarImage src={review.author_avatar_url} alt="" referrerPolicy="no-referrer" />}
-                            <AvatarFallback className="bg-muted text-sm font-medium text-muted-foreground">{author.split(/\s+/).slice(0, 2).map(word => word[0]).join("").toUpperCase()}</AvatarFallback>
-                        </Avatar>
+                        <span className="relative size-10 shrink-0">
+                            <Avatar className="size-10 border border-border">
+                                {typeof review.author_avatar_url === "string" && review.author_avatar_url.trim() && (
+                                    <AvatarImage src={review.author_avatar_url.trim()} alt="" referrerPolicy="no-referrer" className="object-cover" />
+                                )}
+                                <AvatarFallback className="bg-muted text-sm font-medium text-muted-foreground">{author.split(/\s+/).slice(0, 2).map(word => word[0]).join("").toUpperCase()}</AvatarFallback>
+                            </Avatar>
+                            <span className="absolute -bottom-1 -right-1 flex size-5 items-center justify-center rounded-full border-2 border-card bg-card" aria-hidden="true">
+                                <ReviewPlatformIcon platform={platform} className="size-3.5" />
+                            </span>
+                        </span>
                         <span className="min-w-0 flex-1">
                             <span className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                                 <span className="break-words text-sm font-semibold text-foreground [overflow-wrap:anywhere]">{author}</span>
@@ -48,7 +55,7 @@ export function CompactReviewRow(props: {
                             </span>
                             <span className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-2">
                                 <ReviewCardStars rating={rating} />
-                                <ReviewPlatform key={platform} platform={platform} />
+                                <ReviewPlatform platform={platform} showIcon={false} />
                                 {date && !Number.isNaN(date.getTime()) && <time dateTime={date.toISOString()} className="text-xs text-muted-foreground">{date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })}</time>}
                             </span>
                             {!open && <span className={cn("mt-3 block max-w-[75ch] text-sm leading-relaxed [overflow-wrap:anywhere]", text ? "line-clamp-2 text-foreground/85" : "italic text-muted-foreground")}>{text || "Left a star rating without a written review."}</span>}
