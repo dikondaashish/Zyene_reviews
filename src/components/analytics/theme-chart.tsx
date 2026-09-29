@@ -11,11 +11,11 @@ export function ThemeChart({ data }: { data: ThemeDataPoint[] }) {
         <div className="flex justify-between text-xs text-muted-foreground"><span>Topic</span><span>Mentions</span></div>
         <ol className="max-h-[278px] space-y-4 overflow-y-auto pr-1" aria-label="Themes ranked by number of mentions" tabIndex={0}>
             {sorted.map(item => {
-                const tone = item.sentimentScore > 0 ? "Mostly positive" : item.sentimentScore < 0 ? "Mostly negative" : "Balanced";
-                const color = item.sentimentScore > 0 ? "var(--chart-2)" : item.sentimentScore < 0 ? "var(--destructive)" : "var(--chart-3)";
+                const tone = item.sentimentScore / item.count >= 0.2 ? "Positive leaning" : item.sentimentScore / item.count <= -0.2 ? "Negative leaning" : "Balanced";
+                const color = tone === "Positive leaning" ? "var(--chart-2)" : tone === "Negative leaning" ? "var(--destructive)" : "var(--chart-3)";
                 return <li key={item.theme} className="space-y-2">
                     <div className="flex items-start justify-between gap-3 text-sm">
-                        <span className="capitalize">{item.theme}</span><span className="font-medium tabular-nums">{item.count.toLocaleString()}</span>
+                        <span className="min-w-0 break-words capitalize">{item.theme}</span><span className="font-medium tabular-nums">{item.count.toLocaleString()}</span>
                     </div>
                     <div className="h-2 overflow-hidden rounded-sm bg-muted" role="img" aria-label={`${item.theme}: ${item.count} mentions, ${tone.toLowerCase()}`}>
                         <div className="h-full rounded-sm" style={{ width: `${item.count / max * 100}%`, background: color }} />

@@ -20,7 +20,7 @@ export function AnalyticsPageStatsRow({ d, isDemo }: { d: AnalyticsFullRangePayl
                 value={d.stats.totalReviews ? d.stats.avgRating.toFixed(1) : "—"}
                 description={`Based on ${d.stats.totalReviews} reviews in this period`}
                 trend={
-                    d.stats.ratingDelta === null ? undefined : { value: d.stats.ratingDelta, label: "vs last period" }
+                    !d.stats.totalReviews || d.stats.ratingDelta === null ? undefined : { value: d.stats.ratingDelta, label: "vs last period" }
                 }
                 isDemo={isDemo}
             />
@@ -29,7 +29,7 @@ export function AnalyticsPageStatsRow({ d, isDemo }: { d: AnalyticsFullRangePayl
                 value={d.stats.totalReviews ? `${d.stats.responseRate.toFixed(0)}%` : "—"}
                 description={`${d.stats.respondedCount} responded`}
                 trend={
-                    d.stats.responseRateDelta === null
+                    !d.stats.totalReviews || d.stats.responseRateDelta === null
                         ? undefined
                         : { value: d.stats.responseRateDelta, label: "vs last period" }
                 }

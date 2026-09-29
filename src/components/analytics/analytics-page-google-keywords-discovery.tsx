@@ -15,33 +15,36 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <Card className="lg:col-span-2 rounded-xl border-border bg-card overflow-hidden">
-                <CardHeader className="flex flex-row items-center justify-between">
+                <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3">
                     <div className="space-y-1">
                         <CardTitle className="text-sm font-semibold flex items-center gap-2">
                             <Search className="text-primary size-5" />
                             Search Keywords
                         </CardTitle>
                         <p className="text-xs text-muted-foreground font-medium">
-                            Monthly impressions per keyword from local discovery
+                            Monthly impressions, latest available months first
                         </p>
                     </div>
-                    <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-                        Top {Math.min(searchKeywords.length, 10)} Keywords
-                    </Badge>
+                    {searchKeywords.length > 0 && (
+                        <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                            {Math.min(searchKeywords.length, 10)} shown
+                        </Badge>
+                    )}
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
                         {searchKeywords.slice(0, 10).map((k, i) => (
-                            <div key={i} className="flex items-center justify-between group/item">
-                                <div className="flex items-center gap-3">
-                                    <div className="rounded-lg bg-muted/40 flex items-center justify-center text-[10px] font-bold text-muted-foreground group-hover/item:bg-primary/20 group-hover/item:text-primary transition-colors size-6">
+                            <div key={`${k.monthStart}-${k.keyword}`} className="flex items-start justify-between gap-3 group/item">
+                                <div className="flex min-w-0 items-start gap-3">
+                                    <div className="rounded-lg bg-muted/40 flex items-center justify-center text-[10px] font-bold text-muted-foreground group-hover/item:bg-primary/20 group-hover/item:text-primary transition-colors size-6 shrink-0">
                                         {i + 1}
                                     </div>
-                                    <span className="text-sm text-foreground/70 group-hover/item:text-foreground transition-colors">
+                                    <span className="min-w-0 break-words text-sm text-foreground/70 group-hover/item:text-foreground transition-colors">
                                         {k.keyword}
+                                        <span className="mt-1 block text-xs text-muted-foreground">{new Date(`${k.monthStart.slice(0, 10)}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "UTC" })}</span>
                                     </span>
                                 </div>
-                                <div className="flex items-center gap-4">
+                                <div className="flex shrink-0 items-center gap-4">
                                     <div className="h-1.5 w-32 bg-muted/40 rounded-full overflow-hidden hidden sm:block">
                                         <div
                                             className="h-full bg-primary/40 group-hover/item:bg-primary"
@@ -82,6 +85,7 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
                     </div>
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col justify-center space-y-8 pb-10 px-8">
+                    {searchKeywords.some(k => Number(k.impressions) > 0) ? <>
                     <div className="space-y-4">
                         <div className="flex justify-between items-end">
                             <div className="space-y-1">
@@ -117,6 +121,7 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
                             />
                         </div>
                     </div>
+                    </> : <p className="text-sm leading-relaxed text-muted-foreground">Not enough keyword data to estimate discovery yet.</p>}
                 </CardContent>
             </Card>
         </div>

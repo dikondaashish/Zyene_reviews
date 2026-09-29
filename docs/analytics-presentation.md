@@ -19,3 +19,11 @@ The analytics refinement uses the existing app palette in light and dark mode. H
 Checked actual components with a temporary local sample-data page: desktop light/dark, 390px mobile without page overflow, Google metric toggle, rating tooltip by keyboard, and empty states. The temporary route was removed. Screenshots and the fixture are retained in ignored `output/analytics-refinement/`.
 
 React Doctor: 90/100. Its eager Recharts import warnings are false positives here: charts are behind the dynamic registry (own-platform activity is inside the dynamically imported own-platform view). The StatsCard complexity warning is pre-existing. Three additional development-only warnings flag the shared presentation module exporting formatting constants alongside components; no production behavior is affected. Type checking, file-size and color guards, focused ESLint, and the seven business-metrics/review-timeline tests passed. The production webpack build also passed (273 static pages generated).
+
+## Follow-up edge-case audit
+
+- Hide rating/response percentage changes when the current period has no reviews; a missing average is not a 100% decline. Review-count changes remain visible.
+- Show an unavailable state for discovery estimates when there are no keyword impressions.
+- Label clear theme score trends as positive/negative leaning and small net scores as balanced; a net score cannot establish a majority.
+- Allow long keyword labels to wrap while keeping counts visible. Display the month for each row because the API can return the same keyword for multiple months, ordered by latest month.
+- Added component regressions for these data-presentation cases, alongside existing business-metrics and review-timeline tests.
