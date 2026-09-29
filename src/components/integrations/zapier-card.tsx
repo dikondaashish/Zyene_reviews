@@ -21,11 +21,15 @@ export function ZapierCard({ hasApiKey }: ZapierCardProps) {
     const apiBase = getAppBaseUrl();
     const webhookUrl = `${apiBase}/api/webhooks/generic`;
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(webhookUrl);
-        setCopied(true);
-        toast.success("Webhook URL copied to clipboard");
-        setTimeout(() => setCopied(false), 2000);
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(webhookUrl);
+            setCopied(true);
+            toast.success("Webhook URL copied to clipboard");
+            setTimeout(() => setCopied(false), 2000);
+        } catch {
+            toast.error("Could not copy the URL. Select and copy it from the field above.");
+        }
     };
 
     return (
@@ -83,6 +87,7 @@ export function ZapierCard({ hasApiKey }: ZapierCardProps) {
                             size="icon"
                             className="shrink-0"
                             onClick={handleCopy}
+                            aria-label={copied ? "Webhook URL copied" : "Copy webhook URL"}
                         >
                             {copied ? (
                                 <Check className="text-success size-4" />

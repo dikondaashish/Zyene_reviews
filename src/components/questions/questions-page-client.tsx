@@ -8,7 +8,7 @@ import { QuestionsPageClientDesktopTable } from "./questions-page-client-desktop
 import { QuestionsPageClientEmptyState } from "./questions-page-client-empty-state";
 import { QuestionsPageClientFilterTabs } from "./questions-page-client-filter-tabs";
 import { QuestionsPageClientMobileList } from "./questions-page-client-mobile-list";
-import type { GbpQuestionRow, QuestionsPageClientProps } from "./questions-page-client-types";
+import type { QuestionsPageClientProps } from "@/components/questions/questions-page-client-types";
 import { useQuestionsPageClient } from "./use-questions-page-client";
 
 export type { GbpQuestionRow } from "./questions-page-client-types";
@@ -43,6 +43,7 @@ export function QuestionsPageClient(props: QuestionsPageClientProps) {
                 open={v.dialogOpen}
                 onOpenChange={v.setDialogOpen}
                 answerText={v.answerText}
+                questionText={v.filtered.find((question) => question.id === v.activeId)?.question_text}
                 onAnswerTextChange={v.setAnswerText}
                 suggesting={v.suggesting}
                 submitting={v.submitting}

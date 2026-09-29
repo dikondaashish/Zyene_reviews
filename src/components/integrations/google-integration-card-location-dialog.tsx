@@ -54,7 +54,7 @@ export function GoogleIntegrationCardLocationDialog({
 
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <div className="text-sm font-medium">Account</div>
+                        <label htmlFor="google-location-account" className="text-sm font-medium">Account</label>
                         <Select
                             value={selectedAccount}
                             onValueChange={(v) => {
@@ -64,7 +64,7 @@ export function GoogleIntegrationCardLocationDialog({
                                 if (firstLoc) setSelectedLocation(firstLoc);
                             }}
                         >
-                            <SelectTrigger className="w-full">
+                            <SelectTrigger id="google-location-account" className="w-full">
                                 <SelectValue placeholder="Select account" />
                             </SelectTrigger>
                             <SelectContent>
@@ -78,13 +78,13 @@ export function GoogleIntegrationCardLocationDialog({
                     </div>
 
                     <div className="space-y-2">
-                        <div className="text-sm font-medium">Location</div>
+                        <label htmlFor="google-location-selection" className="text-sm font-medium">Location</label>
                         <Select
                             value={selectedLocation}
                             onValueChange={setSelectedLocation}
                             disabled={!selectedAccount || isLoadingLocations}
                         >
-                            <SelectTrigger className="w-full">
+                            <SelectTrigger id="google-location-selection" className="w-full">
                                 <SelectValue placeholder={isLoadingLocations ? "Loading…" : "Select location"} />
                             </SelectTrigger>
                             <SelectContent>

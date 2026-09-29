@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CAMPAIGN_TEMPLATES } from "@/lib/campaigns/templates";
 import { CampaignTemplateCard } from "@/components/campaigns/campaign-template-card";
@@ -23,8 +24,17 @@ export function CampaignsTabs({
     getOpenedPercent: (c: Campaign) => number;
     getCompletedPercent: (c: Campaign) => number;
 }) {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const activeTab = searchParams.get("tab") === "templates" ? "templates" : "all";
+    const changeTab = (value: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (value === "templates") params.set("tab", value);
+        else params.delete("tab");
+        router.replace(`/campaigns${params.size ? `?${params}` : ""}`, { scroll: false });
+    };
     return (
-        <Tabs defaultValue="all" className="w-full">
+        <Tabs value={activeTab} onValueChange={changeTab} className="w-full">
             <TabsList variant="line" className="mb-4 w-full min-w-0 justify-start border-b border-border">
                 <TabsTrigger value="all">All Campaigns</TabsTrigger>
                 <TabsTrigger value="templates">Template Library</TabsTrigger>

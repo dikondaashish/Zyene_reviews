@@ -1,36 +1,32 @@
 "use client";
 
 import type { Table } from "@tanstack/react-table";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Customer } from "@/components/customers/customer-table-types";
 
 export function CustomerTablePagination({ table }: { table: Table<Customer> }) {
+    const { pageIndex, pageSize } = table.getState().pagination;
+    const total = table.getFilteredRowModel().rows.length;
+    const selected = table.getFilteredSelectedRowModel().rows.length;
+    const start = total === 0 ? 0 : pageIndex * pageSize + 1;
+    const end = Math.min((pageIndex + 1) * pageSize, total);
+    const pages = Math.max(1, table.getPageCount());
+
     return (
-        <div className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-left text-xs text-muted-foreground">
-                {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                {table.getFilteredRowModel().rows.length} row(s) selected.
-            </div>
-            <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:justify-end">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                    className="h-9 w-full rounded-lg border-border px-3 text-xs font-medium text-muted-foreground transition-all hover:bg-muted sm:h-8 sm:w-auto"
-                >
-                    Previous
+        <nav aria-label="Customers pagination" className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <p aria-live="polite" className="text-xs tabular-nums text-muted-foreground">
+                {start}–{end} of {total.toLocaleString()} customers{selected > 0 && ` · ${selected} selected`}
+            </p>
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:flex">
+                <Button variant="outline" size="sm" className="h-11 sm:h-9" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+                    <ChevronLeft aria-hidden="true" className="size-4" />Previous
                 </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                    className="h-9 w-full rounded-lg border-border px-3 text-xs font-medium text-muted-foreground transition-all hover:bg-muted sm:h-8 sm:w-auto"
-                >
-                    Next
+                <span className="text-xs tabular-nums text-muted-foreground">Page {pageIndex + 1} of {pages}</span>
+                <Button variant="outline" size="sm" className="h-11 sm:h-9" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+                    Next<ChevronRight aria-hidden="true" className="size-4" />
                 </Button>
             </div>
-        </div>
+        </nav>
     );
 }

@@ -29,7 +29,7 @@ export function CompetitorsListToolbar({
 }: CompetitorsListToolbarProps) {
     return (
         <div className="flex min-w-0 flex-col gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
-                <div className="flex w-full min-w-0 items-stretch gap-1 rounded-lg border bg-muted/30 p-1 sm:max-w-md lg:w-fit lg:max-w-none lg:items-center">
+                <div role="group" aria-label="Competitor date range" className="flex w-full min-w-0 items-stretch gap-1 rounded-lg border bg-muted/30 p-1 sm:max-w-md lg:w-fit lg:max-w-none lg:items-center">
                     {rangeOptions.map((opt) => {
                         const active = optimisticRange === opt.value;
                         return (
@@ -37,6 +37,7 @@ export function CompetitorsListToolbar({
                                 key={opt.value}
                                 size="sm"
                                 variant={active ? "default" : "ghost"}
+                                aria-pressed={active}
                                 className="min-w-0 flex-1 px-2 sm:px-3 lg:flex-none lg:px-3"
                                 onClick={() => setRange(opt.value)}
                             >

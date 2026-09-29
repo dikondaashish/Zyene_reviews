@@ -6,16 +6,19 @@ import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 export function QuestionsPageClientAnswerDialog({
     open,
     onOpenChange,
     answerText,
+    questionText,
     onAnswerTextChange,
     suggesting,
     submitting,
@@ -26,6 +29,7 @@ export function QuestionsPageClientAnswerDialog({
     open: boolean;
     onOpenChange: (open: boolean) => void;
     answerText: string;
+    questionText: string | undefined;
     onAnswerTextChange: (value: string) => void;
     suggesting: boolean;
     submitting: boolean;
@@ -38,9 +42,13 @@ export function QuestionsPageClientAnswerDialog({
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>Answer on Google</DialogTitle>
+                    <DialogDescription>Review your answer before publishing it to your business listing.</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-3">
+                    {questionText && <blockquote className="max-h-40 overflow-y-auto break-words rounded-lg border border-border bg-muted/40 p-4 text-sm leading-relaxed">{questionText}</blockquote>}
+                    <Label htmlFor="google-question-answer">Your answer</Label>
                     <Textarea
+                        id="google-question-answer"
                         placeholder="Write a helpful, accurate answer for searchers…"
                         value={answerText}
                         onChange={(e) => onAnswerTextChange(e.target.value)}

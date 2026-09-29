@@ -63,8 +63,8 @@ export function YelpIntegrationCardConnectFlow({
                 ) : (
                     <div className="space-y-3">
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-foreground">Business Name</label>
-                            <Input
+                            <label htmlFor="yelp-search-business" className="text-xs font-medium text-foreground">Business Name</label>
+                            <Input id="yelp-search-business"
                                 placeholder="e.g. Joe's Coffee Shop"
                                 value={searchName}
                                 onChange={(e) => onSearchNameChange(e.target.value)}
@@ -72,8 +72,8 @@ export function YelpIntegrationCardConnectFlow({
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-foreground">City, State</label>
-                            <Input
+                            <label htmlFor="yelp-search-location" className="text-xs font-medium text-foreground">City, State</label>
+                            <Input id="yelp-search-location"
                                 placeholder="e.g. San Francisco, CA"
                                 value={searchLocation}
                                 onChange={(e) => onSearchLocationChange(e.target.value)}

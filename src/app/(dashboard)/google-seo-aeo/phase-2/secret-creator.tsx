@@ -26,9 +26,9 @@ export function SecretCreator({ businessId, kind }: { businessId: string; kind: 
     return (
         <form action={submit} className="space-y-3 border-t pt-4">
             <div className="flex items-center gap-2 text-sm font-medium">{kind === "api" ? <KeyRound className="size-4" /> : <RadioTower className="size-4" />}{kind === "api" ? "Scoped REST API key" : "Crawler log source"}</div>
-            <div className="flex flex-wrap gap-2">
-                <Input name="name" required minLength={2} maxLength={80} placeholder={kind === "api" ? "Reporting integration" : "Production log drain"} className="max-w-xs" />
-                {kind === "logs" ? <select name="source" className="h-9 rounded-md border bg-background px-3 text-sm"><option value="vercel">Vercel</option><option value="cloudflare">Cloudflare</option><option value="proxy">Proxy</option></select> : null}
+            <div className="flex flex-wrap items-end gap-3">
+                <label className="grid w-full max-w-xs gap-1.5 text-sm font-medium">{kind === "api" ? "Key name" : "Log source name"}<Input name="name" required minLength={2} maxLength={80} placeholder={kind === "api" ? "Reporting integration" : "Production log drain"} /></label>
+                {kind === "logs" ? <label className="grid gap-1.5 text-sm font-medium">Provider<select name="source" className="h-9 rounded-md border bg-background px-3 text-sm"><option value="vercel">Vercel</option><option value="cloudflare">Cloudflare</option><option value="proxy">Proxy</option></select></label> : null}
                 <Button type="submit" disabled={pending}>{pending ? "Creating..." : "Create"}</Button>
             </div>
             {secret ? <div className="rounded border border-warning/40 bg-warning/10 p-3 text-xs"><p className="font-medium">Shown once</p><code className="mt-1 block break-all select-all">{secret}</code></div> : null}

@@ -1,43 +1,19 @@
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 import type { RangeKey } from "@/lib/query/date-range-keys";
 
-export function AnalyticsFiltersRangeButtons({
-    ranges,
-    displayRange,
-    onSelect,
-}: {
+export function AnalyticsFiltersRangeButtons({ ranges, displayRange, onSelect }: {
     ranges: Array<{ label: string; value: RangeKey }>;
-    displayRange: RangeKey;
-    onSelect: (range: RangeKey) => void;
+    displayRange: RangeKey; onSelect: (range: RangeKey) => void;
 }) {
     return (
-        <div className="flex items-center p-1 bg-muted/40 backdrop-blur-sm rounded-lg border border-border/50">
-            {ranges.map((range) => {
-                const isActive = displayRange === range.value;
-                return (
-                    <button
-                        key={range.value}
-                        type="button"
-                        onClick={() => onSelect(range.value)}
-                        className={cn(
-                            "relative px-4 py-1.5 text-xs font-bold transition-all rounded-[6px] outline-none focus-visible:ring-2 focus-visible:ring-primary",
-                            isActive
-                                ? "text-primary-foreground"
-                                : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
-                        )}
-                    >
-                        {isActive && (
-                            <motion.div
-                                layoutId="active-range"
-                                className="absolute inset-0 bg-primary rounded-[6px]"
-                                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                            />
-                        )}
-                        <span className="relative z-10">{range.label}</span>
-                    </button>
-                );
-            })}
+        <div role="group" aria-label="Analytics date range" className="flex max-w-full flex-wrap items-center gap-1 rounded-xl border border-border bg-card p-1">
+            {ranges.map(range => (
+                <button key={range.value} type="button" aria-pressed={displayRange === range.value} onClick={() => onSelect(range.value)}
+                    className={cn("min-h-11 flex-1 whitespace-nowrap rounded-lg px-3 py-2 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:min-h-9",
+                        displayRange === range.value ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground")}>
+                    {range.label}
+                </button>
+            ))}
         </div>
     );
 }

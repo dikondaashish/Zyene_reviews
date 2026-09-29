@@ -27,7 +27,6 @@ export function DashboardView(props: DashboardViewProps) {
         canConfigureNotifications = true,
         requestsThisMonth,
         hasEngagementData,
-        displayTotalReviews,
     } = props;
     const requestSent = hasSentReviewRequest({
         hasEngagementData,
@@ -57,13 +56,13 @@ export function DashboardView(props: DashboardViewProps) {
                 </div>
             )}
 
-            <DashboardViewTopRow business={business} />
             <DashboardViewStatCards {...props} />
+            <DashboardViewBottomRow {...props} />
+            <DashboardViewTopRow business={business} />
             <DashboardViewGoogleHealth {...props} />
             <DashboardViewGooglePerformance {...props} />
             <DashboardViewExtendedStats {...props} />
             <DashboardViewCharts {...props} />
-            <DashboardViewBottomRow {...props} />
         </div>
     );
 }

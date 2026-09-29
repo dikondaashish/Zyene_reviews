@@ -58,7 +58,7 @@ export default async function NotificationSettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium">Notification Settings</h3>
+        <h1 className="text-lg font-medium">Notification Settings</h1>
         <p className="text-sm text-muted-foreground">
           Configure how and when you want to be alerted about new reviews. Quiet hours use the business timezone: {typeof activeContext.business?.timezone === "string" ? activeContext.business.timezone : "UTC"}. Change it in Business Information.
         </p>

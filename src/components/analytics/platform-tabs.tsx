@@ -1,8 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { ReviewCardGoogleIcon } from "@/components/reviews/review-card-google-icon";
+import { FacebookBrandIcon } from "@/components/integrations/facebook-brand-icon";
 import { cn } from "@/lib/utils";
-import { Globe, Facebook, LayoutGrid, Chrome } from "lucide-react";
+import { Globe, LayoutGrid } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface Platform {
@@ -40,13 +41,13 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug, onPlatfo
         { 
             id: "google", 
             name: "Google", 
-            icon: <Chrome className="text-brand-google size-4" />,
+            icon: <ReviewCardGoogleIcon className="size-4" />,
             color: "text-primary"
         },
         { 
             id: "facebook", 
             name: "Facebook", 
-            icon: <Facebook className="text-brand-facebook size-4" />,
+            icon: <FacebookBrandIcon aria-hidden="true" className="size-4" />,
             color: "text-primary"
         },
     ];
@@ -71,27 +72,22 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug, onPlatfo
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2 p-1 bg-muted/40 backdrop-blur-md border border-border/50 rounded-2xl w-fit overflow-x-auto no-scrollbar">
+            <div role="group" aria-label="Analytics platform" className="flex max-w-full flex-wrap items-center gap-1 p-1 bg-muted/40 border border-border rounded-2xl w-fit">
                 {availablePlatforms.map((platform) => {
                     const isActive = activePlatform === platform.id;
                     return (
                         <button
                             key={platform.id}
+                            type="button"
+                            aria-pressed={isActive}
                             onClick={() => handlePlatformChange(platform.id)}
                             className={cn(
-                                "relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
+                                "relative flex shrink-0 items-center gap-2 whitespace-nowrap px-4 py-2.5 rounded-xl text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
                                 isActive
-                                    ? "text-primary"
+                                    ? "bg-card text-primary shadow-sm"
                                     : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                             )}
                         >
-                            {isActive && (
-                                <motion.div
-                                    layoutId="active-platform"
-                                    className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/20 rounded-xl -z-10"
-                                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                />
-                            )}
                             <span className={cn("transition-colors duration-300", platform.color)}>
                                 {platform.icon}
                             </span>
@@ -102,22 +98,20 @@ export function PlatformTabs({ platforms, activePlatform, businessSlug, onPlatfo
             </div>
             
             {activePlatform === "zyene" && (
-                <motion.div 
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-xl w-fit"
+                <div
+                    className="flex max-w-full flex-wrap items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-xl w-fit"
                 >
-                    <span className="text-xs text-primary font-medium">Internal Link:</span>
+                    <span className="text-xs text-primary font-medium">Your review link:</span>
                     <a 
                         href={`https://collectratings.com/${businessSlug}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-primary/80 hover:underline flex items-center gap-1"
+                        className="text-xs text-primary hover:underline flex min-w-0 items-center gap-1 break-all"
                     >
                         collectratings.com/{businessSlug}
                         <Globe className="ml-1 size-3" />
                     </a>
-                </motion.div>
+                </div>
             )}
         </div>
     );

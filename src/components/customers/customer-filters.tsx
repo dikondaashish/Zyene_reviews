@@ -41,8 +41,9 @@ export function CustomerFilters({
                 <div className="relative w-full min-w-0 flex-1 group">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary size-4" />
                     <Input
-                        placeholder="Search by name, email, or phone..."
-                        className="h-9 rounded-lg border-border bg-background pl-9 text-sm focus:border-primary/60 focus:ring-2 focus:ring-primary/15"
+                        aria-label="Search customers by name, email, or phone"
+                        placeholder="Search by name, email, or phone…"
+                        className="h-11 sm:h-9 rounded-lg border-border bg-background pl-9 text-sm focus:border-primary/60 focus:ring-2 focus:ring-primary/15"
                         value={searchQuery}
                         onChange={(e) => {
                             onSearchChange(e.target.value);
@@ -60,7 +61,7 @@ export function CustomerFilters({
                     >
                         <SelectTrigger
                             size="sm"
-                            className="h-9 w-full rounded-lg border-border sm:w-[220px]"
+                            className="h-11 sm:h-9 w-full rounded-lg border-border sm:w-[220px]"
                             aria-label="Filter by tag"
                         >
                             <SelectValue placeholder="Filter by tag" />
@@ -80,7 +81,7 @@ export function CustomerFilters({
                     <Button
                         variant="ghost"
                         onClick={clearFilters}
-                        className="h-9 w-full shrink-0 justify-center rounded-lg px-3 text-muted-foreground transition-all hover:bg-destructive/10 hover:text-destructive sm:w-auto sm:justify-start"
+                        className="h-11 sm:h-9 w-full shrink-0 justify-center rounded-lg px-3 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:w-auto sm:justify-start"
                     >
                         <X className="mr-2 size-4" />
                         Clear filters

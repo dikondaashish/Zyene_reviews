@@ -24,12 +24,12 @@ export function GoogleLodgingPoliciesTab({
     return (
         <div className="space-y-4 max-w-md">
             <div className="flex items-center justify-between gap-4">
-                <Label>Smoke-free property</Label>
-                <Switch checked={smokeFree} onCheckedChange={setSmokeFree} />
+                <Label htmlFor="lodging-smoke-free">Smoke-free property</Label>
+                <Switch id="lodging-smoke-free" checked={smokeFree} onCheckedChange={setSmokeFree} />
             </div>
             <div className="flex items-center justify-between gap-4">
-                <Label>Kids stay free</Label>
-                <Switch checked={kidsFree} onCheckedChange={setKidsFree} />
+                <Label htmlFor="lodging-kids-free">Kids stay free</Label>
+                <Switch id="lodging-kids-free" checked={kidsFree} onCheckedChange={setKidsFree} />
             </div>
             <Button
                 disabled={saving}

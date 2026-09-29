@@ -15,9 +15,13 @@ function CopyButton({ text, label }: { text: string; label: string }) {
         <Button
             size="sm"
             variant="outline"
-            onClick={() => {
-                navigator.clipboard.writeText(text);
-                toast.success(`${label} copied`);
+            onClick={async () => {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    toast.success(`${label} copied`);
+                } catch {
+                    toast.error("Could not copy. Check clipboard permissions and try again.");
+                }
             }}
         >
             <Copy className="mr-1.5 size-3.5" /> Copy {label}
@@ -104,7 +108,7 @@ export function ContentBriefSection({
 
                     {brief.faqItems.length > 0 && (
                         <div>
-                            <div className="flex items-center justify-between">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
                                 <p className="text-sm font-medium">FAQ block</p>
                                 <div className="flex gap-1.5">
                                     <CopyButton text={brief.faqHtml} label="HTML" />
@@ -123,7 +127,7 @@ export function ContentBriefSection({
                     )}
 
                     <div>
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
                             <p className="text-sm font-medium">Schema patch</p>
                             <CopyButton text={brief.schemaPatchJsonLd} label="JSON-LD" />
                         </div>

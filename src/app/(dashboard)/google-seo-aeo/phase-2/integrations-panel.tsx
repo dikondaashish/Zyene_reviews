@@ -18,7 +18,15 @@ export function IntegrationsPanel({ data, businessId }: { data: Phase2Operations
                     {data.logSources.map((row) => <p key={row.id} className="text-xs text-muted-foreground">{row.name} · {row.source} · {row.prefix}… · {row.lastReceivedAt ? `received ${new Date(row.lastReceivedAt).toLocaleDateString()}` : "waiting for logs"}</p>)}
                 </CardContent></Card>
                 <Card><CardHeader><CardTitle className="text-base">Alert channels</CardTitle></CardHeader><CardContent className="space-y-4">
-                    <form action={createAlertChannel} className="grid gap-2"><div className="flex gap-2"><Input name="name" required minLength={2} placeholder="Marketing alerts" /><select name="type" className="h-9 rounded-md border bg-background px-3 text-sm"><option value="slack">Slack</option><option value="webhook">Webhook</option></select></div><Input name="endpoint" type="url" required placeholder="https://hooks.slack.com/services/..." /><Input name="signingSecret" type="password" placeholder="Signing secret for generic webhooks" /><Button type="submit">Add channel</Button></form>
+                    <form action={createAlertChannel} className="grid gap-3">
+                        <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+                            <label className="grid gap-1.5 text-sm font-medium">Channel name<Input name="name" required minLength={2} placeholder="Marketing alerts" /></label>
+                            <label className="grid gap-1.5 text-sm font-medium">Channel type<select name="type" className="h-9 rounded-md border bg-background px-3 text-sm"><option value="slack">Slack</option><option value="webhook">Webhook</option></select></label>
+                        </div>
+                        <label className="grid gap-1.5 text-sm font-medium">Endpoint URL<Input name="endpoint" type="url" required placeholder="https://hooks.slack.com/services/..." /></label>
+                        <label className="grid gap-1.5 text-sm font-medium">Signing secret<Input name="signingSecret" type="password" placeholder="For generic webhooks" autoComplete="new-password" /></label>
+                        <Button type="submit">Add channel</Button>
+                    </form>
                     {data.channels.length ? <div className="divide-y">{data.channels.map((row) => <div key={row.id} className="flex justify-between py-2 text-sm"><span>{row.name} · {row.type}</span><span className="text-muted-foreground">{row.deliveryStatus ?? "not delivered"}</span></div>)}</div> : <p className="text-sm text-muted-foreground">No Slack or webhook channel configured.</p>}
                 </CardContent></Card>
             </div>

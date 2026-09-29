@@ -19,9 +19,10 @@ export function TeamManagementPanelPermissionMatrix() {
                 <tbody>
                     {TEAM_PERMISSION_ROWS.map((row) => (
                         <tr key={row.action} className="border-b border-border/60 last:border-b-0">
-                            <td className="px-4 py-3 font-medium text-foreground/90">{row.action}</td>
+                            <th scope="row" className="px-4 py-3 text-left font-medium text-foreground/90">{row.action}</th>
                             {(["owner", "admin", "manager", "member", "viewer"] as const).map((role) => (
                                 <td key={role} className="px-4 py-3 text-center">
+                                    <span className="sr-only">{row[role] ? "Allowed" : "Not allowed"}</span>
                                     {row[role] ? (
                                         <Check className="mx-auto text-success size-4" />
                                     ) : (

@@ -26,20 +26,20 @@ export function GoogleLodgingPropertyTab({
     return (
         <div className="space-y-4 max-w-md">
             <div className="grid gap-2">
-                <Label>Rooms (guest bookable)</Label>
-                <Input type="number" min={0} value={rooms} onChange={(e) => setRooms(e.target.value)} />
+                <Label htmlFor="lodging-rooms">Rooms (guest bookable)</Label>
+                <Input id="lodging-rooms" type="number" min={0} value={rooms} onChange={(e) => setRooms(e.target.value)} />
             </div>
             <div className="grid gap-2">
-                <Label>Floors (guest accessible)</Label>
-                <Input type="number" min={0} value={floors} onChange={(e) => setFloors(e.target.value)} />
+                <Label htmlFor="lodging-floors">Floors (guest accessible)</Label>
+                <Input id="lodging-floors" type="number" min={0} value={floors} onChange={(e) => setFloors(e.target.value)} />
             </div>
             <div className="grid gap-2">
-                <Label>Year built</Label>
-                <Input type="number" min={1800} max={2100} value={built} onChange={(e) => setBuilt(e.target.value)} />
+                <Label htmlFor="lodging-year-built">Year built</Label>
+                <Input id="lodging-year-built" type="number" min={1800} max={2100} value={built} onChange={(e) => setBuilt(e.target.value)} />
             </div>
             <div className="grid gap-2">
-                <Label>Last renovated year</Label>
-                <Input type="number" min={1800} max={2100} value={reno} onChange={(e) => setReno(e.target.value)} />
+                <Label htmlFor="lodging-year-renovated">Last renovated year</Label>
+                <Input id="lodging-year-renovated" type="number" min={1800} max={2100} value={reno} onChange={(e) => setReno(e.target.value)} />
             </div>
             <Button
                 disabled={saving}

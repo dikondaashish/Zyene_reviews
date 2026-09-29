@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, ArrowRight } from "lucide-react";
+import { Loader2, ArrowRight, LockKeyhole } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,44 +38,49 @@ export function Step2FormManualEntryPanel({
             </div>
 
             <div className="space-y-4">
+                <p className="text-xs text-muted-foreground">All fields are required. Enter your full street address.</p>
                 <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-0.5">
+                    <Label htmlFor="onboarding-business-name" className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-0.5">
                         Business Name
                     </Label>
                     <Input
+                        id="onboarding-business-name" aria-required="true" aria-invalid={!!form.formState.errors.businessName} aria-describedby={form.formState.errors.businessName ? "onboarding-business-name-error" : undefined}
                         {...form.register("businessName")}
                         placeholder="e.g., Acme Corp"
                         disabled={isLoading || googleState.status === "success"}
-                        className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl text-sm transition-all placeholder:text-muted-foreground/50"
+                        className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl text-sm transition-colors placeholder:text-muted-foreground/50"
                     />
+                    {form.formState.errors.businessName && <p id="onboarding-business-name-error" className="text-xs text-destructive">{form.formState.errors.businessName.message}</p>}
                 </div>
-
                 <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-0.5">
+                    <Label htmlFor="onboarding-address" className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-0.5">
                         Address
                     </Label>
                     <Input
+                        id="onboarding-address" aria-required="true" aria-invalid={!!form.formState.errors.address} aria-describedby={form.formState.errors.address ? "onboarding-address-error" : undefined}
                         {...form.register("address")}
                         placeholder="e.g., 123 Main St, City"
                         disabled={isLoading || googleState.status === "success"}
-                        className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl text-sm transition-all placeholder:text-muted-foreground/50"
+                        className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl text-sm transition-colors placeholder:text-muted-foreground/50"
                     />
+                    {form.formState.errors.address && <p id="onboarding-address-error" className="text-xs text-destructive">{form.formState.errors.address.message}</p>}
                 </div>
-
                 <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1.5">
-                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-0.5">
+                        <Label htmlFor="onboarding-city" className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-0.5">
                             City
                         </Label>
                         <Input
+                            id="onboarding-city" aria-required="true" aria-invalid={!!form.formState.errors.city} aria-describedby={form.formState.errors.city ? "onboarding-city-error" : undefined}
                             {...form.register("city")}
                             placeholder="City"
                             disabled={isLoading || googleState.status === "success"}
-                            className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl text-sm transition-all placeholder:text-muted-foreground/50"
+                            className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl text-sm transition-colors placeholder:text-muted-foreground/50"
                         />
+                        {form.formState.errors.city && <p id="onboarding-city-error" className="text-xs text-destructive">{form.formState.errors.city.message}</p>}
                     </div>
                     <div className="space-y-1.5">
-                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-0.5">
+                        <Label htmlFor="onboarding-state" className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-0.5">
                             State
                         </Label>
                         <Select
@@ -83,7 +88,7 @@ export function Step2FormManualEntryPanel({
                             onValueChange={(v) => form.setValue("state", v)}
                             disabled={isLoading || googleState.status === "success"}
                         >
-                            <SelectTrigger className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl text-sm transition-all">
+                            <SelectTrigger id="onboarding-state" aria-required="true" className="h-12 bg-background/60 border-border focus:border-primary focus:ring-4 focus:ring-primary/10 rounded-2xl text-sm transition-colors">
                                 <SelectValue placeholder="State" />
                             </SelectTrigger>
                             <SelectContent>
@@ -117,18 +122,7 @@ export function Step2FormManualEntryPanel({
 
                 <div className="space-y-3 pt-3">
                     <p className="text-[11px] text-muted-foreground/50 flex items-center justify-center gap-1.5 font-medium">
-                        <svg
-                            className="shrink-0 size-3"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                        </svg>
+                        <LockKeyhole aria-hidden="true" className="shrink-0 size-3" />
                         We only read your profile. We never post on your behalf.
                     </p>
 

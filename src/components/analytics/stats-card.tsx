@@ -3,7 +3,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingDown, TrendingUp, Minus, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface StatsCardProps {
@@ -31,14 +30,8 @@ export function StatsCard({ title, value, description, trend, isDemo, className 
     }
 
     return (
-        <motion.div
-            whileHover={{ y: -4, scale: 1.01 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className={cn("h-full", className)}
-        >
-            <Card className="relative h-full overflow-hidden border-2 border-transparent bg-background/60 p-1 backdrop-blur-xl transition-all hover:border-primary/20 dark:bg-card/40">
-                {/* Subtle gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
+        <div className={cn("h-full min-w-0", className)}>
+            <Card className="h-full rounded-2xl border-border bg-card shadow-none">
                 
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-semibold tracking-tight text-muted-foreground flex items-center justify-between w-full">
@@ -53,7 +46,7 @@ export function StatsCard({ title, value, description, trend, isDemo, className 
                 </CardHeader>
                 <CardContent className="space-y-3">
                     <div className="flex items-baseline gap-1">
-                        <div className="text-3xl font-black tracking-tight leading-none">{value}</div>
+                        <div className="text-3xl font-semibold tabular-nums tracking-tight leading-none">{value}</div>
                     </div>
                     
                     <div className="flex flex-wrap items-center gap-2">
@@ -61,17 +54,17 @@ export function StatsCard({ title, value, description, trend, isDemo, className 
                             <div className={cn(
                                 "flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold transition-colors",
                                 trendColor
-                            )}>
+                            )} aria-label={`${trend.value > 0 ? "+" : ""}${trend.value.toFixed(1)}% ${trend.label}`}>
                                 {isPositive && <TrendingUp className="size-3" />}
                                 {isNegative && <TrendingDown className="size-3" />}
                                 {isNeutral && <Minus className="size-3" />}
                                 {Math.abs(trend.value).toFixed(1)}%
                             </div>
                         )}
-                        <p className="text-xs text-muted-foreground font-medium line-clamp-1">{description}</p>
+                        <p className="text-xs text-muted-foreground font-medium leading-relaxed">{description}</p>
                     </div>
                 </CardContent>
             </Card>
-        </motion.div>
+        </div>
     );
 }

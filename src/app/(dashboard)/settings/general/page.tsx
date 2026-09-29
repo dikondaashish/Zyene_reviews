@@ -37,7 +37,7 @@ export default async function GeneralSettingsPage() {
         <div className="space-y-8">
             {/* Page Header */}
             <div>
-                <h3 className="text-xl font-semibold tracking-tight">General</h3>
+                <h1 className="text-xl font-semibold tracking-tight">General</h1>
                 <p className="text-sm text-muted-foreground mt-1">
                     Manage your personal profile and organization settings.
                 </p>

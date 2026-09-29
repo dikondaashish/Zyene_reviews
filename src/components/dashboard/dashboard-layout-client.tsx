@@ -63,6 +63,7 @@ export function DashboardLayoutClient({
                 data-dashboard-shell
                 className="flex min-h-[calc(100vh-4rem)] min-w-0 flex-1 flex-col bg-canvas"
             >
+            <a href="#dashboard-main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-3 focus:text-primary-foreground">Skip to content</a>
             <header className="flex h-16 min-w-0 shrink-0 items-center gap-2 border-b border-border/70 bg-card px-3 max-lg:gap-1.5 lg:px-4">
                 {/* Sidebar trigger on tablet and mobile (FAB also toggles the same sheet) */}
                 {(isTablet || isMobile) && (
@@ -84,9 +85,9 @@ export function DashboardLayoutClient({
                 {header}
             </header>
 
-            <main className="flex min-w-0 flex-1 flex-col gap-4 overflow-x-hidden p-4 sm:gap-5 sm:p-5 max-md:pb-20 max-lg:pb-[max(1rem,env(safe-area-inset-bottom,0px))] lg:p-6 lg:overflow-x-visible lg:pb-6">
+            <div id="dashboard-main" tabIndex={-1} className="flex min-w-0 flex-1 flex-col gap-4 overflow-x-hidden p-4 sm:gap-5 sm:p-5 max-md:pb-20 max-lg:pb-[max(1rem,env(safe-area-inset-bottom,0px))] lg:p-6 lg:overflow-x-visible lg:pb-6">
                 {children}
-            </main>
+            </div>
             <footer className="mt-auto shrink-0 flex flex-col gap-3 border-t border-border bg-canvas px-3 py-4 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-5 lg:px-6">
                 <div className="shrink-0 text-center sm:text-left">
                     © {new Date().getFullYear()} Zyene, Inc. · Local to Global

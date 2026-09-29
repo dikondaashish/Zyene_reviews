@@ -48,7 +48,7 @@ export function AnalyticsPageClient({
         | null;
 
     return (
-        <div className="relative flex min-w-0 flex-1 flex-col gap-8 overflow-x-hidden p-4 text-foreground md:p-8">
+        <div className="relative flex min-w-0 flex-1 flex-col gap-8 overflow-x-hidden text-foreground">
             <AnalyticsPageClientHero
                 businessId={businessId}
                 businessName={businessName}

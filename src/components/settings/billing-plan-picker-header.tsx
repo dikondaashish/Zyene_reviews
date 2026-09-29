@@ -27,16 +27,15 @@ export function BillingPlanPickerHeader(props: {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end mb-6">
                 <div
                     className="inline-flex w-full sm:w-auto items-center gap-0.5 rounded-full border border-border bg-muted/80 p-1 dark:border-border/60 dark:bg-muted/80"
-                    role="tablist"
+                    role="group"
                     aria-label="Billing interval"
                 >
                     <button
                         type="button"
-                        role="tab"
-                        aria-selected={interval === "month"}
+                        aria-pressed={interval === "month"}
                         onClick={() => setInterval("month")}
                         className={cn(
-                            "flex-1 sm:flex-none rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
+                            "flex-1 sm:flex-none min-h-11 sm:min-h-9 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
                             interval === "month"
                                 ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
                                 : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground"
@@ -46,11 +45,10 @@ export function BillingPlanPickerHeader(props: {
                     </button>
                     <button
                         type="button"
-                        role="tab"
-                        aria-selected={interval === "year"}
+                        aria-pressed={interval === "year"}
                         onClick={() => setInterval("year")}
                         className={cn(
-                            "flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
+                            "flex-1 sm:flex-none flex items-center justify-center gap-2 min-h-11 sm:min-h-9 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
                             interval === "year"
                                 ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
                                 : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground"

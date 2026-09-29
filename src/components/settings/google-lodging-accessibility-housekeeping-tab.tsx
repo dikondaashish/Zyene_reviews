@@ -34,8 +34,8 @@ export function GoogleLodgingAccessibilityHousekeepingTab({
                 ["Accessible elevator", mobEl, setMobEl],
             ].map(([label, val, set]) => (
                 <div key={label as string} className="flex items-center justify-between gap-4">
-                    <Label>{label as string}</Label>
-                    <Switch checked={val as boolean} onCheckedChange={set as (c: boolean) => void} />
+                    <Label htmlFor={`lodging-${String(label).replaceAll(" ", "-")}`}>{label as string}</Label>
+                    <Switch id={`lodging-${String(label).replaceAll(" ", "-")}`} checked={val as boolean} onCheckedChange={set as (c: boolean) => void} />
                 </div>
             ))}
             <p className="text-sm font-medium pt-2">Housekeeping</p>
@@ -44,8 +44,8 @@ export function GoogleLodgingAccessibilityHousekeepingTab({
                 ["Daily housekeeping", daily, setDaily],
             ].map(([label, val, set]) => (
                 <div key={label as string} className="flex items-center justify-between gap-4">
-                    <Label>{label as string}</Label>
-                    <Switch checked={val as boolean} onCheckedChange={set as (c: boolean) => void} />
+                    <Label htmlFor={`lodging-${String(label).replaceAll(" ", "-")}`}>{label as string}</Label>
+                    <Switch id={`lodging-${String(label).replaceAll(" ", "-")}`} checked={val as boolean} onCheckedChange={set as (c: boolean) => void} />
                 </div>
             ))}
             <Button

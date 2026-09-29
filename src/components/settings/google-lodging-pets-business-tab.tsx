@@ -39,24 +39,24 @@ export function GoogleLodgingPetsBusinessTab({
                     ["Pets stay free", petsFree, setPetsFree],
                 ].map(([label, val, set]) => (
                     <div key={label as string} className="flex items-center justify-between gap-4">
-                        <Label>{label as string}</Label>
-                        <Switch checked={val as boolean} onCheckedChange={set as (c: boolean) => void} />
+                        <Label htmlFor={`lodging-${String(label).replaceAll(" ", "-")}`}>{label as string}</Label>
+                        <Switch id={`lodging-${String(label).replaceAll(" ", "-")}`} checked={val as boolean} onCheckedChange={set as (c: boolean) => void} />
                     </div>
                 ))}
             </div>
             <div className="space-y-3">
                 <p className="text-sm font-medium">Business traveler</p>
                 <div className="flex items-center justify-between gap-4">
-                    <Label>Business center</Label>
-                    <Switch checked={bizCenter} onCheckedChange={setBizCenter} />
+                    <Label htmlFor="lodging-business-center">Business center</Label>
+                    <Switch id="lodging-business-center" checked={bizCenter} onCheckedChange={setBizCenter} />
                 </div>
                 <div className="flex items-center justify-between gap-4">
-                    <Label>Meeting rooms</Label>
-                    <Switch checked={meetRooms} onCheckedChange={setMeetRooms} />
+                    <Label htmlFor="lodging-meeting-rooms">Meeting rooms</Label>
+                    <Switch id="lodging-meeting-rooms" checked={meetRooms} onCheckedChange={setMeetRooms} />
                 </div>
                 <div className="grid gap-2">
-                    <Label>Meeting room count</Label>
-                    <Input type="number" min={0} value={meetCount} onChange={(e) => setMeetCount(e.target.value)} />
+                    <Label htmlFor="lodging-meeting-room-count">Meeting room count</Label>
+                    <Input id="lodging-meeting-room-count" type="number" min={0} value={meetCount} onChange={(e) => setMeetCount(e.target.value)} />
                 </div>
             </div>
             <Button

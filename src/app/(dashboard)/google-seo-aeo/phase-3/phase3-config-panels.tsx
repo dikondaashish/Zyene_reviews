@@ -17,26 +17,29 @@ export function Phase3ConfigPanels({ branding, webhookCount, bigQueryCount }: {
         <div className="grid gap-4 xl:grid-cols-3">
             <Card><CardHeader><CardTitle className="text-base">White-label reports</CardTitle></CardHeader>
                 <CardContent className="space-y-3"><form action={saveWhiteLabel} className="grid gap-2">
-                    <Input name="name" required defaultValue={branding?.name ?? ""} placeholder="Agency name" />
-                    <Input name="logoUrl" type="url" defaultValue={branding?.logo_url ?? ""} placeholder="https://.../logo.png" />
+                    <label className="grid gap-1.5 text-sm font-medium">Agency name<Input name="name" required defaultValue={branding?.name ?? ""} placeholder="Your agency" /></label>
+                    <label className="grid gap-1.5 text-sm font-medium">Logo URL<Input name="logoUrl" type="url" defaultValue={branding?.logo_url ?? ""} placeholder="https://.../logo.png" /></label>
                     <label className="flex items-center gap-2 text-sm">Color <Input className="w-24" name="color" type="color" defaultValue={branding?.primary_color ?? DEFAULT_AEO_REPORT_COLOR} /></label>
-                    <Input name="senderDomain" defaultValue={branding?.aeo_sender_domain ?? ""} placeholder="reports.example.com" />
+                    <label className="grid gap-1.5 text-sm font-medium">Sender domain<Input name="senderDomain" defaultValue={branding?.aeo_sender_domain ?? ""} placeholder="reports.example.com" /></label>
                     <label className="flex items-center gap-2 text-sm"><input name="hidePoweredBy" type="checkbox" defaultChecked={branding?.hide_powered_by} /> Remove powered by</label>
                     <Button type="submit">Save branding</Button>
                 </form><form action={checkSenderDomain}><Button type="submit" variant="outline" className="w-full">Verify sender domain</Button></form>
                 <p className="text-xs text-muted-foreground">Sender: {branding?.aeo_sender_domain_status ?? "not configured"}</p></CardContent></Card>
             <Card><CardHeader><CardTitle className="text-base">Outbound webhooks</CardTitle></CardHeader>
                 <CardContent className="space-y-3"><form action={createPhase3Webhook} className="grid gap-2">
-                    <Input name="name" required placeholder="Automation webhook" /><Input name="endpoint" type="url" required placeholder="https://..." />
-                    <Input name="secret" type="password" required minLength={32} placeholder="Signing secret, 32+ characters" />
+                    <label className="grid gap-1.5 text-sm font-medium">Webhook name<Input name="name" required placeholder="Automation webhook" /></label>
+                    <label className="grid gap-1.5 text-sm font-medium">Endpoint URL<Input name="endpoint" type="url" required placeholder="https://..." /></label>
+                    <label className="grid gap-1.5 text-sm font-medium">Signing secret<Input name="secret" type="password" required minLength={32} placeholder="At least 32 characters" autoComplete="new-password" /></label>
                     <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="events" value="aeo.alert.created" defaultChecked /> Alert created</label>
                     <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="events" value="aeo.run.completed" defaultChecked /> Run completed</label>
                     <Button type="submit">Add webhook</Button>
                 </form><p className="text-xs text-muted-foreground">{webhookCount} configured endpoint{webhookCount === 1 ? "" : "s"}</p></CardContent></Card>
             <Card><CardHeader><CardTitle className="text-base">BigQuery export</CardTitle></CardHeader>
                 <CardContent className="space-y-3"><form action={saveBigQuery} className="grid gap-2">
-                    <Input name="projectId" required placeholder="Google Cloud project" /><Input name="datasetId" required placeholder="Dataset" />
-                    <Input name="tableId" required placeholder="Table" /><Textarea name="credentials" required rows={5} placeholder="Service account JSON" />
+                    <label className="grid gap-1.5 text-sm font-medium">Google Cloud project ID<Input name="projectId" required placeholder="my-project" /></label>
+                    <label className="grid gap-1.5 text-sm font-medium">Dataset ID<Input name="datasetId" required placeholder="Dataset" /></label>
+                    <label className="grid gap-1.5 text-sm font-medium">Table ID<Input name="tableId" required placeholder="Table" /></label>
+                    <label className="grid gap-1.5 text-sm font-medium">Service account JSON<Textarea name="credentials" required rows={5} placeholder="Paste service account credentials" /></label>
                     <Button type="submit">Connect BigQuery</Button>
                 </form><p className="text-xs text-muted-foreground">{bigQueryCount ? "Structured export connected" : "No warehouse connected"}</p></CardContent></Card>
         </div>

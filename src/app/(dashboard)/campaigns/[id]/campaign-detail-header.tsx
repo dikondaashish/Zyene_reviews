@@ -16,8 +16,8 @@ export function CampaignDetailHeader({ campaign, detail }: CampaignDetailHeaderP
     return (
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex min-w-0 items-start gap-3 sm:gap-4">
-                <Button variant="ghost" size="icon" onClick={() => router.push("/campaigns")}>
-                    <ArrowLeft className="size-4" />
+                <Button aria-label="Back to campaigns" variant="ghost" size="icon" onClick={() => router.push("/campaigns")}>
+                    <ArrowLeft aria-hidden="true" className="size-4" />
                 </Button>
                 <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">

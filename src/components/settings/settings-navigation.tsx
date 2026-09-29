@@ -58,7 +58,7 @@ function SettingsTabLinks(props: { items: NavItem[]; pathname: string; access: S
         href={item.href}
         aria-current={isActive ? "page" : undefined}
         className={cn(
-          "-mb-px flex items-center gap-1.5 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium transition-colors",
+          "-mb-px flex items-center gap-1.5 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
           isActive
             ? "border-primary text-primary"
             : "border-transparent text-muted-foreground hover:border-border hover:text-foreground",
@@ -76,7 +76,7 @@ export function SettingsNavigation(props: { children: React.ReactNode; access: S
   const pathname = usePathname();
 
   return (
-    <div className="flex min-w-0 flex-col gap-0 overflow-x-hidden p-4 sm:p-6">
+    <div className="flex min-w-0 flex-col gap-0 overflow-x-hidden">
       <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Settings</h2>
       <nav
         className="-mx-1 mb-6 flex flex-col gap-5 border-b border-border px-1 pb-0 xl:flex-row xl:items-end xl:gap-8"
@@ -86,15 +86,15 @@ export function SettingsNavigation(props: { children: React.ReactNode; access: S
           <span className="px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
             Organization
           </span>
-          <div className="flex flex-wrap items-center gap-1">
+          <div className="flex items-center gap-1 overflow-x-auto">
             <SettingsTabLinks items={organizationNavItems} pathname={pathname} access={props.access} />
           </div>
         </div>
-        <div className="hidden h-9 w-px shrink-0 bg-border sm:mb-2.5 sm:block sm:self-end" aria-hidden />
+        <div className="hidden h-9 w-px shrink-0 bg-border sm:mb-2.5 xl:block xl:self-end" aria-hidden />
         <div className="flex min-w-0 flex-1 flex-col gap-1">
           <span className="px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Business</span>
           <span className="sr-only">Applies to the business selected in the header.</span>
-          <div className="flex flex-wrap items-center gap-1">
+          <div className="flex items-center gap-1 overflow-x-auto">
             <SettingsTabLinks items={businessNavItems} pathname={pathname} access={props.access} />
           </div>
         </div>

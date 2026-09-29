@@ -166,7 +166,7 @@ export function AddCompetitorDialog({
                     Track Competitor
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[640px] p-0 overflow-hidden">
+            <DialogContent className="sm:max-w-[640px] p-0 overflow-x-hidden overflow-y-auto">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader className="px-6 pt-6 pb-2">
                         <DialogTitle className="text-3xl tracking-tight">Add a Competitor</DialogTitle>

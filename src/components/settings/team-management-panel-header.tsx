@@ -41,7 +41,7 @@ export function TeamManagementPanelHeader({
     return (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
-                <h3 className="text-3xl font-semibold tracking-tight">Team</h3>
+                <h1 className="text-3xl font-semibold tracking-tight">Team</h1>
                 <p className="text-sm text-muted-foreground">{businessName} · Manage members and permissions</p>
             </div>
             {canInviteTeam ? (

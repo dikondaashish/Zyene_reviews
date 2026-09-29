@@ -37,8 +37,8 @@ export function GoogleLodgingConnectivityParkingTab({
                     ["Public area Wi-Fi", publicWifi, setPublicWifi],
                 ].map(([label, val, set]) => (
                     <div key={label as string} className="flex items-center justify-between gap-4">
-                        <Label>{label as string}</Label>
-                        <Switch checked={val as boolean} onCheckedChange={set as (c: boolean) => void} />
+                        <Label htmlFor={`lodging-${String(label).replaceAll(" ", "-")}`}>{label as string}</Label>
+                        <Switch id={`lodging-${String(label).replaceAll(" ", "-")}`} checked={val as boolean} onCheckedChange={set as (c: boolean) => void} />
                     </div>
                 ))}
             </div>
@@ -51,8 +51,8 @@ export function GoogleLodgingConnectivityParkingTab({
                     ["Valet parking", valet, setValet],
                 ].map(([label, val, set]) => (
                     <div key={label as string} className="flex items-center justify-between gap-4">
-                        <Label>{label as string}</Label>
-                        <Switch checked={val as boolean} onCheckedChange={set as (c: boolean) => void} />
+                        <Label htmlFor={`lodging-${String(label).replaceAll(" ", "-")}`}>{label as string}</Label>
+                        <Switch id={`lodging-${String(label).replaceAll(" ", "-")}`} checked={val as boolean} onCheckedChange={set as (c: boolean) => void} />
                     </div>
                 ))}
             </div>

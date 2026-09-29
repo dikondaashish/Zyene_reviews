@@ -1,14 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { MessageSquare, TrendingDown } from "lucide-react";
 
-import { AnimatedNumber } from "@/components/ui/animated-number";
 import { cn } from "@/lib/utils";
-import { spring } from "@/lib/motion/springs";
-import { PRO_STAT_CARD_ICON_MAP } from "./pro-stat-card-icon-map";
-import { ProStatCardRatingStarSlot, ProStatCardTrendUpGlyph } from "./pro-stat-card-rating-star";
-import type { ProStatCardProps } from "./pro-stat-card-types";
+import { PRO_STAT_CARD_ICON_MAP } from "@/components/dashboard/pro-stat-card-icon-map";
+import { ProStatCardRatingStarSlot, ProStatCardTrendUpGlyph } from "@/components/dashboard/pro-stat-card-rating-star";
+import type { ProStatCardProps } from "@/components/dashboard/pro-stat-card-types";
 
 export function ProStatCard({
     title,
@@ -22,7 +19,6 @@ export function ProStatCard({
     suffix = "",
     precision = 0,
     className,
-    delay = 0,
 }: ProStatCardProps) {
     const Icon = PRO_STAT_CARD_ICON_MAP[iconName] || MessageSquare;
     const hasTrend = typeof trend === "number";
@@ -33,20 +29,15 @@ export function ProStatCard({
     const ratingClamped = showRatingStars ? Math.max(0, Math.min(5, value)) : 0;
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ ...spring.default, delay }}
+        <div
             className={cn(
-                "group relative overflow-hidden rounded-2xl border border-border/60 bg-card p-5 md:p-6 min-h-[180px]",
-                "transition-all duration-200 hover:border-primary/30 hover:shadow-sm",
+                "relative min-w-0 rounded-2xl border border-border bg-card p-5 md:p-6 min-h-[180px]",
                 className,
             )}
         >
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
             <div className="relative flex items-center justify-between">
-                <div className="flex items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary transition-transform group-hover:scale-105 size-10">
+                <div className="flex items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary size-10">
                     <Icon className="size-5" />
                 </div>
                 {hasTrend && (
@@ -85,14 +76,10 @@ export function ProStatCard({
 
             <div className="relative mt-4 space-y-1.5">
                 <p className="text-sm font-medium text-muted-foreground">{title}</p>
-                <div className="flex items-baseline gap-1">
-                    <AnimatedNumber
-                        value={value}
-                        prefix={prefix}
-                        suffix={suffix}
-                        precision={precision}
-                        className="text-4xl font-bold tracking-tight text-foreground"
-                    />
+                <div className="flex flex-wrap items-baseline gap-1">
+                    <span className="text-4xl font-semibold tabular-nums tracking-tight text-foreground">
+                        {prefix}{value.toLocaleString("en-US", { minimumFractionDigits: precision, maximumFractionDigits: precision })}{suffix}
+                    </span>
                     {showRatingStars && (
                         <div
                             className="ml-2 flex items-center gap-1 pb-1"
@@ -106,14 +93,13 @@ export function ProStatCard({
                     )}
                 </div>
                 {description && (
-                    <p className="text-xs leading-relaxed text-muted-foreground line-clamp-2 min-h-8">
+                    <p className="text-xs leading-relaxed text-muted-foreground min-h-8">
                         {description}
                         {trendLabel && <span className="ml-1 opacity-80">{trendLabel}</span>}
                     </p>
                 )}
             </div>
 
-            <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-        </motion.div>
+        </div>
     );
 }
