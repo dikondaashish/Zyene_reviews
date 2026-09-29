@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { PanelLoading } from "@/components/dashboard/panel-loading";
 import {
     AreaChart,
     Area,
@@ -32,7 +33,7 @@ export function ReviewTrendChart({ data }: { data: TrendDataPoint[] }) {
     }
 
     if (!mounted) {
-        return <div className="mt-2 h-[250px] w-full min-w-0" />;
+        return <PanelLoading label="review trend" className="mt-2" />;
     }
 
     return (

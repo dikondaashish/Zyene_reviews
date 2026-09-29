@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
+import { PanelLoading } from "@/components/dashboard/panel-loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MousePointer2 } from "lucide-react";
 import type { AnalyticsFullRangePayload } from "@/lib/analytics/build-analytics-range-payload";
@@ -45,13 +46,13 @@ export function AnalyticsPageGooglePerformanceSection({
                         </div>
                     </CardHeader>
                     <CardContent className="pl-0 pb-6">
-                        <Suspense fallback={<div className="h-[260px] rounded-lg bg-muted/40 animate-pulse" />}>
+                        <Suspense fallback={<PanelLoading className="h-[260px]" />}>
                             <AnalyticsGooglePerformanceProfileChart data={d.perfSeries as never[]} />
                         </Suspense>
                     </CardContent>
                 </Card>
 
-                <Suspense fallback={<div className="h-[220px] rounded-lg bg-muted/40 animate-pulse" />}>
+                <Suspense fallback={<PanelLoading className="h-[220px]" />}>
                     <AnalyticsEngagementFunnelCard
                         profileViews={perfTotals?.profileViews ?? 0}
                         websiteClicks={perfTotals?.websiteClicks ?? 0}

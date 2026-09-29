@@ -1,31 +1,28 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { PanelLoading } from "@/components/dashboard/panel-loading";
+import { CustomerPortalLoading } from "@/components/dashboard/customer-portal-loading";
 import type { CustomerPortalCardProps } from "@/components/dashboard/customer-portal-card-types";
 
 const ReviewTrendChart = dynamic(
     () => import("@/components/dashboard/review-trend-chart").then((m) => m.ReviewTrendChart),
-    { ssr: false }
+    { ssr: false, loading: () => <PanelLoading label="review trend" className="mt-2" /> }
 );
 
 const RatingDistributionChart = dynamic(
     () => import("@/components/dashboard/rating-distribution-chart").then((m) => m.RatingDistributionChart),
-    { ssr: false }
-);
-
-const QRCodeCard = dynamic(
-    () => import("@/components/dashboard/qr-code-card").then((m) => m.QRCodeCard),
-    { ssr: false }
+    { ssr: false, loading: () => <PanelLoading label="rating distribution" /> }
 );
 
 const CustomerPortalCard = dynamic(
     () => import("@/components/dashboard/customer-portal-card").then((m) => m.CustomerPortalCard),
-    { ssr: false }
+    { ssr: false, loading: CustomerPortalLoading }
 );
 
 const AnimatedReviewCards = dynamic(
     () => import("@/components/ui/animated-review-card").then((m) => m.AnimatedReviewCards),
-    { ssr: false }
+    { ssr: false, loading: () => <PanelLoading label="recent reviews" className="h-[360px] rounded-2xl border border-border bg-card" /> }
 );
 
 export type TrendDataPoint = { day: string; count: number };

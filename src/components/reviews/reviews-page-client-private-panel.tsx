@@ -1,6 +1,7 @@
 "use client";
 
 import { Lock } from "lucide-react";
+import { PanelLoading } from "@/components/dashboard/panel-loading";
 import { PrivateFeedbackCard } from "@/components/reviews/private-feedback-card";
 import type { PrivateFeedback } from "@/components/reviews/private-feedback-card";
 
@@ -10,6 +11,7 @@ interface ReviewsPageClientPrivatePanelProps {
 }
 
 export function ReviewsPageClientPrivatePanel({ loading, reviews }: ReviewsPageClientPrivatePanelProps) {
+    if (loading && reviews.length === 0) return <PanelLoading label="private feedback" className="h-[360px] rounded-xl border border-border bg-card" />;
     return (
         <div aria-label="Private feedback inbox" aria-busy={loading} inert={loading} className={`grid gap-4 ${loading ? "opacity-60 transition-opacity" : "transition-opacity"}`}>
             {reviews && reviews.length > 0 ? (

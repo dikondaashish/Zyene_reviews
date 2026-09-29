@@ -3,6 +3,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "./dashboard-colors.css";
+@import "../components/dashboard/dashboard-loading.css";
 
 @custom-variant dark (&:is(.dark *));
 

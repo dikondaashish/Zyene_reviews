@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
+import { PanelLoading } from "@/components/dashboard/panel-loading";
 import type { AnalyticsFullRangePayload } from "@/lib/analytics/build-analytics-range-payload";
 import { AnalyticsPlatformTable } from "@/components/analytics/analytics-charts-registry";
 
@@ -11,7 +12,7 @@ export function AnalyticsPagePlatformCompare({ d }: { d: AnalyticsFullRangePaylo
                 <h2 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Platform Comparison</h2>
                 <div className="h-[1px] flex-1 bg-border/30" />
             </div>
-            <Suspense fallback={<div className="h-[220px] rounded-lg bg-muted/40 animate-pulse" />}>
+            <Suspense fallback={<PanelLoading className="h-[220px]" />}>
                 <AnalyticsPlatformTable data={d.platformData} />
             </Suspense>
         </div>

@@ -6,6 +6,7 @@ import { ReviewManagement } from "@/components/reviews/review-management";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, SearchX } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
+import { PanelLoading } from "@/components/dashboard/panel-loading";
 import type { ReviewManagementItem } from "@/types/components";
 
 interface ReviewsPageClientPublicPanelProps {
@@ -41,7 +42,7 @@ export function ReviewsPageClientPublicPanel({
             <ReviewSearch key={filters.q || ""} query={filters.q || ""} onSearch={(q) => onFilterChange("q", q)} />
             <ReviewsFilters filters={filters} onFilterChange={onFilterChange} />
             </div>
-            <div aria-busy={loading} inert={loading} className={loading ? "opacity-60 transition-opacity" : "transition-opacity"}>
+            {loading && reviews.length === 0 ? <PanelLoading label="reviews" className="h-[360px]" /> : <div aria-busy={loading} inert={loading} className={loading ? "opacity-60 transition-opacity" : "transition-opacity"}>
                 {reviews && reviews.length > 0 ? (
                     <ReviewManagement
                         reviews={reviews}
@@ -78,7 +79,7 @@ export function ReviewsPageClientPublicPanel({
                         </div>}
                     </div>
                 )}
-            </div>
+            </div>}
         </section>
     );
 }

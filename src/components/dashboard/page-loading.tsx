@@ -1,7 +1,9 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { DashboardSkeleton as Skeleton } from "@/components/dashboard/dashboard-skeleton";
+import { SmartInsightsCardLoading } from "@/components/dashboard/smart-insights-card-loading";
+import { CustomerPortalLoading } from "@/components/dashboard/customer-portal-loading";
 
 export function PageLoading({ label, variant = "list", showHeader = true }: {
-    label: string; variant?: "list" | "overview"; showHeader?: boolean;
+    label: string; variant?: "list" | "overview" | "dashboard"; showHeader?: boolean;
 }) {
     return (
         <div role="status" aria-live="polite" className="w-full min-w-0">
@@ -11,12 +13,13 @@ export function PageLoading({ label, variant = "list", showHeader = true }: {
                     <div className="min-w-0 space-y-2"><Skeleton className="h-7 w-40 max-w-full" /><Skeleton className="h-4 w-64 max-w-full" /></div>
                     <Skeleton className="h-10 w-full sm:w-36" />
                 </div>}
+                {variant === "dashboard" && <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]"><SmartInsightsCardLoading /><CustomerPortalLoading /></div>}
                 <div className="grid min-w-0 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                     {[1, 2, 3, 4].map(item => <div key={item} className="min-w-0 space-y-3 rounded-xl border bg-card p-5">
                         <Skeleton className="h-4 w-24 max-w-full" /><Skeleton className="h-8 w-20 max-w-full" /><Skeleton className="h-3 w-36 max-w-full" />
                     </div>)}
                 </div>
-                {variant === "overview" ? <div className="grid gap-4 lg:grid-cols-2">
+                {variant !== "list" ? <div className="grid gap-4 lg:grid-cols-2">
                     {[1, 2].map(item => <div key={item} className="min-w-0 space-y-4 rounded-xl border bg-card p-5">
                         <Skeleton className="h-5 w-40 max-w-full" /><Skeleton className="h-52 w-full" />
                     </div>)}

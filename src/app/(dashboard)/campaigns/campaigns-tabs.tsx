@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { PanelLoading } from "@/components/dashboard/panel-loading";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CAMPAIGN_TEMPLATES } from "@/lib/campaigns/templates";
@@ -42,9 +42,7 @@ export function CampaignsTabs({
 
             <TabsContent value="all" className="space-y-6">
                 {loading && (
-                    <div className="flex items-center justify-center py-20">
-                        <Loader2 className="animate-spin text-muted-foreground size-8" />
-                    </div>
+                    <PanelLoading label="campaigns" className="h-80 rounded-xl border border-border bg-card" />
                 )}
 
                 {!loading && campaigns.length === 0 && <CampaignsEmptyState />}

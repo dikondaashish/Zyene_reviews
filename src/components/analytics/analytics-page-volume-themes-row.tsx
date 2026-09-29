@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
+import { PanelLoading } from "@/components/dashboard/panel-loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Globe, Sparkles } from "lucide-react";
 import type { AnalyticsFullRangePayload } from "@/lib/analytics/build-analytics-range-payload";
@@ -22,7 +23,7 @@ export function AnalyticsPageVolumeThemesRow({ d }: { d: AnalyticsFullRangePaylo
                     </div>
                 </CardHeader>
                 <CardContent className="pl-0 pb-6">
-                    <Suspense fallback={<div className="h-[260px] rounded-lg bg-muted/40 animate-pulse" />}>
+                    <Suspense fallback={<PanelLoading className="h-[260px]" />}>
                         <AnalyticsVolumeChart data={d.trendData} />
                     </Suspense>
                 </CardContent>
@@ -41,7 +42,7 @@ export function AnalyticsPageVolumeThemesRow({ d }: { d: AnalyticsFullRangePaylo
                     </div>
                 </CardHeader>
                 <CardContent className="pb-6">
-                    <Suspense fallback={<div className="h-[220px] rounded-lg bg-muted/40 animate-pulse" />}>
+                    <Suspense fallback={<PanelLoading className="h-[220px]" />}>
                         <AnalyticsThemeChart data={d.themeData} />
                     </Suspense>
                 </CardContent>
