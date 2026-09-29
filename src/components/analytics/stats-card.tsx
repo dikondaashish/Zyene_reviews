@@ -31,7 +31,7 @@ export function StatsCard({ title, value, description, trend, isDemo, className 
 
     return (
         <div className={cn("h-full min-w-0", className)}>
-            <Card className="h-full rounded-2xl border-border bg-card shadow-none">
+            <Card className="h-full rounded-xl border-border bg-card shadow-none">
                 
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-semibold tracking-tight text-muted-foreground flex items-center justify-between w-full">
@@ -49,16 +49,17 @@ export function StatsCard({ title, value, description, trend, isDemo, className 
                         <div className="text-3xl font-semibold tabular-nums tracking-tight leading-none">{value}</div>
                     </div>
                     
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="space-y-2">
                         {trend && (
                             <div className={cn(
-                                "flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold transition-colors",
+                                "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold transition-colors",
                                 trendColor
                             )} aria-label={`${trend.value > 0 ? "+" : ""}${trend.value.toFixed(1)}% ${trend.label}`}>
                                 {isPositive && <TrendingUp className="size-3" />}
                                 {isNegative && <TrendingDown className="size-3" />}
                                 {isNeutral && <Minus className="size-3" />}
                                 {Math.abs(trend.value).toFixed(1)}%
+                                <span className="ml-1 font-normal">{trend.label}</span>
                             </div>
                         )}
                         <p className="text-xs text-muted-foreground font-medium leading-relaxed">{description}</p>

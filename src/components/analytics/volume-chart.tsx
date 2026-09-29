@@ -1,121 +1,29 @@
-
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
-    Legend,
-    Cell
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { ChartEmpty, ChartKey, chartAxis, chartDate, chartTooltipStyle } from "@/components/analytics/chart-presentation";
 
-interface VolumeDataPoint {
-    date: string;
-    positive: number;
-    neutral: number;
-    negative: number;
-}
-
+interface VolumeDataPoint { date: string; positive: number; neutral: number; negative: number }
+const series = [
+    { key: "positive", label: "Positive", color: "var(--chart-2)" },
+    { key: "neutral", label: "Neutral", color: "var(--chart-3)" },
+    { key: "negative", label: "Negative", color: "var(--destructive)" },
+];
 export function VolumeChart({ data }: { data: VolumeDataPoint[] }) {
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    if (data.length === 0) {
-        return (
-            <div className="flex h-[300px] items-center justify-center text-muted-foreground border border-dashed rounded-xl bg-muted/5">
-                No volume data for this period
-            </div>
-        );
-    }
-    if (!mounted) {
-        return <div className="h-[300px] w-full" />;
-    }
-
-    return (
-        <div className="w-full h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data} margin={{ top: 20, right: 10, left: -20, bottom: 0 }} barSize={20}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.5} />
-                    <XAxis
-                        dataKey="date"
-                        tick={{ fontSize: 11, fontWeight: 500, fill: "var(--muted-foreground)" }}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(value) => {
-                            const d = new Date(value);
-                            return `${d.getMonth() + 1}/${d.getDate()}`;
-                        }}
-                        minTickGap={40}
-                        dy={10}
-                    />
-                    <YAxis
-                        tick={{ fontSize: 11, fontWeight: 500, fill: "var(--muted-foreground)" }}
-                        tickLine={false}
-                        axisLine={false}
-                    />
-                    <Tooltip
-                        contentStyle={{
-                            backgroundColor: "var(--card)",
-                            border: "1px solid var(--border)",
-                            borderRadius: "12px",
-                            boxShadow: "var(--pro-shadow)",
-                            padding: "8px 12px",
-                        }}
-                        cursor={{ fill: "color-mix(in oklab, var(--muted) 35%, transparent)" }}
-                        labelClassName="font-bold text-xs mb-1"
-                        labelFormatter={(label) => new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-                        itemStyle={{ fontSize: '11px', fontWeight: 600 }}
-                    />
-                    <Legend 
-                        verticalAlign="top" 
-                        align="right" 
-                        iconType="circle" 
-                        iconSize={8}
-                        wrapperStyle={{
-                            paddingBottom: 20,
-                            fontSize: 11,
-                            fontWeight: 500,
-                            display: "flex",
-                            flexWrap: "wrap",
-                            gap: 10,
-                            justifyContent: "flex-end",
-                            rowGap: 6,
-                        }}
-                    />
-                    <Bar 
-                        dataKey="negative" 
-                        name="Negative (1-2★)" 
-                        stackId="a" 
-                        fill="var(--destructive)" 
-                        background={{ fill: "var(--border)" }}
-                        radius={[0, 0, 0, 0]} 
-                    />
-                    <Bar 
-                        dataKey="neutral" 
-                        name="Neutral (3★)" 
-                        stackId="a" 
-                        fill="var(--chart-3)" 
-                        background={{ fill: "var(--border)" }}
-                        radius={[0, 0, 0, 0]} 
-                    />
-                    <Bar 
-                        dataKey="positive" 
-                        name="Positive (4-5★)" 
-                        stackId="a" 
-                        fill="var(--chart-2)" 
-                        background={{ fill: "var(--border)" }}
-                        radius={[4, 4, 0, 0]} 
-                    />
+    if (!data.length) return <ChartEmpty message="No reviews in this period" />;
+    return <div className="space-y-5">
+        <div className="flex flex-wrap gap-x-5 gap-y-2">{series.map(s => <ChartKey key={s.key} label={s.label} color={s.color} />)}</div>
+        <div className="h-[260px] w-full" role="group" aria-label="Daily review counts, stacked by positive, neutral and negative star ratings">
+            <ResponsiveContainer width="100%" height={260} minWidth={0}>
+                <BarChart data={data} margin={{ top: 12, right: 8, left: -24, bottom: 4 }} maxBarSize={24} barCategoryGap="25%" accessibilityLayer>
+                    <CartesianGrid vertical={false} stroke="var(--border)" strokeDasharray="3 5" />
+                    <XAxis dataKey="date" tick={chartAxis} tickLine={false} axisLine={false} tickFormatter={v => chartDate(v)} minTickGap={40} tickMargin={12} />
+                    <YAxis allowDecimals={false} tick={chartAxis} tickLine={false} axisLine={false} />
+                    <Tooltip contentStyle={chartTooltipStyle} labelFormatter={v => chartDate(String(v), true)} cursor={{ fill: "var(--muted)" }} />
+                    {series.map(s => <Bar key={s.key} dataKey={s.key} name={s.label} stackId="reviews" fill={s.color} isAnimationActive={false} />)}
                 </BarChart>
             </ResponsiveContainer>
         </div>
-    );
+        <p className="text-xs text-muted-foreground">Days with reviews · Positive: 4–5 stars · Neutral: 3 · Negative: 1–2</p>
+    </div>;
 }

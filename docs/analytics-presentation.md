@@ -1,0 +1,21 @@
+# Analytics presentation
+
+The analytics refinement uses the existing app palette in light and dark mode. Home dashboard components are outside its scope.
+
+- Review ratings use a dated line chart with a fixed 0–5 scale and a period-average reference. Dates are formatted in UTC to preserve calendar dates from the API.
+- Review volume uses stacked bars, whole-number ticks and consistent rating-category colors. Only days present in the supplied review data are shown; the caption makes that explicit.
+- The rating distribution donut displays counts and percentages in a text legend. This is based on star ratings, not AI sentiment analysis.
+- Themes use ranked horizontal bars with full labels, counts and a balanced category when positive and negative scores tie.
+- Google profile views and customer actions have separate chart views. This prevents high view counts from flattening lower-volume action lines. Customer actions also use different dash patterns.
+- Own-platform activity uses three distinct line series, without overlapping gradient fills.
+- Charts stay dynamically imported with shimmer fallbacks. Repeated chart animations were removed, including on filter changes. The data/filter/export pipeline is unchanged.
+
+## References
+
+[IBM Carbon dashboard guidance](https://carbondesignsystem.com/data-visualization/dashboards/) informed hierarchy, consistent legends and restrained decoration. [Carbon chart guidance](https://carbondesignsystem.com/data-visualization/simple-charts/) informed choosing lines for trends and bars for comparisons.
+
+## Validation
+
+Checked actual components with a temporary local sample-data page: desktop light/dark, 390px mobile without page overflow, Google metric toggle, rating tooltip by keyboard, and empty states. The temporary route was removed. Screenshots and the fixture are retained in ignored `output/analytics-refinement/`.
+
+React Doctor: 90/100. Its eager Recharts import warnings are false positives here: charts are behind the dynamic registry (own-platform activity is inside the dynamically imported own-platform view). The StatsCard complexity warning is pre-existing. Three additional development-only warnings flag the shared presentation module exporting formatting constants alongside components; no production behavior is affected. Type checking, file-size and color guards, focused ESLint, and the seven business-metrics/review-timeline tests passed. The production webpack build also passed (273 static pages generated).

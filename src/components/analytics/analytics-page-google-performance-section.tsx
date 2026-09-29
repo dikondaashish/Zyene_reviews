@@ -24,19 +24,16 @@ export function AnalyticsPageGooglePerformanceSection({
 }) {
     return (
         <>
-            <div className="flex items-center gap-3 mt-4">
-                <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-border/50 to-transparent" />
-                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
-                    Google Business Insights
-                </h2>
-                <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+            <div className="space-y-1">
+                <h2 className="text-lg font-semibold tracking-tight">Google Business insights</h2>
+                <p className="text-sm text-muted-foreground">Understand how people find and interact with your business.</p>
             </div>
 
             <div className="flex flex-col gap-6">
-                <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20 overflow-hidden">
+                <Card className="rounded-xl border-border bg-card overflow-hidden">
                     <CardHeader className="pb-2">
                         <div className="space-y-1">
-                            <CardTitle className="text-lg font-bold flex items-center gap-2">
+                            <CardTitle className="text-sm font-semibold flex items-center gap-2">
                                 <MousePointer2 className="text-primary size-5" />
                                 Listing Performance
                             </CardTitle>
@@ -45,7 +42,7 @@ export function AnalyticsPageGooglePerformanceSection({
                             </p>
                         </div>
                     </CardHeader>
-                    <CardContent className="pl-0 pb-6">
+                    <CardContent className="pb-1">
                         <Suspense fallback={<PanelLoading className="h-[260px]" />}>
                             <AnalyticsGooglePerformanceProfileChart data={d.perfSeries as never[]} />
                         </Suspense>

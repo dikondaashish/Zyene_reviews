@@ -9,7 +9,7 @@ export function AnalyticsPageStatsRow({ d, isDemo }: { d: AnalyticsFullRangePayl
             <StatsCard
                 title="New Reviews"
                 value={d.stats.totalReviews}
-                description="Reviews whose review date falls in this period"
+                description="Reviews received in this period"
                 trend={
                     d.stats.reviewsDelta === null ? undefined : { value: d.stats.reviewsDelta, label: "vs last period" }
                 }
@@ -17,8 +17,8 @@ export function AnalyticsPageStatsRow({ d, isDemo }: { d: AnalyticsFullRangePayl
             />
             <StatsCard
                 title="Average Rating"
-                value={d.stats.avgRating.toFixed(1)}
-                description={`Based on ${d.stats.totalReviews} reviews (same date window)`}
+                value={d.stats.totalReviews ? d.stats.avgRating.toFixed(1) : "—"}
+                description={`Based on ${d.stats.totalReviews} reviews in this period`}
                 trend={
                     d.stats.ratingDelta === null ? undefined : { value: d.stats.ratingDelta, label: "vs last period" }
                 }
@@ -26,7 +26,7 @@ export function AnalyticsPageStatsRow({ d, isDemo }: { d: AnalyticsFullRangePayl
             />
             <StatsCard
                 title="Response Rate"
-                value={`${d.stats.responseRate.toFixed(0)}%`}
+                value={d.stats.totalReviews ? `${d.stats.responseRate.toFixed(0)}%` : "—"}
                 description={`${d.stats.respondedCount} responded`}
                 trend={
                     d.stats.responseRateDelta === null

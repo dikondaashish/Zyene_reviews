@@ -1,6 +1,6 @@
 "use client";
 
-import { Gauge, Sparkles } from "lucide-react";
+import { ChartNoAxesCombined, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AnalyticsReportGenerator } from "@/components/analytics/analytics-charts-registry";
 import { ExportDataButton } from "@/components/analytics/export-data-button";
@@ -39,8 +39,8 @@ export function AnalyticsPageClientHero({
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="space-y-1">
-                        <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold tracking-tight sm:gap-3 sm:text-3xl">
-                            <Gauge className="text-primary size-9" />
+                        <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold tracking-tight sm:gap-3 sm:text-2xl">
+                            <ChartNoAxesCombined className="size-6 text-primary" aria-hidden />
                             Analytics
                             {isDemo && (
                                 <Badge
@@ -52,9 +52,9 @@ export function AnalyticsPageClientHero({
                                 </Badge>
                             )}
                         </h1>
-                        <p className="text-muted-foreground font-medium">
-                            Review performance for{" "}
-                            <span className="font-bold">{businessName || "your business"}</span>
+                        <p className="text-sm text-muted-foreground">
+                            Reputation and customer engagement for{" "}
+                            <span className="font-medium text-foreground">{businessName || "your business"}</span>
                         </p>
                     </div>
 

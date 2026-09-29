@@ -1,52 +1,17 @@
 "use client";
 
-import { Suspense } from "react";
-import { PanelLoading } from "@/components/dashboard/panel-loading";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Gauge, Sparkles } from "lucide-react";
+import { ChartNoAxesCombined, ChartPie } from "lucide-react";
 import type { AnalyticsFullRangePayload } from "@/lib/analytics/build-analytics-range-payload";
+import { AnalyticsChartCard } from "@/components/analytics/analytics-chart-card";
 import { AnalyticsRatingsChart, AnalyticsSentimentChart } from "@/components/analytics/analytics-charts-registry";
 
 export function AnalyticsPageRatingSentimentRow({ d }: { d: AnalyticsFullRangePayload; isDemo: boolean }) {
-    return (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <Card className="lg:col-span-2 bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <div className="space-y-1">
-                        <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <Gauge className="text-primary size-5" />
-                            Rating Trend
-                        </CardTitle>
-                        <p className="text-xs text-muted-foreground font-medium">Average score fluctuations daily</p>
-                    </div>
-                    <Badge variant="secondary" className="font-bold bg-primary/10 text-primary border-primary/20">
-                        Avg: {d.stats.avgRating.toFixed(1)}
-                    </Badge>
-                </CardHeader>
-                <CardContent className="pl-0 pb-6">
-                    <Suspense fallback={<PanelLoading className="h-[280px]" />}>
-                        <AnalyticsRatingsChart data={d.trendData} overallAvg={d.stats.avgRating} />
-                    </Suspense>
-                </CardContent>
-            </Card>
-
-            <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20">
-                <CardHeader>
-                    <div className="space-y-1">
-                        <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <Sparkles className="text-primary size-5" />
-                            Sentiment Breakdown
-                        </CardTitle>
-                        <p className="text-xs text-muted-foreground font-medium">AI-analyzed review emotional tone</p>
-                    </div>
-                </CardHeader>
-                <CardContent className="pb-6">
-                    <Suspense fallback={<PanelLoading className="h-[220px]" />}>
-                        <AnalyticsSentimentChart data={d.sentimentData} />
-                    </Suspense>
-                </CardContent>
-            </Card>
-        </div>
-    );
+    return <div className="grid gap-5 xl:grid-cols-3">
+        <AnalyticsChartCard title="Rating trend" description="How your customer ratings change over time" icon={ChartNoAxesCombined} className="xl:col-span-2">
+            <AnalyticsRatingsChart data={d.trendData} overallAvg={d.stats.avgRating} />
+        </AnalyticsChartCard>
+        <AnalyticsChartCard title="Rating distribution" description="Share of reviews by star rating" icon={ChartPie}>
+            <AnalyticsSentimentChart data={d.sentimentData} />
+        </AnalyticsChartCard>
+    </div>;
 }

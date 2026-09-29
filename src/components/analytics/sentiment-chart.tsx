@@ -1,97 +1,34 @@
-
 "use client";
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { ChartEmpty, chartTooltipStyle } from "@/components/analytics/chart-presentation";
 
-interface SentimentDataPoint {
-    name: string;
-    value: number;
-    color: string;
-}
-
+interface SentimentDataPoint { name: string; value: number; color: string }
 export function SentimentChart({ data }: { data: SentimentDataPoint[] }) {
-    const total = data.reduce((acc, curr) => acc + curr.value, 0);
-
-    if (total === 0) {
-        return (
-            <div className="flex h-[300px] items-center justify-center text-muted-foreground border border-dashed rounded-xl bg-muted/5">
-                No sentiment data available
+    const total = data.reduce((sum, item) => sum + item.value, 0);
+    if (!total) return <ChartEmpty message="No rating distribution yet" />;
+    return <div className="space-y-4">
+        <div className="relative h-[190px]" role="img" aria-label={`${total} reviews by rating category`}>
+            <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-3xl font-semibold tracking-tight tabular-nums">{total.toLocaleString()}</span>
+                <span className="mt-1 text-xs text-muted-foreground">total reviews</span>
             </div>
-        );
-    }
-
-    // Refined colors
-    const colorMap: Record<string, string> = {
-        Positive: "var(--chart-2)",
-        Neutral: "var(--chart-3)",
-        Negative: "var(--destructive)",
-        Mixed: "var(--chart-5)",
-    };
-
-    const displayData = data.map(d => ({
-        ...d,
-        color: colorMap[d.name] || d.color
-    }));
-
-    return (
-        <div className="w-full h-[300px] relative">
-            {/* Center Label */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-8">
-                <span className="text-3xl font-black tracking-tight">{total}</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Reviews</span>
-            </div>
-
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={190} minWidth={0}>
                 <PieChart>
-                    <Pie
-                        data={displayData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={70}
-                        outerRadius={90}
-                        paddingAngle={8}
-                        cornerRadius={40}
-                        dataKey="value"
-                        stroke="none"
-                        animationBegin={0}
-                        animationDuration={1500}
-                    >
-                        {displayData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
+                    <Pie data={data} cx="50%" cy="50%" innerRadius={67} outerRadius={87} paddingAngle={data.length > 1 ? 2 : 0} dataKey="value" stroke="var(--card)" strokeWidth={2} startAngle={90} endAngle={-270} isAnimationActive={false}>
+                        {data.map(item => <Cell key={item.name} fill={item.color} />)}
                     </Pie>
-                    <Tooltip
-                        contentStyle={{
-                            backgroundColor: "var(--card)",
-                            border: "1px solid var(--border)",
-                            borderRadius: "12px",
-                            boxShadow: "var(--pro-shadow)",
-                            padding: "8px 12px",
-                        }}
-                        itemStyle={{ fontSize: '11px', fontWeight: 600 }}
-                        formatter={(value) => {
-                            const count = typeof value === "number" ? value : Number(value) || 0;
-                            return [`${count} reviews`, "Count"];
-                        }}
-                    />
-                    <Legend
-                        verticalAlign="bottom"
-                        align="center"
-                        iconType="circle"
-                        iconSize={8}
-                        wrapperStyle={{
-                            paddingTop: 20,
-                            fontSize: 11,
-                            fontWeight: 600,
-                            display: "flex",
-                            flexWrap: "wrap",
-                            gap: 12,
-                            justifyContent: "center",
-                            rowGap: 8,
-                        }}
-                    />
+                    <Tooltip contentStyle={chartTooltipStyle} formatter={v => [`${Number(v).toLocaleString()} reviews`, "Count"]} />
                 </PieChart>
             </ResponsiveContainer>
         </div>
-    );
+        <ul className="divide-y divide-border">
+            {data.map(item => <li key={item.name} className="flex items-center gap-2.5 py-2.5 text-xs">
+                <span className="size-2 shrink-0 rounded-sm" style={{ background: item.color }} aria-hidden />
+                <span className="flex-1 text-muted-foreground">{item.name}</span>
+                <span className="font-medium tabular-nums">{item.value.toLocaleString()}</span>
+                <span className="w-12 text-right tabular-nums text-muted-foreground">{Math.round(item.value / total * 100)}%</span>
+            </li>)}
+        </ul>
+    </div>;
 }

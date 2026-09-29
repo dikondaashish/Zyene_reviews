@@ -14,10 +14,10 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
 }) {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="lg:col-span-2 bg-card/60 border-border/50 backdrop-blur-md overflow-hidden group hover:border-primary/30 transition-all duration-500">
+            <Card className="lg:col-span-2 rounded-xl border-border bg-card overflow-hidden">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div className="space-y-1">
-                        <CardTitle className="text-xl font-bold flex items-center gap-2">
+                        <CardTitle className="text-sm font-semibold flex items-center gap-2">
                             <Search className="text-primary size-5" />
                             Search Keywords
                         </CardTitle>
@@ -26,7 +26,7 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
                         </p>
                     </div>
                     <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-                        Top {searchKeywords.length} Keywords
+                        Top {Math.min(searchKeywords.length, 10)} Keywords
                     </Badge>
                 </CardHeader>
                 <CardContent>
@@ -44,7 +44,7 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
                                 <div className="flex items-center gap-4">
                                     <div className="h-1.5 w-32 bg-muted/40 rounded-full overflow-hidden hidden sm:block">
                                         <div
-                                            className="h-full bg-primary/40 group-hover/item:bg-primary transition-all duration-1000"
+                                            className="h-full bg-primary/40 group-hover/item:bg-primary"
                                             style={{
                                                 width: `${Math.min(
                                                     100,
@@ -58,7 +58,7 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
                                             }}
                                         />
                                     </div>
-                                    <span className="text-sm font-mono font-bold text-muted-foreground group-hover/item:text-primary transition-colors">
+                                    <span className="text-sm font-medium tabular-nums text-muted-foreground group-hover/item:text-primary transition-colors">
                                         {Number(k.impressions).toLocaleString()}
                                     </span>
                                 </div>
@@ -74,23 +74,23 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
                 </CardContent>
             </Card>
 
-            <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20 flex flex-col">
+            <Card className="rounded-xl border-border bg-card flex flex-col">
                 <CardHeader>
                     <div className="space-y-1">
-                        <CardTitle className="text-lg font-bold">Discovery Type</CardTitle>
-                        <p className="text-xs text-muted-foreground font-medium">Business name vs categories</p>
+                        <CardTitle className="text-sm font-semibold">Discovery Type</CardTitle>
+                        <p className="text-xs text-muted-foreground font-medium">Estimated from search keywords</p>
                     </div>
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col justify-center space-y-8 pb-10 px-8">
                     <div className="space-y-4">
                         <div className="flex justify-between items-end">
                             <div className="space-y-1">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                                     Discovery
                                 </p>
                                 <p className="text-xs text-muted-foreground">Found via category/service</p>
                             </div>
-                            <p className="text-3xl font-black text-primary">{d.discoverySplit.discoveryPct}%</p>
+                            <p className="text-3xl font-semibold text-primary">{d.discoverySplit.discoveryPct}%</p>
                         </div>
                         <div className="h-2 w-full bg-muted/40 rounded-full overflow-hidden">
                             <div
@@ -103,12 +103,12 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
                     <div className="space-y-4">
                         <div className="flex justify-between items-end">
                             <div className="space-y-1">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                                     Branded
                                 </p>
                                 <p className="text-xs text-muted-foreground">Found via business name</p>
                             </div>
-                            <p className="text-2xl font-black text-muted-foreground">{d.discoverySplit.directPct}%</p>
+                            <p className="text-2xl font-semibold text-muted-foreground">{d.discoverySplit.directPct}%</p>
                         </div>
                         <div className="h-2 w-full bg-muted/40 rounded-full overflow-hidden">
                             <div

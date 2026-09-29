@@ -32,7 +32,7 @@ const GoogleIcon = () => (
 
 export function PlatformTable({ data }: { data: PlatformData[] }) {
     return (
-        <div className="rounded-xl border border-border/50 bg-card/40 backdrop-blur-sm overflow-hidden">
+        <div className="rounded-xl border border-border bg-card overflow-hidden">
             <Table>
                 <TableHeader className="bg-muted/30">
                     <TableRow className="hover:bg-transparent">
@@ -62,7 +62,7 @@ export function PlatformTable({ data }: { data: PlatformData[] }) {
                                             {(row.platform.toLowerCase() === "google") ? (
                                                 <GoogleIcon />
                                             ) : (
-                                                <span className="text-[10px] font-black">{row.platform[0]}</span>
+                                                <span className="text-[10px] font-semibold">{row.platform[0]}</span>
                                             )}
                                         </div>
                                         <span className="truncate">{row.platform}</span>

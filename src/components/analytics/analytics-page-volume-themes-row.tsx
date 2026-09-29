@@ -1,52 +1,17 @@
 "use client";
 
-import { Suspense } from "react";
-import { PanelLoading } from "@/components/dashboard/panel-loading";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Globe, Sparkles } from "lucide-react";
+import { ChartColumnIncreasing, ListFilter } from "lucide-react";
 import type { AnalyticsFullRangePayload } from "@/lib/analytics/build-analytics-range-payload";
+import { AnalyticsChartCard } from "@/components/analytics/analytics-chart-card";
 import { AnalyticsVolumeChart, AnalyticsThemeChart } from "@/components/analytics/analytics-charts-registry";
 
 export function AnalyticsPageVolumeThemesRow({ d }: { d: AnalyticsFullRangePayload }) {
-    return (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
-            <Card className="lg:col-span-3 bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20">
-                <CardHeader>
-                    <div className="space-y-1">
-                        <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <Globe className="text-primary size-5" />
-                            Review Volume
-                        </CardTitle>
-                        <p className="text-xs text-muted-foreground font-medium">
-                            Total review count across distribution channels
-                        </p>
-                    </div>
-                </CardHeader>
-                <CardContent className="pl-0 pb-6">
-                    <Suspense fallback={<PanelLoading className="h-[260px]" />}>
-                        <AnalyticsVolumeChart data={d.trendData} />
-                    </Suspense>
-                </CardContent>
-            </Card>
-
-            <Card className="lg:col-span-2 bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20">
-                <CardHeader>
-                    <div className="space-y-1">
-                        <CardTitle className="text-lg font-bold flex items-center gap-2">
-                            <Sparkles className="text-primary size-5" />
-                            Common Themes
-                        </CardTitle>
-                        <p className="text-xs text-muted-foreground font-medium">
-                            Key topics frequently mentioned in reviews
-                        </p>
-                    </div>
-                </CardHeader>
-                <CardContent className="pb-6">
-                    <Suspense fallback={<PanelLoading className="h-[220px]" />}>
-                        <AnalyticsThemeChart data={d.themeData} />
-                    </Suspense>
-                </CardContent>
-            </Card>
-        </div>
-    );
+    return <div className="grid gap-5 xl:grid-cols-3">
+        <AnalyticsChartCard title="Review volume" description="Review activity, broken down by rating" icon={ChartColumnIncreasing} className="xl:col-span-2">
+            <AnalyticsVolumeChart data={d.trendData} />
+        </AnalyticsChartCard>
+        <AnalyticsChartCard title="Common themes" description="What customers mention most often" icon={ListFilter}>
+            <AnalyticsThemeChart data={d.themeData} />
+        </AnalyticsChartCard>
+    </div>;
 }

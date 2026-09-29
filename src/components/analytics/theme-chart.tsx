@@ -1,94 +1,29 @@
 "use client";
 
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    Tooltip,
-    ResponsiveContainer,
-    Cell
-} from "recharts";
-
-interface ThemeDataPoint {
-    theme: string;
-    count: number;
-    sentimentScore: number; // >0 positive, <0 negative
-}
+import { ChartEmpty } from "@/components/analytics/chart-presentation";
+interface ThemeDataPoint { theme: string; count: number; sentimentScore: number }
 
 export function ThemeChart({ data }: { data: ThemeDataPoint[] }) {
-    if (data.length === 0) {
-        return (
-            <div className="flex h-[320px] items-center justify-center border border-dashed rounded-xl bg-muted/5">
-                <p className="text-sm text-muted-foreground font-medium italic">
-                    No theme data detected in reviews yet.
-                </p>
-            </div>
-        );
-    }
-
-    return (
-        <div className="w-full h-[320px] pt-2">
-            <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                    layout="vertical"
-                    data={data}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                    <XAxis type="number" hide />
-                    <YAxis
-                        dataKey="theme"
-                        type="category"
-                        tick={{ fontSize: 11, fontWeight: 700, fill: "var(--muted-foreground)" }}
-                        width={90}
-                        axisLine={false}
-                        tickLine={false}
-                        tickFormatter={(value) => value.replace(/_/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase())}
-                    />
-                    <Tooltip
-                        cursor={{ fill: "color-mix(in oklab, var(--muted) 28%, transparent)", radius: 4 }}
-                        content={({ active, payload }) => {
-                            if (active && payload && payload.length) {
-                                const data = payload[0].payload as ThemeDataPoint;
-                                return (
-                                    <div className="rounded-lg border bg-background/90 backdrop-blur-md p-3 ring-1 ring-border">
-                                        <div className="flex flex-col gap-1.5">
-                                            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">
-                                                {data.theme.replace(/_/g, " ")}
-                                            </p>
-                                            <div className="flex items-center gap-2">
-                                                <div className={`rounded-full ${data.sentimentScore >= 0 ? 'bg-chart-2/100' : 'bg-destructive/100'} size-2`} />
-                                                <p className="text-sm font-bold text-foreground">
-                                                    {data.count} {data.count === 1 ? 'mention' : 'mentions'}
-                                                </p>
-                                            </div>
-                                            <p className={`text-[10px] font-bold ${data.sentimentScore >= 0 ? 'text-success' : 'text-destructive'}`}>
-                                                {data.sentimentScore >= 0 ? 'Positive Sentiment' : 'Negative Sentiment'}
-                                            </p>
-                                        </div>
-                                    </div>
-                                );
-                            }
-                            return null;
-                        }}
-                    />
-                    <Bar
-                        dataKey="count"
-                        radius={[0, 6, 6, 0]}
-                        barSize={24}
-                        minPointSize={2}
-                        background={{ fill: "var(--border)", radius: 6 }}
-                    >
-                        {data.map((entry, index) => (
-                            <Cell 
-                                key={`cell-${index}`} 
-                                fill={entry.sentimentScore >= 0 ? "var(--chart-2)" : "var(--destructive)"} 
-                                fillOpacity={0.8}
-                            />
-                        ))}
-                    </Bar>
-                </BarChart>
-            </ResponsiveContainer>
-        </div>
-    );
+    if (!data.length) return <ChartEmpty message="No recurring themes yet" />;
+    const sorted = [...data].sort((a, b) => b.count - a.count);
+    const max = Math.max(...sorted.map(d => d.count), 1);
+    return <div className="space-y-5">
+        <div className="flex justify-between text-xs text-muted-foreground"><span>Topic</span><span>Mentions</span></div>
+        <ol className="max-h-[278px] space-y-4 overflow-y-auto pr-1" aria-label="Themes ranked by number of mentions" tabIndex={0}>
+            {sorted.map(item => {
+                const tone = item.sentimentScore > 0 ? "Mostly positive" : item.sentimentScore < 0 ? "Mostly negative" : "Balanced";
+                const color = item.sentimentScore > 0 ? "var(--chart-2)" : item.sentimentScore < 0 ? "var(--destructive)" : "var(--chart-3)";
+                return <li key={item.theme} className="space-y-2">
+                    <div className="flex items-start justify-between gap-3 text-sm">
+                        <span className="capitalize">{item.theme}</span><span className="font-medium tabular-nums">{item.count.toLocaleString()}</span>
+                    </div>
+                    <div className="h-2 overflow-hidden rounded-sm bg-muted" role="img" aria-label={`${item.theme}: ${item.count} mentions, ${tone.toLowerCase()}`}>
+                        <div className="h-full rounded-sm" style={{ width: `${item.count / max * 100}%`, background: color }} />
+                    </div>
+                    <p className="text-xs text-muted-foreground">{tone}</p>
+                </li>;
+            })}
+        </ol>
+        <p className="text-xs text-muted-foreground">Themes mentioned at least twice. A review can include multiple topics.</p>
+    </div>;
 }

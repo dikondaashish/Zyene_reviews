@@ -1,113 +1,30 @@
-
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-    AreaChart,
-    Area,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
-    ReferenceLine
-} from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
+import { ChartEmpty, ChartKey, chartAxis, chartDate, chartTooltipStyle } from "@/components/analytics/chart-presentation";
 
-interface RatingDataPoint {
-    date: string;
-    rating: number;
-    count: number;
-}
+interface RatingDataPoint { date: string; rating: number; count: number }
 
 export function RatingsChart({ data, overallAvg }: { data: RatingDataPoint[]; overallAvg: number }) {
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    if (data.length === 0) {
-        return (
-            <div className="flex h-[300px] items-center justify-center text-muted-foreground border border-dashed rounded-xl bg-muted/5">
-                No rating data for this period
-            </div>
-        );
-    }
-    if (!mounted) {
-        return <div className="h-[300px] w-full" />;
-    }
-
-    return (
-        <div className="w-full h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <defs>
-                        <linearGradient id="colorRating" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3} />
-                            <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
-                        </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.5} />
-                    <XAxis
-                        dataKey="date"
-                        tick={{ fontSize: 11, fontWeight: 500, fill: "var(--muted-foreground)" }}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(value) => {
-                            const d = new Date(value);
-                            return `${d.getMonth() + 1}/${d.getDate()}`;
-                        }}
-                        minTickGap={40}
-                        dy={10}
-                    />
-                    <YAxis
-                        domain={[0, 5]}
-                        tick={{ fontSize: 11, fontWeight: 500, fill: "var(--muted-foreground)" }}
-                        tickLine={false}
-                        axisLine={false}
-                        tickCount={6}
-                    />
-                    <Tooltip
-                        contentStyle={{
-                            backgroundColor: "var(--card)",
-                            border: "1px solid var(--border)",
-                            borderRadius: "12px",
-                            padding: "8px 12px",
-                        }}
-                        labelClassName="font-bold text-xs mb-1"
-                        labelFormatter={(label) => new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-                        itemStyle={{ fontSize: '11px', fontWeight: 600 }}
-                        formatter={(value: any) => [
-                            <span key="val" className="text-primary">{Number(value).toFixed(1)} ★</span>,
-                            "Avg Rating"
-                        ]}
-                    />
-                    <ReferenceLine 
-                        y={overallAvg} 
-                        stroke="var(--primary)" 
-                        strokeDasharray="4 4" 
-                        strokeWidth={1.5}
-                        label={{ 
-                            value: `Avg: ${overallAvg.toFixed(1)}`, 
-                            position: 'insideTopRight', 
-                            fill: "var(--primary)", 
-                            fontSize: 10,
-                            fontWeight: 700,
-                            offset: 10
-                        }} 
-                    />
-                    <Area
-                        type="monotone"
-                        dataKey="rating"
-                        stroke="var(--primary)"
-                        strokeWidth={3}
-                        fillOpacity={1}
-                        fill="url(#colorRating)"
-                        animationDuration={1500}
-                        activeDot={{ r: 5, strokeWidth: 2, stroke: "var(--background)" }}
-                    />
-                </AreaChart>
+    if (!data.length) return <ChartEmpty message="No ratings in this period" />;
+    const points = data.map(d => ({ ...d, time: Date.parse(`${d.date}T00:00:00Z`) }));
+    return <div className="space-y-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+            <ChartKey label="Daily average" color="var(--primary)" />
+            <span className="text-xs text-muted-foreground">Period average <strong className="ml-1 font-semibold text-foreground">{overallAvg.toFixed(1)} / 5</strong></span>
+        </div>
+        <div className="h-[260px] w-full" role="group" aria-label={`Daily review ratings on a zero to five scale. Period average ${overallAvg.toFixed(1)}.`}>
+            <ResponsiveContainer width="100%" height={260} minWidth={0}>
+                <LineChart data={points} margin={{ top: 12, right: 16, left: -24, bottom: 4 }} accessibilityLayer>
+                    <CartesianGrid vertical={false} stroke="var(--border)" strokeDasharray="3 5" />
+                    <XAxis dataKey="time" type="number" scale="time" domain={["dataMin", "dataMax"]} tick={chartAxis} tickLine={false} axisLine={false} tickFormatter={v => chartDate(v)} minTickGap={40} tickMargin={12} />
+                    <YAxis domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]} tick={chartAxis} tickLine={false} axisLine={false} />
+                    <Tooltip contentStyle={chartTooltipStyle} labelFormatter={v => chartDate(Number(v), true)} formatter={v => [`${Number(v).toFixed(1)} / 5`, "Average rating"]} cursor={{ stroke: "var(--muted-foreground)", strokeDasharray: "3 4" }} />
+                    <ReferenceLine y={overallAvg} stroke="var(--muted-foreground)" strokeDasharray="5 5" />
+                    <Line type="linear" dataKey="rating" stroke="var(--primary)" strokeWidth={2.5} dot={{ r: 3, strokeWidth: 2, fill: "var(--card)" }} activeDot={{ r: 5, stroke: "var(--card)", strokeWidth: 2 }} isAnimationActive={false} />
+                </LineChart>
             </ResponsiveContainer>
         </div>
-    );
+        <p className="text-xs text-muted-foreground">Each point represents a day with reviews. Dashed line shows the period average.</p>
+    </div>;
 }
