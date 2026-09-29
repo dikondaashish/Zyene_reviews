@@ -22,7 +22,7 @@ export function SmartInsightsCardExamplesDialog({
 }: SmartInsightsCardExamplesDialogProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+            <DialogContent data-original-dashboard-colors className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>What guests said</DialogTitle>
                     {examplesSuggestion ? (

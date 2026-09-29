@@ -17,7 +17,7 @@ export function SmartInsightsCard({ businessName }: { businessName?: string }) {
     if (!s.selectedTheme) return null;
 
     return (
-        <div className="rounded-2xl bg-card border border-border/60 p-6 lg:p-8 flex flex-col h-full shadow-sm relative overflow-hidden">
+        <div data-original-dashboard-colors className="rounded-2xl bg-card border border-border/60 p-6 lg:p-8 flex flex-col h-full shadow-sm relative overflow-hidden">
             <SmartInsightsCardHeader
                 reviewCount={s.data.reviewCount}
                 firstPart={s.firstPart}

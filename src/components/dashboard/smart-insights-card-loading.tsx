@@ -2,7 +2,7 @@ import { Loader2 } from "lucide-react";
 
 export function SmartInsightsCardLoading() {
     return (
-        <div className="rounded-2xl border border-border bg-card p-6 h-full flex flex-col justify-center items-center shadow-sm min-h-[360px]">
+        <div data-original-dashboard-colors className="rounded-2xl border border-border bg-card p-6 h-full flex flex-col justify-center items-center shadow-sm min-h-[360px]">
             <Loader2 className="animate-spin text-muted-foreground/50 mb-3 size-6" />
             <p className="text-sm font-medium text-muted-foreground">Generating Smart Insights...</p>
             <p className="text-xs text-muted-foreground mt-1">Analyzing all recent reviews</p>

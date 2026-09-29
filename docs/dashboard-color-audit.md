@@ -41,3 +41,7 @@ The last four values were read from OptiMonk's document-level CSS variables; the
 Dark mode is a Zyene adaptation, not an observed OptiMonk theme: charcoal backgrounds, neutral gray borders, orange actions, peach selections, and lighter text/status colors. Existing typography, spacing, component shapes, and workflows stay intact.
 
 Dashboard panels with literal forest green, blue, beige, or salmon colors now use shared surface/action/status tokens. Printable QR artifacts and customer branding previews retain their output colors.
+
+### Requested exceptions
+
+Smart Insights and Your Customer Portal retain their original colors at the user's request. Smart Insights uses its original warm light/dark neutrals and orange accents. The portal keeps its forest-green surface, blue NFC banner, white text, and coral QR action. Their loading states and QR/examples dialogs use the original local tokens; the rest of the app continues using the OptiMonk palette.

@@ -1,7 +1,7 @@
 export function CustomerPortalCardDecoration() {
     return (
         <svg
-            className="absolute -right-8 -top-8 opacity-[0.03] text-primary pointer-events-none size-[280px]"
+            className="absolute -right-8 -top-8 opacity-[0.03] text-white pointer-events-none size-[280px]"
             viewBox="0 0 200 200"
             xmlns="http://www.w3.org/2000/svg"
         >
@@ -17,16 +17,16 @@ export function CustomerPortalCardDecoration() {
 export function CustomerPortalCardHero() {
     return (
         <div className="relative z-10">
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-4">YOUR CUSTOMER PORTAL</p>
+            <p className="text-[10px] font-bold text-white/50 uppercase tracking-widest mb-4">YOUR CUSTOMER PORTAL</p>
             <h2
-                className="text-[28px] font-serif text-card-foreground leading-tight mb-3"
+                className="text-[28px] font-serif text-white/95 leading-tight mb-3"
                 style={{ fontFamily: "Georgia, serif" }}
             >
                 Share it. Collect reviews.
                 <br />
                 Drive repeat orders.
             </h2>
-            <p className="text-[13px] text-muted-foreground leading-relaxed max-w-[90%] mb-1">
+            <p className="text-[13px] text-white/60 leading-relaxed max-w-[90%] mb-1">
                 One link. Leave it on receipts, tables, or the door. We handle the rest.
             </p>
         </div>
