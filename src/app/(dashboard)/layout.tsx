@@ -6,6 +6,7 @@ export const metadata: Metadata = {
 };
 
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import { MobileSidebarFAB } from "@/components/dashboard/mobile-sidebar-fab";
 import { DashboardHeaderControls } from "@/components/dashboard/dashboard-header-controls";
@@ -38,6 +39,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   } = activeContext;
 
   const hideGoogleQaNav = !(await getGoogleQaSidebarNavVisible(activeBusinessId));
+  const sidebarOpen = (await cookies()).get("sidebar_state")?.value === "true";
 
   const stripeCustomerId =
     typeof organization?.stripe_customer_id === "string" ? organization.stripe_customer_id : null;
@@ -54,7 +56,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   );
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={sidebarOpen} style={{ "--sidebar-width": "15rem", "--sidebar-width-icon": "4.75rem" } as React.CSSProperties}>
       <AppSidebar hideGoogleQaNav={hideGoogleQaNav} settingsAccess={settingsAccess} />
       <SidebarInset className="bg-canvas">
         <VerificationBanner user={user} />

@@ -1,42 +1,27 @@
 "use client";
 
 import Link from "next/link";
+import { ChevronsLeft, ChevronsRight, X } from "lucide-react";
 import { ZyeneReviewsLogoMark } from "@/components/brand/zyene-reviews-logo-mark";
-import { X } from "lucide-react";
-
-import {
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    useSidebar,
-} from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export function AppSidebarHeader() {
-    const { setOpenMobile } = useSidebar();
+    const { state, isMobile, setOpenMobile, toggleSidebar } = useSidebar();
+    const compact = state === "collapsed" && !isMobile;
+    const label = isMobile ? "Close sidebar" : compact ? "Expand sidebar" : "Collapse sidebar";
+    const Icon = isMobile ? X : compact ? ChevronsRight : ChevronsLeft;
 
     return (
-        <div className="relative gap-3 border-b border-sidebar-border p-4">
-            <SidebarMenu>
-                <SidebarMenuItem>
-                    <SidebarMenuButton size="lg" asChild>
-                        <Link href="/dashboard">
-                            <ZyeneReviewsLogoMark size={36} priority className="shadow-sm" />
-                            <div className="flex flex-col gap-0.5 leading-none">
-                                <span className="font-semibold">Zyene Reviews</span>
-                                <span className="text-xs">v1.0.0</span>
-                            </div>
-                        </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
-            <button
-                type="button"
-                className="absolute right-3 top-3 inline-flex items-center justify-center rounded-md text-muted-foreground hover:bg-muted/50 md:hidden size-8"
-                aria-label="Close sidebar"
-                onClick={() => setOpenMobile(false)}
-            >
-                <X className="size-5" />
+        <header className="app-sidebar-header">
+            <Link href="/dashboard" aria-label="Zyene Reviews home" className="app-sidebar-brand" onClick={() => setOpenMobile(false)}>
+                <ZyeneReviewsLogoMark size={28} priority className="shadow-none ring-0" />
+                {!compact && <span>Zyene Reviews</span>}
+            </Link>
+            <button type="button" className="app-sidebar-toggle" aria-label={label} title={label}
+                aria-expanded={isMobile || !compact} aria-controls="app-sidebar-navigation"
+                onClick={() => isMobile ? setOpenMobile(false) : toggleSidebar()}>
+                <Icon aria-hidden="true" size={16} strokeWidth={1.75} />
             </button>
-        </div>
+        </header>
     );
 }

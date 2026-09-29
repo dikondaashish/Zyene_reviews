@@ -45,3 +45,9 @@ Dashboard panels with literal forest green, blue, beige, or salmon colors now us
 ### Requested exceptions
 
 Smart Insights and Your Customer Portal retain their original colors at the user's request. Smart Insights uses its original warm light/dark neutrals and orange accents. The portal keeps its forest-green surface, blue NFC banner, white text, and coral QR action. Their loading states and QR/examples dialogs use the original local tokens; the rest of the app continues using the OptiMonk palette.
+
+### Sidebar reference
+
+The sidebar follows the reference's 76px compact rail, 72px logo area, 20px outline icons, 54px navigation rows, 4px row gaps, 12px selection corners, and Funnel Sans labels at 10px/16px with weight 500. Neutral navigation uses the measured `#8f97a4`; the selected item uses primary orange on peach. Zyene retains its own logo, routes, and access rules.
+
+An added toggle expands the rail to 240px with 14px labels. The existing sidebar cookie now restores that preference on reload, and viewport changes no longer force it open. Compact settings open in a keyboard-accessible flyout; expanded/mobile settings use an inline disclosure. The mobile drawer closes after selecting a destination. The font is scoped to the sidebar and its settings flyout.

@@ -3,14 +3,14 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import {
-  BarChart3,
+  ChartNoAxesCombined,
   Bell,
   Building2,
   CreditCard,
   Globe,
   HelpCircle,
   Home,
-  Megaphone,
+  LayoutGrid,
   MessageSquare,
   Plug,
   Send,
@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 
 import { useLanguage } from "@/lib/language-context";
-import type { AppSidebarNavItem } from "./app-sidebar-types";
+import type { AppSidebarNavItem } from "@/components/dashboard/app-sidebar-types";
 import type { SettingsAccess } from "@/lib/auth/settings-access";
 
 export function useAppSidebarNav(
@@ -45,11 +45,11 @@ export function useAppSidebarNav(
       { title: dict.nav.reviews, url: "/reviews", icon: MessageSquare },
       { title: dict.nav.qa, url: "/questions", icon: HelpCircle },
       { title: dict.nav.requests, url: "/requests", icon: Send },
-      { title: dict.nav.campaigns, url: "/campaigns", icon: Megaphone },
+      { title: dict.nav.campaigns, url: "/campaigns", icon: LayoutGrid },
       {
         title: dict.nav.analytics,
         url: "/analytics",
-        icon: BarChart3,
+        icon: ChartNoAxesCombined,
         tourTarget: "tour-analytics-nav",
       },
       {

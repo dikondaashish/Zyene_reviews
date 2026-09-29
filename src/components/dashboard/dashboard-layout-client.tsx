@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Link from "next/link";
-import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { DashboardTourProvider } from "@/components/tours/dashboard-tour-provider";
@@ -16,25 +16,12 @@ export function DashboardLayoutClient({
     children,
     header,
 }: DashboardLayoutClientProps) {
-    const { setOpen } = useSidebar();
-
-    // Desktop: always open (≥1024px)
+    // The provider owns the user's preference; resizing must not reset it.
     const isDesktop = useMediaQuery("(min-width: 1024px)");
     // Tablet: collapse to icon (768px-1023px)
     const isTablet = useMediaQuery("(min-width: 768px) and (max-width: 1023px)");
     // Mobile: hidden (< 768px)
     const isMobile = !useMediaQuery("(min-width: 768px)");
-
-    // Effect: auto-manage sidebar state
-    useEffect(() => {
-        if (isDesktop) {
-            setOpen(true);
-        } else if (isTablet) {
-            setOpen(false); // Collapsed to icon
-        } else if (isMobile) {
-            setOpen(false); // Hidden
-        }
-    }, [isDesktop, isTablet, isMobile, setOpen]);
 
     const handleManageCookies = () => {
         const w = window as Window & {

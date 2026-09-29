@@ -1,64 +1,37 @@
 "use client";
 
 import Link from "next/link";
-
-import {
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import type { AppSidebarNavItem } from "./app-sidebar-types";
-import { appSidebarNavButtonClass, appSidebarNavItemIsActive } from "./app-sidebar-nav-utils";
+import { useSidebar } from "@/components/ui/sidebar";
+import type { AppSidebarNavItem } from "@/components/dashboard/app-sidebar-types";
+import { appSidebarNavItemIsActive } from "@/components/dashboard/app-sidebar-nav-utils";
 
 const PRIMARY_URLS = ["/dashboard", "/businesses", "/customers", "/campaigns"];
 
 export function AppSidebarMainNavItems({ items, pathname }: { items: AppSidebarNavItem[]; pathname: string }) {
-    const primaryItems = items.filter((item) => PRIMARY_URLS.includes(item.url));
-    const secondaryItems = items.filter((item) => !PRIMARY_URLS.includes(item.url));
+    const { setOpenMobile } = useSidebar();
+    const groups = [
+        { id: "workspace", items: items.filter(item => PRIMARY_URLS.includes(item.url)) },
+        { id: "reputation", items: items.filter(item => !PRIMARY_URLS.includes(item.url)) },
+    ];
 
     return (
-        <div className="space-y-4">
-            <SidebarMenu>
-                {primaryItems.map((item) => {
-                    const isActive = appSidebarNavItemIsActive(pathname, item.url);
-                    return (
-                        <SidebarMenuItem key={item.title} data-tour-target={item.tourTarget}>
-                            <SidebarMenuButton
-                                asChild
-                                tooltip={item.title}
-                                className={appSidebarNavButtonClass(isActive)}
-                            >
-                                <Link href={item.url}>
-                                    <item.icon className={isActive ? "text-primary" : ""} />
+        <div id="app-sidebar-navigation" className="app-sidebar-groups">
+            {groups.filter(group => group.items.length > 0).map(group => (
+                <ul key={group.id} className="app-sidebar-menu">
+                    {group.items.map(item => {
+                        const isActive = appSidebarNavItemIsActive(pathname, item.url);
+                        return (
+                            <li key={item.url} data-tour-target={item.tourTarget}>
+                                <Link href={item.url} className="app-sidebar-link" aria-current={isActive ? "page" : undefined}
+                                    onClick={() => setOpenMobile(false)}>
+                                    <item.icon className="app-sidebar-icon" />
                                     <span>{item.title}</span>
                                 </Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    );
-                })}
-            </SidebarMenu>
-
-            <div className="mx-2 border-t border-sidebar-border" />
-
-            <SidebarMenu>
-                {secondaryItems.map((item) => {
-                    const isActive = pathname === item.url || pathname.startsWith(item.url + "/");
-                    return (
-                        <SidebarMenuItem key={item.title} data-tour-target={item.tourTarget}>
-                            <SidebarMenuButton
-                                asChild
-                                tooltip={item.title}
-                                className={appSidebarNavButtonClass(isActive)}
-                            >
-                                <Link href={item.url}>
-                                    <item.icon className={isActive ? "text-primary" : ""} />
-                                    <span>{item.title}</span>
-                                </Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    );
-                })}
-            </SidebarMenu>
+                            </li>
+                        );
+                    })}
+                </ul>
+            ))}
         </div>
     );
 }
