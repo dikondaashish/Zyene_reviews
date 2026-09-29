@@ -38,7 +38,7 @@ export function NeedsAttentionReviewRowTrigger({
             onClick={onToggle}
             className={cn(
                 "flex w-full min-w-0 items-start gap-3 px-4 py-3.5 text-left transition-colors duration-200 ease-out sm:gap-3.5 sm:px-5",
-                "hover:bg-[rgb(241,235,222)] dark:hover:bg-chart-4/10",
+                "hover:bg-accent dark:hover:bg-accent",
                 open && "bg-chart-4/10 dark:bg-chart-4/5",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             )}

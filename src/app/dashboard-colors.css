@@ -1,0 +1,112 @@
+/* Measured in OptiMonk's signed-in dashboard, campaigns, and analytics.
+ * Scope at the document root so body portals (menus, dialogs, and toasts)
+ * inherit the same palette. The marker disappears on non-app routes.
+ * Dark values are a Zyene adaptation, not an observed OptiMonk dark theme.
+ */
+:root:has([data-dashboard-shell], [data-app-onboarding]) {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #23262a;
+  --card: #ffffff;
+  --card-foreground: #23262a;
+  --popover: #ffffff;
+  --popover-foreground: #23262a;
+  --brand-accent: #ed5a29;
+  --primary: #ed5a29;
+  --primary-foreground: #ffffff;
+  --primary-text: #ba3a10;
+  --primary-hover: #ba3a10;
+  --cta: var(--primary);
+  --cta-foreground: var(--primary-foreground);
+  --secondary: #f1f2f4;
+  --secondary-foreground: #505763;
+  --muted: #f7f7f8;
+  --muted-foreground: #6c757d;
+  --accent: #f1f2f4;
+  --accent-foreground: #23262a;
+  --destructive: #dc3545;
+  --destructive-foreground: #ffffff;
+  --warning: #ffc107;
+  --warning-foreground: #505763;
+  --success: #28a745;
+  --success-foreground: #ffffff;
+  --border: #e3e5e8;
+  --input: #d5d8dd;
+  --ring: #ed5a29;
+  --chart-1: #ed5a29;
+  --chart-2: #28a745;
+  --chart-3: #8f97a4;
+  --chart-4: #ffc107;
+  --chart-5: #17a2b8;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #505763;
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: #feefea;
+  --sidebar-accent-foreground: #ba3a10;
+  --sidebar-border: #e3e5e8;
+  --sidebar-ring: var(--ring);
+  --canvas: #f9fafb;
+  --canvas-elevated: #f7f7f8;
+  --sync-action: var(--primary);
+  --sync-action-hover: var(--primary-hover);
+  --tour-overlay-scrim: rgb(35 38 42 / 58%);
+}
+
+:root.dark:has([data-dashboard-shell], [data-app-onboarding]) {
+  color-scheme: dark;
+  --background: #17191c;
+  --foreground: #f9fafb;
+  --card: #23262a;
+  --card-foreground: #f9fafb;
+  --popover: #292d33;
+  --popover-foreground: #f9fafb;
+  --primary-text: #ff9b79;
+  --primary-hover: #d94e21;
+  --secondary: #30353d;
+  --secondary-foreground: #e3e5e8;
+  --muted: #292d33;
+  --muted-foreground: #b9bec6;
+  --accent: #30353d;
+  --accent-foreground: #f9fafb;
+  --destructive: #ff8b96;
+  --destructive-foreground: #17191c;
+  --warning: #ffc107;
+  --warning-foreground: #ffc107;
+  --success: #71d58a;
+  --success-foreground: #17191c;
+  --border: #3c424b;
+  --input: #505763;
+  --chart-1: #ed5a29;
+  --chart-2: #71d58a;
+  --chart-3: #8f97a4;
+  --chart-4: #ffc107;
+  --chart-5: #65cbdc;
+  --sidebar: #1c1f23;
+  --sidebar-foreground: #b9bec6;
+  --sidebar-accent: #3c2924;
+  --sidebar-accent-foreground: #ff9b79;
+  --sidebar-border: #3c424b;
+  --canvas: #17191c;
+  --canvas-elevated: #292d33;
+  --tour-overlay-scrim: rgb(0 0 0 / 70%);
+}
+
+/* OptiMonk uses its darker orange for small selected labels and links. */
+:root:has([data-dashboard-shell], [data-app-onboarding]) .text-primary {
+  color: var(--primary-text);
+}
+
+:root:has([data-dashboard-shell], [data-app-onboarding]) [data-slot="button"][data-variant="default"]:hover:not(:disabled),
+:root:has([data-dashboard-shell], [data-app-onboarding]) .cta-button:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+@media (prefers-contrast: more) {
+  :root:has([data-dashboard-shell], [data-app-onboarding]) {
+    --muted-foreground: var(--foreground);
+    --border: var(--foreground);
+    --input: var(--foreground);
+  }
+}

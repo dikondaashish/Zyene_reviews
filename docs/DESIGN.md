@@ -4,7 +4,7 @@ Zyene Reviews helps local businesses turn customer feedback into a manageable da
 
 ## Identity and restraint
 
-Preserve the cream canvas, warm orange, local-business imagery, and real review examples. Preserve the original vivid orange (`#ff4f00`) for brand accents and primary actions in both themes, as requested by the product owner. Do not substitute a darker or lighter orange during UI polish. Product screens should prioritize customer content over large brand marks, decorative gradients, or animated panels.
+Marketing preserves the cream canvas and original orange (`#ff4f00`). The app uses the user's requested OptiMonk palette: white panels, a cool gray canvas, charcoal text, and orange (`#ed5a29`) actions. Keep both light and dark modes. Product screens should prioritize customer content over large brand marks, decorative gradients, or animated panels.
 
 Premium quality comes from complete workflows, readable typography, deliberate spacing, and useful feedback. Use one prominent action per decision area. Make supporting actions quiet but discoverable.
 
@@ -12,18 +12,19 @@ Premium quality comes from complete workflows, readable typography, deliberate s
 
 | Role | Light | Dark | Use |
 |---|---|---|---|
-| Background | `#fffefb` | `#201515` | Main surface |
-| Canvas | `#f7f5ef` | `#201515` | Workspace around panels |
-| Card | `#fffefb` | `#2a2222` | Solid content panels |
-| Primary | `#ff4f00` | `#ff4f00` | Actions, links and selected text |
+| Background | `#ffffff` | `#17191c` | Main surface |
+| Canvas | `#f9fafb` | `#17191c` | Workspace around panels |
+| Card | `#ffffff` | `#23262a` | Solid content panels |
+| Primary | `#ed5a29` | `#ed5a29` | Filled actions |
 | Primary foreground | `#ffffff` | `#ffffff` | Text on primary |
-| Brand accent | `#ff4f00` | `#ff4f00` | Decorative identity |
-| Muted foreground | `#6d685d` | `#c5c0b1` | Supporting text |
-| Success | `#287653` | `#89cda8` | Completed, sent, connected and positive states |
-| Success foreground | `#ffffff` | `#201515` | Text on a filled success surface |
-| Border | `#c5c0b1` | `#4a4540` | Grouping and controls |
+| Primary text | `#ba3a10` | `#ff9b79` | Small links and selected labels |
+| Brand accent | `#ed5a29` | `#ed5a29` | App identity |
+| Muted foreground | `#6c757d` | `#b9bec6` | Supporting text |
+| Success | `#28a745` | `#71d58a` | Completed, sent, connected and positive states |
+| Success foreground | `#ffffff` | `#17191c` | Text on a filled success surface |
+| Border | `#e3e5e8` | `#3c424b` | Grouping and controls |
 
-The product owner requested restoring the original orange after the contrast adjustment. White on `#ff4f00` is approximately 3.30:1; the original normal-text contrast concern remains. Marketing uses a light theme with the same original brand orange.
+The app palette was measured in OptiMonk's signed-in Chrome dashboard and is defined in `src/app/dashboard-colors.css`. Dark mode is adapted for Zyene. The reference's white-on-orange small button labels remain below WCAG AA contrast; see [dashboard color audit](dashboard-color-audit.md). Marketing keeps its original brand colors.
 
 Use semantic tokens from `src/app/globals.css`. Do not use chart fill colors as text colors for status messages; use success, warning/destructive and their foreground roles. Success text uses `text-success` on neutral or lightly tinted surfaces; warning text uses `text-warning-foreground`. Keep chart series separate from status labels. The legacy sync-action token aliases primary, so AI and sync do not introduce another brand color. Custom business colors use `readableForeground` for filled controls so text remains readable. A color must not be the only indication of selection or status.
 

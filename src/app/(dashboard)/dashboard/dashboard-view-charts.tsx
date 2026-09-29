@@ -42,7 +42,7 @@ export function DashboardViewCharts({
                     </div>
                     {totalReviewsTrend !== undefined && totalReviewsTrend !== 0 && (
                         <div
-                            className={`flex shrink-0 items-center gap-1 self-start rounded-md px-2 py-1 text-xs font-semibold sm:self-auto ${totalReviewsTrend > 0 ? "bg-[rgb(229,238,221)] text-[rgb(62,95,46)]" : "bg-destructive/10 text-destructive"}`}
+                            className={`flex shrink-0 items-center gap-1 self-start rounded-md px-2 py-1 text-xs font-semibold sm:self-auto ${totalReviewsTrend > 0 ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"}`}
                         >
                             {totalReviewsTrend > 0 ? (
                                 <TrendingUp className="size-3" />

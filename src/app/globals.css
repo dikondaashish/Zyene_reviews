@@ -2,6 +2,7 @@
 @config "../../tailwind.config.ts";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "./dashboard-colors.css";
 
 @custom-variant dark (&:is(.dark *));
 

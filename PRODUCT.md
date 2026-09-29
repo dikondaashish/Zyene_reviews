@@ -16,7 +16,7 @@ Zyene Reviews gives location-based businesses one reliable workspace for review 
 
 Warm, approachable, and professional. The interface should feel organized and human while remaining efficient for repeated operational use.
 
-The brand orange is **#ff4f00**. Preserve this exact primary accent across marketing and dashboard work; use the existing `--primary` / `--brand-orange` tokens. Keep primary actions and selected reply tones orange. Do not substitute purple, a different orange, or monochrome primary buttons during redesigns. Neutral surfaces and semantic status colors may support the brand.
+Marketing keeps the brand orange **#ff4f00**. The authenticated app uses the OptiMonk-inspired palette requested by the user: **#ed5a29** actions, white panels, **#f9fafb** canvas, charcoal text, cool gray borders, and pale peach selections. Keep both light and dark modes. Use the shared semantic tokens in `src/app/dashboard-colors.css`; never add page-specific colors. Platform logos and customer-selected public review branding retain their own colors. See `docs/dashboard-color-audit.md` for the measured reference palette.
 
 ## Anti-references
 

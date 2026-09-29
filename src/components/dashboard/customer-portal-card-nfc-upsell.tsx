@@ -12,7 +12,7 @@ export function CustomerPortalCardNfcUpsell({ businessName }: { businessName: st
             <button
                 type="button"
                 onClick={() => order.setOpen(true)}
-                className="group relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-[22px] bg-[rgb(0,82,204)] px-8 py-5 text-left shadow-sm transition-transform duration-150 ease-out active:scale-[0.99] focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
+                className="group relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-[22px] bg-sidebar-accent px-8 py-5 text-left shadow-sm transition-transform duration-150 ease-out active:scale-[0.99] focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
             >
                 <div className="pointer-events-none absolute -top-10 -left-10 size-36 opacity-[0.05] select-none transition-transform duration-700 group-hover:scale-110">
                     <Image
@@ -28,14 +28,14 @@ export function CustomerPortalCardNfcUpsell({ businessName }: { businessName: st
 
                 <div className="relative z-10 flex flex-1 flex-col justify-center gap-3.5">
                     <div className="space-y-1">
-                        <h4 className="text-[18px] leading-tight font-bold tracking-tight text-white">
+                        <h4 className="text-[18px] leading-tight font-bold tracking-tight text-foreground">
                             Get more reviews with an NFC card!
                         </h4>
-                        <p className="max-w-[240px] text-[12px] leading-snug font-medium text-white/80">
+                        <p className="max-w-[240px] text-[12px] leading-snug font-medium text-muted-foreground">
                             Customers can simply tap their phone to it to leave you a review.
                         </p>
                     </div>
-                    <span className="flex w-fit items-center justify-center rounded-[10px] bg-white px-5 py-1.5 text-[13px] font-bold text-[rgb(0,82,204)] transition-[box-shadow,transform] duration-150 ease-out group-hover:shadow-lg">
+                    <span className="flex w-fit items-center justify-center rounded-[10px] bg-primary px-5 py-1.5 text-[13px] font-bold text-primary-foreground transition-[box-shadow,transform] duration-150 ease-out group-hover:shadow-lg">
                         Order now
                     </span>
                 </div>

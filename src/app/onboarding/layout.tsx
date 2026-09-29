@@ -37,7 +37,7 @@ export default async function OnboardingLayout({
     }
 
     return (
-        <div className="relative flex min-h-screen min-w-0 flex-col overflow-x-clip bg-muted">
+        <div data-app-onboarding className="relative flex min-h-screen min-w-0 flex-col overflow-x-clip bg-muted">
             {/* Ambient gradient blobs */}
             <div className="pointer-events-none absolute top-[-20%] left-[-10%] rounded-full bg-primary/20 blur-[120px] size-[50vw]" />
             <div className="pointer-events-none absolute bottom-[-15%] right-[-10%] rounded-full bg-primary/15 blur-[100px] size-[40vw]" />

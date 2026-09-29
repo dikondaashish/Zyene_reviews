@@ -88,7 +88,7 @@ export function ReviewTrendChart({ data }: { data: TrendDataPoint[] }) {
                         dataKey="count"
                         stroke="var(--primary)"
                         strokeWidth={2}
-                        fill="color-mix(in oklab, var(--chart-2) 15%, transparent)"
+                        fill="color-mix(in oklab, var(--primary) 15%, transparent)"
                         activeDot={{ r: 4, fill: "var(--primary)" }}
                         dot={{ r: 2.5, fill: "var(--primary)", strokeWidth: 0 }}
                     />

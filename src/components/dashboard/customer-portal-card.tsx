@@ -26,7 +26,7 @@ export function CustomerPortalCard(props: CustomerPortalCardProps) {
     } = useCustomerPortalCard(props);
 
     return (
-        <div className="h-full rounded-[24px] bg-[rgb(34,49,34)] p-6 lg:p-8 flex flex-col justify-between overflow-hidden relative border border-[rgba(62,74,62,0.3)] shadow-sm min-h-[360px]">
+        <div className="h-full rounded-[24px] bg-card p-6 lg:p-8 flex flex-col justify-between overflow-hidden relative border border-border shadow-sm min-h-[360px]">
             <CustomerPortalCardDecoration />
             <CustomerPortalCardHero />
             <CustomerPortalCardQrPreview loading={loading} qrDataUrl={qrDataUrl} />

@@ -1,0 +1,43 @@
+# App dashboard palette
+
+The user requested OptiMonk's dashboard colors across the Zyene app, with existing layouts and both light and dark modes retained.
+
+## Reference audit
+
+Measured computed styles in the signed-in Chrome session on September 28, 2026:
+
+- https://app.optimonk.com/273634/dashboard
+- https://app.optimonk.com/273634/campaigns
+- https://app.optimonk.com/273634/analytics (including the date filter menu)
+
+| Role | Measured color |
+| --- | --- |
+| Page canvas | `#f9fafb` |
+| Panels, sidebar, popovers | `#ffffff` |
+| Headings | `#23262a` |
+| Body text | `#272727` |
+| Secondary labels | `#505763` |
+| Muted icons and metadata | `#8f97a4` |
+| Muted neutral token | `#6c757d` |
+| Disabled text | `#b9bec6` |
+| Primary action | `#ed5a29` |
+| Selected navigation background | `#feefea` |
+| Dark orange selected text | `#ba3a10` |
+| Neutral control background | `#f1f2f4` |
+| Muted panel background | `#f7f7f8` |
+| Dividers | `#e3e5e8` / `#e5e7eb` |
+| Input borders | `#d5d8dd` |
+| Success token | `#28a745` |
+| Danger token | `#dc3545` |
+| Warning token | `#ffc107` |
+| Info token | `#17a2b8` |
+
+The last four values were read from OptiMonk's document-level CSS variables; the account did not expose populated charts or every status state. Main charts use orange. White text on the reference orange does not reach WCAG AA for small text; the palette preserves the requested reference pairing. Small orange links use the measured darker orange, and body metadata uses the reference's darker gray token for better contrast.
+
+## Application
+
+`src/app/dashboard-colors.css` defines the app overrides. The root selector detects a dashboard or onboarding marker, so body-mounted dialogs, tooltips, mobile navigation, and notifications inherit the same tokens. Marketing, auth, and public review routes keep their existing palette. Customer branding and platform logos are independent from app chrome.
+
+Dark mode is a Zyene adaptation, not an observed OptiMonk theme: charcoal backgrounds, neutral gray borders, orange actions, peach selections, and lighter text/status colors. Existing typography, spacing, component shapes, and workflows stay intact.
+
+Dashboard panels with literal forest green, blue, beige, or salmon colors now use shared surface/action/status tokens. Printable QR artifacts and customer branding previews retain their output colors.
