@@ -10,7 +10,7 @@ This is a route-family and shared-component audit, not an exhaustive review of e
 
 ## Changes
 
-- Dashboard metrics and reviews needing attention appear before the larger insights panels. Metrics show their actual values immediately instead of counting up from zero.
+- The welcome header, Smart Insights, and Customer Portal retain their original dashboard positions. The original section order was restored at the user's request after the polish pass. Metrics show their actual values immediately instead of counting up from zero.
 - Metric cards use consistent solid surfaces, readable descriptions, tabular numbers, and calmer movement. The existing rating stars remain intact.
 - Analytics uses the existing Google and Facebook brand assets. Platform buttons wrap on small screens, and both platform and date controls expose their selected state.
 - Customers has concise introductory copy, optional test-contact guidance, a compact mobile action row, a visible export-progress state, named search, neutral filter reset, and page/range context in pagination.

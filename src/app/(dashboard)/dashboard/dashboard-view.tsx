@@ -56,13 +56,13 @@ export function DashboardView(props: DashboardViewProps) {
                 </div>
             )}
 
-            <DashboardViewStatCards {...props} />
-            <DashboardViewBottomRow {...props} />
             <DashboardViewTopRow business={business} />
+            <DashboardViewStatCards {...props} />
             <DashboardViewGoogleHealth {...props} />
             <DashboardViewGooglePerformance {...props} />
             <DashboardViewExtendedStats {...props} />
             <DashboardViewCharts {...props} />
+            <DashboardViewBottomRow {...props} />
         </div>
     );
 }
