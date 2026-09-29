@@ -140,6 +140,13 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         height: 941,
         caption: "Local business owners frequently evaluate whether bundled communication tools justify Podium's $399+/month annual contract.",
     },
+    "why-are-my-google-reviews-not-showing-up": {
+        src: `${BLOG_IMAGE_BASE}/missing-google-reviews-laptop.jpg`,
+        alt: "Small business owner puzzled looking at missing reviews on Google Business Profile on a laptop",
+        width: 1672,
+        height: 941,
+        caption: "Google's automated spam algorithms frequently suppress legitimate customer reviews.",
+    },
 };
 
 export function getBlogImage(slug: string): ContentImage {

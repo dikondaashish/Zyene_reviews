@@ -63,6 +63,10 @@ const BASELINE = {
     max: 291,
     why: "content dataset — competitor comparison guide with pricing tables and buyer FAQs",
   },
+  "src/lib/content/blog-posts-missing-reviews.ts": {
+    max: 264,
+    why: "content dataset — troubleshooting guide for missing Google reviews with recovery steps",
+  },
   "src/lib/content/resource-data.ts": { max: 505, why: "content dataset" },
   "src/lib/comparisons/competitor-data.ts": {
     max: 455,
