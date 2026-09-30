@@ -3,9 +3,7 @@ import { generateContentWithFallback } from "@/domains/ai/adapters/vertex-adapte
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
-import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
-import { aiRateLimit } from "@/lib/auth/rate-limit";
-import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
+import { authorizeInsights } from "@/services/ai/authorize-insights";
 import { checkAiBusinessDailyBudget } from "@/services/ai/ai-business-budget";
 import { AI_INSIGHTS_PROMPT, insightsSchema } from "@/services/ai/insights-schema";
 
@@ -21,38 +19,9 @@ export async function handleAiInsights(_request: Request) {
         const { businessId } = await getActiveBusinessId();
         if (!businessId) return apiError("No business found", { status: 404, details: requestId });
 
-        // Cached context is a selector, not evidence of current tenant access.
-        if (!(await userCanAccessBusiness(supabase, user.id, businessId))) {
-            return apiError("Forbidden", { status: 403, details: requestId });
-        }
-        const { data: business } = await supabase
-            .from("businesses")
-            .select("name, organization_id")
-            .eq("id", businessId)
-            .single();
-        if (!business?.organization_id)
-            return apiError("Business not found", {
-                status: 404,
-                details: requestId,
-            });
-        const { data: organization } = await supabase
-            .from("organizations")
-            .select("plan, plan_status")
-            .eq("id", business.organization_id)
-            .single();
-        if (!organization || !planAllowsAiReviewFeatures(organization.plan, organization.plan_status)) {
-            return apiError("AI insights require an active paid plan.", {
-                status: 403,
-                code: "AI_INSIGHTS_PLAN_REQUIRED",
-                details: requestId,
-            });
-        }
-        const { success: rateOk } = await aiRateLimit.limit(user.id);
-        if (!rateOk)
-            return apiError("AI rate limit exceeded.", {
-                status: 429,
-                details: requestId,
-            });
+        const access = await authorizeInsights(supabase, user.id, businessId, requestId);
+        if (access.response) return access.response;
+        const business = access.business;
 
         const cacheKey = `ai_insights:${businessId}`;
         try {
@@ -94,7 +63,7 @@ export async function handleAiInsights(_request: Request) {
 
         const prompt = AI_INSIGHTS_PROMPT.replace(
             "{business_name}",
-            (business.name || "the business").slice(0, 200),
+            (business?.name || "the business").slice(0, 200),
         )
             .replace("{count}", (count || reviews.length).toString())
             .replace("{reviews}", reviewsText);

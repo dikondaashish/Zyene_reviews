@@ -64,6 +64,12 @@ export const aiBusinessDailyRateLimit = new Ratelimit({
     prefix: '@upstash/ratelimit/ai-business-daily',
 });
 
+export const aeoPromptSuggestionRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(1, '1 h'),
+    prefix: '@upstash/ratelimit/aeo-prompt-suggestions',
+});
+
 export const aiAnalysisBusinessRateLimit = new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(200, '1 d'),

@@ -14,13 +14,18 @@ vi.mock("@/lib/db/supabase/verify-business-access", () => ({ userCanAccessBusine
 vi.mock("@/lib/auth/rate-limit", () => ({ aiRateLimit: { limit: mocks.rate } }));
 vi.mock("@/services/ai/ai-business-budget", () => ({ checkAiBusinessDailyBudget: mocks.budget }));
 vi.mock("@/lib/db/redis", () => ({ redis: { get: mocks.get, set: mocks.set } }));
+vi.mock("@/lib/reviews/count-visible-reviews", () => ({ countVisibleReviewsForBusiness: async () => ({ count: 5 }) }));
 vi.mock("@/domains/ai/adapters/vertex-adapter", () => ({ generateContentWithFallback: mocks.generate }));
 vi.mock("@/lib/logger", () => ({ createRequestLogger: () => ({
     requestId: "synthetic", logger: { info: vi.fn(), error: vi.fn() },
 }) }));
-import { handleAiInsights } from "@/services/ai/ai-insights-api";
+import { handleAiInsights as aiInsights } from "@/services/ai/ai-insights-api";
+import { handleSmartInsightsGet } from "@/services/smart/insights-api";
 
-describe("AI insights authorization and spend boundaries", () => {
+describe.each([
+    ["AI Insights", aiInsights, "ai_insights"],
+    ["Smart Insights", handleSmartInsightsGet, "ai_insights_v3"],
+] as const)("%s authorization and spend boundaries", (_name, handleAiInsights, cachePrefix) => {
     const request = () => new Request("https://example.test/api/ai/insights?businessId=foreign-business");
     beforeEach(() => {
         vi.resetAllMocks();
@@ -115,7 +120,7 @@ describe("AI insights authorization and spend boundaries", () => {
         expect((await handleAiInsights(request())).status).toBe(200);
         expect(mocks.eq).toHaveBeenCalledWith("id", "org-a");
         expect(mocks.generate).toHaveBeenCalledTimes(1);
-        expect(mocks.set).toHaveBeenCalledWith("ai_insights:business-a", expect.any(String), { ex: 86400 });
+        expect(mocks.set).toHaveBeenCalledWith(`${cachePrefix}:business-a`, expect.any(String), { ex: 86400 });
     });
     it("does not spend a model budget when there are too few reviews", async () => {
         mocks.reviews = [];
