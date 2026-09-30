@@ -7,30 +7,31 @@ import {
     isStaleRunningGoogleSync,
     reconcileStaleGoogleSyncRun,
 } from "@/services/google/sync-run-state";
-import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
+import { ApiRouteError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { mapGoogleSyncError } from "@/lib/api/google-sync-errors";
-import { getGooglePlatformForUser, type GooglePlatformRow } from "./sync-google-platform";
+import { getGooglePlatformForUser, type GooglePlatformRow } from "@/services/google/sync-google-platform";
+import { parseGoogleSyncInput, readGoogleSyncBody } from "@/services/google/sync-google-input";
 
 function mapSyncRouteError(error: unknown) {
     const mapped = mapGoogleSyncError(error);
-    const normalized = toApiError(error);
-    return apiError(mapped.message || normalized.message, {
-        status: mapped.status ?? normalized.status,
-        code: mapped.code ?? normalized.code,
-        details: mapped.details ?? normalized.details,
+    return apiError(mapped.message, {
+        status: mapped.status,
+        code: mapped.code,
+        details: mapped.details,
     });
 }
 
 export async function handleGoogleSyncGet(request: Request) {
     try {
-        const { supabase } = await requireUser();
+        const { supabase, user } = await requireUser();
         const { searchParams } = new URL(request.url);
-        const businessId = searchParams.get("businessId") ?? undefined;
+        const { businessId } = parseGoogleSyncInput({ businessId: searchParams.get("businessId") ?? undefined });
 
         const { businessId: resolvedBusinessId, platform: platformRow } = await getGooglePlatformForUser(
             supabase,
+            user.id,
             businessId ?? undefined
         );
 
@@ -102,17 +103,8 @@ export async function handleGoogleSyncPost(request: Request) {
             });
         }
 
-        let businessId: string | undefined;
-        let force = false;
-        try {
-            const body = await request.json();
-            businessId = body.businessId;
-            force = !!body.force;
-        } catch {
-            /* no body */
-        }
-
-        const { platform } = await getGooglePlatformForUser(supabase, businessId);
+        const { businessId, force } = await readGoogleSyncBody(request);
+        const { platform } = await getGooglePlatformForUser(supabase, user.id, businessId, true);
 
         const admin = createAdminClient();
         if (!force) {

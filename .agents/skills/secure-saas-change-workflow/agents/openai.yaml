@@ -1,0 +1,4 @@
+interface:
+  display_name: "Secure SaaS Change Workflow"
+  short_description: "Prevent tenant, token, billing, and rollout regressions"
+  default_prompt: "Use $secure-saas-change-workflow to implement this change, verify its affected security boundaries, and document any remaining release work."

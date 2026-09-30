@@ -1,3 +1,5 @@
+import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
+
 export type GoogleSyncMappedError = {
   status: number;
   message: string;
@@ -6,6 +8,8 @@ export type GoogleSyncMappedError = {
 };
 
 export function mapGoogleSyncError(error: unknown): GoogleSyncMappedError {
+  if (error instanceof ApiRouteError) return toApiError(error);
+
   const errAny = error as { code?: string; message?: string; userMessage?: string };
   const message = errAny?.message || (error instanceof Error ? error.message : String(error));
 

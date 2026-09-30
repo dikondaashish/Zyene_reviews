@@ -9,7 +9,7 @@ import type { GoogleBusinessLocation, GoogleStorefrontAddress } from "./types";
 export type GoogleLocationInput = GoogleBusinessLocation | OnboardingGoogleLocationInfo;
 
 const LOCATION_READ_MASK =
-    "title,storefrontAddress,phoneNumbers,categories,websiteUri,profile,metadata";
+    "name,title,storefrontAddress,phoneNumbers,categories,websiteUri,profile,metadata";
 
 export function resolveStorefrontAddress(
     loc: GoogleLocationInput,

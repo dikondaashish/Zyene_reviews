@@ -175,6 +175,7 @@ Skills live in **`.agents/skills/<name>/SKILL.md`**. Invoke by name when the tas
 | **technical-seo-checker** | `sitemap.ts`, `robots.ts`, crawl/index/speed issues |
 | **seo** | Pre-commit SEO audit (metadata, h1, images, sitemap) |
 | **security-auditor** | Auth, payments, RLS, API routes, webhooks |
+| **secure-saas-change-workflow** | Implementing or reviewing tenant authorization, OAuth, privileged data access, jobs, paid APIs, or security fixes; reusable audit lessons and release evidence. Read [the skill](.agents/skills/secure-saas-change-workflow/SKILL.md) and only its relevant references. |
 | **react-patterns** | New React components and hooks |
 | **tdd-workflow** | New features (tests first) |
 | **senior-fullstack** | Architecture, refactors, cross-cutting design |

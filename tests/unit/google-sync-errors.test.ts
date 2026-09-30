@@ -1,7 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { mapGoogleSyncError } from "../../src/lib/api/google-sync-errors";
+import { ApiRouteError } from "@/app/api/_shared/errors";
+import { mapGoogleSyncError } from "@/lib/api/google-sync-errors";
 
 describe("mapGoogleSyncError", () => {
+  it.each([
+    [401, "UNAUTHORIZED", "Unauthorized"],
+    [400, "INVALID_INPUT", "Invalid sync request"],
+    [404, "BUSINESS_NOT_FOUND", "Business record missing"],
+    [429, "SYNC_RATE_LIMIT", "Please wait 1 minute"],
+  ])("preserves structured route errors with status %i", (status, code, message) => {
+    expect(mapGoogleSyncError(new ApiRouteError(message, { status, code })))
+      .toEqual({ status, code, message, details: undefined });
+  });
+
   it("maps conflict", () => {
     const result = mapGoogleSyncError({ code: "CONFLICT", message: "lock held" });
     expect(result.status).toBe(409);
@@ -20,4 +31,3 @@ describe("mapGoogleSyncError", () => {
     expect(result.code).toBe("INTEGRATION_NOT_FOUND");
   });
 });
-

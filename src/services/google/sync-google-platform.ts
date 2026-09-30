@@ -1,5 +1,9 @@
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { ApiRouteError } from "@/app/api/_shared/errors";
+import { createAdminClient } from "@/lib/db/supabase/admin";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { logger } from "@/lib/logger";
+import type { Database } from "@/lib/db/supabase/database.types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export type GooglePlatformRow = {
@@ -15,12 +19,14 @@ export type GooglePlatformRow = {
 };
 
 /**
- * Match dashboard business resolution (cookie + business_members) via {@link getActiveBusinessId},
- * then load Google row with an RLS-scoped `businesses` read.
+ * Resolve the dashboard business, verify live access using the user's RLS client,
+ * then read backend-only sync fields. Never grant these fields to browser clients.
  */
 export async function getGooglePlatformForUser(
-    supabase: SupabaseClient,
-    businessIdParam?: string | null
+    supabase: SupabaseClient<Database>,
+    userId: string,
+    businessIdParam?: string | null,
+    write = false,
 ): Promise<{ businessId: string; platform: GooglePlatformRow }> {
     const trimmed = typeof businessIdParam === "string" ? businessIdParam.trim() : "";
     let resolvedBusinessId: string | null = trimmed.length > 0 ? trimmed : null;
@@ -34,33 +40,23 @@ export async function getGooglePlatformForUser(
         throw new ApiRouteError("Business not found", { status: 404, code: "BUSINESS_NOT_FOUND" });
     }
 
-    const { data: business, error: businessError } = await supabase
-        .from("businesses")
-        .select(
-            `
-            id,
-            review_platforms (
-                id,
-                platform,
-                sync_status,
-                last_synced_at,
-                locked_until,
-                updated_at,
-                sync_state,
-                total_reviews,
-                average_rating
-            )
-        `
-        )
-        .eq("id", resolvedBusinessId)
-        .maybeSingle();
-
-    if (businessError || !business) {
-        throw new ApiRouteError("Business record missing", { status: 404, code: "BUSINESS_NOT_FOUND" });
+    if (!(await userCanAccessBusiness(supabase, userId, resolvedBusinessId, write))) {
+        throw new ApiRouteError("Business not found or access denied", { status: 404, code: "BUSINESS_NOT_FOUND" });
     }
 
-    const platforms = (business.review_platforms ?? []) as GooglePlatformRow[];
-    const platform = platforms.find((p) => p.platform === "google");
+    const { data: platform, error } = await createAdminClient()
+        .from("review_platforms")
+        .select("id, platform, sync_status, last_synced_at, locked_until, updated_at, sync_state, total_reviews, average_rating")
+        .eq("business_id", resolvedBusinessId)
+        .eq("platform", "google")
+        .maybeSingle();
+
+    if (error) {
+        logger.error({ err: error, businessId: resolvedBusinessId }, "Google sync platform lookup failed");
+        throw new ApiRouteError("Unable to load Google sync status. Please try again.", {
+            status: 500, code: "GOOGLE_PLATFORM_LOOKUP_FAILED",
+        });
+    }
     if (!platform) {
         throw new ApiRouteError("Google platform not connected", {
             status: 404,
@@ -68,5 +64,5 @@ export async function getGooglePlatformForUser(
         });
     }
 
-    return { businessId: business.id, platform };
+    return { businessId: resolvedBusinessId, platform };
 }
