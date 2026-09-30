@@ -13,6 +13,7 @@ it("locks every affected package to a patched version and installs the patched r
     const patched: Record<string, string[]> = {
         axios: ["1.20.0"], "fast-uri": ["3.1.8"], "ip-address": ["10.7.2"],
         "brace-expansion": ["1.1.21", "5.0.12"], next: ["16.3.8"],
+        dompurify: ["3.4.16"], "@grpc/grpc-js": ["1.14.5"],
     };
     for (const [name, allowed] of Object.entries(patched)) {
         const versions = Object.keys(lock.packages).filter((key) => key.startsWith(`${name}@`))
@@ -31,5 +32,6 @@ it("locks every affected package to a patched version and installs the patched r
         "ip-address@>=10.0.0 <10.7.2": "10.7.2",
         "brace-expansion@>=1.0.0 <1.1.21": "1.1.21",
         "brace-expansion@>=4.0.0 <5.0.12": "5.0.12",
+        "dompurify@<3.4.16": "3.4.16", "@grpc/grpc-js@<1.14.5": "1.14.5",
     });
 });

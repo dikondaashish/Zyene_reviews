@@ -1,8 +1,8 @@
 import { Agent, fetch as undiciFetch } from "undici";
-import { checkOriginIsPublic, resolvePublicAddress } from "./ssrf-guard";
+import { checkOriginIsPublic, resolvePublicAddress } from "@/services/aeo/crawler/ssrf-guard";
 
 type PublicHttpOptions = {
-    method?: "GET" | "POST";
+    method?: "GET" | "POST" | "HEAD";
     headers?: Record<string, string>;
     body?: string;
     timeoutMs?: number;

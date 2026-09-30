@@ -1,4 +1,5 @@
-import type { PlaceActionLink } from "./place-actions";
+import type { PlaceActionLink } from "@/services/google/place-actions";
+import { fetchPublicHttpBytes } from "@/services/aeo/crawler/public-http";
 
 export function linkToRow(
     link: PlaceActionLink,
@@ -32,19 +33,24 @@ export function linkToRow(
 
 /** Lightweight HEAD check; returns true if likely broken (4xx/5xx or network). */
 export async function checkUriLikelyBroken(uri: string): Promise<boolean> {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-
+    const deadline = Date.now() + 8000;
+    const visited = new Set<string>();
     try {
-        const response = await fetch(uri, {
-            method: "HEAD",
-            redirect: "follow",
-            signal: controller.signal,
-        });
-        return response.status >= 400;
+        let url = new URL(uri);
+        for (let redirects = 0; redirects <= 3; redirects++) {
+            const remaining = deadline - Date.now();
+            if (remaining <= 0 || visited.has(url.href)) return true;
+            visited.add(url.href);
+            // Reuse connection-time DNS validation for every destination/hop.
+            const response = await fetchPublicHttpBytes(url.href, {
+                method: "HEAD", redirect: "manual", timeoutMs: remaining, maxBytes: 0,
+            });
+            if (![301, 302, 303, 307, 308].includes(response.status)) return response.status >= 400;
+            if (!response.location) return true;
+            url = new URL(response.location, url);
+        }
+        return true;
     } catch {
         return true;
-    } finally {
-        clearTimeout(timeout);
     }
 }
