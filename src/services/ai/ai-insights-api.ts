@@ -3,68 +3,116 @@ import { generateContentWithFallback } from "@/domains/ai/adapters/vertex-adapte
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
-import { AI_INSIGHTS_PROMPT, insightsSchema } from "./insights-schema";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { aiRateLimit } from "@/lib/auth/rate-limit";
+import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
+import { checkAiBusinessDailyBudget } from "@/services/ai/ai-business-budget";
+import { AI_INSIGHTS_PROMPT, insightsSchema } from "@/services/ai/insights-schema";
 
 export async function handleAiInsights(_request: Request) {
     const { logger, requestId } = createRequestLogger("GET /api/ai/insights");
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return apiError("Unauthorized", { status: 401, details: requestId });
-
-    const { businessId, business } = await getActiveBusinessId();
-    if (!businessId) return apiError("No business found", { status: 404, details: requestId });
-
-    const cacheKey = `ai_insights:${businessId}`;
     try {
-        const { redis } = await import("@/lib/db/redis");
-        const cached = await redis.get(cacheKey);
-        if (cached) {
-            const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
-            logger.info({ userId: user.id, businessId, cached: true }, "AI insights served from cache");
-            return apiOk(parsed);
+        const supabase = await createClient();
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) return apiError("Unauthorized", { status: 401, details: requestId });
+
+        const { businessId } = await getActiveBusinessId();
+        if (!businessId) return apiError("No business found", { status: 404, details: requestId });
+
+        // Cached context is a selector, not evidence of current tenant access.
+        if (!(await userCanAccessBusiness(supabase, user.id, businessId))) {
+            return apiError("Forbidden", { status: 403, details: requestId });
         }
-    } catch {
-        // Redis unavailable, continue without cache
-    }
+        const { data: business } = await supabase
+            .from("businesses")
+            .select("name, organization_id")
+            .eq("id", businessId)
+            .single();
+        if (!business?.organization_id)
+            return apiError("Business not found", {
+                status: 404,
+                details: requestId,
+            });
+        const { data: organization } = await supabase
+            .from("organizations")
+            .select("plan, plan_status")
+            .eq("id", business.organization_id)
+            .single();
+        if (!organization || !planAllowsAiReviewFeatures(organization.plan, organization.plan_status)) {
+            return apiError("AI insights require an active paid plan.", {
+                status: 403,
+                code: "AI_INSIGHTS_PLAN_REQUIRED",
+                details: requestId,
+            });
+        }
+        const { success: rateOk } = await aiRateLimit.limit(user.id);
+        if (!rateOk)
+            return apiError("AI rate limit exceeded.", {
+                status: 429,
+                details: requestId,
+            });
 
-    const { data: reviews, count } = await supabase
-        .from("reviews")
-        .select("text, rating", { count: "exact" })
-        .eq("business_id", businessId)
-        .not("text", "is", null)
-        .neq("text", "")
-        .order("review_date", { ascending: false })
-        .limit(200);
+        const cacheKey = `ai_insights:${businessId}`;
+        try {
+            const { redis } = await import("@/lib/db/redis");
+            const cached = await redis.get(cacheKey);
+            if (cached) {
+                const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
+                logger.info({ userId: user.id, businessId, cached: true }, "AI insights served from cache");
+                return apiOk(parsed);
+            }
+        } catch {
+            // Redis unavailable, continue without cache
+        }
 
-    if (!reviews || reviews.length < 5) {
-        return apiOk({
-            themes: [],
-            suggestions: [],
-            reviewCount: count || 0,
-            message: "Not enough reviews with text to generate insights. At least 5 reviews needed.",
-        });
-    }
+        const { data: reviews, count } = await supabase
+            .from("reviews")
+            .select("text, rating", { count: "exact" })
+            .eq("business_id", businessId)
+            .not("text", "is", null)
+            .neq("text", "")
+            .order("review_date", { ascending: false })
+            .limit(200);
 
-    try {
+        if (!reviews || reviews.length < 5) {
+            return apiOk({
+                themes: [],
+                suggestions: [],
+                reviewCount: count || 0,
+                message: "Not enough reviews with text to generate insights. At least 5 reviews needed.",
+            });
+        }
+
+        const budgetDenial = await checkAiBusinessDailyBudget(businessId);
+        if (budgetDenial) return budgetDenial;
+
         const reviewsText = reviews
-            .map((r, i) => `[${i + 1}] (${r.rating}★) ${r.text}`)
+            .map((r, i) => `[${i + 1}] (${r.rating}★) ${(r.text || "").slice(0, 2000)}`)
             .join("\n");
 
-        const prompt = AI_INSIGHTS_PROMPT
-            .replace("{business_name}", business?.name || "the business")
+        const prompt = AI_INSIGHTS_PROMPT.replace(
+            "{business_name}",
+            (business.name || "the business").slice(0, 200),
+        )
             .replace("{count}", (count || reviews.length).toString())
             .replace("{reviews}", reviewsText);
 
         const content = await generateContentWithFallback(prompt, {
             requireJson: true,
             schema: insightsSchema,
+            maxOutputTokens: 2048,
         });
 
         let result;
         try {
             result = JSON.parse(content);
         } catch {
-            return apiError("Failed to parse AI response", { status: 500, details: requestId });
+            return apiError("Failed to parse AI response", {
+                status: 500,
+                details: requestId,
+            });
         }
 
         const responseData = {
@@ -83,7 +131,10 @@ export async function handleAiInsights(_request: Request) {
         logger.info({ userId: user.id, businessId, reviewCount: count }, "AI insights generated");
         return apiOk(responseData);
     } catch (error) {
-        logger.error({ error, userId: user.id, businessId }, "AI insights generation failed");
-        return apiError("Failed to generate insights", { status: 500, details: requestId });
+        logger.error({ error, requestId }, "AI insights generation failed");
+        return apiError("AI insights are temporarily unavailable", {
+            status: 503,
+            details: requestId,
+        });
     }
 }

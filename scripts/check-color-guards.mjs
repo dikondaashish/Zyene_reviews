@@ -6,7 +6,11 @@ const SKIP_SEGMENTS = [
   `${path.sep}resend${path.sep}templates${path.sep}`,
 ];
 // Color arithmetic and its fixtures require actual sRGB inputs, not CSS tokens.
-const LITERAL_COLOR_FILES = new Set(["src/lib/design/contrast.ts", "tests/unit/brand-contrast.test.ts"]);
+const LITERAL_COLOR_FILES = new Set([
+  "src/lib/design/contrast.ts", "tests/unit/brand-contrast.test.ts",
+  // Print-sink injection/contrast fixtures must exercise actual color literals.
+  "tests/unit/customer-portal-print-color-security.test.ts",
+]);
 
 const SKIP_BASENAMES = new Set([
   "qr-code-card.tsx",

@@ -25,6 +25,11 @@ if ! docker info >/dev/null 2>&1; then
   exit 1
 fi
 
+# Docker's Python SDK does not read the Docker CLI's selected context.
+if [[ -z "${DOCKER_HOST:-}" ]]; then
+  export DOCKER_HOST="$(docker context inspect --format '{{.Endpoints.docker.Host}}')"
+fi
+
 snapshot="$(mktemp -d "${TMPDIR:-/tmp}/zyene-strix.XXXXXX")"
 trap 'rm -rf "$snapshot"' EXIT
 node "$repo_dir/scripts/create-security-audit-snapshot.mjs" "$repo_dir" "$snapshot"

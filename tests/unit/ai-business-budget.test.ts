@@ -28,7 +28,7 @@ describe("authenticated AI business budget", () => {
 
     it("guards every authenticated on-demand AI generator", () => {
         for (const file of [
-            "suggest-reply-api.ts", "suggest-qa-answer-api.ts",
+            "suggest-reply-api.ts", "suggest-qa-answer-api.ts", "ai-insights-api.ts",
             "optimize-business-description-api.ts", "optimize-gbp-content-api.ts",
         ]) {
             const source = readFileSync(join(process.cwd(), "src/services/ai", file), "utf8");
