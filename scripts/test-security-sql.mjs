@@ -20,10 +20,10 @@ const migrations = [
     "20260930143717_referral_reward_claims.sql",
     "20260930145044_guard_privileged_business_rpcs.sql",
     "20260930153833_guard_oauth_ciphertext_writes.sql",
-    "20260930153233_backend_only_ai_usage.sql",
+    "20260930165420_backend_only_ai_usage.sql",
     "20260930160138_retire_legacy_oauth_encryption_key.sql",
     "20260930162251_scope_business_storage_access.sql",
-];
+].sort();
 
 function docker(args, input) {
     const result = spawnSync("docker", args, { input, encoding: "utf8", timeout: 30_000 });

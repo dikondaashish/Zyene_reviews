@@ -32,7 +32,7 @@ The prior deployed suggestion handlers called an authenticated accounting RPC. T
 
 `tests/unit/ai-reply-usage.test.ts` and `ai-qa-usage.test.ts` deny foreign/sibling/suspended/missing identities before admin/provider operations, verify server-derived organization accounting, and exercise monthly quota and fallback accounting. `tests/security/ai-usage-boundaries.sql` denies client counter calls and preserves backend increments without changing another tenant's counter.
 
-`20260930153233_backend_only_ai_usage.sql` is prepared but **must not be applied before the new production deployment is READY and its aliases point to it**. It removes browser RPC access while retaining authorized backend bookkeeping. Deployment and final grant verification are pending at this checkpoint.
+`20260930165420_backend_only_ai_usage.sql` was applied **after** production deployment `dpl_EfANhQWy5PuUQfHeBr7uZSiLT3Pu` became READY for security commit `bf9c0dc19e2f57291d6ad1feaa412572a03d3a15`, with the production application/public-capture aliases. Read-only grant checks confirm both `anon` and `authenticated` are denied EXECUTE while `service_role` retains it. Browser RPC access is removed without breaking the deployed backend callers.
 
 ### Historical Invitation Scope
 
@@ -44,7 +44,7 @@ Private identity and audit-history checks matched two accepted business-admin in
 
 ## Stripe Read-Only Reconciliation
 
-`scripts/security-billing-reconcile-readonly.mjs` checks exact Vercel project, Supabase host, and Stripe account bindings before GET-only inspection. Decrypted production secrets remain in memory, never output. The enabled endpoint has the five handled event types and API version `2026-02-25.clover`, matching Stripe SDK 20.4.1. A signing secret is configured, but its match to the existing endpoint is not verified by GET.
+`scripts/security-billing-reconcile-readonly.mjs` checks exact Vercel project, Supabase host, and Stripe account bindings before GET-only inspection. Decrypted production secrets remain in memory, never output. The enabled endpoint has the five handled event types and API version `2026-02-25.clover`, matching Stripe SDK 20.4.1. A separate private comparison of the visible Stripe destination secret and decrypted production Vercel configuration confirmed they match. Only the boolean result was output, and the secret was hidden again before a screenshot. No secret was copied into this report. The dashboard shows 26 deliveries and zero failures this week; that is historical observation, not a new delivery test.
 
 All **122 legacy-unknown records remain unchanged**: 61 events were retrievable and 61 unavailable/older than retention. The retrievable events comprise 7 subscription updates, 51 successful invoices and 3 failed invoices. None has a pending webhook, but successful delivery does not prove every side effect completed. Six current subscription/customer bindings and statuses matched, with zero drift, unavailable subscriptions, or customer mismatch. This is not a historical credit-ledger reconciliation or proof that plan-price mappings match.
 
@@ -86,16 +86,16 @@ The prior production deployment `dpl_5DkcXEQoThJfzLLyofVYcDgSZwBt` is READY for 
 - Disposable PostgreSQL harness: 17 security migrations plus real historical RPC/storage/credit migrations passed, including tenant, role, invitation, grant, storage, counter, billing, retry and rotation regressions. No network, host mounts or application credentials were provided.
 - `pnpm build` passed after the Q&A fix: compilation, TypeScript and 273 generated static pages. Existing Edge Runtime and Tailwind module warnings remain.
 - A following fast check found duplicate generated `.next/types/* 2.ts` declarations. Only those generated duplicates were removed; `pnpm verify:fast` then passed. Unrelated source duplicates were not removed.
-- The three new live SQL bodies were not edited after application. Remote migration history has 147 records at this checkpoint (131 pre-existing plus 16 security entries); the backend-only counter is the seventeenth local security migration and remains pending.
+- The four new live SQL bodies were not edited after application. Remote migration history has 148 records (131 pre-existing plus 17 security entries), including the backend-only counter. Pending local versions were renamed to the Supabase-assigned versions; no earlier ledger row or applied SQL body was changed.
+- Security commit `bf9c0dc1` was pushed to `main`. [GitHub CI run 36746338601](https://github.com/dikondaashish/Zyene_reviews/actions/runs/36746338601) passed its full validation job. Vercel deployment `dpl_EfANhQWy5PuUQfHeBr7uZSiLT3Pu` is READY, its source SHA matches, and all production aliases point to it. The subsequent metadata-only ledger alignment does not change the deployed application callers.
 
 ## Remaining Operational Work
 
-1. Complete the approved security-only code rollout, attest READY/aliases, apply the backend-only AI counter migration, and inspect final grants.
-2. Obtain independent recovery access before the approved PostgreSQL 17.11.0.002 upgrade. Compatibility checks found no deprecated extensions, logical slots, ltree/float GiST indexes, or custom estimator functions needing repair. Free has no scheduled backups; the installed CLI is not authenticated. Plugins support SQL/migrations, not a logical-backup download. Supabase documents restoring the original instance on failed upgrades, but that is not an independent restore-tested backup or a downgrade after success.
-3. Leaked-password protection is still disabled and Pro-only. The owner chose Free, so no paid plan was purchased or bypassed.
-4. Owner must revoke only the exposed Google key ending `e764` while retaining the production key ending `eba5`, rotate the shared AkashML credential, and provide only a private file path/confirmation. These actions are not confirmed complete.
-5. Coordinate Google/provider token revocation and reconnection with the affected business owners. DB encryption rotation alone cannot invalidate provider credentials.
-6. Reconcile historical Stripe side effects with retained billing/audit exports; preserve unavailable/ambiguous events. Prepare isolated test credentials/database before an end-to-end webhook check. No automatic live replay is safe.
-7. Complete and triage a fresh source-only Strix scan. No empty future scanner report or perfect-security guarantee is made.
+1. Obtain independent recovery access before the approved PostgreSQL 17.11.0.002 upgrade. Compatibility checks found no deprecated extensions, logical slots, ltree/float GiST indexes, or custom estimator functions needing repair. Free has no scheduled backups; the installed CLI is not authenticated. The owner has only used plugins so far. Plugins support SQL/migrations, not a logical-backup download. Supabase documents restoring the original instance on failed upgrades, but that is not an independent restore-tested backup or a downgrade after success. No upgrade was started without that prerequisite.
+2. Leaked-password protection is still disabled and Pro-only. The owner chose Free, so no paid plan was purchased or bypassed.
+3. Owner must revoke only the exposed Google key ending `e764` while retaining the production key ending `eba5`, rotate the shared AkashML credential, and provide only a private file path/confirmation. These actions are not confirmed complete.
+4. Coordinate Google/provider token revocation and reconnection with the affected business owners. DB encryption rotation alone cannot invalidate provider credentials.
+5. Reconcile historical Stripe side effects with retained billing/audit exports; preserve unavailable/ambiguous events. The signing-secret match is now verified. Prepare isolated test credentials/database before an end-to-end webhook check. No automatic live replay is safe.
+6. Complete and triage a fresh source-only Strix scan (`zyene-strix-1mfphe_569f`), currently running against a redacted source snapshot. No empty future scanner report or perfect-security guarantee is made.
 
-Advisor notices are interpreted, not silenced: four no-policy RLS tables deny client rows; identity-scoped read helpers and policy helpers intentionally use definer security. The AI counter notice should disappear only after its coordinated grant change. Disabled leaked-password protection remains a real operational limitation on Free.
+Advisor notices are interpreted, not silenced: four no-policy RLS tables deny client rows; identity-scoped read helpers and policy helpers intentionally use definer security. The AI counter is now backend-only. Disabled leaked-password protection remains a real operational limitation on Free.

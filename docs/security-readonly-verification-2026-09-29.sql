@@ -7,7 +7,7 @@ SELECT version FROM supabase_migrations.schema_migrations
 WHERE version IN ('20260930143031', '20260930143035', '20260930143037',
   '20260930143537', '20260930143541', '20260930143543', '20260930143632',
   '20260930143635', '20260930143637', '20260930143714', '20260930143715', '20260930143717',
-  '20260930145044')
+  '20260930145044', '20260930153833', '20260930160138', '20260930162251', '20260930165420')
 ORDER BY version;
 
 SELECT role_name,
@@ -60,6 +60,7 @@ FROM (VALUES ('anon'), ('authenticated'), ('service_role')) roles(role_name)
 CROSS JOIN (VALUES
   ('public.encrypt_token(text)'), ('public.decrypt_token(text)'),
   ('public.rotate_oauth_encryption_key()'), ('public.acquire_platform_lock(uuid,interval)'),
+  ('public.increment_ai_replies_used(uuid)'), ('public.can_write_business_logo(text)'),
   ('public.claim_stripe_webhook_event(text,uuid)'),
   ('public.finish_stripe_webhook_event(text,uuid,boolean)'),
   ('public.authorized_business_ids(boolean,boolean)'),
@@ -69,6 +70,10 @@ CROSS JOIN (VALUES
   ('public.claim_referral_conversion_reward(uuid,bigint)'),
   ('public.finish_referral_conversion_reward(uuid,uuid)')
 ) functions(signature);
+
+SELECT policyname, permissive, roles, cmd, qual, with_check
+FROM pg_policies WHERE schemaname = 'storage' AND tablename = 'objects'
+ORDER BY policyname;
 
 SELECT t.tgname, t.tgenabled FROM pg_trigger t
 WHERE t.tgrelid = 'public.business_members'::regclass AND NOT t.tgisinternal;
