@@ -20,7 +20,7 @@ export async function loadAuthorizedCampaignJob(admin: Admin, job: CampaignJobDa
     return data;
 }
 
-export async function campaignContactPermission(admin: Admin, job: CampaignJobData, frequencyCapDays: number) {
+export async function campaignContactPermission(admin: Admin, job: Pick<CampaignJobData, "businessId" | "contact">, frequencyCapDays: number) {
     if (job.contact.phone) {
         const { data, error } = await admin.from("sms_opt_outs")
             .select("id").eq("phone_number", job.contact.phone).maybeSingle();
@@ -34,7 +34,7 @@ export async function campaignContactPermission(admin: Admin, job: CampaignJobDa
             .eq("business_id", job.businessId).eq(method, job.contact[method]!).maybeSingle();
         if (error) throw error;
         if (data?.is_opted_out || data?.tags?.includes("zyene:test")) return { allowed: false, reason: "Customer opted out" };
-        if (data?.last_request_sent_at && Date.now() - new Date(data.last_request_sent_at).getTime() < frequencyCapDays * 86400000) {
+        if (frequencyCapDays > 0 && data?.last_request_sent_at && Date.now() - new Date(data.last_request_sent_at).getTime() < frequencyCapDays * 86400000) {
             return { allowed: false, reason: "Review request frequency cap" };
         }
     }

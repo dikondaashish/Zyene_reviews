@@ -3,56 +3,55 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
 import { pickDripChannel, shouldSkipDripSend } from "@/lib/campaigns/drip-phase1";
 import type { DripCampaignRow, DripRequestRow } from "@/lib/campaigns/drip-phase1-types";
-
-function businessFromCampaign(campaign: DripCampaignRow) {
-    const b = campaign.businesses;
-    return Array.isArray(b) ? b[0] : b;
-}
+import { loadDripSendContext } from "@/lib/campaigns/drip-send-context";
+import { reserveChannelUsage } from "@/lib/stripe/reserve-channel-usage";
+import { campaignContactPermission } from "@/services/campaigns/campaign-job-access";
 
 export async function sendDripStep(args: {
     admin: ReturnType<typeof createAdminClient>;
     campaign: DripCampaignRow;
     req: DripRequestRow;
     step: 2 | 3;
-    template: string | undefined;
+    deliveryId: string;
 }) {
-    const { admin, campaign, req, step, template } = args;
-    if (shouldSkipDripSend(req)) return;
-
-    const business = businessFromCampaign(campaign);
-    if (!business) return;
+    const { admin, campaign, req, step, deliveryId } = args;
+    if (!deliveryId || shouldSkipDripSend(req)) return;
+    const live = await loadDripSendContext(admin, campaign, req, step);
+    if (!live) return;
+    const { business, request } = live;
 
     const channel = pickDripChannel({
-        alternate: campaign.drip_channel_alternate !== false,
+        alternate: live.campaign.drip_channel_alternate !== false,
         lastChannel:
-            req.last_drip_channel === "sms" || req.last_drip_channel === "email"
-                ? req.last_drip_channel
+            request.last_drip_channel === "sms" || request.last_drip_channel === "email"
+                ? request.last_drip_channel
                 : null,
-        hasEmail: Boolean(req.customer_email),
-        hasPhone: Boolean(req.customer_phone),
+        hasEmail: Boolean(request.customer_email),
+        hasPhone: Boolean(request.customer_phone),
     });
     if (!channel) {
         logger.warn({ requestId: req.id, step }, "[drip] skip: no contact for channel");
         return;
     }
 
-    const { data: fresh } = await admin
-        .from("review_requests")
-        .select("drip_status, review_left, clicked_at, completed_at")
-        .eq("id", req.id)
-        .maybeSingle();
-    if (!fresh || shouldSkipDripSend(fresh as unknown as DripRequestRow)) return;
-
     try {
+        const permission = await campaignContactPermission(admin, {
+            businessId: business.id, contact: { name: request.customer_name ?? undefined,
+                email: request.customer_email ?? undefined, phone: request.customer_phone ?? undefined },
+        }, 0);
+        if (!permission.allowed) return;
+        // New cron occurrences consume allowance even if a prior delivery could not be recorded.
+        if (!(await reserveChannelUsage(business.organization_id, [channel], `drip:${req.id}:step:${step}:job:${deliveryId}`))) return;
+        const template = step === 3 ? live.campaign.drip_step3_template || live.campaign.follow_up_template : live.campaign.follow_up_template;
         const result = await sendReviewRequest({
             businessId: business.id,
             businessName: business.name,
             senderName: business.sender_name ?? null,
-            customerName: req.customer_name || "Customer",
+            customerName: request.customer_name || "Customer",
             contactMethods: [channel],
-            customerEmail: req.customer_email,
-            customerPhone: req.customer_phone,
-            template,
+            customerEmail: request.customer_email,
+            customerPhone: request.customer_phone,
+            template: template || undefined,
             isFollowUp: true,
         });
 
@@ -66,7 +65,7 @@ export async function sendDripStep(args: {
 
         const now = new Date().toISOString();
         if (step === 2) {
-            await admin
+            const { error } = await admin
                 .from("review_requests")
                 .update({
                     drip_steps_sent: 2,
@@ -76,10 +75,12 @@ export async function sendDripStep(args: {
                     last_drip_channel: channel,
                 })
                 .eq("id", req.id)
+                .eq("business_id", business.id).eq("campaign_id", campaign.id)
                 .eq("drip_status", "active")
                 .eq("drip_steps_sent", 1);
+            if (error) throw error;
         } else {
-            await admin
+            const { error } = await admin
                 .from("review_requests")
                 .update({
                     drip_steps_sent: 3,
@@ -89,8 +90,10 @@ export async function sendDripStep(args: {
                     drip_terminated_reason: "exhausted",
                 })
                 .eq("id", req.id)
+                .eq("business_id", business.id).eq("campaign_id", campaign.id)
                 .eq("drip_status", "active")
                 .eq("drip_steps_sent", 2);
+            if (error) throw error;
         }
     } catch (e) {
         logger.error({ err: e, requestId: req.id, step }, "[drip] step failed");
