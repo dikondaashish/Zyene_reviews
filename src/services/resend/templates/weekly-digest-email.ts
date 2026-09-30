@@ -1,4 +1,4 @@
-
+import { escapeHtml } from "@/lib/security/html-escape";
 interface ReviewDigestItem {
     rating: number;
     authorName: string;
@@ -17,14 +17,17 @@ interface WeeklyDigestProps {
 }
 
 export function weeklyDigestEmail({
-    businessName,
+    businessName: rawBusinessName,
     reviews,
     totalNew,
     avgRating,
     pendingCount,
-    dashboardUrl,
-    settingsUrl,
+    dashboardUrl: rawDashboardUrl,
+    settingsUrl: rawSettingsUrl,
 }: WeeklyDigestProps): string {
+    const businessName = escapeHtml(rawBusinessName);
+    const dashboardUrl = escapeHtml(rawDashboardUrl);
+    const settingsUrl = escapeHtml(rawSettingsUrl);
     const reviewRows = reviews.map(review => {
         const starColor = review.rating >= 4 ? "#16a34a" : review.rating === 3 ? "#ca8a04" : "#dc2626";
         const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
@@ -34,11 +37,11 @@ export function weeklyDigestEmail({
             <div style="border-bottom: 1px solid #f4f4f5; padding: 16px 0;">
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
                     <tr>
-                        <td style="font-size: 15px; font-weight: 600; color: #18181b;">${review.authorName}</td>
+                        <td style="font-size: 15px; font-weight: 600; color: #18181b;">${escapeHtml(review.authorName)}</td>
                         <td align="right" style="font-size: 14px; color: ${starColor}; letter-spacing: 1px;">${stars}</td>
                     </tr>
                 </table>
-                <p style="margin: 4px 0 0; font-size: 14px; line-height: 1.5; color: #52525b; font-style: italic;">"${snippet}"</p>
+                <p style="margin: 4px 0 0; font-size: 14px; line-height: 1.5; color: #52525b; font-style: italic;">"${escapeHtml(snippet)}"</p>
             </div>
         `;
     }).join("");

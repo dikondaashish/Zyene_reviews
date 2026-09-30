@@ -1,5 +1,10 @@
+import { escapeHtml } from "@/lib/security/html-escape";
 
-export const teamInviteEmail = (inviteLink: string, inviterName: string, organizationName: string) => `
+export const teamInviteEmail = (rawInviteLink: string, rawInviterName: string, rawOrganizationName: string) => {
+    const inviteLink = escapeHtml(rawInviteLink);
+    const inviterName = escapeHtml(rawInviterName);
+    const organizationName = escapeHtml(rawOrganizationName);
+    return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -67,3 +72,4 @@ export const teamInviteEmail = (inviteLink: string, inviterName: string, organiz
 </body>
 </html>
 `;
+};

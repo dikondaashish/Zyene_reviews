@@ -1,4 +1,4 @@
-
+import { escapeHtml } from "@/lib/security/html-escape";
 interface ReviewAlertProps {
     businessName: string;
     rating: number;
@@ -12,16 +12,29 @@ interface ReviewAlertProps {
 }
 
 export function reviewAlertEmail({
-    businessName,
+    businessName: rawBusinessName,
     rating,
-    authorName,
-    reviewText,
+    authorName: rawAuthorName,
+    reviewText: rawReviewText,
     urgencyScore,
-    dashboardUrl,
-    settingsUrl,
-    customerEmail,
-    customerPhone,
+    dashboardUrl: rawDashboardUrl,
+    settingsUrl: rawSettingsUrl,
+    customerEmail: rawCustomerEmail,
+    customerPhone: rawCustomerPhone,
 }: ReviewAlertProps): string {
+    const businessName = escapeHtml(rawBusinessName);
+    const authorName = escapeHtml(rawAuthorName);
+    const reviewText = escapeHtml(rawReviewText);
+    const dashboardUrl = escapeHtml(rawDashboardUrl);
+    const settingsUrl = escapeHtml(rawSettingsUrl);
+    const customerPhone = rawCustomerPhone ? escapeHtml(rawCustomerPhone) : undefined;
+    const phoneHref = rawCustomerPhone?.replace(/[^\d+]/g, "");
+    const replyParams = new URLSearchParams({
+        subject: "Regarding your recent feedback",
+        body: `Hi ${rawAuthorName !== rawCustomerEmail ? rawAuthorName : "there"},\r\n\r\nTo help us look into this, could you share a bit more detail?\r\n\r\n`,
+    }).toString().replaceAll("+", "%20");
+    const replyHref = rawCustomerEmail
+        ? escapeHtml(`mailto:${encodeURIComponent(rawCustomerEmail)}?${replyParams}`) : undefined;
     const starLabel = "★".repeat(rating) + "☆".repeat(5 - rating);
     const starColor = rating >= 4 ? "#16a34a" : rating === 3 ? "#ca8a04" : "#dc2626";
 
@@ -75,7 +88,7 @@ export function reviewAlertEmail({
                             ${customerPhone ? `
                             <p style="margin: 0 0 20px; font-size: 14px; color: #52525b;">
                                 <strong>Customer phone:</strong>
-                                <a href="tel:${String(customerPhone).replace(/[^\d+]/g, "")}" style="color: #2563eb;">${customerPhone}</a>
+                                <a href="tel:${phoneHref}" style="color: #2563eb;">${customerPhone}</a>
                             </p>
                             ` : ""}
 
@@ -84,8 +97,8 @@ export function reviewAlertEmail({
                                 <a href="${dashboardUrl}" style="display: inline-block; background-color: #18181b; color: #ffffff; font-weight: 600; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-size: 16px; border: 1px solid #27272a;">
                                     View in Dashboard
                                 </a>
-                                ${customerEmail ? `
-                                <a href="mailto:${customerEmail}?subject=Regarding your recent feedback&body=Hi ${authorName !== customerEmail ? authorName : 'there'},%0D%0A%0D%0ATo help us look into this, could you share a bit more detail?%0D%0A%0D%0A" style="display: inline-block; background-color: #ffffff; color: #18181b; font-weight: 600; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-size: 16px; border: 1px solid #e4e4e7;">
+                                ${replyHref ? `
+                                <a href="${replyHref}" style="display: inline-block; background-color: #ffffff; color: #18181b; font-weight: 600; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-size: 16px; border: 1px solid #e4e4e7;">
                                     Reply to Customer
                                 </a>
                                 ` : ''}
