@@ -1,6 +1,7 @@
 import { logger } from "@/lib/logger";
-import { inngest } from "../client";
+import { inngest } from "@/services/inngest/client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
 import { isGoogleSyncConflictError } from "@/services/google/sync-lock-utils";
 import { syncYelpReviewsForPlatform } from "@/services/yelp/sync-service";
@@ -76,20 +77,24 @@ export const weeklyDigestWorker = inngest.createFunction(
       const { data: members } = await admin
         .from("organization_members")
         .select("user_id")
-        .eq("organization_id", business.organization_id);
+        .eq("organization_id", business.organization_id)
+        .eq("status", "active");
 
       if (!members || members.length === 0) return null;
 
-      const userIds = members.map(m => m.user_id);
+      const authorized = (await Promise.all(members.map(async member =>
+        await userCanAccessBusiness(admin, member.user_id, businessId) ? member.user_id : null
+      ))).filter(userId => userId !== null);
+      if (authorized.length === 0) return null;
       const { data: prefs } = await admin
         .from("notification_preferences")
         .select("*, users(email)")
         .eq("business_id", businessId)
-        .in("user_id", userIds);
+        .in("user_id", authorized);
 
       const recipients = (prefs ?? [])
         .map(p => p as { user_id: string; digest_enabled?: boolean; users: { email?: string } | null })
-        .filter(p => p.digest_enabled !== false && p.users?.email)
+        .filter(p => authorized.includes(p.user_id) && p.digest_enabled !== false && p.users?.email)
         .map(p => ({ userId: p.user_id, email: p.users?.email as string }))
         // Sorted so the per-recipient step ids below are stable across retries;
         // Postgres does not promise row order without an ORDER BY, and an
@@ -117,13 +122,15 @@ export const weeklyDigestWorker = inngest.createFunction(
     // burst of parallel sends is also the shape that trips Resend's rate limit.
     // Step ids key on user id, not email - they surface in the Inngest UI.
     for (const recipient of digest.recipients) {
-      await step.run(`send-digest-${recipient.userId}`, () =>
-        sendEmail({
+      await step.run(`send-digest-${recipient.userId}`, async () => {
+        // A cached build step is not proof of current recipient access.
+        if (!(await userCanAccessBusiness(admin, recipient.userId, businessId))) return;
+        return sendEmail({
           to: recipient.email,
           subject: `Weekly review summary for ${digest.businessName}`,
           html: digest.emailHtml
-        })
-      );
+        });
+      });
     }
   }
 );

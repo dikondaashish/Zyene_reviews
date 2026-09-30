@@ -2,6 +2,7 @@
 import { isInQuietHours } from "@/lib/notifications/quiet-hours";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { sendSMS } from "@/services/twilio/send-sms";
 import { sendEmail } from "@/services/resend/send-email";
 import { reviewAlertEmail } from "@/services/resend/templates/review-alert-email";
@@ -51,7 +52,12 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
         return;
     }
 
-    const userIds = members.map(m => m.user_id);
+    // Organization membership alone does not grant access to every business.
+    const scopedMembers = (await Promise.all(members.map(async member =>
+        await userCanAccessBusiness(admin, member.user_id, review.business_id) ? member : null
+    ))).filter(member => member !== null);
+    if (scopedMembers.length === 0) return;
+    const userIds = scopedMembers.map(m => m.user_id);
 
     // 3. Get Notification Preferences for these users
     const { data: prefs, error: prefsErr } = await admin
@@ -66,7 +72,7 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
     // We iterate through members to ensure even those without a 'preference' record 
     // get a critical email if they are an owner/admin.
     await Promise.all(
-        members.map(async (member) => {
+        scopedMembers.map(async (member) => {
             const userEmail = (member.users as { email?: string } | null)?.email;
             if (!userEmail) return;
 
@@ -114,6 +120,6 @@ export async function sendReviewAlert(review: ReviewAlertPayload) {
         await admin.from("reviews").update({
             alert_sent: true,
             alert_sent_at: new Date().toISOString()
-        }).eq("id", review.id);
+        }).eq("id", review.id).eq("business_id", review.business_id);
     }
 }
