@@ -8,6 +8,7 @@ import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 import { checkAiBusinessDailyBudget } from "./ai-business-budget";
+import { recordAiReplyUsage } from "@/services/ai/record-reply-usage";
 
 const requestSchema = z.object({
     reviewId: z.string().uuid(),
@@ -115,7 +116,7 @@ export async function handleSuggestReply(request: Request) {
             rotationScope: businessId,
         });
 
-        await supabase.rpc("increment_ai_replies_used", { org_id: orgId });
+        await recordAiReplyUsage(supabase, businessId);
         logger.info({ userId: user.id, reviewId, tone }, "AI reply suggestion generated");
 
         return apiOk({ reply, tone, requestId });

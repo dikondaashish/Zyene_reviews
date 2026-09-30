@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const sql = readFileSync(join(process.cwd(),
-    "supabase/migrations/20260929234000_restrict_platform_sync_lock.sql"), "utf8");
+    "supabase/migrations/20260930143541_restrict_platform_sync_lock.sql"), "utf8");
 
 describe("platform sync lock grants", () => {
     it("denies anonymous and authenticated callers even with a known platform ID", () => {

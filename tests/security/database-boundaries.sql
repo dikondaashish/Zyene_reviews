@@ -8,11 +8,19 @@ SELECT test.expect_denied('SELECT access_token FROM public.integrations');
 SELECT test.expect_denied($cmd$SELECT public.decrypt_token('synthetic')$cmd$);
 SELECT test.expect_denied($cmd$SELECT public.acquire_platform_lock('40000000-0000-4000-8000-000000000001')$cmd$);
 SELECT test.expect_denied($cmd$SELECT public.claim_stripe_webhook_event('evt', gen_random_uuid())$cmd$);
+SELECT test.expect_denied('SELECT event_id FROM public.stripe_webhook_events');
+SELECT test.expect_denied('SELECT receipt_id FROM public.stripe_credit_grant_receipts');
 
 RESET ROLE;
 SET ROLE authenticated;
 SET request.jwt.claim.role = 'authenticated';
 SET request.jwt.claim.sub = '20000000-0000-4000-8000-000000000001';
+SELECT test.expect_denied('SELECT status FROM public.stripe_webhook_events');
+SELECT test.expect_denied($cmd$UPDATE public.stripe_webhook_events SET status = 'processed'$cmd$);
+SELECT test.expect_denied('SELECT receipt_id FROM public.stripe_credit_grant_receipts');
+SELECT test.assert_true(EXISTS (SELECT 1 FROM pg_policies WHERE schemaname = 'public'
+  AND tablename = 'stripe_credit_grant_receipts' AND roles = ARRAY['service_role']::name[]),
+  'credit receipts have an explicit backend-only RLS policy');
 SELECT test.expect_denied($cmd$UPDATE test.policy_rows
   SET tenant_id = '20000000-0000-4000-8000-000000000002' WHERE id = 1$cmd$);
 SELECT test.assert_true((SELECT tenant_id = auth.uid() FROM test.policy_rows WHERE id = 1), 'implicit WITH CHECK prevented reparenting');
@@ -88,14 +96,29 @@ $$;
 SELECT test.assert_true((SELECT platform_id = '40000000-0000-4000-8000-000000000001'
   FROM public.reviews WHERE id = '60000000-0000-4000-8000-000000000001'), 'platform link retained');
 CREATE TEMP TABLE previous_key AS SELECT key_val FROM internal.vault_config;
+CREATE TEMP TABLE stale_credentials AS SELECT access_token, refresh_token FROM public.review_platforms LIMIT 1;
 SELECT public.rotate_oauth_encryption_key();
 SELECT test.assert_true((SELECT v.key_val <> p.key_val FROM internal.vault_config v CROSS JOIN previous_key p), 'key changed');
 SELECT test.assert_true((SELECT bool_and(public.decrypt_token(access_token) = 'synthetic-access'
   AND public.decrypt_token(refresh_token) = 'synthetic-refresh') FROM public.review_platforms), 'platform tokens survived rotation');
 SELECT test.assert_true((SELECT public.decrypt_token(access_token) = 'synthetic-integration'
   FROM public.integrations), 'legacy integration token survived rotation');
+SELECT test.expect_retryable($cmd$UPDATE public.review_platforms SET access_token =
+  (SELECT access_token FROM stale_credentials)$cmd$);
+SELECT test.expect_retryable($cmd$INSERT INTO public.integrations VALUES
+  (gen_random_uuid(), (SELECT access_token FROM stale_credentials), NULL)$cmd$);
+SELECT test.assert_true((SELECT bool_and(public.decrypt_token(access_token) = 'synthetic-access')
+  FROM public.review_platforms), 'stale in-flight write cannot corrupt rotated credentials');
+SET ROLE service_role;
+SET request.jwt.claim.role = 'service_role';
+UPDATE public.review_platforms SET access_token = public.encrypt_token('synthetic-access');
+RESET ROLE;
+SET request.jwt.claim.role = '';
 UPDATE previous_key SET key_val = (SELECT key_val FROM internal.vault_config);
+-- Deliberate corruption fixture bypasses the guard only in this disposable database.
+ALTER TABLE public.integrations DISABLE TRIGGER guard_oauth_ciphertext_write;
 UPDATE public.integrations SET access_token = 'invalid-ciphertext';
+ALTER TABLE public.integrations ENABLE TRIGGER guard_oauth_ciphertext_write;
 DO $$
 BEGIN
   BEGIN PERFORM public.rotate_oauth_encryption_key();

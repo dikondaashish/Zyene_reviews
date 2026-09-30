@@ -10,6 +10,8 @@ CREATE INDEX stripe_credit_grant_receipts_org_period
 ALTER TABLE public.stripe_credit_grant_receipts ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON public.stripe_credit_grant_receipts FROM PUBLIC, anon, authenticated;
 GRANT ALL ON public.stripe_credit_grant_receipts TO service_role;
+CREATE POLICY stripe_credit_grant_receipts_backend ON public.stripe_credit_grant_receipts
+  FOR ALL TO service_role USING (true) WITH CHECK (true);
 
 CREATE FUNCTION public.apply_stripe_credit_grant(
   p_receipt_id text, p_organization_id uuid, p_customer_id text,

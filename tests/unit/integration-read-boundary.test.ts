@@ -8,7 +8,7 @@ import {
 
 const source = (path: string) => readFileSync(join(process.cwd(), path), "utf8");
 const migration = source(
-    "supabase/migrations/20260929230000_restrict_public_integration_reads.sql",
+    "supabase/migrations/20260930143031_restrict_public_integration_reads.sql",
 );
 
 describe("integration read boundary", () => {

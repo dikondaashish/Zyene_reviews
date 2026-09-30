@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const sql = readFileSync(join(process.cwd(),
-  "supabase/migrations/20260929233000_guard_business_member_roles.sql"), "utf8");
+  "supabase/migrations/20260930143537_guard_business_member_roles.sql"), "utf8");
 
 describe("business member role boundary", () => {
   it("keeps the trigger on every membership write", () => {

@@ -5,7 +5,7 @@ import type { createAdminClient } from "@/lib/db/supabase/admin";
 import { withStripeWebhookClaim } from "@/services/stripe/webhook-claim";
 
 const migration = readFileSync(join(
-    process.cwd(), "supabase/migrations/20260929231000_stripe_webhook_processing_claims.sql",
+    process.cwd(), "supabase/migrations/20260930143035_stripe_webhook_processing_claims.sql",
 ), "utf8");
 
 function clientWithResponses(...responses: Array<{ data: unknown; error?: Error | null }>) {

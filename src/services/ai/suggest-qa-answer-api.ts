@@ -8,7 +8,9 @@ import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
+import { checkLimit } from "@/lib/stripe/check-limits";
 import { checkAiBusinessDailyBudget } from "./ai-business-budget";
+import { recordAiReplyUsage } from "@/services/ai/record-reply-usage";
 
 const requestSchema = z.object({
     questionId: z.string().uuid(),
@@ -96,6 +98,10 @@ export async function handleSuggestQaAnswer(request: Request) {
         });
     }
 
+    const quota = await checkLimit(orgId, "smart_replies");
+    if (!quota.allowed) return apiError("Monthly AI reply limit reached. Please upgrade your plan.", {
+        status: 403, details: requestId,
+    });
     const budgetDenial = await checkAiBusinessDailyBudget(businessId);
     if (budgetDenial) return budgetDenial;
 
@@ -116,6 +122,7 @@ export async function handleSuggestQaAnswer(request: Request) {
             isPremium,
             enableGrounding: true,
         });
+        await recordAiReplyUsage(supabase, businessId);
         let result: { answer?: string };
         try {
             result = JSON.parse(content) as { answer?: string };
@@ -123,7 +130,6 @@ export async function handleSuggestQaAnswer(request: Request) {
             return apiOk({ answer: content.trim(), requestId }, { status: 200 });
         }
 
-        await supabase.rpc("increment_ai_replies_used", { org_id: orgId });
         logger.info({ userId: user.id, questionId }, "AI QA answer generated");
 
         return apiOk({ answer: result.answer || content.trim(), requestId });

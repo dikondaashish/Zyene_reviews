@@ -64,7 +64,7 @@ describe("onboarding billing authorization", () => {
 
   it("limits direct client writes to non-billing organization columns", () => {
     const sql = readFileSync(join(process.cwd(),
-      "supabase/migrations/20260929232000_protect_organization_billing_columns.sql"), "utf8");
+      "supabase/migrations/20260930143037_protect_organization_billing_columns.sql"), "utf8");
     expect(sql).toMatch(/REVOKE UPDATE ON public\.organizations FROM PUBLIC, anon, authenticated/i);
     expect(sql).toMatch(/GRANT UPDATE \(name, slug, updated_at\) ON public\.organizations TO authenticated/i);
     expect(sql).toMatch(/REVOKE INSERT ON public\.organizations FROM PUBLIC, anon, authenticated/i);

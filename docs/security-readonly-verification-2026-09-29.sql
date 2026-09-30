@@ -4,9 +4,10 @@ BEGIN TRANSACTION READ ONLY;
 SELECT current_setting('server_version_num')::integer AS server_version_num;
 
 SELECT version FROM supabase_migrations.schema_migrations
-WHERE version IN ('20260929230000', '20260929231000', '20260929232000',
-  '20260929233000', '20260929234000', '20260929235000', '20260929235100',
-  '20260929235200', '20260929235300', '20260929235400', '20260929235500', '20260929235600')
+WHERE version IN ('20260930143031', '20260930143035', '20260930143037',
+  '20260930143537', '20260930143541', '20260930143543', '20260930143632',
+  '20260930143635', '20260930143637', '20260930143714', '20260930143715', '20260930143717',
+  '20260930145044')
 ORDER BY version;
 
 SELECT role_name,
@@ -74,6 +75,21 @@ WHERE t.tgrelid = 'public.business_members'::regclass AND NOT t.tgisinternal;
 
 SELECT conname, convalidated FROM pg_constraint
 WHERE conrelid = 'public.reviews'::regclass AND conname = 'reviews_platform_tenant_fk';
+SELECT proname, prosecdef AS security_definer, proconfig FROM pg_proc
+WHERE oid IN (
+  'public.bulk_add_customer_tags(uuid[],text[])'::regprocedure,
+  'public.bulk_remove_customer_tags(uuid[],text[])'::regprocedure,
+  'public.merge_customers(uuid,uuid,uuid)'::regprocedure,
+  'public.upsert_customer_by_identity(uuid,uuid,text,text,text,text,text[],text,integer,timestamptz)'::regprocedure,
+  'public.import_customers_by_identity(uuid,jsonb)'::regprocedure
+);
+-- All five customer RPCs must be invoker-security so business write RLS applies.
+SELECT role_name, table_name,
+  has_any_column_privilege(role_name, table_name, 'SELECT,INSERT,UPDATE') AS client_data_access,
+  has_table_privilege(role_name, table_name, 'DELETE,TRUNCATE') AS client_delete_access
+FROM (VALUES ('anon'), ('authenticated')) roles(role_name)
+CROSS JOIN (VALUES ('public.stripe_webhook_events'), ('public.stripe_credit_grant_receipts'),
+  ('public.referral_conversions')) tables(table_name);
 SELECT count(*) AS mismatched_review_platform_tenants
 FROM public.reviews r JOIN public.review_platforms p ON p.id = r.platform_id
 WHERE p.business_id IS DISTINCT FROM r.business_id;

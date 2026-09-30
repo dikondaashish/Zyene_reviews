@@ -14,6 +14,20 @@ ALTER TABLE public.stripe_webhook_events
 ALTER TABLE public.stripe_webhook_events
     ALTER COLUMN status SET DEFAULT 'processing';
 
+ALTER TABLE public.stripe_webhook_events ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON public.stripe_webhook_events FROM PUBLIC, anon, authenticated;
+DO $$
+DECLARE columns text;
+BEGIN
+    SELECT string_agg(quote_ident(attname), ', ') INTO columns FROM pg_attribute
+        WHERE attrelid = 'public.stripe_webhook_events'::regclass AND attnum > 0 AND NOT attisdropped;
+    EXECUTE format('REVOKE ALL (%s) ON public.stripe_webhook_events FROM PUBLIC, anon, authenticated', columns);
+END;
+$$;
+GRANT ALL ON public.stripe_webhook_events TO service_role;
+CREATE POLICY stripe_webhook_events_backend ON public.stripe_webhook_events
+    FOR ALL TO service_role USING (true) WITH CHECK (true);
+
 CREATE OR REPLACE FUNCTION public.claim_stripe_webhook_event(
     p_event_id TEXT, p_claim_token UUID
 ) RETURNS TEXT
