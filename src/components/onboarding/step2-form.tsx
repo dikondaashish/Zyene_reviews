@@ -29,15 +29,21 @@ export function Step2Form(props: Step2FormProps) {
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 rounded-2xl overflow-hidden border border-border bg-card/80 backdrop-blur-xl">
-            <Step2FormGoogleConnectPanel onConnectClick={c.handleConnectClick} />
-            <Step2FormManualEntryPanel
-                form={c.form}
-                isLoading={isLoading}
-                googleState={c.googleState}
-                advancing={c.advancing}
-                onSaveAndNext={c.onSaveAndNext}
-                onSkip={c.handleSkip}
+            <Step2FormGoogleConnectPanel
+                onConnectClick={c.handleConnectClick}
+                pending={c.googleRedirectPending}
+                disabled={isLoading || c.advancing}
             />
+            <fieldset disabled={c.googleRedirectPending} className="contents">
+                <Step2FormManualEntryPanel
+                    form={c.form}
+                    isLoading={isLoading}
+                    googleState={c.googleState}
+                    advancing={c.advancing}
+                    onSaveAndNext={c.onSaveAndNext}
+                    onSkip={c.handleSkip}
+                />
+            </fieldset>
         </div>
     );
 }

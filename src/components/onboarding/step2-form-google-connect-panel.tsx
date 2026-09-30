@@ -1,10 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { CheckCircle2, ArrowRight, Loader2 } from "lucide-react";
 import { Step2ChainIcon, Step2GoogleIcon } from "@/components/onboarding/step2-form-icons";
 
-export function Step2FormGoogleConnectPanel({ onConnectClick }: { onConnectClick: () => void }) {
+export function Step2FormGoogleConnectPanel({ onConnectClick, pending, disabled }: {
+    onConnectClick: () => void;
+    pending: boolean;
+    disabled: boolean;
+}) {
     return (
         <div className="relative p-8 sm:p-10 lg:p-12 flex flex-col justify-center overflow-hidden bg-primary/[0.03]">
             <div className="absolute -top-24 -left-24 bg-primary/[0.06] rounded-full blur-3xl pointer-events-none size-72" />
@@ -32,9 +36,11 @@ export function Step2FormGoogleConnectPanel({ onConnectClick }: { onConnectClick
                 <motion.button
                     type="button"
                     onClick={onConnectClick}
+                    disabled={pending || disabled}
+                    aria-busy={pending}
                     whileHover={{ scale: 1.01, translateY: -2 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full max-w-[340px] h-14 group relative flex items-center justify-between px-6 rounded-2xl bg-background/80 backdrop-blur-xl border border-border shadow-sm hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 transition-all duration-300 cursor-pointer overflow-hidden"
+                    className="w-full max-w-[340px] h-14 group relative flex items-center justify-between px-6 rounded-2xl bg-background/80 backdrop-blur-xl border border-border shadow-sm hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 transition-[box-shadow,border-color,opacity] duration-300 cursor-pointer overflow-hidden disabled:cursor-wait disabled:opacity-60"
                 >
                     <div className="absolute inset-x-0 top-0 h-px bg-white/20 pointer-events-none" />
 
@@ -42,11 +48,14 @@ export function Step2FormGoogleConnectPanel({ onConnectClick }: { onConnectClick
                         <div className="p-2 bg-white rounded-xl shadow-sm border border-border/50 group-hover:scale-110 transition-transform duration-300">
                             <Step2GoogleIcon />
                         </div>
-                        <span className="text-[14px] font-bold text-foreground tracking-tight">Connect Google Business</span>
+                        <span className="text-[14px] font-bold text-foreground tracking-tight">
+                            {pending ? "Connecting…" : "Connect Google Business"}
+                        </span>
                     </div>
 
                     <div className="relative z-10">
-                        <ArrowRight className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300 size-5" />
+                        {pending ? <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" /> :
+                            <ArrowRight className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-[color,transform] duration-300 size-5" />}
                     </div>
 
                     <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

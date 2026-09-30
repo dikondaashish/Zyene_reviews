@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { stepBusinessLocationSchema, type StepBusinessLocationFormData } from "@/lib/validations/onboarding";
 import type { OnboardingGoogleLocationInfo } from "@/types/components";
 import type { Step2FormProps, GoogleConnectionState } from "@/components/onboarding/step2-form-types";
-import { navigateToGoogleBusinessOAuthOnboarding } from "@/components/onboarding/step2-form-google-oauth-navigate";
+import { useGoogleOAuthNavigation } from "@/components/onboarding/use-google-oauth-navigation";
 import { runStep2SaveAndNext, runStep2Skip } from "@/components/onboarding/step2-form-save-navigation";
 import { useStep2GoogleConnection } from "@/components/onboarding/use-step2-google-connection";
 
@@ -104,7 +104,7 @@ export function useStep2FormController({
         setAdvancing,
     });
 
-    const handleConnectClick = () => navigateToGoogleBusinessOAuthOnboarding(businessId);
+    const { pending: googleRedirectPending, connect: handleConnectClick } = useGoogleOAuthNavigation(businessId);
 
     const onSaveAndNext = async () => {
         setAdvancing(true);
@@ -133,6 +133,7 @@ export function useStep2FormController({
         availableLocations: google.availableLocations,
         handleSelection: google.handleSelection,
         handleConnectClick,
+        googleRedirectPending,
         onGoogleConnectionErrorConsumed,
         onSaveAndNext,
         handleSkip,
