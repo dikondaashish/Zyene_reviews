@@ -40,7 +40,19 @@ Private identity and audit-history checks matched two accepted business-admin in
 
 ### Safe Audit Snapshot
 
-`scripts/create-security-audit-snapshot.mjs` and the Strix runner exclude credential files, missing tracked paths, and all symlink traversal. They redact only retired seed literals in the copied historical SQL, leaving repository migrations untouched, and disable external MCP connectors for the source scan. `security-audit-snapshot.test.ts` covers those boundaries and rejects a snapshot inside the original checkout. A fresh Strix result is not yet available at this checkpoint.
+`scripts/create-security-audit-snapshot.mjs` and the Strix runner exclude credential files, missing tracked paths, and all symlink traversal. They redact retired seed literals in both SQL and comments, as well as monitoring bearer URLs, leaving repository migrations untouched, and disable external MCP connectors. `security-audit-snapshot.test.ts` covers those boundaries and rejects a snapshot inside the original checkout.
+
+### Dependency and Monitoring Follow-Up
+
+A fresh dependency audit found 17 advisories across five packages. The framework is now pinned to Next/ESLint config 16.3.8; scoped transitive overrides require Axios 1.20.0, fast-uri 3.1.8, ip-address 10.7.2 and brace-expansion 1.1.21/5.0.12. The [Next advisory](https://github.com/vercel/next.js/security/advisories/GHSA-vcvr-r3jv-pc5j) applies to attacker-controlled SVG values in Node ImageResponse; reviewed OG routes use fixed content or catalog-derived values, so a reachable RCE was not established. The dependency is patched regardless. Frozen installation and `pnpm audit --json` now report zero advisories. `patched-transitive-dependencies.test.ts` parses the lockfile and checks the installed Next/Twilio HTTP runtime; native AVIF tests still pass.
+
+The follow-up/review-sync/weekly-digest modules and two older tests contained heartbeat bearer URLs. Those committed fallbacks are removed; only server environment settings are used. Production metadata confirms all three settings exist, so configured monitoring is preserved. Ten new credential-boundary tests and the updated existing tests cover no-env/no-request, success/failure suffixes, daily fallback and isolated monitoring failures. Removal does not invalidate URLs retained in Git history: the monitor owner must rotate them and update Vercel before retiring the old endpoints.
+
+### Poster Print CSS Boundary
+
+The API schema accepts only hex colors and the database constrains `review_page_background_color`, but the historical schema does not equivalently constrain `brand_color`. `resolveCustomerPortalBrandColor` previously passed through any stored string; the print window interpolated it into a style block. The color resolver and HTML sink now accept only supported three/six-digit hex values, fall back safely, and derive foreground color from constants. Valid three-digit contrast is also preserved. Ten regression cases reject style/script closure, URL/property injection and malformed colors, including calls that bypass the normal resolver. Business names remain HTML-escaped. Tests first reproduced the unsafe output and then passed with the fix; no production payload was submitted.
+
+The partial IP-header lead is deployment-dependent: [Vercel documents overwriting X-Forwarded-For to prevent spoofing](https://vercel.com/docs/headers/request-headers). Generic self-hosting must verify its trusted proxy. The global availability limiter intentionally fails open; the independently enforced spend-producing endpoint limits fail closed. No production spoofing test was performed.
 
 ## Stripe Read-Only Reconciliation
 
@@ -81,7 +93,8 @@ Disposition remains **14 fixed, 2 false positives, 2 requiring operational verif
 
 The prior production deployment `dpl_5DkcXEQoThJfzLLyofVYcDgSZwBt` is READY for commit `46ad5111d29c023272fa8aedf6f9832419938280`, with the application/public-capture aliases. Its production Vertex configuration uses the existing key ending `eba5`, not the exposed key ending `e764`. Only that comparison was output. Headless isolation opt-in is absent in authoritative production configuration; rendering stays disabled.
 
-- Full `pnpm verify` including the snapshot tests: 247 files / 1,562 tests, TypeScript and sizes passed.
+- Latest full `pnpm verify`: 250 files / 1,584 tests, TypeScript and sizes passed.
+- New dependency/monitoring/poster/snapshot focused group: 7 files / 34 tests passed. React Doctor's changed-file scan scored 100/100 with no findings. The latest dependency audit reports zero advisories.
 - Focused AI/limiter/integration/Stripe suites: 5 files / 27 tests passed.
 - Disposable PostgreSQL harness: 17 security migrations plus real historical RPC/storage/credit migrations passed, including tenant, role, invitation, grant, storage, counter, billing, retry and rotation regressions. No network, host mounts or application credentials were provided.
 - `pnpm build` passed after the Q&A fix: compilation, TypeScript and 273 generated static pages. Existing Edge Runtime and Tailwind module warnings remain.
@@ -96,6 +109,7 @@ The prior production deployment `dpl_5DkcXEQoThJfzLLyofVYcDgSZwBt` is READY for 
 3. Owner must revoke only the exposed Google key ending `e764` while retaining the production key ending `eba5`, rotate the shared AkashML credential, and provide only a private file path/confirmation. These actions are not confirmed complete.
 4. Coordinate Google/provider token revocation and reconnection with the affected business owners. DB encryption rotation alone cannot invalidate provider credentials.
 5. Reconcile historical Stripe side effects with retained billing/audit exports; preserve unavailable/ambiguous events. The signing-secret match is now verified. Prepare isolated test credentials/database before an end-to-end webhook check. No automatic live replay is safe.
-6. Complete and triage a fresh source-only Strix scan (`zyene-strix-1mfphe_569f`), currently running against a redacted source snapshot. No empty future scanner report or perfect-security guarantee is made.
+6. Complete and triage fresh source-only Strix run `zyene-strix-bslupd_365d`, started with the replacement AkashML credential against the corrected snapshot. Run `zyene-strix-1mfphe_569f` failed after provider 429s and then HTTP 402 insufficient credits: only three coverage entries and no filed findings, not a completed clean audit. Its CSS/monitoring/dependency leads were reviewed and mitigated above. The replacement key was also pasted into chat and must be rotated after use; it is not persisted in repository/configuration files. No empty future scanner report or perfect-security guarantee is made.
+7. The final repeat Supabase plugin query/advisor check was denied by the connector. Earlier live migration/grant/rotation evidence remains recorded; restoring connector access is required for a new plugin attestation. No credentials or plugin session tokens were extracted to bypass that restriction.
 
 Advisor notices are interpreted, not silenced: four no-policy RLS tables deny client rows; identity-scoped read helpers and policy helpers intentionally use definer security. The AI counter is now backend-only. Disabled leaked-password protection remains a real operational limitation on Free.

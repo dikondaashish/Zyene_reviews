@@ -11,9 +11,9 @@ const manifest = JSON.parse(readFileSync("package.json", "utf8")) as {
 
 describe("patched image optimization dependencies", () => {
     it("runs the patched Next and sharp versions and cannot override back to vulnerable sharp", () => {
-        expect((require("next/package.json") as { version: string }).version).toBe("16.3.3");
+        expect((require("next/package.json") as { version: string }).version).toBe("16.3.8");
         expect(sharp.versions.sharp).toBe("0.35.4");
-        expect(manifest.dependencies.next).toBe("16.3.3");
+        expect(manifest.dependencies.next).toBe("16.3.8");
         expect(manifest.dependencies.sharp).toBe("0.35.4");
         expect(manifest.pnpm.overrides["sharp@<0.35.4"]).toBe("0.35.4");
     });

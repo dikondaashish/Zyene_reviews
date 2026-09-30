@@ -1,31 +1,19 @@
 import { fetchWithTimeout, HEARTBEAT_TIMEOUT_MS } from "@/lib/http/fetch-with-timeout";
-/**
- * Better Stack (or compatible) heartbeat for the review sync pipeline.
- *
- * Set BETTERSTACK_REVIEW_SYNC_HEARTBEAT_URL in production to the exact URL shown
- * in Uptime → Heartbeats for this monitor. If unset, falls back to the legacy
- * URL baked into the cron route (update env if you recreated the monitor).
- *
- * Note: Your monitor's "expected every" interval should be <= how often this
- * runs in practice (or you will get false "missed heartbeat" incidents).
- */
-const LEGACY_HEARTBEAT_URL =
-    "https://uptime.betterstack.com/api/v1/heartbeat/6VwMgkdn2vqaoo3NG2wwfeNV";
 
+/** Configure the monitor's bearer URL through server-only environment settings. */
 function heartbeatBaseUrl(): string | null {
-    const fromEnv = process.env.BETTERSTACK_REVIEW_SYNC_HEARTBEAT_URL?.trim();
-    if (fromEnv) return fromEnv.replace(/\/$/, "");
-    return LEGACY_HEARTBEAT_URL;
+    const base = process.env.BETTERSTACK_REVIEW_SYNC_HEARTBEAT_URL?.trim();
+    return base ? base.replace(/\/+$/, "") : null;
 }
 
 /** Fire-and-forget; never throws. */
 export async function pingReviewSyncHeartbeat(ok: boolean): Promise<void> {
     const base = heartbeatBaseUrl();
     if (!base) return;
-    const url = ok ? base : `${base}/fail`;
     try {
-        await fetchWithTimeout(url, { method: "GET", cache: "no-store" }, HEARTBEAT_TIMEOUT_MS);
+        await fetchWithTimeout(ok ? base : `${base}/fail`,
+            { method: "GET", cache: "no-store" }, HEARTBEAT_TIMEOUT_MS);
     } catch {
-        /* monitoring must not break sync */
+        // Monitoring failures must not break review synchronization.
     }
 }

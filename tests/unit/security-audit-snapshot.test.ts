@@ -42,10 +42,21 @@ it("redacts historical key material only in the snapshot", () => {
     const name = "supabase/migrations/20260405164500_vault_setup.sql";
     mkdirSync(join(repo, "supabase/migrations"), { recursive: true });
     const synthetic = "synthetic-retired-key-".repeat(3);
-    writeFileSync(join(repo, name), `INSERT INTO vault VALUES ('primary', '${synthetic}');`);
-    expect(run(repo, snapshot).redacted).toBe(1);
+    writeFileSync(join(repo, name), `-- Provided: ${synthetic}\nINSERT INTO vault VALUES ('primary', '${synthetic}');`);
+    expect(run(repo, snapshot).redacted).toBe(2);
     expect(readFileSync(join(snapshot, name), "utf8")).not.toContain(synthetic);
     expect(readFileSync(join(repo, name), "utf8")).toContain(synthetic);
+});
+
+it("redacts bearer-like heartbeat URLs in copied source without changing the original", () => {
+    const { repo, snapshot } = fixture();
+    const source = "src/lib/monitoring/review-sync-heartbeat.ts";
+    mkdirSync(join(repo, "src/lib/monitoring"), { recursive: true });
+    const synthetic = "https://uptime.betterstack.com/api/v1/heartbeat/synthetic-monitor-token";
+    writeFileSync(join(repo, source), `const url = "${synthetic}";`);
+    expect(run(repo, snapshot).redacted).toBe(1);
+    expect(readFileSync(join(snapshot, source), "utf8")).not.toContain(synthetic);
+    expect(readFileSync(join(repo, source), "utf8")).toContain(synthetic);
 });
 
 it("rejects snapshots inside the original checkout", () => {

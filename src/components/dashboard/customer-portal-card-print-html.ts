@@ -1,6 +1,8 @@
 import { toast } from "sonner";
 import { CUSTOMER_PORTAL_GOOGLE_G_SVG } from "@/components/dashboard/customer-portal-card-constants";
 import { escapeHtml } from "@/lib/security/html-escape";
+import { resolveCustomerPortalBrandColor, contrastTextForHexBackground }
+    from "@/components/dashboard/customer-portal-card-colors";
 
 export function openCustomerPortalPrintWindow(params: {
     qrDataUrl: string;
@@ -11,7 +13,9 @@ export function openCustomerPortalPrintWindow(params: {
     posterFg: string;
     domain: string;
 }): void {
-    const { qrDataUrl, businessSlug, businessName, businessLogoUrl, posterBg, posterFg, domain } = params;
+    const { qrDataUrl, businessSlug, businessName, businessLogoUrl, domain } = params;
+    const posterBg = resolveCustomerPortalBrandColor(params.posterBg);
+    const posterFg = contrastTextForHexBackground(posterBg);
     const safeBusinessName = escapeHtml(businessName || "Business");
     const safeBusinessSlug = escapeHtml(businessSlug);
     const safeBusinessLogoUrl = businessLogoUrl ? escapeHtml(businessLogoUrl) : null;

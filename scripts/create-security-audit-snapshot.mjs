@@ -32,13 +32,22 @@ export function createSecurityAuditSnapshot(repo, destination) {
         const source = resolve(root, path);
         const output = resolve(target, path);
         mkdirSync(dirname(output), { recursive: true, mode: 0o700 });
-        if (/2026040516(?:4000_oauth_encryption_consolidated|4500_vault_setup)\.sql$/.test(path)) {
-            // Preserve the historical hardcoded-key flow, but not its retired literal.
-            const sql = readFileSync(source, "utf8").replace(/'([A-Za-z0-9_+/=-]{32,})'/g, () => {
+        if (/\.(?:sql|[cm]?[jt]sx?|md|json|ya?ml|sh|txt)$/i.test(path)) {
+            let content = readFileSync(source, "utf8");
+            if (/2026040516(?:4000_oauth_encryption_consolidated|4500_vault_setup)\.sql$/.test(path)) {
+                // Preserve the flow, but remove retired literals from code and comments.
+                const literals = new Set([...content.matchAll(/'([A-Za-z0-9_+/=-]{32,})'/g)]
+                    .map((match) => match[1]));
+                for (const literal of literals) content = content.replaceAll(literal, () => {
+                    redacted++;
+                    return "RETIRED_KEY_REDACTED_FOR_SOURCE_AUDIT";
+                });
+            }
+            content = content.replace(/https:\/\/uptime\.betterstack\.com\/api\/v1\/heartbeat\/[^\s"'`<>]+/g, () => {
                 redacted++;
-                return "'RETIRED_KEY_REDACTED_FOR_SOURCE_AUDIT'";
+                return "https://uptime.betterstack.com/api/v1/heartbeat/REDACTED_MONITOR_TOKEN";
             });
-            writeFileSync(output, sql, { mode: 0o600 });
+            writeFileSync(output, content, { mode: 0o600 });
         } else {
             copyFileSync(source, output);
         }
