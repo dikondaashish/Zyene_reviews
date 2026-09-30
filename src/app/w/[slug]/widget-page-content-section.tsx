@@ -7,6 +7,7 @@ type WidgetPageContentSectionProps = Extract<WidgetPageData, { kind: "ok" }>;
 
 export function WidgetPageContentSection({
     businessName,
+    reviewsUrl,
     hideBranding,
     widgetType,
     reviewCount,
@@ -21,6 +22,7 @@ export function WidgetPageContentSection({
                         businessName={businessName}
                         avgRating={averageRating}
                         totalReviews={reviewCount}
+                        reviewsUrl={reviewsUrl}
                     />
                 ) : (
                     <ReviewCarousel reviews={formattedReviews} businessName={businessName} />

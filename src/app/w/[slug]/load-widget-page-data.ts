@@ -1,16 +1,9 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
 import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
+import type { PublicWidgetReview } from "@/lib/widgets/public-types";
 
-export type WidgetReview = {
-    id: string;
-    author_name: string;
-    rating: number;
-    content: string;
-    platform: string;
-    created_at: string;
-    external_url?: string;
-};
+export type WidgetReview = PublicWidgetReview;
 
 export type WidgetPageData =
     | { kind: "not-found" }
@@ -18,6 +11,10 @@ export type WidgetPageData =
     | {
           kind: "ok";
           businessName: string;
+          reviewsUrl: string;
+          writeReviewUrl?: string;
+          googleCount: number;
+          googleRating: number;
           hideBranding: boolean;
           widgetType: string;
           reviewCount: number;
@@ -36,7 +33,8 @@ export function sanitizeExternalReviewUrl(value: string | null | undefined): str
 
 export async function loadWidgetPageData(
     slug: string,
-    widgetType: string
+    widgetType: string,
+    configurable = false,
 ): Promise<WidgetPageData> {
     const admin = createAdminClient();
 
@@ -46,6 +44,8 @@ export async function loadWidgetPageData(
             id,
             name,
             hide_branding,
+            status,
+            google_review_url,
             organization:organizations (
                 plan,
                 plan_status
@@ -54,7 +54,7 @@ export async function loadWidgetPageData(
         .eq("slug", slug)
         .maybeSingle();
 
-    if (!business) {
+    if (!business || business.status !== "active") {
         return { kind: "not-found" };
     }
 
@@ -69,7 +69,7 @@ export async function loadWidgetPageData(
     const visibleRollupMap = await fetchVisibleReviewRollupsByBusinessIds(admin, [business.id]);
     const vr = visibleRollupMap.get(business.id)!;
 
-    const { data: reviews } = await admin
+    const { data: reviews, error: reviewsError } = await admin
         .from("reviews")
         .select(`
             id,
@@ -78,24 +78,31 @@ export async function loadWidgetPageData(
             external_url,
             author_name,
             created_at,
-            review_platforms (
-                platform
-            )
+            platform,
+            review_date,
+            author_avatar_url,
+            review_photo_urls,
+            ai_summary
         `)
         .eq("business_id", business.id)
         .eq("is_visible", true)
-        .gte("rating", 4)
-        .order("created_at", { ascending: false })
-        .limit(20);
+        .gte("rating", configurable ? 1 : 4)
+        .order("review_date", { ascending: false })
+        .limit(configurable ? 100 : 20);
+
+    if (reviewsError) throw new Error("Unable to load public widget reviews");
 
     const formattedReviews: WidgetReview[] = (reviews ?? []).map((r) => ({
         id: r.id,
         author_name: r.author_name || "Customer",
         rating: r.rating ?? 5,
         content: (r.text || "").trim(),
-        platform: r.review_platforms?.platform || "Direct",
-        created_at: r.created_at ?? "",
+        platform: r.platform || "Direct",
+        created_at: r.review_date || r.created_at || "",
         external_url: sanitizeExternalReviewUrl(r.external_url),
+        avatar: sanitizeExternalReviewUrl(r.author_avatar_url),
+        photos: (r.review_photo_urls || []).map(sanitizeExternalReviewUrl).filter((url): url is string => !!url).slice(0, 8),
+        summary: r.ai_summary?.slice(0, 500) || undefined,
     }));
 
     const reviewCount = vr.totalVisible;
@@ -111,6 +118,10 @@ export async function loadWidgetPageData(
     return {
         kind: "ok",
         businessName: business.name ?? "Reviews",
+        reviewsUrl: `/w/${encodeURIComponent(slug)}`,
+        writeReviewUrl: sanitizeExternalReviewUrl(business.google_review_url),
+        googleCount: vr.googleVisibleCount ?? 0,
+        googleRating: vr.googleAverageRating ?? 0,
         hideBranding: !!(business as { hide_branding?: boolean | null }).hide_branding,
         widgetType,
         reviewCount,

@@ -97,7 +97,7 @@ export function IntegrationsWebsiteElementsSection({ data }: { data: OkData }) {
                 icon={MonitorPlay}
             />
             {data.canUsePublicWidget ? (
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
+                <div className="w-full">
                     <WidgetCard businessSlug={data.business.slug || ""} />
                 </div>
             ) : (

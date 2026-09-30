@@ -11,7 +11,7 @@ export function ReviewCarouselCard({
     mounted: boolean;
 }) {
     return (
-        <div className="flex-none w-[min(280px,calc(100vw-3rem))] sm:w-[320px] bg-card rounded-xl border border-border p-4 flex flex-col gap-3 transition-transform hover:-translate-y-1 cursor-default">
+        <div className="flex-none w-[min(280px,calc(100vw-3rem))] sm:w-[320px] bg-card rounded-xl border border-border p-4 h-[260px] flex flex-col gap-3 transition-transform hover:-translate-y-1 cursor-default">
             <div className="flex justify-between items-start">
                 <div className="flex -space-x-0.5" role="img" aria-label={`${review.rating} out of 5 stars`}>
                     {Array.from({ length: 5 }).map((_, i) => (
@@ -20,7 +20,7 @@ export function ReviewCarouselCard({
                             aria-hidden="true"
                             className={cn(
                                 "size-4",
-                                i < review.rating ? "fill-chart-4 text-warning-foreground" : "fill-muted text-muted-foreground/40"
+                                i < review.rating ? "fill-warning text-warning-foreground" : "fill-muted text-muted-foreground/40"
                             )}
                         />
                     ))}
@@ -30,7 +30,7 @@ export function ReviewCarouselCard({
                 </span>
             </div>
 
-            <p className="text-sm text-foreground leading-relaxed flex-1">
+            <p className="text-sm text-foreground leading-relaxed flex-1 min-h-0 overflow-y-auto break-words">
                 {review.content ? `“${review.content}”` : "This customer left a rating without a written review."}
             </p>
 
@@ -46,7 +46,7 @@ export function ReviewCarouselCard({
             )}
 
             <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
-                <span className="font-semibold text-sm text-foreground truncate">
+                <span className="font-semibold text-sm text-foreground truncate" title={review.author_name}>
                     {review.author_name || "Valued Customer"}
                 </span>
                 <span className="text-xs text-muted-foreground whitespace-nowrap">

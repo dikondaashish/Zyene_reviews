@@ -1,137 +1,52 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy, Code2, Eye } from "lucide-react";
+import dynamic from "next/dynamic";
+import { Code2, LayoutTemplate, Smartphone, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { parseWidgetConfig, type WidgetConfig } from "@/lib/widgets/config";
+
+const WidgetBuilder = dynamic(() => import("@/components/widgets/builder/widget-builder").then(module => module.WidgetBuilder), {
+    loading: () => <p className="p-8 text-center text-muted-foreground" role="status">Loading widget builder…</p>,
+    ssr: false,
+});
 
 export function WidgetCard({ businessSlug }: { businessSlug: string }) {
-    const [copiedType, setCopiedType] = useState<"carousel" | "badge" | null>(null);
-    const [previewType, setPreviewType] = useState<"carousel" | "badge" | null>(null);
-    const hasSlug = Boolean(businessSlug?.trim());
-
-    // Always use the public apex domain for iframes - app.* requires login and redirects to auth.* (breaks embeds).
-    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com";
-    const protocol = rootDomain.includes("localhost") ? "http" : "https";
-    const embedBase = `${protocol}://${rootDomain}`;
-    const embedUrl = `${embedBase}/w/${businessSlug}`;
-    const carouselPreviewUrl = embedUrl;
-    const badgePreviewUrl = `${embedUrl}?type=badge`;
-
-    const carouselEmbedCode = `<iframe src="${embedUrl}" width="100%" height="400px" frameborder="0" style="border:none; overflow:hidden;" allowtransparency="true"></iframe>`;
-    const badgeEmbedCode = `<iframe src="${embedUrl}?type=badge" style="width: 100%; border: none; min-height: 300px;" title="Reviews Widget"></iframe>`;
-
-    const handleCopy = async (type: "carousel" | "badge") => {
-        const code = type === "badge" ? badgeEmbedCode : carouselEmbedCode;
-        try {
-            await navigator.clipboard.writeText(code);
-            setCopiedType(type);
-            toast.success("Embed code copied to clipboard");
-            setTimeout(() => setCopiedType(null), 2000);
-        } catch (err) {
-            toast.error("Failed to copy code");
-        }
+    const [open, setOpen] = useState(false);
+    const [initialConfig, setInitialConfig] = useState<WidgetConfig>(() => parseWidgetConfig(null));
+    const launch = () => {
+        try { setInitialConfig(parseWidgetConfig(localStorage.getItem(`zyene-widget:${businessSlug}`))); }
+        catch { setInitialConfig(parseWidgetConfig(null)); }
+        setOpen(true);
     };
-
-    return (
-        <Card className="flex flex-col relative overflow-hidden transition-all duration-300 hover:border-primary/50 group">
-            <CardHeader className="flex flex-row items-center gap-4 pb-4">
-                <div className="flex items-center justify-center rounded-xl bg-muted text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary size-12">
-                    <Code2 className="size-6" />
-                </div>
-                <div>
-                    <CardTitle className="text-xl">Website Widgets</CardTitle>
-                    <CardDescription>Embed a review carousel or rating badge</CardDescription>
-                </div>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4">
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                    Showcase your top reviews directly on your website to build trust and increase conversions. Both widgets update automatically.
-                </p>
-
-                <div className="space-y-2 mt-auto">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Carousel embed</p>
-                    <div className="space-y-2">
-                        <pre className="p-3 bg-foreground text-background rounded-lg text-xs overflow-x-auto whitespace-pre-wrap font-mono">
-                            {carouselEmbedCode}
-                        </pre>
-                        <div className="flex items-center justify-end gap-2">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                disabled={!hasSlug}
-                                onClick={() => setPreviewType("carousel")}
-                            >
-                                <Eye className="mr-1 size-4" />
-                                Preview
-                            </Button>
-                            <Button variant="secondary" size="sm" onClick={() => handleCopy("carousel")}>
-                                {copiedType === "carousel" ? <Check className="mr-1 text-success size-4" /> : <Copy className="mr-1 size-4" />}
-                                {copiedType === "carousel" ? "Copied" : "Copy"}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="space-y-2">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Badge embed</p>
-                    <div className="space-y-2">
-                        <pre className="p-3 bg-foreground text-background rounded-lg text-xs overflow-x-auto whitespace-pre-wrap font-mono">
-                            {badgeEmbedCode}
-                        </pre>
-                        <div className="flex items-center justify-end gap-2">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                disabled={!hasSlug}
-                                onClick={() => setPreviewType("badge")}
-                            >
-                                <Eye className="mr-1 size-4" />
-                                Preview
-                            </Button>
-                            <Button variant="secondary" size="sm" onClick={() => handleCopy("badge")}>
-                                {copiedType === "badge" ? <Check className="mr-1 text-success size-4" /> : <Copy className="mr-1 size-4" />}
-                                {copiedType === "badge" ? "Copied" : "Copy"}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </CardContent>
-
-            <Dialog open={previewType !== null} onOpenChange={(open) => !open && setPreviewType(null)}>
-                <DialogContent className="sm:max-w-5xl">
-                    <DialogHeader>
-                        <DialogTitle>
-                            {previewType === "badge" ? "Badge Widget Preview" : "Carousel Widget Preview"}
-                        </DialogTitle>
-                        <DialogDescription>
-                            Live preview of your embeddable widget for this business.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="w-full overflow-hidden rounded-lg border border-border bg-background">
-                        {previewType && hasSlug ? (
-                            <iframe
-                                src={previewType === "badge" ? badgePreviewUrl : carouselPreviewUrl}
-                                title={previewType === "badge" ? "Badge preview" : "Carousel preview"}
-                                className="w-full border-0"
-                                style={{ minHeight: previewType === "badge" ? 360 : 440 }}
-                            />
-                        ) : previewType ? (
-                            <p className="p-8 text-center text-sm text-muted-foreground">
-                                Set a business slug in Settings → Business Information to preview your widget.
-                            </p>
-                        ) : null}
-                    </div>
-                </DialogContent>
-            </Dialog>
-        </Card>
-    );
+    return <Card>
+        <CardHeader className="flex flex-row items-center gap-4">
+            <div className="rounded-xl bg-primary/10 p-3 text-primary"><Code2 className="size-6" /></div>
+            <div><CardTitle className="text-xl">Website Widgets</CardTitle>
+                <CardDescription>Create your Google Reviews widget</CardDescription></div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+            <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">Choose a template, customize its appearance, and embed your reviews on any website. Your widget shows the latest reviews synced to Zyene.</p>
+            <div className="grid gap-4 sm:grid-cols-3">
+                {[{ Icon: LayoutTemplate, title: "20 ready-to-use templates", text: "Carousels, grids, badges, stickers, and more" },
+                    { Icon: Palette, title: "Make it yours", text: "Six themes, custom colors, fonts, and filters" },
+                    { Icon: Smartphone, title: "Every screen", text: "Live desktop and mobile previews" }].map(({ Icon, title, text }) =>
+                    <div key={title} className="rounded-xl border border-border bg-muted/30 p-4"><Icon className="mb-3 size-5 text-primary" />
+                        <h3 className="text-sm font-semibold">{title}</h3><p className="mt-1 text-xs leading-relaxed text-muted-foreground">{text}</p></div>)}
+            </div>
+            <Button onClick={launch} disabled={!businessSlug.trim()}><LayoutTemplate className="mr-2 size-4" /> Open widget builder</Button>
+            {!businessSlug.trim() && <p className="text-sm text-muted-foreground">Set your business slug in Business Information to create a widget.</p>}
+        </CardContent>
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent className="grid h-[94dvh] w-[calc(100vw-24px)] max-w-[1440px] grid-rows-[auto_minmax(0,1fr)] gap-0 overflow-hidden p-0 sm:max-w-[1440px]">
+                <DialogHeader className="border-b px-5 py-4 pr-12">
+                    <DialogTitle>Edit review widget</DialogTitle>
+                    <DialogDescription>Choose a template and customize your widget. Copy the code when you’re ready.</DialogDescription>
+                </DialogHeader>
+                {open && <WidgetBuilder key={businessSlug} businessSlug={businessSlug} initialConfig={initialConfig} />}
+            </DialogContent>
+        </Dialog>
+    </Card>;
 }
