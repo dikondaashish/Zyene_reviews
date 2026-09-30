@@ -7,6 +7,7 @@ interface LimitCheckResult {
     max: number; // -1 = unlimited
     remaining: number;
 }
+const DENIED: LimitCheckResult = { allowed: false, current: 0, max: 0, remaining: 0 };
 
 type LimitType =
     | "review_requests" // generic total (all channels)
@@ -48,10 +49,11 @@ export async function checkLimit(
         return { allowed: false, current: 0, max: 0, remaining: 0 };
     }
 
-    const { count: businessCountRaw } = await supabase
+    const { count: businessCountRaw, error: countError } = await supabase
         .from("businesses")
         .select("*", { count: "exact", head: true })
         .eq("organization_id", organizationId);
+    if (countError || businessCountRaw === null) return DENIED;
 
     const businessCount = businessCountRaw ?? 0;
     const subscriptionIsActive = hasActiveOrTrialingStatus(org.plan_status ?? null);
@@ -114,10 +116,11 @@ export async function checkLimit(
         startOfMonth.setUTCDate(1);
         startOfMonth.setUTCHours(0, 0, 0, 0);
 
-        const { data: businesses } = await supabase
+        const { data: businesses, error: businessError } = await supabase
             .from("businesses")
             .select("id")
             .eq("organization_id", organizationId);
+        if (businessError || !businesses) return DENIED;
 
         const businessIds = businesses?.map((b: { id: string }) => b.id) || [];
 
@@ -127,13 +130,13 @@ export async function checkLimit(
         }
 
         if (limitType === "smart_replies") {
-            const { count } = await supabase
+            const { count, error } = await supabase
                 .from("review_requests")
                 .select("*", { count: "exact", head: true })
                 .in("business_id", businessIds)
                 .not("ai_review_text", "is", null)
                 .gte("created_at", startOfMonth.toISOString());
-
+            if (error || count === null) return DENIED;
             current = count || 0;
         } else {
             let query = supabase
@@ -147,16 +150,18 @@ export async function checkLimit(
             query = query.or(
                 "customer_phone.not.is.null,customer_email.not.is.null,customer_name.not.is.null,campaign_id.not.is.null"
             );
+            query = query.neq("status", "skipped");
 
             if (limitType === "email_requests") {
-                query = query.eq("channel", "email");
+                query = query.in("channel", ["email", "both"]);
             } else if (limitType === "sms_requests") {
-                query = query.eq("channel", "sms");
+                query = query.in("channel", ["sms", "both"]);
             } else if (limitType === "link_requests") {
                 query = query.eq("channel", "link");
             }
 
-            const { count } = await query;
+            const { count, error } = await query;
+            if (error || count === null) return DENIED;
             current = count || 0;
         }
     }

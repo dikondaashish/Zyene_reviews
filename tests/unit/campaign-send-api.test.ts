@@ -1,11 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({ createClient: vi.fn(), createAdminClient: vi.fn(), access: vi.fn(), limit: vi.fn(), send: vi.fn() }));
+const mocks = vi.hoisted(() => ({ createClient: vi.fn(), createAdminClient: vi.fn(), access: vi.fn(), limit: vi.fn(), send: vi.fn(), quota: vi.fn(), adminEq: vi.fn() }));
 vi.mock("@/lib/db/supabase/server", () => ({ createClient: mocks.createClient }));
 vi.mock("@/lib/db/supabase/admin", () => ({ createAdminClient: mocks.createAdminClient }));
 vi.mock("@/lib/db/supabase/verify-business-access", () => ({ userCanAccessBusiness: mocks.access }));
 vi.mock("@/lib/auth/rate-limit", () => ({ campaignRateLimit: { limit: mocks.limit } }));
 vi.mock("@/services/inngest/client", () => ({ inngest: { send: mocks.send } }));
+vi.mock("@/services/campaigns/campaign-send-quota", () => ({ checkCampaignAudienceQuota: mocks.quota }));
 vi.mock("@/lib/logger", () => ({ logger: { error: vi.fn() } }));
 import { handleCampaignSend } from "@/services/campaigns/campaign-send-api";
 const campaignId = "11111111-1111-4111-8111-111111111111";
@@ -22,8 +23,12 @@ beforeEach(() => {
     customers.select.mockReturnValue(customers); customers.eq.mockReturnValue(customers);
     customers.in.mockResolvedValue({ data: [{ id: customerId, first_name: "Test", last_name: null, phone: "123", email: null, is_opted_out: false }], error: null });
     mocks.createClient.mockResolvedValue({ auth: { getUser: vi.fn().mockResolvedValue({ data: { user: { id: "user", email_confirmed_at: "2026-01-01" } } }) }, from: vi.fn((table: string) => table === "campaigns" ? campaignQuery : customers) });
-    mocks.createAdminClient.mockReturnValue({ from: vi.fn().mockReturnValue({ update: vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ error: null }) }) }) });
+    const adminQuery = { update: vi.fn(), eq: mocks.adminEq,
+        then: (resolve: (value: unknown) => unknown) => Promise.resolve({ error: null }).then(resolve) };
+    adminQuery.update.mockReturnValue(adminQuery); mocks.adminEq.mockReturnValue(adminQuery);
+    mocks.createAdminClient.mockReturnValue({ from: vi.fn().mockReturnValue(adminQuery) });
     mocks.access.mockResolvedValue(true); mocks.limit.mockResolvedValue({ success: true }); mocks.send.mockResolvedValue({ ids: ["event"] });
+    mocks.quota.mockResolvedValue(true);
 });
 
 describe("selected campaign sending", () => {
@@ -31,11 +36,25 @@ describe("selected campaign sending", () => {
         const response = await handleCampaignSend(request(), campaignId);
         expect(await response.json()).toMatchObject({ success: true, data: { queuedCount: 1, skippedCount: 0 } });
         expect(mocks.send).toHaveBeenCalledWith([expect.objectContaining({ id: `campaign:${campaignId}:customer:${customerId}`, data: expect.objectContaining({ businessId: "business", contact: expect.objectContaining({ phone: "123" }) }) })]);
+        expect(mocks.adminEq).toHaveBeenCalledWith("business_id", "business");
     });
     it("never enqueues for an unauthorized business", async () => {
         mocks.access.mockResolvedValue(false);
         expect((await handleCampaignSend(request(), campaignId)).status).toBe(403);
         expect(mocks.send).not.toHaveBeenCalled();
+        expect(mocks.createAdminClient).not.toHaveBeenCalled();
+        expect(mocks.quota).not.toHaveBeenCalled();
+    });
+    it("requires writable business access and binds the authenticated actor to every job", async () => {
+        expect((await handleCampaignSend(request(), campaignId)).status).toBe(200);
+        expect(mocks.access).toHaveBeenCalledWith(expect.anything(), "user", "business", true);
+        expect(mocks.send).toHaveBeenCalledWith([expect.objectContaining({ data: expect.objectContaining({ userId: "user" }) })]);
+    });
+    it("denies an audience over the channel allowance before enqueuing or privileged writes", async () => {
+        mocks.quota.mockResolvedValue(false);
+        expect((await handleCampaignSend(request(), campaignId)).status).toBe(403);
+        expect(mocks.send).not.toHaveBeenCalled();
+        expect(mocks.createAdminClient).not.toHaveBeenCalled();
     });
     it("reports a queue failure as a failure", async () => {
         mocks.send.mockRejectedValue(new Error("unavailable"));

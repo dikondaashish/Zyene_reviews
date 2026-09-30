@@ -6,13 +6,13 @@ import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access"
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { campaignSendSchema } from "@/services/campaigns/campaigns-schema";
 import { loadCampaignAudience } from "@/services/campaigns/campaign-audience";
+import { checkCampaignAudienceQuota } from "@/services/campaigns/campaign-send-quota";
 import { z } from "zod";
 
 export async function handleCampaignSend(request: Request, campaignId: string) {
     if (!z.uuid().safeParse(campaignId).success) return apiError("Invalid campaign", { status: 400 });
     try {
         const supabase = await createClient();
-        const admin = createAdminClient();
 
         const {
             data: { user },
@@ -44,7 +44,7 @@ export async function handleCampaignSend(request: Request, campaignId: string) {
         if (!campaign?.business_id) {
             return apiError("Campaign not found", { status: 404 });
         }
-        const canAccess = await userCanAccessBusiness(supabase, user.id, campaign.business_id);
+        const canAccess = await userCanAccessBusiness(supabase, user.id, campaign.business_id, true);
         if (!canAccess) {
             return apiError("Forbidden", { status: 403 });
         }
@@ -62,6 +62,10 @@ export async function handleCampaignSend(request: Request, campaignId: string) {
                 { status: 400 },
             );
         const skippedCount = parsed.data.customerIds ? new Set(parsed.data.customerIds).size - contacts.length : 0;
+        if (!(await checkCampaignAudienceQuota(supabase, campaign.business_id, campaign.channel, contacts))) {
+            return apiError("This audience exceeds the remaining monthly channel allowance.", { status: 403 });
+        }
+        const admin = createAdminClient();
         const { inngest } = await import("@/services/inngest/client");
 
         const eventsToEnqueue = contacts.map((contact) => ({
@@ -70,6 +74,7 @@ export async function handleCampaignSend(request: Request, campaignId: string) {
             data: {
                 campaignId,
                 businessId: campaign.business_id,
+                userId: user.id,
                 contact: {
                     name: contact.name,
                     phone: contact.phone,
@@ -81,7 +86,9 @@ export async function handleCampaignSend(request: Request, campaignId: string) {
         try {
             await inngest.send(eventsToEnqueue);
 
-            await admin.from("campaigns").update({ status: "processing" }).eq("id", campaignId);
+            const { error } = await admin.from("campaigns").update({ status: "processing" })
+                .eq("id", campaignId).eq("business_id", campaign.business_id);
+            if (error) throw error;
         } catch (e) {
             logger.error({ err: e }, "Failed to enqueue campaign events:");
             return apiError("Failed to queue campaign", { status: 500 });

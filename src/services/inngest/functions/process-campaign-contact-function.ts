@@ -1,200 +1,87 @@
-import { inngest } from "../client";
+import { inngest } from "@/services/inngest/client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
 import { primaryChannelFromMethods, type DripChannel } from "@/lib/campaigns/drip-phase1";
 import { bumpCustomerAfterSend } from "@/lib/review-requests/bump-after-send";
+import { reserveChannelUsage } from "@/lib/stripe/reserve-channel-usage";
+import { campaignJobSchema, loadAuthorizedCampaignJob, campaignContactPermission } from "@/services/campaigns/campaign-job-access";
 
 export const processCampaignContact = inngest.createFunction(
-    {
-        id: "process-campaign-contact",
-        name: "Process Campaign Contact",
-        concurrency: {
-            // Inngest free/hobby plans cap per-function concurrency at 5; higher values fail sync.
-            limit: 5,
-        }
-    },
+    { id: "process-campaign-contact", name: "Process Campaign Contact", concurrency: { limit: 5 } },
     { event: "campaign/send.contact" },
-    async ({ event, step }: { event: { data: { campaignId: string, businessId: string, contact: any } }, step: any }) => {
-        const { campaignId, businessId, contact } = event.data;
-        const supabase = createAdminClient();
+    async ({ event, step }) => {
+        const parsed = campaignJobSchema.safeParse(event.data);
+        if (!parsed.success || !event.id) return { status: "skipped", reason: "Missing or invalid job authorization" };
+        const job = parsed.data;
+        // Inngest verifies the service signature; these metadata reads establish live user scope.
+        const admin = createAdminClient();
+        const campaign = await step.run("fetch-campaign-details", () => loadAuthorizedCampaignJob(admin, job));
+        if (!campaign?.businesses) return { status: "skipped", reason: "Campaign access revoked" };
+        const contactMethods: DripChannel[] = [];
+        if (["email", "both"].includes(campaign.channel) && job.contact.email) contactMethods.push("email");
+        if (["sms", "both"].includes(campaign.channel) && job.contact.phone) contactMethods.push("sms");
+        if (!contactMethods.length) return { status: "skipped", reason: "Missing campaign contact info" };
+        const claimId = `${job.campaignId}:${event.id}`;
 
-        // 1. Get Campaign and Business details
-        const campaign = await step.run("fetch-campaign-details", async () => {
-            const { data, error } = await supabase
-                .from("campaigns")
-                .select("*, businesses(name, slug, sender_name, review_request_frequency_cap_days, review_platforms(platform))")
-                .eq("id", campaignId)
-                .single();
-            if (error || !data) throw new Error(`Campaign not found: ${campaignId}`);
-            return data;
-        });
-
-        interface CampaignWithBusiness {
-            businesses: {
-                name: string;
-                slug: string;
-                sender_name: string | null;
-                review_request_frequency_cap_days: number | null;
-                review_platforms: Array<{ platform: string }>;
-            } | null;
-        }
-        const business = (campaign as unknown as CampaignWithBusiness).businesses;
-        if (!business) throw new Error("Business not found for campaign");
-
-        // 2. Filter contacts (Frequency Cap & Opt-out checks)
         const canSend = await step.run("check-permissions", async () => {
-            // Check global opt-out
-            if (contact.phone) {
-                const { data: optOut } = await supabase
-                    .from("sms_opt_outs")
-                    .select("id")
-                    .eq("phone_number", contact.phone)
-                    .single();
-                if (optOut) return { allowed: false, reason: "Customer opted out of SMS" };
-
-                // Check frequency cap
-                const frequencyCapDays = business.review_request_frequency_cap_days || 30;
-                const { data: existingContact } = await supabase
-                    .from("customers")
-                    .select("last_request_sent_at")
-                    .eq("business_id", businessId)
-                    .eq("phone", contact.phone)
-                    .single();
-
-                interface CustomerRecord {
-                    last_request_sent_at?: string | null;
-                }
-                const existingCustTyped = existingContact as unknown as CustomerRecord;
-
-                if (existingCustTyped?.last_request_sent_at) {
-                    const lastSent = new Date(existingCustTyped.last_request_sent_at);
-                    const now = new Date();
-                    const diffDays = (now.getTime() - lastSent.getTime()) / (1000 * 3600 * 24);
-                    if (diffDays < frequencyCapDays) {
-                        return { allowed: false, reason: `Frequency cap: sent within ${frequencyCapDays} days` };
-                    }
-                }
+            const liveCampaign = await loadAuthorizedCampaignJob(admin, job);
+            if (!liveCampaign?.businesses) return { allowed: false, reason: "Campaign access revoked" };
+            const permission = await campaignContactPermission(admin, job, liveCampaign.businesses.review_request_frequency_cap_days ?? 30);
+            if (!permission.allowed) return permission;
+            if (!(await reserveChannelUsage(liveCampaign.businesses.organization_id, contactMethods, claimId))) {
+                return { allowed: false, reason: "Monthly channel allowance exhausted" };
             }
-            return { allowed: true, reason: undefined as string | undefined };
+            return permission;
         });
-
-        // 3. Create Request Record explicitly as "queued" or "skipped"
         const requestRecord = await step.run("create-request-record", async () => {
-            const status = canSend.allowed ? (campaign.delay_minutes > 0 ? "queued" : "sending") : "skipped";
-            const { data, error } = await supabase
-                .from("review_requests")
-                .insert({
-                    business_id: businessId,
-                    campaign_id: campaignId,
-                    customer_name: contact.name || null,
-                    customer_phone: contact.phone || null,
-                    customer_email: contact.email || null,
-                    channel: campaign.channel,
-                    status: status,
-                    error_message: canSend.reason || null
-                })
-                .select()
-                .single();
-            if (error) throw new Error(`Failed to create request: ${error.message}`);
+            if (!(await loadAuthorizedCampaignJob(admin, job))) return null;
+            const { data, error } = await admin.from("review_requests").insert({
+                business_id: job.businessId, campaign_id: job.campaignId,
+                customer_name: job.contact.name || null, customer_phone: job.contact.phone || null,
+                customer_email: job.contact.email || null, channel: campaign.channel,
+                status: canSend.allowed ? (campaign.delay_minutes > 0 ? "queued" : "sending") : "skipped",
+                error_message: canSend.reason || null,
+            }).select("id").single();
+            if (error || !data) throw error ?? new Error("Failed to create campaign request");
             return data;
         });
+        if (!requestRecord) return { status: "skipped", reason: "Campaign access revoked" };
+        if (!canSend.allowed) return { status: "skipped", reason: canSend.reason };
+        if (campaign.delay_minutes > 0) await step.sleep("initial-delay", `${campaign.delay_minutes}m`);
 
-        if (!canSend.allowed) {
-            return { status: "skipped", reason: canSend.reason };
-        }
-
-        // 4. Handle Initial Delay
-        if (campaign.delay_minutes > 0) {
-            // Sleep for the specified delay
-            await step.sleep("initial-delay", `${campaign.delay_minutes}m`);
-
-            // Update status to sending
-            await step.run("update-status-sending", async () => {
-                await supabase
-                    .from("review_requests")
-                    .update({ status: "sending" })
-                    .eq("id", requestRecord.id);
-            });
-        }
-
-        // 5. Send Initial Message
         const sendResult = await step.run("send-message", async () => {
-            const contactMethods: DripChannel[] = [];
-            if (campaign.channel === "email" || campaign.channel === "both") {
-                if (contact.email) contactMethods.push("email");
+            // Never reuse a cached authorization/entitlement after a delay.
+            const liveCampaign = await loadAuthorizedCampaignJob(admin, job);
+            if (!liveCampaign?.businesses) return { sendStatus: "skipped" as const, errorMessage: "Campaign access revoked" };
+            const permission = await campaignContactPermission(admin, job, liveCampaign.businesses.review_request_frequency_cap_days ?? 30);
+            if (!permission.allowed) return { sendStatus: "skipped" as const, errorMessage: permission.reason };
+            if (liveCampaign.channel !== campaign.channel || !(await reserveChannelUsage(liveCampaign.businesses.organization_id, contactMethods, claimId))) {
+                return { sendStatus: "skipped" as const, errorMessage: "Campaign channel or allowance changed" };
             }
-            if (campaign.channel === "sms" || campaign.channel === "both") {
-                if (contact.phone) contactMethods.push("sms");
-            }
-
-            if (contactMethods.length === 0) {
-                return {
-                    sendStatus: "failed" as const,
-                    errorMessage: "Missing contact info for campaign type",
-                    contactMethods,
-                };
-            }
-
             const result = await sendReviewRequest({
-                businessId: businessId,
-                businessName: business.name,
-                senderName: business.sender_name,
-                customerName: contact.name || "Customer",
-                contactMethods,
-                customerEmail: contact.email,
-                customerPhone: contact.phone,
-                template: campaign.sms_template || campaign.email_template || undefined
+                businessId: job.businessId, businessName: liveCampaign.businesses.name,
+                senderName: liveCampaign.businesses.sender_name, customerName: job.contact.name || "Customer",
+                contactMethods, customerEmail: job.contact.email, customerPhone: job.contact.phone,
+                template: liveCampaign.sms_template || liveCampaign.email_template || undefined,
             });
-
-            return {
-                sendStatus: (result.emailSent || result.smsSent) ? ("sent" as const) : ("failed" as const),
-                errorMessage: result.error,
-                contactMethods,
-            };
+            return { sendStatus: result.emailSent || result.smsSent ? "sent" as const : "failed" as const, errorMessage: result.error };
         });
-
-        // 6. Update Database for Initial Send (+ activate Phase 1 drip when follow-ups enabled)
         await step.run("update-initial-database", async () => {
-            const dripOn = Boolean(campaign.follow_up_enabled);
-            const lastChannel =
-                sendResult.sendStatus === "sent"
-                    ? primaryChannelFromMethods(sendResult.contactMethods ?? [])
-                    : null;
-            await supabase
-                .from("review_requests")
-                .update({
-                    status: sendResult.sendStatus,
-                    error_message: sendResult.errorMessage,
-                    sent_at: sendResult.sendStatus === "sent" ? new Date().toISOString() : null,
-                    ...(sendResult.sendStatus === "sent" && dripOn
-                        ? {
-                              drip_status: "active" as const,
-                              drip_steps_sent: 1,
-                              last_drip_channel: lastChannel,
-                          }
-                        : {}),
-                })
-                .eq("id", requestRecord.id);
-
-            if (sendResult.sendStatus === "sent") {
-                await bumpCustomerAfterSend(
-                    supabase,
-                    businessId,
-                    contact.name,
-                    contact.phone ?? null,
-                    contact.email ?? null,
-                    {
-                        phone: sendResult.contactMethods.includes("sms"),
-                        email: sendResult.contactMethods.includes("email"),
-                    },
-                );
-            }
+            // Settle this signed job's already-attempted delivery even if actor access was revoked meanwhile.
+            const sent = sendResult.sendStatus === "sent";
+            const { error } = await admin.from("review_requests").update({
+                status: sendResult.sendStatus, error_message: sendResult.errorMessage,
+                sent_at: sent ? new Date().toISOString() : null,
+                ...(sent && campaign.follow_up_enabled ? {
+                    drip_status: "active" as const, drip_steps_sent: 1,
+                    last_drip_channel: primaryChannelFromMethods(contactMethods),
+                } : {}),
+            }).eq("id", requestRecord.id).eq("business_id", job.businessId).eq("campaign_id", job.campaignId);
+            if (error) throw error;
+            if (sent) await bumpCustomerAfterSend(admin, job.businessId, job.contact.name, job.contact.phone ?? null, job.contact.email ?? null, {
+                phone: contactMethods.includes("sms"), email: contactMethods.includes("email"),
+            });
         });
-
-        if (sendResult.sendStatus !== "sent") {
-            return { status: "completed_with_error", sendResult };
-        }
-
-        return { status: "completed", sendResult };
-    }
+        return { status: sendResult.sendStatus === "sent" ? "completed" : "completed_with_error", sendResult };
+    },
 );

@@ -19,6 +19,7 @@ type CampaignSendEvent = {
     data: {
         campaignId: string;
         businessId: string;
+        userId: string;
         contact: {
             name?: string;
             phone?: string;
