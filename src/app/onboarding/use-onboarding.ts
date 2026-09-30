@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { GoogleOAuthAuthorization } from "@/types/components";
 import { createClient } from "@/lib/db/supabase/client";
 import { useOnboardingStore } from "@/lib/state/onboarding-store";
 import type {
@@ -19,7 +20,7 @@ export function useOnboarding() {
     const [business, setBusiness] = useState<OnboardingBusiness | null>(null);
     const [googleConnected, setGoogleConnected] = useState(false);
     const [loadError, setLoadError] = useState<string | null>(null);
-    const [pendingGoogleCode, setPendingGoogleCode] = useState<string | null>(null);
+    const [pendingGoogleCode, setPendingGoogleCode] = useState<GoogleOAuthAuthorization | null>(null);
     const [googleConnectionError, setGoogleConnectionError] = useState<string | null>(null);
     const [showPaymentCancelled, setShowPaymentCancelled] = useState(false);
     const [isStepResolved, setIsStepResolved] = useState(false);

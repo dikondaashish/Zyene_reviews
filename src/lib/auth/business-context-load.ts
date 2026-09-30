@@ -1,5 +1,5 @@
 /**
- * Loads a user's org + business memberships, with a short Redis cache.
+ * Loads live org + business memberships. Authorization never uses Redis.
  *
  * Deliberately not a server action - it is an internal helper for
  * business-context.ts, which owns the "use server" boundary.
@@ -12,8 +12,7 @@ import type {
     BusinessContextBusiness,
     BusinessContextOrganization,
 } from "@/types/business-context";
-
-const CACHE_TTL_SECONDS = 300;
+import { displayBusiness, displayOrganization } from "@/lib/auth/business-context-platforms";
 
 export function businessContextCacheKey(userId: string): string {
     return `user_businesses:${userId}`;
@@ -22,36 +21,6 @@ export function businessContextCacheKey(userId: string): string {
 export interface UserBusinessContext {
     organizations: BusinessContextOrganization[];
     businesses: BusinessContextBusiness[];
-}
-
-/** Returns cached memberships, or empty arrays when absent/unusable. */
-async function readCache(cacheKey: string): Promise<UserBusinessContext> {
-    const empty: UserBusinessContext = { organizations: [], businesses: [] };
-    try {
-        const { redis } = await import("@/lib/db/redis");
-        const cached = await redis.get(cacheKey);
-        if (!cached) return empty;
-
-        const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
-        const businesses = (parsed.businesses as BusinessContextBusiness[]) ?? [];
-        const organizations = (parsed.organizations as BusinessContextOrganization[]) ?? [];
-
-        // Legacy cache stored a single `organization` - ignore so multi-org users refresh
-        if (organizations.length === 0) return empty;
-        return { organizations, businesses };
-    } catch (e) {
-        logger.error({ err: e }, "Redis cache error:");
-        return empty;
-    }
-}
-
-async function writeCache(cacheKey: string, value: UserBusinessContext): Promise<void> {
-    try {
-        const { redis } = await import("@/lib/db/redis");
-        await redis.set(cacheKey, JSON.stringify(value), { ex: CACHE_TTL_SECONDS });
-    } catch (e) {
-        logger.error({ err: e }, "Redis cache set error:");
-    }
 }
 
 /** Clears the cached memberships for a user (call after a membership change). */
@@ -70,16 +39,23 @@ async function fetchFromDatabase(
     userId: string,
 ): Promise<UserBusinessContext> {
     // Business-scoped memberships (source of truth for which org the user is working in)
-    const { data: memberBusinesses } = await supabase
+    const { data: memberBusinesses, error: businessError } = await supabase
         .from("business_members")
         .select(`
             business_id,
             businesses (
                 *,
-                review_platforms (*)
+                review_platforms (
+                    id, platform, external_url, google_location_id, google_account_id,
+                    granted_scopes, sync_status, last_synced_at, google_qa_unavailable,
+                    google_lodging_health_score, google_lodging_available,
+                    google_performance_synced_at, google_profile_health_score,
+                    average_rating, total_reviews
+                )
             )
         `)
-        .eq("user_id", userId);
+        .eq("user_id", userId)
+        .eq("status", "active");
 
     let businesses = (memberBusinesses ?? []).reduce<BusinessContextBusiness[]>(
         (acc, entry: { businesses?: BusinessContextBusiness | null }) => {
@@ -91,15 +67,22 @@ async function fetchFromDatabase(
     );
 
     // All org memberships (invited teammates have organization_members + business_members; RLS requires org row)
-    const { data: orgMemberRows } = await supabase
+    const { data: orgMemberRows, error: orgError } = await supabase
         .from("organization_members")
         .select(`
+            role,
             organization_id,
             organizations (
                 *,
                 businesses (
                     *,
-                    review_platforms (*)
+                    review_platforms (
+                        id, platform, external_url, google_location_id, google_account_id,
+                        granted_scopes, sync_status, last_synced_at, google_qa_unavailable,
+                        google_lodging_health_score, google_lodging_available,
+                        google_performance_synced_at, google_profile_health_score,
+                        average_rating, total_reviews
+                    )
                 )
             )
         `)
@@ -107,47 +90,38 @@ async function fetchFromDatabase(
         .eq("status", "active");
 
     type OrgMemberRow = {
+        role: string;
         organization_id: string;
         organizations: BusinessContextOrganization | null;
     };
     const rows = (orgMemberRows ?? []) as OrgMemberRow[];
-    const organizations = rows
-        .map((r) => r.organizations)
-        .filter((org): org is BusinessContextOrganization => Boolean(org?.id));
-
-    // Backward-compat: org-only members until all users have business_members
-    if (businesses.length === 0 && organizations[0]?.businesses?.length) {
-        businesses = organizations[0].businesses.filter(
-            (business) => business.status !== "archived"
-        );
+    if (businessError || orgError) return { organizations: [], businesses: [] };
+    const activeOrgIds = new Set(rows.map((row) => row.organization_id));
+    businesses = businesses.filter((business) => activeOrgIds.has(String(business.organization_id ?? ""))).map(displayBusiness);
+    for (const row of rows) {
+        if (!["owner", "admin", "manager", "ORG_OWNER", "ORG_ADMIN", "ORG_MANAGER"].includes(row.role)) continue;
+        for (const business of row.organizations?.businesses ?? []) {
+            if (business.status !== "archived" && !businesses.some((entry) => entry.id === business.id)) {
+                businesses.push(displayBusiness(business));
+            }
+        }
     }
-
+    const allowedIds = new Set(businesses.map((business) => business.id));
+    const organizations = rows.map((row) => row.organizations)
+        .filter((org): org is BusinessContextOrganization => Boolean(org?.id))
+        .map((org) => displayOrganization({ ...org,
+            businesses: org.businesses?.filter((business) => allowedIds.has(business.id)),
+        }));
     return { organizations, businesses };
 }
 
 /**
- * Resolves the user's organizations and businesses, preferring the Redis cache
- * unless `skipCache` is set. Writes the cache back on a database read.
+ * Always resolves live memberships; the legacy argument is kept for callers.
  */
 export async function loadUserBusinessContext(
     supabase: SupabaseClient<Database>,
     userId: string,
-    skipCache: boolean,
+    _skipCache: boolean,
 ): Promise<UserBusinessContext> {
-    const cacheKey = businessContextCacheKey(userId);
-
-    if (!skipCache) {
-        const cached = await readCache(cacheKey);
-        if (cached.organizations.length > 0 && cached.businesses.length > 0) {
-            return cached;
-        }
-    }
-
-    const fresh = await fetchFromDatabase(supabase, userId);
-
-    if (fresh.organizations.length > 0 && !skipCache) {
-        await writeCache(cacheKey, fresh);
-    }
-
-    return fresh;
+    return fetchFromDatabase(supabase, userId);
 }

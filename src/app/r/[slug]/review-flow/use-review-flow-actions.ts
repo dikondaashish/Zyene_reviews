@@ -24,6 +24,7 @@ type ReviewFlowActionsConfig = Pick<
     activeRequestId: string | undefined;
     requestId: string | undefined;
     ensureActiveRequestId: () => Promise<string | undefined>;
+    getTrackingToken: () => string | undefined;
     trackRequestUpdate: (trackData: Record<string, unknown>) => Promise<void>;
     setStep: React.Dispatch<React.SetStateAction<FlowStep>>;
     setRating: React.Dispatch<React.SetStateAction<number | null>>;

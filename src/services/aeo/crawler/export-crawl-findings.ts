@@ -3,6 +3,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { NextResponse } from "next/server";
 import Papa from "papaparse";
+import { SAFE_CSV_OPTIONS } from "@/lib/export/safe-csv";
 
 /** F7.2: every F5.2/F5.3 crawl finding recorded for this business. */
 export async function handleCrawlFindingsExport() {
@@ -48,7 +49,7 @@ export async function handleCrawlFindingsExport() {
         };
     });
 
-    const csvData = Papa.unparse(formatted);
+    const csvData = Papa.unparse(formatted, SAFE_CSV_OPTIONS);
     const safeName = (business.name || "business").replace(/[^a-z0-9]/gi, "_").toLowerCase();
 
     return new NextResponse(csvData, {

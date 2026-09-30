@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getAppIntegrationsUrl } from "@/config/env";
-import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import {
     decodeSquareOAuthState,
     exchangeSquareCodeForTokens,
@@ -47,7 +47,7 @@ export async function GET(request: Request) {
     if (!user || user.id !== state.userId) {
         return redirect("?square_error=auth");
     }
-    const allowed = await userCanAccessBusiness(supabase, user.id, state.businessId);
+    const allowed = await canManageBusinessIntegration(supabase, user.id, state.businessId);
     if (!allowed) {
         return redirect("?square_error=forbidden");
     }

@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/db/supabase/server";
-import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
+import { googleResourceBelongsToLocation } from "@/services/google/resource-boundary";
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import { upsertQuestionAnswer } from "@/services/google/qanda";
 import { syncGbpQuestionsForPlatform } from "@/services/google/phase2-sync";
@@ -40,18 +41,20 @@ export async function POST(request: Request) {
     }
 
     const businessId = row.business_id as string;
-    const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+    const allowed = await canManageBusinessIntegration(supabase, user.id, businessId);
     if (!allowed) {
         return apiError("Forbidden", { status: 403, details: requestId });
     }
 
     const { data: platform, error: platErr } = await supabase
         .from("review_platforms")
-        .select("id, platform")
+        .select("id, platform, google_location_id")
         .eq("id", row.review_platform_id as string)
+        .eq("business_id", businessId)
         .single();
 
-    if (platErr || !platform || platform.platform !== "google") {
+    if (platErr || !platform || platform.platform !== "google" ||
+        !googleResourceBelongsToLocation(row.google_question_name, platform.google_location_id, "questions")) {
         return apiError("Invalid platform", { status: 400, details: requestId });
     }
 

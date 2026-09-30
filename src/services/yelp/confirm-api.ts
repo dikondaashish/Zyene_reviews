@@ -2,7 +2,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { getBusiness } from "@/services/yelp/adapter";
 import { syncYelpReviewsForPlatform } from "@/services/yelp/sync-service";
 import * as Sentry from "@sentry/nextjs";
-import type { MemberOrgContext } from "@/types/member-context";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { yelpConfirmSchema } from "./confirm-schema";
@@ -26,17 +26,7 @@ export async function handleYelpConfirm(req: Request) {
 
         const { yelpBusinessId, businessId } = parsed.data;
 
-        const { data: member } = await supabase
-            .from("organization_members")
-            .select("organizations ( businesses ( id ) )")
-            .eq("user_id", user.id)
-            .single();
-
-        const memberTyped = member as unknown as MemberOrgContext;
-        const businesses = memberTyped?.organizations?.businesses || [];
-        const ownsBusiness = businesses.some((b) => b.id === businessId);
-
-        if (!ownsBusiness) {
+        if (!(await canManageBusinessIntegration(supabase, user.id, businessId))) {
             return apiError("Unauthorized", { status: 403, details: requestId });
         }
 
@@ -56,7 +46,7 @@ export async function handleYelpConfirm(req: Request) {
                 },
                 { onConflict: "business_id, platform" }
             )
-            .select()
+            .select("id")
             .single();
 
         if (error) {
@@ -70,7 +60,6 @@ export async function handleYelpConfirm(req: Request) {
             logger.info({ userId: user.id, businessId, yelpBusinessId, platformId: platform.id }, "Yelp business confirmed");
             return apiOk({
                 success: true,
-                platform,
                 syncResult,
                 requestId,
                 business: {
@@ -83,7 +72,6 @@ export async function handleYelpConfirm(req: Request) {
             Sentry.captureException(syncError, { tags: { route: "yelp-confirm", step: "initial_sync" } });
             return apiOk({
                 success: true,
-                platform,
                 syncResult: null,
                 requestId,
                 warning: "Connected but initial sync failed. It will retry automatically.",

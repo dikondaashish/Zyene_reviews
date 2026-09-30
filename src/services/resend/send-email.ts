@@ -1,5 +1,5 @@
 import { logger } from "@/lib/logger";
-import { resend } from "./client";
+import { resend } from "@/services/resend/client";
 
 interface SendEmailProps {
     to: string | string[];
@@ -88,8 +88,7 @@ export async function sendEmail({ to, subject, html, text, from, replyTo, header
             ...(attachments?.length ? { attachments } : {}),
             ...replyToPayload,
             ...headersPayload,
-            ...(idempotencyKey ? { idempotencyKey } : {}),
-        });
+        }, idempotencyKey ? { idempotencyKey } : undefined);
 
         if (error) {
             logger.error({ err: error }, "Resend Error:");

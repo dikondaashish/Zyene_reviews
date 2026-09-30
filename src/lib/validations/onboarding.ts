@@ -82,7 +82,7 @@ export type StepNotificationsFormData = z.infer<typeof stepNotificationsSchema>;
 
 // Step 5: Plan Selection
 export const stepPlanSchema = z.object({
-  plan: z.enum(["none", "starter", "pro"]),
+  plan: z.literal("none"),
 });
 
 export type StepPlanFormData = z.infer<typeof stepPlanSchema>;
@@ -133,4 +133,3 @@ export const step4FormSchema = z.object({
 });
 
 export type Step4FormData = z.infer<typeof step4FormSchema>;
-

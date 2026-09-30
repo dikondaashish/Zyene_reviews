@@ -4,6 +4,7 @@ import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { bumpCustomerAfterSend } from "@/lib/review-requests/bump-after-send";
 import { dispatchDashboardReviewChannels } from "@/lib/review-requests/review-request-dashboard-dispatch";
 import { reviewRequestSubject } from "@/lib/email/review-request-subject";
+import { signedReviewLink } from "@/lib/review-requests/tracking-token";
 import type { SendRequestPrepared } from "./send-request-execute-prepare";
 
 export async function executeImmediateSendReviewRequest(prepared: SendRequestPrepared) {
@@ -37,7 +38,7 @@ export async function executeImmediateSendReviewRequest(prepared: SendRequestPre
     const reviewCaptureDomain = rootDomain.includes("localhost")
         ? rootDomain
         : process.env.NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN || "collectratings.com";
-    const reviewLink = `${protocol}://${reviewCaptureDomain}/${slug}?ref=${requestId}`;
+    const reviewLink = signedReviewLink(`${protocol}://${reviewCaptureDomain}/${slug}`, requestId, businessId);
 
     const businessName = (business.name as string) || "us";
     const bizRow = business as { email?: string | null; sender_name?: string | null };

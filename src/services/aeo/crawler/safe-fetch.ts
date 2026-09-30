@@ -21,6 +21,7 @@
  */
 import type { FetchText } from "./discover-urls";
 import { checkOriginIsPublic } from "./ssrf-guard";
+import { fetchPublicHttpText, type PublicHttpResult } from "./public-http";
 
 export const CRAWL_TIMEOUT_MS = 15_000;
 export const CRAWL_MAX_REDIRECTS = 5;
@@ -76,7 +77,7 @@ export function createCrawlFetch(options: CrawlFetchOptions): FetchText {
     const timeoutMs = options.timeoutMs ?? CRAWL_TIMEOUT_MS;
     const maxRedirects = options.maxRedirects ?? CRAWL_MAX_REDIRECTS;
     const maxBytes = options.maxBytes ?? CRAWL_MAX_BYTES;
-    const doFetch = options.fetchImpl ?? fetch;
+    const doFetch = options.fetchImpl;
     const isPublic = options.isPublic ?? checkOriginIsPublic;
 
     // One DNS resolution per host, not per page: a 1,000-page crawl of one site
@@ -111,19 +112,34 @@ export function createCrawlFetch(options: CrawlFetchOptions): FetchText {
 
             if (!(await hostIsPublic(current))) return null;
 
-            let response: Response;
+            let response: PublicHttpResult;
             try {
-                response = await doFetch(current, {
-                    headers: { "User-Agent": options.userAgent },
-                    redirect: "manual",
-                    signal: AbortSignal.timeout(timeoutMs),
-                });
+                if (doFetch) {
+                    const injected = await doFetch(current, {
+                        headers: { "User-Agent": options.userAgent },
+                        redirect: "manual",
+                        signal: AbortSignal.timeout(timeoutMs),
+                    });
+                    response = {
+                        ok: injected.ok,
+                        status: injected.status,
+                        location: injected.headers.get("location"),
+                        text: isRedirect(injected.status) ? "" : await readTextCapped(injected, maxBytes),
+                    };
+                } else {
+                    response = await fetchPublicHttpText(current, {
+                        headers: { "User-Agent": options.userAgent },
+                        redirect: "manual",
+                        timeoutMs,
+                        maxBytes,
+                    });
+                }
             } catch {
                 return null;
             }
 
             if (isRedirect(response.status)) {
-                const location = response.headers.get("location");
+                const location = response.location;
                 if (!location) return null;
                 try {
                     current = new URL(location, current).toString();
@@ -134,7 +150,7 @@ export function createCrawlFetch(options: CrawlFetchOptions): FetchText {
             }
 
             try {
-                return { ok: response.ok, status: response.status, text: await readTextCapped(response, maxBytes) };
+                return { ok: response.ok, status: response.status, text: response.text };
             } catch {
                 return null;
             }

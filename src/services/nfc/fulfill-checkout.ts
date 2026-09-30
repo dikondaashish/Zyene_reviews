@@ -41,7 +41,7 @@ export async function fulfillNfcCheckout(
     const payload = nfcOrderPayloadFromSession(session);
     if (!isValidNfcOrderPayload(payload)) {
         logger.error({ sessionId: session.id, payload }, "NFC checkout missing required metadata");
-        return;
+        throw new Error("NFC checkout missing required metadata");
     }
 
     const { error } = await insertNfcOrder(supabase, {
@@ -63,5 +63,6 @@ export async function fulfillNfcCheckout(
     if (error?.code === "23505") return;
     if (error) {
         logger.error({ err: error, sessionId: session.id }, "Failed to persist NFC order");
+        throw error;
     }
 }

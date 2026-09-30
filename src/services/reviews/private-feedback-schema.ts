@@ -4,18 +4,15 @@ export const contactModeSchema = z.enum(["hidden", "optional", "required"]);
 
 export const privateFeedbackSchema = z
     .object({
-        review_request_id: z.string().uuid().optional().nullable(),
-        business_id: z.string().uuid().optional().nullable(),
+        review_request_id: z.string().uuid(),
+        business_id: z.string().uuid(),
+        token: z.string().min(1),
         rating: z.number().int().min(1).max(5),
         content: z.string().max(5000).optional().default(""),
         customer_email: z.string().max(255).optional().nullable(),
         customer_phone: z.string().max(32).optional().nullable(),
-        selected_staff: z.array(z.string()).optional().nullable(),
-    })
-    .refine(
-        (data) => Boolean(data.review_request_id || data.business_id),
-        { message: "Either review_request_id or business_id is required" }
-    );
+        selected_staff: z.array(z.string().max(120)).max(100).optional().nullable(),
+    });
 
 export function normalizeContactMode(value: unknown, fallback: "hidden" | "optional" | "required") {
     const p = contactModeSchema.safeParse(value);

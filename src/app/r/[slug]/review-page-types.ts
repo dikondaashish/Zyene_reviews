@@ -46,6 +46,7 @@ export type ReviewPageData =
           business: ReviewPageBusiness;
           googleUrl: string | undefined;
           requestId: string | undefined;
+          openToken: string;
           reviewPageBackgroundColor: string | undefined;
           ratingStyle: "stars" | "number" | "slider" | "radio" | "emoji";
       };

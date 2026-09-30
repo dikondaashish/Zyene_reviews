@@ -1,0 +1,227 @@
+
+  - dialog "Business information":
+    - banner "Business information" [active]:
+      - button "Back":
+      - heading "Business information" [level=1]
+      - button "Menu":
+      - button "Close":
+    - tablist:
+      - tab "About" [selected]:
+        - generic: About
+      - tab "Contact":
+        - generic: Contact
+      - tab "Location":
+        - generic: Location
+      - tab "Hours":
+        - generic: Hours
+      - tab "More":
+        - generic: More
+    - main:
+      - heading "About your business" [level=2]
+      - region:
+        - heading "Business name" [level=3]
+        - button "Edit Business name":
+        - list:
+          - generic "Zyene":
+            - generic: Zyene
+      - region:
+        - heading "Business category" [level=3]
+        - button "Edit Business category":
+        - list:
+          - generic "Software company":
+            - generic: Software company
+      - region:
+        - heading "Description" [level=3]
+        - button "Edit Description":
+        - list:
+          - generic "Zyene is a digital marketing and technology company providing growth solutions for local and service-based businesses. We combine marketing expertise with proprietary software tools to help businesses improve their online presence, reputation, and customer engagement. Our platform, Zyene Reviews, allows businesses to securely manage and respond to customer reviews through official Google Business Profile integrations. We focus on compliant, transparent, and ethical review management practices that help businesses monitor feedback, generate insights, and strengthen brand credibility for long-term growth.":
+            - generic: Zyene is a digital marketing and technology company providing growth solutions for local and service-based businesses. We combine marketing expertise with proprietary software tools to help businesses improve their online presence, reputation, and customer engagement. Our platform, Zyene Reviews, allows businesses to securely manage and respond to customer reviews through official Google Business Profile integrations. We focus on compliant, transparent, and ethical review management practices that help businesses monitor feedback, generate insights, and strengthen brand credibility for long-term growth.
+      - region:
+        - heading "Opening date" [level=3]
+        - button "Edit Opening date":
+        - list:
+          - generic "November 25, 2025":
+            - generic: November 25, 2025
+      - heading "Contact information" [level=2]
+      - region:
+        - heading "Phone number" [level=3]
+        - button "Edit Phone number":
+        - list:
+          - generic "(415) 409-9798":
+            - generic: (415) 409-9798
+      - region:
+        - heading "Chat" [level=3]
+        - button "Edit Chat":
+        - generic: Content that violates our policies isn't allowed
+        - 'button "Learn more: rejected edits"':
+          - generic: Learn more
+        - button "OK":
+          - generic: OK
+        - heading "Not approved" [level=4]
+        - list:
+          - generic "sms:+14154099798 has been updated":
+            - insertion: sms:+14154099798
+      - region:
+        - heading "Website" [level=3]
+        - button "Edit Website":
+        - list:
+          - generic "https://zyene.com/":
+            - generic: https://zyene.com/
+      - region:
+        - heading "Social profiles" [level=3]
+        - button "Edit Social profiles":
+        - list:
+          - generic "https://www.instagram.com/zyene_inc/":
+            - generic: https://www.instagram.com/zyene_inc/
+          - generic "https://www.linkedin.com/company/zyene/":
+            - generic: https://www.linkedin.com/company/zyene/
+      - heading "Location and areas" [level=2]
+      - region:
+        - heading "Business location" [level=3]
+        - button "Edit Business location":
+        - list:
+          - 'generic "28 Geary St Ste 650 #1892, San Francisco, CA 94108"':
+            - generic: "28 Geary St Ste 650 #1892, San Francisco, CA 94108"
+      - region:
+        - heading "Service area" [level=3]
+        - button "Edit Service area":
+        - generic: Add
+      - heading "Business hours" [level=2]
+      - region:
+        - heading "Hours" [level=3]
+        - button "Edit Hours":
+        - list:
+          - generic "Open with main hours":
+            - generic: Open with main hours
+        - generic: Sunday
+        - generic: Closed
+        - generic: Monday
+        - list:
+          - generic "9:00 AM–5:00 PM":
+            - generic: 9:00 AM–5:00 PM
+        - generic: Tuesday
+        - list:
+          - generic "9:00 AM–5:00 PM":
+            - generic: 9:00 AM–5:00 PM
+        - generic: Wednesday
+        - list:
+          - generic "9:00 AM–5:00 PM":
+            - generic: 9:00 AM–5:00 PM
+        - generic: Thursday
+        - list:
+          - generic "9:00 AM–5:00 PM":
+            - generic: 9:00 AM–5:00 PM
+        - generic: Friday
+        - list:
+          - generic "9:00 AM–5:00 PM":
+            - generic: 9:00 AM–5:00 PM
+        - generic: Saturday
+        - generic: Closed
+      - region:
+        - heading "Special hours" [level=3]
+        - button "Edit Special hours":
+        - generic: Add
+      - heading "Add more hours" [level=3]
+      - toolbar:
+        - button "Access":
+          - generic: Access
+        - button "Breakfast":
+          - generic: Breakfast
+        - button "Brunch":
+          - generic: Brunch
+        - button "Delivery":
+          - generic: Delivery
+        - button "Dinner":
+          - generic: Dinner
+        - button "Drive through":
+          - generic: Drive through
+        - button "Happy hours":
+          - generic: Happy hours
+        - button "Kitchen":
+          - generic: Kitchen
+        - button "Lunch":
+          - generic: Lunch
+        - button "Online service hours":
+          - generic: Online service hours
+        - button "Pickup":
+          - generic: Pickup
+        - button "Senior hours":
+          - generic: Senior hours
+        - button "Takeout":
+          - generic: Takeout
+      - heading "More" [level=2]
+      - region:
+        - heading "From the business" [level=3]
+        - button "Edit From the business":
+        - generic: Add
+      - region:
+        - heading "Accessibility" [level=3]
+        - button "Edit Accessibility":
+        - generic: Your attributes were updated by Google.
+        - 'button "Learn more: how Google gathers and uses business information"':
+          - generic: Learn more
+        - button "OK":
+          - generic: OK
+        - heading "Current" [level=4]
+        - list:
+          - generic "Has wheelchair accessible parking lot":
+            - generic: Has wheelchair accessible parking lot
+          - generic "Has wheelchair accessible restroom":
+            - generic: Has wheelchair accessible restroom
+          - generic "Has wheelchair accessible entrance has been updated":
+            - insertion: Has wheelchair accessible entrance
+        - heading "Previous" [level=4]
+        - list:
+          - generic "Has wheelchair accessible parking lot":
+            - generic: Has wheelchair accessible parking lot
+          - generic "Has wheelchair accessible restroom":
+            - generic: Has wheelchair accessible restroom
+      - region:
+        - heading "Amenities" [level=3]
+        - button "Edit Amenities":
+        - generic: Add
+      - region:
+        - heading "Children" [level=3]
+        - button "Edit Children":
+        - generic: Add
+      - region:
+        - heading "Crowd" [level=3]
+        - button "Edit Crowd":
+        - generic: Add
+      - region:
+        - heading "Parking" [level=3]
+        - button "Edit Parking":
+        - list:
+          - generic "On-site parking":
+            - generic: On-site parking
+          - generic "Free parking lot":
+            - generic: Free parking lot
+          - generic "No paid parking lot":
+            - generic: No paid parking lot
+          - generic "Free parking garage":
+            - generic: Free parking garage
+          - generic "No paid parking garage":
+            - generic: No paid parking garage
+          - generic "Free street parking":
+            - generic: Free street parking
+          - generic "No paid street parking":
+            - generic: No paid street parking
+      - region:
+        - heading "Planning" [level=3]
+        - button "Edit Planning":
+        - generic: Add
+      - region:
+        - heading "Service options" [level=3]
+        - button "Edit Service options":
+        - list:
+          - generic "English":
+            - generic: English
+          - generic "Hindi":
+            - generic: Hindi
+          - generic "Portuguese":
+            - generic: Portuguese
+          - generic "Spanish":
+            - generic: Spanish
+      - generic: Learn how business information is gathered and used by Google
+      - 'button "Learn more: how Google gathers and uses business information"':
+        - generic: Learn more

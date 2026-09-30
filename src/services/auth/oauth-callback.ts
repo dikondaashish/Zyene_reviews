@@ -8,6 +8,8 @@ import { runOAuthNewUserSignup } from "./oauth-callback-new-user";
 import { runOAuthExistingUserLogin } from "./oauth-callback-existing-user";
 import { resolveOAuthInviteParam } from "./oauth-invite";
 import { getAppSiteOrigin } from "@/lib/routing/platform-routes";
+import { consumeAddBusinessOAuth } from "./add-business-oauth-cookie";
+import { canAddBusinessToOrganization } from "./add-business-authorization";
 
 export async function handleOAuthCallback(request: Request) {
     try {
@@ -19,15 +21,32 @@ export async function handleOAuthCallback(request: Request) {
         const code = searchParams.get("code");
         const next = safeNextPath(searchParams.get("next"));
         const biz = searchParams.get("biz");
-        const addBusinessOrgId = searchParams.get("add_org");
-        const addBusinessUserId = searchParams.get("add_user");
-        const isAddBusinessFlow = !!(addBusinessOrgId && next === "/businesses");
+        const addBusinessState = searchParams.get("add_business_state");
+        const hasLegacyAddBusinessIds = searchParams.has("add_org") || searchParams.has("add_user");
 
-        if (!code) {
+        if (!code || hasLegacyAddBusinessIds) {
             return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
         }
 
         const supabase = await createClient();
+        let originalUserId: string | null = null;
+        let addBusinessOrgId: string | null = null;
+        if (addBusinessState) {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user || next !== "/businesses") {
+                return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
+            }
+
+            const state = await consumeAddBusinessOAuth(addBusinessState, user.id);
+            if (!state || !await canAddBusinessToOrganization(
+                supabase, user.id, state.organizationId,
+            )) {
+                return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
+            }
+            originalUserId = user.id;
+            addBusinessOrgId = state.organizationId;
+        }
+
         const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (error || !data.user) {
@@ -44,22 +63,22 @@ export async function handleOAuthCallback(request: Request) {
 
         if (data.user) {
             const admin = createAdminClient();
-            const inviteParamForAccept = await resolveOAuthInviteParam(
-                admin,
-                data.user,
-                searchParams.get("invite")
-            );
-
-            if (isAddBusinessFlow && addBusinessOrgId) {
+            if (originalUserId && addBusinessOrgId) {
                 return runOAuthAddBusinessFlow({
                     admin,
                     supabase,
                     data,
                     appUrl,
                     addBusinessOrgId,
-                    addBusinessUserId,
+                    originalUserId,
                 });
             }
+
+            const inviteParamForAccept = await resolveOAuthInviteParam(
+                admin,
+                data.user,
+                searchParams.get("invite")
+            );
 
             const { data: existingUser } = await admin
                 .from("users")

@@ -3,6 +3,8 @@ import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
 import { sendSMS } from "@/services/twilio/send-sms";
+import { signedReviewLink } from "@/lib/review-requests/tracking-token";
+import { smsLabel } from "@/lib/security/sms-label";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 type CustomerRow = {
@@ -94,8 +96,10 @@ export async function runBulkReviewRequestAction(
                 const reviewCaptureDomain = rootDomain.includes("localhost")
                     ? rootDomain
                     : (process.env.NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN || "collectratings.com");
-                const reviewLink = `${protocol}://${reviewCaptureDomain}/${biz.slug}?ref=${requestRecord.id}`;
-                const messageBody = `Hi ${customer.first_name || "there"}! Thanks for visiting ${biz.name}. We'd love your feedback: ${reviewLink}`;
+                const reviewLink = signedReviewLink(
+                    `${protocol}://${reviewCaptureDomain}/${biz.slug}`, requestRecord.id, biz.id,
+                );
+                const messageBody = `Hi ${smsLabel(customer.first_name, "there")}! Thanks for visiting ${smsLabel(biz.name, "us")}. We'd love your feedback: ${reviewLink}`;
 
                 const result = await sendSMS(customer.phone, messageBody);
 

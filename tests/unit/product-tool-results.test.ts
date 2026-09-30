@@ -1,5 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-const mocks = vi.hoisted(() => ({ metrics: vi.fn(), lead: vi.fn(), send: vi.fn() }));
+const mocks = vi.hoisted(() => ({ metrics: vi.fn(), lead: vi.fn(), send: vi.fn(), limit: vi.fn() }));
+vi.mock("@/lib/auth/rate-limit", () => ({
+    clientIpFrom: () => "test-ip",
+    publicFormRateLimit: { limit: mocks.limit },
+    publicToolResultRateLimit: { limit: mocks.limit },
+}));
 vi.mock("@/lib/free-tools/places-public", () => ({ fetchPublicPlaceMetrics: mocks.metrics }));
 vi.mock("@/lib/free-tools/capture-tool-lead", () => ({ captureToolLead: mocks.lead }));
 vi.mock("@/services/resend/send-email", () => ({ sendEmail: mocks.send }));
@@ -13,6 +18,7 @@ beforeEach(() => {
     mocks.metrics.mockResolvedValue({ name: "My Business", totalReviews: 12, averageRating: 4.5, reviewLink: "https://google.test/review" });
     mocks.lead.mockResolvedValue({ ok: true });
     mocks.send.mockResolvedValue({ sent: false });
+    mocks.limit.mockResolvedValue({ success: true });
 });
 describe("public tool evidence", () => {
     it("returns a usable review link without collecting an email", async () => {

@@ -33,22 +33,24 @@ async function countDraftsUsedThisMonth(
     supabase: SupabaseClient<Database>,
     orgId: string,
 ): Promise<number | null> {
-    const { data: orgBusinesses } = await supabase
+    const { data: orgBusinesses, error: businessError } = await supabase
         .from("businesses")
         .select("id")
         .eq("organization_id", orgId);
 
+    if (businessError) return null;
+
     const businessIds = (orgBusinesses ?? []).map((b: { id: string }) => b.id);
     if (businessIds.length === 0) return null;
 
-    const { count } = await supabase
+    const { count, error: countError } = await supabase
         .from("review_requests")
         .select("*", { count: "exact", head: true })
         .in("business_id", businessIds)
         .not("ai_review_text", "is", null)
         .gte("created_at", startOfCurrentMonth().toISOString());
 
-    return count ?? 0;
+    return countError ? null : count;
 }
 
 /**
@@ -62,11 +64,13 @@ export async function checkAiReviewDraftQuota(
     reviewRequestId: string | undefined,
 ): Promise<QuotaDenial> {
     try {
-        const { data: biz } = await supabase
+        const { data: biz, error: bizError } = await supabase
             .from("businesses")
             .select("organization_id, organizations!inner(plan, plan_status, max_ai_replies_per_month)")
             .eq("id", businessId)
             .maybeSingle();
+
+        if (bizError || !biz) return NextResponse.json(PLAN_REQUIRED, { status: 403 });
 
         const org =
             (biz as {
@@ -93,12 +97,13 @@ export async function checkAiReviewDraftQuota(
 
         let alreadyGenerated = false;
         if (reviewRequestId) {
-            const { data: existingDraft } = await supabase
+            const { data: existingDraft, error: draftError } = await supabase
                 .from("review_requests")
                 .select("id")
                 .eq("id", reviewRequestId)
                 .not("ai_review_text", "is", null)
                 .maybeSingle();
+            if (draftError) return NextResponse.json(PLAN_REQUIRED, { status: 503 });
             alreadyGenerated = Boolean(existingDraft?.id);
         }
 
@@ -110,7 +115,8 @@ export async function checkAiReviewDraftQuota(
 
         if (quotaApplies && !alreadyGenerated) {
             const used = await countDraftsUsedThisMonth(supabase, orgId);
-            if (used !== null && used >= maxDrafts) {
+            if (used === null) return NextResponse.json(PLAN_REQUIRED, { status: 503 });
+            if (used >= maxDrafts) {
                 return NextResponse.json(
                     {
                         error: "Monthly AI review draft limit reached for your plan.",

@@ -1,5 +1,5 @@
 import { logger } from "@/lib/logger";
-import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import {
     getValidGoogleToken,
     reattachOrphanedGoogleReviews,
@@ -38,7 +38,7 @@ export async function getGoogleLocationSelector(request: NextRequest) {
             throw new ApiRouteError("businessId required", { status: 400, code: "MISSING_BUSINESS_ID" });
         }
 
-        const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+        const allowed = await canManageBusinessIntegration(supabase, user.id, businessId);
         if (!allowed) {
             throw new ApiRouteError("Forbidden", { status: 403, code: "FORBIDDEN" });
         }
@@ -132,7 +132,7 @@ export async function postGoogleLocationSelector(request: Request) {
             });
         }
 
-        const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+        const allowed = await canManageBusinessIntegration(supabase, user.id, businessId);
         if (!allowed) {
             throw new ApiRouteError("Forbidden", { status: 403, code: "FORBIDDEN" });
         }
@@ -255,4 +255,3 @@ export async function postGoogleLocationSelector(request: Request) {
         });
     }
 }
-

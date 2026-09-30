@@ -2,11 +2,14 @@ import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { terminateReviewRequestDrip } from "@/lib/campaigns/terminate-drip";
+import { verifyReviewTracking } from "@/lib/review-requests/tracking-token";
 import { z } from "zod";
 
 const updateSchema = z.object({
     action: z.literal("update"),
     requestId: z.string().uuid(),
+    businessId: z.string().uuid(),
+    token: z.string().min(1),
     trackData: z
         .object({
             status: z.enum(["rated_positive", "rated_negative", "completed", "feedback_left"]).optional(),
@@ -27,15 +30,19 @@ export async function POST(request: Request) {
         if (!parsed.success) {
             return NextResponse.json({ error: "Invalid tracking payload" }, { status: 400 });
         }
-        const { requestId, trackData } = parsed.data;
+        const { requestId, businessId, token, trackData } = parsed.data;
 
-        // Admin client is safe here only after strict request-level validation.
+        if (!verifyReviewTracking(requestId, businessId, token)) {
+            return NextResponse.json({ error: "Invalid tracking token" }, { status: 403 });
+        }
+
         const supabase = createAdminClient();
 
         const { data: existing, error: lookupError } = await supabase
             .from("review_requests")
             .select("id")
             .eq("id", requestId)
+            .eq("business_id", businessId)
             .maybeSingle();
 
         if (lookupError || !existing) {
@@ -45,7 +52,8 @@ export async function POST(request: Request) {
         const { error } = await supabase
             .from("review_requests")
             .update(trackData)
-            .eq("id", requestId);
+            .eq("id", requestId)
+            .eq("business_id", businessId);
 
         if (error) {
             throw error;

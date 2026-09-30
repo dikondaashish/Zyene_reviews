@@ -7,9 +7,11 @@ import { parseReviewRefFromSearch } from "./helpers";
 export function useReviewFlowTracking(
     businessId: string,
     requestId: string | undefined,
+    openToken: string | undefined,
     isPreview: boolean
 ) {
     const [activeRequestId, setActiveRequestId] = useState<string | undefined>(requestId);
+    const trackingTokenRef = useRef<string | undefined>(undefined);
     const trackOpenInFlightRef = useRef<Promise<string | undefined> | null>(null);
 
     const resolveTrackingRequestId = useCallback((): string | undefined => {
@@ -22,7 +24,7 @@ export function useReviewFlowTracking(
 
     const ensureActiveRequestId = useCallback(async (): Promise<string | undefined> => {
         if (isPreview) return undefined;
-        if (activeRequestId) return activeRequestId;
+        if (activeRequestId && trackingTokenRef.current) return activeRequestId;
 
         if (trackOpenInFlightRef.current) {
             return trackOpenInFlightRef.current;
@@ -31,19 +33,32 @@ export function useReviewFlowTracking(
         trackOpenInFlightRef.current = (async () => {
             try {
                 const rid = resolveTrackingRequestId();
-                const res = await fetch("/api/track/review-open", {
+                let res = await fetch("/api/track/review-open", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         businessId,
                         requestId: rid,
+                        token: new URLSearchParams(window.location.search).get("sig") || undefined,
+                        openToken,
                     }),
                 });
 
-                const data = (await res.json().catch(() => ({}))) as { requestId?: string; error?: string };
-                if (!res.ok) {
+                if (!res.ok && rid && openToken) {
+                    res = await fetch("/api/track/review-open", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ businessId, openToken }),
+                    });
                 }
-                if (res.ok && typeof data.requestId === "string" && data.requestId.length > 0) {
+
+                if (!res.ok) return undefined;
+
+                const data = (await res.json().catch(() => ({}))) as {
+                    requestId?: string; token?: string; error?: string;
+                };
+                if (typeof data.requestId === "string" && typeof data.token === "string") {
+                    trackingTokenRef.current = data.token;
                     setActiveRequestId(data.requestId);
                     return data.requestId as string;
                 }
@@ -56,7 +71,7 @@ export function useReviewFlowTracking(
         })();
 
         return trackOpenInFlightRef.current;
-    }, [activeRequestId, businessId, isPreview, resolveTrackingRequestId]);
+    }, [activeRequestId, businessId, isPreview, openToken, resolveTrackingRequestId]);
 
     useEffect(() => {
         if (isPreview) return;
@@ -66,23 +81,27 @@ export function useReviewFlowTracking(
     const trackRequestUpdate = useCallback(
         async (trackData: Record<string, unknown>) => {
             if (isPreview) return;
-            const requestIdToUse = activeRequestId ?? (await ensureActiveRequestId());
-            if (!requestIdToUse) return;
+            const requestIdToUse = await ensureActiveRequestId();
+            if (!requestIdToUse || !trackingTokenRef.current) return;
             try {
                 await fetch("/api/track/review", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: "update", requestId: requestIdToUse, trackData }),
+                    body: JSON.stringify({
+                        action: "update", requestId: requestIdToUse, businessId,
+                        token: trackingTokenRef.current, trackData,
+                    }),
                 });
             } catch (error) {
             }
         },
-        [activeRequestId, ensureActiveRequestId, isPreview]
+        [businessId, ensureActiveRequestId, isPreview]
     );
 
     return {
         activeRequestId,
         ensureActiveRequestId,
+        getTrackingToken: () => trackingTokenRef.current,
         trackRequestUpdate,
     };
 }

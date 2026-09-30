@@ -3,6 +3,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { NextResponse } from "next/server";
 import Papa from "papaparse";
+import { SAFE_CSV_OPTIONS } from "@/lib/export/safe-csv";
 
 /** F7.2: every citation an engine gave for one of this business's samples. */
 export async function handleCitationsExport() {
@@ -56,7 +57,7 @@ export async function handleCitationsExport() {
         };
     });
 
-    const csvData = Papa.unparse(formatted);
+    const csvData = Papa.unparse(formatted, SAFE_CSV_OPTIONS);
     const safeName = (business.name || "business").replace(/[^a-z0-9]/gi, "_").toLowerCase();
 
     return new NextResponse(csvData, {

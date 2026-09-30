@@ -113,11 +113,6 @@ const BASELINE = {
     why: "TODO: split",
   },
   "src/app/actions/onboarding/business.ts": { max: 241, why: "TODO: split" },
-  "src/lib/auth/accept-business-invitation.ts": {
-    max: 239,
-    why: "TODO: split",
-  },
-  "src/services/team/team-member-api.ts": { max: 235, why: "TODO: split" },
   "src/services/google/performance-queries.ts": {
     max: 234,
     why: "TODO: split",

@@ -5,6 +5,7 @@ import { OnboardingStepTwoSection } from "./onboarding-step-two-section";
 import { OnboardingGlassStepsSection } from "./onboarding-glass-steps-section";
 import { getOnboardingStepMotion } from "./onboarding-step-motion";
 import type { OnboardingBusiness, OnboardingOrganization, OnboardingUser } from "./onboarding-types";
+import type { GoogleOAuthAuthorization } from "@/types/components";
 
 type OnboardingStepsProps = {
     currentStep: number;
@@ -15,8 +16,8 @@ type OnboardingStepsProps = {
     user: OnboardingUser;
     googleConnected: boolean;
     setGoogleConnected: (connected: boolean) => void;
-    pendingGoogleCode: string | null;
-    setPendingGoogleCode: (code: string | null) => void;
+    pendingGoogleCode: GoogleOAuthAuthorization | null;
+    setPendingGoogleCode: (code: GoogleOAuthAuthorization | null) => void;
     googleConnectionError: string | null;
     setGoogleConnectionError: (message: string | null) => void;
     showPaymentCancelled: boolean;

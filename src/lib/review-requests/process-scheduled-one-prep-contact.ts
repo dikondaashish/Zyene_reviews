@@ -2,6 +2,7 @@ import { isTestContact } from "@/lib/customers/test-contact";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { BusinessRow, DueRow } from "./scheduled-queue-types";
 import { patchRequest } from "./scheduled-queue-patch";
+import { signedReviewLink } from "@/lib/review-requests/tracking-token";
 export type ScheduledSendContactFields = {
     channel: string;
     phoneNorm: string | null;
@@ -140,7 +141,7 @@ export async function validateScheduledSendContact(
     const reviewCaptureDomain = rootDomain.includes("localhost")
         ? rootDomain
         : process.env.NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN || "collectratings.com";
-    const reviewLink = `${protocol}://${reviewCaptureDomain}/${slug}?ref=${requestId}`;
+    const reviewLink = signedReviewLink(`${protocol}://${reviewCaptureDomain}/${slug}`, requestId, businessId);
 
     return { channel, phoneNorm, emailNorm, displayName, reviewLink };
 }

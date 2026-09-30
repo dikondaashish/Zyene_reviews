@@ -3,8 +3,14 @@ import { z } from "zod";
 
 import { logger } from "@/lib/logger";
 import { generateContentWithFallback } from "@/domains/ai/adapters/vertex-adapter";
-import { aiRateLimit } from "@/lib/auth/rate-limit";
+import {
+    clientIpFrom,
+    publicAiDraftBusinessRateLimit,
+    publicAiDraftIpRateLimit,
+    publicAiDraftRequestRateLimit,
+} from "@/lib/auth/rate-limit";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { verifyReviewTracking } from "@/lib/review-requests/tracking-token";
 import {
     ensureCompleteReviewText,
     isCompleteReviewText,
@@ -20,8 +26,9 @@ import {
 
 const requestSchema = z.object({
     /** When set, last reviews are loaded only for this request's business (server-resolved). Never trust client businessId for DB reads. */
-    reviewRequestId: z.string().uuid().optional(),
-    businessId: z.string().uuid().optional(),
+    reviewRequestId: z.string().uuid(),
+    businessId: z.string().uuid(),
+    token: z.string().min(1),
     businessName: z.string().min(1).max(200),
     businessCategory: z.string().min(1).max(120),
     rating: z.number().int().min(4).max(5),
@@ -33,25 +40,23 @@ type AdminClient = ReturnType<typeof createAdminClient>;
 
 async function persistDraft(
     supabase: AdminClient,
-    reviewRequestId: string | undefined,
+    reviewRequestId: string,
     reviewText: string,
     rating: number,
 ): Promise<void> {
-    if (!reviewRequestId) return;
-    await supabase
+    const { data, error } = await supabase
         .from("review_requests")
         .update({ ai_review_text: reviewText, rating_given: rating })
-        .eq("id", reviewRequestId);
+        .eq("id", reviewRequestId)
+        .select("id")
+        .maybeSingle();
+    if (error || !data) throw error ?? new Error("Review draft was not saved");
 }
 
 export async function handleGenerateReviewFlow(request: Request) {
     try {
-        const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
-            || request.headers.get("x-real-ip")
-            || "anonymous";
-
         try {
-            const { success } = await aiRateLimit.limit(ip);
+            const { success } = await publicAiDraftIpRateLimit.limit(clientIpFrom(request));
             if (!success) {
                 return NextResponse.json(
                     { error: "Too many requests. Please try again in a few minutes." },
@@ -60,6 +65,7 @@ export async function handleGenerateReviewFlow(request: Request) {
             }
         } catch (e) {
             logger.error({ err: e }, "AI Rate limit check failed:");
+            return NextResponse.json({ error: "AI drafts are temporarily unavailable." }, { status: 503 });
         }
 
         const body = await request.json();
@@ -72,18 +78,32 @@ export async function handleGenerateReviewFlow(request: Request) {
             );
         }
 
-        const { reviewRequestId, businessId, businessName, businessCategory, rating, selectedTags, selectedStaff } =
+        const { reviewRequestId, businessId, token, businessName, businessCategory, rating, selectedTags, selectedStaff } =
             parsed.data;
+
+        if (!verifyReviewTracking(reviewRequestId, businessId, token)) {
+            return NextResponse.json({ error: "Invalid review link" }, { status: 403 });
+        }
 
         const supabase = createAdminClient();
 
-        const context = reviewRequestId
-            ? await loadRecentReviewsContext(supabase, reviewRequestId)
-            : { resolvedBusinessId: null, recentReviewsContext: "" };
-
-        const resolvedBusinessId = context.resolvedBusinessId ?? businessId ?? null;
-        if (!resolvedBusinessId) {
+        const context = await loadRecentReviewsContext(supabase, reviewRequestId);
+        const resolvedBusinessId = context.resolvedBusinessId;
+        if (!resolvedBusinessId || businessId !== resolvedBusinessId) {
             return NextResponse.json(PLAN_REQUIRED, { status: 403 });
+        }
+
+        try {
+            const [businessLimit, requestLimit] = await Promise.all([
+                publicAiDraftBusinessRateLimit.limit(resolvedBusinessId),
+                publicAiDraftRequestRateLimit.limit(reviewRequestId),
+            ]);
+            if (!businessLimit.success || !requestLimit.success) {
+                return NextResponse.json({ error: "AI draft limit reached. Please try again later." }, { status: 429 });
+            }
+        } catch (error) {
+            logger.error({ err: error }, "AI draft budget check failed:");
+            return NextResponse.json({ error: "AI drafts are temporarily unavailable." }, { status: 503 });
         }
 
         const denial = await checkAiReviewDraftQuota(supabase, resolvedBusinessId, reviewRequestId);

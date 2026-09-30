@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 
 const schema = z.object({ businessId: z.string().uuid(), name: z.string().trim().min(2).max(80), source: z.enum(["vercel", "cloudflare", "proxy", "manual"]) });
 
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
         if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         const parsed = schema.safeParse(await request.json());
         if (!parsed.success) return NextResponse.json({ error: "Invalid log source" }, { status: 400 });
-        if (!(await userCanAccessBusiness(supabase, user.id, parsed.data.businessId))) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        if (!(await canManageBusinessIntegration(supabase, user.id, parsed.data.businessId))) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         const admin = createAdminClient();
         const business = await admin.from("businesses").select("organization_id").eq("id", parsed.data.businessId).single();
         if (business.error) return NextResponse.json({ error: "Business not found" }, { status: 404 });

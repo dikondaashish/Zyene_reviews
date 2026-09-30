@@ -1,22 +1,13 @@
 import { toast } from "sonner";
 
-import { GBP_SCOPE } from "@/services/google/oauth-scopes";
+import { prepareGoogleOnboardingOAuth } from "@/app/actions/onboarding/google-oauth-start";
 
-export function navigateToGoogleBusinessOAuthOnboarding(): void {
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.trim();
-    if (!clientId) {
-        toast.error(
-            "Google connection is unavailable in this environment. Please enter your business details manually or contact support."
-        );
-        return;
+export async function navigateToGoogleBusinessOAuthOnboarding(businessId: string): Promise<void> {
+    try {
+        const result = await prepareGoogleOnboardingOAuth(businessId, `${window.location.origin}/onboarding`);
+        if (result.success) window.location.href = result.url;
+        else toast.error(result.error);
+    } catch {
+        toast.error("Unable to start Google connection. Please try again.");
     }
-    const redirectUri = `${window.location.origin}/onboarding`;
-    const oauthUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
-    oauthUrl.searchParams.set("client_id", clientId);
-    oauthUrl.searchParams.set("redirect_uri", redirectUri);
-    oauthUrl.searchParams.set("response_type", "code");
-    oauthUrl.searchParams.set("scope", GBP_SCOPE);
-    oauthUrl.searchParams.set("access_type", "offline");
-    oauthUrl.searchParams.set("prompt", "consent");
-    window.location.href = oauthUrl.toString();
 }

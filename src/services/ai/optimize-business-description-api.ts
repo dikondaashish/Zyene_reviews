@@ -6,6 +6,7 @@ import { generateContentWithFallback, nextResponseForVertexAiError } from "@/dom
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
+import { checkAiBusinessDailyBudget } from "./ai-business-budget";
 
 const requestSchema = z.object({
     businessId: z.string().uuid(),
@@ -68,6 +69,9 @@ export async function handleOptimizeBusinessDescription(request: Request) {
             details: requestId,
         });
     }
+
+    const budgetDenial = await checkAiBusinessDailyBudget(businessId);
+    if (budgetDenial) return budgetDenial;
 
     const keywordList = topKeywords
         .reduce<string[]>((acc, k) => {

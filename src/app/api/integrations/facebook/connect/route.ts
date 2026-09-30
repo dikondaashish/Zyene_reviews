@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import { createClient } from "@/lib/db/supabase/server";
-import { getAppId } from "@/services/facebook/client";
+import { getAppId, getAppSecret } from "@/services/facebook/client";
+import { createFacebookOAuthState, FACEBOOK_STATE_COOKIE, facebookCookieOptions } from
+    "@/services/facebook/oauth-state";
 
 const connectQuerySchema = z.object({ businessId: z.string().uuid() });
 
@@ -30,7 +32,7 @@ export async function GET(request: Request) {
     }
     const { businessId } = parsed.data;
 
-    if (!(await userCanAccessBusiness(supabase, user.id, businessId))) {
+    if (!(await canManageBusinessIntegration(supabase, user.id, businessId))) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -46,10 +48,7 @@ export async function GET(request: Request) {
         process.env.NEXT_PUBLIC_ROOT_DOMAIN || "http://localhost:3000";
     const redirectUri = `${rootDomain}/api/integrations/facebook/callback`;
 
-    // State encodes businessId so we can associate on callback
-    const state = Buffer.from(
-        JSON.stringify({ businessId, userId: user.id })
-    ).toString("base64url");
+    const state = createFacebookOAuthState(user.id, businessId, getAppSecret());
 
     const scopes = [
         "pages_read_engagement",
@@ -62,8 +61,11 @@ export async function GET(request: Request) {
         `client_id=${appId}` +
         `&redirect_uri=${encodeURIComponent(redirectUri)}` +
         `&scope=${scopes}` +
-        `&state=${state}` +
+        `&state=${state.nonce}` +
         `&response_type=code`;
 
-    return NextResponse.redirect(oauthUrl);
+    const response = NextResponse.redirect(oauthUrl);
+    response.cookies.set(FACEBOOK_STATE_COOKIE, state.cookieValue,
+        facebookCookieOptions("/api/integrations/facebook/callback", 600));
+    return response;
 }

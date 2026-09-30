@@ -16,7 +16,7 @@ export async function triggerOnboardingSync(businessId: string) {
     // Find if Google is connected for this business
     const { data: platform } = await supabase
       .from("review_platforms")
-      .select("*")
+      .select("id, google_location_id, sync_status")
       .eq("business_id", businessId)
       .eq("platform", "google")
       .maybeSingle();

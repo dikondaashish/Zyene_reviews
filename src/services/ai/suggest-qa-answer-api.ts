@@ -8,6 +8,7 @@ import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
+import { checkAiBusinessDailyBudget } from "./ai-business-budget";
 
 const requestSchema = z.object({
     questionId: z.string().uuid(),
@@ -94,6 +95,9 @@ export async function handleSuggestQaAnswer(request: Request) {
             details: requestId,
         });
     }
+
+    const budgetDenial = await checkAiBusinessDailyBudget(businessId);
+    if (budgetDenial) return budgetDenial;
 
     const knowledgeBase = (bizTyped.knowledge_base as string) || "No special knowledge base provided.";
     const businessName = (bizTyped.name as string) || "our business";

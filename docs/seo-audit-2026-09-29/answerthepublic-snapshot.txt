@@ -1,0 +1,1217 @@
+- navigation:
+  - link "AnswerThePublic Home":
+    - /url: /
+    - img "AnswerThePublic"
+  - button "Open learn menu": Learn
+  - button "Open features menu": Features
+  - button "Open use cases menu": Use Cases
+  - button "Open services menu": Services
+  - button "Content Studio"
+  - generic: New
+  - link "Pricing":
+    - /url: /pricing
+  - button "EN":
+    - generic: EN
+  - button "Sign in":
+    - generic: Sign in
+  - link "Get started for free":
+    - /url: /pricing
+- main:
+  - main:
+    - button "Create Project":
+      - generic: Create Project
+    - button "Dashboard":
+      - generic: Dashboard
+    - button "Suggested For You":
+      - generic: Suggested For You
+    - button "Keyword Coverage":
+      - generic: Keyword Coverage
+    - button "Content Schedule":
+      - generic: Content Schedule
+    - button "All Content":
+      - generic: All Content
+    - button "Settings":
+      - generic: Settings
+    - button "Hide Menu":
+      - generic: Hide Menu
+    - generic: "Upgrade to:"
+    - list:
+      - generic: Increase daily limits
+      - generic: Unlock all keywords data
+      - generic: Get more search results
+    - button "Start a 7-Day Trial":
+      - generic: Start a 7-Day Trial
+    - button "Watch tutorial":
+      - generic: Watch tutorial
+    - button "Send Feedback":
+      - generic: Send Feedback
+    - link "Community":
+      - /url: https://discord.gg/67vmn4Qtw9
+      - generic: Community
+    - link "Support":
+      - /url: https://answerthepublic.zendesk.com/hc/en-us/requests/new
+      - generic: Support
+    - img "ATP Logo"
+    - tablist "tabs":
+      - tab "All" [selected]:
+        - text: All
+      - tab "AI Models":
+        - text: AI Models
+      - tab "Search Engines":
+        - text: Search Engines
+      - tab "Social Media":
+        - text: Social Media
+      - tab "Shopping":
+        - text: Shopping
+    - button "Back to top":
+      - text: Back to top
+    - searchbox "Search All": google reviews
+    - textbox "English"
+    - textbox "United States"
+    - button "Filters":
+      - generic: Filters
+    - button "Search All":
+      - generic: Search All
+    - button "Claim offer":
+      - paragraph: SEO Day & NP Summit '26
+      - paragraph: Special offer
+      - paragraph: Get 4 months free on yearly plans. Discover ideas. Create content.
+      - generic: "1"
+      - generic: "3"
+      - generic: DAYS
+      - generic: "1"
+      - generic: "1"
+      - generic: HRS
+      - generic: "2"
+      - generic: "6"
+      - generic: MINS
+      - button "Claim offer":
+        - paragraph: Claim offer
+      - button "Close banner":
+    - paragraph: You've used your free search for today
+    - text: "|"
+    - paragraph: Create an account to unlock 3 free searches per day — no credit card needed.
+    - button "Get 3 free searches"
+    - paragraph: Summary
+    - paragraph: for google reviews
+    - button "Export":
+      - text: Export
+    - img "Google"
+    - paragraph: Search Volume
+    - button:
+    - heading "301.0K High" [level=2]:
+      - text: 301.0K
+      - text: High
+    - img "Google Ads"
+    - paragraph: Cost Per Click
+    - button:
+    - heading "US$ 14.22 Medium" [level=2]:
+      - text: US$ 14.22
+      - text: Medium
+    - paragraph: Rank for this keyword with Content Studio
+    - button:
+    - heading "Generate Content" [level=2]:
+      - button "Generate Content":
+        - paragraph: Generate Content
+    - heading "Ideas" [level=1]
+    - heading "for google reviews" [level=6]
+    - button "Send Feedback":
+      - generic: Send Feedback
+    - paragraph: Last updated 9/29/2026
+    - paragraph: Top Ideas
+    - button "Export":
+      - text: Export
+    - paragraph: Google reviews
+    - paragraph: Register for free to unlock more data
+    - button "Create my free account":
+      - generic: Create my free account
+    - generic: AI Prompts
+    - generic: for google reviews
+    - img "OpenAI"
+    - img "Gemini"
+    - generic: Beta
+    - table:
+      - rowgroup:
+        - row "Prompt Content Studio Intent Sentiment Brands":
+          - columnheader "Prompt":
+            - generic: Prompt
+          - columnheader "Content Studio":
+            - generic: Content Studio
+          - columnheader "Intent":
+            - generic: Intent
+          - columnheader "Sentiment":
+            - generic: Sentiment
+          - columnheader "Brands":
+            - generic: Brands
+      - rowgroup:
+        - row "ChatGPT How do I write an effective Google review for a local business? Copy Generate Content Neutral Google":
+          - cell "ChatGPT How do I write an effective Google review for a local business? Copy":
+            - img "ChatGPT"
+            - button:
+            - button "How do I write an effective Google review for a local business?"
+            - button:
+            - button:
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell:
+          - cell "Neutral"
+          - cell "Google":
+            - generic: Google
+        - row "Gemini How to encourage customers to leave positive Google reviews? Copy Generate Content Get AI response to view sentiment Get AI Response":
+          - cell "Gemini How to encourage customers to leave positive Google reviews? Copy":
+            - img "Gemini"
+            - button:
+            - button "How to encourage customers to leave positive Google reviews?"
+            - button:
+            - button:
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell:
+          - cell "Get AI response to view sentiment":
+            - paragraph: Get AI response to view sentiment
+          - cell "Get AI Response":
+            - paragraph: Get AI Response
+        - row "ChatGPT Where can I find detailed Google reviews for nearby restaurants? Copy Generate Content":
+          - cell "ChatGPT Where can I find detailed Google reviews for nearby restaurants? Copy":
+            - img "ChatGPT"
+            - button:
+            - button "Where can I find detailed Google reviews for nearby restaurants?"
+            - button:
+            - button:
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell:
+          - cell:
+          - cell:
+        - row "Gemini What are effective strategies for responding to negative Google reviews? Copy Generate Content":
+          - cell "Gemini What are effective strategies for responding to negative Google reviews? Copy":
+            - img "Gemini"
+            - button:
+            - button "What are effective strategies for responding to negative Google reviews?"
+            - button:
+            - button:
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell:
+          - cell:
+          - cell:
+        - row "ChatGPT What are the best practices for responding to negative Google reviews? Copy Generate Content":
+          - cell "ChatGPT What are the best practices for responding to negative Google reviews? Copy":
+            - img "ChatGPT"
+            - button:
+            - button "What are the best practices for responding to negative Google reviews?"
+            - button:
+            - button:
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell:
+          - cell:
+          - cell:
+        - row "Gemini Where can I find my business's Google reviews? Copy Generate Content":
+          - cell "Gemini Where can I find my business's Google reviews? Copy":
+            - img "Gemini"
+            - button:
+            - button "Where can I find my business's Google reviews?"
+            - button:
+            - button:
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell:
+          - cell:
+          - cell:
+        - row "ChatGPT How to identify fake Google reviews on product listings? Copy Generate Content":
+          - cell "ChatGPT How to identify fake Google reviews on product listings? Copy":
+            - img "ChatGPT"
+            - button:
+            - button "How to identify fake Google reviews on product listings?"
+            - button:
+            - button:
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell:
+          - cell:
+          - cell:
+        - row "Gemini How do online customer reviews impact local search rankings? Copy Generate Content":
+          - cell "Gemini How do online customer reviews impact local search rankings? Copy":
+            - img "Gemini"
+            - button:
+            - button "How do online customer reviews impact local search rankings?"
+            - button:
+            - button:
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell:
+          - cell:
+          - cell:
+        - row "ChatGPT Which services have the highest average ratings on Google reviews? Copy Generate Content":
+          - cell "ChatGPT Which services have the highest average ratings on Google reviews? Copy":
+            - img "ChatGPT"
+            - button:
+            - button "Which services have the highest average ratings on Google reviews?"
+            - button:
+            - button:
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell:
+          - cell:
+          - cell:
+        - row "Gemini What tools are available for managing online business feedback? Copy Generate Content":
+          - cell "Gemini What tools are available for managing online business feedback? Copy":
+            - img "Gemini"
+            - button:
+            - button "What tools are available for managing online business feedback?"
+            - button:
+            - button:
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell:
+          - cell:
+          - cell:
+    - generic: Register to get 3 daily searches, 30 prompts and 2 answers from AI models
+    - list:
+      - generic: View more results per search
+      - generic: Get 2 prompt answers
+      - generic: Get to see unlimited search history
+    - button "Create my free account":
+      - paragraph: Create my free account
+    - img "Neil gift illustration"
+    - button "View up to 100 results":
+      - generic: View up to 100 results
+    - generic: Showing 10 of 10 results
+    - dialog "Register to unlock more data":
+      - generic: Register to unlock more data
+      - button "Create my free account"
+    - generic: Organic Searches
+    - generic: for google reviews
+    - img "Google"
+    - img "Bing"
+    - table:
+      - rowgroup:
+        - row "Keywords Content Studio Modifiers Volume CPC":
+          - columnheader "Keywords":
+            - generic: Keywords
+          - columnheader "Content Studio":
+            - generic: Content Studio
+          - columnheader "Modifiers":
+            - generic: Modifiers
+          - columnheader "Volume":
+            - button "Volume":
+              - paragraph: Volume
+          - columnheader "CPC":
+            - button "CPC":
+              - paragraph: CPC
+      - rowgroup:
+        - row "Google google reviews my reviews Copy Generate Content Alphabeticals / m 49.5K 11.27":
+          - cell "Google google reviews my reviews Copy":
+            - img "Google"
+            - button:
+            - generic: google reviews my reviews
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / m":
+            - generic: Alphabeticals / m
+          - cell "49.5K"
+          - cell "11.27":
+            - generic: "11.27"
+        - row "Google google reviews management tool Copy Generate Content Alphabeticals / m 1.0K 23.26":
+          - cell "Google google reviews management tool Copy":
+            - img "Google"
+            - button:
+            - generic: google reviews management tool
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / m":
+            - generic: Alphabeticals / m
+          - cell "1.0K"
+          - cell "23.26":
+            - generic: "23.26"
+        - row "Google google reviews manager Copy Generate Content Alphabeticals / m":
+          - cell "Google google reviews manager Copy":
+            - img "Google"
+            - button:
+            - generic: google reviews manager
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / m":
+            - generic: Alphabeticals / m
+          - cell:
+          - cell:
+        - row "Google google reviews museum of ice cream nyc Copy Generate Content Alphabeticals / m":
+          - cell "Google google reviews museum of ice cream nyc Copy":
+            - img "Google"
+            - button:
+            - generic: google reviews museum of ice cream nyc
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / m":
+            - generic: Alphabeticals / m
+          - cell:
+          - cell:
+        - row "Google google reviews missing Copy Generate Content Alphabeticals / m":
+          - cell "Google google reviews missing Copy":
+            - img "Google"
+            - button:
+            - generic: google reviews missing
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / m":
+            - generic: Alphabeticals / m
+          - cell:
+          - cell:
+        - row "Google google reviews maps Copy Generate Content Alphabeticals / m":
+          - cell "Google google reviews maps Copy":
+            - img "Google"
+            - button:
+            - generic: google reviews maps
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / m":
+            - generic: Alphabeticals / m
+          - cell:
+          - cell:
+        - row "Google google reviews meme Copy Generate Content Alphabeticals / m":
+          - cell "Google google reviews meme Copy":
+            - img "Google"
+            - button:
+            - generic: google reviews meme
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / m":
+            - generic: Alphabeticals / m
+          - cell:
+          - cell:
+        - row "Google google reviews mine Copy Generate Content Alphabeticals / m":
+          - cell "Google google reviews mine Copy":
+            - img "Google"
+            - button:
+            - generic: google reviews mine
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / m":
+            - generic: Alphabeticals / m
+          - cell:
+          - cell:
+        - row "Google google reviews mavis tire Copy Generate Content Alphabeticals / m":
+          - cell "Google google reviews mavis tire Copy":
+            - img "Google"
+            - button:
+            - generic: google reviews mavis tire
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / m":
+            - generic: Alphabeticals / m
+          - cell:
+          - cell:
+        - row "Google google reviews mcdonald's Copy Generate Content Alphabeticals / m":
+          - cell "Google google reviews mcdonald's Copy":
+            - img "Google"
+            - button:
+            - generic: google reviews mcdonald's
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / m":
+            - generic: Alphabeticals / m
+          - cell:
+          - cell:
+    - button "View 3.6K results":
+      - generic: View 3.6K results
+    - generic: Showing 10 of 3.6K results
+    - dialog "Register to unlock more data":
+      - generic: Register to unlock more data
+      - button "Create my free account"
+    - generic: Search Modifiers
+    - generic: for google reviews
+    - img "Google"
+    - tablist "tabs":
+      - tab "Questions" [active] [selected]:
+        - generic: Questions
+      - tab "Prepositions":
+        - generic: Prepositions
+      - tab "Comparisons":
+        - generic: Comparisons
+      - tab "Alphabeticals":
+        - generic: Alphabeticals
+      - tab "Numbers":
+        - generic: Numbers
+    - heading "are" [level=4]
+    - img "Google"
+    - generic: CPC
+    - button:
+    - generic: are google reviews reliable
+    - generic: "210"
+    - generic: "-"
+    - button:
+    - generic: are google reviews anonymous
+    - generic: "90"
+    - generic: "-"
+    - button:
+    - generic: are google reviews fake
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: are google reviews legit
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: are google reviews important
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: are google reviews posted immediately
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: are google reviews instant
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: are google reviews public
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: are google reviews real
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: are google reviews down
+    - generic: "-"
+    - generic: "-"
+    - button "View 15 results":
+      - generic: View 15 results
+    - heading "can" [level=4]
+    - img "Google"
+    - generic: CPC
+    - button:
+    - generic: can google reviews be deleted
+    - generic: 1.6K
+    - generic: US$ 7.14
+    - button:
+    - generic: can google reviews be removed
+    - generic: 1.3K
+    - generic: US$ 6.65
+    - button:
+    - generic: can google reviews be anonymous
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: can google reviews be traced
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: can google reviews be deleted by the business
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: can google reviews be deleted by owner
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: can google reviews be trusted
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: can google reviews be bought
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: can google reviews be taken down
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: can google reviews be edited
+    - generic: "-"
+    - generic: "-"
+    - button "View 15 results":
+      - generic: View 15 results
+    - heading "how" [level=4]
+    - img "Google"
+    - generic: CPC
+    - button:
+    - generic: how get google reviews
+    - generic: 1K
+    - generic: US$ 23.83
+    - button:
+    - generic: how many google reviews do i need
+    - generic: "90"
+    - generic: US$ 9.73
+    - button:
+    - generic: how google reviews work
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: how google reviews are calculated
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: how google reviews help your business
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: how do google reviews disappear
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: how google reviews work for business
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: how google reviews
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: how search google reviews
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: how delete google reviews
+    - generic: "-"
+    - generic: "-"
+    - button "View 11 results":
+      - generic: View 11 results
+    - heading "what" [level=4]
+    - img "Google"
+    - generic: CPC
+    - button:
+    - generic: what google reviews have i left
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: what google reviews can be removed
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: what google reviews
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: what do google reviews do
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: what is google reviews business
+    - generic: "-"
+    - generic: "-"
+    - button "View 5 results":
+      - generic: View 5 results
+    - heading "when" [level=4]
+    - img "Google"
+    - generic: CPC
+    - button:
+    - generic: when can google reviews be removed
+    - generic: "-"
+    - generic: "-"
+    - button "View 1 results":
+      - generic: View 1 results
+    - heading "where" [level=4]
+    - img "Google"
+    - generic: CPC
+    - button:
+    - generic: where to see google reviews
+    - generic: "30"
+    - generic: "-"
+    - button:
+    - generic: where to write google reviews
+    - generic: "20"
+    - generic: "-"
+    - button:
+    - generic: where to check google reviews
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: where to find google reviews i left
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: where to read google reviews
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: where google reviews
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: where find google reviews
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: where to see google reviews i left
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: where to leave google reviews
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: where to get google reviews
+    - generic: "-"
+    - generic: "-"
+    - button "View 10 results":
+      - generic: View 10 results
+    - heading "which" [level=4]
+    - img "Google"
+    - generic: CPC
+    - button:
+    - generic: which reviews are better google or yelp
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: which reviews are more accurate google or yelp
+    - generic: "-"
+    - generic: "-"
+    - button "View 2 results":
+      - generic: View 2 results
+    - heading "who" [level=4]
+    - img "Google"
+    - generic: CPC
+    - button:
+    - generic: who can delete google reviews
+    - generic: "20"
+    - generic: US$ 22.95
+    - button:
+    - generic: who can see my google reviews
+    - generic: "20"
+    - generic: "-"
+    - button:
+    - generic: who reviews google reviews
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: who reads google reviews
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: who uses google reviews
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: who controls google reviews
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: who manages google reviews
+    - generic: "-"
+    - generic: "-"
+    - button "View 7 results":
+      - generic: View 7 results
+    - heading "why" [level=4]
+    - img "Google"
+    - generic: CPC
+    - button:
+    - generic: why google reviews are decreasing
+    - generic: "70"
+    - generic: "-"
+    - button:
+    - generic: why google reviews disappear
+    - generic: "50"
+    - generic: "-"
+    - button:
+    - generic: why google reviews are important
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: why google reviews are not showing up
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: why google reviews matter
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: why google reviews are getting deleted
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: why google reviews are getting removed
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: why google reviews not showing for movies
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: why google reviews not showing for schools
+    - generic: "-"
+    - generic: "-"
+    - button:
+    - generic: why google reviews suddenly disappeared
+    - generic: "-"
+    - generic: "-"
+    - button "View 11 results":
+      - generic: View 11 results
+    - button "Next":
+    - button "Page 1"
+    - button "Page 2"
+    - button "Page 3"
+    - button "Page 4"
+    - button "Page 5"
+    - paragraph:
+      - text: People Also Ask from
+      - img "Google"
+    - button "Fullscreen":
+      - paragraph: Fullscreen
+    - button "Export":
+      - paragraph: Export
+    - button "Icon Tree":
+      - img "Icon"
+      - paragraph: Tree
+    - button "Icon List":
+      - img "Icon"
+      - paragraph: List
+    - text: Hold
+    - text: while scrolling to zoom in or out the graph
+    - button "Close hint":
+    - 'button "Zoom: 100%"':
+      - paragraph: "Zoom:"
+      - paragraph: 100%
+    - button "-":
+      - paragraph: "-"
+    - button "+":
+      - paragraph: +
+    - generic: Social Media
+    - generic: for google reviews
+    - img "Youtube"
+    - img "Tiktok"
+    - img "Instagram"
+    - tablist "tabs":
+      - tab "Youtube" [selected]:
+        - text: Youtube
+      - tab "Tiktok":
+        - text: Tiktok
+      - tab "Instagram":
+        - text: Instagram
+    - table:
+      - rowgroup:
+        - row "Keywords Content Studio Modifiers Volume CPC":
+          - columnheader "Keywords":
+            - generic: Keywords
+          - columnheader "Content Studio":
+            - generic: Content Studio
+          - columnheader "Modifiers":
+            - generic: Modifiers
+          - columnheader "Volume":
+            - button "Volume":
+              - paragraph: Volume
+          - columnheader "CPC":
+            - button "CPC":
+              - paragraph: CPC
+      - rowgroup:
+        - row "YouTube google reviews for business Copy Generate Content Prepositions / for 12.1K 14.05":
+          - cell "YouTube google reviews for business Copy":
+            - img "YouTube"
+            - button:
+            - generic: google reviews for business
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Prepositions / for":
+            - generic: Prepositions / for
+          - cell "12.1K"
+          - cell "14.05":
+            - generic: "14.05"
+        - row "YouTube google reviews for my business Copy Generate Content Prepositions / for 880 32.4":
+          - cell "YouTube google reviews for my business Copy":
+            - img "YouTube"
+            - button:
+            - generic: google reviews for my business
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Prepositions / for":
+            - generic: Prepositions / for
+          - cell "880"
+          - cell "32.4":
+            - generic: "32.4"
+        - row "YouTube how to get google reviews for my business Copy Generate Content Prepositions / for":
+          - cell "YouTube how to get google reviews for my business Copy":
+            - img "YouTube"
+            - button:
+            - generic: how to get google reviews for my business
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Prepositions / for":
+            - generic: Prepositions / for
+          - cell:
+          - cell:
+        - row "YouTube google reviews plugin for wordpress Copy Generate Content Prepositions / for":
+          - cell "YouTube google reviews plugin for wordpress Copy":
+            - img "YouTube"
+            - button:
+            - generic: google reviews plugin for wordpress
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Prepositions / for":
+            - generic: Prepositions / for
+          - cell:
+          - cell:
+        - row "YouTube delete google reviews for my business Copy Generate Content Prepositions / for":
+          - cell "YouTube delete google reviews for my business Copy":
+            - img "YouTube"
+            - button:
+            - generic: delete google reviews for my business
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Prepositions / for":
+            - generic: Prepositions / for
+          - cell:
+          - cell:
+        - row "YouTube google voice reviews for business Copy Generate Content Prepositions / for":
+          - cell "YouTube google voice reviews for business Copy":
+            - img "YouTube"
+            - button:
+            - generic: google voice reviews for business
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Prepositions / for":
+            - generic: Prepositions / for
+          - cell:
+          - cell:
+        - row "YouTube how to increase google reviews for business Copy Generate Content Prepositions / for":
+          - cell "YouTube how to increase google reviews for business Copy":
+            - img "YouTube"
+            - button:
+            - generic: how to increase google reviews for business
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Prepositions / for":
+            - generic: Prepositions / for
+          - cell:
+          - cell:
+        - row "YouTube google reviews for business Copy Generate Content Alphabeticals / f 12.1K 14.05":
+          - cell "YouTube google reviews for business Copy":
+            - img "YouTube"
+            - button:
+            - generic: google reviews for business
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / f":
+            - generic: Alphabeticals / f
+          - cell "12.1K"
+          - cell "14.05":
+            - generic: "14.05"
+        - row "YouTube google fi reviews Copy Generate Content Alphabeticals / f 2.4K 17.25":
+          - cell "YouTube google fi reviews Copy":
+            - img "YouTube"
+            - button:
+            - generic: google fi reviews
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / f":
+            - generic: Alphabeticals / f
+          - cell "2.4K"
+          - cell "17.25":
+            - generic: "17.25"
+        - row "YouTube google reviews fake Copy Generate Content Alphabeticals / f":
+          - cell "YouTube google reviews fake Copy":
+            - img "YouTube"
+            - button:
+            - generic: google reviews fake
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / f":
+            - generic: Alphabeticals / f
+          - cell:
+          - cell:
+    - button "View 138 results":
+      - generic: View 138 results
+    - generic: Showing 10 of 138 results
+    - dialog "Register to unlock more data":
+      - generic: Register to unlock more data
+      - button "Create my free account"
+    - generic: Shopping
+    - generic: for google reviews
+    - img "Amazon"
+    - table:
+      - rowgroup:
+        - row "Keywords Content Studio Modifiers Volume CPC":
+          - columnheader "Keywords":
+            - generic: Keywords
+          - columnheader "Content Studio":
+            - generic: Content Studio
+          - columnheader "Modifiers":
+            - generic: Modifiers
+          - columnheader "Volume":
+            - button "Volume":
+              - paragraph: Volume
+          - columnheader "CPC":
+            - button "CPC":
+              - paragraph: CPC
+      - rowgroup:
+        - row "Amazon google reviews card Copy Generate Content Alphabeticals / c 2.9K 5.58":
+          - cell "Amazon google reviews card Copy":
+            - img "Amazon"
+            - button:
+            - generic: google reviews card
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / c":
+            - generic: Alphabeticals / c
+          - cell "2.9K"
+          - cell "5.58":
+            - generic: "5.58"
+        - row "Amazon google reviews qr code Copy Generate Content Alphabeticals / c 2.4K 6.51":
+          - cell "Amazon google reviews qr code Copy":
+            - img "Amazon"
+            - button:
+            - generic: google reviews qr code
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / c":
+            - generic: Alphabeticals / c
+          - cell "2.4K"
+          - cell "6.51":
+            - generic: "6.51"
+        - row "Amazon google reviews tap card Copy Generate Content Alphabeticals / c":
+          - cell "Amazon google reviews tap card Copy":
+            - img "Amazon"
+            - button:
+            - generic: google reviews tap card
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / c":
+            - generic: Alphabeticals / c
+          - cell:
+          - cell:
+        - row "Amazon google reviews card nfc Copy Generate Content Alphabeticals / c":
+          - cell "Amazon google reviews card nfc Copy":
+            - img "Amazon"
+            - button:
+            - generic: google reviews card nfc
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / c":
+            - generic: Alphabeticals / c
+          - cell:
+          - cell:
+        - row "Amazon zappy cards google reviews Copy Generate Content Alphabeticals / c":
+          - cell "Amazon zappy cards google reviews Copy":
+            - img "Amazon"
+            - button:
+            - generic: zappy cards google reviews
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / c":
+            - generic: Alphabeticals / c
+          - cell:
+          - cell:
+        - row "Amazon google cards used for reviews Copy Generate Content Alphabeticals / c":
+          - cell "Amazon google cards used for reviews Copy":
+            - img "Amazon"
+            - button:
+            - generic: google cards used for reviews
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / c":
+            - generic: Alphabeticals / c
+          - cell:
+          - cell:
+        - row "Amazon google reviews nfc card stand Copy Generate Content Alphabeticals / c":
+          - cell "Amazon google reviews nfc card stand Copy":
+            - img "Amazon"
+            - button:
+            - generic: google reviews nfc card stand
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / c":
+            - generic: Alphabeticals / c
+          - cell:
+          - cell:
+        - row "Amazon google bar code for reviews Copy Generate Content Alphabeticals / c":
+          - cell "Amazon google bar code for reviews Copy":
+            - img "Amazon"
+            - button:
+            - generic: google bar code for reviews
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / c":
+            - generic: Alphabeticals / c
+          - cell:
+          - cell:
+        - row "Amazon google reviews scan cards Copy Generate Content Alphabeticals / c":
+          - cell "Amazon google reviews scan cards Copy":
+            - img "Amazon"
+            - button:
+            - generic: google reviews scan cards
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / c":
+            - generic: Alphabeticals / c
+          - cell:
+          - cell:
+        - row "Amazon google reviews qr code Copy Generate Content Alphabeticals / q 2.4K 6.51":
+          - cell "Amazon google reviews qr code Copy":
+            - img "Amazon"
+            - button:
+            - generic: google reviews qr code
+            - button "Copy":
+              - generic: Copy
+          - cell "Generate Content":
+            - button "Generate Content":
+              - paragraph: Generate Content
+          - cell "Alphabeticals / q":
+            - generic: Alphabeticals / q
+          - cell "2.4K"
+          - cell "6.51":
+            - generic: "6.51"
+    - button "View 76 results":
+      - generic: View 76 results
+    - generic: Showing 10 of 76 results
+    - dialog "Register to unlock more data":
+      - generic: Register to unlock more data
+      - button "Create my free account"
+- contentinfo:
+  - heading "Need help? Get in touch" [level=2]
+  - link "support@answerthepublic.com":
+    - /url: mailto:support@answerthepublic.com
+  - paragraph: Follow Us around the web
+  - link "X":
+    - /url: https://x.com/neilpatel
+    - generic: X
+  - link "Facebook":
+    - /url: https://www.facebook.com/NPDigitalUS/
+    - generic: Facebook
+  - link "YouTube":
+    - /url: https://www.youtube.com/neilpatel
+    - generic: YouTube
+  - link "LinkedIn":
+    - /url: https://www.linkedin.com/company/npdigital/
+    - generic: LinkedIn
+  - link "Instagram":
+    - /url: https://www.instagram.com/npdigital_us/
+    - generic: Instagram
+  - paragraph: 750 B Street, Suite 1400, San Diego, CA 89178
+  - list:
+    - link "Free Market Research":
+      - /url: /research/collections
+    - link "Help center":
+      - /url: https://answerthepublic.zendesk.com/hc/en-us
+    - link "Pricing":
+      - /url: /pricing
+    - link "Privacy":
+      - /url: https://npdigital.com/privacy-notice/
+    - link "T&Cs":
+      - /url: /pages/terms-and-conditions
+  - paragraph: Use Cases
+  - list:
+    - link "SEO":
+      - /url: /for/seo
+    - link "Content Marketing":
+      - /url: /for/content-marketing
+    - link "Consumer Research":
+      - /url: /for/consumer-research
+- region "Notifications alt+T"
+- alert

@@ -1,37 +1,22 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/lib/db/supabase/database.types";
 
-/**
- * Verifies if a user has access to a business either via business_members 
- * OR via organization_members of the owning organization.
- */
+/** Live business-scoped membership, with org-wide access only for org managers. */
 export async function userCanAccessBusiness(
-  supabase: SupabaseClient, 
-  userId: string, 
-  businessId: string
+    supabase: SupabaseClient<Database>, userId: string, businessId: string,
+    write = false,
 ): Promise<boolean> {
-  const { data, error } = await supabase
-    .from("businesses")
-    .select(`
-        id,
-        organizations!inner (
-            organization_members!inner (
-                user_id
-            )
-        )
-    `)
-    .eq("id", businessId)
-    .eq("organizations.organization_members.user_id", userId)
-    .single();
-
-  if (data && !error) return true;
-
-  // Fallback: check business_members
-  const { data: businessMember } = await supabase
-    .from("business_members")
-    .select("role")
-    .eq("business_id", businessId)
-    .eq("user_id", userId)
-    .single();
-
-  return !!businessMember;
+    const { data: business, error } = await supabase.from("businesses")
+        .select("id, organization_id").eq("id", businessId).maybeSingle();
+    if (error || business?.id !== businessId) return false;
+    const { data: orgMember, error: orgError } = await supabase.from("organization_members")
+        .select("role").eq("organization_id", business.organization_id)
+        .eq("user_id", userId).eq("status", "active").maybeSingle();
+    if (orgError || !orgMember) return false;
+    if (["owner", "admin", "manager", "ORG_OWNER", "ORG_ADMIN", "ORG_MANAGER"].includes(orgMember.role)) return true;
+    const { data: member, error: memberError } = await supabase.from("business_members")
+        .select("role").eq("business_id", businessId).eq("user_id", userId)
+        .eq("status", "active").maybeSingle();
+    return !memberError && ["owner", "admin", "manager", "member", "viewer"].includes(member?.role ?? "") &&
+        (!write || member?.role !== "viewer");
 }

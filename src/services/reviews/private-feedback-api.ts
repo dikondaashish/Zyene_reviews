@@ -7,6 +7,7 @@ import { categorizePrivateFeedback } from "@/domains/ai/services/ai-analysis-ser
 import { sendEmail } from "@/services/resend/send-email";
 import { recoveryEmailTemplate } from "@/services/resend/templates/recovery-email";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
+import { verifyReviewTracking } from "@/lib/review-requests/tracking-token";
 import {
     EMAIL_RE,
     isValidPhoneDigits,
@@ -39,7 +40,8 @@ export async function handlePrivateFeedbackPost(request: Request) {
         }
         const {
             review_request_id,
-            business_id: bodyBusinessId,
+            business_id,
+            token,
             rating,
             content,
             customer_email: rawEmail,
@@ -47,36 +49,27 @@ export async function handlePrivateFeedbackPost(request: Request) {
             selected_staff = [],
         } = parsed.data;
 
+        if (!verifyReviewTracking(review_request_id, business_id, token)) {
+            return NextResponse.json({ error: "Invalid review link" }, { status: 403 });
+        }
+
         const supabase = createAdminClient();
-        let business_id = bodyBusinessId || null;
         let businessName: string | null | undefined;
         let customerName: string | null | undefined;
 
-        if (review_request_id) {
-            const { data: reviewRequest, error: requestErr } = await supabase
-                .from("review_requests")
-                .select("id, business_id, customer_name, businesses(name)")
-                .eq("id", review_request_id)
-                .maybeSingle();
+        const { data: reviewRequest, error: requestErr } = await supabase
+            .from("review_requests")
+            .select("id, business_id, customer_name, businesses(name)")
+            .eq("id", review_request_id)
+            .eq("business_id", business_id)
+            .maybeSingle();
 
-            if (requestErr || !reviewRequest?.business_id) {
-                return NextResponse.json({ error: "Invalid review request" }, { status: 404 });
-            }
-            business_id = reviewRequest.business_id;
-            const businessData = reviewRequest.businesses as { name?: string } | null;
-            businessName = businessData?.name;
-            customerName = reviewRequest.customer_name;
+        if (requestErr || !reviewRequest) {
+            return NextResponse.json({ error: "Invalid review request" }, { status: 404 });
         }
-
-        if (!business_id) {
-            if (bodyBusinessId) {
-                const { data: biz } = await supabase.from("businesses").select("name").eq("id", bodyBusinessId).maybeSingle();
-                businessName = biz?.name;
-            } else {
-                return NextResponse.json({ error: "Business not found" }, { status: 404 });
-            }
-            business_id = bodyBusinessId;
-        }
+        const businessData = reviewRequest.businesses as { name?: string } | null;
+        businessName = businessData?.name;
+        customerName = reviewRequest.customer_name;
 
         const { data: bizPlanRow } = await supabase
             .from("businesses")
@@ -123,14 +116,14 @@ export async function handlePrivateFeedbackPost(request: Request) {
 
         let category = "Other";
         if (canUseAiFeedbackCategorization) {
-            category = await categorizePrivateFeedback(content);
+            category = await categorizePrivateFeedback(content, business_id);
         }
 
         const { data: feedback, error } = await supabase
             .from("private_feedback")
             .insert({
                 business_id,
-                review_request_id: review_request_id || null,
+                review_request_id,
                 rating,
                 content,
                 customer_email: customer_email || null,
@@ -166,7 +159,7 @@ export async function handlePrivateFeedbackPost(request: Request) {
         if (customer_email && businessName) {
             sendEmail({
                 to: customer_email,
-                subject: `We're sorry about your experience at ${businessName}`,
+                subject: `We're sorry about your experience at ${businessName.replace(/[\r\n]/g, " ")}`,
                 html: recoveryEmailTemplate({
                     businessName,
                     customerName: customerName || undefined,

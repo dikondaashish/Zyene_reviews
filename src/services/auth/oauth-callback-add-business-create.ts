@@ -10,12 +10,13 @@ import { fetchGoogleGrantedScopes } from "@/services/google/verify-granted-scope
 export async function createOAuthAddBusinessRecord(params: {
     admin: SupabaseClient;
     addBusinessOrgId: string;
+    ownerUserId: string;
     user: User;
     gbp: OAuthAddBusinessGbpDetails;
     finalAccessToken: string | undefined;
     finalRefreshToken: string | undefined;
 }): Promise<void> {
-    const { admin, addBusinessOrgId, user, gbp, finalAccessToken, finalRefreshToken } = params;
+    const { admin, addBusinessOrgId, ownerUserId, user, gbp, finalAccessToken, finalRefreshToken } = params;
 
     const newBizName = gbp.locationName || `${user.user_metadata?.full_name || "New"}'s Business`;
     const newBizSlug = `${newBizName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${nanoid(6)}`;
@@ -75,7 +76,7 @@ export async function createOAuthAddBusinessRecord(params: {
     await admin.from("business_members").upsert(
         {
             business_id: newBusiness.id,
-            user_id: user.id,
+            user_id: ownerUserId,
             role: "owner",
             status: "active",
         },

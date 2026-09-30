@@ -8,10 +8,10 @@ export default async function RequestPage({
     searchParams,
 }: {
     params: Promise<{ slug: string }>;
-    searchParams: Promise<{ ref?: string }>;
+    searchParams: Promise<{ ref?: string; sig?: string }>;
 }) {
-    const data = await Promise.all([searchParams, params]).then(([{ ref: requestId }, { slug }]) =>
-        loadReviewPageData(slug, requestId)
+    const data = await Promise.all([searchParams, params]).then(([{ ref: requestId, sig }, { slug }]) =>
+        loadReviewPageData(slug, requestId, sig)
     );
 
     if (data.kind === "not-found") {

@@ -4,10 +4,14 @@ import { getGoogleOAuthCallbackOutcome } from "@/app/onboarding/google-oauth-cal
 
 describe("getGoogleOAuthCallbackOutcome", () => {
     it("keeps a successful OAuth code for the connection flow", () => {
-        expect(getGoogleOAuthCallbackOutcome("?code=google-code")).toEqual({
+        expect(getGoogleOAuthCallbackOutcome(`?code=google-code&state=${"a".repeat(43)}`)).toEqual({
             kind: "code",
             code: "google-code",
+            state: "a".repeat(43),
         });
+    });
+    it("rejects an unsolicited callback without state", () => {
+        expect(getGoogleOAuthCallbackOutcome("?code=unsolicited").kind).toBe("error");
     });
 
     it("returns a recovery message when Google consent is canceled", () => {

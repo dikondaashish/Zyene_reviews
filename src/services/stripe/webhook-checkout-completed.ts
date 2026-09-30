@@ -3,43 +3,27 @@ import type Stripe from "stripe";
 
 import { logger } from "@/lib/logger";
 import { stripe } from "@/services/stripe/client";
-import { getPlanByPriceId, type PlanLimits } from "@/services/stripe/plans";
+import { getPlanByPriceId } from "@/services/stripe/plans";
+import { stripeSubscriptionToOrganizationUpdate } from "@/services/stripe/organization-billing-sync";
+import { applySubscriptionProjection } from "@/services/stripe/subscription-projection";
 import { sendEmail } from "@/services/resend/send-email";
 import { subscriptionSuccessEmail } from "@/services/resend/templates/subscription-success-email";
 
 import { isNfcCheckoutSession } from "@/lib/nfc/checkout-session";
 import { fulfillNfcCheckout } from "@/services/nfc/fulfill-checkout";
 
-import { planLimitsToOrganizationColumns } from "./webhook-plan-columns";
 import type { WebhookAdminClient } from "./webhook-types";
 
-const FALLBACK_LIMITS: PlanLimits = {
-    maxLocations: 1,
-    emailRequestsPerMonth: 500,
-    smsRequestsPerMonth: 500,
-    linkRequestsPerMonth: 1500,
-    smartRepliesPerMonth: 1500,
-    teamMembers: 5,
-};
-
-function planStatusFor(subStatus: Stripe.Subscription.Status): string {
-    if (subStatus === "trialing") return "trialing";
-    if (subStatus === "past_due") return "past_due";
-    if (subStatus === "canceled" || subStatus === "unpaid") return "canceled";
-    return "active";
-}
-
-/** Post-checkout growth emails and referral credit - every step is non-fatal. */
+/** Post-checkout growth notifications are best-effort and deduplicated by sequence. */
 async function runPostCheckoutGrowth(
     subscription: Stripe.Subscription,
     session: Stripe.Checkout.Session,
     organizationId: string,
 ) {
     const email = session.customer_details?.email;
-    if (!email) return;
     const userName = session.customer_details?.name || "there";
 
-    if (subscription.status === "trialing") {
+    if (subscription.status === "trialing" && email) {
         try {
             const { scheduleTrialNurture } = await import("@/lib/growth/schedule-growth-emails");
             await scheduleTrialNurture({ email, userName, organizationId });
@@ -51,16 +35,12 @@ async function runPostCheckoutGrowth(
 
     if (subscription.status === "active") {
         try {
-            const { scheduleOnboardingDrip } = await import("@/lib/growth/schedule-growth-emails");
-            await scheduleOnboardingDrip({ email, userName, organizationId });
+            if (email) {
+                const { scheduleOnboardingDrip } = await import("@/lib/growth/schedule-growth-emails");
+                await scheduleOnboardingDrip({ email, userName, organizationId });
+            }
         } catch (dripErr) {
             logger.error({ err: dripErr }, "Error scheduling onboarding drip (direct paid)");
-        }
-        try {
-            const { processReferralConversionReward } = await import("@/lib/growth/referral-rewards");
-            await processReferralConversionReward(organizationId);
-        } catch (refErr) {
-            logger.error({ err: refErr }, "Error processing referral reward:");
         }
     }
 }
@@ -81,8 +61,8 @@ export async function handleCheckoutSessionCompleted(
         return;
     }
 
-    const customerId = session.customer as string;
-    const subscriptionId = session.subscription as string;
+    const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id;
+    const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription.id;
     const organizationId = session.metadata?.organization_id;
 
     if (!organizationId) {
@@ -91,19 +71,35 @@ export async function handleCheckoutSessionCompleted(
             level: "error",
             extra: { session_id: session.id },
         });
-        return;
+        throw new Error("Checkout organization metadata missing");
     }
 
-    // Idempotency: Skip if this subscription is already linked
-    const { data: existingOrg } = await supabase
+    // The stored customer binding is required even for signed metadata.
+    const { data: existingOrg, error: orgLookupError } = await supabase
         .from("organizations")
-        .select("stripe_subscription_id")
+        .select("stripe_subscription_id, stripe_customer_id")
         .eq("id", organizationId)
         .single();
 
-    if (existingOrg?.stripe_subscription_id === subscriptionId) return;
+    if (orgLookupError || !existingOrg) {
+        throw orgLookupError ?? new Error("Checkout organization not found");
+    }
 
+    if (!customerId || existingOrg.stripe_customer_id !== customerId) throw new Error("Checkout customer mismatch");
+    if (existingOrg.stripe_subscription_id && existingOrg.stripe_subscription_id !== subscriptionId) {
+        try {
+            const current = await stripe.subscriptions.retrieve(existingOrg.stripe_subscription_id);
+            if (!["canceled", "unpaid", "incomplete_expired"].includes(current.status)) return;
+        } catch (error) {
+            if (!(typeof error === "object" && error && "code" in error && error.code === "resource_missing")) throw error;
+        }
+    }
+
+    const observedAt = new Date().toISOString();
     const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    const subscriptionCustomer = typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
+    if (subscriptionCustomer !== customerId) throw new Error("Subscription customer mismatch");
+    if (["canceled", "unpaid", "incomplete_expired"].includes(subscription.status)) return;
     const priceId = subscription.items.data[0]?.price?.id;
 
     if (!priceId) {
@@ -112,37 +108,25 @@ export async function handleCheckoutSessionCompleted(
             level: "error",
             extra: { subscription_id: subscription.id },
         });
-        return;
+        throw new Error("Checkout subscription price missing");
     }
 
     const plan = getPlanByPriceId(priceId);
-    const limits = plan?.limits || FALLBACK_LIMITS;
+    if (!plan) throw new Error("Unrecognized checkout subscription price");
+    const updatedOrgId = await applySubscriptionProjection(supabase, customerId, subscriptionId,
+        stripeSubscriptionToOrganizationUpdate(subscription), { bindOrganizationId: organizationId,
+            expectedSubscriptionId: existingOrg.stripe_subscription_id, observedAt });
+    if (!updatedOrgId) return;
 
-    const trialEndsAt =
-        subscription.status === "trialing" && subscription.trial_end
-            ? new Date(subscription.trial_end * 1000).toISOString()
-            : null;
-
-    await supabase
-        .from("organizations")
-        .update({
-            stripe_customer_id: customerId,
-            stripe_subscription_id: subscriptionId,
-            plan: plan?.id || "starter_monthly",
-            plan_status: planStatusFor(subscription.status),
-            trial_ends_at: trialEndsAt,
-            ...planLimitsToOrganizationColumns(limits),
-        })
-        .eq("id", organizationId);
-
-    // Isolated on purpose, like the growth steps below: a bug in this newer,
-    // less-proven feature must never block the org record above or the
-    // welcome email that follows, which real customers rely on today.
-    try {
-        const { resetAeoCreditsForPlan } = await import("@/services/aeo/billing/renewal-credit-reset");
-        await resetAeoCreditsForPlan(supabase, { organizationId, planId: plan?.id || "starter_monthly" });
-    } catch (creditErr) {
-        logger.error({ err: creditErr }, "[AEO] E-9 initial credit grant failed on checkout");
+    // Financial writes must succeed before the event can be acknowledged.
+    // The receipt makes retries safe even when the org binding already landed.
+    const { resetAeoCreditsForPlan } = await import("@/services/aeo/billing/renewal-credit-reset");
+    await resetAeoCreditsForPlan(supabase, { organizationId, planId: plan.id,
+        customerId, subscriptionId, receiptId: `checkout:${session.id}`,
+        periodEnd: subscription.items.data[0]?.current_period_end });
+    if (subscription.status === "active") {
+        const { processReferralConversionReward } = await import("@/lib/growth/referral-rewards");
+        await processReferralConversionReward(organizationId);
     }
 
     try {
@@ -153,6 +137,7 @@ export async function handleCheckoutSessionCompleted(
 
             await sendEmail({
                 to: customerEmail,
+                idempotencyKey: `stripe-checkout:${session.id}`,
                 subject: isTrial
                     ? `Your ${planName} trial has started!`
                     : `Welcome to the ${planName} plan!`,

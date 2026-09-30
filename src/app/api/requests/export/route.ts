@@ -2,6 +2,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { NextResponse } from "next/server";
 import Papa from "papaparse";
+import { SAFE_CSV_OPTIONS } from "@/lib/export/safe-csv";
 import type { ReviewRequestExportRow } from "@/types/api-routes";
 import { loadReviewRequestMetrics } from "@/lib/metrics/load-review-request-metrics";
 import {
@@ -58,7 +59,7 @@ export async function GET() {
         };
     });
 
-    const csvData = Papa.unparse(formatted);
+    const csvData = Papa.unparse(formatted, SAFE_CSV_OPTIONS);
     const businessName = business.name || "business";
     const filename = `${businessName.replace(/[^a-z0-9]/gi, "_").toLowerCase()}_review_requests.csv`;
 

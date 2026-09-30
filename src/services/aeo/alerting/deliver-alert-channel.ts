@@ -1,5 +1,6 @@
 import { createHmac } from "node:crypto";
 import { checkOriginIsPublic } from "@/services/aeo/crawler/ssrf-guard";
+import { fetchPublicHttpText } from "@/services/aeo/crawler/public-http";
 import { decryptAlertSecret } from "./channel-secrets";
 
 type AlertItem = { id: string; severity: string; title: string; detail: string; created_at: string };
@@ -21,6 +22,6 @@ export async function deliverAlertChannel(channel: Channel, alerts: readonly Ale
         const secret = decryptAlertSecret(channel.signing_secret_ciphertext);
         headers["X-Zyene-Signature"] = `sha256=${createHmac("sha256", secret).update(body).digest("hex")}`;
     }
-    const response = await fetch(endpoint, { method: "POST", headers, body, redirect: "error", signal: AbortSignal.timeout(10_000) });
+    const response = await fetchPublicHttpText(endpoint, { method: "POST", headers, body, redirect: "error", timeoutMs: 10_000, maxBytes: 1024 });
     if (!response.ok) throw new Error(`Alert channel returned HTTP ${response.status}`);
 }

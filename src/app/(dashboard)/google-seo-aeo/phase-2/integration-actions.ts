@@ -9,7 +9,7 @@ import { checkOriginIsPublic } from "@/services/aeo/crawler/ssrf-guard";
 const channelSchema = z.object({ name: z.string().trim().min(2).max(80), type: z.enum(["slack", "webhook"]), endpoint: z.url(), signingSecret: z.string().max(200).optional() });
 
 export async function createAlertChannel(formData: FormData) {
-    const { admin, businessId, organizationId } = await requirePhase2Context();
+    const { admin, businessId, organizationId } = await requirePhase2Context(true);
     const parsed = channelSchema.safeParse(Object.fromEntries(formData));
     if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? "Invalid alert channel");
     const url = new URL(parsed.data.endpoint);

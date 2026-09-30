@@ -1,4 +1,4 @@
-import { Ratelimit } from '@upstash/ratelimit';
+import { Ratelimit } from "@/lib/auth/fail-closed-rate-limit";
 import { redis } from "@/lib/db/redis";
 
 // 1. Review Requests Rate Limit (Single sends like SMS/Email)
@@ -26,6 +26,54 @@ export const aiRateLimit = new Ratelimit({
     limiter: Ratelimit.slidingWindow(20, '1 m'),
     analytics: true,
     prefix: '@upstash/ratelimit/ai',
+});
+
+export const publicAiDraftIpRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(3, '10 m'),
+    prefix: '@upstash/ratelimit/public-ai-ip',
+});
+
+export const publicAiDraftBusinessRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(100, '1 d'),
+    prefix: '@upstash/ratelimit/public-ai-business',
+});
+
+export const publicAiDraftRequestRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(2, '1 d'),
+    prefix: '@upstash/ratelimit/public-ai-request',
+});
+
+export const publicReviewOpenIpRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(20, '10 m'),
+    prefix: '@upstash/ratelimit/public-review-open-ip',
+});
+
+export const publicReviewOpenBusinessRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(500, '1 d'),
+    prefix: '@upstash/ratelimit/public-review-open-business',
+});
+
+export const aiBusinessDailyRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(100, '1 d'),
+    prefix: '@upstash/ratelimit/ai-business-daily',
+});
+
+export const aiAnalysisBusinessRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(200, '1 d'),
+    prefix: '@upstash/ratelimit/ai-analysis-business',
+});
+
+export const aiAnalysisBackfillRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(2, '1 d'),
+    prefix: '@upstash/ratelimit/ai-analysis-backfill',
 });
 
 // 4. Sync Operations Rate Limit (Google/Yelp/Facebook sync)
@@ -60,6 +108,24 @@ export const publicFormRateLimit = new Ratelimit({
     limiter: Ratelimit.slidingWindow(5, '10 m'),
     analytics: true,
     prefix: '@upstash/ratelimit/public-form',
+});
+
+export const publicNewsletterRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(5, '10 m'),
+    prefix: '@upstash/ratelimit/public-newsletter',
+});
+
+export const publicToolSearchRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(30, '10 m'),
+    prefix: '@upstash/ratelimit/public-tool-search',
+});
+
+export const publicToolResultRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(5, '10 m'),
+    prefix: '@upstash/ratelimit/public-tool-result',
 });
 
 /**

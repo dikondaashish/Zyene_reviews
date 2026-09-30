@@ -14,8 +14,8 @@ export function useReviewFlowGenerate(options: {
     selectedTags: string[];
     addedCustomTags: string[];
     selectedStaff: string[];
-    activeRequestId: string | undefined;
     ensureActiveRequestId: () => Promise<string | undefined>;
+    getTrackingToken: () => string | undefined;
     setStep: React.Dispatch<React.SetStateAction<FlowStep>>;
     setReviewText: React.Dispatch<React.SetStateAction<string>>;
 }) {
@@ -28,8 +28,8 @@ export function useReviewFlowGenerate(options: {
         selectedTags,
         addedCustomTags,
         selectedStaff,
-        activeRequestId,
         ensureActiveRequestId,
+        getTrackingToken,
         setStep,
         setReviewText,
     } = options;
@@ -48,13 +48,16 @@ export function useReviewFlowGenerate(options: {
         }
 
         try {
-            const requestIdToUse = activeRequestId ?? (await ensureActiveRequestId());
+            const requestIdToUse = await ensureActiveRequestId();
+            const token = getTrackingToken();
+            if (!requestIdToUse || !token) throw new Error("Review link unavailable");
             const res = await fetch("/api/review-flow/generate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     reviewRequestId: requestIdToUse,
                     businessId,
+                    token,
                     businessName,
                     businessCategory: categoryKey,
                     rating,
@@ -79,12 +82,12 @@ export function useReviewFlowGenerate(options: {
             setStep("review");
         }
     }, [
-        activeRequestId,
         addedCustomTags,
         businessId,
         businessName,
         categoryKey,
         ensureActiveRequestId,
+        getTrackingToken,
         isPreview,
         rating,
         selectedStaff,

@@ -48,8 +48,7 @@ export async function graphFetch<T>(options: GraphRequestOptions): Promise<T> {
     const response = await fetchWithTimeout(url.toString(), fetchOptions);
 
     if (!response.ok) {
-        const errorBody = await response.text();
-        logger.error(`[Facebook Graph API] ${response.status}: ${errorBody}`);
+        logger.error({ status: response.status }, "[Facebook Graph API] request failed");
         throw new Error(
             `Facebook Graph API error: ${response.status} ${response.statusText}`
         );

@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { checkOriginIsPublic } from "@/services/aeo/crawler/ssrf-guard";
+import { fetchPublicHttpText } from "@/services/aeo/crawler/public-http";
 import { detectCompetitorPageChanges } from "./page-change-detector";
 
 type Admin = SupabaseClient<Database>;
@@ -26,10 +27,10 @@ export async function refreshCompetitorPages(db: Admin, businessId: string) {
         const safety = await checkOriginIsPublic(citation.url);
         if (!safety.safe) continue;
         try {
-            const response = await fetch(citation.url, { redirect: "error", signal: AbortSignal.timeout(12_000),
+            const response = await fetchPublicHttpText(citation.url, { redirect: "error", timeoutMs: 12_000,
                 headers: { "User-Agent": "Zyene-AEO-Competitor-Monitor/1.0" } });
             if (!response.ok) continue;
-            const html = (await response.text()).slice(0, 2_000_000);
+            const html = response.text;
             const normalizedText = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
                 .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "").replace(/\s+/g, " ").trim();
             const competitor = (competitorResult.data ?? []).find((row) =>

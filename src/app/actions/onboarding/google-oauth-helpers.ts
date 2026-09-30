@@ -94,7 +94,7 @@ export async function exchangeGoogleAuthCode(
     });
 
     if (!tokenResponse.ok) {
-        logger.error({ body: await tokenResponse.text() }, "Failed to exchange auth code");
+        logger.error({ status: tokenResponse.status }, "Failed to exchange auth code");
         return null;
     }
 

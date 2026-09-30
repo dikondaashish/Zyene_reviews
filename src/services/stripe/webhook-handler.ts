@@ -5,6 +5,7 @@ import type Stripe from "stripe";
 import { logger } from "@/lib/logger";
 import { stripe } from "@/services/stripe/client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { withStripeWebhookClaim } from "./webhook-claim";
 
 import { handleCheckoutSessionCompleted } from "./webhook-checkout-completed";
 import {
@@ -51,19 +52,8 @@ export async function handleStripeWebhook(request: Request) {
     const supabase = createAdminClient();
 
     try {
-        const { error: dedupeError } = await supabase
-            .from("stripe_webhook_events")
-            .insert({ event_id: event.id });
-
-        if (dedupeError) {
-            // 23505 = unique violation: this event was already processed.
-            if (dedupeError.code === "23505") {
-                return NextResponse.json({ received: true });
-            }
-            throw dedupeError;
-        }
-
-        switch (event.type) {
+        const result = await withStripeWebhookClaim(supabase, event.id, async () => {
+          switch (event.type) {
             case "checkout.session.completed":
                 await handleCheckoutSessionCompleted(event, supabase);
                 break;
@@ -81,6 +71,10 @@ export async function handleStripeWebhook(request: Request) {
                 break;
             default:
                 break;
+          }
+        });
+        if (result === "in-progress") {
+            return NextResponse.json({ error: "Webhook already processing" }, { status: 503 });
         }
     } catch (error: unknown) {
         logger.error({ err: error }, "Webhook processing error:");

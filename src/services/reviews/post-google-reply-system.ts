@@ -14,7 +14,7 @@ export async function postGoogleReplySystem(reviewId: string, text: string): Pro
     const admin = createAdminClient();
     const { data: review, error } = await admin
         .from("reviews")
-        .select("id, platform, platform_id, external_id")
+        .select("id, business_id, platform, platform_id, external_id")
         .eq("id", reviewId)
         .single();
 
@@ -27,6 +27,13 @@ export async function postGoogleReplySystem(reviewId: string, text: string): Pro
     }
     if (!review.platform_id || !review.external_id) {
         throw new Error("Review missing platform or external id");
+    }
+
+    const { data: authorizedPlatform, error: platformError } = await admin.from("review_platforms")
+        .select("id, business_id").eq("id", review.platform_id)
+        .eq("business_id", review.business_id).maybeSingle();
+    if (platformError || authorizedPlatform?.business_id !== review.business_id) {
+        throw new Error("Review integration does not belong to its business");
     }
 
     const { accessToken, platform } = await getValidGoogleToken(review.platform_id as string);

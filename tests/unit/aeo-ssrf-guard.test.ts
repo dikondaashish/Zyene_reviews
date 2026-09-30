@@ -37,6 +37,23 @@ describe("checkOriginIsPublic", () => {
         expect((await checkOriginIsPublic("http://192.168.1.5/")).safe).toBe(false);
     });
 
+    it("rejects alternate reserved ranges and IPv4-mapped IPv6 loopback", async () => {
+        for (const url of [
+            "http://100.64.0.1/", "http://198.18.0.1/", "http://192.0.2.1/",
+            "http://[::ffff:127.0.0.1]/", "http://[fc00::1]/", "http://[fe90::1]/",
+            "http://[64:ff9b::a9fe:a9fe]/", "http://[::127.0.0.1]/", "http://[fec0::1]/",
+        ]) {
+            expect((await checkOriginIsPublic(url)).safe).toBe(false);
+        }
+    });
+
+    it("rejects non-HTTP URLs and internal hostnames before lookup", async () => {
+        expect((await checkOriginIsPublic("file:///etc/passwd")).safe).toBe(false);
+        expect((await checkOriginIsPublic("https://service.internal./")).safe).toBe(false);
+        expect((await checkOriginIsPublic("https://sub.localhost/")).safe).toBe(false);
+        expect(dns.lookup).not.toHaveBeenCalled();
+    });
+
     it("allows a literal public IP", async () => {
         const result = await checkOriginIsPublic("http://8.8.8.8/");
         expect(result.safe).toBe(true);

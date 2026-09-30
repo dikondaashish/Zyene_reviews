@@ -1,5 +1,6 @@
 import { logger } from "@/lib/logger";
 import { checkOriginIsPublic } from "../crawler/ssrf-guard";
+import { fetchPublicHttpText } from "../crawler/public-http";
 import { extractPageSignals } from "../crawler/extract-page-signals";
 import { computeAnswerabilitySignals } from "../crawler/answerability";
 import { validateSchemaBlocks } from "../crawler/schema-validator";
@@ -56,14 +57,14 @@ export async function fetchCitedSource(url: string): Promise<FetchCitedSourceRes
 
     let html: string;
     try {
-        const response = await fetch(url, {
+        const response = await fetchPublicHttpText(url, {
             headers: { "User-Agent": "ZyeneReviewsBot/1.0 (+https://zyenereviews.com/bot)" },
-            signal: AbortSignal.timeout(CITED_SOURCE_FETCH_TIMEOUT_MS),
+            timeoutMs: CITED_SOURCE_FETCH_TIMEOUT_MS,
         });
         if (!response.ok) {
             return { ok: false, reason: "not_ok", detail: `HTTP ${response.status}` };
         }
-        html = await response.text();
+        html = response.text;
     } catch (error) {
         logger.warn({ err: error, url }, "[content-briefs] cited source fetch failed");
         return { ok: false, reason: "fetch_failed", detail: error instanceof Error ? error.message : "unknown" };

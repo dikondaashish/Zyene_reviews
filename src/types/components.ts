@@ -74,6 +74,8 @@ export interface OnboardingGoogleLocationInfo {
     fullAddress?: string;
 }
 
+export interface GoogleOAuthAuthorization { code: string; state: string }
+
 export interface OnboardingGoogleInitResult {
     success: boolean;
     error?: string;
@@ -84,12 +86,8 @@ export interface OnboardingGoogleInitResult {
     locationInfo?: OnboardingGoogleLocationInfo;
     multipleLocations?: boolean;
     locations?: OnboardingGoogleLocationInfo[];
-    /** Passed back for the finalization step */
-    tokens?: {
-        accessToken: string;
-        refreshToken?: string;
-        expiresIn: number;
-    };
+    /** Opaque, short-lived server-side connection handle. */
+    connectionId?: string;
 }
 
 export interface ReviewManagementItem {

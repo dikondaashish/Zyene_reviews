@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { initializeGoogleAuth, finalizeGoogleConnection } from "@/app/actions/onboarding";
-import type { OnboardingGoogleInitResult, OnboardingGoogleLocationInfo } from "@/types/components";
+import type { OnboardingGoogleInitResult, OnboardingGoogleLocationInfo, GoogleOAuthAuthorization } from "@/types/components";
 import type { GoogleConnectionState } from "@/components/onboarding/step2-form-types";
 
 export function useStep2GoogleConnection({
@@ -19,7 +19,7 @@ export function useStep2GoogleConnection({
 }: {
     businessId: string;
     initialConnected: boolean;
-    pendingGoogleCode?: string | null;
+    pendingGoogleCode?: GoogleOAuthAuthorization | null;
     onGoogleCodeConsumed?: () => void;
     mounted: boolean;
     googleState: GoogleConnectionState;
@@ -28,21 +28,19 @@ export function useStep2GoogleConnection({
     setAdvancing: (v: boolean) => void;
 }) {
     const [availableLocations, setAvailableLocations] = useState<OnboardingGoogleLocationInfo[]>([]);
-    const [pendingTokens, setPendingTokens] = useState<Parameters<typeof finalizeGoogleConnection>[2] | null>(null);
+    const [connectionId, setConnectionId] = useState<string | null>(null);
 
-    const handleGoogleCallback = async (authCode: string) => {
+    const handleGoogleCallback = async ({ code, state }: GoogleOAuthAuthorization) => {
         setGoogleState({ status: "connecting" });
         try {
             const redirectUri =
                 typeof window !== "undefined" ? `${window.location.origin}/onboarding` : undefined;
-            const result = (await initializeGoogleAuth(authCode, businessId, redirectUri)) as OnboardingGoogleInitResult;
+            const result = (await initializeGoogleAuth(code, businessId, redirectUri, state)) as OnboardingGoogleInitResult;
 
             if (result.success) {
                 if (result.multipleLocations && result.locations) {
                     setAvailableLocations(result.locations);
-                    if (result.tokens) {
-                        setPendingTokens(result.tokens);
-                    }
+                    setConnectionId(result.connectionId ?? null);
                     setGoogleState({ status: "success" });
                     toast.info("Multiple businesses found. Please select one.");
                 } else if (result.locationInfo) {
@@ -68,13 +66,13 @@ export function useStep2GoogleConnection({
     };
 
     const handleSelection = async (location: OnboardingGoogleLocationInfo) => {
-        if (!pendingTokens) {
+        if (!connectionId || !location.name) {
             toast.error("Missing session data. Please reconnect.");
             return;
         }
         setAdvancing(true);
         try {
-            const result = await finalizeGoogleConnection(businessId, location, pendingTokens);
+            const result = await finalizeGoogleConnection(businessId, location.name, connectionId);
 
             if (result.success && result.locationInfo) {
                 setGoogleState({
@@ -83,7 +81,7 @@ export function useStep2GoogleConnection({
                     averageRating: result.reviewData?.averageRating,
                 });
                 setAvailableLocations([]);
-                setPendingTokens(null);
+                setConnectionId(null);
                 toast.success("Business profile selected and connected!");
                 if (result.googleSyncWarning) {
                     toast.warning(result.googleSyncWarning);

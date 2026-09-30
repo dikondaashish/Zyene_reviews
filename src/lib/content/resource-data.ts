@@ -3,9 +3,9 @@
 // 4 comprehensive, long-form guides targeting high-volume keyword clusters.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { ContentSection } from "./blog-data";
+import type { ContentSection } from "@/lib/content/blog-data";
 import type { FaqItem } from "@/components/seo/json-ld";
-import { reviewRequestTemplatesGuide } from "./resource-review-request-templates";
+import { reviewRequestTemplatesGuide } from "@/lib/content/resource-review-request-templates";
 
 export interface ResourceGuide {
     slug: string;
@@ -307,29 +307,28 @@ const guide2: ResourceGuide = {
         { type: "cta", ctaLabel: "Explore AI drafts and automatic Google replies →", ctaHref: "/features/ai-replies" },
     ],
 };
-
 const guide3: ResourceGuide = {
     slug: "local-seo-checklist",
-    title: "Local SEO Checklist for 2026 (40+ Action Items)",
-    subtitle: "The complete local SEO checklist for local business owners - Google Business Profile, citations, reviews, on-page optimization, and more.",
+    title: "Local SEO Checklist 2026: Free Checklist for Businesses",
+    subtitle: "A practical checklist for U.S. local businesses and agencies: prioritize profile accuracy, honest review requests, website fixes, and measurable results.",
     excerpt: "The complete 2026 local SEO checklist. 40+ action items across Google Business Profile, citations, reviews, on-page optimization, and link building - all for local businesses.",
     purpose: "Rank for 'local SEO checklist' and 'local SEO 2026' clusters",
-    lastUpdated: "2026-05-25",
+    lastUpdated: "2026-09-29",
     readMinutes: 16,
-    metaTitle: "Local SEO Checklist for 2026 (40+ Action Items)",
+    metaTitle: "Local SEO Checklist 2026: Free Checklist for Businesses",
     metaDescription:
-        "Local SEO checklist for 2026: 40+ action items for Google Business Profile, citations, reviews, on-page SEO, and links - built for local business owners.",
+        "Free local SEO checklist for businesses and agencies: prioritize Google Business Profile, reviews, website fixes, and tracking. No signup required.",
     keywords: ["local seo checklist", "local seo checklist 2026", "local business seo checklist", "google local seo", "local seo guide 2026"],
     resourceLabel: "Free Checklist",
     openingSummary:
-        "Work through this local SEO checklist section by section: Google Business Profile, citations and NAP, reviews, on-page website basics, local links, mobile speed, schema, and tracking. Check items off as you go; pair review velocity with honest outreach and a documented review-request process.",
+        "Start with accurate business details and pages Google can index. Then build an honest review-request routine, improve service and location pages, and track enquiries. Work through the sections below for each real business location. Agencies can record an owner, due date, and evidence URL beside each task; completion does not guarantee a particular ranking.",
     internalLinks: [
-        { label: "Review collection features", href: "/features/review-collection" },
+        { label: "Review management for agencies", href: "/agencies" },
         { label: "Google Reviews guide", href: "/resources/google-reviews-guide" },
         { label: "Review request templates", href: "/resources/review-request-templates" },
         { label: "Compare review platforms", href: "/compare" },
-        { label: "Zyene Reviews pricing", href: "/pricing" },
-        { label: "Start free trial", href: "/signup" },
+        { label: "Google: how local ranking works", href: "https://support.google.com/business/answer/7091" },
+        { label: "Google: business representation guidelines", href: "https://support.google.com/business/answer/3038177" },
     ],
     faqs: [
         {
@@ -340,12 +339,12 @@ const guide3: ResourceGuide = {
         {
             question: "How often should I update my Google Business Profile?",
             answer:
-                "Review hours, photos, and services at least monthly. Post weekly Google updates when possible, respond to new reviews within 48 hours, and refresh photos seasonally so your profile looks active.",
+                "Update hours, contact details, and services whenever they change. Review the profile monthly, add useful photos and updates when you have something new, and set a realistic response target for customer reviews.",
         },
         {
             question: "How many Google reviews do I need for local SEO?",
             answer:
-                "There is no fixed number - competitive categories often need dozens to hundreds of reviews with steady recency. Focus on consistent monthly collection and owner responses rather than a one-time push.",
+                "Google does not publish a minimum review count for ranking. Compare relevant nearby businesses, invite honest feedback consistently, and track customer enquiries alongside review activity.",
         },
         {
             question: "Does NAP consistency still matter in 2026?",
@@ -355,17 +354,17 @@ const guide3: ResourceGuide = {
         {
             question: "What is the fastest local SEO win on this checklist?",
             answer:
-                "Completing and verifying your Google Business Profile - categories, services, photos, hours, and Q&A - often delivers the quickest visibility lift before you tackle citations and link building.",
+                "Start with errors that prevent customers from finding or contacting you: an unverified eligible profile, incorrect hours or phone number, or a website page Google cannot index. There is no universal fastest ranking fix.",
         },
     ],
     howToSteps: [
         {
             name: "Complete your Google Business Profile",
-            text: "Verify ownership, choose accurate primary and secondary categories, add services, photos, hours, and a keyword-aware business description without stuffing or links.",
+            text: "Confirm eligibility and ownership, choose accurate categories, and keep services, photos, hours, and your business description current.",
         },
         {
             name: "Fix NAP and core citations",
-            text: "Align name, address, and phone on your website, GBP, Yelp, Facebook, Apple Maps, and Bing Places; correct outdated listings.",
+            text: "Keep business details accurate on your website and relevant listings; correct outdated information and keep private service addresses private.",
         },
         {
             name: "Set up review collection and responses",
@@ -381,6 +380,7 @@ const guide3: ResourceGuide = {
         },
     ],
     tableOfContents: [
+        { anchor: "first-week", label: "Your First Week" },
         { anchor: "google-business-profile", label: "Google Business Profile" },
         { anchor: "nap-citations", label: "NAP Consistency & Citations" },
         { anchor: "reviews", label: "Reviews" },
@@ -391,30 +391,32 @@ const guide3: ResourceGuide = {
         { anchor: "tracking", label: "Tracking Your Results" },
     ],
     body: [
+        { type: "h2", id: "first-week", text: "What to prioritize in your first week" },
+        { type: "ol", items: ["Day 1: Record Search Console clicks, impressions, and indexed service pages; record profile enquiries.", "Days 2–3: Correct business details, broken pages, and accidental indexing blocks.", "Days 4–5: Test your review link and introduce an honest request process for customers.", "Days 6–7: Improve one important service page, assign the remaining tasks, and record a review date."] },
         { type: "h2", id: "google-business-profile", text: "Section 1: Google Business Profile Optimization" },
-        { type: "p", text: "Your Google Business Profile supplies the basic facts Google uses to understand a local business. Complete the profile, keep hours and services current, and measure local performance against nearby competitors rather than assuming completeness guarantees a higher position." },
+        { type: "p", text: "Google describes local ranking in terms of relevance, distance, and prominence. Start by correcting inaccurate profile information and confirming eligibility. Compare results within the area you actually serve; an accurate profile cannot remove the effect of distance." },
         { type: "ul", items: [
-            "☐ Business name: Exact legal/operating name - no keyword stuffing",
+            "☐ Business name: Use the real-world name customers recognize, without extra keywords",
             "☐ Primary category: Most specific category that accurately describes your primary service",
-            "☐ Additional categories: Up to 9 secondary categories for related services",
-            "☐ Complete address verified and consistent with your website",
-            "☐ Local phone number (not a 1-800 number) as primary",
+            "☐ Additional categories: Include only categories that describe services you actually provide",
+            "☐ Address: Show it only if customers can visit an eligible staffed location; service-area businesses should hide it",
+            "☐ Phone: Use a number that connects customers directly to the business",
             "☐ Website URL pointing to a location-specific page (not just homepage for multi-location)",
             "☐ Business hours: Regular, holiday, and special hours all accurate",
-            "☐ Service area defined (if applicable)",
-            "☐ Business description: 750 characters, keyword-rich, no links",
+            "☐ Service area: List the cities or postal codes you actually visit; online reach is not a local service area",
+            "☐ Business description: Explain your services clearly within the allowed length, without keyword stuffing",
             "☐ Services: Every service listed with individual descriptions",
-            "☐ Photos: 30+ photos including exterior, interior, team, and product/service",
+            "☐ Photos: Add current, genuine images of your team, services, and customer-facing location where applicable",
             "☐ Cover photo updated within last 12 months",
             "☐ Attributes: All relevant identity, accessibility, and amenity attributes selected",
-            "☐ Q&A: 5+ frequently asked questions seeded and answered",
-            "☐ Google Posts: At least 1 new post per week",
-            "☐ Reviews response rate: 100% of reviews responded to within 48 hours",
+            "☐ Customer questions: Answer genuine questions accurately wherever they appear",
+            "☐ Updates: Share relevant announcements when you have useful news",
+            "☐ Review replies: Assign an owner and set a response target your team can maintain",
         ]},
         { type: "h2", id: "nap-citations", text: "Section 2: NAP Consistency & Citations" },
-        { type: "p", text: "NAP (Name, Address, Phone) consistency across the web is a foundational local SEO signal. Inconsistent citations - your name spelled differently, old addresses, wrong phone numbers - confuse Google and dilute your Prominence score." },
+        { type: "p", text: "Keep your business name, address where public, and phone number accurate across important listings. Outdated details can send customers to the wrong place. Google does not provide a public numerical prominence score." },
         { type: "ul", items: [
-            "☐ NAP is identical across your website, GBP, Yelp, Facebook, and all major directories",
+            "☐ Business details are accurate across your website and relevant listings; keep a private service address private",
             "☐ Yelp profile: Complete with photos, hours, and responding to reviews",
             "☐ Facebook Business Page: Complete, active, and consistent NAP",
             "☐ Apple Maps: Claim and optimize your listing",
@@ -422,23 +424,23 @@ const guide3: ResourceGuide = {
             "☐ Industry directories: Listed in relevant vertical directories (Healthgrades for healthcare, TripAdvisor for hospitality, Houzz for home services, etc.)",
             "☐ Chamber of Commerce: Listed in local chamber directory",
             "☐ BBB: Claimed and active profile (if applicable)",
-            "☐ Data aggregators: Ensure accurate data in Factual, Infogroup, and Acxiom",
+            "☐ Listing providers: Check the sources that actually supply your current listings and correct outdated details",
             "☐ Old citations with wrong address/phone: Identified and corrected",
         ]},
         { type: "h2", id: "reviews", text: "Section 3: Reviews" },
         {
             type: "warning",
-            text: "Review outreach: Ask customers honestly for feedback. Do not offer incentives tied to star ratings, do not pressure people with repeated messages, and configure your request process to match your documented business policy. Use private feedback to organize service recovery.",
+            text: "Invite genuine customers to share honest feedback. Google prohibits incentives for reviews and selectively requesting only positive reviews. Offer private support without making access to the public review link depend on a customer’s rating.",
         },
         { type: "ul", items: [
-            "☐ Google review count: 50+ (competitive minimum), 100+ (preferred)",
-            "☐ Review velocity: 5-10 new reviews per month minimum",
-            "☐ Average rating: 4.0+ (4.4+ preferred for competitive categories)",
+            "☐ Review baseline: Record your count and compare relevant nearby businesses; there is no universal minimum",
+            "☐ Review requests: Invite customers consistently at an appropriate point after service",
+            "☐ Customer experience: Track recurring complaints and whether your team resolves their causes",
             "☐ Review response rate: 100% of reviews responded to",
             "☐ Review response time: Under 48 hours for all, under 24 hours for negative",
             "☐ Review request automation: Systematic process to ask every customer",
             "☐ Multi-platform monitoring: Google, Yelp, Facebook, industry platforms all monitored",
-            "☐ Negative Feedback Shield or equivalent: Private resolution channel in place",
+            "☐ Private support: Provide a service-recovery channel without filtering who can leave a public review",
             "☐ Fake review monitoring: New reviews checked for authenticity on arrival",
         ]},
         { type: "h2", id: "on-page-seo", text: "Section 4: On-Page Website Optimization" },
@@ -446,9 +448,9 @@ const guide3: ResourceGuide = {
             "☐ Title tag: City + primary keyword + business name (e.g., 'Austin Family Dentist | Bright Smiles Dental')",
             "☐ Meta description: 150-160 characters, includes city and primary keyword",
             "☐ H1 tag: Contains primary keyword and city",
-            "☐ Content: 500+ words on homepage mentioning city, neighborhood, and primary services",
-            "☐ NAP on website: Name, address, and phone number in text (not just image) on homepage footer and contact page",
-            "☐ Embedded Google Map: Interactive map on contact/location page",
+            "☐ Content: Explain your real services, coverage, process, and evidence; avoid adding text to meet a word quota",
+            "☐ Contact details: Show name and phone in text; publish an address only for a customer-facing location",
+            "☐ Map: Show an accurate customer-facing location where applicable; keep a private service address private",
             "☐ Location pages: Separate, unique page for each physical location (multi-location)",
             "☐ Service pages: Individual pages for each primary service (not one page listing all services)",
             "☐ Internal linking: Location and service pages linked from homepage and each other",
@@ -459,10 +461,10 @@ const guide3: ResourceGuide = {
             "☐ Local news sites: Get mentioned or featured in local news coverage",
             "☐ Chamber of Commerce: Member and listed on their website with a link",
             "☐ Local business associations: Member with website link",
-            "☐ Sponsorships: Local event or team sponsorships that include a website link",
-            "☐ Partner businesses: Reciprocal links with complementary local businesses",
+            "☐ Sponsorships: Participate where relevant; mark paid links appropriately",
+            "☐ Partner businesses: Seek useful, relevant referrals rather than arranged link exchanges",
             "☐ Local blog features: Guest posts or features on local lifestyle/business blogs",
-            "☐ Press releases: Syndicated for new location openings, awards, community events",
+            "☐ News: Share noteworthy openings, research, or events with relevant local publications",
         ]},
         { type: "h2", id: "mobile-and-speed", text: "Section 6: Mobile & Page Speed" },
         { type: "ul", items: [
@@ -494,7 +496,6 @@ const guide3: ResourceGuide = {
         { type: "cta", ctaLabel: "Track your local SEO performance with Zyene →", ctaHref: "/features" },
     ],
 };
-
 export const RESOURCE_GUIDES: ResourceGuide[] = [guide1, guide2, guide3, reviewRequestTemplatesGuide];
 
 export const RESOURCE_MAP: Record<string, ResourceGuide> = Object.fromEntries(

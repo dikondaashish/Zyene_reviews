@@ -7,19 +7,19 @@ import { getAuthSiteUrl } from "@/lib/routing/platform-routes";
 export async function restoreOriginalUserAfterAddBusiness(params: {
     admin: SupabaseClient;
     supabase: SupabaseClient;
-    addBusinessUserId: string;
+    originalUserId: string;
     oauthUserId: string;
     appUrl: string;
 }): Promise<NextResponse | null> {
-    const { admin, supabase, addBusinessUserId, oauthUserId, appUrl } = params;
+    const { admin, supabase, originalUserId, oauthUserId, appUrl } = params;
 
-    if (addBusinessUserId === oauthUserId) {
+    if (originalUserId === oauthUserId) {
         return null;
     }
 
     await supabase.auth.signOut();
 
-    const { data: originalUser } = await admin.auth.admin.getUserById(addBusinessUserId);
+    const { data: originalUser } = await admin.auth.admin.getUserById(originalUserId);
 
     if (originalUser?.user?.email) {
         const { data: linkData } = await admin.auth.admin.generateLink({

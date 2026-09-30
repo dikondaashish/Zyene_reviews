@@ -4,6 +4,7 @@ import { renderAeoReportHtml } from "./report-html";
 import { renderAeoReportPdf } from "./report-pdf";
 import type { AeoReportModel } from "./report-model";
 import { checkOriginIsPublic } from "@/services/aeo/crawler/ssrf-guard";
+import { fetchPublicHttpBytes } from "@/services/aeo/crawler/public-http";
 import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 
 type Admin = SupabaseClient<Database>;
@@ -33,10 +34,10 @@ export async function buildAeoReportModel(db: Admin, businessId: string, range: 
     if (organization.data.logo_url) {
         const safety = await checkOriginIsPublic(organization.data.logo_url);
         if (safety.safe) try {
-            const response = await fetch(organization.data.logo_url, { redirect: "error", signal: AbortSignal.timeout(8_000) });
+            const response = await fetchPublicHttpBytes(organization.data.logo_url, { redirect: "error", timeoutMs: 8_000, maxBytes: 2_000_001 });
             if (!response.ok) throw new Error(`Logo returned HTTP ${response.status}`);
-            const mime = response.headers.get("content-type")?.split(";")[0] ?? "";
-            const bytes = Buffer.from(await response.arrayBuffer());
+            const mime = response.contentType?.split(";")[0] ?? "";
+            const bytes = Buffer.from(response.bytes);
             if (/^image\/(png|jpe?g)$/.test(mime) && bytes.length <= 2_000_000) {
                 brandLogoDataUrl = `data:${mime};base64,${bytes.toString("base64")}`;
             }

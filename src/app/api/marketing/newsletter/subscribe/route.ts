@@ -1,7 +1,15 @@
 import { NextResponse } from "next/server";
 import { processNewsletterSubscribe } from "@/lib/marketing/newsletter-subscribe";
+import { clientIpFrom, publicNewsletterRateLimit } from "@/lib/auth/rate-limit";
 
 export async function POST(request: Request) {
+    try {
+        const { success } = await publicNewsletterRateLimit.limit(clientIpFrom(request));
+        if (!success) return NextResponse.json({ error: "Too many subscriptions" }, { status: 429 });
+    } catch {
+        return NextResponse.json({ error: "Subscription unavailable" }, { status: 503 });
+    }
+
     let body: {
         email?: string;
         source?: string;

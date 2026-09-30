@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/db/supabase/server";
+import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import type {
     BusinessContextBusiness,
     BusinessContextOrganization,
@@ -133,7 +134,7 @@ export async function setActiveBusiness(businessId: string) {
         .eq("id", businessId)
         .maybeSingle();
 
-    if (businessError || !business) {
+    if (businessError || !business || !(await userCanAccessBusiness(supabase, user.id, businessId))) {
         throw new Error("Business not found or access denied");
     }
 

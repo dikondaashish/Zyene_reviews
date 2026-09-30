@@ -1,10 +1,10 @@
-"use server";
+import "server-only";
 
 import { revalidatePath } from "next/cache";
 
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
-import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import { parseGoogleLocationResourceIds } from "@/services/google/business-profile";
 
 import { enqueueGooglePostConnectSync } from "./types";
@@ -13,6 +13,7 @@ import { storeGooglePlatformCredentials } from "./google-platform-credentials";
 import {
     resolveStorefrontAddress,
     type GoogleLocationInput,
+    type GoogleTokenBundle,
 } from "./google-oauth-helpers";
 
 /** Best-effort review totals for a location; zeroes if the call fails. */
@@ -41,17 +42,17 @@ async function fetchReviewSummary(locationName: string | undefined, accessToken:
 /**
  * Finalizes the Google Business Profile connection after selection (or auto-selection).
  */
-export async function finalizeGoogleConnection(
+export async function finalizeVerifiedGoogleConnection(
     businessId: string,
     location: GoogleLocationInput,
-    tokens: { accessToken: string; refreshToken?: string; expiresIn: number },
+    tokens: GoogleTokenBundle,
 ) {
     try {
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return { success: false, error: "Not authenticated" };
 
-        const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+        const allowed = await canManageBusinessIntegration(supabase, user.id, businessId);
         if (!allowed) {
             return { success: false, error: "You do not have access to this business." };
         }
@@ -84,7 +85,7 @@ export async function finalizeGoogleConnection(
             .replace(/[^a-z0-9]+/g, "-")
             .replace(/^-+|-+$/g, "");
 
-        await supabase
+        const { error: businessError } = await supabase
             .from("businesses")
             .update({
                 name: displayName || undefined,
@@ -101,6 +102,7 @@ export async function finalizeGoogleConnection(
                 ...(slug ? { slug } : {}),
             })
             .eq("id", businessId);
+        if (businessError) throw businessError;
 
         // Store platform tokens + GBP resource IDs (required for sync without listAccounts)
         const { googleAccountId, googleLocationId } = parseGoogleLocationResourceIds(
@@ -117,6 +119,7 @@ export async function finalizeGoogleConnection(
             googleReviewUrl,
             reviewCount: reviewData.reviewCount,
             averageRating: reviewData.averageRating,
+            grantedScopes: tokens.grantedScopes,
         });
 
         if (!stored.ok) {

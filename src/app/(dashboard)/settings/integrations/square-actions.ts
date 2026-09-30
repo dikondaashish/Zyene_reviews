@@ -5,10 +5,11 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { logger } from "@/lib/logger";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 
 const businessIdSchema = z.string().uuid();
 
-async function assertCanAccessBusiness(businessId: string): Promise<void> {
+async function assertCanManageBusiness(businessId: string): Promise<void> {
     const parsed = businessIdSchema.safeParse(businessId);
     if (!parsed.success) throw new Error("Invalid business");
 
@@ -18,13 +19,9 @@ async function assertCanAccessBusiness(businessId: string): Promise<void> {
     } = await supabase.auth.getUser();
     if (!user) throw new Error("Unauthorized");
 
-    // RLS: readable business ⇒ org or business member
-    const { data: biz } = await supabase
-        .from("businesses")
-        .select("id")
-        .eq("id", parsed.data)
-        .maybeSingle();
-    if (!biz) throw new Error("Forbidden");
+    if (!(await canManageBusinessIntegration(supabase, user.id, parsed.data))) {
+        throw new Error("Forbidden");
+    }
 }
 
 export async function setSquareAutoSend(
@@ -32,7 +29,7 @@ export async function setSquareAutoSend(
     enabled: boolean,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
     try {
-        await assertCanAccessBusiness(businessId);
+        await assertCanManageBusiness(businessId);
         const admin = createAdminClient();
         const { data, error } = await admin
             .from("square_connections")
@@ -63,7 +60,7 @@ export async function disconnectSquare(
     businessId: string,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
     try {
-        await assertCanAccessBusiness(businessId);
+        await assertCanManageBusiness(businessId);
         const admin = createAdminClient();
         const { data, error } = await admin
             .from("square_connections")

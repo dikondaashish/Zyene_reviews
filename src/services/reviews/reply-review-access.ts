@@ -3,6 +3,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { deleteReviewReply, replyToReview, listAccounts } from "@/services/google/business-profile";
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import { apiError } from "@/app/api/_shared/responses";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 
 type ReviewRow = {
     id: string;
@@ -17,20 +18,13 @@ export async function fetchAuthorizedGoogleReview(reviewId: string, userId: stri
 
     const { data: review, error: reviewError } = await supabase
         .from("reviews")
-        .select(`
-                *,
-                businesses!inner(
-                    organizations!inner(
-                        organization_members!inner(user_id)
-                    )
-                )
-            `)
+        .select("id, platform, platform_id, external_id, business_id")
         .eq("id", reviewId)
-        .eq("businesses.organizations.organization_members.user_id", userId)
         .single();
 
-    if (reviewError || !review) {
-        logger.error({ err: reviewError }, "Review Fetch Error or Not Found:");
+    if (reviewError || !review?.business_id ||
+        !(await canManageBusinessIntegration(supabase, userId, review.business_id))) {
+        if (reviewError) logger.error({ err: reviewError }, "Review Fetch Error:");
         return { ok: false as const, response: apiError("Review not found or unauthorized", { status: 404 }) };
     }
 
@@ -46,6 +40,13 @@ export async function fetchAuthorizedGoogleReview(reviewId: string, userId: stri
 
     if (!row.external_id) {
         return { ok: false as const, response: apiError("Review external ID missing", { status: 500 }) };
+    }
+
+    const { data: platform, error: platformError } = await supabase.from("review_platforms")
+        .select("id, business_id")
+        .eq("id", row.platform_id).eq("business_id", review.business_id).maybeSingle();
+    if (platformError || platform?.business_id !== review.business_id) {
+        return { ok: false as const, response: apiError("Review integration is unavailable", { status: 404 }) };
     }
 
     return { ok: true as const, review: row, supabase };

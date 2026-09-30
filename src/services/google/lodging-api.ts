@@ -1,4 +1,5 @@
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import { getLodging, patchLodging, stripLodgingOutputOnly, type LodgingRecord } from "@/services/google/lodging";
 import { mergeLodgingPatches, type LodgingPatches } from "@/services/google/lodging-merge";
@@ -96,7 +97,7 @@ export async function handleGoogleLodgingPatch(request: Request) {
             });
         }
 
-        const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+        const allowed = await canManageBusinessIntegration(supabase, user.id, businessId);
         if (!allowed) {
             throw new ApiRouteError("Forbidden", { status: 403, code: "FORBIDDEN" });
         }

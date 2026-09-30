@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { checkOriginIsPublic } from "@/services/aeo/crawler/ssrf-guard";
+import { fetchPublicHttpText } from "@/services/aeo/crawler/public-http";
 import { parseLlmsTxt } from "./llms-txt";
 
 type Admin = SupabaseClient<Database>;
@@ -15,10 +16,10 @@ export async function refreshLlmsTxtAudit(db: Admin, businessId: string) {
     let status: number | null = null;
     let content = "";
     try {
-        const response = await fetch(target, { redirect: "error", signal: AbortSignal.timeout(12_000),
+        const response = await fetchPublicHttpText(target, { redirect: "error", timeoutMs: 12_000, maxBytes: 512_000,
             headers: { "User-Agent": "Zyene-AEO-Audit/1.0", Accept: "text/plain,text/markdown" } });
         status = response.status;
-        if (response.ok) content = (await response.text()).slice(0, 512_000);
+        if (response.ok) content = response.text;
     } catch { /* A failed fetch is a measured absence, persisted below. */ }
     const parsed = content ? parseLlmsTxt(content) : { valid: false, issues: ["missing_or_unreachable"] };
     const write = await db.from("aeo_llms_txt_audits" as never).insert({

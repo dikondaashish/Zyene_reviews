@@ -2,6 +2,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { NextResponse } from "next/server";
 import Papa from "papaparse";
+import { SAFE_CSV_OPTIONS } from "@/lib/export/safe-csv";
 import { getAnalyticsPeriods } from "@/lib/analytics/date-range";
 import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 import { calculateReviewMetrics } from "@/lib/metrics/business-metrics";
@@ -81,7 +82,7 @@ export async function GET(request: Request) {
     });
 
     // Generate CSV
-    const csvData = Papa.unparse(trendRows);
+    const csvData = Papa.unparse(trendRows, SAFE_CSV_OPTIONS);
     const businessName = business.name || "business";
     const filename = `${businessName.replace(/[^a-z0-9]/gi, "_").toLowerCase()}_analytics_${platform}_${range}.csv`;
 

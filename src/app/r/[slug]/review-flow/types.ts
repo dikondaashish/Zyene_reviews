@@ -19,6 +19,7 @@ export interface PublicReviewFlowProps {
     businessName: string;
     businessCategory: string;
     requestId?: string;
+    openToken?: string;
     googleUrl?: string;
     brandColor?: string;
     /** Outer full-page gradient behind the white card (Brand Identity → page background) */

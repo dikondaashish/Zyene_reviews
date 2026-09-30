@@ -1,4 +1,6 @@
 
+import { escapeHtml } from "@/lib/security/html-escape";
+
 interface RecoveryEmailProps {
     businessName: string;
     customerName?: string;
@@ -8,7 +10,8 @@ export function recoveryEmailTemplate({
     businessName,
     customerName,
 }: RecoveryEmailProps): string {
-    const greeting = customerName ? `Hi ${customerName},` : "Hi components,";
+    const safeBusinessName = escapeHtml(businessName);
+    const greeting = customerName ? `Hi ${escapeHtml(customerName)},` : "Hi there,";
     
     return `
 <!DOCTYPE html>
@@ -16,7 +19,7 @@ export function recoveryEmailTemplate({
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>We're Sorry - ${businessName}</title>
+    <title>We're Sorry - ${safeBusinessName}</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #fcfbfa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
     <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #fcfbfa; min-height: 100vh;">
@@ -35,7 +38,7 @@ export function recoveryEmailTemplate({
                             </p>
 
                             <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.6; color: #52525b;">
-                                Thank you for sharing your feedback about your recent experience at <strong>${businessName}</strong>. 
+                                Thank you for sharing your feedback about your recent experience at <strong>${safeBusinessName}</strong>.
                                 We're truly sorry that we didn't meet your expectations this time.
                             </p>
 
@@ -50,7 +53,7 @@ export function recoveryEmailTemplate({
                             <div style="padding-top: 32px; border-top: 1px solid #f4f4f5;">
                                 <p style="margin: 0; font-size: 14px; color: #71717a;">
                                     Best regards,<br>
-                                    Management at ${businessName}
+                                    Management at ${safeBusinessName}
                                 </p>
                             </div>
                         </td>

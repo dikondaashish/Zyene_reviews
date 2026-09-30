@@ -3,6 +3,9 @@ import puppeteer from "puppeteer-core";
 import { checkOriginIsPublic } from "../crawler/ssrf-guard";
 
 export async function renderVisibleText(url: string): Promise<string> {
+    if (process.env.AEO_HEADLESS_RENDER_ISOLATED_EGRESS !== "true") {
+        throw new Error("Headless rendering requires isolated outbound network access");
+    }
     const initial = await checkOriginIsPublic(url);
     if (!initial.safe) throw new Error(`Unsafe render target: ${initial.reason}`);
 

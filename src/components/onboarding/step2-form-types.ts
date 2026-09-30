@@ -1,3 +1,5 @@
+import type { GoogleOAuthAuthorization } from "@/types/components";
+
 export interface Step2FormProps {
     onNext: () => Promise<void>;
     onSkip: () => Promise<void>;
@@ -9,7 +11,7 @@ export interface Step2FormProps {
     state?: string;
     phone?: string;
     /** OAuth code passed from page.tsx after Google redirects back */
-    pendingGoogleCode?: string | null;
+    pendingGoogleCode?: GoogleOAuthAuthorization | null;
     /** Called after the pending code has been consumed so the parent can clear it */
     onGoogleCodeConsumed?: () => void;
     /** OAuth cancellation or failure returned by Google before a connection is created. */

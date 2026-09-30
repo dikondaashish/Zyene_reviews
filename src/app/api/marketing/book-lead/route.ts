@@ -11,16 +11,14 @@ const bookLeadSchema = z.object({
 });
 
 export async function POST(request: Request) {
-    if (process.env.NODE_ENV === "production") {
-        try {
-            const { success } = await publicFormRateLimit.limit(clientIpFrom(request));
-            if (!success) {
-                return NextResponse.json({ error: "Too many requests. Please try again shortly." }, { status: 429 });
-            }
-        } catch (err) {
-            logger.error({ err }, "[book-lead] rate limit check failed");
-            return NextResponse.json({ error: "Unable to submit right now." }, { status: 503 });
+    try {
+        const { success } = await publicFormRateLimit.limit(clientIpFrom(request));
+        if (!success) {
+            return NextResponse.json({ error: "Too many requests. Please try again shortly." }, { status: 429 });
         }
+    } catch (err) {
+        logger.error({ err }, "[book-lead] rate limit check failed");
+        return NextResponse.json({ error: "Unable to submit right now." }, { status: 503 });
     }
 
     let raw: unknown;

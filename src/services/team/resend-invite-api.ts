@@ -3,7 +3,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
-import { canManageBusinessTeam } from "@/lib/team/business-team";
+import { canInviterAssignInviteRole, canManageBusinessTeam } from "@/lib/team/business-team";
 import {
     defaultInviteExpiresAtIso,
     deliverTeamInviteEmail,
@@ -39,6 +39,7 @@ export async function handleResendTeamInvite(invitationId: string) {
         .select("role, business_id, users(full_name)")
         .eq("user_id", user.id)
         .eq("business_id", businessId)
+        .eq("status", "active")
         .single();
 
     if (membError || !membership || !canManageBusinessTeam(membership.role)) {
@@ -49,7 +50,7 @@ export async function handleResendTeamInvite(invitationId: string) {
 
     const { data: row, error: invErr } = await supabase
         .from("invitations")
-        .select("id, email, token, business_id, accepted_at")
+        .select("id, email, token, business_id, organization_id, role, accepted_at")
         .eq("id", idParsed.data)
         .eq("business_id", businessId)
         .is("accepted_at", null)
@@ -57,6 +58,10 @@ export async function handleResendTeamInvite(invitationId: string) {
 
     if (invErr || !row?.email || !row.token) {
         return apiError("Invitation not found or already accepted", { status: 404 });
+    }
+    if (row.organization_id !== business.organization_id ||
+        !canInviterAssignInviteRole(membership.role, row.role)) {
+        return apiError("Forbidden", { status: 403 });
     }
 
     const admin = createAdminClient();

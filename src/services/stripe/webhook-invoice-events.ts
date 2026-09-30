@@ -1,4 +1,8 @@
 import type Stripe from "stripe";
+import { stripe } from "@/services/stripe/client";
+import { stripeSubscriptionToOrganizationUpdate } from "@/services/stripe/organization-billing-sync";
+import { applySubscriptionProjection } from "@/services/stripe/subscription-projection";
+import { invoiceServicePeriodEnd } from "@/services/stripe/invoice-service-period";
 
 import { logger } from "@/lib/logger";
 import { sendEmail } from "@/services/resend/send-email";
@@ -22,15 +26,18 @@ export async function handleInvoicePaymentFailed(
     const customerId =
         typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id;
 
-    if (!customerId) {
-        logger.error({ err: invoice.id }, "invoice.payment_failed: missing customer id");
-        return;
+    const invoiceSubscription = invoice.parent?.subscription_details?.subscription;
+    if (!invoiceSubscription) return;
+    if (!customerId) throw new Error("Invoice customer missing");
+    const subscriptionId = typeof invoiceSubscription === "string" ? invoiceSubscription : invoiceSubscription.id;
+    const observedAt = new Date().toISOString();
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    if ((typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id) !== customerId) {
+        throw new Error("Invoice subscription customer mismatch");
     }
-
-    await supabase
-        .from("organizations")
-        .update({ plan_status: "past_due" })
-        .eq("stripe_customer_id", customerId);
+    const updatedOrgId = await applySubscriptionProjection(supabase, customerId, subscriptionId,
+        stripeSubscriptionToOrganizationUpdate(subscription), { observedAt });
+    if (!updatedOrgId || subscription.status !== "past_due") return;
 
     try {
         if (invoice.customer_email) {
@@ -58,28 +65,21 @@ export async function handleInvoicePaymentSucceeded(
     // Only for recurring payments - the first one is covered by checkout.session.completed.
     if (invoice.billing_reason !== "subscription_cycle") return;
 
-    // Isolated on purpose: a bug in this newer, less-proven feature must never
-    // block the payment-success email below, which every renewing customer -
-    // AEO or not - relies on today. organizations.plan is read rather than
-    // re-derived from the invoice's price id because organization-billing-sync
-    // already keeps it current; one row read serves both organization_id and
-    // plan id.
+    // Resolve both customer and current subscription before any financial write.
     const customerId = typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id;
-    if (customerId) {
-        try {
-            const { data: org } = await supabase
-                .from("organizations")
-                .select("id, plan")
-                .eq("stripe_customer_id", customerId)
-                .single();
-            if (org) {
-                const { resetAeoCreditsForPlan } = await import("@/services/aeo/billing/renewal-credit-reset");
-                await resetAeoCreditsForPlan(supabase, { organizationId: org.id, planId: org.plan });
-            }
-        } catch (creditErr) {
-            logger.error({ err: creditErr }, "[AEO] E-9 credit reset failed on renewal");
-        }
-    }
+    const invoiceSubscription = invoice.parent?.subscription_details?.subscription;
+    if (!customerId || !invoiceSubscription) throw new Error("Invoice billing binding missing");
+    const subscriptionId = typeof invoiceSubscription === "string" ? invoiceSubscription : invoiceSubscription.id;
+    const { data: org, error } = await supabase
+        .from("organizations").select("id, plan")
+        .eq("stripe_customer_id", customerId)
+        .eq("stripe_subscription_id", subscriptionId).maybeSingle();
+    if (error) throw error;
+    if (!org) return;
+    const { resetAeoCreditsForPlan } = await import("@/services/aeo/billing/renewal-credit-reset");
+    await resetAeoCreditsForPlan(supabase, { organizationId: org.id, planId: org.plan,
+        customerId, subscriptionId, receiptId: invoice.id,
+        periodEnd: await invoiceServicePeriodEnd(invoice, subscriptionId, org.plan) });
 
     try {
         if (invoice.customer_email) {

@@ -13,7 +13,7 @@ export function useReviewsPageClientBackfill(businessId: string) {
             const response = await fetch("/api/smart/analyze/backfill", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ limit: 1500, businessId }),
+                body: JSON.stringify({ limit: 250, businessId }),
             });
             const payload = await response.json();
             if (!response.ok) {

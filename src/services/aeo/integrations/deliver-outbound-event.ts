@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { checkOriginIsPublic } from "@/services/aeo/crawler/ssrf-guard";
+import { fetchPublicHttpText } from "@/services/aeo/crawler/public-http";
 import { decryptAlertSecret } from "@/services/aeo/alerting/channel-secrets";
 import { buildWebhookDelivery } from "./outbound-webhook";
 
@@ -21,14 +22,17 @@ const wait = (milliseconds: number) => new Promise<void>((resolve) => setTimeout
 export async function postWebhookWithRetry(url: string, delivery: Delivery, options: RetryOptions = {}) {
     const maxAttempts = options.maxAttempts ?? 3;
     const retryDelayMs = options.retryDelayMs ?? 250;
-    const fetcher = options.fetcher ?? fetch;
+    const fetcher = options.fetcher;
     const sleep = options.sleep ?? wait;
     let responseStatus: number | null = null;
     let errorMessage = "Webhook delivery failed";
     for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
         try {
-            const response = await fetcher(url, { method: "POST", body: delivery.body, headers: delivery.headers,
-                redirect: "error", signal: AbortSignal.timeout(10_000) });
+            const response = fetcher
+                ? await fetcher(url, { method: "POST", body: delivery.body, headers: delivery.headers,
+                    redirect: "error", signal: AbortSignal.timeout(10_000) })
+                : await fetchPublicHttpText(url, { method: "POST", body: delivery.body,
+                    headers: delivery.headers, redirect: "error", timeoutMs: 10_000, maxBytes: 1024 });
             responseStatus = response.status;
             if (response.ok) return { success: true, attemptCount: attempt, responseStatus, errorMessage: null };
             errorMessage = `Webhook returned HTTP ${response.status}`;

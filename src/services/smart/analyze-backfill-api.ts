@@ -3,62 +3,45 @@ import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { inngest } from "@/services/inngest/client";
 import { AI_ANALYSIS_BATCH_SIZE } from "@/services/google/constants";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
+import { aiAnalysisBackfillRateLimit } from "@/lib/auth/rate-limit";
+import { z } from "zod";
 
-const DEFAULT_LIMIT = 500;
-const MAX_LIMIT = 2000;
+const schema = z.object({
+    businessId: z.string().uuid(),
+    limit: z.number().int().min(1).max(250).default(250),
+});
 
 export async function handleSmartAnalyzeBackfill(request: Request) {
     try {
         const { supabase, user } = await requireUser();
 
-        let requestedLimit = DEFAULT_LIMIT;
-        let requestedBusinessId: string | undefined;
-        try {
-            const body = await request.json();
-            if (typeof body?.limit === "number" && Number.isFinite(body.limit)) {
-                requestedLimit = body.limit;
-            }
-            if (typeof body?.businessId === "string" && body.businessId.trim()) {
-                requestedBusinessId = body.businessId.trim();
-            }
-        } catch {
-            // no body provided
+        const parsed = schema.safeParse(await request.json());
+        if (!parsed.success) {
+            return apiError("Invalid request payload", { status: 400 });
         }
-
-        const limit = Math.max(1, Math.min(MAX_LIMIT, Math.floor(requestedLimit)));
-
-        const { data: memberData, error: memberError } = await supabase
-            .from("organization_members")
-            .select(`
-                organizations (
-                    plan,
-                    plan_status,
-                    businesses (
-                        id
-                    )
-                )
-            `)
-            .eq("user_id", user.id)
-            .single();
-
-        if (memberError || !memberData) {
+        const { businessId, limit } = parsed.data;
+        if (!(await canManageBusinessIntegration(supabase, user.id, businessId))) {
             return apiError("Business not found", { status: 404, code: "BUSINESS_NOT_FOUND" });
         }
-
-        const typed = memberData as { organizations?: { plan?: string | null; plan_status?: string | null; businesses?: Array<{ id: string }> } };
-        if (!planAllowsAiReviewFeatures(typed.organizations?.plan ?? null, typed.organizations?.plan_status ?? null)) {
+        const { data: business, error: businessError } = await supabase.from("businesses")
+            .select("organizations!inner(plan,plan_status)")
+            .eq("id", businessId).maybeSingle();
+        if (businessError || !business) {
+            return apiError("Business not found", { status: 404, code: "BUSINESS_NOT_FOUND" });
+        }
+        const org = business.organizations;
+        if (!planAllowsAiReviewFeatures(org?.plan ?? null, org?.plan_status ?? null)) {
             return apiError(
                 "AI review analysis requires an active Starter, Professional, or Enterprise plan.",
                 { status: 403, code: "AI_ANALYSIS_PLAN_REQUIRED" }
             );
         }
-        const businesses = (typed.organizations?.businesses || []) as Array<{ id: string }>;
-        const business = requestedBusinessId
-            ? businesses.find((entry) => entry.id === requestedBusinessId)
-            : businesses[0];
-        const businessId = business?.id;
-        if (!businessId) {
-            return apiError("Business not found", { status: 404, code: "BUSINESS_NOT_FOUND" });
+        try {
+            const { success } = await aiAnalysisBackfillRateLimit.limit(businessId);
+            if (!success) return apiError("Daily analysis backfill limit reached", { status: 429 });
+        } catch {
+            return apiError("Analysis backfill is temporarily unavailable", { status: 503 });
         }
 
         const { data, error } = await supabase

@@ -10,6 +10,7 @@ import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import { getGoogleLocation } from "@/services/google/listing-information";
 import { generatePostDrafts, generateServiceDescriptions } from "./gbp-content-generators";
+import { checkAiBusinessDailyBudget } from "./ai-business-budget";
 
 /**
  * F6.6 - the services and posts arms of the GBP optimizer.
@@ -71,6 +72,9 @@ export async function handleOptimizeGbpContent(request: Request) {
             details: requestId,
         });
     }
+
+    const budgetDenial = await checkAiBusinessDailyBudget(businessId);
+    if (budgetDenial) return budgetDenial;
 
     const { data: platform } = await supabase
         .from("review_platforms")

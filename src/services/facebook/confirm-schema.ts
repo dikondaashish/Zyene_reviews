@@ -5,6 +5,7 @@ export const facebookConfirmSchema = z.object({
 });
 
 export type FbConnectCookieData = {
+    userId: string;
     businessId: string;
     tokenExpiresIn?: number;
     pages: Array<{ pageId: string; pageName: string; pageAccessToken: string }>;

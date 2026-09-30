@@ -1,111 +1,53 @@
+import "server-only";
+import { z } from "zod";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { stripe } from "@/services/stripe/client";
 import { sendEmail } from "@/services/resend/send-email";
 import { referralRewardEmailHtml } from "@/lib/email/transactional-email-styles";
 
-/**
- * When a referred organization converts to paid, reward the referrer (1 free month credit).
- * Idempotent per referee org via referral_conversions row.
- */
+const claimSchema = z.object({
+    customerId: z.string().startsWith("cus_"), cents: z.number().int().positive().max(100000),
+    referrerUserId: z.string().uuid(), claimToken: z.string().uuid(), idempotencyKey: z.string().min(1).max(255),
+});
+
+/** System-only paid-conversion workflow. SQL verifies the stored referral/owner relationship. */
 export async function processReferralConversionReward(refereeOrganizationId: string): Promise<void> {
-    const admin = createAdminClient();
-
-    const { data: org } = await admin
-        .from("organizations")
-        .select("id, referred_by_user_id, plan_status, stripe_customer_id")
-        .eq("id", refereeOrganizationId)
-        .maybeSingle();
-
-    if (!org?.referred_by_user_id || org.plan_status !== "active") {
-        return;
-    }
-
-    const referrerUserId = org.referred_by_user_id;
-
-    const { data: existing } = await admin
-        .from("referral_conversions")
-        .select("id, status")
-        .eq("referee_organization_id", refereeOrganizationId)
-        .maybeSingle();
-
-    if (existing?.status === "rewarded") {
-        return;
-    }
-
-    if (!existing) {
-        const { error: insertErr } = await admin.from("referral_conversions").insert({
-            referrer_user_id: referrerUserId,
-            referee_organization_id: refereeOrganizationId,
-            status: "converted",
-            converted_at: new Date().toISOString(),
-        });
-        if (insertErr?.code === "23505") {
-            return;
-        }
-        if (insertErr) {
-            logger.error({ err: insertErr }, "[referral] insert conversion failed:");
-            return;
-        }
-    } else if (existing.status === "pending") {
-        await admin
-            .from("referral_conversions")
-            .update({ status: "converted", converted_at: new Date().toISOString() })
-            .eq("id", existing.id);
-    }
-
     const rewardCents = Number(process.env.REFERRAL_REWARD_CENTS ?? "2999");
-    const { data: referrerMember } = await admin
-        .from("organization_members")
-        .select("organization_id")
-        .eq("user_id", referrerUserId)
-        .eq("role", "ORG_OWNER")
-        .limit(1)
-        .maybeSingle();
-
-    let referrerCustomerId: string | null = null;
-    if (referrerMember?.organization_id) {
-        const { data: referrerOrg } = await admin
-            .from("organizations")
-            .select("stripe_customer_id")
-            .eq("id", referrerMember.organization_id)
-            .maybeSingle();
-        referrerCustomerId = referrerOrg?.stripe_customer_id ?? null;
+    if (rewardCents === 0) return;
+    if (!Number.isSafeInteger(rewardCents) || rewardCents < 1 || rewardCents > 100000) {
+        throw new Error("Invalid referral reward amount");
     }
+    const admin = createAdminClient();
+    const { data, error } = await admin.rpc("claim_referral_conversion_reward" as never, {
+        p_referee_id: refereeOrganizationId, p_reward_cents: rewardCents,
+    } as never);
+    if (error) throw error;
+    if (data === null) return;
+    const claim = claimSchema.parse(data);
 
-    if (referrerCustomerId && rewardCents > 0) {
-        try {
-            await stripe.customers.createBalanceTransaction(referrerCustomerId, {
-                amount: -rewardCents,
-                currency: "usd",
-                description: "Referral reward - 1 month credit (Phase 7)",
-            });
-        } catch (err) {
-            logger.error({ err: err }, "[referral] Stripe balance credit failed:");
+    // Retry the exact frozen payload/key, even if configuration changes. The SQL
+    // claim refuses ambiguous retries after Stripe's safe idempotency window.
+    await stripe.customers.createBalanceTransaction(claim.customerId, {
+        amount: -claim.cents, currency: "usd", description: "Referral reward - 1 month credit (Phase 7)",
+    }, { idempotencyKey: claim.idempotencyKey });
+    const finished = await admin.rpc("finish_referral_conversion_reward" as never, {
+        p_referee_id: refereeOrganizationId, p_claim_token: claim.claimToken,
+    } as never);
+    if (finished.error) throw finished.error;
+    if (finished.data !== true) throw new Error("Referral reward claim lost");
+
+    // Notification failure is non-financial; the confirmed credit stays complete.
+    try {
+        const { data: referrerUser, error: userError } = await admin.from("users")
+            .select("email, full_name").eq("id", claim.referrerUserId).maybeSingle();
+        if (userError) throw userError;
+        if (referrerUser?.email) {
+            await sendEmail({ to: referrerUser.email, subject: "You earned a free month - referral reward",
+                html: referralRewardEmailHtml(referrerUser.full_name || "there"),
+                idempotencyKey: `${claim.idempotencyKey}:email` });
         }
-    }
-
-    await admin
-        .from("referral_conversions")
-        .update({ status: "rewarded", rewarded_at: new Date().toISOString() })
-        .eq("referee_organization_id", refereeOrganizationId);
-
-    const { data: referrerUser } = await admin
-        .from("users")
-        .select("email, full_name")
-        .eq("id", referrerUserId)
-        .maybeSingle();
-
-    if (referrerUser?.email) {
-        const name = referrerUser.full_name || "there";
-        try {
-            await sendEmail({
-                to: referrerUser.email,
-                subject: "You earned a free month - referral reward",
-                html: referralRewardEmailHtml(name),
-            });
-        } catch (err) {
-            logger.error({ err: err }, "[referral] reward email failed:");
-        }
+    } catch (error) {
+        logger.error({ err: error }, "[referral] reward notification failed");
     }
 }

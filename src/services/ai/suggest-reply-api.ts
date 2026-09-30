@@ -7,6 +7,7 @@ import { z } from "zod";
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
+import { checkAiBusinessDailyBudget } from "./ai-business-budget";
 
 const requestSchema = z.object({
     reviewId: z.string().uuid(),
@@ -98,6 +99,9 @@ export async function handleSuggestReply(request: Request) {
 
         const businessId = reviewTyped.business_id;
         if (!businessId) return apiError("Business not found", { status: 404, details: requestId });
+
+        const budgetDenial = await checkAiBusinessDailyBudget(businessId);
+        if (budgetDenial) return budgetDenial;
 
         const reply = await generateReplyDraftText({
             businessName,

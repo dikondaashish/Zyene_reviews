@@ -2,6 +2,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { NextResponse } from "next/server";
 import Papa from "papaparse";
+import { SAFE_CSV_OPTIONS } from "@/lib/export/safe-csv";
 import type {
     PrivateFeedbackExportRow,
     PublicReviewExportRow,
@@ -56,7 +57,7 @@ export async function handleReviewsExport(request: Request) {
                 feedbackRow.customer_phone || feedbackRow.review_requests?.customer_phone || "",
         }));
 
-        csvData = Papa.unparse(formatted);
+        csvData = Papa.unparse(formatted, SAFE_CSV_OPTIONS);
         const name = business.name || "business";
         filename = `${name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_private_feedback.csv`;
     } else {
@@ -90,7 +91,7 @@ export async function handleReviewsExport(request: Request) {
             "Response Status": reviewRow.response_status || "pending"
         }));
 
-        csvData = Papa.unparse(formatted);
+        csvData = Papa.unparse(formatted, SAFE_CSV_OPTIONS);
         const name = business.name || "business";
         filename = `${name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_public_reviews.csv`;
     }

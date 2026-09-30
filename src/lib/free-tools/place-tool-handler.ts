@@ -5,6 +5,7 @@ import { fetchPublicPlaceMetrics } from "@/lib/free-tools/places-public";
 import { captureToolLead } from "@/lib/free-tools/capture-tool-lead";
 import { sendEmail } from "@/services/resend/send-email";
 import { reputationScoreEmailHtml, reviewLinkEmailHtml } from "@/lib/email/transactional-email-styles";
+import { clientIpFrom, publicFormRateLimit, publicToolResultRateLimit } from "@/lib/auth/rate-limit";
 
 const inputSchema = z.object({
     placeId: z.string().trim().min(1).max(256).regex(/^(?:places\/)?[A-Za-z0-9_-]+$/),
@@ -15,6 +16,13 @@ export async function handlePlaceTool(request: Request, kind: "review-link" | "r
     const input = inputSchema.safeParse(await request.json().catch(() => null));
     if (!input.success) return NextResponse.json({ error: "Select a business and enter a valid email, or leave email blank." }, { status: 400 });
     try {
+        const ip = clientIpFrom(request);
+        const resultLimit = await publicToolResultRateLimit.limit(ip);
+        if (!resultLimit.success) return NextResponse.json({ error: "Too many lookups. Try again later." }, { status: 429 });
+        if (input.data.email) {
+            const emailLimit = await publicFormRateLimit.limit(`tool-email:${ip}`);
+            if (!emailLimit.success) return NextResponse.json({ error: "Too many email requests. Try again later." }, { status: 429 });
+        }
         const metrics = await fetchPublicPlaceMetrics(input.data.placeId);
         if (!metrics) return NextResponse.json({ error: "Could not load business details. Try again." }, { status: 404 });
         const preview = { name: metrics.name, averageRating: metrics.averageRating, totalReviews: metrics.totalReviews };

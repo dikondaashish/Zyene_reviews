@@ -104,7 +104,7 @@ export function useStep2FormController({
         setAdvancing,
     });
 
-    const handleConnectClick = () => navigateToGoogleBusinessOAuthOnboarding();
+    const handleConnectClick = () => navigateToGoogleBusinessOAuthOnboarding(businessId);
 
     const onSaveAndNext = async () => {
         setAdvancing(true);

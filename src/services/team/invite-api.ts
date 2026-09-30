@@ -46,6 +46,7 @@ export async function handleTeamInvite(request: Request) {
         .select("role, business_id, users(full_name)")
         .eq("user_id", user.id)
         .eq("business_id", businessId)
+        .eq("status", "active")
         .single();
 
     if (membError || !membership || !canManageBusinessTeam(membership.role)) {

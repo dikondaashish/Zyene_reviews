@@ -1,5 +1,6 @@
 import { logger } from "@/lib/logger";
 import { sendSMS } from "@/services/twilio/send-sms";
+import { smsLabel } from "@/lib/security/sms-label";
 import { sendReviewRequestEmail } from "@/services/resend/send-review-request-email";
 import {
     reviewRequestEmail,
@@ -59,8 +60,8 @@ export async function sendReviewRequest({
             // basic placeholder replacement if it's not a full HTML template
             if (!messageBody.includes("<")) {
                 messageBody = messageBody
-                    .replace(/\{customer_name\}/g, customerName)
-                    .replace(/\{business_name\}/g, businessName)
+                    .replace(/\{customer_name\}/g, smsLabel(customerName, "there"))
+                    .replace(/\{business_name\}/g, smsLabel(businessName, "us"))
                     .replace(/\{review_link\}/g, reviewLink);
 
                 const smsResult = await sendSMS(customerPhone, messageBody);

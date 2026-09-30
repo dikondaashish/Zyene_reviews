@@ -11,6 +11,7 @@ import {
     reviewResponseBonusEmailHtml,
     reviewResponseBonusItemHtml,
 } from "@/lib/email/transactional-email-styles";
+import { clientIpFrom, publicFormRateLimit } from "@/lib/auth/rate-limit";
 
 async function handleValidatedRequest(request: Request) {
     const parsed = z.object({
@@ -36,6 +37,9 @@ async function handleValidatedRequest(request: Request) {
     if (!email) {
         return NextResponse.json({ error: "Email required for bonus templates" }, { status: 400 });
     }
+
+    const { success } = await publicFormRateLimit.limit(`tool-email:${clientIpFrom(request)}`);
+    if (!success) return NextResponse.json({ error: "Too many email requests. Try again later." }, { status: 429 });
 
     const lead = await captureToolLead({ email, source: "tool_review_response" });
     if (!lead.ok) {

@@ -1,4 +1,4 @@
-import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import { getGoogleLocation, patchGoogleLocation } from "@/services/google/listing-information";
 import { computeProfileHealth } from "@/services/google/profile-health";
@@ -22,7 +22,7 @@ export async function handleGoogleListingPatch(request: Request) {
 
         const { businessId } = parsed.data;
 
-        const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+        const allowed = await canManageBusinessIntegration(supabase, user.id, businessId);
         if (!allowed) {
             throw new ApiRouteError("Forbidden", { status: 403, code: "FORBIDDEN" });
         }

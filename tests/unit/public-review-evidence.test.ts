@@ -17,6 +17,7 @@ vi.mock("@/lib/db/supabase/admin", () => ({ createAdminClient: () => ({
 }) }));
 vi.mock("@/lib/reviews/visible-review-rollups", () => ({ fetchVisibleReviewRollupsByBusinessIds: async () => new Map([["business", { totalVisible: 1, averageRatingVisible: 5 }]]) }));
 vi.mock("@/lib/campaigns/terminate-drip", () => ({ terminateReviewRequestDrip: mocks.terminate }));
+vi.mock("@/lib/review-requests/tracking-token", () => ({ verifyReviewTracking: () => true }));
 vi.mock("@/lib/logger", () => ({ logger: { error: vi.fn() } }));
 
 import {
@@ -41,7 +42,11 @@ describe("public review evidence", () => {
     it("does not accept a client's assertion that a public review was published", async () => {
         const response = await POST(new Request("https://example.test/api/track/review", {
             method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "update", requestId: "6df3e0d4-343c-4aa6-a6c9-306d4523f80a", trackData: { status: "completed", completed_at: "2026-09-10T12:00:00.000Z", review_left: true } }),
+            body: JSON.stringify({
+                action: "update", requestId: "6df3e0d4-343c-4aa6-a6c9-306d4523f80a",
+                businessId: "22222222-2222-4222-8222-222222222222", token: "signed-test-token",
+                trackData: { status: "completed", completed_at: "2026-09-10T12:00:00.000Z", review_left: true },
+            }),
         }));
         expect(response.status).toBe(200);
         expect(mocks.update.mock.calls[0][0]).not.toHaveProperty("review_left");

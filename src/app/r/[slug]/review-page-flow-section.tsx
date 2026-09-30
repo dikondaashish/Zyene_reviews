@@ -8,6 +8,7 @@ export function ReviewPageFlowSection({
     business,
     googleUrl,
     requestId,
+    openToken,
     reviewPageBackgroundColor,
     ratingStyle,
 }: ReviewPageFlowSectionProps) {
@@ -24,6 +25,7 @@ export function ReviewPageFlowSection({
                 businessName={business.name}
                 businessCategory={business.category || "other"}
                 requestId={requestId}
+                openToken={openToken}
                 googleUrl={googleUrl}
                 logoUrl={business.logo_url ?? undefined}
                 brandColor={business.brand_color ?? undefined}

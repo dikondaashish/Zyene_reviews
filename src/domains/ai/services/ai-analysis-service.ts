@@ -9,6 +9,7 @@ import { SENTIMENT_PROMPT } from "@/domains/ai/prompts";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { Schema, Type as SchemaType } from "@google/genai";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
+import { aiAnalysisBusinessRateLimit } from "@/lib/auth/rate-limit";
 
 const sentimentSchema: Schema = {
     type: SchemaType.OBJECT,
@@ -57,17 +58,19 @@ export async function analyzeReview(review: ReviewForAnalysis): Promise<Sentimen
     try {
         const admin = createAdminClient();
         const businessId = review.business_id ?? null;
-        if (businessId) {
-            const { data: biz } = await admin
-                .from("businesses")
-                .select("organizations!inner(plan, plan_status)")
-                .eq("id", businessId)
-                .maybeSingle();
-            const org = (biz as { organizations?: { plan?: string | null; plan_status?: string | null } } | null)?.organizations ?? null;
-            if (!planAllowsAiReviewFeatures(org?.plan ?? null, org?.plan_status ?? null)) {
-                return null;
-            }
+        if (!businessId) return null;
+        const { data: biz } = await admin
+            .from("businesses")
+            .select("organizations!inner(plan, plan_status)")
+            .eq("id", businessId)
+            .maybeSingle();
+        const org = (biz as { organizations?: { plan?: string | null; plan_status?: string | null } } | null)?.organizations ?? null;
+        if (!planAllowsAiReviewFeatures(org?.plan ?? null, org?.plan_status ?? null)) {
+            return null;
         }
+
+        const { success } = await aiAnalysisBusinessRateLimit.limit(businessId);
+        if (!success) return null;
 
         const text = review.content || review.text || "";
         const prompt = SENTIMENT_PROMPT
@@ -89,7 +92,7 @@ export async function analyzeReview(review: ReviewForAnalysis): Promise<Sentimen
             urgency_score: normalizeUrgencyForDb(parsed.urgency),
             themes: normalizeThemesForDb(parsed.themes),
             ai_summary: parsed.summary ?? "",
-        }).eq("id", review.id);
+        }).eq("id", review.id).eq("business_id", businessId);
 
         return parsed;
 
@@ -99,9 +102,11 @@ export async function analyzeReview(review: ReviewForAnalysis): Promise<Sentimen
     }
 }
 
-export async function categorizePrivateFeedback(content: string | null | undefined): Promise<string> {
+export async function categorizePrivateFeedback(content: string | null | undefined, businessId: string): Promise<string> {
     if (!content || !content.trim()) return "Other";
     try {
+        const { success } = await aiAnalysisBusinessRateLimit.limit(businessId);
+        if (!success) return "Other";
         const prompt = `Analyze this private customer feedback and categorize the primary issue into a short phrase (2-3 words max, e.g., 'Customer Service', 'Product Quality', 'Wait Time', 'Pricing', etc.).\n\nFeedback: "${content}"`;
         const res = await generateContentWithFallback(prompt, {
             requireJson: true,

@@ -18,6 +18,7 @@ export function useReviewFlow(props: PublicReviewFlowProps) {
     const {
         businessId,
         requestId,
+        openToken,
         isPreview = false,
         privateFeedbackEmailMode = "optional",
         privateFeedbackPhoneMode = "hidden",
@@ -28,9 +29,10 @@ export function useReviewFlow(props: PublicReviewFlowProps) {
     const { pageBgHex, useCustomPageBackdrop } = resolveReviewFlowPageBackdrop(props.reviewPageBackgroundColor);
 
     const state = useReviewFlowState({ isPreview, previewStep: props.previewStep });
-    const { activeRequestId, ensureActiveRequestId, trackRequestUpdate } = useReviewFlowTracking(
+    const { activeRequestId, ensureActiveRequestId, getTrackingToken, trackRequestUpdate } = useReviewFlowTracking(
         businessId,
         requestId,
+        openToken,
         isPreview
     );
 
@@ -68,6 +70,7 @@ export function useReviewFlow(props: PublicReviewFlowProps) {
         activeRequestId,
         requestId,
         ensureActiveRequestId,
+        getTrackingToken,
         trackRequestUpdate,
         setStep: state.setStep,
         setRating: state.setRating,

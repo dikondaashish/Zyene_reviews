@@ -4,10 +4,11 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import { finalizeOnboardingStripeCheckout } from "@/app/actions/onboarding";
 import { getGoogleOAuthCallbackOutcome } from "./google-oauth-callback";
+import type { GoogleOAuthAuthorization } from "@/types/components";
 
 type UseOnboardingUrlEffectsArgs = {
     setCurrentStep: (step: number) => void;
-    setPendingGoogleCode: (code: string | null) => void;
+    setPendingGoogleCode: (code: GoogleOAuthAuthorization | null) => void;
     setGoogleConnectionError: (message: string | null) => void;
     setIsStepResolved: (resolved: boolean) => void;
     setShowPaymentCancelled: (show: boolean) => void;
@@ -26,7 +27,7 @@ export function useOnboardingUrlEffects({
         if (typeof window === "undefined") return;
         const outcome = getGoogleOAuthCallbackOutcome(window.location.search);
         if (outcome.kind === "code") {
-            setPendingGoogleCode(outcome.code);
+            setPendingGoogleCode({ code: outcome.code, state: outcome.state });
             setCurrentStep(2);
             setIsStepResolved(true);
             window.history.replaceState({}, document.title, window.location.pathname);

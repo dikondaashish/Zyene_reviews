@@ -3,6 +3,7 @@
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Step2Form } from "@/components/onboarding/step2-form";
 import type { OnboardingBusiness } from "./onboarding-types";
+import type { GoogleOAuthAuthorization } from "@/types/components";
 
 type OnboardingStepTwoSectionProps = {
     business: OnboardingBusiness | null;
@@ -10,8 +11,8 @@ type OnboardingStepTwoSectionProps = {
     isLoading: boolean;
     googleConnected: boolean;
     setGoogleConnected: (connected: boolean) => void;
-    pendingGoogleCode: string | null;
-    setPendingGoogleCode: (code: string | null) => void;
+    pendingGoogleCode: GoogleOAuthAuthorization | null;
+    setPendingGoogleCode: (code: GoogleOAuthAuthorization | null) => void;
     googleConnectionError: string | null;
     setGoogleConnectionError: (message: string | null) => void;
     handleBusinessUpdate: (updated: Partial<OnboardingBusiness>) => void;

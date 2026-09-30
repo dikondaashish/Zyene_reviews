@@ -1,12 +1,18 @@
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/db/supabase/admin";
 import { recordReviewRequestOpenForRef } from "@/lib/review-requests/record-review-request-open";
+import { verifyReviewTracking } from "@/lib/review-requests/tracking-token";
+import { createPublicReviewOpen } from "@/services/review-flow/create-public-review-open";
+import {
+    clientIpFrom, publicReviewOpenBusinessRateLimit, publicReviewOpenIpRateLimit,
+} from "@/lib/auth/rate-limit";
 import { z } from "zod";
 
 const openSchema = z.object({
     businessId: z.string().uuid(),
     requestId: z.string().uuid().optional(),
+    token: z.string().optional(),
+    openToken: z.string().optional(),
 });
 
 export async function POST(request: Request) {
@@ -18,9 +24,12 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Invalid open tracking payload" }, { status: 400 });
         }
 
-        const { businessId, requestId } = parsed.data;
+        const { businessId, requestId, token, openToken } = parsed.data;
 
         if (requestId) {
+            if (!verifyReviewTracking(requestId, businessId, token)) {
+                return NextResponse.json({ error: "Invalid tracking token" }, { status: 403 });
+            }
             const result = await recordReviewRequestOpenForRef({ businessId, requestId });
             if (!result.ok) {
                 if (result.reason === "not_found") {
@@ -31,58 +40,25 @@ export async function POST(request: Request) {
                 }
                 return NextResponse.json({ error: "Failed to track open" }, { status: 500 });
             }
-            return NextResponse.json({ success: true, requestId });
+            return NextResponse.json({ success: true, requestId, token });
         }
 
-        const nowIso = new Date().toISOString();
-        const supabase = createAdminClient();
-
-        logger.info({ businessId }, "[track/review-open] anonymous public_link (no ref)");
-        const baseInsert = {
-            business_id: businessId,
-            status: "clicked",
-            sent_at: nowIso,
-            delivered_at: nowIso,
-            opened_at: nowIso,
-            clicked_at: nowIso,
-        };
-
-        let createdRequest: { id: string } | null = null;
-        let insertError: unknown = null;
-
-        const primaryInsert = await supabase
-            .from("review_requests")
-            .insert({
-                ...baseInsert,
-                channel: "link",
-                trigger_source: "public_link",
-            })
-            .select("id")
-            .single();
-
-        createdRequest = primaryInsert.data;
-        insertError = primaryInsert.error;
-
-        if (!createdRequest) {
-            const fallbackInsert = await supabase
-                .from("review_requests")
-                .insert({
-                    ...baseInsert,
-                    channel: "email",
-                    trigger_source: "manual",
-                })
-                .select("id")
-                .single();
-
-            createdRequest = fallbackInsert.data;
-            insertError = fallbackInsert.error;
+        if (!verifyReviewTracking("public-open", businessId, openToken)) {
+            return NextResponse.json({ error: "Invalid review page token" }, { status: 403 });
+        }
+        try {
+            const [ipLimit, businessLimit] = await Promise.all([
+                publicReviewOpenIpRateLimit.limit(clientIpFrom(request)),
+                publicReviewOpenBusinessRateLimit.limit(businessId),
+            ]);
+            if (!ipLimit.success || !businessLimit.success) {
+                return NextResponse.json({ error: "Too many review opens" }, { status: 429 });
+            }
+        } catch {
+            return NextResponse.json({ error: "Review tracking unavailable" }, { status: 503 });
         }
 
-        if (!createdRequest) {
-            throw insertError ?? new Error("Failed to create request");
-        }
-
-        return NextResponse.json({ success: true, requestId: createdRequest.id });
+        return NextResponse.json({ success: true, ...(await createPublicReviewOpen(businessId)) });
     } catch (error: unknown) {
         logger.error({ err: error }, "Open tracking error");
         return NextResponse.json({ error: "Failed to track open" }, { status: 500 });

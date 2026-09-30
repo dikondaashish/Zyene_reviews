@@ -3,6 +3,7 @@ import type { Database } from "@/lib/db/supabase/database.types";
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import { getGoogleLocation } from "@/services/google/listing-information";
 import { checkOriginIsPublic } from "@/services/aeo/crawler/ssrf-guard";
+import { fetchPublicHttpText } from "@/services/aeo/crawler/public-http";
 import { compareNapObservation, type Nap } from "./nap-consistency";
 
 type Admin = SupabaseClient<Database>;
@@ -36,10 +37,10 @@ export async function refreshNapConsistency(db: Admin, businessId: string) {
         } else if (platform.external_url) {
             const safety = await checkOriginIsPublic(platform.external_url);
             if (safety.safe) try {
-                const response = await fetch(platform.external_url, { redirect: "error", signal: AbortSignal.timeout(10_000),
+                const response = await fetchPublicHttpText(platform.external_url, { redirect: "error", timeoutMs: 10_000,
                     headers: { "User-Agent": "Zyene-AEO-Audit/1.0" } });
                 if (!response.ok) throw new Error(`Directory returned HTTP ${response.status}`);
-                const body = plain((await response.text()).slice(0, 1_000_000));
+                const body = plain(response.text.slice(0, 1_000_000));
                 observed = { name: body.includes(plain(canonical.name)) ? canonical.name : "",
                     address: body.includes(plain(canonical.address)) ? canonical.address : "",
                     phone: body.includes(canonical.phone.replace(/\D/g, "")) ? canonical.phone : "" };

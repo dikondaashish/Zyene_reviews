@@ -2,7 +2,6 @@
 
 import { FormEvent, useCallback } from "react";
 import { toast } from "sonner";
-import { parseReviewRefFromSearch } from "./helpers";
 import { negativeContactValid } from "./negative-contact-validation";
 import type { FlowStep, PrivateFeedbackContactMode } from "./types";
 
@@ -14,11 +13,11 @@ export function useReviewFlowNegativeSubmit(options: {
     customerEmail: string;
     customerPhone: string;
     selectedStaff: string[];
-    activeRequestId: string | undefined;
-    requestId: string | undefined;
     privateFeedbackEmailMode: PrivateFeedbackContactMode;
     privateFeedbackPhoneMode: PrivateFeedbackContactMode;
     trackRequestUpdate: (trackData: Record<string, unknown>) => Promise<void>;
+    ensureActiveRequestId: () => Promise<string | undefined>;
+    getTrackingToken: () => string | undefined;
     setStep: React.Dispatch<React.SetStateAction<FlowStep>>;
     setRating: React.Dispatch<React.SetStateAction<number | null>>;
     setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,11 +31,11 @@ export function useReviewFlowNegativeSubmit(options: {
         customerEmail,
         customerPhone,
         selectedStaff,
-        activeRequestId,
-        requestId,
         privateFeedbackEmailMode,
         privateFeedbackPhoneMode,
         trackRequestUpdate,
+        ensureActiveRequestId,
+        getTrackingToken,
         setStep,
         setRating,
         setIsSubmitting,
@@ -69,12 +68,16 @@ export function useReviewFlowNegativeSubmit(options: {
         setIsSubmitting(true);
 
         try {
+            const reviewRequestId = await ensureActiveRequestId();
+            const token = getTrackingToken();
+            if (!reviewRequestId || !token) throw new Error("Review link is unavailable. Please refresh.");
             const res = await fetch("/api/reviews/private", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     business_id: businessId,
-                    review_request_id: activeRequestId ?? requestId ?? parseReviewRefFromSearch(),
+                    review_request_id: reviewRequestId,
+                    token,
                     rating,
                     content: feedback,
                     customer_email: customerEmail.trim() || null,
@@ -83,8 +86,8 @@ export function useReviewFlowNegativeSubmit(options: {
                 }),
             });
 
-            const data = await res.json().catch(() => ({}));
             if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
                 throw new Error(typeof data.error === "string" ? data.error : "Failed to submit feedback");
             }
 
@@ -105,7 +108,6 @@ export function useReviewFlowNegativeSubmit(options: {
             setIsSubmitting(false);
         }
     }, [
-        activeRequestId,
         businessId,
         customerEmail,
         customerPhone,
@@ -114,11 +116,12 @@ export function useReviewFlowNegativeSubmit(options: {
         privateFeedbackEmailMode,
         privateFeedbackPhoneMode,
         rating,
-        requestId,
         selectedStaff,
         setIsSubmitting,
         setStep,
         trackRequestUpdate,
+        ensureActiveRequestId,
+        getTrackingToken,
     ]);
 
     const handleNegativeFormSubmit = useCallback(

@@ -3,13 +3,15 @@ import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
 import { recordReviewPageOpen } from "./record-review-page-open";
 import { googleMapsSearchUrl, resolveReviewPageGoogle } from "./resolve-review-page-google";
 import { REVIEW_PAGE_BUSINESS_SELECT } from "./review-page-select";
+import { signReviewTracking } from "@/lib/review-requests/tracking-token";
 import type { ReviewPageBusiness, ReviewPageData } from "./review-page-types";
 
 export type { ReviewPageBusiness, ReviewPageData } from "./review-page-types";
 
 export async function loadReviewPageData(
     slug: string,
-    requestId: string | undefined
+    requestId: string | undefined,
+    signature?: string,
 ): Promise<ReviewPageData> {
     const supabase = await createAdminClient();
 
@@ -52,7 +54,7 @@ export async function loadReviewPageData(
     }
 
     const resolvedRequestId = requestId;
-    await recordReviewPageOpen(business.id, resolvedRequestId);
+    await recordReviewPageOpen(business.id, resolvedRequestId, signature);
 
     const rawPageBg = (business as { review_page_background_color?: string | null })
         .review_page_background_color;
@@ -75,6 +77,7 @@ export async function loadReviewPageData(
         business: business as ReviewPageBusiness,
         googleUrl,
         requestId: resolvedRequestId,
+        openToken: signReviewTracking("public-open", business.id),
         reviewPageBackgroundColor,
         ratingStyle,
     };

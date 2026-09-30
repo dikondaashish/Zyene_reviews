@@ -3,11 +3,13 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getPageDetails } from "@/services/facebook/adapter";
 import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service";
 import { cookies } from "next/headers";
+import { FB_CONNECT_COOKIE, consumeFacebookConnectData } from "@/services/facebook/connect-session";
+import { facebookCookieOptions } from "@/services/facebook/oauth-state";
 import * as Sentry from "@sentry/nextjs";
-import type { MemberOrgContext } from "@/types/member-context";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
-import { facebookConfirmSchema, type FbConnectCookieData } from "./confirm-schema";
+import { facebookConfirmSchema } from "./confirm-schema";
 
 export async function handleFacebookConfirm(req: Request) {
     const { logger, requestId } = createRequestLogger("POST /api/integrations/facebook/confirm");
@@ -28,13 +30,16 @@ export async function handleFacebookConfirm(req: Request) {
         const { pageId } = parsed.data;
 
         const cookieStore = await cookies();
-        const fbDataRaw = cookieStore.get("fb_connect_data")?.value;
+        const nonce = cookieStore.get(FB_CONNECT_COOKIE)?.value;
 
-        if (!fbDataRaw) {
+        if (!nonce) {
             return apiError("Facebook connection data expired. Please reconnect.", { status: 400, details: requestId });
         }
 
-        const fbData = JSON.parse(fbDataRaw) as FbConnectCookieData;
+        const fbData = await consumeFacebookConnectData(nonce);
+        if (!fbData || fbData.userId !== user.id) {
+            return apiError("Facebook connection data expired. Please reconnect.", { status: 403, details: requestId });
+        }
         const selectedPage = fbData.pages.find((p) => p.pageId === pageId);
 
         if (!selectedPage) {
@@ -43,17 +48,7 @@ export async function handleFacebookConfirm(req: Request) {
 
         const businessId = fbData.businessId;
 
-        const { data: member } = await supabase
-            .from("organization_members")
-            .select("organizations ( businesses ( id ) )")
-            .eq("user_id", user.id)
-            .single();
-
-        const memberTyped = member as unknown as MemberOrgContext;
-        const businesses = memberTyped?.organizations?.businesses || [];
-        const ownsBusiness = businesses.some((b) => b.id === businessId);
-
-        if (!ownsBusiness) {
+        if (!(await canManageBusinessIntegration(supabase, user.id, businessId))) {
             return apiError("Unauthorized", { status: 403, details: requestId });
         }
 
@@ -105,7 +100,7 @@ export async function handleFacebookConfirm(req: Request) {
                 },
                 { onConflict: "business_id, platform" }
             )
-            .select()
+            .select("id")
             .single();
 
         if (error) {
@@ -116,7 +111,6 @@ export async function handleFacebookConfirm(req: Request) {
 
         const response = apiOk({
             success: true,
-            platform,
             requestId,
             page: {
                 name: selectedPage.pageName,
@@ -125,10 +119,8 @@ export async function handleFacebookConfirm(req: Request) {
             },
         });
 
-        response.cookies.set("fb_connect_data", "", {
-            maxAge: 0,
-            path: "/",
-        });
+        response.cookies.set(FB_CONNECT_COOKIE, "",
+            facebookCookieOptions("/api/integrations/facebook", 0));
 
         try {
             await syncFacebookReviewsForPlatform(platform.id);

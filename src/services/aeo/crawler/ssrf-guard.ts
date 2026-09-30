@@ -1,5 +1,5 @@
 import { promises as dns } from "node:dns";
-import { isIP } from "node:net";
+import { BlockList, isIP } from "node:net";
 
 /**
  * `origin` for a crawl is `businesses.website` - data the business OWNER
@@ -12,38 +12,38 @@ import { isIP } from "node:net";
  * applies to every trigger path, present and future.
  *
  * Resolves DNS and checks every returned address against private/reserved
- * ranges. This does not close a DNS-rebinding TOCTOU window (the resolved IP
- * could theoretically change between this check and the crawler's own
- * fetches) - a fully bulletproof fix would pin the resolved IP and connect
- * to it directly, which `fetch()` does not support without a custom
- * dispatcher. Flagged as a real, known residual gap rather than claimed as
- * fully closed.
+ * ranges. User-controlled outbound HTTP also validates again inside its
+ * connection lookup; this preflight alone is not a DNS-rebinding defense.
  */
 
-function isPrivateOrReservedIPv4(ip: string): boolean {
-    const parts = ip.split(".").map(Number);
-    if (parts.length !== 4 || parts.some((p) => Number.isNaN(p) || p < 0 || p > 255)) return true; // fail closed on garbage
-    const [a, b] = parts;
-    if (a === 127) return true; // loopback
-    if (a === 10) return true; // RFC1918
-    if (a === 172 && b >= 16 && b <= 31) return true; // RFC1918
-    if (a === 192 && b === 168) return true; // RFC1918
-    if (a === 169 && b === 254) return true; // link-local, includes the 169.254.169.254 cloud metadata endpoint
-    if (a === 0) return true;
-    if (a >= 224) return true; // multicast / reserved
-    return false;
+const blockedAddresses = new BlockList();
+for (const [network, prefix] of [
+    ["0.0.0.0", 8], ["10.0.0.0", 8], ["100.64.0.0", 10], ["127.0.0.0", 8],
+    ["169.254.0.0", 16], ["172.16.0.0", 12], ["192.0.0.0", 24],
+    ["192.0.2.0", 24], ["192.88.99.0", 24], ["192.168.0.0", 16],
+    ["198.18.0.0", 15], ["198.51.100.0", 24], ["203.0.113.0", 24],
+    ["224.0.0.0", 4], ["240.0.0.0", 4],
+] as const) blockedAddresses.addSubnet(network, prefix, "ipv4");
+for (const [network, prefix] of [
+    ["::", 96], ["::1", 128], ["64:ff9b::", 96], ["64:ff9b:1::", 48], ["100::", 64],
+    ["2001::", 23], ["2001:db8::", 32], ["2002::", 16],
+    ["fc00::", 7], ["fe80::", 10], ["fec0::", 10], ["ff00::", 8],
+] as const) blockedAddresses.addSubnet(network, prefix, "ipv6");
+
+export function isPublicIp(address: string): boolean {
+    const family = isIP(address);
+    if (family === 0) return false;
+    return !blockedAddresses.check(address, family === 4 ? "ipv4" : "ipv6");
 }
 
-function isPrivateOrReservedIPv6(ip: string): boolean {
-    const lower = ip.toLowerCase();
-    if (lower === "::1" || lower === "::") return true;
-    if (lower.startsWith("fe80:")) return true; // link-local
-    if (lower.startsWith("fc") || lower.startsWith("fd")) return true; // unique local
-    if (lower.startsWith("::ffff:")) {
-        const v4 = lower.split(":").pop();
-        if (v4 && isIP(v4) === 4) return isPrivateOrReservedIPv4(v4);
+export async function resolvePublicAddress(hostname: string): Promise<{ address: string; family: 4 | 6 }> {
+    const records = await dns.lookup(hostname, { all: true, verbatim: true });
+    if (records.length === 0 || records.some((record) => !isPublicIp(record.address))) {
+        throw new Error("Host does not resolve only to public addresses");
     }
-    return false;
+    const record = records[0];
+    if (record.family !== 4 && record.family !== 6) throw new Error("Unsupported address family");
+    return { address: record.address, family: record.family };
 }
 
 const BLOCKED_HOSTNAMES = new Set(["localhost", "localhost.localdomain"]);
@@ -57,39 +57,35 @@ export async function checkOriginIsPublic(origin: string): Promise<OriginSafetyR
         // which node:net's isIP() does not recognize - stripped here once,
         // rather than risking an IPv6 literal silently falling through to
         // the "not a literal IP, go resolve DNS" branch unrecognized.
-        hostname = new URL(origin).hostname.replace(/^\[|\]$/g, "");
+        const url = new URL(origin);
+        if (!(["http:", "https:"].includes(url.protocol)) || url.username || url.password) {
+            return { safe: false, reason: "Only public HTTP(S) URLs are allowed." };
+        }
+        hostname = url.hostname.replace(/^\[|\]$/g, "");
     } catch {
         return { safe: false, reason: "Not a valid URL." };
     }
 
-    const lowerHost = hostname.toLowerCase();
-    if (BLOCKED_HOSTNAMES.has(lowerHost) || lowerHost.endsWith(".local")) {
+    const lowerHost = hostname.toLowerCase().replace(/\.$/, "");
+    if (BLOCKED_HOSTNAMES.has(lowerHost) || lowerHost.endsWith(".local") ||
+        lowerHost.endsWith(".localhost") || lowerHost.endsWith(".internal") ||
+        (isIP(hostname) === 0 && !hostname.includes("."))) {
         return { safe: false, reason: "This host is not a public internet address." };
     }
 
     const ipVersion = isIP(hostname);
-    if (ipVersion === 4 && isPrivateOrReservedIPv4(hostname)) {
+    if (ipVersion === 4 && !isPublicIp(hostname)) {
         return { safe: false, reason: "This address is a private or reserved IP, not a public website." };
     }
-    if (ipVersion === 6 && isPrivateOrReservedIPv6(hostname)) {
+    if (ipVersion === 6 && !isPublicIp(hostname)) {
         return { safe: false, reason: "This address is a private or reserved IP, not a public website." };
     }
 
     if (ipVersion === 0) {
-        let records: { address: string; family: number }[];
         try {
-            records = await dns.lookup(hostname, { all: true, verbatim: true });
+            await resolvePublicAddress(hostname);
         } catch {
-            return { safe: false, reason: "This domain could not be resolved." };
-        }
-        if (records.length === 0) return { safe: false, reason: "This domain does not resolve." };
-        for (const rec of records) {
-            if (rec.family === 4 && isPrivateOrReservedIPv4(rec.address)) {
-                return { safe: false, reason: "This domain resolves to a private network address." };
-            }
-            if (rec.family === 6 && isPrivateOrReservedIPv6(rec.address)) {
-                return { safe: false, reason: "This domain resolves to a private network address." };
-            }
+            return { safe: false, reason: "This domain does not resolve only to public addresses." };
         }
     }
 

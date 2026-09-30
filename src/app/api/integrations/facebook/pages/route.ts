@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/db/supabase/server";
 import { cookies } from "next/headers";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
+import { FB_CONNECT_COOKIE, readFacebookConnectData } from "@/services/facebook/connect-session";
 
 /**
  * GET: Returns the list of Facebook pages from the fb_connect_data cookie.
@@ -17,9 +19,8 @@ export async function GET() {
     }
 
     const cookieStore = await cookies();
-    const fbDataRaw = cookieStore.get("fb_connect_data")?.value;
-
-    if (!fbDataRaw) {
+    const nonce = cookieStore.get(FB_CONNECT_COOKIE)?.value;
+    if (!nonce) {
         return NextResponse.json(
             { error: "No Facebook connection data found. Please reconnect." },
             { status: 400 }
@@ -27,10 +28,14 @@ export async function GET() {
     }
 
     try {
-        const fbData = JSON.parse(fbDataRaw);
+        const fbData = await readFacebookConnectData(nonce);
+        if (!fbData || fbData.userId !== user.id ||
+            !(await canManageBusinessIntegration(supabase, user.id, fbData.businessId))) {
+            return NextResponse.json({ error: "Connection data unavailable" }, { status: 403 });
+        }
         return NextResponse.json({
             businessId: fbData.businessId,
-            pages: fbData.pages,
+            pages: fbData.pages.map(({ pageId, pageName }) => ({ pageId, pageName })),
         });
     } catch {
         return NextResponse.json(

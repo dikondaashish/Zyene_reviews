@@ -4,7 +4,6 @@ import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { stepPlanSchema, type StepPlanFormData } from "@/lib/validations/onboarding";
 import { stripe } from "@/services/stripe/client";
-import { PLAN_MAP, UNSUBSCRIBED_LIMITS } from "@/services/stripe/plans";
 
 export async function savePlanSelection(
   organizationId: string,
@@ -35,36 +34,16 @@ export async function savePlanSelection(
       };
     }
 
-    // Get limits for the selected plan
-    const planConfig = PLAN_MAP[data.plan];
-    const limits = planConfig?.limits || UNSUBSCRIBED_LIMITS;
+    const { data: membership, error: membershipError } = await supabase
+      .from("organization_members")
+      .select("role")
+      .eq("organization_id", organizationId)
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .maybeSingle();
 
-    // Update organization plan and limits
-    const { error: orgError } = await supabase
-      .from("organizations")
-      .update({
-        plan: data.plan,
-        plan_status: data.plan === "none" ? "active" : "trialing", // Trialing for paid plans
-        max_businesses: limits.maxLocations,
-        max_team_members: limits.teamMembers,
-        max_review_requests_per_month:
-          limits.emailRequestsPerMonth +
-          limits.smsRequestsPerMonth +
-          limits.linkRequestsPerMonth,
-        max_ai_replies_per_month: limits.smartRepliesPerMonth,
-        max_email_requests_per_month: limits.emailRequestsPerMonth,
-        max_sms_requests_per_month: limits.smsRequestsPerMonth,
-        max_link_requests_per_month: limits.linkRequestsPerMonth,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", organizationId);
-
-    if (orgError) {
-      logger.error({ err: orgError }, "Error saving plan selection:");
-      return {
-        success: false,
-        error: "Failed to save plan. Please try again.",
-      };
+    if (membershipError || !membership || !["owner", "ORG_OWNER"].includes(membership.role)) {
+      return { success: false, error: "You cannot manage this organization." };
     }
 
     // Update onboarding step to 5 (Completion)

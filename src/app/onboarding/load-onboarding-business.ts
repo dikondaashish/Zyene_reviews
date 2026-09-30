@@ -8,7 +8,7 @@ export async function loadOnboardingBusiness(
 ): Promise<{ business: OnboardingBusiness | null; googleConnected: boolean }> {
     const { data: biz } = await supabase
         .from("businesses")
-        .select("id, name, city, category, address_line1, state, phone, review_platforms(*)")
+        .select("id, name, city, category, address_line1, state, phone, review_platforms(platform, google_location_id, sync_status)")
         .eq("organization_id", organizationId)
         .order("created_at", { ascending: false })
         .limit(1)

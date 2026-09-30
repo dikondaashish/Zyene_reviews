@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/db/supabase/server";
-import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import { buildCloverAuthorizeUrl } from "@/services/clover/oauth";
 import { isCloverConfigured } from "@/services/clover/config";
 import { randomBytes } from "crypto";
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: "businessId is required" }, { status: 400 });
     }
 
-    const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+    const allowed = await canManageBusinessIntegration(supabase, user.id, businessId);
     if (!allowed) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }

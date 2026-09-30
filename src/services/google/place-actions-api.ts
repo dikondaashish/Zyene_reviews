@@ -1,4 +1,6 @@
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
+import { googleResourceBelongsToLocation } from "@/services/google/resource-boundary";
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import {
     createPlaceActionLink,
@@ -74,7 +76,7 @@ export async function handlePlaceActionsPost(request: Request) {
 
         const { businessId, placeActionType, uri, isPreferred = false } = parsed.data;
 
-        const allowed = await userCanAccessBusiness(supabase, user.id, businessId);
+        const allowed = await canManageBusinessIntegration(supabase, user.id, businessId);
         if (!allowed) {
             throw new ApiRouteError("Forbidden", { status: 403, code: "FORBIDDEN" });
         }
@@ -128,12 +130,18 @@ export async function handlePlaceActionsDelete(request: Request) {
             throw new ApiRouteError("Link not found", { status: 404, code: "LINK_NOT_FOUND" });
         }
 
-        const allowed = await userCanAccessBusiness(supabase, user.id, row.business_id as string);
+        const allowed = await canManageBusinessIntegration(supabase, user.id, row.business_id as string);
         if (!allowed) {
             throw new ApiRouteError("Forbidden", { status: 403, code: "FORBIDDEN" });
         }
 
-        const { accessToken } = await getValidGoogleToken(row.review_platform_id as string);
+        const { data: platform } = await supabase.from("review_platforms")
+            .select("id, google_location_id").eq("id", row.review_platform_id as string)
+            .eq("business_id", row.business_id as string).eq("platform", "google").maybeSingle();
+        if (!platform || !googleResourceBelongsToLocation(row.google_link_name, platform.google_location_id, "placeActionLinks")) {
+            throw new ApiRouteError("Invalid platform resource", { status: 403, code: "FORBIDDEN" });
+        }
+        const { accessToken } = await getValidGoogleToken(platform.id);
         if (!accessToken) {
             throw new ApiRouteError("Token unavailable", { status: 401, code: "TOKEN_UNAVAILABLE" });
         }

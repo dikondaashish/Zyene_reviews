@@ -4,6 +4,7 @@ import { bumpCustomerAfterSend } from "./bump-after-send";
 import { dispatchOutboundReviewChannels } from "./send-outbound-dispatch";
 import { prepareOutboundReviewRequest } from "./send-outbound-validate";
 import { reviewRequestSubject } from "@/lib/email/review-request-subject";
+import { signedReviewLink } from "@/lib/review-requests/tracking-token";
 import {
     fail,
     isValidEmail,
@@ -46,7 +47,7 @@ export async function sendOutboundReviewRequest(
     const captureDomain = rootDomain.includes("localhost")
         ? rootDomain
         : process.env.NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN || "collectratings.com";
-    const reviewLink = `${protocol}://${captureDomain}/${b.slug}?ref=${requestId}`;
+    const reviewLink = signedReviewLink(`${protocol}://${captureDomain}/${b.slug}`, requestId, b.id);
 
     if (channel === "link") {
         const sentAt = new Date().toISOString();

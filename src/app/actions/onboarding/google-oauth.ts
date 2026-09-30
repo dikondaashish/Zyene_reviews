@@ -2,14 +2,19 @@
 
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
+import { consumeGoogleConnectData, saveGoogleConnectData } from "@/services/google/connect-session";
+import { consumeGoogleOnboardingOAuth } from "@/services/google/onboarding-oauth-state";
+import { z } from "zod";
 
-import { finalizeGoogleConnection } from "./google-connection-finalize";
+import { finalizeVerifiedGoogleConnection } from "@/app/actions/onboarding/google-connection-finalize";
 import {
     exchangeGoogleAuthCode,
     listGoogleBusinessLocations,
     mapLocationsForSelection,
-    resolveGoogleOAuthRedirectUri,
 } from "./google-oauth-helpers";
+
+const businessSchema = z.string().uuid();
 
 /**
  * Exchanges the OAuth code, then either hands back the location list for the
@@ -18,7 +23,8 @@ import {
 export async function initializeGoogleAuth(
     authCode: string,
     businessId: string,
-    clientRedirectUri?: string,
+    _clientRedirectUri?: string,
+    state?: string,
 ) {
     try {
         const supabase = await createClient();
@@ -27,8 +33,15 @@ export async function initializeGoogleAuth(
         if (!user) {
             return { success: false, error: "You are not authenticated." };
         }
+        if (!businessSchema.safeParse(businessId).success || !authCode.trim() || authCode.length > 4096 ||
+            !(await canManageBusinessIntegration(supabase, user.id, businessId))) {
+            return { success: false, error: "Permission denied." };
+        }
 
-        const redirectUri = await resolveGoogleOAuthRedirectUri(clientRedirectUri);
+        if (!state) return { success: false, error: "Missing Google connection state. Please reconnect." };
+        const pending = await consumeGoogleOnboardingOAuth(state, user.id, businessId);
+        if (!pending) return { success: false, error: "Invalid or expired Google connection. Please reconnect." };
+        const redirectUri = pending.redirectUri;
         const tokens = await exchangeGoogleAuthCode(authCode, redirectUri);
 
         if (!tokens) {
@@ -50,12 +63,12 @@ export async function initializeGoogleAuth(
                     success: true,
                     multipleLocations: true,
                     locations: mapLocationsForSelection(allLocations),
-                    tokens,
+                    connectionId: await saveGoogleConnectData({ userId: user.id, businessId, tokens, locations: allLocations }),
                 };
             }
 
             if (allLocations.length === 1) {
-                return await finalizeGoogleConnection(businessId, allLocations[0], tokens);
+                return await finalizeVerifiedGoogleConnection(businessId, allLocations[0], tokens);
             }
 
             return {
@@ -75,5 +88,22 @@ export async function initializeGoogleAuth(
             success: false,
             error: "An unexpected error occurred. Please try again.",
         };
+    }
+}
+
+/** The browser supplies an opaque handle and a name, never provider tokens. */
+export async function finalizeGoogleConnection(businessId: string, locationName: string, connectionId: string) {
+    try {
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user || !businessSchema.safeParse(businessId).success ||
+            !(await canManageBusinessIntegration(supabase, user.id, businessId))) {
+            return { success: false, error: "Permission denied." };
+        }
+        const data = await consumeGoogleConnectData(connectionId, user.id, businessId, locationName);
+        if (!data) return { success: false, error: "Connection expired or invalid. Please reconnect." };
+        return finalizeVerifiedGoogleConnection(businessId, data.location, data.tokens);
+    } catch {
+        return { success: false, error: "Unable to finalize connection. Please reconnect." };
     }
 }

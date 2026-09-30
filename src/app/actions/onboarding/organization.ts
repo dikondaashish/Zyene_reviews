@@ -47,8 +47,6 @@ export async function createOrganization(
         name: data.organizationName,
         slug: slug,
         type: "business",
-        plan: "none",
-        plan_status: "active",
       })
       .select()
       .single();

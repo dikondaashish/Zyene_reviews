@@ -15,7 +15,7 @@ import {
     hideGoogleReviewsRemovedFromSource,
     readGoogleReviewSyncResumeCursor,
 } from "@/services/google/sync-service";
-import { MAX_REVIEW_PAGES } from "@/services/google/constants";
+import { AI_ANALYSIS_BATCH_SIZE, MAX_REVIEW_PAGES } from "@/services/google/constants";
 import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
 import {
     normalizeSentimentForDb,
@@ -33,6 +33,12 @@ import {
 } from "@/services/reviews/auto-reply-eligibility";
 import { acquireLock, releaseLock } from "@/lib/db/redis-lock";
 import { processOneScheduled } from "@/lib/review-requests/process-scheduled-queue";
+import { aiAnalysisBusinessRateLimit } from "@/lib/auth/rate-limit";
+import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
+import { z } from "zod";
+import { assertSingleBusinessBatch, isAllowedAnalysisResult } from "@/services/ai/analysis-batch-boundary";
+
+const analysisIdsSchema = z.array(z.string().uuid()).min(1).max(AI_ANALYSIS_BATCH_SIZE);
 
 export const processReviewAnalysisBatch = inngest.createFunction(
     {
@@ -44,25 +50,36 @@ export const processReviewAnalysisBatch = inngest.createFunction(
     },
     { event: "review/analyze.batch" },
     async ({ event, step }: { event: { data: { reviewIds: string[] } }, step: any }) => {
-        const { reviewIds } = event.data;
+        const reviewIds = analysisIdsSchema.parse(event.data.reviewIds);
         const supabase = createAdminClient();
 
         // 1. Fetch the reviews from Supabase
         const reviews = await step.run("fetch-reviews", async () => {
             const { data, error } = await supabase
                 .from("reviews")
-                .select("id, rating, text")
+                .select("id, business_id, rating, text, sentiment")
                 .in("id", reviewIds);
             if (error) throw new Error(`Failed to fetch reviews: ${error.message}`);
             return data;
         });
 
-        if (!reviews || reviews.length === 0) return { status: "no_reviews_found" };
+        const { businessId, allowedIds } = assertSingleBusinessBatch(reviewIds, reviews ?? []);
+        const pendingReviews = reviews.filter((review: { sentiment: string | null }) => review.sentiment === null);
+        if (pendingReviews.length === 0) return { status: "already_analyzed" };
+        const pendingIds = new Set(pendingReviews.map((review: { id: string }) => review.id));
+        const { data: business, error: businessError } = await supabase.from("businesses")
+            .select("organizations!inner(plan,plan_status)")
+            .eq("id", businessId).maybeSingle();
+        if (businessError || !business ||
+            !planAllowsAiReviewFeatures(business.organizations?.plan ?? null,
+                business.organizations?.plan_status ?? null)) {
+            return { status: "plan_unavailable" };
+        }
 
         // 2. Format for AI
         // Must use `reviewId` in the payload - the model output schema uses reviewId; using `id` often causes
         // the model to return `id` instead, so .eq("id", result.reviewId) updates zero rows.
-        const reviewsForAi = reviews.map((r: { id: string, rating: number, text: string | null }) => ({
+        const reviewsForAi = pendingReviews.map((r: { id: string, rating: number, text: string | null }) => ({
             reviewId: r.id,
             rating: r.rating,
             text: r.text || ""
@@ -74,6 +91,8 @@ export const processReviewAnalysisBatch = inngest.createFunction(
 
         // 3. Call Gemini with Fallback
         const aiResults = await step.run("call-gemini-batch", async () => {
+            const { success } = await aiAnalysisBusinessRateLimit.limit(businessId);
+            if (!success) throw new Error("Daily analysis budget exhausted");
             const content = await generateContentWithFallback(prompt, {
                 requireJson: true,
                 schema: batchAnalysisSchema,
@@ -103,7 +122,7 @@ export const processReviewAnalysisBatch = inngest.createFunction(
                     summary?: string;
                 }>).map(async (result) => {
                     const reviewRowId = result.reviewId ?? result.id;
-                    if (!reviewRowId) {
+                    if (!isAllowedAnalysisResult(reviewRowId, allowedIds) || !pendingIds.has(reviewRowId)) {
                         return;
                     }
 
@@ -115,7 +134,9 @@ export const processReviewAnalysisBatch = inngest.createFunction(
                             themes: normalizeThemesForDb(result.themes),
                             ai_summary: result.summary ?? "",
                         })
-                        .eq("id", reviewRowId);
+                        .eq("id", reviewRowId)
+                        .eq("business_id", businessId)
+                        .is("sentiment", null);
 
                     if (updateError) {
                         logger.error({ err: updateError }, `[Batch Analysis] Update failed for ${reviewRowId}:`);

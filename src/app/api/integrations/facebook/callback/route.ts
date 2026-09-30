@@ -1,95 +1,53 @@
-import { logger } from "@/lib/logger";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/db/supabase/server";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import { getAppIntegrationsUrl } from "@/config/env";
-import { exchangeCodeForToken, getLongLivedToken } from "@/services/facebook/client";
-import { getPages } from "@/services/facebook/adapter";
+import { getAppSecret } from "@/services/facebook/client";
+import { completeFacebookOAuth } from "@/services/facebook/complete-oauth";
+import { FB_CONNECT_COOKIE } from "@/services/facebook/connect-session";
+import {
+    FACEBOOK_STATE_COOKIE, facebookCookieOptions, verifyFacebookOAuthState,
+} from "@/services/facebook/oauth-state";
 
 function integrationsRedirect(query: string) {
-    const base = getAppIntegrationsUrl();
-    return NextResponse.redirect(`${base}${query.startsWith("?") ? query : `?${query}`}`);
+    return NextResponse.redirect(`${getAppIntegrationsUrl()}${query}`);
 }
 
-/**
- * GET: Facebook OAuth callback.
- * Exchanges code for token, fetches user's pages, redirects to integrations page
- * with page selection data stored in a temporary cookie.
- */
-export async function GET(request: Request) {
-    const supabase = await createClient();
-    const { searchParams } = new URL(request.url);
+export async function GET(request: NextRequest) {
+    const { searchParams } = request.nextUrl;
+    if (searchParams.has("error")) return integrationsRedirect("?fb_error=denied");
 
     const code = searchParams.get("code");
-    const stateParam = searchParams.get("state");
-    const error = searchParams.get("error");
+    const nonce = searchParams.get("state");
+    if (!code || !nonce) return integrationsRedirect("?fb_error=missing_params");
 
-    // Handle OAuth denial
-    if (error) {
-        logger.error({ err: error }, "[Facebook Callback] OAuth error:");
-        return integrationsRedirect("?fb_error=denied");
-    }
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return integrationsRedirect("?fb_error=invalid_state");
 
-    if (!code || !stateParam) {
-        return integrationsRedirect("?fb_error=missing_params");
-    }
-
-    // Decode state
-    let state: { businessId: string; userId: string };
-    try {
-        state = JSON.parse(
-            Buffer.from(stateParam, "base64url").toString("utf-8")
-        );
-    } catch {
+    const state = verifyFacebookOAuthState(
+        nonce, request.cookies.get(FACEBOOK_STATE_COOKIE)?.value, user.id, getAppSecret(),
+    );
+    if (!state || !(await canManageBusinessIntegration(supabase, user.id, state.businessId))) {
         return integrationsRedirect("?fb_error=invalid_state");
     }
 
-    const rootDomain =
-        process.env.NEXT_PUBLIC_ROOT_DOMAIN || "http://localhost:3000";
+    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "http://localhost:3000";
     const redirectUri = `${rootDomain}/api/integrations/facebook/callback`;
 
     try {
-        // 1. Exchange code for short-lived token
-        const shortLived = await exchangeCodeForToken(code, redirectUri);
-
-        // 2. Exchange for long-lived token (~60 days)
-        const longLived = await getLongLivedToken(shortLived.access_token);
-
-        // 3. Fetch pages the user manages
-        const pages = await getPages(longLived.access_token);
-
-        if (pages.length === 0) {
-            return NextResponse.redirect(
-                new URL("/integrations?fb_error=no_pages", request.url)
-            );
+        const selectionNonce = await completeFacebookOAuth(
+            code, redirectUri, user.id, state.businessId,
+        );
+        const response = integrationsRedirect(selectionNonce ? "?fb_select_page=true" : "?fb_error=no_pages");
+        response.cookies.set(FACEBOOK_STATE_COOKIE, "",
+            facebookCookieOptions("/api/integrations/facebook/callback", 0));
+        if (selectionNonce) {
+            response.cookies.set(FB_CONNECT_COOKIE, selectionNonce,
+                facebookCookieOptions("/api/integrations/facebook", 300));
         }
-
-        // 4. Store pages + token data in a cookie for the frontend to read
-        const fbData = {
-            businessId: state.businessId,
-            userAccessToken: longLived.access_token,
-            tokenExpiresIn: longLived.expires_in,
-            pages: pages.map((p) => ({
-                pageId: p.pageId,
-                pageName: p.pageName,
-                pageAccessToken: p.pageAccessToken,
-                category: p.category,
-            })),
-        };
-
-        const response = integrationsRedirect("?fb_select_page=true");
-
-        // Set cookie with page data (encrypted in production, HttpOnly)
-        response.cookies.set("fb_connect_data", JSON.stringify(fbData), {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            maxAge: 300, // 5 minutes - short-lived
-            path: "/",
-        });
-
         return response;
-    } catch (err: unknown) {
-        logger.error({ err: err }, "[Facebook Callback] Token exchange failed:");
+    } catch {
         return integrationsRedirect("?fb_error=token_failed");
     }
 }
