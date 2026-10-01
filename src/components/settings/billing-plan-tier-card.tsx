@@ -70,8 +70,8 @@ export function BillingPlanTierCard(props: {
         <PricingCard.Card
             id={isPro ? BILLING_PLAN_PROFESSIONAL_ANCHOR_ID : undefined}
             className={cn(
-                "relative flex max-w-none flex-col scroll-mt-28 size-full",
-                isPro && "ring-2 ring-primary/50",
+                "relative flex max-w-none flex-col scroll-mt-28 size-full p-5 backdrop-blur-none dark:bg-card",
+                isPro && "border-primary/40",
                 isExactCurrent && subscriptionHealthy && "ring-2 ring-primary/60"
             )}
         >
@@ -80,20 +80,20 @@ export function BillingPlanTierCard(props: {
                     <Badge className="bg-primary text-primary-foreground border-0">Most popular</Badge>
                 </div>
             )}
-            <PricingCard.Header className="relative z-10 mb-3 p-3">
-                <PricingCard.Plan>
-                    <PricingCard.PlanName>
+            <PricingCard.Header glassEffect={false} className="relative z-10 mb-5 rounded-none border-0 bg-transparent p-0 dark:bg-transparent">
+                <PricingCard.Plan className="mb-3 flex-wrap gap-2">
+                    <PricingCard.PlanName className="text-base font-semibold">
                         {isPro ? <Crown className="text-primary" aria-hidden /> : <Zap className="text-primary" aria-hidden />}
                         <span className="text-foreground">{plan.name}</span>
                     </PricingCard.PlanName>
                     <PricingCard.Badge>{isPro ? "Multi-location" : "Single location"}</PricingCard.Badge>
                 </PricingCard.Plan>
-                <PricingCard.Description className="mb-2 text-[11px] leading-snug text-muted-foreground">
+                <PricingCard.Description className="mb-5 text-sm leading-6 text-muted-foreground">
                     {isPro ? "For growing multi-location businesses." : "Perfect for single-location businesses."}
                 </PricingCard.Description>
                 <PricingCard.Price>
                     {plan.originalPrice && plan.originalPrice > (plan.price || 0) && (
-                        <PricingCard.OriginalPrice>${plan.originalPrice}</PricingCard.OriginalPrice>
+                        <PricingCard.OriginalPrice className="ml-0 text-sm">${plan.originalPrice}</PricingCard.OriginalPrice>
                     )}
                     <PricingCard.MainPrice>${plan.price}</PricingCard.MainPrice>
                     <PricingCard.Period>{intervalLabel}</PricingCard.Period>
@@ -105,19 +105,19 @@ export function BillingPlanTierCard(props: {
                     <p className="text-xs text-muted-foreground mb-3">{b.pro_prorated_no_trial_badge}</p>
                 )}
                 {isExactCurrent && subscriptionHealthy ? (
-                    <Button variant="outline" className="w-full font-semibold" disabled>
+                    <Button variant="outline" className="min-h-11 w-full font-semibold" disabled>
                         {b.current_plan_badge}
                     </Button>
                 ) : (
                     <Button
                         type="button"
                         className={cn(
-                            "w-full font-semibold text-primary-foreground",
+                            "min-h-11 w-full font-semibold text-primary-foreground",
                             "bg-primary",
                             "hover:bg-primary/90 disabled:opacity-60"
                         )}
                         onClick={() => onRequestPlanChange(plan)}
-                        disabled={loadingPlan === plan.stripePriceId}
+                        disabled={!!loadingPlan || !priceConfigured || !!permissionTooltip}
                         title={!priceConfigured ? b.billing_not_configured : permissionTooltip}
                     >
                         {loadingPlan === plan.stripePriceId ? <Loader2 className="animate-spin size-4" /> : null}
@@ -128,10 +128,10 @@ export function BillingPlanTierCard(props: {
                     <p className="text-xs text-warning-foreground dark:text-warning-foreground mt-2 leading-snug">{b.trial_ends_on_upgrade_notice}</p>
                 )}
             </PricingCard.Header>
-            <PricingCard.Body className="space-y-3 p-2">
+            <PricingCard.Body className="border-t border-border px-0 pb-0 pt-5">
                 <PricingCard.List className="space-y-2">
                     {plan.features.map((feature) => (
-                        <PricingCard.ListItem key={feature} className="text-xs gap-2">
+                        <PricingCard.ListItem key={feature} className="text-sm leading-6 gap-2">
                             <span className="mt-0.5 shrink-0">
                                 <CheckCircle2 className="text-success size-3.5" aria-hidden />
                             </span>

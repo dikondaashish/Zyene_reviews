@@ -95,7 +95,6 @@ export function BillingClient({
                 loadingPortal={loadingPortal}
                 onManageSubscription={() => void handleManageSubscription()}
             />
-            <BillingRenewalSummary summary={renewalSummary} />
             <BillingCurrentPlanCard
                 billing={b}
                 currentPlan={currentPlan}
@@ -107,6 +106,7 @@ export function BillingClient({
                 derived={derived}
                 permissionTooltip={permissionTooltip}
             />
+            <BillingRenewalSummary summary={renewalSummary} />
             <BillingPlanPickerSection
                 billing={b}
                 interval={interval}

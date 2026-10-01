@@ -3,7 +3,6 @@
 import type { Plan } from "@/services/stripe/plans";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { BillingDerivedState } from "@/components/settings/billing-client-derived";
-import { BillingPlanPickerBackdrop } from "@/components/settings/billing-plan-picker-backdrop";
 import { BillingPlanPickerHeader } from "@/components/settings/billing-plan-picker-header";
 import { BillingPlanTierCard } from "@/components/settings/billing-plan-tier-card";
 import { BillingPlanEnterpriseCard } from "@/components/settings/billing-plan-enterprise-card";
@@ -49,9 +48,8 @@ export function BillingPlanPickerSection(props: {
     return (
         <div
             id="plan-picker"
-            className="relative overflow-hidden rounded-3xl border border-border/60 bg-muted/20 p-6 md:p-8"
+            className="scroll-mt-6 border-t border-border pt-8"
         >
-            <BillingPlanPickerBackdrop />
 
             <div className="relative z-10">
                 <BillingPlanPickerHeader
@@ -62,7 +60,7 @@ export function BillingPlanPickerSection(props: {
                     yearlySavings={yearlySavings}
                 />
 
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-5 md:grid-cols-2 2xl:grid-cols-3">
                     {displayPlans.map((plan) => (
                         <BillingPlanTierCard
                             key={plan.id}

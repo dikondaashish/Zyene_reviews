@@ -14,7 +14,6 @@ import { CreditCard, ExternalLink, Loader2, Sparkles, ArrowRight } from "lucide-
 import { cn } from "@/lib/utils";
 import type { Plan } from "@/services/stripe/plans";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
-import { UsageBar } from "@/components/settings/billing-usage-bar";
 import type { BillingDerivedState } from "@/components/settings/billing-client-derived";
 import { BillingCurrentPlanUsageSection } from "@/components/settings/billing-current-plan-usage-section";
 
@@ -47,17 +46,16 @@ export function BillingCurrentPlanCard(props: {
         isEnterpriseOrg,
         hasPricedPlan,
         isPaidPlan,
-        subscriptionHealthy,
         currentPlanDisplayName,
         displayUsage,
     } = derived;
 
     return (
-        <Card>
+        <Card className="overflow-hidden rounded-xl border-border shadow-none">
             <CardHeader>
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                        <CardTitle className="text-xl">{b.current_plan}</CardTitle>
+                        <CardTitle className="text-base font-semibold">{b.current_plan}</CardTitle>
                         <CardDescription>{b.active_subscription}</CardDescription>
                     </div>
                     <Badge
@@ -77,16 +75,16 @@ export function BillingCurrentPlanCard(props: {
                     </Badge>
                 </div>
             </CardHeader>
-            <CardContent className="space-y-6">
-                <div className="flex flex-wrap items-baseline gap-2">
+            <CardContent className="grid gap-8 lg:grid-cols-[minmax(180px,0.6fr)_minmax(0,1.4fr)] lg:gap-10">
+                <div className="flex flex-wrap content-start items-baseline gap-2">
                     {hasPricedPlan ? (
                         <>
                             {currentPlan?.originalPrice && currentPlan.originalPrice > (currentPlan.price || 0) && (
-                                <span className="text-xl line-through text-muted-foreground">
+                                <span className="text-sm line-through text-muted-foreground">
                                     ${currentPlan.originalPrice}
                                 </span>
                             )}
-                            <span className="text-4xl font-bold tabular-nums">${currentPlan?.price}</span>
+                            <span className="text-3xl font-semibold tracking-tight tabular-nums">${currentPlan?.price}</span>
                             <span className="text-muted-foreground">
                                 /{currentPlan?.interval === "year" ? "year" : "month"}
                             </span>
@@ -110,9 +108,9 @@ export function BillingCurrentPlanCard(props: {
                     <Button
                         variant="outline"
                         onClick={() => void onManageSubscription()}
-                        disabled={loadingPortal}
+                        disabled={loadingPortal || !!permissionTooltip}
                         title={permissionTooltip}
-                        className="gap-2 order-1 sm:order-2 shrink-0"
+                        className="min-h-11 gap-2 order-1 sm:order-2 shrink-0"
                     >
                         {loadingPortal ? (
                             <Loader2 className="animate-spin size-4" />

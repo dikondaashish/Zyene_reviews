@@ -11,29 +11,29 @@ export function UsageBar({ label, stat, icon }: { label: string; stat: UsageStat
 
     return (
         <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm">
                 <span className="text-muted-foreground flex items-center gap-2">
                     {icon}
                     {label}
                 </span>
                 <span className="font-medium tabular-nums">
                     {stat.used.toLocaleString()}
-                    {isUnlimited ? " used" : ` / ${stat.max.toLocaleString()}`}
+                    {isUnlimited ? " used · Unlimited" : ` / ${stat.max.toLocaleString()}`}
                 </span>
             </div>
             {!isUnlimited && (
-                <div className="h-2 rounded-full bg-muted overflow-hidden">
+                <div role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percentage} aria-valuetext={`${stat.used} of ${stat.max} used`} className="h-1.5 rounded-full bg-muted overflow-hidden">
                     <div
                         className={cn(
-                            "h-full rounded-full transition-all",
-                            isNearLimit ? "bg-primary" : "bg-primary/70"
+                            "h-full rounded-full",
+                            isNearLimit ? "bg-warning" : "bg-primary/70"
                         )}
                         style={{ width: `${percentage}%` }}
                     />
                 </div>
             )}
             {isUnlimited && (
-                <div className="h-2 rounded-full bg-gradient-to-r from-chart-2/20 to-chart-2/5" />
+                <div className="h-1.5 rounded-full bg-muted" />
             )}
         </div>
     );

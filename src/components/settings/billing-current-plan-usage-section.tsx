@@ -11,8 +11,8 @@ export function BillingCurrentPlanUsageSection(props: { billing: BillingDict; di
     const { billing: b, displayUsage } = props;
 
     return (
-        <div className="space-y-4 pt-2">
-            <h3 className="text-sm font-semibold uppercase text-muted-foreground tracking-wide">{b.usage_title}</h3>
+        <div className="space-y-4 lg:border-l lg:border-border lg:pl-8">
+            <h3 className="text-sm font-semibold text-foreground">{b.usage_title}</h3>
             <UsageBar label={b.email_requests} stat={displayUsage.emailRequests} icon={<Mail className="size-3.5" />} />
             <UsageBar label={b.sms_requests} stat={displayUsage.smsRequests} icon={<MessageSquare className="size-3.5" />} />
             <UsageBar label={b.link_requests} stat={displayUsage.linkRequests} icon={<LinkIcon className="size-3.5" />} />

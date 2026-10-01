@@ -21,26 +21,26 @@ export function BillingPlanEnterpriseCard(props: {
     return (
         <PricingCard.Card
             className={cn(
-                "relative flex w-full max-w-none flex-col border-dashed",
+                "relative flex w-full max-w-none flex-col p-5 backdrop-blur-none dark:bg-card",
                 isEnterpriseOrg && subscriptionHealthy && "ring-2 ring-primary/60"
             )}
         >
-            <PricingCard.Header className="relative z-10">
-                <PricingCard.Plan>
-                    <PricingCard.PlanName>
+            <PricingCard.Header glassEffect={false} className="relative z-10 mb-5 rounded-none border-0 bg-transparent p-0 dark:bg-transparent">
+                <PricingCard.Plan className="mb-3 flex-wrap gap-2">
+                    <PricingCard.PlanName className="text-base font-semibold">
                         <Building2 className="text-muted-foreground" aria-hidden />
                         <span className="text-foreground">Enterprise</span>
                     </PricingCard.PlanName>
                     <PricingCard.Badge>Custom</PricingCard.Badge>
                 </PricingCard.Plan>
-                <PricingCard.Description className="mb-2 text-[11px] leading-snug text-muted-foreground">
+                <PricingCard.Description className="mb-5 text-sm leading-6 text-muted-foreground">
                     For large organizations with custom needs.
                 </PricingCard.Description>
                 <PricingCard.Price>
                     <PricingCard.MainPrice className="text-2xl">Custom</PricingCard.MainPrice>
                 </PricingCard.Price>
                 {isEnterpriseOrg && subscriptionHealthy ? (
-                    <Button variant="outline" className="w-full font-semibold" disabled>
+                    <Button variant="outline" className="min-h-11 w-full font-semibold" disabled>
                         {b.current_plan_badge}
                     </Button>
                 ) : (
@@ -55,7 +55,7 @@ export function BillingPlanEnterpriseCard(props: {
                     </a>
                 )}
             </PricingCard.Header>
-            <PricingCard.Body>
+            <PricingCard.Body className="border-t border-border px-0 pb-0 pt-5">
                 <PricingCard.List>
                     {enterprisePlan.features.map((feature) => (
                         <PricingCard.ListItem key={feature}>
