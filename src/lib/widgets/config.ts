@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { WIDGET_COLORS } from "@/lib/widgets/palette";
 
 export const WIDGET_LAYOUTS = ["carousel", "masonry", "slider", "grid", "list", "card-badge", "compact-badge", "review-request", "bold-sticker", "reviews-button", "light-sticker", "tag-sticker", "oval-sticker", "achievement"] as const;
 export const WIDGET_THEMES = ["light", "outline", "soft-tint", "deep-tint", "dark", "outline-dark"] as const;
@@ -7,7 +8,7 @@ const bounded = (min: number, max: number, fallback: number) => z.number().int()
 export const widgetConfigSchema = z.object({
     layout: z.enum(WIDGET_LAYOUTS).catch("carousel"),
     theme: z.enum(WIDGET_THEMES).catch("light"),
-    accent: color("#3366ff"), stars: color("#fbbc04"),
+    accent: color(WIDGET_COLORS.accent), stars: color(WIDGET_COLORS.stars),
     preset: z.string().max(40).regex(/^[a-z-]+$/).catch("carousel"),
     title: z.string().max(100).catch("What Our Customers Say"),
     caption: z.string().max(250).catch(""),
@@ -37,9 +38,9 @@ export const widgetConfigSchema = z.object({
     scrollMode: z.enum(["item", "page"]).catch("item"),
     animationDuration: bounded(150, 1500, 300), autoplayDelay: bounded(2, 20, 5),
     swipe: z.boolean().catch(true),
-    background: color("#ffffff").optional(), cardColor: color("#f5f5f7").optional(),
-    textColor: color("#111111").optional(), mutedColor: color("#999999").optional(),
-    borderColor: color("#cccccc").optional(), verifiedColor: color("#3366ff").optional(),
+    background: color(WIDGET_COLORS.lightBackground).optional(), cardColor: color(WIDGET_COLORS.lightCard).optional(),
+    textColor: color(WIDGET_COLORS.lightText).optional(), mutedColor: color(WIDGET_COLORS.lightMuted).optional(),
+    borderColor: color(WIDGET_COLORS.lightBorder).optional(), verifiedColor: color(WIDGET_COLORS.accent).optional(),
     showSummary: z.boolean().catch(false), showArrows: z.boolean().catch(true),
     showPagination: z.boolean().catch(true), autoplay: z.boolean().catch(false),
     floating: z.boolean().catch(false), position: z.enum(["left", "right"]).catch("left"),

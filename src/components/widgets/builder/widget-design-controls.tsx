@@ -1,6 +1,7 @@
 import { WIDGET_THEMES, isBadgeLayout, type WidgetConfig } from "@/lib/widgets/config";
 import { Choice, NumberField, Toggle, type WidgetFieldsProps } from "@/components/widgets/builder/widget-fields";
 import { WidgetTemplatePicker } from "@/components/widgets/builder/widget-template-picker";
+import { WIDGET_ACCENTS, WIDGET_COLORS } from "@/lib/widgets/palette";
 
 export function WidgetDesignControls({ config, update, section, onChange }: WidgetFieldsProps & { section: string; onChange: (config: WidgetConfig) => void }) {
     const horizontal = config.layout === "carousel" || config.layout === "slider";
@@ -43,13 +44,13 @@ export function WidgetDesignControls({ config, update, section, onChange }: Widg
             <span className={`wb-theme-sample wb-theme-${theme}`}><b>G</b><span>★★★★★</span><i style={{ background: config.accent }} /></span>{theme.replaceAll("-", " ")}
         </button>)}</div>
         <label className="wb-color">Accent color<input type="color" value={config.accent} onChange={e => update("accent", e.target.value)} /></label>
-        <div className="wb-swatches">{["#197bff", "#8855ff", "#df5287", "#e9563f", "#f58220", "#f5c842", "#50ad55", "#242424"].map(color =>
+        <div className="wb-swatches">{WIDGET_ACCENTS.map(color =>
             <button key={color} type="button" aria-label={`Use ${color} accent`} aria-pressed={config.accent === color} style={{ background: color }} onClick={() => update("accent", color)} />)}</div>
         <label className="wb-color">Star color<input type="color" value={config.stars} onChange={e => update("stars", e.target.value)} /></label>
         <NumberField label="Corner radius (px)" value={config.radius} min={0} max={32} onChange={v => update("radius", v)} />
         <details className="wb-custom-theme"><summary>Customize theme</summary>{([
             ["background", "Widget background"], ["cardColor", "Review background"], ["textColor", "Text color"],
             ["mutedColor", "Date and count color"], ["borderColor", "Review outline"], ["verifiedColor", "Google mark color"],
-        ] as const).map(([key, label]) => <label className="wb-color" key={key}>{label}<input type="color" value={config[key] || (key === "background" ? "#ffffff" : key === "cardColor" ? "#f5f5f7" : key === "verifiedColor" ? config.accent : "#111111")} onChange={e => update(key, e.target.value)} /></label>)}</details>
+        ] as const).map(([key, label]) => <label className="wb-color" key={key}>{label}<input type="color" value={config[key] || (key === "background" ? WIDGET_COLORS.lightBackground : key === "cardColor" ? WIDGET_COLORS.lightCard : key === "verifiedColor" ? config.accent : WIDGET_COLORS.lightText)} onChange={e => update(key, e.target.value)} /></label>)}</details>
     </>;
 }

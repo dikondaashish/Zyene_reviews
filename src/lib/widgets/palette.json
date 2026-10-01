@@ -1,0 +1,21 @@
+{
+    "accent": "#3366ff",
+    "stars": "#fbbc04",
+    "lightBackground": "#ffffff",
+    "darkBackground": "#000000",
+    "lightText": "#111111",
+    "darkText": "#ffffff",
+    "lightCard": "#f5f5f7",
+    "darkCard": "#242424",
+    "lightMuted": "#999999",
+    "darkMuted": "#b7b7b7",
+    "lightBorder": "#cccccc",
+    "darkBorder": "#444444",
+    "wallAccent": "#f44343",
+    "halloweenAccent": "#f58220",
+    "violet": "#8855ff",
+    "pink": "#df5287",
+    "coral": "#e9563f",
+    "gold": "#f5c842",
+    "green": "#50ad55"
+}

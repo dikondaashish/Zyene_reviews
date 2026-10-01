@@ -2,8 +2,17 @@ import { describe, expect, it } from "vitest";
 import { parseWidgetConfig, encodeWidgetConfig } from "@/lib/widgets/config";
 import { WIDGET_TEMPLATES } from "@/lib/widgets/templates";
 import { buildConfiguredEmbed } from "@/lib/widgets/configured-embed";
+import { WIDGET_COLORS } from "@/lib/widgets/palette";
 
 describe("configurable review widgets", () => {
+    it("preserves measured reference colors in serialized settings", () => {
+        const channels = (color: string) => [1, 3, 5].map(index => parseInt(color.slice(index, index + 2), 16));
+        const config = parseWidgetConfig(null);
+        expect(channels(config.accent)).toEqual([51, 102, 255]);
+        expect(channels(config.stars)).toEqual([251, 188, 4]);
+        expect(channels(WIDGET_COLORS.lightCard)).toEqual([245, 245, 247]);
+        expect(channels(WIDGET_COLORS.darkBackground)).toEqual([0, 0, 0]);
+    });
     it("round trips every template into an installable widget", () => {
         expect(WIDGET_TEMPLATES).toHaveLength(20);
         for (const template of WIDGET_TEMPLATES) {
@@ -22,7 +31,7 @@ describe("configurable review widgets", () => {
     });
     it("rejects CSS injection and bounds expensive rendering options", () => {
         const config = parseWidgetConfig({ accent: 'red; background:url(https://evil.test)', limit: 99999, columns: 100 });
-        expect(config.accent).toBe("#3366ff");
+        expect(config.accent).toBe(WIDGET_COLORS.accent);
         expect(config.limit).toBeLessThanOrEqual(100);
         expect(config.columns).toBeLessThanOrEqual(6);
     });
@@ -30,9 +39,9 @@ describe("configurable review widgets", () => {
         const template = (id: string) => parseWidgetConfig(WIDGET_TEMPLATES.find(t => t.id === id)?.config);
         expect(template("floating")).toMatchObject({ layout: "card-badge", floating: true, position: "left" });
         expect(template("sidebar")).toMatchObject({ layout: "carousel", columns: 1, width: 340, theme: "outline", showButton: false });
-        expect(template("dark-carousel")).toMatchObject({ reviewStyle: "bubble", showHeader: false, background: "#000000" });
+        expect(template("dark-carousel")).toMatchObject({ reviewStyle: "bubble", showHeader: false, background: WIDGET_COLORS.darkBackground });
         expect(template("simple")).toMatchObject({ theme: "outline", sourceStyle: "inline", showPhotos: true });
-        expect(template("halloween")).toMatchObject({ theme: "dark", stars: "#fbbc04", showVerified: false });
+        expect(template("halloween")).toMatchObject({ theme: "dark", stars: WIDGET_COLORS.stars, showVerified: false });
     });
     it("recovers malformed or oversized configuration and ignores privilege options", () => {
         expect(parseWidgetConfig("{broken")).toEqual(parseWidgetConfig(null));

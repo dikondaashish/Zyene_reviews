@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Monitor, Smartphone } from "lucide-react";
 import { buildConfiguredEmbed } from "@/lib/widgets/configured-embed";
 import { isBadgeLayout, type WidgetConfig } from "@/lib/widgets/config";
+import { WIDGET_COLORS } from "@/lib/widgets/palette";
 import { WidgetPreviewSkeleton } from "@/components/widgets/widget-preview-skeleton";
 
 export function WidgetBuilderPreview({ slug, config, onSetupSummary }: { slug: string; config: WidgetConfig; onSetupSummary: () => void }) {
@@ -46,12 +47,12 @@ export function WidgetBuilderPreview({ slug, config, onSetupSummary }: { slug: s
     const floating = config.floating && isBadgeLayout(config.layout);
     return <section className="wb-preview" aria-label="Live widget preview">
         <div className="wb-preview-toolbar"><span>Live preview</span><div>
-            {config.showSummary && !summarySources.includes(config.source) && <button className="wb-setup-summary" onClick={onSetupSummary}>Generate AI summary</button>}
+            {config.showSummary && !isBadgeLayout(config.layout) && !summarySources.includes(config.source) && <button className="wb-setup-summary" onClick={onSetupSummary}>Generate AI summary</button>}
             <button title="Desktop preview" aria-label="Desktop preview" aria-pressed={!mobile} onClick={() => setMobile(false)}><Monitor size={18} /></button>
             <button title="Mobile preview" aria-label="Mobile preview" aria-pressed={mobile} onClick={() => setMobile(true)}><Smartphone size={18} /></button>
         </div></div>
         <div className="wb-preview-scroll" ref={scrollArea}><div className={`wb-preview-device ${mobile ? "wb-mobile" : ""} ${floating ? "wb-floating-preview" : ""}`} aria-busy={!ready}
-            style={{ background: ["dark", "outline-dark", "deep-tint"].includes(config.theme) ? "#000" : "#fff" }}>
+            style={{ background: ["dark", "outline-dark", "deep-tint"].includes(config.theme) ? WIDGET_COLORS.darkBackground : WIDGET_COLORS.lightBackground }}>
             {!ready && <div className="absolute inset-0 z-10 overflow-hidden bg-card"><WidgetPreviewSkeleton badge={isBadgeLayout(config.layout)} /></div>}
             <iframe ref={frame} src={src} title="Live customer reviews widget" onLoad={() => setReady(true)} aria-hidden={!ready} tabIndex={!ready ? -1 : undefined}
                 style={{ height: isBadgeLayout(config.layout) ? availableHeight : height, visibility: ready ? "visible" : "hidden" }} />
