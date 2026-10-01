@@ -22,7 +22,7 @@ Measured computed styles in the signed-in Chrome session on September 28, 2026:
 | Disabled text | `#b9bec6` |
 | Primary action | `#ed5a29` |
 | Selected navigation background | `#feefea` |
-| Dark orange selected text | `#ba3a10` |
+| Selected text (current user override) | `#ed5a29` |
 | Neutral control background | `#f1f2f4` |
 | Muted panel background | `#f7f7f8` |
 | Dividers | `#e3e5e8` / `#e5e7eb` |
@@ -32,7 +32,7 @@ Measured computed styles in the signed-in Chrome session on September 28, 2026:
 | Warning token | `#ffc107` |
 | Info token | `#17a2b8` |
 
-The last four values were read from OptiMonk's document-level CSS variables; the account did not expose populated charts or every status state. Main charts use orange. White text on the reference orange does not reach WCAG AA for small text; the palette preserves the requested reference pairing. Small orange links use the measured darker orange, and body metadata uses the reference's darker gray token for better contrast.
+The last four values were read from OptiMonk's document-level CSS variables; the account did not expose populated charts or every status state. Main charts use orange. White text on the reference orange does not reach WCAG AA for small text; the palette preserves the requested reference pairing. Small orange links, selected navigation text, and primary hover states now use the user's requested `#ed5a29` override. Body metadata uses the reference's darker gray token.
 
 ## Application
 

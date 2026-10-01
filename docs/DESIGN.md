@@ -17,7 +17,7 @@ Premium quality comes from complete workflows, readable typography, deliberate s
 | Card | `#ffffff` | `#23262a` | Solid content panels |
 | Primary | `#ed5a29` | `#ed5a29` | Filled actions |
 | Primary foreground | `#ffffff` | `#ffffff` | Text on primary |
-| Primary text | `#ba3a10` | `#ff9b79` | Small links and selected labels |
+| Primary text | `#ed5a29` | `#ff9b79` | Small links and selected labels |
 | Brand accent | `#ed5a29` | `#ed5a29` | App identity |
 | Muted foreground | `#6c757d` | `#b9bec6` | Supporting text |
 | Success | `#28a745` | `#71d58a` | Completed, sent, connected and positive states |

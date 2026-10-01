@@ -14,8 +14,8 @@
   --brand-accent: #ed5a29;
   --primary: #ed5a29;
   --primary-foreground: #ffffff;
-  --primary-text: #ba3a10;
-  --primary-hover: #ba3a10;
+  --primary-text: #ed5a29;
+  --primary-hover: #ed5a29;
   --cta: var(--primary);
   --cta-foreground: var(--primary-foreground);
   --secondary: #f1f2f4;
@@ -43,7 +43,7 @@
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
   --sidebar-accent: #feefea;
-  --sidebar-accent-foreground: #ba3a10;
+  --sidebar-accent-foreground: #ed5a29;
   --sidebar-border: #e3e5e8;
   --sidebar-ring: var(--ring);
   --canvas: #f9fafb;
@@ -92,7 +92,7 @@
   --tour-overlay-scrim: rgb(0 0 0 / 70%);
 }
 
-/* OptiMonk uses its darker orange for small selected labels and links. */
+/* Selected labels and links share the requested brand orange. */
 :root:has([data-dashboard-shell], [data-app-onboarding]) .text-primary {
   color: var(--primary-text);
 }
