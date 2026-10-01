@@ -15,13 +15,24 @@ function mount(widgetUrl = "https://zyenereviews.com/w/example", position: strin
             getAttribute: (name: string) => name === "data-widget-url" ? widgetUrl : position,
         }, createElement: (name: string) => name === "iframe" ? frame : wrapper },
     });
-    const send = (origin: string, source: unknown, height: unknown) => listeners.message?.({ origin, source, data: { type: "zyene-widget-size", height } });
+    const send = (origin: string, source: unknown, height: unknown, expanded = false) => listeners.message?.({ origin, source, data: { type: "zyene-widget-size", height, expanded } });
     return { frame, insertBefore, send };
 }
 describe("widget embed message isolation", () => {
     it("rejects embedding an unrelated origin or non-widget route", () => {
         expect(mount("https://evil.example/w/example").insertBefore).not.toHaveBeenCalled();
         expect(mount("https://zyenereviews.com/settings").insertBefore).not.toHaveBeenCalled();
+    });
+    it("opens a page overlay only for an authenticated message from its own frame and restores inline sizing", () => {
+        const { frame, send } = mount();
+        send("https://evil.test", frame.contentWindow, 200, true);
+        expect(frame.style.cssText).not.toContain("position:fixed");
+        send("https://zyenereviews.com", frame.contentWindow, 200, true);
+        expect(frame.style.cssText).toContain("position:fixed");
+        expect(frame.style.height).toBe("600px");
+        send("https://zyenereviews.com", frame.contentWindow, 200, false);
+        expect(frame.style.cssText).not.toContain("position:fixed");
+        expect(frame.style.height).toBe("200px");
     });
     it("accepts resize only from its own iframe and rejects invalid sizes", () => {
         const { frame, send } = mount();

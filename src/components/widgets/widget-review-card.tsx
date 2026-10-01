@@ -1,40 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { PublicWidgetReview } from "@/lib/widgets/public-types";
 import type { WidgetConfig } from "@/lib/widgets/config";
 import { WidgetStars } from "@/components/widgets/widget-stars";
-import { GoogleLogoIcon } from "@/components/widgets/review-carousel-google-logo";
+import { WidgetAuthor } from "@/components/widgets/widget-author";
 
-export function WidgetReviewCard({ review, config }: { review: PublicWidgetReview; config: WidgetConfig }) {
+export function WidgetReviewCard({ review, config, onOpen, onPhoto, full = false }: {
+    review: PublicWidgetReview; config: WidgetConfig; full?: boolean;
+    onOpen?: (id: string) => void; onPhoto?: (review: PublicWidgetReview, index: number) => void;
+}) {
     const [expanded, setExpanded] = useState(false);
-    const [avatarFailed, setAvatarFailed] = useState(false);
-    const date = new Date(review.created_at);
-    return <article className="rw-review">
-        <div className="rw-author">
-            {config.showAvatar && <div className="rw-avatar">
-                {review.avatar && !avatarFailed ? <Image src={review.avatar} alt="" width={40} height={40} unoptimized onError={() => setAvatarFailed(true)} /> :
-                    <span>{review.author_name.slice(0, 1).toUpperCase()}</span>}
-                {review.platform.toLowerCase() === "google" && <span className="rw-source-icon"><GoogleLogoIcon /></span>}
+    const [truncated, setTruncated] = useState(false);
+    const text = useRef<HTMLParagraphElement>(null);
+    const unclamped = full || expanded || config.textMode === "full";
+    useEffect(() => {
+        const node = text.current;
+        if (!node) return;
+        const measure = () => setTruncated(node.scrollHeight > node.clientHeight + 1);
+        const observer = new ResizeObserver(measure);
+        observer.observe(node);
+        measure();
+        return () => observer.disconnect();
+    }, [review.content, config.textLength, unclamped]);
+    const slider = config.layout === "slider" && !full;
+    const bubble = config.reviewStyle === "bubble" && !full;
+    const photos = config.showPhotos ? review.photos || [] : [];
+    return <article className={`rw-review ${bubble ? "rw-bubble-review" : ""} ${slider ? "rw-slider-review" : ""}`} data-review-id={review.id}>
+        {!slider && !bubble && <WidgetAuthor review={review} config={config} />}
+        <div className="rw-review-body">
+            {config.showReviewRating && <WidgetStars rating={review.rating} />}
+            {review.content && <p ref={text} className={`rw-review-text ${unclamped ? "" : "rw-clamped"}`}>{review.content}</p>}
+            {(truncated || expanded) && !full && <button className="rw-text-button" aria-expanded={expanded} onClick={() => {
+                if ((config.showPhotos || config.showReply) && onOpen) onOpen(review.id); else setExpanded(!expanded);
+            }}>{expanded ? "Read less" : "Read more"}</button>}
+            {!!photos.length && <div className={`rw-photos ${photos.length === 1 ? "rw-photo-single" : ""}`}>
+                {photos.slice(0, 4).map((photo, index) => <button type="button" key={photo} onClick={() => onPhoto?.(review, index)} aria-label={`Open ${review.author_name} review photo ${index + 1} of ${photos.length}`}>
+                    <Image src={photo} alt={`Photo from ${review.author_name}'s review`} width={240} height={240} unoptimized />
+                    {index === 3 && photos.length > 4 && <span className="rw-photo-more">+{photos.length - 3}</span>}
+                </button>)}
             </div>}
-            <div className="rw-author-info">
-                <strong title={review.author_name}>{review.author_name}</strong>
-                {config.showDate && !Number.isNaN(date.valueOf()) && <time dateTime={review.created_at}>
-                    {date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })}
-                </time>}
-            </div>
+            {config.showReply && review.ownerReply && <blockquote className="rw-owner-reply"><strong>Response from the owner</strong><p>{review.ownerReply}</p></blockquote>}
         </div>
-        <WidgetStars rating={review.rating} />
-        <p className={expanded || review.content.length <= 180 ? "rw-review-text" : "rw-review-text rw-clamped"}>{review.content || "This customer left a rating without a written review."}</p>
-        {review.content.length > 180 && <button className="rw-text-button" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>
-            {expanded ? "Read less" : "Read more"}
-        </button>}
-        {config.showPhotos && !!review.photos?.length && <div className="rw-photos">
-            {review.photos.slice(0, 4).map((photo, index) => <a key={photo} href={photo} target="_blank" rel="noopener noreferrer" aria-label={`Open review photo ${index + 1}`}>
-                <Image src={photo} alt={`Photo from ${review.author_name}'s review`} width={120} height={90} unoptimized />
-            </a>)}
-        </div>}
-        {review.external_url && <a className="rw-original" href={review.external_url} target="_blank" rel="noopener noreferrer">View on {review.platform === "google" ? "Google" : review.platform}</a>}
+        {(slider || bubble) && <WidgetAuthor review={review} config={config} />}
     </article>;
 }

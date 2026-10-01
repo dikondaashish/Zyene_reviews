@@ -2,9 +2,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({ admin: vi.fn(), rollups: vi.fn() }));
 vi.mock("@/lib/db/supabase/admin", () => ({ createAdminClient: mocks.admin }));
 vi.mock("@/lib/reviews/visible-review-rollups", () => ({ fetchVisibleReviewRollupsByBusinessIds: mocks.rollups }));
+vi.mock("@/lib/widgets/summary-cache", () => ({ readWidgetSummaries: vi.fn().mockResolvedValue(undefined) }));
 import { loadWidgetPageData } from "@/app/w/[slug]/load-widget-page-data";
 
-function database(status = "active") {
+function database(status = "active", responseStatus = "pending") {
     const filters: Record<string, unknown> = {};
     const from = vi.fn((table: string) => {
         let columns = "";
@@ -16,7 +17,7 @@ function database(status = "active") {
                 organization: { plan: "starter", plan_status: "active" } }, error: null }),
             limit: async () => columns.includes("review_platforms")
                 ? { data: null, error: { code: "PGRST201" } }
-                : { data: [{ id: "review-a", rating: 5, text: "Great service", platform: "google" }], error: null },
+                : { data: [{ id: "review-a", rating: 5, text: "Great service", platform: "google", response_text: "Thank you", response_status: responseStatus }], error: null },
         };
         return query;
     });
@@ -28,6 +29,14 @@ beforeEach(() => {
     mocks.rollups.mockResolvedValue(new Map([["business-a", { totalVisible: 10, averageRatingVisible: 4.7 }]]));
 });
 describe("public widget data", () => {
+    it("publishes posted owner replies and keeps pending drafts private", async () => {
+        database();
+        const pending = await loadWidgetPageData("example", "carousel", true);
+        expect(pending.kind === "ok" && pending.formattedReviews[0].ownerReply).toBeUndefined();
+        database("active", "responded");
+        const posted = await loadWidgetPageData("example", "carousel", true);
+        expect(posted.kind === "ok" && posted.formattedReviews[0].ownerReply).toBe("Thank you");
+    });
     it("loads visible tenant reviews without ambiguous platform relationships", async () => {
         const { filters } = database();
         const data = await loadWidgetPageData("example", "carousel");

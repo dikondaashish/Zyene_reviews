@@ -17,7 +17,7 @@
     var wrapper = document.createElement("div");
     wrapper.className = "zyene-reviews-widget";
     if (floating) {
-        wrapper.style.cssText = "position:fixed;bottom:16px;z-index:99999;width:360px;max-width:calc(100vw - 32px);border-radius:16px;overflow:hidden;box-shadow:0 4px 24px #0002;";
+        wrapper.style.cssText = "position:fixed;bottom:0;z-index:99999;width:240px;max-width:100vw;";
         wrapper.style[position] = "16px";
         frame.style.height = "220px";
         frame.loading = "eager";
@@ -25,14 +25,22 @@
     wrapper.appendChild(frame);
     script.parentNode.insertBefore(wrapper, script);
     var desiredHeight = floating ? 220 : 650;
+    var expanded = false;
+    var normalFrameStyle = frame.style.cssText;
     function resize() {
-        frame.style.height = Math.min(desiredHeight, floating ? Math.max(200, window.innerHeight - 32) : 20000) + "px";
+        frame.style.height = (expanded ? window.innerHeight : Math.min(desiredHeight, floating ? Math.max(200, window.innerHeight - 32) : 20000)) + "px";
     }
     function receive(event) {
         if (event.origin !== origin || event.source !== frame.contentWindow) return;
         var data = event.data;
         if (!data || data.type !== "zyene-widget-size" || typeof data.height !== "number" || !Number.isFinite(data.height)) return;
         desiredHeight = Math.max(80, Math.min(20000, Math.ceil(data.height)));
+        if (typeof data.expanded === "boolean" && data.expanded !== expanded) {
+            expanded = data.expanded;
+            frame.style.cssText = expanded ? "position:fixed;inset:0;z-index:2147483647;display:block;width:100vw;height:100vh;border:0;color-scheme:normal;" : normalFrameStyle;
+            if (!floating) wrapper.style.minHeight = expanded ? desiredHeight + "px" : "";
+        }
+        if (floating && typeof data.width === "number" && Number.isFinite(data.width)) wrapper.style.width = Math.max(100, Math.min(480, Math.ceil(data.width))) + "px";
         resize();
     }
     window.addEventListener("message", receive);

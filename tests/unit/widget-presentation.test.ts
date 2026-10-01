@@ -14,7 +14,7 @@ const data: PublicWidgetData = {
 };
 describe("widget review presentation", () => {
     it("filters cards without changing the genuine overall Google rating", () => {
-        const result = widgetPresentation(data, parseWidgetConfig({ textOnly: true }));
+        const result = widgetPresentation(data, parseWidgetConfig({ textOnly: true, minRating: 4 }));
         expect(result.reviews.map(r => r.id)).toEqual(["1"]);
         expect(result).toMatchObject({ count: 30, rating: 4.5 });
     });

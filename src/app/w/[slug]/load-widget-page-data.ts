@@ -2,6 +2,8 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
 import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
 import type { PublicWidgetReview } from "@/lib/widgets/public-types";
+import { readWidgetSummaries } from "@/lib/widgets/summary-cache";
+import type { PublicWidgetData } from "@/lib/widgets/public-types";
 
 export type WidgetReview = PublicWidgetReview;
 
@@ -20,6 +22,7 @@ export type WidgetPageData =
           reviewCount: number;
           averageRating: number;
           formattedReviews: WidgetReview[];
+          summaries?: PublicWidgetData["summaries"];
       };
 
 export function sanitizeExternalReviewUrl(value: string | null | undefined): string | undefined {
@@ -82,7 +85,9 @@ export async function loadWidgetPageData(
             review_date,
             author_avatar_url,
             review_photo_urls,
-            ai_summary
+            ai_summary,
+            response_text,
+            response_status
         `)
         .eq("business_id", business.id)
         .eq("is_visible", true)
@@ -101,8 +106,9 @@ export async function loadWidgetPageData(
         created_at: r.review_date || r.created_at || "",
         external_url: sanitizeExternalReviewUrl(r.external_url),
         avatar: sanitizeExternalReviewUrl(r.author_avatar_url),
-        photos: (r.review_photo_urls || []).map(sanitizeExternalReviewUrl).filter((url): url is string => !!url).slice(0, 8),
+        photos: Array.from(new Set((r.review_photo_urls || []).map(sanitizeExternalReviewUrl).filter((url): url is string => !!url))).slice(0, 8),
         summary: r.ai_summary?.slice(0, 500) || undefined,
+        ownerReply: r.response_status === "responded" ? r.response_text?.slice(0, 5000) || undefined : undefined,
     }));
 
     const reviewCount = vr.totalVisible;
@@ -127,5 +133,6 @@ export async function loadWidgetPageData(
         reviewCount,
         averageRating,
         formattedReviews,
+        summaries: configurable ? await readWidgetSummaries(slug, formattedReviews) : undefined,
     };
 }

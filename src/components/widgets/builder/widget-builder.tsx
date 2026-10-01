@@ -3,12 +3,13 @@
 import { useState } from "react";
 import { LayoutTemplate, LayoutGrid, MessageSquare, PanelTop, Star, Palette, Settings2, Sparkles, Code2, Save } from "lucide-react";
 import { toast } from "sonner";
-import { parseWidgetConfig, type WidgetConfig } from "@/lib/widgets/config";
+import { isBadgeLayout, parseWidgetConfig, type WidgetConfig } from "@/lib/widgets/config";
 import { WidgetTemplatePicker } from "@/components/widgets/builder/widget-template-picker";
 import { WidgetContentControls } from "@/components/widgets/builder/widget-content-controls";
 import { WidgetDesignControls } from "@/components/widgets/builder/widget-design-controls";
 import { WidgetBuilderPreview } from "@/components/widgets/builder/widget-builder-preview";
 import { WidgetInstall } from "@/components/widgets/builder/widget-install";
+import { WidgetSummaryGenerate } from "@/components/widgets/builder/widget-summary-generate";
 import "@/components/widgets/builder/widget-builder.css";
 
 const sections = [
@@ -20,6 +21,7 @@ const sections = [
 export function WidgetBuilder({ businessSlug, initialConfig }: { businessSlug: string; initialConfig?: WidgetConfig }) {
     const [config, setConfig] = useState(() => initialConfig || parseWidgetConfig(null));
     const [section, setSection] = useState("Templates");
+    const [summaryVersion, setSummaryVersion] = useState(0);
     const update = <K extends keyof WidgetConfig>(key: K, value: WidgetConfig[K]) => setConfig(previous => ({ ...previous, [key]: value }));
     const save = () => {
         try { localStorage.setItem(`zyene-widget:${businessSlug}`, JSON.stringify(config)); toast.success("Draft saved in this browser"); }
@@ -36,9 +38,10 @@ export function WidgetBuilder({ businessSlug, initialConfig }: { businessSlug: s
                     section === "Install" ? <WidgetInstall slug={businessSlug} config={config} /> :
                         ["Layout", "Theme", "Settings"].includes(section) ? <WidgetDesignControls config={config} update={update} section={section} onChange={setConfig} /> :
                             <WidgetContentControls config={config} update={update} section={section} />}
+                {section === "AI Features" && !isBadgeLayout(config.layout) && <WidgetSummaryGenerate slug={businessSlug} source={config.source} onGenerated={() => setSummaryVersion(v => v + 1)} />}
             </div>
             <div className="wb-controls-footer"><button className="wb-primary" onClick={() => setSection("Install")}><Code2 size={18} /> Add to website</button></div>
         </aside>
-        <WidgetBuilderPreview slug={businessSlug} config={config} />
+        <WidgetBuilderPreview key={summaryVersion} slug={businessSlug} config={config} onSetupSummary={() => setSection("AI Features")} />
     </div>;
 }

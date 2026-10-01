@@ -20,11 +20,14 @@ export function widgetStyle(config: WidgetConfig): CSSProperties {
     const tint = config.theme.includes("tint");
     return {
         "--rw-accent": config.accent, "--rw-stars": config.stars,
-        "--rw-bg": dark ? "#111111" : "#ffffff", "--rw-text": dark ? "#ffffff" : "#111111",
-        "--rw-card": tint ? `color-mix(in srgb, ${config.accent} ${dark ? "18" : "9"}%, ${dark ? "#111111" : "#ffffff"})` : dark ? "#242424" : "#f5f5f5",
-        "--rw-muted": dark ? "#b7b7b7" : "#666666", "--rw-border": dark ? "#444444" : "#dedede",
+        "--rw-bg": config.background || (dark ? "#000000" : "#ffffff"), "--rw-text": config.textColor || (dark ? "#ffffff" : "#111111"),
+        "--rw-card": config.cardColor || (tint ? `color-mix(in srgb, ${config.accent} ${dark ? "18" : "9"}%, ${dark ? "#111111" : "#ffffff"})` : dark ? "#242424" : "#f5f5f7"),
+        "--rw-muted": config.mutedColor || (dark ? "#b7b7b7" : "#999999"), "--rw-border": config.borderColor || (dark ? "#444444" : "#cccccc"),
+        "--rw-verified": config.verifiedColor || config.accent,
+        "--rw-badge-size": `${config.badgeSize}px`, "--rw-text-lines": config.textLength === "extended" ? 8 : 4,
         "--rw-radius": `${config.radius}px`, "--rw-gap": `${config.gap}px`,
         "--rw-cols": config.columns || 3, "--rw-tablet-cols": Math.min(config.columns || 2, 2),
-        maxWidth: config.width, fontSize: config.fontSize, fontFamily: config.font,
+        maxWidth: config.width, fontSize: config.fontSize,
+        fontFamily: config.font === "sans-serif" ? 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' : config.font,
     } as CSSProperties;
 }

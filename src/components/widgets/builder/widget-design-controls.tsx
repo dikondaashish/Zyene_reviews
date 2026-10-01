@@ -3,18 +3,31 @@ import { Choice, NumberField, Toggle, type WidgetFieldsProps } from "@/component
 import { WidgetTemplatePicker } from "@/components/widgets/builder/widget-template-picker";
 
 export function WidgetDesignControls({ config, update, section, onChange }: WidgetFieldsProps & { section: string; onChange: (config: WidgetConfig) => void }) {
+    const horizontal = config.layout === "carousel" || config.layout === "slider";
+    const sticker = ["light-sticker", "bold-sticker", "tag-sticker", "oval-sticker", "achievement"].includes(config.layout);
     if (section === "Layout") return <>
         <WidgetTemplatePicker config={config} onChange={onChange} layoutsOnly />
         <NumberField label="Maximum width (px)" value={config.width} min={280} max={1600} onChange={v => update("width", v)} />
-        {!isBadgeLayout(config.layout) && <NumberField label="Desktop columns (0 = auto)" value={config.columns} min={0} max={6} onChange={v => update("columns", v)} />}
-        <NumberField label="Item spacing (px)" value={config.gap} min={0} max={40} onChange={v => update("gap", v)} />
+        {["carousel", "grid", "masonry"].includes(config.layout) && <NumberField label="Desktop columns (0 = auto)" value={config.columns} min={0} max={6} onChange={v => update("columns", v)} />}
+        {!isBadgeLayout(config.layout) && <NumberField label="Item spacing (px)" value={config.gap} min={0} max={40} onChange={v => update("gap", v)} />}
         {isBadgeLayout(config.layout) ? <>
             <Toggle label="Floating on website" value={config.floating} onChange={v => update("floating", v)} />
             <Choice label="Position" value={config.position} options={["left", "right"]} onChange={v => update("position", v as WidgetConfig["position"])} />
-        </> : <>
+            <Choice label="Alignment" value={config.badgeAlign} options={["left", "center", "right"]} onChange={v => update("badgeAlign", v as WidgetConfig["badgeAlign"])} />
+            {sticker && <NumberField label="Sticker size (px)" value={config.badgeSize} min={80} max={240} onChange={v => update("badgeSize", v)} />}
+            {(sticker || config.layout === "card-badge") && <Choice label="Label" value={config.badgeLabel} options={["none", "excellent", "google-rating"]} onChange={v => update("badgeLabel", v as WidgetConfig["badgeLabel"])} />}
+            {config.layout !== "review-request" && <><Toggle label="Google icon" value={config.showGoogleIcon} onChange={v => update("showGoogleIcon", v)} />
+                <Choice label="Click action" value={config.clickAction} options={["popup", "google", "none"]} onChange={v => update("clickAction", v as WidgetConfig["clickAction"])} /></>}
+        </> : horizontal && <>
             <Toggle label="Navigation arrows" value={config.showArrows} onChange={v => update("showArrows", v)} />
             <Toggle label="Pagination" value={config.showPagination} onChange={v => update("showPagination", v)} />
-            <Toggle label="Auto slide every 5 seconds" value={config.autoplay} onChange={v => update("autoplay", v)} />
+            <Toggle label="Auto slide" value={config.autoplay} onChange={v => update("autoplay", v)} />
+            <NumberField label="Auto slide interval (seconds)" value={config.autoplayDelay} min={2} max={20} onChange={v => update("autoplayDelay", v)} />
+            <NumberField label="Animation duration (ms)" value={config.animationDuration} min={150} max={1500} onChange={v => update("animationDuration", v)} />
+            {config.layout === "carousel" && <><NumberField label="Rows" value={config.rows} min={1} max={6} onChange={v => update("rows", v)} />
+                <NumberField label="Rows on mobile" value={config.mobileRows} min={1} max={3} onChange={v => update("mobileRows", v)} /></>}
+            <Choice label="Scroll mode" value={config.scrollMode} options={["item", "page"]} onChange={v => update("scrollMode", v as WidgetConfig["scrollMode"])} />
+            <Toggle label="Swipe navigation" value={config.swipe} onChange={v => update("swipe", v)} />
         </>}
         <p className="wb-note">Layouts adjust to the website width. Carousels support touch swipes and keyboard scrolling.</p>
     </>;
@@ -26,7 +39,7 @@ export function WidgetDesignControls({ config, update, section, onChange }: Widg
     </>;
     return <>
         <div className="wb-theme-grid">{WIDGET_THEMES.map(theme => <button type="button" key={theme} aria-pressed={config.theme === theme}
-            className={`wb-theme ${config.theme === theme ? "wb-selected" : ""}`} onClick={() => update("theme", theme)}>
+            className={`wb-theme ${config.theme === theme ? "wb-selected" : ""}`} onClick={() => onChange({ ...config, theme, background: undefined, cardColor: undefined, textColor: undefined, mutedColor: undefined, borderColor: undefined })}>
             <span className={`wb-theme-sample wb-theme-${theme}`}><b>G</b><span>★★★★★</span><i style={{ background: config.accent }} /></span>{theme.replaceAll("-", " ")}
         </button>)}</div>
         <label className="wb-color">Accent color<input type="color" value={config.accent} onChange={e => update("accent", e.target.value)} /></label>
@@ -34,5 +47,9 @@ export function WidgetDesignControls({ config, update, section, onChange }: Widg
             <button key={color} type="button" aria-label={`Use ${color} accent`} aria-pressed={config.accent === color} style={{ background: color }} onClick={() => update("accent", color)} />)}</div>
         <label className="wb-color">Star color<input type="color" value={config.stars} onChange={e => update("stars", e.target.value)} /></label>
         <NumberField label="Corner radius (px)" value={config.radius} min={0} max={32} onChange={v => update("radius", v)} />
+        <details className="wb-custom-theme"><summary>Customize theme</summary>{([
+            ["background", "Widget background"], ["cardColor", "Review background"], ["textColor", "Text color"],
+            ["mutedColor", "Date and count color"], ["borderColor", "Review outline"], ["verifiedColor", "Google mark color"],
+        ] as const).map(([key, label]) => <label className="wb-color" key={key}>{label}<input type="color" value={config[key] || (key === "background" ? "#ffffff" : key === "cardColor" ? "#f5f5f7" : key === "verifiedColor" ? config.accent : "#111111")} onChange={e => update(key, e.target.value)} /></label>)}</details>
     </>;
 }

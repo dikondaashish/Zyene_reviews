@@ -22,9 +22,17 @@ describe("configurable review widgets", () => {
     });
     it("rejects CSS injection and bounds expensive rendering options", () => {
         const config = parseWidgetConfig({ accent: 'red; background:url(https://evil.test)', limit: 99999, columns: 100 });
-        expect(config.accent).toBe("#197bff");
+        expect(config.accent).toBe("#3366ff");
         expect(config.limit).toBeLessThanOrEqual(100);
         expect(config.columns).toBeLessThanOrEqual(6);
+    });
+    it("uses the observed template hierarchy instead of reusing unrelated layouts", () => {
+        const template = (id: string) => parseWidgetConfig(WIDGET_TEMPLATES.find(t => t.id === id)?.config);
+        expect(template("floating")).toMatchObject({ layout: "card-badge", floating: true, position: "left" });
+        expect(template("sidebar")).toMatchObject({ layout: "carousel", columns: 1, width: 340, theme: "outline", showButton: false });
+        expect(template("dark-carousel")).toMatchObject({ reviewStyle: "bubble", showHeader: false, background: "#000000" });
+        expect(template("simple")).toMatchObject({ theme: "outline", sourceStyle: "inline", showPhotos: true });
+        expect(template("halloween")).toMatchObject({ theme: "dark", stars: "#fbbc04", showVerified: false });
     });
     it("recovers malformed or oversized configuration and ignores privilege options", () => {
         expect(parseWidgetConfig("{broken")).toEqual(parseWidgetConfig(null));

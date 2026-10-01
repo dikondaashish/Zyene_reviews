@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+vi.mock("@/lib/widgets/summary-cache", () => ({ readWidgetSummaries: vi.fn().mockResolvedValue(undefined) }));
 
 const mocks = vi.hoisted(() => ({ update: vi.fn(), terminate: vi.fn() }));
 vi.mock("@/lib/db/supabase/admin", () => ({ createAdminClient: () => ({
@@ -7,7 +8,7 @@ vi.mock("@/lib/db/supabase/admin", () => ({ createAdminClient: () => ({
             select: () => chain, eq: () => chain, gte: () => chain, order: () => chain,
             update: (data: unknown) => { mocks.update(data); return chain; },
             maybeSingle: async () => ({ data: table === "businesses"
-                ? { id: "business", name: "Sample business", organization: { plan: "starter", plan_status: "active" } }
+                ? { id: "business", name: "Sample business", status: "active", organization: { plan: "starter", plan_status: "active" } }
                 : { id: "6df3e0d4-343c-4aa6-a6c9-306d4523f80a" }, error: null }),
             limit: async () => ({ data: [{ id: "review", rating: 5, text: "  ", author_name: "Reviewer", created_at: "2026-09-01", review_platforms: { platform: "google" } }] }),
             then: (resolve: (v: unknown) => void) => resolve({ error: null }),
