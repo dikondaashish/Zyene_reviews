@@ -40,6 +40,8 @@ export interface GoogleReview {
     /** Customer-uploaded photos attached to the review (shape can vary by API payload) */
     photos?: Array<{ photoUri?: string; photoUrl?: string; url?: string }>;
     photoUrls?: string[];
+    /** Official GBP media attached to this review; videos have a videoUrl. */
+    reviewMediaItems?: Array<{ thumbnailUrl?: string; thumbnailLabel?: string; videoUrl?: string }>;
     /** Optional rich fields seen in some GBP responses */
     reviewQuestions?: Array<{ question?: string; answer?: string; rating?: string; displayName?: string }>;
     stayDate?: { year?: number; month?: number };

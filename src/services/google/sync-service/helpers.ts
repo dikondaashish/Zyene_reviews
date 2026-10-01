@@ -46,11 +46,7 @@ function cleanStringArray(values: Array<string | null | undefined>): string[] | 
     return cleaned.length > 0 ? Array.from(new Set(cleaned)) : null;
 }
 
-export function googleReviewPhotoUrls(review: GoogleReview): string[] | null {
-    const fromObjects = (review.photos || []).flatMap((p) => [p.photoUri, p.photoUrl, p.url]);
-    const fromArray = review.photoUrls || [];
-    return cleanStringArray([...fromObjects, ...fromArray]);
-}
+export { googleReviewPhotoUrls } from "@/services/google/review-media";
 
 export function googleAttributeChips(review: GoogleReview): string[] | null {
     const raw = review as unknown as Record<string, unknown>;

@@ -1,4 +1,5 @@
 import { createHash } from "crypto";
+import { googleReviewPhotoUrls } from "@/services/google/review-media";
 import type { GoogleReview } from "@/services/google/business-profile";
 
 function stableStringify(value: unknown): string {
@@ -27,6 +28,7 @@ function stableStringify(value: unknown): string {
 export function computeReviewHash(review: GoogleReview): string {
     const payload = {
         starRating: review.starRating,
+        reviewPhotoUrls: googleReviewPhotoUrls(review),
         comment: review.comment ?? null,
         reviewReplyComment: review.reviewReply?.comment ?? null,
         reviewReplyUpdateTime: review.reviewReply?.updateTime ?? null,
