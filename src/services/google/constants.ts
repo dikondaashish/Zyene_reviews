@@ -23,11 +23,10 @@ export const PAGINATION_DELAY_MS = 300;
 export const AI_ANALYSIS_BATCH_SIZE = 5;
 
 /**
- * Lock TTL passed to `acquire_platform_lock`. Must exceed worst-case Google review sync
- * (many pages + API delays); otherwise `locked_until` expires mid-run and overlapping jobs
- * or retries see spurious "Sync already in progress" / stolen locks.
+ * Lock TTL passed to `acquire_platform_lock`. Keep this below the database function's
+ * 30-minute safety cap and aligned with stale-run reconciliation.
  */
-export const STALE_LOCK_TIMEOUT_MINUTES = 45;
+export const STALE_LOCK_TIMEOUT_MINUTES = 25;
 
 /**
  * Bootstrap hands off to Inngest with `sync_status: running` and `locked_until: null`.
