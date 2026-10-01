@@ -10,6 +10,7 @@ interface TeamTableMobileLayoutProps {
     members: TeamTableMember[];
     currentUserId: string;
     currentUserRole: string;
+    canDeleteDeveloper?: boolean;
     isLoadingId: string | null;
     onRoleChange: (memberId: string, role: string) => void;
     onResendInvite: (inviteId: string) => void;
@@ -46,6 +47,7 @@ export function TeamTableMobileLayout(props: TeamTableMobileLayoutProps) {
                                 member={member}
                                 currentUserId={currentUserId}
                                 currentUserRole={currentUserRole}
+                                    canDeleteDeveloper={props.canDeleteDeveloper}
                                 isLoadingId={isLoadingId}
                                 onRoleChange={onRoleChange}
                                 onResendInvite={onResendInvite}
@@ -54,7 +56,7 @@ export function TeamTableMobileLayout(props: TeamTableMobileLayoutProps) {
                         </div>
                         <div className="flex flex-wrap gap-2">
                             <Badge variant={teamTableRoleBadgeVariant(member.role)} className="capitalize">
-                                {member.role}
+                                {member.role === "owner" && member.roleLabel === "developer" ? "Developer" : member.role}
                             </Badge>
                             <Badge
                                 variant={member.status === "active" ? "default" : "secondary"}

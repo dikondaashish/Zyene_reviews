@@ -1,4 +1,6 @@
 import { logger } from "@/lib/logger";
+import { z } from "zod";
+import { deleteDeveloper } from "@/services/team/delete-developer";
 import { createClient } from "@/lib/db/supabase/server";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
@@ -7,6 +9,18 @@ import { canManageBusinessTeam, isElevatedBusinessRole } from "@/lib/team/busine
 export { patchTeamMember } from "@/services/team/team-member-update-api";
 
 export async function deleteTeamMember(
+    request: Request,
+    context: { params: Promise<{ id: string }> }
+) {
+    try {
+        return await deleteAuthorizedTeamMember(request, context);
+    } catch (error) {
+        logger.error({ err: error }, "[team/delete] Removal failed");
+        return apiError("Unable to remove member", { status: 500 });
+    }
+}
+
+async function deleteAuthorizedTeamMember(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
@@ -19,9 +33,11 @@ export async function deleteTeamMember(
         return apiError("Unauthorized", { status: 401 });
     }
 
-    const { id } = await params;
     const url = new URL(request.url);
-    const type = url.searchParams.get("type") || "member"; // 'member' or 'invite'
+    const parsed = z.object({ id: z.string().uuid(), type: z.enum(["member", "invite"]) })
+        .safeParse({ ...(await params), type: url.searchParams.get("type") ?? "member" });
+    if (!parsed.success) return apiError("Invalid member request", { status: 400 });
+    const { id, type } = parsed.data;
     const { businessId, organization } = await getActiveBusinessId();
     if (!businessId) {
         return apiError("No active business selected", { status: 400 });
@@ -35,7 +51,7 @@ export async function deleteTeamMember(
         .eq("status", "active")
         .single();
 
-    if (reqError || !canManageBusinessTeam(requester.role)) {
+    if (reqError || !requester || !canManageBusinessTeam(requester.role)) {
         return apiError("Forbidden", { status: 403 });
     }
 
@@ -76,7 +92,7 @@ export async function deleteTeamMember(
     } else {
         const { data: targetMember } = await supabase
             .from("business_members")
-            .select("id, role, user_id, users(full_name, email)")
+            .select("*, users(full_name, email)")
             .eq("id", id)
             .eq("business_id", requester.business_id)
             .maybeSingle();
@@ -85,6 +101,9 @@ export async function deleteTeamMember(
         }
         if (targetMember.user_id === user.id) {
             return apiError("You cannot remove yourself", { status: 400 });
+        }
+        if ((targetMember as typeof targetMember & { role_label?: string }).role_label === "developer") {
+            return deleteDeveloper(supabase, businessId, id);
         }
         if (targetMember.role === "owner") {
             return apiError("Owner cannot be removed", { status: 403 });

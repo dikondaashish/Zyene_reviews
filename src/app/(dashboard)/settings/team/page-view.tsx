@@ -42,6 +42,7 @@ export default async function TeamSettingsPage() {
       members={data.members}
       currentUserId={data.currentUserId}
       currentUserRole={data.currentUserRole}
+      canDeleteDeveloper={data.canDeleteDeveloper}
       activeMembersCount={data.activeMembersCount}
       pendingInvitesCount={data.pendingInvitesCount}
       maxMembers={data.maxMembers}

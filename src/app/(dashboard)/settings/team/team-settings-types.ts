@@ -1,6 +1,7 @@
 export type TeamPanelMember = {
     id: string;
     role: string;
+    roleLabel?: string | null;
     type: "member" | "invite";
     userId?: string;
     user?: { full_name: string; email: string; avatar_url?: string };

@@ -71,7 +71,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           businessName={activeBusiness?.name}
         />
         <DashboardLayoutClient header={headerContent}>
-          <ErrorBoundary>{children}</ErrorBoundary>
+          <ErrorBoundary key={`${organization?.id ?? "none"}:${activeBusinessId ?? "none"}`}>{children}</ErrorBoundary>
         </DashboardLayoutClient>
       </SidebarInset>
       <MobileSidebarFAB />

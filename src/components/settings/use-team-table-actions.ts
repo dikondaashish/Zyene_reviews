@@ -5,7 +5,9 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { teamTableResendInviteWithToasts } from "./team-table-invite-resend";
 
-export function useTeamTableActions() {
+import type { TeamTableMember } from "@/components/settings/team-table-types";
+
+export function useTeamTableActions(members: TeamTableMember[]) {
     const router = useRouter();
     const [isLoadingId, setIsLoadingId] = useState<string | null>(null);
 
@@ -47,11 +49,15 @@ export function useTeamTableActions() {
 
     const handleRemove = useCallback(
         async (memberId: string, type: "member" | "invite") => {
+            const isDeveloper = members.some((m) => m.id === memberId && m.roleLabel === "developer");
             const msg =
                 type === "invite"
                     ? "Cancel this invitation? They will not be able to use the old link after you remove it."
-                    : "Are you sure you want to remove this member?";
+                    : isDeveloper
+                      ? "Delete Developer? This removes their access to this organization and all its businesses. Their other organizations are unchanged."
+                      : "Are you sure you want to remove this member?";
             if (!confirm(msg)) return;
+            const successMessage = isDeveloper ? "Developer removed from organization" : "Member removed";
             setIsLoadingId(memberId);
             try {
                 const response = await fetch(`/api/team/${memberId}?type=${type}`, {
@@ -59,16 +65,15 @@ export function useTeamTableActions() {
                 });
 
                 if (!response.ok) throw new Error("Failed to remove member");
-                toast.success("Member removed");
+                toast.success(successMessage);
                 router.refresh();
             } catch (error: unknown) {
                 const message = error instanceof Error ? error.message : "An unexpected error occurred";
                 toast.error(message);
-            } finally {
-                setIsLoadingId(null);
             }
+            setIsLoadingId(null);
         },
-        [router],
+        [router, members],
     );
 
     return { isLoadingId, handleRoleChange, handleResendInvite, handleRemove };

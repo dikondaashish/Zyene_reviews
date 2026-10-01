@@ -1,6 +1,7 @@
 export type TeamMemberRow = {
     id: string;
     role: string;
+    roleLabel?: string | null;
     type: "member" | "invite";
     userId?: string;
     user?: {
@@ -24,6 +25,7 @@ export type TeamManagementPanelProps = {
     members: TeamMemberRow[];
     currentUserId: string;
     currentUserRole: string;
+    canDeleteDeveloper?: boolean;
     activeMembersCount: number;
     pendingInvitesCount: number;
     maxMembers: number;

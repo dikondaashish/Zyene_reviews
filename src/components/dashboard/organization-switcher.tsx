@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Building2, ChevronsUpDown, Check } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 import {
     DropdownMenu,
@@ -29,21 +30,23 @@ export function OrganizationSwitcher({
     activeOrganizationId,
 }: OrganizationSwitcherProps) {
     const router = useRouter()
-    const [switching, setSwitching] = React.useState(false)
+    const [switching, startTransition] = React.useTransition()
 
     const activeOrg =
         organizations.find((org) => org.id === activeOrganizationId) || organizations[0]
     const canSwitch = organizations.length > 1
 
-    const handleSwitch = async (org: OrganizationSwitcherProps["organizations"][number]) => {
-        if (org.id === activeOrganizationId || !org.defaultBusinessId) return
-        setSwitching(true)
-        try {
-            await setActiveBusiness(org.defaultBusinessId)
-            router.refresh()
-        } finally {
-            setSwitching(false)
-        }
+    const handleSwitch = (org: OrganizationSwitcherProps["organizations"][number]) => {
+        const businessId = org.defaultBusinessId
+        if (switching || org.id === activeOrganizationId || !businessId) return
+        startTransition(async () => {
+            try {
+                await setActiveBusiness(businessId)
+                router.refresh()
+            } catch {
+                toast.error("Could not switch organization. Please try again.")
+            }
+        })
     }
 
     if (!canSwitch) {

@@ -3,6 +3,7 @@
 import * as React from "react"
 import { ChevronsUpDown, Store, Plus, Check } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 import {
     DropdownMenu,
@@ -29,16 +30,20 @@ interface BusinessSwitcherProps {
 
 export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses = 1 }: BusinessSwitcherProps) {
     const router = useRouter()
-    const [switching, setSwitching] = React.useState(false)
+    const [switching, startTransition] = React.useTransition()
 
     const activeBusiness = businesses.find((b) => b.id === activeBusinessId) || businesses[0]
 
-    const handleSwitch = async (businessId: string) => {
-        if (businessId === activeBusinessId) return
-        setSwitching(true)
-        await setActiveBusiness(businessId)
-        router.refresh()
-        setSwitching(false)
+    const handleSwitch = (businessId: string) => {
+        if (switching || businessId === activeBusinessId) return
+        startTransition(async () => {
+            try {
+                await setActiveBusiness(businessId)
+                router.refresh()
+            } catch {
+                toast.error("Could not switch business. Please try again.")
+            }
+        })
     }
 
     return (

@@ -46,12 +46,15 @@ export async function patchTeamMember(
 
     const { data: targetMember } = await supabase
         .from("business_members")
-        .select("id, role, user_id, users(full_name, email)")
+        .select("*, users(full_name, email)")
         .eq("id", id)
         .eq("business_id", requester.business_id)
         .maybeSingle();
     if (!targetMember) {
         return apiError("Member not found", { status: 404 });
+    }
+    if ((targetMember as typeof targetMember & { role_label?: string }).role_label === "developer") {
+        return apiError("Developer roles are protected. An organization owner can use Delete Developer.", { status: 403 });
     }
     if (targetMember.user_id === user.id) {
         return apiError("You cannot change your own role here", { status: 400 });

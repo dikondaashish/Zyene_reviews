@@ -41,6 +41,7 @@ export function TeamManagementPanel(props: TeamManagementPanelProps) {
 
                 <TabsContent value="members" className="pt-4">
                     <TeamTable
+                        canDeleteDeveloper={props.canDeleteDeveloper}
                         members={props.members}
                         currentUserId={props.currentUserId}
                         currentUserRole={props.currentUserRole}

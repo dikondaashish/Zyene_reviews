@@ -1,6 +1,7 @@
 export interface TeamTableMember {
     id: string;
     role: string;
+    roleLabel?: string | null;
     type: "member" | "invite";
     /** Present for rows backed by `business_members` (not pending invites). */
     userId?: string;
@@ -17,4 +18,5 @@ export interface TeamTableProps {
     members: TeamTableMember[];
     currentUserId: string;
     currentUserRole: string;
+    canDeleteDeveloper?: boolean;
 }

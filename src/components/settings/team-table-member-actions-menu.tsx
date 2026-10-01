@@ -22,6 +22,7 @@ interface TeamTableMemberActionsMenuProps {
     member: TeamTableMember;
     currentUserId: string;
     currentUserRole: string;
+    canDeleteDeveloper?: boolean;
     isLoadingId: string | null;
     onRoleChange: (memberId: string, role: string) => void;
     onResendInvite: (inviteId: string) => void;
@@ -32,19 +33,20 @@ export function TeamTableMemberActionsMenu({
     member,
     currentUserId,
     currentUserRole,
+    canDeleteDeveloper = false,
     isLoadingId,
     onRoleChange,
     onResendInvite,
     onRemove,
 }: TeamTableMemberActionsMenuProps) {
     const canManage = canManageBusinessTeam(currentUserRole);
-    const canOpen = teamTableCanOpenActionsMenu(member, currentUserId, currentUserRole);
+    const canOpen = teamTableCanOpenActionsMenu(member, currentUserId, currentUserRole, canDeleteDeveloper);
     const showOwnerAdminRoleItems = teamTableShowOwnerAdminRoleItems(member, currentUserRole);
     const showManagerRoleItems = teamTableShowManagerRoleItems(member, currentUserRole);
 
     if (!canOpen) {
         return canManage ? (
-            <span className="text-xs text-muted-foreground">,</span>
+            <span className="text-xs text-muted-foreground">—</span>
         ) : (
             <span className="text-xs text-muted-foreground">View only</span>
         );
@@ -97,7 +99,7 @@ export function TeamTableMemberActionsMenu({
                 )}
                 {(showOwnerAdminRoleItems || showManagerRoleItems) && <DropdownMenuSeparator />}
                 <DropdownMenuItem className="text-destructive" onClick={() => onRemove(member.id, member.type)}>
-                    Remove
+                    {member.roleLabel === "developer" ? "Delete Developer" : "Remove"}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

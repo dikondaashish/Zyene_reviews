@@ -18,6 +18,7 @@ interface TeamTableDesktopTableProps {
     members: TeamTableMember[];
     currentUserId: string;
     currentUserRole: string;
+    canDeleteDeveloper?: boolean;
     isLoadingId: string | null;
     onRoleChange: (memberId: string, role: string) => void;
     onResendInvite: (inviteId: string) => void;
@@ -61,7 +62,7 @@ export function TeamTableDesktopTable(props: TeamTableDesktopTableProps) {
                             </TableCell>
                             <TableCell>
                                 <Badge variant={teamTableRoleBadgeVariant(member.role)} className="capitalize">
-                                    {member.role}
+                                    {member.role === "owner" && member.roleLabel === "developer" ? "Developer" : member.role}
                                 </Badge>
                             </TableCell>
                             <TableCell>
@@ -81,6 +82,7 @@ export function TeamTableDesktopTable(props: TeamTableDesktopTableProps) {
                                     member={member}
                                     currentUserId={currentUserId}
                                     currentUserRole={currentUserRole}
+                                    canDeleteDeveloper={props.canDeleteDeveloper}
                                     isLoadingId={isLoadingId}
                                     onRoleChange={onRoleChange}
                                     onResendInvite={onResendInvite}

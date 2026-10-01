@@ -18,6 +18,7 @@ export type TeamSettingsPageData =
           members: TeamPanelMember[];
           currentUserId: string;
           currentUserRole: string;
+          canDeleteDeveloper: boolean;
           activeMembersCount: number;
           pendingInvitesCount: number;
           maxMembers: number;
@@ -52,6 +53,10 @@ export async function loadTeamSettingsPage(userId: string): Promise<TeamSettings
         return { kind: "no-membership", businessName: business.name ?? null };
     }
 
+    const { data: orgMember } = await supabase.from("organization_members").select("*")
+        .eq("organization_id", organization?.id ?? "").eq("user_id", userId).eq("status", "active").maybeSingle();
+    const canDeleteDeveloper = !!orgMember && ["owner", "ORG_OWNER"].includes(orgMember.role)
+        && (orgMember as typeof orgMember & { role_label?: string | null }).role_label !== "developer";
     const canInviteTeam = canManageBusinessTeam(currentUserMember.role);
 
     const [
@@ -61,11 +66,7 @@ export async function loadTeamSettingsPage(userId: string): Promise<TeamSettings
         supabase
             .from("business_members")
             .select(`
-            id,
-            role,
-            status,
-            created_at,
-            user_id,
+            *,
             users (
                 full_name,
                 email,
@@ -89,6 +90,7 @@ export async function loadTeamSettingsPage(userId: string): Promise<TeamSettings
         ...(members || []).map((m) => ({
             id: m.id,
             role: m.role,
+            roleLabel: (m as typeof m & { role_label?: string | null }).role_label,
             type: "member" as const,
             userId: m.user_id,
             user: memberUserFromJoin(m.users),
@@ -125,6 +127,7 @@ export async function loadTeamSettingsPage(userId: string): Promise<TeamSettings
         canInviteTeam,
         members: combinedMembers,
         currentUserId: userId,
+        canDeleteDeveloper,
         currentUserRole: currentUserMember.role,
         activeMembersCount: (members || []).length,
         pendingInvitesCount: (invites || []).length,
