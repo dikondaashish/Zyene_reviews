@@ -131,6 +131,8 @@ Run the **`seo`** skill before committing marketing changes (see §5).
 
 ## 4. Before finishing any task
 
+After completing and verifying a feature or update, **commit and push the task's changes to GitHub by default**. The user does not need to request a push separately. Follow any explicit instruction to keep work local or uncommitted, and stage only changes belonging to the task.
+
 GitHub CI already runs the full `typecheck` + all tests + `pnpm build`. Do **not** repeat that locally after every small change — a production webpack build takes several minutes and is the usual stall.
 
 **Default (most tasks):**
