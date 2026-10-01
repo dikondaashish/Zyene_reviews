@@ -1,7 +1,6 @@
 "use client";
 
 import { BillingRenewalSummary } from "@/components/settings/billing-renewal-summary";
-import { BillingInvoiceHistory } from "@/components/settings/billing-invoice-history";
 import { useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useLanguage } from "@/lib/language-context";
@@ -99,6 +98,8 @@ export function BillingClient({
             />
             <BillingCurrentPlanCard
                 billing={b}
+                organizationId={organizationId}
+                canManageBilling={canManageBilling}
                 currentPlan={currentPlan}
                 planStatus={planStatus}
                 hasStripeCustomer={hasStripeCustomer}
@@ -109,7 +110,6 @@ export function BillingClient({
                 permissionTooltip={permissionTooltip}
             />
             <BillingRenewalSummary summary={renewalSummary} />
-            <BillingInvoiceHistory organizationId={organizationId} canManageBilling={canManageBilling} hasStripeCustomer={hasStripeCustomer} />
             <BillingPlanPickerSection
                 billing={b}
                 interval={interval}

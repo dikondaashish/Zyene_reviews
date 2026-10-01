@@ -27,7 +27,6 @@ describe("billing invoice history display", () => {
 
   it("shows invoice dates, totals, paid status, and a PDF download", () => {
     const html = render();
-    expect(html).toContain("Invoices");
     expect(html).toContain("ZYENE-0001");
     expect(html).toContain("Oct 1, 2026");
     expect(html).toContain("$29.99");

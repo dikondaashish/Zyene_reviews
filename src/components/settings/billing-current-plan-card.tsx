@@ -10,17 +10,20 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CreditCard, ExternalLink, Loader2, Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Plan } from "@/services/stripe/plans";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { BillingDerivedState } from "@/components/settings/billing-client-derived";
 import { BillingCurrentPlanUsageSection } from "@/components/settings/billing-current-plan-usage-section";
+import { BillingCurrentPlanFooter } from "@/components/settings/billing-current-plan-footer";
 
 type BillingDict = Dictionary["billing"];
 
 export function BillingCurrentPlanCard(props: {
     billing: BillingDict;
+    organizationId: string;
+    canManageBilling: boolean;
     currentPlan: Plan | null;
     planStatus: string;
     hasStripeCustomer: boolean;
@@ -32,6 +35,8 @@ export function BillingCurrentPlanCard(props: {
 }) {
     const {
         billing: b,
+        organizationId,
+        canManageBilling,
         currentPlan,
         planStatus,
         hasStripeCustomer,
@@ -102,26 +107,9 @@ export function BillingCurrentPlanCard(props: {
                 <BillingCurrentPlanUsageSection billing={b} displayUsage={displayUsage} />
             </CardContent>
 
-            {hasStripeCustomer && (
-                <CardFooter className="flex-col items-stretch gap-2 border-t bg-muted/30 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="text-xs text-muted-foreground order-2 sm:order-1">{b.portal_help}</p>
-                    <Button
-                        variant="outline"
-                        onClick={() => void onManageSubscription()}
-                        disabled={loadingPortal || !!permissionTooltip}
-                        title={permissionTooltip}
-                        className="min-h-11 gap-2 order-1 sm:order-2 shrink-0"
-                    >
-                        {loadingPortal ? (
-                            <Loader2 className="animate-spin size-4" />
-                        ) : (
-                            <CreditCard className="size-4" />
-                        )}
-                        {b.manage_subscription}
-                        <ExternalLink className="opacity-70 size-3" />
-                    </Button>
-                </CardFooter>
-            )}
+            <BillingCurrentPlanFooter billing={b} organizationId={organizationId} canManageBilling={canManageBilling}
+                hasStripeCustomer={hasStripeCustomer} loadingPortal={loadingPortal}
+                onManageSubscription={onManageSubscription} permissionTooltip={permissionTooltip} />
 
             {!isPaidPlan && !hasStripeCustomer && (
                 <CardFooter className="bg-primary/10 dark:bg-primary/15 border-t flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4">
