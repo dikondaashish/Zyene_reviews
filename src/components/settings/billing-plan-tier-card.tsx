@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Crown, Zap, Loader2 } from "lucide-react";
+import { Crown, Zap, Loader2 } from "lucide-react";
 import * as PricingCard from "@/components/ui/pricing-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,7 @@ import { isPaidPlanTierUpgrade } from "@/services/stripe/plans";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { BILLING_PLAN_PROFESSIONAL_ANCHOR_ID } from "@/lib/billing/business-limit-upgrade-href";
 import { sameProductTier } from "@/components/settings/billing-plan-helpers";
+import { BillingPlanFeatureList } from "@/components/settings/billing-plan-feature-list";
 
 type BillingDict = Dictionary["billing"];
 
@@ -70,7 +71,7 @@ export function BillingPlanTierCard(props: {
         <PricingCard.Card
             id={isPro ? BILLING_PLAN_PROFESSIONAL_ANCHOR_ID : undefined}
             className={cn(
-                "relative flex max-w-none flex-col scroll-mt-28 size-full p-5 backdrop-blur-none dark:bg-card",
+                "relative flex min-w-0 max-w-none flex-col scroll-mt-28 size-full p-4 backdrop-blur-none dark:bg-card lg:row-span-2 lg:grid lg:grid-rows-subgrid xl:p-5",
                 isPro && "border-primary/40",
                 isExactCurrent && subscriptionHealthy && "ring-2 ring-primary/60"
             )}
@@ -80,7 +81,7 @@ export function BillingPlanTierCard(props: {
                     <Badge className="bg-primary text-primary-foreground border-0">Most popular</Badge>
                 </div>
             )}
-            <PricingCard.Header glassEffect={false} className="relative z-10 mb-5 rounded-none border-0 bg-transparent p-0 dark:bg-transparent">
+            <PricingCard.Header glassEffect={false} className="relative z-10 mb-5 rounded-none border-0 bg-transparent p-0 dark:bg-transparent [&>div]:flex [&>div]:h-full [&>div]:flex-col">
                 <PricingCard.Plan className="mb-3 flex-wrap gap-2">
                     <PricingCard.PlanName className="text-base font-semibold">
                         {isPro ? <Crown className="text-primary" aria-hidden /> : <Zap className="text-primary" aria-hidden />}
@@ -91,9 +92,9 @@ export function BillingPlanTierCard(props: {
                 <PricingCard.Description className="mb-5 text-sm leading-6 text-muted-foreground">
                     {isPro ? "For growing multi-location businesses." : "Perfect for single-location businesses."}
                 </PricingCard.Description>
-                <PricingCard.Price>
+                <PricingCard.Price className="flex-wrap">
                     {plan.originalPrice && plan.originalPrice > (plan.price || 0) && (
-                        <PricingCard.OriginalPrice className="ml-0 text-sm">${plan.originalPrice}</PricingCard.OriginalPrice>
+                        <PricingCard.OriginalPrice className="ml-0 w-full text-sm">${plan.originalPrice}</PricingCard.OriginalPrice>
                     )}
                     <PricingCard.MainPrice>${plan.price}</PricingCard.MainPrice>
                     <PricingCard.Period>{intervalLabel}</PricingCard.Period>
@@ -104,15 +105,18 @@ export function BillingPlanTierCard(props: {
                 {showProProratedHint && (
                     <p className="text-xs text-muted-foreground mb-3">{b.pro_prorated_no_trial_badge}</p>
                 )}
+                {showTrialEndsOnUpgradeHint && (
+                    <p className="text-xs text-warning-foreground dark:text-warning-foreground mb-3 leading-snug">{b.trial_ends_on_upgrade_notice}</p>
+                )}
                 {isExactCurrent && subscriptionHealthy ? (
-                    <Button variant="outline" className="min-h-11 w-full font-semibold" disabled>
+                    <Button variant="outline" className="mt-auto min-h-11 w-full font-semibold" disabled>
                         {b.current_plan_badge}
                     </Button>
                 ) : (
                     <Button
                         type="button"
                         className={cn(
-                            "min-h-11 w-full font-semibold text-primary-foreground",
+                            "mt-auto min-h-11 w-full font-semibold text-primary-foreground",
                             "bg-primary",
                             "hover:bg-primary/90 disabled:opacity-60"
                         )}
@@ -124,22 +128,8 @@ export function BillingPlanTierCard(props: {
                         {planCta}
                     </Button>
                 )}
-                {showTrialEndsOnUpgradeHint && (
-                    <p className="text-xs text-warning-foreground dark:text-warning-foreground mt-2 leading-snug">{b.trial_ends_on_upgrade_notice}</p>
-                )}
             </PricingCard.Header>
-            <PricingCard.Body className="border-t border-border px-0 pb-0 pt-5">
-                <PricingCard.List className="space-y-2">
-                    {plan.features.map((feature) => (
-                        <PricingCard.ListItem key={feature} className="text-sm leading-6 gap-2">
-                            <span className="mt-0.5 shrink-0">
-                                <CheckCircle2 className="text-success size-3.5" aria-hidden />
-                            </span>
-                            <span>{feature}</span>
-                        </PricingCard.ListItem>
-                    ))}
-                </PricingCard.List>
-            </PricingCard.Body>
+            <BillingPlanFeatureList features={plan.features} />
         </PricingCard.Card>
     );
 }

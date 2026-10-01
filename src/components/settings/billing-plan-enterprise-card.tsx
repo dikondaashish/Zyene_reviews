@@ -1,12 +1,13 @@
 "use client";
 
-import { CheckCircle2, Building2, Mail } from "lucide-react";
+import { Building2, Mail } from "lucide-react";
 import * as PricingCard from "@/components/ui/pricing-card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { Plan } from "@/services/stripe/plans";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { enterpriseSalesGmailComposeUrl } from "@/lib/enterprise-sales-contact";
+import { BillingPlanFeatureList } from "@/components/settings/billing-plan-feature-list";
 
 type BillingDict = Dictionary["billing"];
 
@@ -21,11 +22,11 @@ export function BillingPlanEnterpriseCard(props: {
     return (
         <PricingCard.Card
             className={cn(
-                "relative flex w-full max-w-none flex-col p-5 backdrop-blur-none dark:bg-card",
+                "relative flex min-w-0 w-full max-w-none flex-col p-4 backdrop-blur-none dark:bg-card lg:row-span-2 lg:grid lg:grid-rows-subgrid xl:p-5",
                 isEnterpriseOrg && subscriptionHealthy && "ring-2 ring-primary/60"
             )}
         >
-            <PricingCard.Header glassEffect={false} className="relative z-10 mb-5 rounded-none border-0 bg-transparent p-0 dark:bg-transparent">
+            <PricingCard.Header glassEffect={false} className="relative z-10 mb-5 rounded-none border-0 bg-transparent p-0 dark:bg-transparent [&>div]:flex [&>div]:h-full [&>div]:flex-col">
                 <PricingCard.Plan className="mb-3 flex-wrap gap-2">
                     <PricingCard.PlanName className="text-base font-semibold">
                         <Building2 className="text-muted-foreground" aria-hidden />
@@ -40,7 +41,7 @@ export function BillingPlanEnterpriseCard(props: {
                     <PricingCard.MainPrice className="text-2xl">Custom</PricingCard.MainPrice>
                 </PricingCard.Price>
                 {isEnterpriseOrg && subscriptionHealthy ? (
-                    <Button variant="outline" className="min-h-11 w-full font-semibold" disabled>
+                    <Button variant="outline" className="mt-auto min-h-11 w-full font-semibold" disabled>
                         {b.current_plan_badge}
                     </Button>
                 ) : (
@@ -48,25 +49,14 @@ export function BillingPlanEnterpriseCard(props: {
                         href={enterpriseSalesGmailComposeUrl()}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={cn(buttonVariants({ variant: "outline", size: "default" }), "w-full gap-2 font-semibold")}
+                        className={cn(buttonVariants({ variant: "outline", size: "default" }), "mt-auto min-h-11 w-full gap-2 font-semibold")}
                     >
                         <Mail className="size-4" aria-hidden />
                         Contact sales
                     </a>
                 )}
             </PricingCard.Header>
-            <PricingCard.Body className="border-t border-border px-0 pb-0 pt-5">
-                <PricingCard.List>
-                    {enterprisePlan.features.map((feature) => (
-                        <PricingCard.ListItem key={feature}>
-                            <span className="mt-0.5 shrink-0">
-                                <CheckCircle2 className="text-success size-4" aria-hidden />
-                            </span>
-                            <span>{feature}</span>
-                        </PricingCard.ListItem>
-                    ))}
-                </PricingCard.List>
-            </PricingCard.Body>
+            <BillingPlanFeatureList features={enterprisePlan.features} />
         </PricingCard.Card>
     );
 }

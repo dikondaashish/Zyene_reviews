@@ -1,0 +1,25 @@
+Tool: built-in image generation
+Reference: public/brand/mascot/zyene-mascot-master-v1.png
+Transparent background: true
+
+Create a professional production CHARACTER REFERENCE SHEET for the Zyene Reviews platform using the supplied image as the exact approved character identity. This is an identity-preserving expansion of the supplied mascot, NOT a redesign. Deliver one high-resolution square PNG with genuinely transparent background, a clean 3 by 3 grid of nine full-body character renders with generous gutters and margin. No text, labels, borders, panels, shadows on the ground, or backdrop. Render at the largest practical resolution.
+
+IDENTITY LOCK — reproduce this exact character: bright Zyene orange soft rounded five-lobed body, large thick top lobe curved forward and to its own left (viewer right in the reference), two broad rounded side lobes acting as arms, two huge plump oval lower lobes folded forward like feet. Slightly pear-shaped central torso, squat chubby proportions. One large recessed dark warm-charcoal oval face panel across the center front; two small warm-ivory circular dot eyes and one small curved ivory smile. TWO detached smooth orange droplets of different sizes always floating just above and to the side of the curled top lobe; these move with the character's orientation. Fine tactile satin silicone microtexture and broad soft highlights, same orange and same smooth volumes as the input. Body is entirely orange, face charcoal, facial marks ivory. No outfit, accessories, fingers, articulated joints, ears, tails, extra limbs, or additional characters within a cell. Preserve thickness and shape of the curled top; do not turn the top into a narrow antenna or a horn. Preserve the reference's lovable calm personality. Use consistent camera scale and studio lighting in all cells.
+
+GRID, reading left to right:
+Row 1 = MODEL TURNAROUND:
+1. FRONT, neutral friendly smile, upright centered body, both feet and both side lobes visible, top curl visible.
+2. RIGHT SIDE PROFILE, the SAME body viewed at 90 degrees, demonstrate the protruding feet, thickness of body and top curl, oval face panel only visible as a narrow edge. Side view should remain recognizable and anatomically coherent.
+3. BACK, view at 180 degrees of the SAME body, uninterrupted orange rounded back without any face on the back, same two broad side lobes, same two feet, top curl and droplets rotate consistently.
+
+Row 2 = FRIENDLY PLATFORM INTERACTIONS:
+4. WELCOME: match the supplied three-quarter view and delighted smile, one side lobe raised in a friendly wave.
+5. LISTENING: three-quarter front view, small gentle body tilt, attentive ivory dot eyes and soft closed smile, side lobes relaxed.
+6. THINKING: front three-quarter view, one rounded side lobe held gently near the lower face, eyes glance upward with subtle unequal height, tiny thoughtful ivory mouth, no extra symbols.
+
+Row 3 = PLATFORM STATES:
+7. SUCCESS: both side lobes lifted, body lifted in a joyful small hop, happy crescent-shaped ivory eyes and a broad ivory curved smile; keep all five lobes and droplets intact. No confetti.
+8. NEEDS HELP: gentle concerned expression, slightly lowered side lobes, softly curved ivory mouth and small ivory eyes. Supportive, not crying or distressed.
+9. RESTING: relaxed folded lower lobes, side lobes resting, eyes are small closed ivory arcs, tiny peaceful smile.
+
+LAYOUT QUALITY: uniform cell sizes, all full-body poses entirely inside their own cell, all droplets included, absolutely no overlap between cells, consistent apparent character height across all views, subtle variation only in pose and expression. High-end 3D model sheet with convincing volume, close fidelity to supplied mascot, soft lighting on the figures, crisp clean cutout edges, transparent negative spaces between every figure. Background must have alpha transparency, not a painted checkerboard. No text of any kind.

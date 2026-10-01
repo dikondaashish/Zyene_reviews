@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import { readableForeground } from "@/lib/design/contrast";
 import { cn } from "@/lib/utils";
 import { formatTagForDisplay } from "@/lib/review-flow/tag-display";
@@ -19,7 +20,7 @@ export function TagsStepTagGrid({
 }: TagsStepTagGridProps) {
     const selected = new Set(selectedTags);
     return (
-        <div className="flex flex-wrap justify-center gap-2">
+        <div className="grid grid-cols-2 gap-2.5">
             {tags.map((tag) => {
                 const { emoji, label } = formatTagForDisplay(tag, categoryKey);
                 return (
@@ -29,11 +30,11 @@ export function TagsStepTagGrid({
                         aria-pressed={selected.has(tag)}
                         onClick={() => onToggleTag(tag)}
                         className={cn(
-                            "inline-flex items-center gap-1.5 px-3.5 py-2 min-h-10 rounded-full text-sm font-medium transition-all duration-200",
-                            "border-2 active:scale-95",
+                            "relative flex min-w-0 items-center gap-2 px-3 py-3 min-h-14 rounded-xl text-sm font-medium text-left transition-colors duration-150 motion-reduce:transition-none",
+                            "border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                             selected.has(tag)
-                                ? "text-primary-foreground dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] scale-105 shadow-md"
-                                : "bg-background text-muted-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
+                                ? "text-primary-foreground"
+                                : "bg-background text-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
                         )}
                         style={{
                             backgroundColor: selected.has(tag) ? resolvedBrandColor : undefined,
@@ -41,8 +42,9 @@ export function TagsStepTagGrid({
                             borderColor: selected.has(tag) ? resolvedBrandColor : undefined,
                         }}
                     >
-                        <span className="text-base leading-none" aria-hidden>{emoji}</span>
-                        <span>{label}</span>
+                        <span className="shrink-0 text-lg leading-none" aria-hidden>{emoji}</span>
+                        <span className="min-w-0 flex-1 break-words leading-snug">{label}</span>
+                        {selected.has(tag) && <Check className="size-3.5 shrink-0" aria-hidden="true" />}
                     </button>
                 );
             })}

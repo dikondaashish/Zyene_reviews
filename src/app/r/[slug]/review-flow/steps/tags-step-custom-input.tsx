@@ -36,7 +36,7 @@ export function TagsStepCustomInput({
                     TAG_ACTION_BTN_CLASS,
                     "flex items-center justify-center gap-2",
                     showCustomInput || addedCustomTags.length > 0
-                        ? "text-primary-foreground dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] shadow-md"
+                        ? "text-primary-foreground"
                         : "text-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
                 )}
                 aria-expanded={showCustomInput}
@@ -79,7 +79,7 @@ export function TagsStepCustomInput({
                             enterKeyHint="done"
                             maxLength={80}
                             disabled={addedCustomTags.length >= MAX_CUSTOM_TAG_CHIPS}
-                            className="flex-1 min-w-0 h-11 px-3 rounded-xl border-2 border-border bg-background text-foreground text-sm focus:border-primary focus:outline-none dark:bg-[rgb(30,41,59)] dark:border-white/10"
+                            className="flex-1 min-w-0 h-11 px-3 rounded-xl border-2 border-border bg-background text-foreground text-base focus:border-primary focus:outline-none dark:bg-[rgb(30,41,59)] dark:border-white/10"
                         />
                         <button
                             type="button"
@@ -108,18 +108,18 @@ export function TagsStepCustomInput({
                     {addedCustomTags.map((tag, index) => (
                         <span
                             key={tag}
-                            className="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1.5 rounded-full text-sm font-medium border-2 text-primary-foreground"
+                            className="inline-flex max-w-full items-center gap-1.5 pl-3 pr-1 py-0.5 rounded-full text-sm font-medium border-2 text-primary-foreground"
                             style={{
                                 backgroundColor: resolvedBrandColor,
                                 color: readableForeground(resolvedBrandColor),
                                 borderColor: resolvedBrandColor,
                             }}
                         >
-                            {tag}
+                            <span className="min-w-0 break-words">{tag}</span>
                             <button
                                 type="button"
                                 onClick={() => onRemoveCustomTag(index)}
-                                className="rounded-full p-0.5 hover:bg-black/10 dark:hover:bg-white/20"
+                                className="flex size-11 shrink-0 items-center justify-center rounded-full hover:bg-black/10 dark:hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
                                 aria-label={`Remove ${tag}`}
                             >
                                 <X className="size-3.5" />

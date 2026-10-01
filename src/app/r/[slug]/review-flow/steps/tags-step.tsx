@@ -34,7 +34,7 @@ export function TagsStep({
     onBack,
 }: TagsStepProps) {
     return (
-        <div className="px-6 pt-7 pb-0 animate-in fade-in slide-in-from-right-4 duration-400">
+        <div className="px-4 pt-5 pb-0 sm:px-6 sm:pt-6 animate-in fade-in duration-200 motion-reduce:animate-none">
             <div className="flex flex-col gap-4">
                 <TagsStepProgressHeader
                     resolvedBrandColor={resolvedBrandColor}
@@ -73,7 +73,7 @@ export function TagsStep({
                     />
                 )}
 
-                <TagsStepContinueButton hasTagSelection={hasTagSelection} onContinue={onContinue} />
+                <TagsStepContinueButton resolvedBrandColor={resolvedBrandColor} hasTagSelection={hasTagSelection} onContinue={onContinue} />
             </div>
 
             <TagsStepBackButton onBack={onBack} />

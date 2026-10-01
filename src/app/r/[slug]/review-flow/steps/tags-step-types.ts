@@ -25,4 +25,4 @@ export interface TagsStepProps {
 }
 
 export const TAG_ACTION_BTN_CLASS =
-    "w-full min-h-11 rounded-xl text-sm font-semibold transition-all duration-200 border-2 active:scale-[0.98]";
+    "flex w-full items-center justify-center gap-2 min-h-12 px-3 py-3 rounded-xl text-sm font-semibold transition-colors duration-150 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none";

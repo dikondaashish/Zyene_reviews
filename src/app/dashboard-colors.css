@@ -1,9 +1,9 @@
 /* Measured in OptiMonk's signed-in dashboard, campaigns, and analytics.
  * Scope at the document root so body portals (menus, dialogs, and toasts)
- * inherit the same palette. The marker disappears on non-app routes.
+ * inherit the same palette. Public loaders can opt in with data-app-palette.
  * Dark values are a Zyene adaptation, not an observed OptiMonk dark theme.
  */
-:root:has([data-dashboard-shell], [data-app-onboarding]) {
+:root:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) {
   color-scheme: light;
   --background: #ffffff;
   --foreground: #23262a;
@@ -53,7 +53,7 @@
   --tour-overlay-scrim: rgb(35 38 42 / 58%);
 }
 
-:root.dark:has([data-dashboard-shell], [data-app-onboarding]) {
+:root.dark:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) {
   color-scheme: dark;
   --background: #17191c;
   --foreground: #f9fafb;
@@ -93,12 +93,12 @@
 }
 
 /* Selected labels and links share the requested brand orange. */
-:root:has([data-dashboard-shell], [data-app-onboarding]) .text-primary {
+:root:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) .text-primary {
   color: var(--primary-text);
 }
 
-:root:has([data-dashboard-shell], [data-app-onboarding]) [data-slot="button"][data-variant="default"]:hover:not(:disabled),
-:root:has([data-dashboard-shell], [data-app-onboarding]) .cta-button:hover:not(:disabled) {
+:root:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) [data-slot="button"][data-variant="default"]:hover:not(:disabled),
+:root:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) .cta-button:hover:not(:disabled) {
   background-color: var(--primary-hover);
   border-color: var(--primary-hover);
 }
@@ -149,7 +149,7 @@
 }
 
 @media (prefers-contrast: more) {
-  :root:has([data-dashboard-shell], [data-app-onboarding]) {
+  :root:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) {
     --muted-foreground: var(--foreground);
     --border: var(--foreground);
     --input: var(--foreground);

@@ -4,6 +4,7 @@
 @import "shadcn/tailwind.css";
 @import "./dashboard-colors.css";
 @import "../components/dashboard/dashboard-loading.css";
+@import "../components/brand/zyene-pet-loader.css";
 
 @custom-variant dark (&:is(.dark *));
 

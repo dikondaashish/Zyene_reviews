@@ -1,0 +1,48 @@
+.zyene-pet-loader-mascot {
+  transform-origin: center bottom;
+}
+
+.zyene-pet-loader-dot {
+  opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .zyene-pet-loader-mascot {
+    animation: zyene-pet-hop 1.8s ease-in-out infinite;
+  }
+
+  .zyene-pet-loader-shadow {
+    animation: zyene-pet-shadow 1.8s ease-in-out infinite;
+  }
+
+  .zyene-pet-loader-dot {
+    animation: zyene-pet-dot 1.2s ease-in-out infinite;
+  }
+
+  .zyene-pet-loader-dot:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .zyene-pet-loader-dot:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+}
+
+@keyframes zyene-pet-hop {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  25% { transform: translateY(-8px) rotate(4deg); }
+  50% { transform: translateY(0) rotate(-3deg); }
+  70% { transform: translateY(-4px) rotate(2deg); }
+  85% { transform: translateY(0) rotate(0); }
+}
+
+@keyframes zyene-pet-shadow {
+  0%, 50%, 85%, 100% { transform: scaleX(1); opacity: 1; }
+  25% { transform: scaleX(0.7); opacity: 0.5; }
+  70% { transform: scaleX(0.85); opacity: 0.7; }
+}
+
+@keyframes zyene-pet-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
