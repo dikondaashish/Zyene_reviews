@@ -7,6 +7,7 @@ export interface UsageStat {
 }
 
 export interface BillingClientProps {
+    organizationId: string;
     renewalSummary?: BillingRenewalSummary | null;
     currentPlan: Plan | null;
     organizationPlanId: string;

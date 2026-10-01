@@ -39,5 +39,5 @@ export default async function BillingPage() {
     );
   }
 
-  return <BillingClient {...data.clientProps} />;
+  return <BillingClient key={activeOrganizationId} organizationId={activeOrganizationId} {...data.clientProps} />;
 }
