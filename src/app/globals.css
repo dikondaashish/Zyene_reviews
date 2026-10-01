@@ -5,6 +5,7 @@
 @import "./dashboard-colors.css";
 @import "../components/dashboard/dashboard-loading.css";
 @import "../components/brand/zyene-pet-loader.css";
+@import "../components/public/access-error.css";
 
 @custom-variant dark (&:is(.dark *));
 

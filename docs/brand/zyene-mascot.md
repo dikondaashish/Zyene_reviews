@@ -8,6 +8,7 @@ Preserve its identity in future assets.
 - Approved master image: [transparent PNG](../../public/brand/mascot/zyene-mascot-master-v1.png).
 - Character sheet: [transparent PNG](../../public/brand/mascot/zyene-mascot-character-sheet-v1.png).
 - Sheet generation prompt: [exact prompt](./zyene-mascot-character-sheet-v1.prompt.txt).
+- Production needs-help pose: [transparent PNG](../../public/brand/mascot/zyene-mascot-needs-help-v1.png), [exact prompt](./zyene-mascot-needs-help-v1.prompt.txt).
 
 Use the master as the primary identity reference and the sheet for pose and
 expression direction. If details differ, the master wins. The ribbon, comet,
@@ -96,6 +97,6 @@ Reusable prompt starter:
 - Keep UI state understandable without the artwork.
 - If animated later, use gentle movement and respect reduced-motion preferences.
 
-Created with the built-in image-generation tool. Only source assets and this
-guide were added; the platform UI has not been changed.
-
+Created with the built-in image-generation tool. The master appears in the
+public review loader. The needs-help pose appears on inactive review pages
+with two gentle calls for attention, then rests. Reduced motion skips movement.

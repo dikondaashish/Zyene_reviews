@@ -1,0 +1,24 @@
+.review-access-mascot {
+  transform-origin: 50% 80%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .review-access-mascot {
+    animation: review-access-call 2.4s ease-in-out 2;
+  }
+
+  .review-access-callout {
+    animation: review-access-prompt 2.4s ease-in-out 2;
+  }
+}
+
+@keyframes review-access-call {
+  0%, 65%, 100% { transform: rotate(0) translateY(0); }
+  20% { transform: rotate(-4deg) translateY(-2px); }
+  40% { transform: rotate(3deg) translateY(0); }
+}
+
+@keyframes review-access-prompt {
+  0%, 65%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-3px); }
+}

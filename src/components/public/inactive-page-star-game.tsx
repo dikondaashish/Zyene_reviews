@@ -23,10 +23,23 @@ export function InactivePageStarGame({ businessName }: { businessName: string })
     }
 
     return (
-        <section aria-labelledby="star-game-heading" className="border-t border-border px-6 py-6 sm:px-10">
-            <div className="flex items-center justify-between gap-3">
+        <section aria-labelledby="review-visitor-heading" className="border-t border-border px-6 py-6 sm:px-8">
+            <div className="space-y-2">
+                <h2 id="review-visitor-heading" className="text-sm font-semibold">Help the owner get this page ready</h2>
+                <p className="text-xs leading-5 text-muted-foreground">Let them know you stopped by to leave a review.</p>
+                <Button type="button" variant="outline" className="min-h-11 w-full gap-2 whitespace-normal rounded-lg" onClick={copyMessage}>
+                    {copyState === "copied" ? <Check className="size-4" aria-hidden="true" /> : <Copy className="size-4" aria-hidden="true" />}
+                    {copyState === "copied" ? "Message copied" : "Copy a message for the owner"}
+                </Button>
+                <p role="status" className="text-xs leading-5 text-muted-foreground">
+                    {copyState === "copied" ? "Ready to paste into a message to the business." : copyState === "error" ? "Couldn’t copy automatically. Select and copy the message below." : "Copy it, then send it to the business yourself."}
+                </p>
+                {copyState === "error" && <textarea aria-label="Message for the business owner" readOnly value={message} rows={4} className="w-full resize-y rounded-lg border border-border bg-background p-3 text-sm" onFocus={(event) => event.currentTarget.select()} />}
+            </div>
+
+            <div className="mt-6 flex items-center justify-between gap-3 border-t border-border pt-5">
                 <div>
-                    <h2 id="star-game-heading" className="text-sm font-semibold">A little fun before you go</h2>
+                    <h3 id="star-game-heading" className="text-sm font-semibold">A little fun before you go</h3>
                     <p className="mt-1 text-xs leading-5 text-muted-foreground">Catch five stars. Just a game, not a review.</p>
                 </div>
                 <Star className="size-5 shrink-0 text-primary" aria-hidden="true" />
@@ -65,18 +78,6 @@ export function InactivePageStarGame({ businessName }: { businessName: string })
                 </div>
             )}
 
-            <div className="mt-5 space-y-2">
-                <p className="text-sm font-medium">Help the owner get this page ready</p>
-                <p className="text-xs leading-5 text-muted-foreground">Let them know you stopped by to leave a review.</p>
-                <Button type="button" variant="ghost" className="min-h-11 w-full gap-2 rounded-xl border border-border" onClick={copyMessage}>
-                    {copyState === "copied" ? <Check className="size-4" aria-hidden="true" /> : <Copy className="size-4" aria-hidden="true" />}
-                    {copyState === "copied" ? "Message copied" : "Copy a message for the owner"}
-                </Button>
-                <p role="status" className="text-xs leading-5 text-muted-foreground">
-                    {copyState === "copied" ? "Ready to paste into a message to the business." : copyState === "error" ? "Couldn’t copy automatically. Select and copy the message below." : "Copy it, then send it to the business yourself."}
-                </p>
-                {copyState === "error" && <textarea aria-label="Message for the business owner" readOnly value={message} rows={4} className="w-full resize-y rounded-lg border border-border bg-background p-3 text-sm" onFocus={(event) => event.currentTarget.select()} />}
-            </div>
         </section>
     );
 }
