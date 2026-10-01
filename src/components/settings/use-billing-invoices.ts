@@ -11,6 +11,8 @@ export function useBillingInvoices(organizationId: string, enabled: boolean) {
         getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
         enabled,
         staleTime: 30_000,
+        refetchOnMount: "always",
+        refetchOnWindowFocus: "always",
         retry: false,
     });
 }

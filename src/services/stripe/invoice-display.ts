@@ -33,9 +33,13 @@ export function toBillingInvoice(invoice: Stripe.Invoice, isFreeTrial: boolean):
         currencyFormatters.set(invoice.currency, formatter);
     }
     const fractionDigits = ["isk", "ugx"].includes(invoice.currency) ? 2 : formatter.resolvedOptions().maximumFractionDigits ?? 2;
+    const hostedUrl = safeUrl(invoice.hosted_invoice_url);
     return {
         id: invoice.id, number: invoice.number, createdAt: new Date(invoice.created * 1000).toISOString(),
         amount: formatter.format(invoice.total / 10 ** fractionDigits), status: invoice.status ?? "draft", isFreeTrial,
-        pdfUrl: safeUrl(invoice.invoice_pdf), hostedUrl: safeUrl(invoice.hosted_invoice_url),
+        pdfUrl: safeUrl(invoice.invoice_pdf), hostedUrl,
+        // Stripe's hosted page provides receipt PDFs and handles the live payment state.
+        receiptUrl: invoice.status === "paid" && invoice.amount_paid > 0 && !isFreeTrial ? hostedUrl : null,
+        paymentUrl: invoice.status === "open" && invoice.amount_remaining > 0 ? hostedUrl : null,
     };
 }

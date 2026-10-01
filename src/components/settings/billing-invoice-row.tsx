@@ -1,6 +1,5 @@
-import { Download, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { BillingInvoiceActions } from "@/components/settings/billing-invoice-actions";
 import { cn } from "@/lib/utils";
 import type { BillingInvoice } from "@/types/billing-invoices";
 
@@ -11,7 +10,7 @@ const labels: Record<BillingInvoice["status"], string> = {
 export function BillingInvoiceRow({ invoice }: { invoice: BillingInvoice }) {
     const label = invoice.number || invoice.id;
     return (
-        <li className="flex min-w-0 flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <li className="grid min-w-0 gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center lg:grid-cols-[minmax(0,1fr)_auto_auto]">
             <div className="min-w-0 flex-1">
                 <p className="break-all text-sm font-semibold">{label}</p>
                 <time dateTime={invoice.createdAt} className="mt-1 block text-sm text-muted-foreground">
@@ -24,19 +23,7 @@ export function BillingInvoiceRow({ invoice }: { invoice: BillingInvoice }) {
                     {invoice.isFreeTrial ? "Free trial" : labels[invoice.status]}
                 </Badge>
             </div>
-            {invoice.pdfUrl ? (
-                <a href={invoice.pdfUrl} download target="_blank" rel="noopener noreferrer"
-                    aria-label={`Download PDF for invoice ${label}`}
-                    className={cn(buttonVariants({ variant: "outline" }), "min-h-11 gap-2 sm:ml-2")}>
-                    <Download className="size-4" aria-hidden />Download PDF
-                </a>
-            ) : invoice.hostedUrl ? (
-                <a href={invoice.hostedUrl} target="_blank" rel="noopener noreferrer"
-                    aria-label={`View invoice ${label}`}
-                    className={cn(buttonVariants({ variant: "outline" }), "min-h-11 gap-2 sm:ml-2")}>
-                    <ExternalLink className="size-4" aria-hidden />View invoice
-                </a>
-            ) : <span className="text-sm text-muted-foreground sm:ml-2">PDF not available yet</span>}
+            <BillingInvoiceActions invoice={invoice} />
         </li>
     );
 }

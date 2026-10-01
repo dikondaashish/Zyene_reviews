@@ -18,7 +18,7 @@ const member = (role = "owner", customerId: string | null = "cus_active") => ({
 });
 const invoice = (overrides = {}) => ({
   id: "in_newest", number: "ZYENE-0001", customer: "cus_active", status: "paid",
-  created: 1790812800, total: 2999, currency: "usd",
+  created: 1790812800, total: 2999, amount_paid: 2999, amount_remaining: 0, currency: "usd",
   invoice_pdf: "https://pay.stripe.com/invoice/example/pdf",
   hosted_invoice_url: "https://invoice.stripe.com/i/example",
   customer_email: "private@example.com", metadata: { secret: "hidden" }, ...overrides,
@@ -43,6 +43,7 @@ describe("billing invoice history", () => {
       id: "in_newest", number: "ZYENE-0001", createdAt: "2026-10-01T00:00:00.000Z",
       amount: "$29.99", status: "paid", isFreeTrial: false, pdfUrl: "https://pay.stripe.com/invoice/example/pdf",
       hostedUrl: "https://invoice.stripe.com/i/example",
+      receiptUrl: "https://invoice.stripe.com/i/example", paymentUrl: null,
     }] });
     expect(JSON.stringify(body)).not.toContain("private@example.com");
     expect(JSON.stringify(body)).not.toContain("hidden");
@@ -54,6 +55,34 @@ describe("billing invoice history", () => {
     expect((await handleBillingInvoices(request())).status).toBe(401);
     expect(mocks.membership).not.toHaveBeenCalled();
     expect(mocks.invoices).not.toHaveBeenCalled();
+  });
+
+  it("offers payment for a remaining balance, including partial and one-cent balances", async () => {
+    mocks.invoices.mockResolvedValue({ data: [
+      invoice({ id: "in_partial", status: "open", amount_paid: 1000, amount_remaining: 1999 }),
+      invoice({ id: "in_cent", status: "open", total: 1, amount_paid: 0, amount_remaining: 1 }),
+    ], has_more: false });
+    const body = await (await handleBillingInvoices(request())).json();
+    expect(body.data.invoices).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: "in_partial", receiptUrl: null, paymentUrl: "https://invoice.stripe.com/i/example" }),
+      expect.objectContaining({ id: "in_cent", receiptUrl: null, paymentUrl: "https://invoice.stripe.com/i/example" }),
+    ]));
+  });
+
+  it.each(["paid", "draft", "void", "uncollectible"])("does not offer payment for %s invoices", async status => {
+    mocks.invoices.mockResolvedValue({ data: [invoice({ status, amount_remaining: 2999 })], has_more: false });
+    const body = await (await handleBillingInvoices(request())).json();
+    expect(body.data.invoices[0].paymentUrl).toBeNull();
+  });
+
+  it.each([
+    { status: "open", amount_remaining: 0 },
+    { status: "open", hosted_invoice_url: null, amount_remaining: 2999 },
+    { status: "paid", amount_paid: 0 },
+  ])("does not invent a receipt or payment action when unavailable: %o", async overrides => {
+    mocks.invoices.mockResolvedValue({ data: [invoice(overrides)], has_more: false });
+    const body = await (await handleBillingInvoices(request())).json();
+    expect(body.data.invoices[0]).toMatchObject({ receiptUrl: null, paymentUrl: null });
   });
 
   it.each(["viewer", "member", "admin", "ORG_EMPLOYEE"])("denies %s before reading invoices", async role => {
@@ -115,7 +144,7 @@ describe("billing invoice history", () => {
   it.each(["javascript:alert(1)", "not-a-url"])("does not render untrusted download destinations: %s", async pdfUrl => {
     mocks.invoices.mockResolvedValue({ data: [invoice({ invoice_pdf: pdfUrl, hosted_invoice_url: "https://stripe.com.evil.example/invoice" })], has_more: false });
     const body = await (await handleBillingInvoices(request())).json();
-    expect(body.data.invoices[0]).toMatchObject({ pdfUrl: null, hostedUrl: null });
+    expect(body.data.invoices[0]).toMatchObject({ pdfUrl: null, hostedUrl: null, receiptUrl: null, paymentUrl: null });
   });
 
   it("formats zero-decimal currencies and invoices without a PDF", async () => {

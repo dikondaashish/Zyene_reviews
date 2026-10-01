@@ -32,7 +32,7 @@ describe("billing invoice history display", () => {
     expect(html).toContain("$29.99");
     expect(html).toContain("Paid");
     expect(html).toContain('href="https://pay.stripe.com/invoice/example/pdf"');
-    expect(html).toContain("Download PDF");
+    expect(html).toContain("Download invoice");
     expect(html).toContain('rel="noopener noreferrer"');
   });
 
@@ -48,7 +48,7 @@ describe("billing invoice history display", () => {
   it("does not offer a broken download when a PDF is unavailable", () => {
     mocks.history.mockReturnValue({ data: { pages: [{ invoices: [{ ...invoice, pdfUrl: null }] }] } });
     const html = render();
-    expect(html).not.toContain("Download PDF");
+    expect(html).not.toContain("Download invoice");
     expect(html).toContain("View invoice");
   });
 

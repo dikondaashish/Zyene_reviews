@@ -24,7 +24,7 @@ export function BillingInvoicesDialog(props: {
             <DialogContent className="flex flex-col gap-0 overflow-hidden p-0 sm:max-w-3xl sm:p-0">
                 <DialogHeader className="shrink-0 border-b px-5 py-5 pr-12 text-left sm:px-6 sm:pr-12">
                     <DialogTitle>Invoices</DialogTitle>
-                    <DialogDescription>View your billing history and download invoice PDFs.</DialogDescription>
+                    <DialogDescription>View your billing history, download invoice PDFs and receipts, or pay outstanding invoices.</DialogDescription>
                 </DialogHeader>
                 <div className="min-h-0 overflow-y-auto overscroll-contain px-5 pb-5 sm:px-6 sm:pb-6">
                     {open && <BillingInvoiceHistory {...props} />}

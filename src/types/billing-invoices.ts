@@ -19,6 +19,8 @@ export const billingInvoiceSchema = z.object({
     status: z.enum(["draft", "open", "paid", "uncollectible", "void"]),
     pdfUrl: stripeInvoiceUrlSchema.nullable(),
     hostedUrl: stripeInvoiceUrlSchema.nullable(),
+    receiptUrl: stripeInvoiceUrlSchema.nullable().default(null),
+    paymentUrl: stripeInvoiceUrlSchema.nullable().default(null),
 });
 
 export const billingInvoicesPageSchema = z.object({
