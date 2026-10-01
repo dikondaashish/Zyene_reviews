@@ -11,8 +11,8 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
     const q = usePublicProfileEditorQrShare(business.id, business.name, initialSlug, p.previewUrl);
 
     return (
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_420px] gap-8 items-start">
-            <div className="min-w-0 order-2 xl:order-1"><PublicProfileEditorFormColumn
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(300px,390px)]">
+            <div className="min-w-0 order-2 lg:order-1"><PublicProfileEditorFormColumn
                 business={business}
                 initialSlug={initialSlug}
                 onSlugChange={p.handleSlugChange}
@@ -21,7 +21,7 @@ export function PublicProfileEditor({ business, initialSlug }: PublicProfileEdit
                 onTabChange={p.handleTabChange}
             /></div>
 
-            <div className="min-w-0 order-1 xl:order-2 xl:sticky xl:top-6"><PublicProfileEditorPreviewColumn
+            <div className="min-w-0 order-1 lg:order-2 lg:sticky lg:top-6 lg:self-start"><PublicProfileEditorPreviewColumn
                 business={business}
                 previewState={p.previewState}
                 previewStep={p.previewStep}

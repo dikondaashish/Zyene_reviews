@@ -1,9 +1,10 @@
 "use client";
 
 import { PublicReviewFlow } from "@/app/r/[slug]/review-flow";
-import { HelpCircle } from "lucide-react";
+import { Smartphone } from "lucide-react";
 import type { PublicProfileBusinessRecord, PublicProfilePreviewValues } from "@/types/components";
-import { buildPublicReviewFlowPreviewProps } from "./public-profile-editor-preview-flow-props";
+import { buildPublicReviewFlowPreviewProps } from "@/components/settings/public-profile-editor-preview-flow-props";
+import { PublicProfileMobileViewport } from "@/components/settings/public-profile-mobile-viewport";
 
 interface PublicProfileEditorPreviewDeviceProps {
     business: PublicProfileBusinessRecord;
@@ -22,19 +23,19 @@ export function PublicProfileEditorPreviewDevice({
 
     return (
         <div>
-            <div className="flex items-center gap-2 mb-3 justify-start px-1">
+            <div className="mb-3 flex items-center justify-between gap-2 px-1">
                 <span className="text-xs font-semibold text-muted-foreground/80 tracking-widest uppercase">
                     PREVIEW
                 </span>
-                <HelpCircle className="text-muted-foreground/50 size-3.5" />
+                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Smartphone className="size-3.5" aria-hidden="true" /> Mobile
+                </span>
             </div>
 
-            <div className="mx-auto h-[min(700px,75dvh)] w-full max-w-[420px] rounded-[2.5rem] overflow-hidden relative border-[4px] border-foreground ring-1 ring-border">
-                <div className="h-8 w-full bg-transparent absolute top-0 z-20 pointer-events-none" />
-
-                <div className="overflow-y-auto size-full" style={{ background: previewBackdrop }}>
+            <div className="relative mx-auto h-[min(680px,calc(100dvh-190px))] min-h-64 w-full max-w-[390px] overflow-hidden rounded-[2.5rem] border-[4px] border-foreground bg-background shadow-xl ring-1 ring-border" style={{ background: previewBackdrop }}>
+                <PublicProfileMobileViewport>
                     <PublicReviewFlow {...flowProps} />
-                </div>
+                </PublicProfileMobileViewport>
             </div>
         </div>
     );

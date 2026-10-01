@@ -44,9 +44,9 @@ export function PublicProfileEditorPreviewColumn(props: PublicProfileEditorPrevi
     } = props;
 
     return (
-        <div className="flex min-w-0 flex-col gap-5 xl:sticky xl:top-6">
-            <Button variant="outline" className="xl:hidden" aria-expanded={previewOpen} aria-controls="public-profile-live-preview" onClick={() => setPreviewOpen(!previewOpen)}><Eye className="size-4" />{previewOpen ? "Hide preview" : "Preview review page"}</Button>
-            <div id="public-profile-live-preview" className={previewOpen ? "block" : "hidden xl:block"}>
+        <div className="flex min-w-0 flex-col gap-4">
+            <Button variant="outline" className="lg:hidden" aria-expanded={previewOpen} aria-controls="public-profile-live-preview" onClick={() => setPreviewOpen(!previewOpen)}><Eye className="size-4" />{previewOpen ? "Hide preview" : "Preview review page"}</Button>
+            <div id="public-profile-live-preview" className={previewOpen ? "block" : "hidden lg:block"}>
             <PublicProfileEditorPreviewDevice
                 business={business}
                 previewState={previewState}

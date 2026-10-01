@@ -42,6 +42,6 @@ export function buildPublicReviewFlowPreviewProps(
         hideBranding: previewState.hide_branding,
         isPreview: true as const,
         previewStep,
-        className: "min-h-full w-full rounded-[2rem]",
+        className: "min-h-screen w-full",
     };
 }
