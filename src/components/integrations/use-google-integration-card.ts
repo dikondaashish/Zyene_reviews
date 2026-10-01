@@ -13,6 +13,7 @@ import { postGoogleReviewSync } from "@/components/integrations/google-card-sync
 import type { GoogleCardProps } from "@/components/integrations/google-card-types";
 import { useGoogleCardLocationPicker } from "@/components/integrations/use-google-card-location-picker";
 import { runGoogleCardDisconnect } from "@/components/integrations/google-card-disconnect";
+import { googleAuthNeedsReconnect } from "@/lib/google/is-google-connected";
 
 export function useGoogleIntegrationCard({
     platform,
@@ -65,7 +66,7 @@ export function useGoogleIntegrationCard({
     useGoogleCardForceSyncVisibility(isSyncBusy, isStalled, setShowForceSync);
 
     const isConnected = !!platform;
-    const isError = platform?.sync_status?.startsWith("error");
+    const isError = googleAuthNeedsReconnect(platform?.sync_status);
     const needsLocation = isConnected && !platform?.google_location_id;
 
     const displayReviewCount =
