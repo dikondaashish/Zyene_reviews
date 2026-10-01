@@ -30,7 +30,7 @@
 .marketing-exit-popup-kicker-mark { display: grid; width: 22px; height: 22px; place-items: center; border-radius: 7px; background: var(--brand-wash); color: var(--primary); }
 .marketing-exit-popup h2 { max-width: 18ch; margin: 0; font-size: clamp(28px, 3vw, 34px); line-height: 1.04; letter-spacing: -.045em; }
 .marketing-exit-popup-description { max-width: 36ch; margin: 16px 0 24px; color: var(--muted-foreground); font-size: 15px; line-height: 1.55; }
-.marketing-exit-popup-cta { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 13px 20px; border-radius: 999px; background: var(--primary); color: #201515; font-size: 14px; font-weight: 750; transition: transform 160ms var(--ease-out), box-shadow 160ms, background-color 160ms; }
+.marketing-exit-popup-cta { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 13px 20px; border-radius: 999px; background: var(--primary); color: #fff; font-size: 14px; font-weight: 750; transition: transform 160ms var(--ease-out), box-shadow 160ms, background-color 160ms; }
 .marketing-exit-popup-cta:hover { background: #ff641f; box-shadow: 0 8px 20px #ff4f0030; transform: translateY(-1px); }
 .marketing-exit-popup-cta:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; }
 .marketing-exit-popup-cta svg { transition: transform 160ms var(--ease-out); }

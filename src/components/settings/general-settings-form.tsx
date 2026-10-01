@@ -4,9 +4,9 @@ import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { AppUserSummary, OrganizationSettingsRecord } from "@/types/components";
-import { GeneralSettingsFormOrganizationSection } from "./general-settings-form-organization-section";
-import { GeneralSettingsFormProfileFields } from "./general-settings-form-profile-fields";
-import { useGeneralSettingsForm } from "./use-general-settings-form";
+import { GeneralSettingsFormOrganizationSection } from "@/components/settings/general-settings-form-organization-section";
+import { GeneralSettingsFormProfileFields } from "@/components/settings/general-settings-form-profile-fields";
+import { useGeneralSettingsForm } from "@/components/settings/use-general-settings-form";
 
 interface GeneralSettingsFormProps {
     user: AppUserSummary;
@@ -22,7 +22,7 @@ export function GeneralSettingsForm({
     const f = useGeneralSettingsForm(user, organization, canEditOrganizationName);
 
     return (
-        <form onSubmit={f.handleSave} className="rounded-lg border border-border bg-card flex flex-col">
+        <form onSubmit={f.handleSave} aria-busy={f.isLoading} className="flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm">
             <GeneralSettingsFormProfileFields
                 fullName={f.fullName}
                 onFullNameChange={f.setFullName}
@@ -39,15 +39,28 @@ export function GeneralSettingsForm({
                 />
             )}
 
-            <div className="flex flex-col gap-2 px-4 pb-6 pt-2 max-lg:items-stretch sm:px-6 lg:flex-row lg:justify-end">
+            <div className="flex flex-col gap-4 border-t border-border bg-muted/20 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7">
+                <p role="status" className="text-xs text-muted-foreground">
+                    {f.isLoading ? "Saving your changes…" : f.hasChanges ? "You have unsaved changes." : "Changes are visible to your team."}
+                </p>
+                <div className="flex items-center justify-end gap-2">
+                    {f.hasChanges && (
+                        <Button type="button" variant="ghost" disabled={f.isLoading} className="h-10" onClick={() => {
+                            f.setFullName(user.user_metadata?.full_name || "");
+                            f.setOrgName(organization?.name || "");
+                        }}>
+                            Discard
+                        </Button>
+                    )}
                 <Button
                     type="submit"
                     disabled={f.isLoading || !f.hasChanges}
-                    className="bg-primary text-primary-foreground hover:bg-primary/90"
+                    className="h-10 min-w-32 bg-primary text-primary-foreground hover:bg-primary/90"
                 >
-                    {f.isLoading && <Loader2 className="mr-2 animate-spin size-4" />}
-                    Save Changes
+                    {f.isLoading && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
+                    {f.isLoading ? "Saving…" : "Save changes"}
                 </Button>
+                </div>
             </div>
         </form>
     );

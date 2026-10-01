@@ -1,5 +1,4 @@
-import { Mail, User } from "lucide-react";
-
+import { LockKeyhole, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 export function GeneralSettingsFormProfileFields({
@@ -14,44 +13,53 @@ export function GeneralSettingsFormProfileFields({
     isLoading: boolean;
 }) {
     return (
-        <>
-            <div className="border-b px-6 py-4">
-                <h4 className="text-sm font-semibold">Your Profile</h4>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                    Update your personal information visible to your team.
+        <section aria-labelledby="profile-section-heading" className="grid gap-6 p-5 sm:p-7 xl:grid-cols-[200px_minmax(0,1fr)] xl:gap-10">
+            <div className="space-y-2">
+                <h2 id="profile-section-heading" className="text-base font-semibold tracking-tight">Your profile</h2>
+                <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+                    How your name appears to the people you work with.
                 </p>
             </div>
-
-            <div className="px-6 py-5 space-y-5">
+            <div className="w-full max-w-xl space-y-6">
                 <div className="space-y-2">
-                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                        Full Name
-                    </label>
+                    <label htmlFor="settings-full-name" className="text-sm font-medium">Full name</label>
+                    <Input
+                        id="settings-full-name"
+                        name="fullName"
+                        autoComplete="name"
+                        value={fullName}
+                        onChange={(e) => onFullNameChange(e.target.value)}
+                        placeholder="Enter your full name"
+                        className="h-11 bg-background"
+                        disabled={isLoading}
+                    />
+                </div>
+                <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-3">
+                        <label htmlFor="settings-email" className="text-sm font-medium">Email address</label>
+                        <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <LockKeyhole className="size-3" aria-hidden="true" /> Read only
+                        </span>
+                    </div>
                     <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
+                        <Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
                         <Input
-                            value={fullName}
-                            onChange={(e) => onFullNameChange(e.target.value)}
-                            placeholder="John Doe"
-                            className="pl-9"
-                            disabled={isLoading}
+                            id="settings-email"
+                            type="email"
+                            value={userEmail}
+                            readOnly
+                            aria-describedby="settings-email-help"
+                            className="h-11 bg-muted/40 pl-10 text-muted-foreground shadow-none"
                         />
                     </div>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                        Email Address
-                    </label>
-                    <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
-                        <Input value={userEmail} disabled readOnly className="pl-9 bg-muted/50" />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                        Email cannot be changed. If you want to change it, contact customer support.
+                    <p id="settings-email-help" className="text-xs leading-relaxed text-muted-foreground">
+                        Need to change your email?{" "}
+                        <a href="mailto:support@zyenereviews.com" className="font-medium text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-ring">
+                            Contact support
+                        </a>.
                     </p>
                 </div>
             </div>
-        </>
+        </section>
     );
 }
