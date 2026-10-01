@@ -15,6 +15,7 @@ export const billingInvoiceSchema = z.object({
     number: z.string().nullable(),
     createdAt: z.iso.datetime(),
     amount: z.string(),
+    isFreeTrial: z.boolean().default(false),
     status: z.enum(["draft", "open", "paid", "uncollectible", "void"]),
     pdfUrl: stripeInvoiceUrlSchema.nullable(),
     hostedUrl: stripeInvoiceUrlSchema.nullable(),

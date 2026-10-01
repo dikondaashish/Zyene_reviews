@@ -18,6 +18,13 @@ describe("invoice history fetching", () => {
         });
     });
 
+    it("preserves the free-trial display state in the older-page cursor", async () => {
+        const fetchMock = vi.fn().mockResolvedValue(Response.json(response()));
+        vi.stubGlobal("fetch", fetchMock);
+        await fetchBillingInvoices("org-active", "in_previous:trial");
+        expect(fetchMock.mock.calls[0][0]).toBe("/api/billing/invoices?starting_after=in_previous%3Atrial");
+    });
+
     it("discards a response when the selected organization changed during the request", async () => {
         vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json(response("org-other"))));
         await expect(fetchBillingInvoices("org-active", null)).rejects.toThrow("organization changed");

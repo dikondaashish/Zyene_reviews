@@ -58,6 +58,19 @@ describe("billing invoice history display", () => {
     expect(render()).toContain("Load older invoices");
   });
 
+  it("labels the retained zero-dollar trial as Free trial", () => {
+    mocks.history.mockReturnValue({ data: { pages: [{ invoices: [{ ...invoice, amount: "$0.00", isFreeTrial: true }] }] } });
+    const html = render();
+    expect(html).toContain("Free trial");
+    expect(html).not.toContain(">Paid<");
+  });
+
+  it("keeps older history reachable when a bounded scan found only hidden invoices", () => {
+    mocks.history.mockReturnValue({ data: { pages: [{ invoices: [] }] }, hasNextPage: true });
+    expect(render()).toContain("Load older invoices");
+    expect(render()).not.toContain("No invoices yet");
+  });
+
   it("shows loading and retry states", () => {
     mocks.history.mockReturnValue({ isPending: true });
     expect(render()).toContain("Loading invoices");

@@ -38,10 +38,10 @@ describe("billing invoice history", () => {
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(mocks.membership).toHaveBeenCalledWith("user-owner");
-    expect(mocks.invoices).toHaveBeenCalledWith({ customer: "cus_active", limit: 10 });
+    expect(mocks.invoices).toHaveBeenCalledWith({ customer: "cus_active", limit: 100 });
     expect(body.data).toEqual({ organizationId: "org-active", nextCursor: null, invoices: [{
       id: "in_newest", number: "ZYENE-0001", createdAt: "2026-10-01T00:00:00.000Z",
-      amount: "$29.99", status: "paid", pdfUrl: "https://pay.stripe.com/invoice/example/pdf",
+      amount: "$29.99", status: "paid", isFreeTrial: false, pdfUrl: "https://pay.stripe.com/invoice/example/pdf",
       hostedUrl: "https://invoice.stripe.com/i/example",
     }] });
     expect(JSON.stringify(body)).not.toContain("private@example.com");
@@ -78,7 +78,7 @@ describe("billing invoice history", () => {
     expect(mocks.invoices).not.toHaveBeenCalled();
   });
 
-  it.each(["?customer=cus_foreign", "?organization_id=org-foreign", "?starting_after=bad-id"])(
+  it.each(["?customer=cus_foreign", "?organization_id=org-foreign", "?starting_after=bad-id", "?starting_after=in_newest:invalid"])(
     "rejects untrusted scope or malformed pagination: %s", async query => {
       expect((await handleBillingInvoices(request(query))).status).toBe(400);
       expect(mocks.invoices).not.toHaveBeenCalled();
@@ -92,10 +92,17 @@ describe("billing invoice history", () => {
   });
 
   it("keeps older invoice pages scoped to the same customer", async () => {
-    mocks.invoices.mockResolvedValue({ data: [invoice({ id: "in_older" })], has_more: true });
+    mocks.invoices.mockResolvedValue({ data: Array.from({ length: 10 }, (_, i) => invoice({ id: `in_older${i}` })), has_more: true });
     const body = await (await handleBillingInvoices(request("?starting_after=in_newest"))).json();
-    expect(mocks.invoices).toHaveBeenCalledWith({ customer: "cus_active", limit: 10, starting_after: "in_newest" });
-    expect(body.data.nextCursor).toBe("in_older");
+    expect(mocks.invoices).toHaveBeenCalledWith({ customer: "cus_active", limit: 100, starting_after: "in_newest" });
+    expect(body.data.nextCursor).toBe("in_older9");
+  });
+
+  it("accepts trial display state in the cursor while deriving customer scope from membership", async () => {
+    mocks.invoices.mockResolvedValue({ data: [invoice({ id: "in_older" })], has_more: false });
+    const res = await handleBillingInvoices(request("?starting_after=in_newest%3Atrial"));
+    expect(res.status).toBe(200);
+    expect(mocks.invoices).toHaveBeenCalledWith({ customer: "cus_active", limit: 100, starting_after: "in_newest" });
   });
 
   it("never exposes an invoice from another Stripe customer", async () => {

@@ -21,7 +21,7 @@ export function BillingInvoiceRow({ invoice }: { invoice: BillingInvoice }) {
             <div className="flex items-center gap-3 sm:gap-5">
                 <span className="text-sm font-semibold tabular-nums">{invoice.amount}</span>
                 <Badge variant="outline" className={cn("whitespace-nowrap", invoice.status === "paid" && "border-success/30 bg-success/10 text-success")}>
-                    {labels[invoice.status]}
+                    {invoice.isFreeTrial ? "Free trial" : labels[invoice.status]}
                 </Badge>
             </div>
             {invoice.pdfUrl ? (

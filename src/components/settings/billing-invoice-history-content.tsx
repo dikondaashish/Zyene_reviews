@@ -16,11 +16,14 @@ export function BillingInvoiceHistoryContent(props: {
     if (loading) return <p className="mt-5 flex items-center gap-2 text-sm text-muted-foreground" role="status">
         <Loader2 className="size-4 animate-spin" aria-hidden />Loading invoices…
     </p>;
-    if (!failed && invoices.length === 0) return <div className="mt-5 rounded-lg bg-muted/60 p-4">
+    if (!failed && !hasMore && invoices.length === 0) return <div className="mt-5 rounded-lg bg-muted/60 p-4">
         <p className="text-sm font-medium">No invoices yet</p>
         <p className="mt-1 text-sm text-muted-foreground">Your invoices will appear here once they are issued.</p>
     </div>;
     return <>
+        {!failed && invoices.length === 0 && <p className="mt-5 text-sm text-muted-foreground">
+            No matching invoices in this part of your history. Load older invoices to continue.
+        </p>}
         <ul className="mt-3 divide-y divide-border" aria-label="Invoice history">
             {invoices.map((invoice) => <BillingInvoiceRow key={invoice.id} invoice={invoice} />)}
         </ul>
