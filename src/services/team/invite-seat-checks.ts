@@ -43,7 +43,8 @@ export async function assertTeamInviteSeatAvailable(
         supabase
             .from("business_members")
             .select("*", { count: "exact", head: true })
-            .eq("business_id", params.businessId),
+            .eq("business_id", params.businessId)
+            .or("role_label.is.null,role_label.neq.developer"),
         supabase
             .from("invitations")
             .select("*", { count: "exact", head: true })

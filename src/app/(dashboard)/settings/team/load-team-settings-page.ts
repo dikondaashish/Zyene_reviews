@@ -129,7 +129,7 @@ export async function loadTeamSettingsPage(userId: string): Promise<TeamSettings
         currentUserId: userId,
         canDeleteDeveloper,
         currentUserRole: currentUserMember.role,
-        activeMembersCount: (members || []).length,
+        activeMembersCount: combinedMembers.filter((member) => member.type === "member" && member.roleLabel !== "developer").length,
         pendingInvitesCount: (invites || []).length,
         maxMembers: teamMemberLimitForPlan(organization?.plan ?? null, organization?.plan_status ?? null),
         latestInviteLink: newestPendingInvite?.token ? buildTeamInviteSignupLink(newestPendingInvite.token) : null,

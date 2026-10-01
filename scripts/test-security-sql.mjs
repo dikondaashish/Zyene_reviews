@@ -77,9 +77,12 @@ try {
         storageAssertions, accountingAssertions, assertions, readOnlyChecks,
         readFileSync("supabase/migrations/20261001020939_developer_owner_role_label.sql", "utf8"),
         readFileSync("supabase/migrations/20261001022325_owner_delete_developer.sql", "utf8"),
-        readFileSync("tests/security/developer-boundaries.sql", "utf8")].join("\n");
+        readFileSync("tests/security/developer-boundaries.sql", "utf8"),
+        readFileSync("tests/security/default-developer-fixture.sql", "utf8"),
+        readFileSync("supabase/migrations/20261001151611_default_business_developer.sql", "utf8"),
+        readFileSync("tests/security/default-developer-boundaries.sql", "utf8")].join("\n");
     docker(["exec", "-i", container, "psql", "-X", "-q", "-v", "ON_ERROR_STOP=1", "-U", "postgres"], sql);
-    console.log(`PASS: ${migrations.length + 2} security migrations executed; grant, tenant, storage, accounting, role, developer, invitation, webhook and key-rotation assertions passed.`);
+    console.log(`PASS: ${migrations.length + 3} security migrations executed; grant, tenant, storage, accounting, role, developer defaults/removal, invitation, webhook and key-rotation assertions passed.`);
 } catch (error) {
     console.error(error.message);
     process.exitCode = 1;
