@@ -1,9 +1,10 @@
-import * as Sentry from "@sentry/nextjs";
-
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { logger } from "@/lib/logger";
+import { reportError } from "@/lib/monitoring/report-error";
 
 import { listAllQuestions, questionToRow } from "./qanda";
+import { isGoogleQaUnsupported } from "./qa-unsupported";
+import { reportGoogleSyncFailure } from "./sync-failure-report";
 import { getValidGoogleToken } from "./sync-service";
 
 /** Sync all Q&A questions for a Google-connected platform. */
@@ -51,8 +52,10 @@ export async function syncGbpQuestionsForPlatform(platformId: string): Promise<{
         );
         for (const { error } of upsertResults) {
             if (error) {
-                logger.error({ err: error }, "[Phase2] gbp_questions upsert:");
-                Sentry.captureException(error);
+                reportError(error, {
+                    logMessage: "[Phase2] gbp_questions upsert:",
+                    tags: { google_sync: "qa_upsert" },
+                });
                 throw error;
             }
         }
@@ -63,23 +66,22 @@ export async function syncGbpQuestionsForPlatform(platformId: string): Promise<{
             .eq("id", platformId);
         return { success: true, count: rows.length };
     } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : String(error);
-        const apiUnsupported =
-            /\b501\b/.test(message) &&
-            (/API_UNSUPPORTED|UNIMPLEMENTED|no longer supported/i.test(message) ||
-                /mybusinessqanda\.googleapis\.com/i.test(message));
-        if (apiUnsupported) {
+        if (isGoogleQaUnsupported(error)) {
             const { error: updateError } = await admin
                 .from("review_platforms")
                 .update({ google_qa_synced_at: new Date().toISOString(), google_qa_unavailable: true })
                 .eq("id", platformId);
             if (updateError) {
                 logger.error({ err: updateError }, "[Phase2] Failed to persist google_qa_unavailable:");
+            } else {
+                logger.warn(
+                    { platformId, err: error instanceof Error ? error.message : String(error) },
+                    "[Phase2] Google Q&A unavailable for location; marked google_qa_unavailable"
+                );
             }
             return { success: true, count: 0 };
         }
-        logger.error({ err: message }, "[Phase2] Q&A sync failed:");
-        Sentry.captureException(error);
+        const message = reportGoogleSyncFailure("[Phase2] Q&A", error);
         return { success: false, count: 0, error: message };
     }
 }

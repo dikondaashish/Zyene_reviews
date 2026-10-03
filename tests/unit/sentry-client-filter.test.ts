@@ -3,7 +3,9 @@ import { describe, expect, it } from "vitest";
 
 import {
     filterClientSentryEvent,
+    isBrowserNetworkFetchError,
     isCefSharpCrawlerError,
+    isDevelopmentHydrationMismatch,
     isInjectedMetaMaskError,
     isStaleServerActionError,
 } from "../../src/lib/monitoring/sentry-client-filter";
@@ -99,6 +101,60 @@ describe("Sentry client event filtering", () => {
         );
 
         expect(isStaleServerActionError(event)).toBe(false);
+        expect(filterClientSentryEvent(event)).toBe(event);
+    });
+
+    it("drops Mobile Safari fetch Load failed noise without an app stack", () => {
+        const event: ErrorEvent = {
+            type: undefined,
+            exception: {
+                values: [{ type: "TypeError", value: "Load failed" }],
+            },
+        };
+
+        expect(isBrowserNetworkFetchError(event)).toBe(true);
+        expect(filterClientSentryEvent(event)).toBeNull();
+    });
+
+    it("keeps Failed to fetch when the stack points at app code", () => {
+        const event = errorEvent("Failed to fetch", "app:///src/components/onboarding/step2-form.tsx");
+
+        expect(isBrowserNetworkFetchError(event)).toBe(false);
+        expect(filterClientSentryEvent(event)).toBe(event);
+    });
+
+    it("drops development-only hydration mismatches", () => {
+        const event: ErrorEvent = {
+            type: undefined,
+            environment: "development",
+            exception: {
+                values: [
+                    {
+                        value:
+                            "Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client.",
+                    },
+                ],
+            },
+        };
+
+        expect(isDevelopmentHydrationMismatch(event)).toBe(true);
+        expect(filterClientSentryEvent(event)).toBeNull();
+    });
+
+    it("keeps production hydration mismatches", () => {
+        const event: ErrorEvent = {
+            type: undefined,
+            environment: "production",
+            exception: {
+                values: [
+                    {
+                        value:
+                            "Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client.",
+                    },
+                ],
+            },
+        };
+
         expect(filterClientSentryEvent(event)).toBe(event);
     });
 });

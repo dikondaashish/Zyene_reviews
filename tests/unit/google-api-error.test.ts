@@ -130,6 +130,18 @@ describe("Google account-state errors (customer action, not our fault)", () => {
         expect(isGoogleActionableFault(rateLimited)).toBe(true);
     });
 
+    it("classifies Google Q&A HTML 404 responses as not_found", () => {
+        const error = createGoogleServiceError(
+            "My Business Q&A API",
+            404,
+            "<!DOCTYPE html><title>Error 404 (Not Found)!!1</title>",
+        );
+
+        expect(error.kind).toBe("not_found");
+        expect(error.message).toMatch(/unavailable \(404\)/);
+        expect(isGoogleActionableFault(error)).toBe(true);
+    });
+
     it("keeps a disabled API classified as configuration, not account state", () => {
         const error = createGoogleServiceError(
             "My Business Place Actions API",

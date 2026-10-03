@@ -1,5 +1,6 @@
 import { fetchWithRetry } from "./business-profile";
 import type { Json } from "@/lib/db/supabase/database.types";
+import { createGoogleServiceError } from "./api-error";
 import { requireGoogleLocationId } from "./location-id";
 
 const BASE = "https://mybusinessqanda.googleapis.com/v1";
@@ -61,7 +62,7 @@ export async function listQuestionsPage(
 
     if (!response.ok) {
         const body = await response.text();
-        throw new Error(`Q&A listQuestions ${response.status}: ${body}`);
+        throw createGoogleServiceError("My Business Q&A API", response.status, body);
     }
 
     return response.json() as Promise<ListQuestionsResponse>;
@@ -148,7 +149,7 @@ export async function upsertQuestionAnswer(
 
     if (!response.ok) {
         const body = await response.text();
-        throw new Error(`Q&A upsertAnswer ${response.status}: ${body}`);
+        throw createGoogleServiceError("My Business Q&A API", response.status, body);
     }
 
     return response.json() as Promise<GbpAnswer>;

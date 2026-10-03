@@ -90,17 +90,23 @@ async function bufferResponseBody(response: Response): Promise<Response> {
 export async function fetchWithRetry(url: string, options: RequestInit, retries = 3, backoff = 2000): Promise<Response> {
     try {
         const response = await fetchWithTimeout(url, options);
+        const retryableStatus = response.status === 429 || (response.status >= 500 && response.status <= 599);
+
+        if (retryableStatus && retries > 0) {
+            // Discard the error body so the connection can close before we wait.
+            await response.arrayBuffer().catch(() => undefined);
+            const jitter = Math.random() * backoff;
+            logger.error(
+                `[Google API] HTTP ${response.status}. Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`
+            );
+            await new Promise((resolve) => setTimeout(resolve, jitter));
+            return fetchWithRetry(url, options, retries - 1, backoff * 2);
+        }
 
         if (response.status === 429) {
-            if (retries > 0) {
-                // Add jitter: delay = random(0, backoff)
-                const jitter = Math.random() * backoff;
-                logger.error(`[Google API] Rate limit hit (429). Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`);
-                await new Promise(resolve => setTimeout(resolve, jitter));
-                return fetchWithRetry(url, options, retries - 1, backoff * 2);
-            } else {
-                logger.error("[Google API] Rate limit exceeded after multiple retries.");
-            }
+            logger.error("[Google API] Rate limit exceeded after multiple retries.");
+        } else if (response.status >= 500) {
+            logger.error(`[Google API] Upstream ${response.status} after multiple retries.`);
         }
 
         // Consume the body while the request deadline is still inside this

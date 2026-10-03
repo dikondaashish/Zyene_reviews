@@ -4,6 +4,7 @@ export type GoogleServiceErrorKind =
     | "access_pending"
     | "permission_denied"
     | "unverified_location"
+    | "not_found"
     | "invalid_argument"
     | "rate_limited"
     | "server_error"
@@ -69,6 +70,7 @@ function classifyGoogleServiceError(
         googleReason === "UNVERIFIED_LOCATION" || /unverified location/i.test(googleMessage);
     if (unverifiedLocation) return "unverified_location";
 
+    if (statusCode === 404 || googleStatus === "NOT_FOUND") return "not_found";
     if (statusCode === 400 || googleStatus === "INVALID_ARGUMENT") return "invalid_argument";
     if (statusCode === 429 || googleStatus === "RESOURCE_EXHAUSTED") return "rate_limited";
     if (statusCode >= 500) return "server_error";
@@ -103,6 +105,8 @@ export function createGoogleServiceError(
         message =
             `${apiName} requires a verified Google Business Profile location. Complete Google's ` +
             "verification for this listing, then retry the sync.";
+    } else if (kind === "not_found") {
+        message = `${apiName} reported this location or resource as unavailable (404).`;
     }
 
     const error = new Error(message) as GoogleServiceError;

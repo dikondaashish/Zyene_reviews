@@ -156,7 +156,7 @@ Also see [PRODUCTION_CHECKLIST.md](./PRODUCTION_CHECKLIST.md).
 | `playwright.config.ts` | Visual tests |
 | `vercel.json` | Cron / hosting hints |
 | `components.json` | shadcn |
-| `sentry.*.config.ts` | Sentry |
+| `sentry.server.config.ts` / `sentry.edge.config.ts` / `src/instrumentation-client.ts` | Sentry init (shared options in `src/lib/monitoring/sentry-init-options.ts`) |
 
 ---
 

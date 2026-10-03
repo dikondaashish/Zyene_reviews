@@ -37,6 +37,11 @@ export async function proxy(request: NextRequest) {
         return supabaseResponse;
     }
 
+    // Sentry tunnel must bypass middleware (auth/cookies) or client reporting breaks.
+    if (pathname === "/monitoring" || pathname.startsWith("/monitoring/")) {
+        return NextResponse.next({ request: { headers: request.headers } });
+    }
+
     // Webhook endpoints must be served immediately and never redirected.
     if (pathname.startsWith("/api/webhooks") || pathname.startsWith("/api/inngest")) {
         return NextResponse.next({ request: { headers: request.headers } });
@@ -146,6 +151,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
     matcher: [
-        "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+        "/((?!_next/static|_next/image|favicon.ico|monitoring|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
     ],
 };
