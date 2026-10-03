@@ -13,6 +13,7 @@ import type {
     AeoReportRequestedEvent,
     AeoRunRequestedEvent,
 } from "./aeo/aeo-events";
+import { inngestSentryMiddleware } from "./sentry-middleware";
 
 
 type CampaignSendEvent = {
@@ -185,5 +186,6 @@ export const inngest = new Inngest({
     id: "zyene-reviews",
     eventKey: process.env.INNGEST_EVENT_KEY,
     // Providing strict types for our events
-    schemas: new EventSchemas().fromRecord<Events>()
+    schemas: new EventSchemas().fromRecord<Events>(),
+    middleware: [inngestSentryMiddleware],
 });

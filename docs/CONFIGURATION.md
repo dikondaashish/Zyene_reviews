@@ -156,7 +156,8 @@ Also see [PRODUCTION_CHECKLIST.md](./PRODUCTION_CHECKLIST.md).
 | `playwright.config.ts` | Visual tests |
 | `vercel.json` | Cron / hosting hints |
 | `components.json` | shadcn |
-| `sentry.server.config.ts` / `sentry.edge.config.ts` / `src/instrumentation-client.ts` | Sentry init (shared options in `src/lib/monitoring/sentry-init-options.ts`) |
+| `sentry.server.config.ts` / `sentry.edge.config.ts` / `src/instrumentation-client.ts` | Sentry init (shared options in `src/lib/monitoring/sentry-init-options.ts`; server `beforeSend` + Pino bridge; client Session Replay) |
+| `src/services/inngest/sentry-middleware.ts` | Inngest terminal failures → Sentry |
 
 ---
 

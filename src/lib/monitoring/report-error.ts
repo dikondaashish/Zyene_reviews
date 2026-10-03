@@ -1,6 +1,10 @@
 /**
  * Central place to report unexpected failures to Sentry + logs.
  * Prefer this over ad-hoc captureException so tags stay consistent.
+ *
+ * Note: `logger.error` is also bridged to Sentry via `pinoIntegration` on the
+ * server. This helper still calls `captureException` so tags/extra attach even
+ * when the log bridge is unavailable (edge) or the call site only uses this API.
  */
 import * as Sentry from "@sentry/nextjs";
 

@@ -20,6 +20,8 @@ import { ErrorBoundary } from "@/components/errors/error-boundary";
 import { getGoogleConnectionStatus } from "@/lib/google/is-google-connected";
 import { GoogleConnectBanner } from "@/components/dashboard/google-connect-banner";
 import { getSettingsAccessContext } from "@/lib/auth/settings-access-context";
+import { SentryTenantContext } from "@/components/monitoring/sentry-tenant-context";
+import { setSentryTenantContext } from "@/lib/monitoring/set-sentry-tenant-context";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, activeContext, access: settingsAccess } = await getSettingsAccessContext();
@@ -37,6 +39,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
     organizations,
     business: activeBusiness,
   } = activeContext;
+
+  setSentryTenantContext({
+    userId: user.id,
+    email: user.email,
+    businessId: activeBusinessId,
+    organizationId: organization?.id,
+  });
 
   const hideGoogleQaNav = !(await getGoogleQaSidebarNavVisible(activeBusinessId));
   const sidebarOpen = (await cookies()).get("sidebar_state")?.value === "true";
@@ -57,6 +66,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <SidebarProvider defaultOpen={sidebarOpen} style={{ "--sidebar-width": "15rem", "--sidebar-width-icon": "4.75rem" } as React.CSSProperties}>
+      <SentryTenantContext
+        userId={user.id}
+        email={user.email}
+        businessId={activeBusinessId}
+        organizationId={organization?.id}
+      />
       <AppSidebar hideGoogleQaNav={hideGoogleQaNav} settingsAccess={settingsAccess} />
       <SidebarInset className="bg-canvas">
         <VerificationBanner user={user} />

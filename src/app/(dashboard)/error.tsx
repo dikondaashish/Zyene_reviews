@@ -2,7 +2,7 @@
 
 import { DashboardRouteError } from "@/components/errors/dashboard-route-error";
 
-export default function BillingError({
+export default function DashboardSegmentError({
     error,
     reset,
 }: {
@@ -13,9 +13,9 @@ export default function BillingError({
         <DashboardRouteError
             error={error}
             reset={reset}
-            page="billing"
-            title="Billing Error"
-            description="We couldn't load your billing information. This might be a temporary issue — please try again."
+            page="dashboard"
+            title="Something went wrong"
+            description="We encountered an error while loading this page. Please try again."
         />
     );
 }

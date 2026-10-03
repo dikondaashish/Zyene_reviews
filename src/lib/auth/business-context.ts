@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/db/supabase/server";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
+import { setSentryTenantContext } from "@/lib/monitoring/set-sentry-tenant-context";
 import type {
     BusinessContextBusiness,
     BusinessContextOrganization,
@@ -103,6 +104,13 @@ export async function getActiveBusinessId(options?: {
     const scopedBusinesses = activeOrgId
         ? businesses.filter((b) => businessOrgId(b) === activeOrgId)
         : businesses;
+
+    setSentryTenantContext({
+        userId: user.id,
+        email: user.email,
+        businessId: activeBusiness.id,
+        organizationId: organization?.id,
+    });
 
     return {
         businessId: activeBusiness.id,
