@@ -12,6 +12,12 @@ const BASE_URL_NOTIFICATIONS = "https://mybusinessnotifications.googleapis.com/v
 /** Only for location-scoped notificationSetting (if used); not the primary Pub/Sub path. */
 const BASE_URL_ACCOUNT_MANAGEMENT = "https://mybusinessaccountmanagement.googleapis.com/v1";
 
+/** 403/404 from Notifications API — account type or API access; not an actionable prod fault. */
+export function isNotificationRegistrationUnavailable(error: unknown): boolean {
+    const message = error instanceof Error ? error.message : String(error);
+    return /Failed to register (?:location )?notifications:\s*(403|404)\b/.test(message);
+}
+
 export interface GoogleNotificationSetting {
     name: string; 
     pubsubTopic: string;
@@ -57,7 +63,10 @@ export async function registerNotifications(
 
     if (!response.ok) {
         const errorBody = await response.text();
-        logger.error(`[Google Notifications] Registration Error (${response.status}): ${errorBody}`);
+        const unavailable = response.status === 403 || response.status === 404;
+        const message = `[Google Notifications] Registration ${unavailable ? "unavailable" : "Error"} (${response.status}): ${errorBody}`;
+        if (unavailable) logger.warn(message);
+        else logger.error(message);
         throw new Error(`Failed to register notifications: ${response.status} ${response.statusText}`);
     }
 
@@ -93,7 +102,10 @@ export async function patchLocationNotificationSetting(
 
     if (!response.ok) {
         const errorBody = await response.text();
-        logger.error(`[Google Notifications] Location Registration Error (${response.status}): ${errorBody}`);
+        const unavailable = response.status === 403 || response.status === 404;
+        const message = `[Google Notifications] Location Registration ${unavailable ? "unavailable" : "Error"} (${response.status}): ${errorBody}`;
+        if (unavailable) logger.warn(message);
+        else logger.error(message);
         throw new Error(`Failed to register location notifications: ${response.status} ${response.statusText}`);
     }
 
@@ -147,6 +159,13 @@ export async function registerNotificationsWithRetry(
         await registerNotifications(accessToken, accountName, topic);
         return { ok: true };
     } catch (firstError) {
+        if (isNotificationRegistrationUnavailable(firstError)) {
+            logger.warn(
+                { err: firstError, platformId, googleAccountId, logPrefix },
+                `${logPrefix} Pub/Sub notification registration unavailable for this Google account`,
+            );
+            return { ok: false };
+        }
         logger.error(
             { err: firstError, platformId, googleAccountId, logPrefix },
             `${logPrefix} registerNotifications failed (attempt 1/2)`,
@@ -156,7 +175,8 @@ export async function registerNotificationsWithRetry(
             await registerNotifications(accessToken, accountName, topic);
             return { ok: true };
         } catch (secondError) {
-            logger.error(
+            const level = isNotificationRegistrationUnavailable(secondError) ? "warn" : "error";
+            logger[level](
                 { err: secondError, platformId, googleAccountId, logPrefix },
                 `${logPrefix} registerNotifications failed after retry - Pub/Sub may stay unregistered until manual cron or reconnect`,
             );

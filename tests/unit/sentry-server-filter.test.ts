@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
     filterServerSentryEvent,
     isAbortError,
+    isExpectedGoogleSetupNoise,
     isNextControlFlowError,
 } from "@/lib/monitoring/sentry-server-filter";
 
@@ -33,4 +34,21 @@ describe("Sentry server event filtering", () => {
         };
         expect(filterServerSentryEvent(event)).toBe(event);
     });
+
+    it("drops expected Google setup and notification-registration noise", () => {
+        const noLocations: ErrorEvent = {
+            type: undefined,
+            exception: { values: [{ type: "Error", value: "No Locations found" }] },
+        };
+        const notify404: ErrorEvent = {
+            type: undefined,
+            exception: {
+                values: [{ type: "Error", value: "Failed to register notifications: 404 Not Found" }],
+            },
+        };
+        expect(isExpectedGoogleSetupNoise(noLocations)).toBe(true);
+        expect(filterServerSentryEvent(noLocations)).toBeNull();
+        expect(filterServerSentryEvent(notify404)).toBeNull();
+    });
 });
+

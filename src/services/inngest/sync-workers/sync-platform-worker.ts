@@ -2,6 +2,7 @@ import { logger } from "@/lib/logger";
 import { inngest } from "../client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
+import { isExpectedGoogleSyncSetupError } from "@/services/google/sync-service/expected-setup-errors";
 import { isGoogleSyncConflictError } from "@/services/google/sync-lock-utils";
 import { syncYelpReviewsForPlatform } from "@/services/yelp/sync-service";
 import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service";
@@ -63,7 +64,15 @@ export const syncPlatformWorker = inngest.createFunction(
             await pingReviewSyncHeartbeat(true);
             return { skipped: true, reason: "sync_lock_conflict" as const, attempt };
           }
-          logger.error({ err: error, platformType, platformId }, "[Worker] Sync failed");
+          const message = error instanceof Error ? error.message : String(error);
+          if (platformType === "google" && isExpectedGoogleSyncSetupError(message)) {
+            logger.warn(
+              { err: error, platformType, platformId },
+              "[Worker] Sync blocked by Google account setup",
+            );
+          } else {
+            logger.error({ err: error, platformType, platformId }, "[Worker] Sync failed");
+          }
           throw error; // Rethrow for Inngest retries
         }
       });

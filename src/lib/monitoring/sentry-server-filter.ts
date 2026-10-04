@@ -4,6 +4,10 @@ import type { ErrorEvent } from "@sentry/nextjs";
 const NEXT_CONTROL_FLOW_PATTERN =
     /^(?:NEXT_REDIRECT|NEXT_NOT_FOUND|NEXT_HTTP_ERROR_FALLBACK;\d+)$/;
 
+/** Expected Google setup / Notifications API gaps — warn in logs, not Sentry. */
+const EXPECTED_GOOGLE_SETUP_NOISE_PATTERN =
+    /(?:No Locations found|No Google Accounts found|Failed to register (?:location )?notifications:\s*(?:403|404)|\[Google Notifications\] (?:Location )?Registration (?:unavailable|Error) \((?:403|404)\))/i;
+
 function eventTextCandidates(event: ErrorEvent): Array<string | undefined> {
     return [event.message, ...(event.exception?.values ?? []).map((exception) => exception.value)];
 }
@@ -34,7 +38,14 @@ export function isAbortError(event: ErrorEvent): boolean {
     );
 }
 
+export function isExpectedGoogleSetupNoise(event: ErrorEvent): boolean {
+    return eventTextCandidates(event).some(
+        (text) => typeof text === "string" && EXPECTED_GOOGLE_SETUP_NOISE_PATTERN.test(text)
+    );
+}
+
 export function filterServerSentryEvent(event: ErrorEvent): ErrorEvent | null {
-    const isNoise = isNextControlFlowError(event) || isAbortError(event);
+    const isNoise =
+        isNextControlFlowError(event) || isAbortError(event) || isExpectedGoogleSetupNoise(event);
     return isNoise ? null : event;
 }

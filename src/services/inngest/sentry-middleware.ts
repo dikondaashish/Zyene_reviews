@@ -5,10 +5,23 @@
 import * as Sentry from "@sentry/nextjs";
 import { InngestMiddleware } from "inngest";
 
+import { isExpectedGoogleSyncSetupError } from "@/services/google/sync-service/expected-setup-errors";
+import { isPermanentGoogleAuthError } from "@/services/google/sync-service/permanent-auth-errors";
+
 function readStringField(data: unknown, key: string): string | undefined {
     if (!data || typeof data !== "object") return undefined;
     const value = (data as Record<string, unknown>)[key];
     return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+function errorMessage(error: unknown): string {
+    if (error instanceof Error) return error.message;
+    if (typeof error === "string") return error;
+    if (error && typeof error === "object" && "message" in error) {
+        const message = (error as { message?: unknown }).message;
+        if (typeof message === "string") return message;
+    }
+    return String(error);
 }
 
 function toCaptureTarget(error: unknown): unknown {
@@ -23,12 +36,18 @@ function toCaptureTarget(error: unknown): unknown {
     return error;
 }
 
+function shouldSkipInngestSentryCapture(error: unknown): boolean {
+    const message = errorMessage(error);
+    return isExpectedGoogleSyncSetupError(message) || isPermanentGoogleAuthError(message);
+}
+
 export const inngestSentryMiddleware = new InngestMiddleware({
     name: "Sentry Error Capture",
     init: () => ({
         onFunctionRun: ({ ctx, fn }) => ({
             finished: ({ result }) => {
                 if (!result.error) return;
+                if (shouldSkipInngestSentryCapture(result.error)) return;
 
                 const eventData = ctx.event?.data;
                 const businessId = readStringField(eventData, "businessId");

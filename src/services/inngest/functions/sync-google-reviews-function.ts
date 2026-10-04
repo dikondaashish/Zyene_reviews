@@ -1,6 +1,7 @@
 import { logger } from "@/lib/logger";
 import { NonRetriableError } from "inngest";
 import { inngest } from "../client";
+import { isExpectedGoogleSyncSetupError } from "@/services/google/sync-service/expected-setup-errors";
 import { isPermanentGoogleAuthError } from "@/services/google/sync-service/permanent-auth-errors";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
@@ -126,10 +127,18 @@ export const syncGoogleReviews = inngest.createFunction(
 
             return { status: "completed", pages: pageCount, synced: totalSynced };
         } catch (error: unknown) {
-            logger.error({ err: error }, `[Inngest] Sync failed for platform ${platformId}:`);
-
             const message = error instanceof Error ? error.message : String(error);
             const permanentAuthFailure = isPermanentGoogleAuthError(message);
+            const expectedSetupFailure = isExpectedGoogleSyncSetupError(message);
+
+            if (expectedSetupFailure) {
+                logger.warn(
+                    { err: error, platformId },
+                    `[Inngest] Sync blocked by Google account setup for platform ${platformId}`,
+                );
+            } else {
+                logger.error({ err: error }, `[Inngest] Sync failed for platform ${platformId}:`);
+            }
 
             await step.run("mark-as-error", async () => {
                 const { clearGoogleSyncBootstrapHandoff } = await import(
@@ -150,7 +159,7 @@ export const syncGoogleReviews = inngest.createFunction(
                 await clearGoogleSyncBootstrapHandoff(supabase, platformId);
             });
 
-            if (permanentAuthFailure) {
+            if (permanentAuthFailure || expectedSetupFailure) {
                 throw new NonRetriableError(message);
             }
             throw error;

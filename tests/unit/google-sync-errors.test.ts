@@ -30,4 +30,10 @@ describe("mapGoogleSyncError", () => {
     expect(result.status).toBe(404);
     expect(result.code).toBe("INTEGRATION_NOT_FOUND");
   });
+
+  it("maps empty GBP location lists to 400", () => {
+    const result = mapGoogleSyncError(new Error("No Locations found"));
+    expect(result.status).toBe(400);
+    expect(result.code).toBe("NO_GOOGLE_LOCATIONS");
+  });
 });

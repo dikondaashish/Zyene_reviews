@@ -65,6 +65,14 @@ export function mapGoogleSyncError(error: unknown): GoogleSyncMappedError {
     return { status: 400, message: "No Google Business Profile found.", code: "NO_GOOGLE_ACCOUNTS" };
   }
 
+  if (message.includes("No Locations found")) {
+    return {
+      status: 400,
+      message: "No Google Business Profile locations found for this account.",
+      code: "NO_GOOGLE_LOCATIONS",
+    };
+  }
+
   if (message.includes("reconnect") || message.includes("refresh token")) {
     return {
       status: 401,
