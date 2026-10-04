@@ -4,6 +4,7 @@ import { ArrowRight, Clock, Sparkles } from "lucide-react";
 import { PILLAR_LABELS, PILLAR_COLORS } from "@/lib/content/blog-data";
 import type { BlogPost } from "@/lib/content/blog-types";
 import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
+import { formatBlogPublishedDate } from "@/lib/content/format-blog-date";
 
 export function BlogFeaturedPostSection({ featured }: { featured: BlogPost }) {
     return (
@@ -30,13 +31,7 @@ export function BlogFeaturedPostSection({ featured }: { featured: BlogPost }) {
                                             <Clock className="size-3.5" />
                                             {featured.readMinutes} min read
                                         </div>
-                                        <span>
-                                            {new Date(featured.publishedAt).toLocaleDateString("en-US", {
-                                                month: "long",
-                                                day: "numeric",
-                                                year: "numeric",
-                                            })}
-                                        </span>
+                                        <span>{formatBlogPublishedDate(featured.publishedAt, "long")}</span>
                                     </div>
                                 </div>
                             </div>

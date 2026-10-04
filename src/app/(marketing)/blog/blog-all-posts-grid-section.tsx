@@ -3,12 +3,7 @@ import Image from "next/image";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { BLOG_POSTS } from "@/lib/content/blog-data";
 import { resolveBlogAuthor } from "@/lib/content/blog-authors";
-
-const BLOG_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
-
-function formatDate(date: string) {
-    return BLOG_DATE_FORMATTER.format(new Date(date));
-}
+import { formatBlogPublishedDate } from "@/lib/content/format-blog-date";
 
 export function BlogAllPostsGridSection({
     posts,
@@ -46,7 +41,7 @@ export function BlogAllPostsGridSection({
                                         <h3>{post.title}</h3>
                                         <p>{post.excerpt}</p>
                                         <div className="blog-post-meta">
-                                            <span>{author.name}</span><span aria-hidden="true">•</span><time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time><span>{post.readMinutes} min read</span>
+                                            <span>{author.name}</span><span aria-hidden="true">•</span><time dateTime={post.publishedAt}>{formatBlogPublishedDate(post.publishedAt)}</time><span>{post.readMinutes} min read</span>
                                         </div>
                                     </div>
                                 </Link>

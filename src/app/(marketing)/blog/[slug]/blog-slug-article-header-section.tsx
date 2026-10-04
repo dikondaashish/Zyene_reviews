@@ -3,16 +3,7 @@ import { CalendarDays, Clock, Slash } from "lucide-react";
 import { PILLAR_LABELS } from "@/lib/content/blog-data";
 import type { BlogPost } from "@/lib/content/blog-types";
 import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
-
-const BLOG_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-});
-
-function formatDate(date: string) {
-    return BLOG_DATE_FORMATTER.format(new Date(`${date}T12:00:00`));
-}
+import { formatBlogPublishedDate } from "@/lib/content/format-blog-date";
 
 export function BlogSlugArticleHeaderSection({ post }: { post: BlogPost }) {
     return (
@@ -28,7 +19,7 @@ export function BlogSlugArticleHeaderSection({ post }: { post: BlogPost }) {
                     <BlogAuthorByline author={post.author} size="md" showRole={false} className="blog-article-author" />
                     <span className="blog-article-meta-item">
                         <CalendarDays className="size-4" aria-hidden="true" />
-                        <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+                        <time dateTime={post.publishedAt}>{formatBlogPublishedDate(post.publishedAt, "long")}</time>
                     </span>
                     <span className="blog-article-meta-item">
                         <Clock className="size-4" aria-hidden="true" />

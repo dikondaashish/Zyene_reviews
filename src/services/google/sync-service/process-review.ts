@@ -21,6 +21,9 @@ import {
   type AdminClient,
   type ReviewPlatformRef,
 } from "./helpers";
+import { isTransientSupabaseError, sleepMs } from "./transient-supabase";
+
+const UPSERT_ATTEMPTS = 3;
 
 /**
  * Processes a single Google Review: Upserts to DB.
@@ -83,11 +86,26 @@ export async function processGoogleReview(
         is_visible: true,
     };
 
-    const { data: upserted, error: upsertError } = await admin
-        .from("reviews")
-        .upsert(reviewData, { onConflict: "business_id, platform, external_id" })
-        .select("id, sentiment, text, created_at")
-        .single();
+    let upserted: {
+        id: string;
+        sentiment: string | null;
+        text: string | null;
+        created_at: string;
+    } | null = null;
+    let upsertError: unknown = null;
+    for (let attempt = 1; attempt <= UPSERT_ATTEMPTS; attempt++) {
+        const result = await admin
+            .from("reviews")
+            .upsert(reviewData, { onConflict: "business_id, platform, external_id" })
+            .select("id, sentiment, text, created_at")
+            .single();
+        upserted = result.data;
+        upsertError = result.error;
+        if (!result.error || !isTransientSupabaseError(result.error) || attempt === UPSERT_ATTEMPTS) {
+            break;
+        }
+        await sleepMs(200 * attempt);
+    }
 
     let upsertedOk = false;
     let needsAnalysis = false;

@@ -22,7 +22,11 @@ import { finalizeGoogleSync, enqueueMissingGoogleReviewAnalysis } from "./finali
 import { prepareGoogleSync } from "./prepare-sync";
 import { syncGoogleReviewsPage } from "./sync-page";
 import { processGoogleReview } from "./process-review";
+import { mapWithConcurrency } from "./transient-supabase";
 import type { SyncResult } from "./types";
+
+/** Cap parallel review upserts to avoid DNS/socket exhaustion (EBUSY / EMFILE). */
+const REVIEW_UPSERT_CONCURRENCY = 5;
 
 /**
  * Compatibility wrapper for existing manual sync (Synchronous).
@@ -55,10 +59,10 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             let totalSyncedFull = 0;
             const seenGoogleExternalIds = new Set<string>();
 
-            const syncStats = await Promise.all(
-                googleReviews.map((review) =>
-                    processGoogleReview(admin, context.platform, review, autoReplySettings)
-                )
+            const syncStats = await mapWithConcurrency(
+                googleReviews,
+                REVIEW_UPSERT_CONCURRENCY,
+                (review) => processGoogleReview(admin, context.platform, review, autoReplySettings)
             );
             for (let i = 0; i < googleReviews.length; i++) {
                 const stats = syncStats[i];
