@@ -27,7 +27,12 @@ export interface IndustryData {
     ownerTitle: string;
     heroHeadline: string;
     heroSub: string;
-    accentColor: string;
+    /**
+     * Curated accent token mapped onto the app's `--chart-*` palette.
+     * Kept to one hue-family per vertical so cards/hovers stay restrained
+     * and the Zyene orange `--primary` remains the dominant action color.
+     */
+    accentColor: "brand" | "chart1" | "chart2" | "chart3" | "chart4" | "chart5";
     metaTitle: string;
     metaDescription: string;
     targetKeywords: string[];
@@ -47,7 +52,7 @@ export const INDUSTRIES: IndustryData[] = [
         ownerTitle: "restaurant owner",
         heroHeadline: "Review Management Built for Restaurants",
         heroSub: "Restaurant owners use Zyene Reviews to send post-visit requests, respond to Google reviews, and give diners a private way to report service problems.",
-        accentColor: "orange",
+        accentColor: "brand",
         metaTitle: "Restaurant Review Management",
         metaDescription:
             "Zyene Reviews helps restaurants get more Google reviews, respond faster with AI, and protect reputation with the Negative Feedback Shield. From $29.99/mo.",
@@ -92,7 +97,7 @@ export const INDUSTRIES: IndustryData[] = [
         ownerTitle: "dental practice",
         heroHeadline: "Review Management Built for Dental Practices",
         heroSub: "Dental practices use Zyene Reviews to attract new patients, respond to reviews professionally, and protect their reputation with the Negative Feedback Shield.",
-        accentColor: "blue",
+        accentColor: "chart1",
         metaTitle: "Dental Practice Review Management",
         metaDescription:
             "Dental practices get more Google reviews with HIPAA-aware AI replies, the Negative Feedback Shield, and competitor tracking. From $29.99/mo.",
@@ -137,7 +142,7 @@ export const INDUSTRIES: IndustryData[] = [
         ownerTitle: "shop owner",
         heroHeadline: "Review Management Built for Auto Repair Shops",
         heroSub: "Auto repair shops use Zyene Reviews to build trust with new customers, respond to reviews professionally, and protect their reputation online.",
-        accentColor: "gray",
+        accentColor: "chart3",
         metaTitle: "Auto Repair Review Management",
         metaDescription:
             "Auto repair shops build trust with more Google reviews, AI replies, and the Negative Feedback Shield. Built for independent mechanics from $29.99/mo.",
@@ -182,7 +187,7 @@ export const INDUSTRIES: IndustryData[] = [
         ownerTitle: "salon owner",
         heroHeadline: "Review Management Built for Salons & Spas",
         heroSub: "Salon and spa owners use Zyene Reviews to grow their 5-star review count, respond to clients professionally, and shield their reputation from bad experiences.",
-        accentColor: "pink",
+        accentColor: "chart4",
         metaTitle: "Salon & Spa Review Management",
         metaDescription:
             "Salons and spas grow Google reviews with automated requests, AI replies, and the Negative Feedback Shield. Built for beauty businesses from $29.99/mo.",
@@ -227,7 +232,7 @@ export const INDUSTRIES: IndustryData[] = [
         ownerTitle: "home services professional",
         heroHeadline: "Review Management Built for Home Services",
         heroSub: "Plumbers, HVAC technicians, electricians, and other home services professionals use Zyene Reviews to build trust online and win more jobs.",
-        accentColor: "teal",
+        accentColor: "chart2",
         metaTitle: "Home Services Review Management",
         metaDescription:
             "Plumbers, HVAC, and electricians win more jobs with review automation, AI replies, and private negative feedback routing. From $29.99/mo.",
@@ -272,7 +277,7 @@ export const INDUSTRIES: IndustryData[] = [
         ownerTitle: "healthcare provider",
         heroHeadline: "Review Management Built for Medical Practices",
         heroSub: "Doctors, clinics, and healthcare providers use Zyene Reviews to attract new patients, respond professionally to reviews, and protect their practice's reputation.",
-        accentColor: "blue",
+        accentColor: "chart1",
         metaTitle: "Medical Practice Review Management",
         metaDescription:
             "Medical practices attract patients with ethical review requests, HIPAA-aware AI replies, and the Negative Feedback Shield. From $29.99/mo.",
@@ -317,7 +322,7 @@ export const INDUSTRIES: IndustryData[] = [
         ownerTitle: "hotel owner",
         heroHeadline: "Review Management Built for Hotels & Hospitality",
         heroSub: "Hotels and hospitality businesses use Zyene Reviews to respond to guests faster, protect their reputation, and strengthen their Google Maps presence.",
-        accentColor: "indigo",
+        accentColor: "chart5",
         metaTitle: "Hotel Review Management",
         metaDescription:
             "Hotels respond faster, collect post-stay reviews, and protect ratings with AI replies and the Negative Feedback Shield. From $29.99/mo.",
@@ -362,7 +367,7 @@ export const INDUSTRIES: IndustryData[] = [
         ownerTitle: "gym or studio owner",
         heroHeadline: "Review Management Built for Fitness & Gyms",
         heroSub: "Gyms, fitness studios, and personal trainers use Zyene Reviews to attract new members, retain existing ones, and protect their reputation online.",
-        accentColor: "green",
+        accentColor: "chart2",
         metaTitle: "Gym & Fitness Review Management",
         metaDescription:
             "Gyms and studios attract members with automated review requests, AI replies, and the Negative Feedback Shield. Built for fitness from $29.99/mo.",
@@ -407,7 +412,7 @@ export const INDUSTRIES: IndustryData[] = [
         ownerTitle: "HVAC business owner",
         heroHeadline: "Review & Reputation Management for HVAC Companies",
         heroSub: "HVAC companies use Zyene Reviews to automate post-job review requests, respond with AI, and win more seasonal jobs through a stronger local reputation.",
-        accentColor: "sky",
+        accentColor: "chart1",
         metaTitle: "HVAC Reputation Management & Review Software",
         metaDescription:
             "HVAC review management: automate post-job review requests, AI-drafted Google replies, and private routing of pricing complaints. From $29.99/mo.",
@@ -462,7 +467,7 @@ export const INDUSTRIES: IndustryData[] = [
         ownerTitle: "plumbing business owner",
         heroHeadline: "Review & Reputation Management for Plumbers",
         heroSub: "Plumbers use Zyene Reviews to turn every completed job into a Google review, respond with AI, and keep pricing surprises off public review pages.",
-        accentColor: "cyan",
+        accentColor: "chart2",
         metaTitle: "Plumber Review & Reputation Management Software",
         metaDescription:
             "Plumbing reputation management: automate post-job Google review requests via SMS, draft AI replies, and resolve billing complaints privately. From $29.99/mo.",
@@ -517,7 +522,7 @@ export const INDUSTRIES: IndustryData[] = [
         ownerTitle: "electrical business owner",
         heroHeadline: "Review & Reputation Management for Electricians",
         heroSub: "Electricians use Zyene Reviews to automate review requests after each job, respond with AI, and stay the top-rated choice for local electrical work.",
-        accentColor: "amber",
+        accentColor: "chart4",
         metaTitle: "Electrician Review & Reputation Management",
         metaDescription:
             "Electrician reputation management: automate Google review requests after each job, AI-drafted replies, and private routing of unhappy customers. From $29.99/mo.",

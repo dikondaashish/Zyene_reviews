@@ -1,14 +1,17 @@
 import type { IndustryData } from "@/lib/industries/industry-data";
+import { industryAccentTint, industryAccentVar } from "@/lib/industries/industry-accent-tokens";
 
 export function IndustriesIndustryPainPointsSection({ data }: { data: IndustryData }) {
     // Use the first pain point as the featured stat (left), remaining as supporting (right)
     const featured = data.painPoints[0];
     const supporting = data.painPoints.slice(1);
+    const accent = industryAccentVar(data.accentColor);
+    const tint = industryAccentTint(data.accentColor);
 
     return (
         <section className="py-20 px-4 bg-muted border-t border-border">
             <div className="container mx-auto max-w-5xl">
-                <h2 className="text-3xl font-bold text-foreground text-center mb-3">
+                <h2 className="text-3xl font-bold text-foreground text-center mb-3 tracking-tight">
                     The reputation challenges {data.name.toLowerCase()} face
                 </h2>
                 <p className="text-muted-foreground text-center mb-14 max-w-xl mx-auto">
@@ -18,10 +21,13 @@ export function IndustriesIndustryPainPointsSection({ data }: { data: IndustryDa
                 <div className="grid lg:grid-cols-5 gap-10 items-start">
                     {/* Featured stat: 3/5 width */}
                     <div className="lg:col-span-3">
-                        <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-4">
+                        <p
+                            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full mb-4"
+                            style={{ color: accent, background: tint }}
+                        >
                             {featured.stat}
                         </p>
-                        <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-5 leading-tight">
+                        <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-5 leading-tight tracking-tight">
                             {featured.title}
                         </h3>
                         <p className="text-base text-muted-foreground leading-relaxed max-w-lg">
@@ -32,11 +38,18 @@ export function IndustriesIndustryPainPointsSection({ data }: { data: IndustryDa
                     {/* Supporting stats: 2/5 width, stacked */}
                     <div className="lg:col-span-2 flex flex-col gap-6">
                         {supporting.map((point, i) => (
-                            <div key={i} className="border-l-2 border-primary pl-5 py-1">
-                                <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">
+                            <div
+                                key={i}
+                                className="pl-5 py-4 rounded-r-xl bg-card border border-border hover:border-primary/40 transition-[border-color] duration-[180ms]"
+                                style={{ borderLeft: `3px solid ${accent}` }}
+                            >
+                                <p
+                                    className="text-xs font-semibold uppercase tracking-wider mb-2"
+                                    style={{ color: accent }}
+                                >
                                     {point.stat}
                                 </p>
-                                <h3 className="text-lg font-bold text-foreground mb-2">
+                                <h3 className="text-lg font-bold text-foreground mb-2 tracking-tight">
                                     {point.title}
                                 </h3>
                                 <p className="text-sm text-muted-foreground leading-relaxed">

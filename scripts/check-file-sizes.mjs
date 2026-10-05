@@ -67,12 +67,18 @@ const BASELINE = {
     max: 264,
     why: "content dataset — troubleshooting guide for missing Google reviews with recovery steps",
   },
-  "src/lib/content/resource-data.ts": { max: 505, why: "content dataset" },
+  "src/lib/content/resource-data.ts": {
+    max: 516,
+    why: "content dataset — expanded SEO metadata for the local SEO checklist guide",
+  },
   "src/lib/comparisons/competitor-data.ts": {
     max: 455,
     why: "content dataset",
   },
-  "src/lib/industries/industry-data.ts": { max: 454, why: "content dataset" },
+  "src/lib/industries/industry-data.ts": {
+    max: 579,
+    why: "content dataset — grew with hvac/plumbing/electricians verticals (SEO-driven expansion)",
+  },
   "src/lib/growth/kpi-definitions.ts": { max: 225, why: "content dataset" },
   "src/lib/growth/implementation-matrix.ts": {
     max: 242,
