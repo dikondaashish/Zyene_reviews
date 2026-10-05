@@ -398,6 +398,171 @@ export const INDUSTRIES: IndustryData[] = [
         ctaJoinCopy: "Join other gym and fitness studio owners on Zyene",
         imagePath: "/images/industries/fitness.png",
     },
+
+    // ── 9. HVAC ───────────────────────────────────────────────────────────
+    {
+        slug: "hvac",
+        name: "HVAC Companies",
+        nameSingular: "HVAC Company",
+        ownerTitle: "HVAC business owner",
+        heroHeadline: "Review & Reputation Management for HVAC Companies",
+        heroSub: "HVAC companies use Zyene Reviews to automate post-job review requests, respond with AI, and win more seasonal jobs through a stronger local reputation.",
+        accentColor: "sky",
+        metaTitle: "HVAC Reputation Management & Review Software",
+        metaDescription:
+            "HVAC review management: automate post-job review requests, AI-drafted Google replies, and private routing of pricing complaints. From $29.99/mo.",
+        targetKeywords: [
+            "hvac reputation management",
+            "hvac review management",
+            "hvac reputation management software",
+            "hvac customer review management software",
+            "hvac online reputation management",
+            "reputation management for hvac companies",
+        ],
+        painPoints: [
+            {
+                stat: "Seasonal demand",
+                title: "Win the summer & winter service rush",
+                description:
+                    "Homeowners compare HVAC companies on Google before calling during A/C and heating season. A fresh, high-volume review profile decides who gets the call.",
+            },
+            {
+                stat: "Pricing disputes",
+                title: "Quote changes turn into 1-star reviews",
+                description:
+                    "Scope changes and unexpected charges are the top source of negative HVAC reviews. Without a private resolution path, upset homeowners post publicly.",
+            },
+            {
+                stat: "Techs in the field",
+                title: "No time to chase reviews between jobs",
+                description:
+                    "Techs finish the job and drive to the next call. Manual review requests never get sent, so your best work goes uncredited on Google.",
+            },
+        ],
+        solutions: [
+            { title: "Request a review the moment the job closes", description: "Trigger an SMS or email review request automatically when a job is marked complete - when the homeowner's relief (and your five-star service) is freshest." },
+            { title: "AI replies while you're on the next call", description: "Auto-draft professional replies to eligible new Google reviews in your chosen tone. Handle a tricky pricing concern with a draft you review yourself." },
+            { title: "Route pricing complaints privately", description: "The Negative Feedback Shield gives unhappy homeowners a private form to explain a billing issue and alerts your office before it becomes a public review." },
+            { title: "Beat nearby HVAC competitors", description: "Track review volume, rating, and response rate against other HVAC companies in your service area - before peak season hits." },
+        ],
+        useCase: {
+            startingPoint: "An HVAC company completes dozens of installs and repairs monthly but asks for reviews inconsistently and catches pricing complaints only after they go public.",
+            workflow: "Connect the job-completion workflow, send consented follow-ups, centralize new-review alerts, and compare review trends with nearby HVAC providers before peak season.",
+            measures: "Track request delivery, review volume, rating distribution, response time, and resolved billing issues. Maps position depends on relevance, distance, and prominence - not reviews alone.",
+        },
+        ctaJoinCopy: "Join other HVAC companies on Zyene",
+        imagePath: "/images/industries/window-installation.webp",
+    },
+
+    // ── 10. Plumbing ───────────────────────────────────────────────────────
+    {
+        slug: "plumbing",
+        name: "Plumbing Companies",
+        nameSingular: "Plumbing Company",
+        ownerTitle: "plumbing business owner",
+        heroHeadline: "Review & Reputation Management for Plumbers",
+        heroSub: "Plumbers use Zyene Reviews to turn every completed job into a Google review, respond with AI, and keep pricing surprises off public review pages.",
+        accentColor: "cyan",
+        metaTitle: "Plumber Review & Reputation Management Software",
+        metaDescription:
+            "Plumbing reputation management: automate post-job Google review requests via SMS, draft AI replies, and resolve billing complaints privately. From $29.99/mo.",
+        targetKeywords: [
+            "plumbing reputation management",
+            "plumber reputation management",
+            "plumbing review management",
+            "reputation management for plumbers",
+            "plumber reviews",
+            "review management for plumbing company",
+        ],
+        painPoints: [
+            {
+                stat: "Emergency calls",
+                title: "Homeowners pick the plumber with the freshest reviews",
+                description:
+                    "During a leak or burst pipe, homeowners call the top-rated plumber near them. A stale or thin review profile sends that emergency work to a competitor.",
+            },
+            {
+                stat: "Price surprises",
+                title: "Estimate changes are your biggest review risk",
+                description:
+                    "Unexpected charges and changed quotes are the #1 source of 1-star plumbing reviews. Without a private resolution path, upset customers post on Google.",
+            },
+            {
+                stat: "Hands-on work",
+                title: "You're on a job, not on Google",
+                description:
+                    "Plumbing is hands-on. Manual review requests and reply drafts don't happen - so your reputation lags behind your workmanship.",
+            },
+        ],
+        solutions: [
+            { title: "Automate post-job review requests", description: "Send a branded SMS or email review request automatically after each completed job - no office admin work required." },
+            { title: "AI replies in your shop's voice", description: "Auto-draft replies to eligible new Google reviews in a Professional, Friendly, or Concise tone. Edit a draft personally when a customer needs individual attention." },
+            { title: "Resolve billing complaints before they go public", description: "The Negative Feedback Shield routes price disputes to a private form and alerts your office so you can make it right first." },
+            { title: "Track other plumbers in your area", description: "Monitor competitor review volume and rating across your service area to stay the obvious choice when homeowners search." },
+        ],
+        useCase: {
+            startingPoint: "A plumbing company finishes many jobs weekly but rarely asks for reviews and learns about billing complaints only from public 1-star posts.",
+            workflow: "Send the same honest request after completed jobs, centralize alerts, respond with AI-assisted drafts, and route billing issues to a private feedback form.",
+            measures: "Track request delivery, review volume, rating distribution, response coverage, and resolved issues. Ranking is not a promised outcome.",
+        },
+        ctaJoinCopy: "Join other plumbing companies on Zyene",
+        imagePath: "/images/industries/window-installation.webp",
+    },
+
+    // ── 11. Electricians ───────────────────────────────────────────────────
+    {
+        slug: "electricians",
+        name: "Electricians",
+        nameSingular: "Electrician",
+        ownerTitle: "electrical business owner",
+        heroHeadline: "Review & Reputation Management for Electricians",
+        heroSub: "Electricians use Zyene Reviews to automate review requests after each job, respond with AI, and stay the top-rated choice for local electrical work.",
+        accentColor: "amber",
+        metaTitle: "Electrician Review & Reputation Management",
+        metaDescription:
+            "Electrician reputation management: automate Google review requests after each job, AI-drafted replies, and private routing of unhappy customers. From $29.99/mo.",
+        targetKeywords: [
+            "electrician reputation management",
+            "electrical reputation management",
+            "local electrician reputation management",
+            "electrical company reputation management services",
+            "electrician online reputation management",
+            "review management service for electrician",
+        ],
+        painPoints: [
+            {
+                stat: "Safety & trust",
+                title: "Homeowners vet electricians carefully",
+                description:
+                    "Electrical work is high-stakes and licensed. Homeowners compare Google ratings before letting anyone into their panel - a thin review profile loses the job.",
+            },
+            {
+                stat: "Quote disputes",
+                title: "Scope changes become public complaints",
+                description:
+                    "Hidden-condition discoveries change the price mid-job. Without a private resolution path, a frustrated customer leaves a 1-star review.",
+            },
+            {
+                stat: "Solo & small crews",
+                title: "No marketing team to manage reviews",
+                description:
+                    "Most electrical contractors are lean. Review requests and replies compete with dispatch, quotes, and the work itself - so they rarely happen.",
+            },
+        ],
+        solutions: [
+            { title: "Every finished job earns a review", description: "Trigger an SMS or email request automatically when the job is closed - panels, rewires, and installs all feed your Google profile." },
+            { title: "AI replies while you're on site", description: "Auto-draft replies to eligible new Google reviews in your chosen tone. Handle a tricky concern yourself from a pre-written draft." },
+            { title: "Resolve unhappy customers privately", description: "The Negative Feedback Shield gives an unhappy customer a private channel and alerts you before a public review hits." },
+            { title: "Out-rank competing electricians", description: "Track review volume and rating against other electricians in your service area so you stay the obvious, trusted choice." },
+        ],
+        useCase: {
+            startingPoint: "An electrical contractor does high-quality work but has far fewer Google reviews than nearby competitors and no consistent reply process.",
+            workflow: "Send the same honest request after eligible jobs, centralize alerts, respond with AI-assisted drafts, and route unhappy customers privately.",
+            measures: "Track request delivery, review volume, response coverage, and rating distribution. Local position depends on factors beyond reviews.",
+        },
+        ctaJoinCopy: "Join other electricians on Zyene",
+        imagePath: "/images/industries/window-installation.webp",
+    },
 ];
 
 /** Lookup map keyed by slug. */

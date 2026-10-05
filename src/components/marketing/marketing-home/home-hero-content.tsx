@@ -10,10 +10,10 @@ export function HomeHeroContent() {
       </p>
       <h1 id="home-hero-title">
         <span>
-          More reviews.
+          Review management for local businesses.
         </span>
         <span>
-          Less busywork.
+          More Google reviews, less busywork.
         </span>
       </h1>
       <p className="home-hero-description">

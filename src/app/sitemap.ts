@@ -80,6 +80,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
         { url: `${BASE_URL}/industries/medical`, changeFrequency: "monthly", priority: 0.75 },
         { url: `${BASE_URL}/industries/hotels`, changeFrequency: "monthly", priority: 0.75 },
         { url: `${BASE_URL}/industries/fitness`, changeFrequency: "monthly", priority: 0.7 },
+        { url: `${BASE_URL}/industries/hvac`, changeFrequency: "monthly", priority: 0.75 },
+        { url: `${BASE_URL}/industries/plumbing`, changeFrequency: "monthly", priority: 0.75 },
+        { url: `${BASE_URL}/industries/electricians`, changeFrequency: "monthly", priority: 0.75 },
     ];
 
     // 4. Comparison pages - Phase 3 (live)
