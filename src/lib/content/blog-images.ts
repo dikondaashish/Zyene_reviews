@@ -147,6 +147,13 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         height: 941,
         caption: "Google's automated spam algorithms frequently suppress legitimate customer reviews.",
     },
+    "how-to-ask-customers-for-reviews-sms-email-templates": {
+        src: `${BLOG_IMAGE_BASE}/how-to-ask-for-reviews-hero.jpg`,
+        alt: "Local American small business owner smiling behind a cafe counter sending review request texts on a smartphone",
+        width: 1672,
+        height: 941,
+        caption: "Timely, respectful review requests sent via SMS generate up to 4x higher response rates than traditional follow-up emails.",
+    },
 };
 
 export function getBlogImage(slug: string): ContentImage {

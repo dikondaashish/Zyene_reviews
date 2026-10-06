@@ -67,6 +67,10 @@ const BASELINE = {
     max: 264,
     why: "content dataset — troubleshooting guide for missing Google reviews with recovery steps",
   },
+  "src/lib/content/blog-posts-ask-for-reviews.ts": {
+    max: 270,
+    why: "content dataset — review request templates guide with US compliance and industry scripts",
+  },
   "src/lib/content/resource-data.ts": {
     max: 516,
     why: "content dataset — expanded SEO metadata for the local SEO checklist guide",
