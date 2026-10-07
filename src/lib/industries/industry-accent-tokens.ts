@@ -5,7 +5,7 @@ import type { IndustryData } from "./industry-data";
  * surface stays on the Zyene palette.
  *
  * Rules:
- * - `brand` uses the Zyene orange `--primary` (#ff4f00). Reserve for the
+ * - `brand` uses the Zyene orange `--primary`. Reserve for the
  *   flagship restaurant vertical; don't use for everything or the CTA
  *   loses contrast.
  * - `chart1..chart5` reuse `--chart-1..--chart-5`, which are hand-tuned OKLCH
