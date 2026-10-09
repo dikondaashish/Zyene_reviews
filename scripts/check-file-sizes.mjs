@@ -71,6 +71,10 @@ const BASELINE = {
     max: 270,
     why: "content dataset — review request templates guide with US compliance and industry scripts",
   },
+  "src/lib/content/blog-posts-hvac-leads.ts": {
+    max: 235,
+    why: "content dataset — HVAC lead generation and Google Maps optimization guide",
+  },
   "src/lib/content/resource-data.ts": {
     max: 516,
     why: "content dataset — expanded SEO metadata for the local SEO checklist guide",

@@ -154,6 +154,13 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         height: 941,
         caption: "Timely, respectful review requests sent via SMS generate up to 4x higher response rates than traditional follow-up emails.",
     },
+    "how-to-get-hvac-leads-from-google-maps": {
+        src: `${BLOG_IMAGE_BASE}/hvac-google-maps-leads-hero.jpg`,
+        alt: "HVAC contractor business owner and dispatcher reviewing incoming customer calls and Google Maps reviews in an office",
+        width: 1672,
+        height: 941,
+        caption: "Top-performing HVAC contractors rely on organic Google Maps rankings to fill service boards without paying $100+ per click for search ads.",
+    },
 };
 
 export function getBlogImage(slug: string): ContentImage {
