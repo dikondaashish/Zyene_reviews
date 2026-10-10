@@ -7,7 +7,7 @@ import {
     isStaleRunningGoogleSync,
     reconcileStaleGoogleSyncRun,
 } from "@/services/google/sync-run-state";
-import { ApiRouteError } from "@/app/api/_shared/errors";
+import { ApiRouteError, isHandledApiClientError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { mapGoogleSyncError } from "@/lib/api/google-sync-errors";
@@ -86,7 +86,11 @@ export async function handleGoogleSyncGet(request: Request) {
                 platform.average_rating != null ? Number(platform.average_rating) : null,
         });
     } catch (error: unknown) {
-        logger.error({ err: error }, "Sync status GET");
+        if (isHandledApiClientError(error)) {
+            logger.warn({ err: error, status: error.status, code: error.code }, "Sync status GET");
+        } else {
+            logger.error({ err: error }, "Sync status GET");
+        }
         return mapSyncRouteError(error);
     }
 }
@@ -130,7 +134,11 @@ export async function handleGoogleSyncPost(request: Request) {
 
         return apiOk({ message: "Sync started in background" });
     } catch (error: unknown) {
-        logger.error({ err: error }, "Sync Error");
+        if (isHandledApiClientError(error)) {
+            logger.warn({ err: error, status: error.status, code: error.code }, "Sync Error");
+        } else {
+            logger.error({ err: error }, "Sync Error");
+        }
         return mapSyncRouteError(error);
     }
 }
