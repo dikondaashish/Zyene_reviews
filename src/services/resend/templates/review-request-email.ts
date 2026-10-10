@@ -1,3 +1,7 @@
+import { emailHtmlToText } from "@/lib/email/html-to-text";
+import { escapeHtml } from "@/lib/security/html-escape";
+import { reviewRequestLayout } from "@/lib/email/review-request-layout";
+
 interface ReviewRequestEmailProps {
     customerName: string;
     businessName: string;
@@ -7,27 +11,13 @@ interface ReviewRequestEmailProps {
     senderName?: string;
 }
 
-function escapeHtml(s: string): string {
-    return s
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
-}
-
-/** Safe for double-quoted HTML attributes (e.g. href). */
-function escapeAttr(s: string): string {
-    return escapeHtml(s).replace(/'/g, "&#39;");
-}
-
 function firstName(value: string | null | undefined): string {
     const cleaned = (value || "").trim().split(/\s+/)[0] || "";
     return cleaned;
 }
 
 /**
- * Plain-text body. Short, conversational, asks for a reply - patterns that
- * Gmail typically treats as personal correspondence rather than bulk mail.
+ * Plain-text alternative to the personal review request.
  */
 export function reviewRequestEmailPlainText({
     customerName,
@@ -41,12 +31,14 @@ export function reviewRequestEmailPlainText({
     const signoff = sender ? sender : businessName;
 
     if (template) {
+        const isHtml = /<[a-z][\s\S]*>/i.test(template);
+        const value = (text: string) => isHtml ? escapeHtml(text) : text;
         const rendered = template
-            .replace(/\{customer_name\}/g, customerName || "")
-            .replace(/\{business_name\}/g, businessName)
-            .replace(/\{review_link\}/g, reviewLink)
-            .replace(/\{sender_name\}/g, sender);
-        return rendered;
+            .replace(/\{customer_name\}/g, () => value(customerName || ""))
+            .replace(/\{business_name\}/g, () => value(businessName))
+            .replace(/\{review_link\}/g, () => value(reviewLink))
+            .replace(/\{sender_name\}/g, () => value(sender));
+        return isHtml ? emailHtmlToText(rendered) : rendered;
     }
 
     const intro = sender
@@ -61,7 +53,7 @@ export function reviewRequestEmailPlainText({
         "If you have a minute, we'd love to hear how it went:",
         reviewLink,
         "",
-        "Or just reply to this email - I read every response.",
+        "Thank you for sharing your honest feedback.",
         "",
         "Thanks,",
         signoff,
@@ -70,7 +62,7 @@ export function reviewRequestEmailPlainText({
 
 /**
  * Minimal HTML for one-to-one review requests. Plain-text vibe, single link,
- * asks for a reply, no marketing chrome or UTM footers.
+ * keeps the business sender prominent without marketing chrome.
  */
 export function reviewRequestEmail({
     customerName,
@@ -80,11 +72,18 @@ export function reviewRequestEmail({
     senderName,
 }: ReviewRequestEmailProps): string {
     if (template && template.includes("<") && template.includes(">")) {
-        return template
-            .replace(/\{customer_name\}/g, customerName || "")
-            .replace(/\{business_name\}/g, businessName)
-            .replace(/\{review_link\}/g, reviewLink)
-            .replace(/\{sender_name\}/g, senderName || "");
+        const values: Record<string, string> = { customer_name: customerName || "", business_name: businessName, review_link: reviewLink, sender_name: senderName || "" };
+        const html = template.replace(/\{(customer_name|business_name|review_link|sender_name)\}/g,
+            (_, key: string) => escapeHtml(values[key]));
+        return /<html[\s>]/i.test(html) ? html : reviewRequestLayout(html);
+    }
+
+    if (template) {
+        const text = reviewRequestEmailPlainText({ customerName, businessName, reviewLink, template, senderName });
+        const href = escapeHtml(reviewLink);
+        const escaped = escapeHtml(text).replace(/\n/g, "<br>");
+        const body = href ? escaped.split(href).join(`<a href="${href}" style="color:#1a0dab;text-decoration:underline;word-break:break-all;">${href}</a>`) : escaped;
+        return reviewRequestLayout(`<p style="margin:0;white-space:pre-wrap;">${body}</p>`);
     }
 
     const greeting = escapeHtml(firstName(customerName) || "there");
@@ -92,35 +91,20 @@ export function reviewRequestEmail({
     const sender = (senderName || "").trim();
     const senderEsc = escapeHtml(sender);
     const signoff = escapeHtml(sender || businessName);
-    const href = escapeAttr(reviewLink);
+    const href = escapeHtml(reviewLink);
     const linkText = escapeHtml(reviewLink);
 
     const intro = sender
         ? `This is ${senderEsc} from ${biz}.`
         : `Hope you had a good visit to ${biz}.`;
 
-    const font =
-        "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif";
-    const text = "#202124";
-    const muted = "#5f6368";
-
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thanks for stopping by</title>
-</head>
-<body style="margin:0;padding:0;background-color:#ffffff;">
-  <div style="max-width:560px;margin:0 auto;padding:24px 20px 32px;font-family:${font};font-size:16px;line-height:1.6;color:${text};">
+    return reviewRequestLayout(`
     <p style="margin:0 0 16px;">Hi ${greeting},</p>
     <p style="margin:0 0 16px;">${intro}</p>
     <p style="margin:0 0 16px;">If you have a minute, we&rsquo;d love to hear how it went:</p>
     <p style="margin:0 0 16px;"><a href="${href}" style="color:#1a0dab;text-decoration:underline;word-break:break-all;">${linkText}</a></p>
-    <p style="margin:0 0 16px;color:${muted};">Or just reply to this email &mdash; I read every response.</p>
+    <p style="margin:0 0 16px;color:#5f6368;">Thank you for sharing your honest feedback.</p>
     <p style="margin:0 0 4px;">Thanks,</p>
     <p style="margin:0;">${signoff}</p>
-  </div>
-</body>
-</html>`;
+`);
 }

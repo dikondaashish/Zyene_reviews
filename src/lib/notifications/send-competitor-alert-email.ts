@@ -1,8 +1,9 @@
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { competitorAlertEmail } from "@/services/resend/templates/competitor-alert-email";
 import { sendEmail } from "@/services/resend/send-email";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+const APP_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://app.zyenereviews.com").replace(/\/$/, "");
 
 export type CompetitorAlertEmailPayload = {
     businessId: string;
@@ -55,17 +56,10 @@ export async function sendCompetitorAlertEmail(payload: CompetitorAlertEmailPayl
         .eq("business_id", payload.businessId);
 
     const businessName = business.name || "Your business";
-    const html = `
-      <div style="font-family: system-ui, sans-serif; max-width: 560px;">
-        <h2 style="margin: 0 0 12px;">${escapeHtml(payload.title)}</h2>
-        <p style="color: #444; line-height: 1.5;">${escapeHtml(payload.summary)}</p>
-        <p style="margin-top: 16px;">
-          <a href="${APP_URL}/competitors" style="color: #ff4f00;">Open Competitor Monitoring</a>
-          ·
-          <a href="${APP_URL}/settings/competitor-alerts" style="color: #666;">Alert settings</a>
-        </p>
-      </div>
-    `;
+    const html = competitorAlertEmail({
+        businessName, title: payload.title, summary: payload.summary,
+        dashboardUrl: `${APP_URL}/competitors`, settingsUrl: `${APP_URL}/settings/competitor-alerts`,
+    });
 
     await Promise.all(
         members.map(async (member) => {
@@ -83,12 +77,4 @@ export async function sendCompetitorAlertEmail(payload: CompetitorAlertEmailPayl
             });
         })
     );
-}
-
-function escapeHtml(s: string): string {
-    return s
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
 }

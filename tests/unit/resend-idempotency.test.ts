@@ -30,6 +30,17 @@ describe("Resend provider-side replay protection", () => {
         await sendEmail({ to: "fixture@example.test", subject: "Fixture", html: "<p>Fixture</p>" });
         expect(new Headers(fetchMock.mock.calls[0][1].headers).has("Idempotency-Key")).toBe(false);
     });
+    it("delivers generated plain text with action URLs through the real SDK", async () => {
+        await sendEmail({ to: "fixture@example.test", subject: "Fixture",
+            html: '<p>Hello</p><p><a href="https://example.test/dashboard?a=1&amp;b=2">Open dashboard</a></p>' });
+        const body = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { text: string };
+        expect(body.text).toBe("Hello\n\nOpen dashboard (https://example.test/dashboard?a=1&b=2)");
+    });
+    it("preserves an explicitly supplied plain-text alternative", async () => {
+        await sendEmail({ to: "fixture@example.test", subject: "Fixture", html: "<p>HTML</p>", text: "Personal message" });
+        const body = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { text: string };
+        expect(body.text).toBe("Personal message");
+    });
     it("does not contact the provider without server credentials", async () => {
         vi.stubEnv("RESEND_API_KEY", "");
         await expect(sendEmail({ to: "fixture@example.test", subject: "Fixture", html: "Fixture",

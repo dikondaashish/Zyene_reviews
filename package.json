@@ -29,7 +29,9 @@
     "indexnow:ping": "node scripts/ping-indexnow.mjs",
     "geo:gsc-baseline": "node scripts/export-gsc-baseline.mjs",
     "geo:weekly-report": "node scripts/generate-geo-weekly-report.mjs",
-    "test:private-feedback-category": "tsx --env-file=.env.local scripts/test-private-feedback-category.ts"
+    "test:private-feedback-category": "tsx --env-file=.env.local scripts/test-private-feedback-category.ts",
+    "email:preview": "tsx scripts/render-email-previews.ts",
+    "test:email": "playwright test --config tests/email/playwright.config.ts"
   },
   "dependencies": {
     "@google/genai": "^1.49.0",

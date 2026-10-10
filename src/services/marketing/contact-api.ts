@@ -3,8 +3,7 @@ import { z } from "zod";
 
 import { logger } from "@/lib/logger";
 import { clientIpFrom, publicFormRateLimit } from "@/lib/auth/rate-limit";
-import { emailMutedFooter } from "@/lib/email/transactional-email-styles";
-import { escapeHtml } from "@/lib/security/html-escape";
+import { formNotificationEmail, formReceiptEmail } from "@/services/resend/templates/form-emails";
 import { sendEmail } from "@/services/resend/send-email";
 
 const CONTACT_INBOX = "contact@zyenereviews.com";
@@ -61,24 +60,14 @@ export async function handleContactPost(request: Request) {
         await sendEmail({
             to: CONTACT_INBOX,
             subject: `[Contact] ${subject} - ${name}`,
-            html: `<p><strong>New contact form submission</strong></p>
-<ul>
-<li><strong>Name:</strong> ${escapeHtml(name)}</li>
-<li><strong>Email:</strong> ${escapeHtml(email)}</li>
-<li><strong>Subject:</strong> ${escapeHtml(subject)}</li>
-</ul>
-<p><strong>Message:</strong></p>
-<p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>
-${emailMutedFooter("Submitted via zyenereviews.com/contact")}`,
+            html: formNotificationEmail("New contact form submission", { Name: name, Email: email, Subject: subject }, message, "Submitted via zyenereviews.com/contact"),
             replyTo: email,
         });
 
         await sendEmail({
             to: email,
             subject: "We received your message - Zyene Reviews",
-            html: `<p>Hi ${escapeHtml(name)},</p>
-<p>Thanks for reaching out. We received your message about <strong>${escapeHtml(subject)}</strong> and will reply within one business day.</p>
-<p> - Zyene Reviews</p>`,
+            html: formReceiptEmail("contact", name, subject),
         });
     } catch (err) {
         logger.error({ err }, "[contact] email failed:");
