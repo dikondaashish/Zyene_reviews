@@ -1,125 +1,157 @@
-# Deep Codebase Audit Report
+# Verified cleanup execution — October 10, 2026
 
-> **Archive / historical snapshot.** File counts and removed paths reflect the audit date, not necessarily the current tree. For live structure, use `docs/CODEBASE_STRUCTURE.md` and the repo. For product architecture, use `docs/PROJECT_DEEP_DIVE.md`.
+This records the cleanup authorized after independently checking the supplied
+report against commit `7d45ba755ebccde5c6c10b274761645bff9d82be`.
+The [claim-by-claim verification](REPO_CLEANUP_VERIFICATION_2026-10-10.md)
+explains evidence and corrections. The [exact manifest](REPO_CLEANUP_MANIFEST_2026-10-10.json)
+records every deleted path, original byte size, and archived document.
+The [previous August report](archive/2026-08/DEEP_CODEBASE_AUDIT_REPORT.md)
+is historical evidence, not current usage data.
 
-This report records a full-repo automated + manual audit pass across all tracked files.
+## Executed changes
 
-## Phase 1 - File Usage Audit
+| Category | Files deleted | Original bytes |
+|---|---:|---:|
+| Unused source modules and non-routed/unmatched copies | 35 | 64,332 |
+| Unreferenced public assets | 20 | 8,614,331 |
+| Legacy blog JPEGs with existing WebP replacements | 22 | 9,628,142 |
+| Retired one-off size-class codemod | 1 | 2,398 |
+| Historical screenshots and obsolete machine usage snapshots | 25 | 5,392,810 |
+| **Total** | **103** | **23,702,013** |
 
-- Total tracked files reviewed: `532`
-- Full machine-readable inventory: `docs/FULL_FILE_USAGE_AUDIT.json`
+These are gross bytes removed from the current tree, before small additions.
+They are not measured download, clone, deployment or CDN savings. Old Git blobs
+remain recoverable; no history rewrite was performed. Fifteen dated documents
+were moved into archive directories, which improves organization but saves no
+checkout bytes. The prior deep-audit report was also preserved there.
 
-### High-confidence dead/unused files removed
+The source batch includes the 25 named candidates and ten ` 2` copies. Seven
+copies were byte-identical; three obsolete API copies differed and were checked
+against their active routes/history before deletion. Their logic was not merged
+back. The custom animated-number/pro-chart-container files were project additions,
+not upstream shadcn primitives. Next.js convention files and live loading states stay.
+The growth blueprint scans marketing directories dynamically; its regression test
+checks behavior after the unused feature section was removed.
 
-1. `src/lib/stores/onboarding-store.ts`
-2. `src/app/(dashboard)/integrations/actions.ts`
-3. `src/components/settings/index.ts`
-4. `src/components/ui/pricing-demo.tsx`
-5. `src/lib/twilio/send-sms.ts`
-6. `src/lib/resend/send-email.ts`
-7. `email-list-2026-04-06T20-24-54.html`
+Twenty-two specific permanent redirects in `next.config.ts` preserve the old blog
+JPEG URLs and lead to existing WebP images. Live JPEG covers remain. No wildcard
+redirect rewrites arbitrary JPEGs. Other removed public assets had no tracked
+application consumer; external traffic/logs were unavailable, so external use is
+not certified absent. Restore a needed source asset from the baseline commit if
+an external consumer is identified.
 
-### Remaining cautionary candidates (manual review recommended)
+Historical design screenshots were removed from the checkout with a recovery
+note in the evidence directory. Source plans, ledgers and SEO datasets remain.
+Copies of the removed screenshots and machine snapshots were retained privately
+outside the repository. Old screenshots do not certify today's rendered pages.
 
-Note: `public/` files are intentionally left untouched per product direction.
+## Corrections and protected files
 
-- `public/file.svg`
-- `public/window.svg`
-- `public/widget-test.html`
-- `public/zyene-overview.pdf`
+- `public/Main logo.png` is live through its encoded URL; it stays.
+- Approved mascot masters, brand references, verification tokens, NFC photos,
+  referenced blog covers and the live overview PDF stay.
+- Tested security scripts and active security/support handoffs stay. Manual
+  invocation is valid usage; package/CI absence is not proof of obsolescence.
+- The shared marketing MIT notice stays because AnimatedBackground remains live.
+- `docs/INDEX.md` is a discovery index, not a deletion allowlist. It now includes
+  active support, security, planning and operator references previously missing.
+- Stale MASTER design tokens were replaced with a pointer to DESIGN/PRODUCT.
+- [Operator scripts](OPERATOR_SCRIPTS.md) now documents purpose, environment and
+  side effects. Paid/live vendor tools were inspected, not run as ordinary tests.
+- Dated plans with unfinished work remain active; superseded presentation/audit
+  snapshots carry historical notices and updated relative links in the archive.
 
-These have no internal app references but may be externally linked or manually used.
+## Growth authentication repair
 
-## Phase 2 - Dead Code Inside Used Files
+The login API now delegates to a bounded, strict Zod service. Malformed JSON,
+null/array bodies and non-string/empty/oversized passwords return 400; wrong
+passwords return 401; a disabled dashboard returns 503. Failures issue no cookie.
+Unexpected session creation failures return a structured 500 and a server log.
 
-### Confirmed cleanup done
+Sessions have signed issuance/expiry timestamps and a random nonce. Verification
+enforces a seven-day lifetime for both cookie access and bearer replay. Tampering,
+future-issued and legacy non-expiring tokens are rejected. Rotating
+`GROWTH_DASHBOARD_SECRET` invalidates existing sessions and the old raw secret.
+Existing operators must sign in again after rollout. Cookies remain HttpOnly,
+SameSite=Strict, and Secure in production. Success responses are no-store.
 
-- Removed duplicate dead integration action file (`integrations/actions.ts`), keeping canonical logic in `integrations/_actions.ts`.
-- Removed duplicate onboarding store path in `src/lib/stores`, keeping canonical `src/lib/state/onboarding-store.ts`.
-- Removed duplicate provider modules under `src/lib` and standardized on `src/services` for Twilio/Resend senders.
-- Removed legacy full-page refresh in `src/app/(dashboard)/requests/send-request-dialog.tsx` and replaced it with `router.refresh()`.
-- Removed low-value debug logging in onboarding and dashboard UI flows.
+Raw secret bearer authorization remains supported for existing automation. There
+is no per-session revocation registry or individual operator identity. The shared
+API limiter remains, including its Redis-outage fail-open behavior; this change
+does not claim to add a dedicated login limiter. See [growth operations](GROWTH_OPERATIONS.md).
 
-### High-priority remaining items (flagged)
+## Administration and remaining owner work
 
-- No blocking TODO/FIXME debt remains from the original flagged set.
+Source inspection found no global tenant CRUD/impersonation console. It did find
+implemented developer-labelled `owner`/`ORG_OWNER` support memberships, provisioning
+triggers, backfill, organization opt-outs and audit events. Tenant permissions
+also include viewer/ORG_EMPLOYEE normalization. Do not infer production grants
+or deployed trigger status from migration files alone.
 
-## Phase 3 - Dependency Audit
+| Work | Owner / evidence required | Tracking |
+|---|---|---|
+| Attest current support access | Platform owner: correct Zyene project, migration/trigger state, support identities, active grants, opt-outs, MFA/recovery and audit visibility | [Developer access](developer-role-2026-09-30.md) |
+| Reconcile recorded security follow-up | Platform owner: fresh deployment attestation, provider/heartbeat rotations and independent recovery before DB upgrade; dated statements need rechecking | [Security follow-up](SECURITY-FOLLOW-UP-2026-09-30.md) |
+| Finish GEO distribution/proof/measurement | Growth owner: real QA outcomes, posts, profiles, customer permission and weekly numbers; no fake completion | [GEO closeout](GEO_CLOSEOUT_STATUS.md) and [owner checklist](GEO_OWNER_FINAL_CHECKLIST.md) |
+| Reconcile AEO/SEO/workspace plans | Product owner: compare outstanding checklists to current implementation and measured acceptance before retiring plans | [AEO release plan](GOOGLE_SEO_AEO_RELEASE_PLAN.md), [SEO growth](SEO_GROWTH_PLAN_2026-09-29.md), [Reviews workspace](REVIEWS_WORKSPACE_IMPLEMENTATION_PLAN.md) |
+| Triage existing static diagnostics | Engineering owner: investigate remaining React Doctor hypotheses against behavior and regression tests; compiler opt-outs and historical SQL are not all confirmed runtime defects | This record and the active standards/security audit workflow |
+| Reduce overview PDF cost meaningfully | Marketing owner: review visual quality or storage/URL migration; preserve working download links | `public/zyene-overview.pdf` |
 
-- Full machine-readable matrix: `docs/DEPENDENCY_AUDIT.json`
-- Total packages checked: `64`
-- Candidate review list: `6` (TypeScript `@types/*` packages; expected for type tooling)
+The connected Supabase account did not expose the Zyene project. No credentials
+were substituted and no database state was changed. The permission matrix above
+is an operational follow-up, not authorization to create a new admin console.
 
-### Candidate review packages
+The PDF remains at its live URL. A lossless compression/deduplication trial
+reduced 23,736,932 bytes by only 5,545 bytes (0.023%); that does not justify
+replacing the production asset. A lossy redesign or storage move needs a separate
+quality/link review.
 
-- Type packages flagged by static grep but expected for TS toolchain:
-  - `@types/node`
-  - `@types/react`
-  - `@types/react-dom`
-  - `@types/canvas-confetti`
-  - `@types/papaparse`
-  - `@types/qrcode`
+## Local housekeeping
 
-### Packages removed in cleanup
-
-- `@radix-ui/react-label`
-- `@radix-ui/react-slot`
-- `@radix-ui/react-tabs`
-- `@react-email/components`
-- `@stripe/stripe-js`
-- `react-wrap-balancer`
-- `babel-plugin-react-compiler`
-- `prettier-plugin-tailwindcss`
-
-## Phase 4 - Folder & Architecture Audit
-
-### Current structure quality
-
-- `src/app` routing is organized and consistent with Next.js App Router conventions.
-- Shared UI primitives are centralized under `src/components/ui`.
-- Business logic is split across `src/lib` and `src/services`, but duplication exists.
-
-### Architecture issues found
-
-- Raw API calls (`fetch`) still exist in multiple components (tight UI/network coupling).
-- Domain logic duplicated across `lib` and `services`.
-- Several large "god files" remain over 300 lines and should be split by feature slices.
-
-### Target structure recommendation
-
-- Keep current root split but incrementally converge toward:
-  - `src/components/ui`
-  - `src/components/shared`
-  - `src/components/features/<feature>`
-  - `src/services/<feature>`
-  - `src/types`
-  - `src/constants`
-  - `src/config`
-  - `src/utils`
-
-## Phase 5 - Naming & Consistency Audit
-
-### Issues found
-
-- Mixed naming conventions in onboarding component files (`Step*` + `step*-form`).
-- Historic duplicate folder naming (`lib/state` vs removed `lib/stores`).
-
-### Actions taken
-
-- Removed one duplicate naming path (`src/lib/stores/onboarding-store.ts`).
-- Reduced logger inconsistency in key UI flows by removing non-actionable console statements.
-- Normalized utility imports to `@/lib/utils` (removed `@/lib/utils/index` usage).
-
-## Phase 6 - Documentation Baseline
-
-- Updated baseline audit docs added:
-  - `docs/FULL_FILE_USAGE_AUDIT.json`
-  - `docs/DEPENDENCY_AUDIT.json`
-  - `docs/DEEP_CODEBASE_AUDIT_REPORT.md`
+Removed the regenerable 7,857,196-byte TypeScript cache and seven verified empty
+directories. Nonempty `output/`, `test-results 2/` and `loading-proof/` were retained
+because they contain local evidence; the original empty-folder claim was wrong.
+No generic recursive local-junk deletion was used.
 
 ## Verification
 
-- `pnpm typecheck` — Pass
-- `pnpm test` — Pass
-- `pnpm build` — Pass
+Completed so far:
 
+- `pnpm verify`: strict TypeScript, 303 Vitest files / 1,940 tests, and file-size guard passed.
+- Color and migration guards, changed-file ESLint and `git diff --check` passed.
+- Post-removal TypeScript AST scan checked 2,853 tracked/new TS/JS files. It
+  matched both resolver results and literal alias/relative paths so missing
+  deleted files could not hide references. No imports/exports/requires targeted
+  the 35 removed source/copy paths. The one nonliteral dynamic import belongs
+  to the impeccable detector loader; runtime marketing directory scanning was
+  reviewed separately and the growth blueprint tests passed.
+- Archived/current doc check: 84 relative/external Markdown links inspected in
+  18 affected documents; all local targets exist.
+- Removal/archive manifest and protected-file hash checks passed.
+- Changed-file React Doctor: 100/100, no findings. Its whole-repo diagnostic scan
+  scored 43/100 with 656 hypotheses (223 scanner errors, 433 warnings), requiring
+  contextual triage rather than a blanket health claim. Example: historical SQL
+  policies flagged as permissive are removed by the August public-write-policy
+  migration, and Stripe webhook RLS is enabled by later April/September
+  migrations. Those flags do not establish today's deployed grants. No applied
+  migration was edited or diagnostic suppression added. The same scanner on
+  the original commit also scored 43/100, with 677 findings; the cleanup has 21
+  fewer findings. File/rule/severity comparison found no added diagnostic counts. This
+  is evidence of no scanner regression, not proof that all remaining flags are
+  false or that the application is free of defects.
+- The 43 marketing page/layout and sitemap/robots files match the baseline;
+  focused marketing SEO, sitemap, branding and growth regression tests pass.
+- `pnpm build`: production webpack compilation, build-time TypeScript and all 280 static pages passed. Existing Edge Runtime deprecation/static-generation notices remain. Built-server checks passed: all 22 old JPEG URLs return 308 and their WebP
+  targets return 200; logo/PDF downloads return 200; malformed/wrong-password
+  login requests return 400/401 without cookies; successful login sets the
+  production Secure/HttpOnly/Strict cookie with signed seven-day expiry and
+  no-store; unauthenticated/legacy-cookie metrics requests return 401. Home,
+  features, partners and blog render 200 with titles/headings; the pre-existing
+  product-to-features redirect still returns 308. Only synthetic credentials
+  were used; no live provider or database actions ran.
+The workspace's cloud-evicted dependency files stalled file reads. Verification
+uses an exact-base temporary GitHub checkout with the task changes overlaid and
+fresh frozen-lockfile dependencies, without changing the project's dependencies.
+Focused auth/report/SEO/growth tests passed before that environment repair.
+This report does not certify all application security, live database state,
+external asset consumers or production rollout.

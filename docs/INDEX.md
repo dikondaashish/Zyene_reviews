@@ -2,6 +2,10 @@
 
 Central index for project documentation and where each file belongs.
 
+This is a discovery index, not a deletion allowlist. Unlisted documents may be
+referenced by skills, runbooks, design context or human workflows. Verify those
+consumers before retirement. Dated evidence is not proof of current deployment.
+
 ## Engineering knowledge base (START HERE)
 
 - `docs/README.md` — documentation hub (setup overview + links).
@@ -25,6 +29,9 @@ Central index for project documentation and where each file belongs.
 - `docs/ROADMAP.md` - unbuilt / planned work (drip campaigns, SSO, POS, etc.).
 - `docs/CODEBASE_STRUCTURE.md` - repo structure and placement rules.
 - `docs/PRODUCTION_CHECKLIST.md` - pre-release and deployment verification checklist.
+- `PRODUCT.md` - product, voice and audience context consumed by the impeccable skill.
+- `docs/dashboard-color-audit.md` - design decisions referenced by PRODUCT.md and DESIGN.md.
+- `docs/marketing-component-licenses.md` - required attribution for live marketing adaptations.
 
 ## Growth & GEO Docs (KEEP in `docs/`)
 
@@ -54,8 +61,22 @@ Central index for project documentation and where each file belongs.
 
 - `docs/CRITICAL_FLOW_VERIFICATION.md` - critical flow verification and release gate.
 - `docs/DEEP_CODEBASE_AUDIT_REPORT.md` - latest cleanup/audit outcomes.
+- `docs/REPO_CLEANUP_VERIFICATION_2026-10-10.md` and `docs/REPO_CLEANUP_MANIFEST_2026-10-10.json` - claim checks and exact executed removals.
 - `docs/DESIGN_UX_PHASES.md` - UX/design evolution roadmap and phase tracking.
 - `docs/competitor-watch-cursor-prompt.md` - Cursor prompt for competitor watch feature work.
+- `docs/OPERATOR_SCRIPTS.md` - manual diagnostic tools, environments and side effects.
+- `docs/developer-role-2026-09-30.md` - support access, owner removal and recovery history.
+- `docs/SECURITY-FOLLOW-UP-2026-09-30.md` - latest recorded security operational checkpoint.
+- `docs/SECURITY-REMEDIATION-2026-09-29.md` - original findings and source/regression evidence.
+- `docs/SECURITY-DEPLOYMENT-2026-09-30.md` - historical rollout record.
+- `docs/security-readonly-verification-2026-09-29.sql` - saved read-only verification queries.
+- `docs/SEO_GROWTH_PLAN_2026-09-29.md` and `docs/SEO_BACKLINK_STRATEGY.md` - owner execution plans.
+- `docs/SEO_REMEDIATION_2026-09-13.md` - dated release and post-deployment checks.
+- `docs/GOOGLE_SEO_AEO_RELEASE_PLAN.md` and `docs/AEO_*COMPLETION*.md` - phase plans and completion evidence.
+- `docs/REVIEWS_WORKSPACE_IMPLEMENTATION_PLAN.md` - draft plan; reconcile against current implementation.
+- `docs/design-handoff-2026-09/` - proposal/acceptance material and route inventory, not approved completion.
+- `docs/seo-audit-2026-09-13/`, `docs/seo-audit-2026-09-29/` and `docs/audits/` - dated evidence backing retained plans.
+- `docs/brand/zyene-mascot.md` - approved mascot source and reference assets.
 
 ## AI / Agent Runtime Docs (KEEP in `.agent/`)
 
@@ -74,6 +95,7 @@ Point-in-time snapshots — not live SoT:
 - `docs/archive/DATABASE_VALIDATION_REPORT.md`
 - `docs/archive/TEST_FLOWS.md`
 - `docs/archive/README.md`
+- `docs/archive/2026-07/`, `docs/archive/2026-08/`, `docs/archive/2026-09/` - dated audit and design snapshots retired from the live docs root in October 2026.
 
 ## Tooling Instruction Docs (KEEP in place)
 
