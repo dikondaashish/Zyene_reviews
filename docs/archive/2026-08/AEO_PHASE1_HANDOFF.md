@@ -6,6 +6,10 @@
 > Use `docs/AEO_PHASE1_COMPLETION_2026-08-18.md` for the current state. The
 > remainder of this file is retained as the historical 2026-08-11 snapshot.
 
+October 10 review: the August credential-disclosure note is not proof of later
+revocation. Its closure is tracked as SEC-1 in the
+[active follow-up tracker](../../DOCUMENTATION_FOLLOW_UP_2026-10-10.md).
+
 **Written:** 2026-08-11 · **Verified against:** live repo working tree + production Supabase `snielpllhrppdqzkzjwf`
 **Everything below was checked against real files, real `git status`, and real SQL counts.** Nothing is quoted from a prior session's memory. Where something is unverified, it says so.
 

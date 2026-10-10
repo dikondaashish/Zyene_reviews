@@ -523,18 +523,13 @@
   ],
   "archived": {
     "AUDIT_REPORT.md": "docs/archive/2026-07/AUDIT_REPORT.md",
-    "CONTENT_AUDIT_REPORT.md": "docs/archive/2026-09/CONTENT_AUDIT_REPORT.md",
     "docs/CODEBASE_STANDARDS_AUDIT_2026-08.md": "docs/archive/2026-08/CODEBASE_STANDARDS_AUDIT_2026-08.md",
     "docs/COLOR_CONSISTENCY_AUDIT_2026-09-12.md": "docs/archive/2026-09/COLOR_CONSISTENCY_AUDIT_2026-09-12.md",
     "docs/TYPOGRAPHY_SPACING_AUDIT_2026-09-12.md": "docs/archive/2026-09/TYPOGRAPHY_SPACING_AUDIT_2026-09-12.md",
     "docs/AUTO_REPLY_BUYER_JOURNEY_AUDIT_2026-09-12.md": "docs/archive/2026-09/AUTO_REPLY_BUYER_JOURNEY_AUDIT_2026-09-12.md",
-    "docs/analytics-presentation.md": "docs/archive/2026-09/analytics-presentation.md",
     "docs/pricing-presentation.md": "docs/archive/2026-09/pricing-presentation.md",
-    "docs/app-ux-audit.md": "docs/archive/2026-09/app-ux-audit.md",
-    "docs/dashboard-loading.md": "docs/archive/2026-09/dashboard-loading.md",
     "docs/marketing-redesign.md": "docs/archive/2026-09/marketing-redesign.md",
     "docs/marketing-redesign-first-pass.md": "docs/archive/2026-09/marketing-redesign-first-pass.md",
-    "docs/widget-reference-analysis-2026-09-30.md": "docs/archive/2026-09/widget-reference-analysis-2026-09-30.md",
     "docs/AEO_PHASE1_HANDOFF.md": "docs/archive/2026-08/AEO_PHASE1_HANDOFF.md",
     "docs/AEO_PHASE1_STATE_2026-08-11.md": "docs/archive/2026-08/AEO_PHASE1_STATE_2026-08-11.md"
   },
@@ -549,12 +544,31 @@
     "docs/marketing-component-licenses.md",
     "docs/developer-role-2026-09-30.md",
     "docs/SECURITY-FOLLOW-UP-2026-09-30.md",
-    "docs/security-readonly-verification-2026-09-29.sql"
+    "docs/security-readonly-verification-2026-09-29.sql",
+    "CONTENT_AUDIT_REPORT.md",
+    "docs/analytics-presentation.md",
+    "docs/app-ux-audit.md",
+    "docs/dashboard-loading.md",
+    "docs/widget-reference-analysis-2026-09-30.md"
   ],
   "limitations": [
     "Public assets may have external consumers; legacy blog JPEG URLs have specific permanent WebP redirects.",
     "A normal deletion commit does not remove old blobs from Git history.",
-    "Archived documents preserve historical findings; unfinished plans remain active.",
+    "Ten reviewed documents remain archived; five active references were restored. Unfinished work is tracked in docs/DOCUMENTATION_FOLLOW_UP_2026-10-10.md.",
     "No live Zyene database attestation was available through the connected Supabase account."
-  ]
+  ],
+  "restored_after_document_review": {
+    "docs/archive/2026-09/CONTENT_AUDIT_REPORT.md": "CONTENT_AUDIT_REPORT.md",
+    "docs/archive/2026-09/analytics-presentation.md": "docs/analytics-presentation.md",
+    "docs/archive/2026-09/app-ux-audit.md": "docs/app-ux-audit.md",
+    "docs/archive/2026-09/dashboard-loading.md": "docs/dashboard-loading.md",
+    "docs/archive/2026-09/widget-reference-analysis-2026-09-30.md": "docs/widget-reference-analysis-2026-09-30.md"
+  },
+  "documentation_review": {
+    "date": "2026-10-10",
+    "initial_archive_count": 15,
+    "final_archive_count": 10,
+    "restored_count": 5,
+    "record": "docs/DOCUMENTATION_FOLLOW_UP_2026-10-10.md"
+  }
 }

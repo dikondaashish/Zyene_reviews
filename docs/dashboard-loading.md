@@ -1,6 +1,13 @@
 # Dashboard loading states
 
-> Archived October 10, 2026. This is historical evidence, not current implementation or deployment status. See [the current cleanup record](../../DEEP_CODEBASE_AUDIT_REPORT.md).
+> Active loading-state reference, restored October 10, 2026. Implementation guidance remains relevant; browser and test results below describe the September work. See [DESIGN.md](DESIGN.md) and the [active follow-up tracker](DOCUMENTATION_FOLLOW_UP_2026-10-10.md).
+
+Current implementation: `src/components/dashboard/dashboard-loading.css` and
+`src/components/dashboard/dashboard-skeleton.tsx`. Use `DashboardSkeleton` for
+dashboard placeholders rendered through dialog portals, where the shell selector
+does not reach them. Preserve static placeholders for reduced motion and visible
+existing content during refresh. Authenticated navigation verification is still
+open (LOAD-1); the local component preview was not that verification.
 
 The authenticated app uses a soft, moving highlight across neutral skeleton placeholders, informed by the OptiMonk Home → Analytics transition observed in Chrome on September 29, 2026.
 

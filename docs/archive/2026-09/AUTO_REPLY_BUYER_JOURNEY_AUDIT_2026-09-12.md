@@ -2,6 +2,10 @@
 
 > Archived October 10, 2026. This is historical evidence, not current implementation or deployment status. See [the current cleanup record](../../DEEP_CODEBASE_AUDIT_REPORT.md).
 
+The unconfirmed Podium plan/platform comparison and current competitor-evidence
+review are retained as COMP-1 in the
+[active follow-up tracker](../../DOCUMENTATION_FOLLOW_UP_2026-10-10.md).
+
 Date: September 12, 2026
 
 ## Recommendation

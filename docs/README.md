@@ -154,6 +154,8 @@ Never commit `.env.local` or put secrets in SQL migrations.
 ### Related existing docs
 
 - [INDEX.md](./INDEX.md) — full inventory (growth, GEO, audits, archives)
+- [Documentation follow-up](./DOCUMENTATION_FOLLOW_UP_2026-10-10.md) — reviewed archive decisions, restored references and unfinished work
+- [Content audit](../CONTENT_AUDIT_REPORT.md), [analytics](./analytics-presentation.md), [loading states](./dashboard-loading.md), [dashboard UX](./app-ux-audit.md), and [widget reference](./widget-reference-analysis-2026-09-30.md) — restored active documentation
 - [PROJECT_DEEP_DIVE.md](./PROJECT_DEEP_DIVE.md) — product/domain deep dive
 - [CODEBASE_STRUCTURE.md](./CODEBASE_STRUCTURE.md) — placement rules
 - [PLATFORM_FEATURES.md](./PLATFORM_FEATURES.md) — customer-facing capabilities

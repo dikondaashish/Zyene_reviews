@@ -32,6 +32,10 @@ consumers before retirement. Dated evidence is not proof of current deployment.
 - `PRODUCT.md` - product, voice and audience context consumed by the impeccable skill.
 - `docs/dashboard-color-audit.md` - design decisions referenced by PRODUCT.md and DESIGN.md.
 - `docs/marketing-component-licenses.md` - required attribution for live marketing adaptations.
+- [analytics-presentation.md](analytics-presentation.md) - current chart meaning, missing-data rules and presentation rationale.
+- [dashboard-loading.md](dashboard-loading.md) - current dashboard placeholder integration and reduced-motion behavior.
+- [review-widget-builder.md](review-widget-builder.md) - current widget setup, aggregate summaries and installation.
+- [widget-reference-analysis-2026-09-30.md](widget-reference-analysis-2026-09-30.md) - active widget implementation boundaries with dated reference research.
 
 ## Growth & GEO Docs (KEEP in `docs/`)
 
@@ -56,6 +60,7 @@ consumers before retirement. Dated evidence is not proof of current deployment.
 - `docs/PHASE3_DISTRIBUTION_PACKAGE.md` - Phase 3 launch copy, UTMs, posting guide, template pack tracking.
 - `docs/TEMPLATE_PACK_LEAD_MAGNET.md` - Template pack funnel events, report API, QA filters.
 - `docs/WELCOME_SEQUENCE.md` - Marketing nurture email sequence (Inngest).
+- [CONTENT_AUDIT_REPORT.md](../CONTENT_AUDIT_REPORT.md) - active content audit with a current reconciliation and unresolved factual/prompt findings.
 
 ## Operations & Verification Docs (KEEP in `docs/`)
 
@@ -77,6 +82,8 @@ consumers before retirement. Dated evidence is not proof of current deployment.
 - `docs/design-handoff-2026-09/` - proposal/acceptance material and route inventory, not approved completion.
 - `docs/seo-audit-2026-09-13/`, `docs/seo-audit-2026-09-29/` and `docs/audits/` - dated evidence backing retained plans.
 - `docs/brand/zyene-mascot.md` - approved mascot source and reference assets.
+- [app-ux-audit.md](app-ux-audit.md) - owner-approved dashboard arrangement and unfinished competitor-search keyboard review.
+- [DOCUMENTATION_FOLLOW_UP_2026-10-10.md](DOCUMENTATION_FOLLOW_UP_2026-10-10.md) - all 15 archive decisions, five restorations, owners and completion evidence for remaining work.
 
 ## AI / Agent Runtime Docs (KEEP in `.agent/`)
 
@@ -95,7 +102,7 @@ Point-in-time snapshots — not live SoT:
 - `docs/archive/DATABASE_VALIDATION_REPORT.md`
 - `docs/archive/TEST_FLOWS.md`
 - `docs/archive/README.md`
-- `docs/archive/2026-07/`, `docs/archive/2026-08/`, `docs/archive/2026-09/` - dated audit and design snapshots retired from the live docs root in October 2026.
+- `docs/archive/2026-07/`, `docs/archive/2026-08/`, `docs/archive/2026-09/` - ten of the 15 reviewed cleanup documents remain historical; five active references were restored. See the follow-up tracker and archive README for exact dispositions.
 
 ## Tooling Instruction Docs (KEEP in place)
 
@@ -104,7 +111,7 @@ Point-in-time snapshots — not live SoT:
 ## Current Organization Decision
 
 - Keep `README.md` at repo root for discovery and onboarding.
-- Keep all remaining project documentation under `docs/`.
+- Keep `PRODUCT.md` and the restored `CONTENT_AUDIT_REPORT.md` at their existing root locations; other project documentation belongs under `docs/`.
 - Keep operational and feature-specific docs inside `docs/`.
 - Keep live agent playbooks in `.agent/docs/`; historical snapshots under `docs/archive/`.
 - Planned / unbuilt work: `docs/ROADMAP.md`.

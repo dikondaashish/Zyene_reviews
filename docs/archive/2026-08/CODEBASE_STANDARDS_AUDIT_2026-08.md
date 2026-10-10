@@ -2,6 +2,11 @@
 
 > Archived October 10, 2026. This is historical evidence, not current implementation or deployment status. See [the current cleanup record](../../DEEP_CODEBASE_AUDIT_REPORT.md).
 
+Historical migration-history observations below remain relevant as DB-1 in the
+[active follow-up tracker](../../DOCUMENTATION_FOLLOW_UP_2026-10-10.md). Use the
+[current migration guide](../../../supabase/migrations/README.md) before any new
+application; old counts and procedures do not establish today's ledger.
+
 **Branch:** `chore/codebase-standards-audit` · 15 commits
 **Standard applied:** repo-native rules in [AGENTS.md §2](../../../AGENTS.md#2-code-standards-non-negotiable)
 

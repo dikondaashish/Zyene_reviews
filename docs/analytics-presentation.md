@@ -1,6 +1,13 @@
 # Analytics presentation
 
-> Archived October 10, 2026. This is historical evidence, not current implementation or deployment status. See [the current cleanup record](../../DEEP_CODEBASE_AUDIT_REPORT.md).
+> Active analytics reference, restored October 10, 2026. The presentation rules remain relevant; the validation results below describe the September implementation and do not certify current production. See [DESIGN.md](DESIGN.md) and the [documentation follow-up tracker](DOCUMENTATION_FOLLOW_UP_2026-10-10.md).
+
+Current source references: `src/components/analytics/ratings-chart.tsx`,
+`chart-presentation.tsx`, `sentiment-chart.tsx`, `theme-chart.tsx`, and
+`google-performance-profile-chart.tsx`. The rating distribution is not AI
+sentiment, and unavailable data must not be presented as a measured zero or decline.
+`tests/unit/analytics-presentation.test.ts` retains the missing-data and theme
+interpretation regressions. Keep these explanations accessible when changing charts.
 
 The analytics refinement uses the existing app palette in light and dark mode. Home dashboard components are outside its scope.
 

@@ -22,8 +22,10 @@ is historical evidence, not current usage data.
 These are gross bytes removed from the current tree, before small additions.
 They are not measured download, clone, deployment or CDN savings. Old Git blobs
 remain recoverable; no history rewrite was performed. Fifteen dated documents
-were moved into archive directories, which improves organization but saves no
-checkout bytes. The prior deep-audit report was also preserved there.
+were initially moved into archive directories. The subsequent owner-approved
+[document review](DOCUMENTATION_FOLLOW_UP_2026-10-10.md) restored five active
+references to their original locations; ten remain archived. Moves save no
+checkout bytes. The prior deep-audit report was separately preserved there.
 
 The source batch includes the 25 named candidates and ten ` 2` copies. Seven
 copies were byte-identical; three obsolete API copies differed and were checked
@@ -60,6 +62,16 @@ outside the repository. Old screenshots do not certify today's rendered pages.
   side effects. Paid/live vendor tools were inspected, not run as ordinary tests.
 - Dated plans with unfinished work remain active; superseded presentation/audit
   snapshots carry historical notices and updated relative links in the archive.
+- Review of the 15 archived documents found five premature retirements: the root
+  content audit and the analytics, dashboard UX, loading and widget references.
+  They are restored and indexed with current-status notes. DESIGN now matches the
+  owner's dashboard order; the widget guide describes real aggregate summaries
+  and optional autoplay; the migration README no longer claims CI applies SQL.
+- The [active follow-up tracker](DOCUMENTATION_FOLLOW_UP_2026-10-10.md) retains
+  unresolved content/prompt reconciliation, keyboard and authenticated-loading
+  checks, controlled widget-generation QA, competitor evidence, the August AEO
+  credential incident and historical migration-ledger reconciliation. These are
+  not closed by restoring documents or passing CI.
 
 ## Growth authentication repair
 
@@ -155,3 +167,15 @@ fresh frozen-lockfile dependencies, without changing the project's dependencies.
 Focused auth/report/SEO/growth tests passed before that environment repair.
 This report does not certify all application security, live database state,
 external asset consumers or production rollout.
+
+## Documentation correction verification — October 10, 2026
+
+Following the 15-document review, five active references were restored with their
+original dated bodies preserved. All 125 local links in the 18 affected Markdown
+files resolve, the manifest records ten remaining archives and five restorations,
+and no tracked Markdown still targets the five former archive locations. The
+original 103 deletions are unchanged. `git diff --check` and `pnpm verify:fast`
+passed; the latter used a fresh frozen-lockfile temporary checkout because the
+workspace's cloud-loaded dependency reads stalled. No application, dependency or
+SQL migration body changed in this correction. The pushed commit must pass full
+GitHub checks before merging. Open owner work remains in the follow-up tracker.

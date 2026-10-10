@@ -21,7 +21,7 @@ Scripts retain their invocation examples and environment variables in their head
 | `scripts/verify-fetch-cited-source-live.ts` | Verify cited-source fetch behavior | Outbound network reads. Keep manual. |
 | `scripts/verify-template-pack-report-production.mjs` | Read-only funnel report verification | Authenticated report API reads; choose explicit target. Keep manual. |
 | `scripts/test-analysis.ts` | Synthetic review examples through a real model adapter | Billable provider calls; header/model descriptions can age. Keep manual; verify configured adapter before running. |
-| `scripts/audit-marketing-seo.mjs` | Read-only static marketing audit | Referenced by archived content audit; keyword checks are heuristics, not render/SEO certification. Keep useful CLI. |
+| `scripts/audit-marketing-seo.mjs` | Read-only static marketing audit | Referenced by the restored active content audit; keyword checks are heuristics, not render/SEO certification. Keep useful CLI. |
 | `scripts/qa-lead-magnet-flow.mjs` | Lead-magnet QA runbook tool | Dry-run default; `--execute` can subscribe/send in selected environment. Keep. |
 | `scripts/prospecting/build_prospect_emails.py` | Owner prospecting PDF/HTML generation | Writes local collateral; requires Python/reportlab. Keep human workflow; does not send mail by itself. |
 | `scripts/validate-geo-faq-build.mjs` | Post-build FAQ/schema checks | Reads local build output. Active GEO runbooks consume it. Keep. |

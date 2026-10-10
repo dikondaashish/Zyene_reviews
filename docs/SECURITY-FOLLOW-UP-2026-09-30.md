@@ -148,6 +148,14 @@ The prior production deployment `dpl_5DkcXEQoThJfzLLyofVYcDgSZwBt` is READY for 
 
 ## Remaining Operational Work
 
+October 10 documentation review: the archived August AEO handoff separately
+records an exposed `AEO_GEMINI_API_KEY`. This report does not establish that it
+is the same credential as the Google incident below, or that it was revoked.
+The active [documentation tracker](DOCUMENTATION_FOLLOW_UP_2026-10-10.md) keeps
+that incident reconciliation open as SEC-1. Compare private incident metadata
+before choosing the correct credential; do not disclose keys or retire the
+confirmed active production credential on an assumption.
+
 1. Obtain independent recovery access before the approved PostgreSQL 17.11.0.002 upgrade. Compatibility checks found no deprecated extensions, logical slots, ltree/float GiST indexes, or custom estimator functions needing repair. Free has no scheduled backups; the installed CLI is not authenticated. The owner has only used plugins so far. Plugins support SQL/migrations, not a logical-backup download. Supabase documents restoring the original instance on failed upgrades, but that is not an independent restore-tested backup or a downgrade after success. No upgrade was started without that prerequisite.
 2. Leaked-password protection is still disabled and Pro-only. The owner chose Free, so no paid plan was purchased or bypassed.
 3. Owner must revoke only the exposed Google key ending `e764` while retaining the production key ending `eba5`, rotate chat-shared AkashML credentials after use, and provide only a private file path/confirmation. Google revocation is not confirmed complete. The newest AkashML credential is used only in scanner process memory; earlier credentials are not reused.
