@@ -1,5 +1,27 @@
 # Zyene Reviews content audit
 
+> Active audit with unfinished work. Restored after the October 10, 2026 document review. The September findings below are historical evidence, not a declaration that every change reached the committed product. See the [active follow-up tracker](docs/DOCUMENTATION_FOLLOW_UP_2026-10-10.md).
+
+## Reconciliation — October 10, 2026
+
+The original audit is retained below so its findings and owner decisions are not lost.
+Current source was checked before restoring this document:
+
+| Finding | Current evidence | Disposition |
+|---|---|---|
+| Unsupported How It Works performance figures | `src/app/(marketing)/how-it-works/how-it-works-data.ts` now uses descriptive workflow measures | Old figures replaced; do not recreate them. |
+| Case-study results presented as customer evidence | `src/lib/social-proof/case-study-data.ts` now labels educational examples and omits result metrics | Earlier concern addressed in source; real proof collection remains in `docs/GEO_PROOF_COLLECTION_RUNBOOK.md`. |
+| Unsupported industry claims and repetitive copy | `src/lib/industries/industry-data.ts` still contains several “#1 source” assertions | Open: verify evidence or rewrite around supported workflows (CONTENT-1). |
+| Reply/Q&A prompt rewrite claimed in §3 | `src/domains/ai/prompts/index.ts` still has SEO/AEO instructions in `REPLY_PROMPT` and `QA_ANSWER_PROMPT`; the compact dashboard reply prompt is different | The claimed file-wide rewrite is not supported by the committed source. Trace active callers and reconcile the intended behavior before changing prompts (CONTENT-2). |
+| Customer-review prompt changes reversed in §2 | `src/services/review-flow/generate-review-prompt.ts` and `generate-review-api.ts` retain the forced constraints | The September audit explicitly records the owner's reversal. Restoration does not authorize undoing that decision (CONTENT-2). |
+| SEO audit script failure | The later marketing redesign fixed the undefined loop variable | Historical failure, not a current failure assertion. |
+| Remaining editorial statistics and integration claims | Earlier audit observations are not a fresh inventory of every rendered page | Recheck current copy and retain sources, owner decisions and completion evidence (CONTENT-3). |
+
+Keep this audit active until the open findings are reconciled or transferred to an
+active content checklist. Passing compilation does not verify factual marketing claims.
+
+## Original September audit
+
 Date: 2026-09-07
 
 Reference: [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing)

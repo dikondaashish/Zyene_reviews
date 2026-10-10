@@ -44,7 +44,7 @@ The shared dashboard shell now enforces one 24 px page-title scale, 14 px body r
 
 Use a 4 px spacing base, with 12–16 px inside compact controls and 20–24 px inside content panels. Separate related sections with 24–32 px, rather than nesting many card borders.
 
-Dashboard order: business context and primary action, setup guidance when needed, compact metrics, reviews needing attention and recent feedback, insights, deeper reporting, and optional sharing tools. Do not place decorative analytics or a large QR code ahead of the actionable review queue.
+Dashboard order: business context and primary action, setup guidance when needed, the Smart Insights / Customer Portal row, metric cards, Google profile health/performance, extended metrics, charts, and the bottom row. This preserves the owner's September 28 request and the current `dashboard-view.tsx` arrangement. Do not reorder Insights or Customer Portal as incidental polish. See the decision and open keyboard review in [app-ux-audit.md](app-ux-audit.md).
 
 On compact layouts, preserve the same capabilities. Organization switching remains reachable. The public-profile editor has an explicit Preview control and always-visible sharing actions. Documentation has a browse menu. Wide secondary navigation scrolls within its own region.
 
@@ -59,6 +59,16 @@ Use existing Radix/shadcn primitives for dialogs, selects, menus and toggles. Ke
 - Exclusive choices: native radios when practical; otherwise labeled toggle buttons with selected state. Never rely on color alone.
 - Data states: distinguish loading, empty, unavailable, error, stale and complete. Preserve work on failure and provide a useful next step.
 
+Analytics must distinguish star-rating distribution from AI sentiment, keep ratings
+on a fixed 0–5 scale, preserve UTC calendar dates, separate Google views from actions,
+and avoid reporting missing data as a measured zero or decline. The current chart
+rules and their rationale are in [analytics-presentation.md](analytics-presentation.md).
+
+Dashboard loading uses shared neutral placeholders and a 1.6-second shimmer.
+Use `DashboardSkeleton` in dialog portals, preserve loaded content during background
+refreshes, and use static placeholders for reduced motion. Follow
+[dashboard-loading.md](dashboard-loading.md) for boundaries and integration details.
+
 ## Writing and trust
 
 Use business language: “Refresh insights,” “Request review,” “Queue for 12 customers.” Keep internal phase names and URL parameters out of interface copy.
@@ -69,7 +79,7 @@ Explain automatic public AI publishing before activation. Show its scope, rating
 
 ## Motion
 
-Use brief transitions to clarify hover, selection and navigation. Content should be readable without movement. No timed marketing interruptions. Embedded reviews use manual scrolling with keyboard-accessible controls; they do not autoplay or duplicate content.
+Use brief transitions to clarify hover, selection and navigation. Content should be readable without movement. No timed marketing interruptions. Embedded reviews default to manual scrolling with keyboard-accessible controls. The widget builder also supports explicitly enabled autoplay, which pauses for hover/focus, hidden pages and the pause control and is disabled under reduced motion. Do not duplicate reviews merely to create movement. See [review-widget-builder.md](review-widget-builder.md).
 
 Honor reduced motion in both CSS and JavaScript. Avoid confetti for routine business actions. Motion must never determine whether information can be reached.
 

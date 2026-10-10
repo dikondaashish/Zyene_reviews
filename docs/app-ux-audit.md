@@ -1,5 +1,21 @@
 # Dashboard UI/UX polish — September 28, 2026
 
+> Active UX audit with an unfinished keyboard review, restored October 10, 2026. The September checks below are historical. Current guidance is in [DESIGN.md](DESIGN.md); remaining work is tracked in [DOCUMENTATION_FOLLOW_UP_2026-10-10.md](DOCUMENTATION_FOLLOW_UP_2026-10-10.md).
+
+## Current decision and open work — October 10, 2026
+
+The owner requested that Smart Insights and Customer Portal retain their original
+placement ahead of metric cards. `src/app/(dashboard)/dashboard/dashboard-view.tsx`
+and `dashboard-view-top-row.tsx` still implement that order. DESIGN.md now reflects
+this decision; this document does not propose another layout change.
+
+The competitor search autocomplete keyboard review remains open (UX-1). Its input
+and suggestion list have accessibility roles, but those roles alone do not prove
+keyboard selection, dismissal and focus behavior. Record a dedicated controlled
+check and fix confirmed defects before marking that follow-up complete.
+
+## September implementation record
+
 This pass improves the authenticated app using the approved OptiMonk-inspired light and dark palette. The Smart Insights and Customer Portal color exceptions, original review-platform branding, and collapsible sidebar are preserved.
 
 ## Coverage

@@ -2,6 +2,10 @@
 
 Central index for project documentation and where each file belongs.
 
+This is a discovery index, not a deletion allowlist. Unlisted documents may be
+referenced by skills, runbooks, design context or human workflows. Verify those
+consumers before retirement. Dated evidence is not proof of current deployment.
+
 ## Engineering knowledge base (START HERE)
 
 - `docs/README.md` — documentation hub (setup overview + links).
@@ -25,6 +29,13 @@ Central index for project documentation and where each file belongs.
 - `docs/ROADMAP.md` - unbuilt / planned work (drip campaigns, SSO, POS, etc.).
 - `docs/CODEBASE_STRUCTURE.md` - repo structure and placement rules.
 - `docs/PRODUCTION_CHECKLIST.md` - pre-release and deployment verification checklist.
+- `PRODUCT.md` - product, voice and audience context consumed by the impeccable skill.
+- `docs/dashboard-color-audit.md` - design decisions referenced by PRODUCT.md and DESIGN.md.
+- `docs/marketing-component-licenses.md` - required attribution for live marketing adaptations.
+- [analytics-presentation.md](analytics-presentation.md) - current chart meaning, missing-data rules and presentation rationale.
+- [dashboard-loading.md](dashboard-loading.md) - current dashboard placeholder integration and reduced-motion behavior.
+- [review-widget-builder.md](review-widget-builder.md) - current widget setup, aggregate summaries and installation.
+- [widget-reference-analysis-2026-09-30.md](widget-reference-analysis-2026-09-30.md) - active widget implementation boundaries with dated reference research.
 
 ## Growth & GEO Docs (KEEP in `docs/`)
 
@@ -49,13 +60,30 @@ Central index for project documentation and where each file belongs.
 - `docs/PHASE3_DISTRIBUTION_PACKAGE.md` - Phase 3 launch copy, UTMs, posting guide, template pack tracking.
 - `docs/TEMPLATE_PACK_LEAD_MAGNET.md` - Template pack funnel events, report API, QA filters.
 - `docs/WELCOME_SEQUENCE.md` - Marketing nurture email sequence (Inngest).
+- [CONTENT_AUDIT_REPORT.md](../CONTENT_AUDIT_REPORT.md) - active content audit with a current reconciliation and unresolved factual/prompt findings.
 
 ## Operations & Verification Docs (KEEP in `docs/`)
 
 - `docs/CRITICAL_FLOW_VERIFICATION.md` - critical flow verification and release gate.
 - `docs/DEEP_CODEBASE_AUDIT_REPORT.md` - latest cleanup/audit outcomes.
+- `docs/REPO_CLEANUP_VERIFICATION_2026-10-10.md` and `docs/REPO_CLEANUP_MANIFEST_2026-10-10.json` - claim checks and exact executed removals.
 - `docs/DESIGN_UX_PHASES.md` - UX/design evolution roadmap and phase tracking.
 - `docs/competitor-watch-cursor-prompt.md` - Cursor prompt for competitor watch feature work.
+- `docs/OPERATOR_SCRIPTS.md` - manual diagnostic tools, environments and side effects.
+- `docs/developer-role-2026-09-30.md` - support access, owner removal and recovery history.
+- `docs/SECURITY-FOLLOW-UP-2026-09-30.md` - latest recorded security operational checkpoint.
+- `docs/SECURITY-REMEDIATION-2026-09-29.md` - original findings and source/regression evidence.
+- `docs/SECURITY-DEPLOYMENT-2026-09-30.md` - historical rollout record.
+- `docs/security-readonly-verification-2026-09-29.sql` - saved read-only verification queries.
+- `docs/SEO_GROWTH_PLAN_2026-09-29.md` and `docs/SEO_BACKLINK_STRATEGY.md` - owner execution plans.
+- `docs/SEO_REMEDIATION_2026-09-13.md` - dated release and post-deployment checks.
+- `docs/GOOGLE_SEO_AEO_RELEASE_PLAN.md` and `docs/AEO_*COMPLETION*.md` - phase plans and completion evidence.
+- `docs/REVIEWS_WORKSPACE_IMPLEMENTATION_PLAN.md` - draft plan; reconcile against current implementation.
+- `docs/design-handoff-2026-09/` - proposal/acceptance material and route inventory, not approved completion.
+- `docs/seo-audit-2026-09-13/`, `docs/seo-audit-2026-09-29/` and `docs/audits/` - dated evidence backing retained plans.
+- `docs/brand/zyene-mascot.md` - approved mascot source and reference assets.
+- [app-ux-audit.md](app-ux-audit.md) - owner-approved dashboard arrangement and unfinished competitor-search keyboard review.
+- [DOCUMENTATION_FOLLOW_UP_2026-10-10.md](DOCUMENTATION_FOLLOW_UP_2026-10-10.md) - all 15 archive decisions, five restorations, owners and completion evidence for remaining work.
 
 ## AI / Agent Runtime Docs (KEEP in `.agent/`)
 
@@ -74,6 +102,7 @@ Point-in-time snapshots — not live SoT:
 - `docs/archive/DATABASE_VALIDATION_REPORT.md`
 - `docs/archive/TEST_FLOWS.md`
 - `docs/archive/README.md`
+- `docs/archive/2026-07/`, `docs/archive/2026-08/`, `docs/archive/2026-09/` - ten of the 15 reviewed cleanup documents remain historical; five active references were restored. See the follow-up tracker and archive README for exact dispositions.
 
 ## Tooling Instruction Docs (KEEP in place)
 
@@ -82,7 +111,7 @@ Point-in-time snapshots — not live SoT:
 ## Current Organization Decision
 
 - Keep `README.md` at repo root for discovery and onboarding.
-- Keep all remaining project documentation under `docs/`.
+- Keep `PRODUCT.md` and the restored `CONTENT_AUDIT_REPORT.md` at their existing root locations; other project documentation belongs under `docs/`.
 - Keep operational and feature-specific docs inside `docs/`.
 - Keep live agent playbooks in `.agent/docs/`; historical snapshots under `docs/archive/`.
 - Planned / unbuilt work: `docs/ROADMAP.md`.

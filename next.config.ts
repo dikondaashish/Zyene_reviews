@@ -1,9 +1,42 @@
 import type { NextConfig } from "next";
 
+// Preserve links to the JPEG covers replaced by WebP in September 2026.
+const legacyBlogCoverNames = [
+  "ai-review-reply-oversight",
+  "ai-visibility-audit",
+  "birdeye-alternatives-cost-comparison",
+  "delete-google-review-hero",
+  "dental-practice-reputation",
+  "fake-review-evidence",
+  "five-star-review-collection",
+  "google-business-profile-audit",
+  "google-review-policy-research",
+  "google-review-request-playbook",
+  "local-map-pack-visibility",
+  "online-reputation-business-impact",
+  "positive-google-review-response",
+  "private-feedback-service-recovery",
+  "reporting-google-review-laptop",
+  "reputation-dashboard-overview",
+  "responding-to-negative-review",
+  "responding-to-one-star-review",
+  "restaurant-review-management",
+  "review-software-pricing-comparison",
+  "team-review-management",
+  "why-google-reviews-matter"
+];
+
 const nextConfig: NextConfig = {
   reactCompiler: true,
   async redirects() {
-    return [{ source: "/product", destination: "/features", permanent: true }];
+    return [
+      { source: "/product", destination: "/features", permanent: true },
+      ...legacyBlogCoverNames.map((name) => ({
+        source: `/images/blog/covers/${name}.jpg`,
+        destination: `/images/blog/covers/${name}.webp`,
+        permanent: true,
+      })),
+    ];
   },
   images: {
     remotePatterns: [

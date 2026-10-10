@@ -1,0 +1,574 @@
+{
+  "date": "2026-10-10",
+  "base_commit": "7d45ba755ebccde5c6c10b274761645bff9d82be",
+  "scope": "Verified cleanup removals; not a whole-repository usage graph",
+  "deleted_file_count": 103,
+  "deleted_bytes": 23702013,
+  "removed": [
+    {
+      "path": "src/app/(marketing)/about/about-hero-image-section.tsx",
+      "bytes": 612,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/app/(marketing)/blog/blog-featured-post-section.tsx",
+      "bytes": 3382,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/app/(marketing)/case-studies/[slug]/case-studies-slug-quote-section.tsx",
+      "bytes": 1414,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/app/(marketing)/case-studies/case-studies-logo-bar-section.tsx",
+      "bytes": 199,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/app/(marketing)/features/features-quick-feature-grid-section.tsx",
+      "bytes": 1503,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/app/(marketing)/partners/partners-agency-perks-section.tsx",
+      "bytes": 1588,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/app/(marketing)/partners/partners-channels-section.tsx",
+      "bytes": 4184,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/app/(marketing)/partners/partners-cta-section.tsx",
+      "bytes": 865,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/app/(marketing)/partners/partners-logos-section.tsx",
+      "bytes": 1575,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/app/(marketing)/partners/partners-outreach-section.tsx",
+      "bytes": 5259,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/dashboard/ai-insights-card.tsx",
+      "bytes": 4853,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/dashboard/organization-display.tsx",
+      "bytes": 717,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/growth/growth-dashboard-stat-lead-cards.tsx",
+      "bytes": 564,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/integrations/webhook-card.tsx",
+      "bytes": 3682,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/marketing/home-lead-wizard-persistence.ts",
+      "bytes": 370,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/marketing/marketing-tilt.tsx",
+      "bytes": 1650,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/marketing/transition-panel.tsx",
+      "bytes": 1371,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/settings/billing-plan-picker-backdrop.tsx",
+      "bytes": 1018,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/settings/organization-name-form.tsx",
+      "bytes": 2814,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/settings/profile-form.tsx",
+      "bytes": 4791,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/ui/animated-number.tsx",
+      "bytes": 1197,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/ui/pro-chart-container.tsx",
+      "bytes": 3542,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/services/google/webhook-qa.ts",
+      "bytes": 2492,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/services/review-requests/api/send-request-phone.ts",
+      "bytes": 286,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/types/member-context.ts",
+      "bytes": 1199,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/app/(dashboard)/loading 2.tsx",
+      "bytes": 147,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/app/api/ai/analyze/route 2.ts",
+      "bytes": 1298,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/app/api/integrations/facebook/callback/route 2.ts",
+      "bytes": 3368,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/app/api/smart/analyze/route 2.ts",
+      "bytes": 2147,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/dashboard/customer-portal-loading 2.tsx",
+      "bytes": 1172,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/dashboard/dashboard-loading 2.css",
+      "bytes": 1403,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/dashboard/dashboard-skeleton 2.tsx",
+      "bytes": 297,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/dashboard/page-form-loading 2.tsx",
+      "bytes": 1303,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "src/components/dashboard/panel-loading 2.tsx",
+      "bytes": 875,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "tests/unit/reviews-loading-state.test 2.ts",
+      "bytes": 1195,
+      "kind": "unused-source-or-copy"
+    },
+    {
+      "path": "public/file.svg",
+      "bytes": 391,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/globe.svg",
+      "bytes": 1035,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/icons.svg",
+      "bytes": 1269,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/illustrations/zyene-five-mascot-3d.png",
+      "bytes": 1365700,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/illustrations/zyene-five-mascot-3d.prompt.txt",
+      "bytes": 2740,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/illustrations/zyene-review-comet-3d-transparent.png",
+      "bytes": 1546706,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/illustrations/zyene-review-oracle-3d.png",
+      "bytes": 1821358,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/illustrations/zyene-review-orbit-guardian.png",
+      "bytes": 1876413,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/illustrations/zyene-ribbon-mascot-3d.png",
+      "bytes": 1040253,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/illustrations/zyene-ribbon-mascot-3d.prompt.txt",
+      "bytes": 2783,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/images/blog/covers/ai-review-reply-oversight.jpg",
+      "bytes": 291039,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/ai-visibility-audit.jpg",
+      "bytes": 313517,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/birdeye-alternatives-cost-comparison.jpg",
+      "bytes": 303909,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/delete-google-review-hero.jpg",
+      "bytes": 741432,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/dental-practice-reputation.jpg",
+      "bytes": 253044,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/fake-review-evidence.jpg",
+      "bytes": 326040,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/five-star-review-collection.jpg",
+      "bytes": 781316,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/google-business-profile-audit.jpg",
+      "bytes": 327379,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/google-review-policy-research.jpg",
+      "bytes": 669681,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/google-review-request-playbook.jpg",
+      "bytes": 329077,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/local-map-pack-visibility.jpg",
+      "bytes": 360748,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/online-reputation-business-impact.jpg",
+      "bytes": 274922,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/positive-google-review-response.jpg",
+      "bytes": 305119,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/private-feedback-service-recovery.jpg",
+      "bytes": 298638,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/reporting-google-review-laptop.jpg",
+      "bytes": 647414,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/reputation-dashboard-overview.jpg",
+      "bytes": 703983,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/responding-to-negative-review.jpg",
+      "bytes": 762507,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/responding-to-one-star-review.jpg",
+      "bytes": 225225,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/restaurant-review-management.jpg",
+      "bytes": 375726,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/review-software-pricing-comparison.jpg",
+      "bytes": 265071,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/team-review-management.jpg",
+      "bytes": 760645,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/covers/why-google-reviews-matter.jpg",
+      "bytes": 311710,
+      "kind": "legacy-jpeg-with-webp-redirect"
+    },
+    {
+      "path": "public/images/blog/positive_review_reply.jpg",
+      "bytes": 495447,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/marketing/home/customer-moment.webp",
+      "bytes": 171484,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/marketing/home/local-owner-v2.webp",
+      "bytes": 140906,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/marketing/interior/guidance-hero.webp",
+      "bytes": 52214,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/marketing/interior/local-business-hero.webp",
+      "bytes": 48010,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/marketing/interior/product-hero.webp",
+      "bytes": 44676,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/next.svg",
+      "bytes": 1375,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/vercel.svg",
+      "bytes": 128,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/widget-test.html",
+      "bytes": 1058,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "public/window.svg",
+      "bytes": 385,
+      "kind": "unused-public-asset"
+    },
+    {
+      "path": "scripts/collapse-tailwind-size-classes.mjs",
+      "bytes": 2398,
+      "kind": "retired-one-off-codemod"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/features-ai-replies-mobile.png",
+      "bytes": 62271,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/features-mobile.png",
+      "bytes": 168687,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/pricing-mobile.png",
+      "bytes": 127689,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/how-it-works-mobile.png",
+      "bytes": 116431,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/proposed-wireframes-desktop.png",
+      "bytes": 121296,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/contact-mobile.png",
+      "bytes": 140699,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/pricing-desktop.png",
+      "bytes": 279208,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/help-mobile.png",
+      "bytes": 105266,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/about-desktop.png",
+      "bytes": 511066,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/features-competitor-tracking-mobile.png",
+      "bytes": 40215,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/blog-mobile.png",
+      "bytes": 141344,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/contact-desktop.png",
+      "bytes": 452792,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/features-ai-replies-desktop.png",
+      "bytes": 131888,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/industries-restaurants-mobile.png",
+      "bytes": 190038,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/demo-desktop.png",
+      "bytes": 327040,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/features-desktop.png",
+      "bytes": 456360,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/blog-desktop.png",
+      "bytes": 327109,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/industries-restaurants-desktop.png",
+      "bytes": 546902,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/features-competitor-tracking-desktop.png",
+      "bytes": 83437,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/how-it-works-desktop.png",
+      "bytes": 388696,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/about-mobile.png",
+      "bytes": 222999,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/help-desktop.png",
+      "bytes": 210711,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/design-handoff-2026-09/evidence/demo-mobile.png",
+      "bytes": 138306,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/FULL_FILE_USAGE_AUDIT.json",
+      "bytes": 95578,
+      "kind": "historical-generated-evidence"
+    },
+    {
+      "path": "docs/DEPENDENCY_AUDIT.json",
+      "bytes": 6782,
+      "kind": "historical-generated-evidence"
+    }
+  ],
+  "archived": {
+    "AUDIT_REPORT.md": "docs/archive/2026-07/AUDIT_REPORT.md",
+    "docs/CODEBASE_STANDARDS_AUDIT_2026-08.md": "docs/archive/2026-08/CODEBASE_STANDARDS_AUDIT_2026-08.md",
+    "docs/COLOR_CONSISTENCY_AUDIT_2026-09-12.md": "docs/archive/2026-09/COLOR_CONSISTENCY_AUDIT_2026-09-12.md",
+    "docs/TYPOGRAPHY_SPACING_AUDIT_2026-09-12.md": "docs/archive/2026-09/TYPOGRAPHY_SPACING_AUDIT_2026-09-12.md",
+    "docs/AUTO_REPLY_BUYER_JOURNEY_AUDIT_2026-09-12.md": "docs/archive/2026-09/AUTO_REPLY_BUYER_JOURNEY_AUDIT_2026-09-12.md",
+    "docs/pricing-presentation.md": "docs/archive/2026-09/pricing-presentation.md",
+    "docs/marketing-redesign.md": "docs/archive/2026-09/marketing-redesign.md",
+    "docs/marketing-redesign-first-pass.md": "docs/archive/2026-09/marketing-redesign-first-pass.md",
+    "docs/AEO_PHASE1_HANDOFF.md": "docs/archive/2026-08/AEO_PHASE1_HANDOFF.md",
+    "docs/AEO_PHASE1_STATE_2026-08-11.md": "docs/archive/2026-08/AEO_PHASE1_STATE_2026-08-11.md"
+  },
+  "historical_report_preserved": "docs/archive/2026-08/DEEP_CODEBASE_AUDIT_REPORT.md",
+  "retained": [
+    "public/Main logo.png",
+    "public/zyene-overview.pdf",
+    "public/brand/mascot/",
+    "scripts/run-strix-akashml.sh",
+    "scripts/create-security-audit-snapshot.mjs",
+    "scripts/test-security-redis.mjs",
+    "docs/marketing-component-licenses.md",
+    "docs/developer-role-2026-09-30.md",
+    "docs/SECURITY-FOLLOW-UP-2026-09-30.md",
+    "docs/security-readonly-verification-2026-09-29.sql",
+    "CONTENT_AUDIT_REPORT.md",
+    "docs/analytics-presentation.md",
+    "docs/app-ux-audit.md",
+    "docs/dashboard-loading.md",
+    "docs/widget-reference-analysis-2026-09-30.md"
+  ],
+  "limitations": [
+    "Public assets may have external consumers; legacy blog JPEG URLs have specific permanent WebP redirects.",
+    "A normal deletion commit does not remove old blobs from Git history.",
+    "Ten reviewed documents remain archived; five active references were restored. Unfinished work is tracked in docs/DOCUMENTATION_FOLLOW_UP_2026-10-10.md.",
+    "No live Zyene database attestation was available through the connected Supabase account."
+  ],
+  "restored_after_document_review": {
+    "docs/archive/2026-09/CONTENT_AUDIT_REPORT.md": "CONTENT_AUDIT_REPORT.md",
+    "docs/archive/2026-09/analytics-presentation.md": "docs/analytics-presentation.md",
+    "docs/archive/2026-09/app-ux-audit.md": "docs/app-ux-audit.md",
+    "docs/archive/2026-09/dashboard-loading.md": "docs/dashboard-loading.md",
+    "docs/archive/2026-09/widget-reference-analysis-2026-09-30.md": "docs/widget-reference-analysis-2026-09-30.md"
+  },
+  "documentation_review": {
+    "date": "2026-10-10",
+    "initial_archive_count": 15,
+    "final_archive_count": 10,
+    "restored_count": 5,
+    "record": "docs/DOCUMENTATION_FOLLOW_UP_2026-10-10.md"
+  }
+}

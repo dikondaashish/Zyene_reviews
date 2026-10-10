@@ -1,18 +1,34 @@
 # Database migrations
 
-SQL migrations for Zyene Reviews Postgres (Supabase). Applied in **lexicographic filename order**—the timestamp or numeric prefix is the version key recorded in `supabase_migrations.schema_migrations`.
+SQL migrations for Zyene Reviews Postgres (Supabase). Repository filenames express
+dependency order. CLI-managed application expects filename versions to match the
+remote ledger, but this project's historical manual/plugin applications sometimes
+received different remote versions. A file on disk is not proof of pending or
+applied production state.
 
 ## How migrations run
 
-1. **Local:** `supabase db reset` replays all files from scratch. `supabase migration up` applies only pending versions.
-2. **Remote:** `supabase db push` (or CI) applies pending files in sorted order; each filename is applied at most once.
-3. **Order matters.** Never change the relative order of existing files. A migration that depends on a table must have a **later** filename than the migration that creates it.
+1. **CI:** `.github/workflows/ci.yml` runs the migration guard. It validates immutable SQL and application-order notes; it does not connect to a database or apply migrations.
+2. **Local:** replay/reset commands belong to disposable development databases. The security harness uses a selected synthetic migration chain; its success does not establish a complete fresh replay or production ledger consistency.
+3. **Remote:** before choosing CLI push or a reviewed manual/plugin procedure, verify the exact project, deployed callers, actual migration ledger, exact SQL already applied, ordering and recovery. Do not run a bulk push against unresolved historical version drift.
+4. **Order matters.** Never change the relative order of existing files. A migration that depends on a table must have a **later** filename than the migration that creates it. New migration headers must state their ordering relative to application code.
 
-Check what production has already applied:
+With an authenticated CLI bound to the intended project, inspect its migration list:
 
 ```bash
 supabase migration list
 ```
+
+Compare remote ledger entries with repository files and application evidence; a
+timestamp difference alone does not establish that SQL should be applied again.
+Historical August “never use apply_migration” instructions describe that session's
+process, not a universal rule. The September rollout records reviewed plugin
+application with remote-assigned versions. Existing drift must be reconciled before
+adopting a consistent future procedure (DB-1 in the
+[active follow-up tracker](../../docs/DOCUMENTATION_FOLLOW_UP_2026-10-10.md)). See
+[SECURITY-DEPLOYMENT-2026-09-30.md](../../docs/SECURITY-DEPLOYMENT-2026-09-30.md)
+and the migration/recovery section of
+[secure-saas-change-workflow](../../.agents/skills/secure-saas-change-workflow/references/release-and-handoff.md).
 
 ## Legacy `001`–`014` block
 

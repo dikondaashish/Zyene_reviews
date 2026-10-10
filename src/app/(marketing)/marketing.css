@@ -66,6 +66,5 @@
 }
 @media (max-width:399px) { .marketing-actions { align-items:stretch; flex-direction:column; } }
 @media (prefers-reduced-motion:reduce) {
- .marketing-site [data-marketing-tilt] { transform:none !important; }
  .marketing-site *, .marketing-site *::before, .marketing-site *::after { animation:none !important; transition-duration:0s !important; scroll-behavior:auto !important; }
 }

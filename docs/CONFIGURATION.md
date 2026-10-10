@@ -97,7 +97,7 @@ Missing **required** vars accessed via `required()` throw at use/import time wit
 | Variable | Purpose |
 |----------|---------|
 | `CRON_SECRET` | Bearer for `/api/cron/*` |
-| `GROWTH_DASHBOARD_SECRET` | Optional; falls back to cron secret |
+| `GROWTH_DASHBOARD_SECRET` | Required for growth operations; no cron-secret fallback. Rotate to revoke all growth sessions and old automation credentials. |
 | `ENCRYPTION_KEY` | Optional legacy; OAuth uses DB RPCs today |
 
 ### AI (Vertex / GenAI)

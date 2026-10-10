@@ -1,5 +1,25 @@
 # Google Reviews widget reference analysis
 
+> Active widget implementation reference, restored October 10, 2026. Competitor observations and browser results below remain dated September evidence. Current user guidance is in [review-widget-builder.md](review-widget-builder.md); unfinished verification is in the [follow-up tracker](DOCUMENTATION_FOLLOW_UP_2026-10-10.md).
+
+## Current Zyene behavior — October 10, 2026
+
+The widget builder can generate an aggregate summary through its **AI Features**
+controls. `src/services/widgets/summary-api.ts` requires an authenticated authorized
+editor, eligible plan, rate allowance, and at least five visible written reviews.
+New generation checks the daily business budget and uses a concurrency lock.
+Permissions and review content are rechecked before publication. Public widgets
+read only cached summaries matching the current review fingerprint; they never
+start generation. This replaces the active guide's former per-review-only claim.
+
+Autoplay is optional and off by default. The carousel pauses for hover/focus,
+hidden pages and its pause control, and does not start autoplay under reduced
+motion. These are Zyene behaviors verified in source, not promises of every
+Elfsight feature. No live paid generation was performed in this document review;
+the outstanding controlled verification remains WIDGET-1.
+
+## September reference and implementation evidence
+
 Reference inspected interactively on September 30, 2026: https://elfsight.com/google-reviews-widget/ and its embedded Google Reviews configurator (v3.49.19). All 20 gallery templates and the 14 layout choices were opened. The carousel, review popup, and responsive preview were exercised. This records observed behavior, not a claim that every Elfsight backend service is reproduced.
 
 | Template | Observed appearance and behavior |
