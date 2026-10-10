@@ -1,4 +1,5 @@
-import { inngest } from "./client";
+import { inngest } from "@/services/inngest/client";
+import { marketingCanonicalUrl } from "@/lib/seo/marketing-site-url";
 import { sendEmail } from "@/services/resend/send-email";
 import {
     trialNurtureEmail,
@@ -116,9 +117,15 @@ export const marketingNurtureWorker = inngest.createFunction(
             }
 
             await step.run(`send-${nurtureStep.key}`, async () => {
+                const { data: subscriber, error } = await createAdminClient().from("marketing_subscribers")
+                    .select("id, unsubscribed_at").eq("email", email.toLowerCase()).maybeSingle();
+                if (error) throw new Error("Unable to check marketing subscription");
+                if (!subscriber || subscriber.unsubscribed_at) return;
+                const unsubscribeUrl = `${marketingCanonicalUrl("/newsletter/unsubscribe")}?id=${subscriber.id}`;
                 const { subject, html } = marketingNurtureEmail({
                     email,
                     stepKey: nurtureStep.key,
+                    unsubscribeUrl,
                 });
                 await sendEmail({ to: email, subject, html });
             });

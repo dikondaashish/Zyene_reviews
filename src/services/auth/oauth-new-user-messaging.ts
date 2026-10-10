@@ -21,8 +21,8 @@ export async function sendOAuthNewUserMessages(params: {
     sendEmail({
         to: email,
         subject: "Welcome to Zyene Reviews - connect Google to get started",
-        html: welcomeEmail({ userName: fullName || "User", loginUrl }),
-        text: welcomeEmailText({ userName: fullName || "User", loginUrl }),
+        html: welcomeEmail({ userName: fullName || "there", loginUrl }),
+        text: welcomeEmailText({ userName: fullName || "there", loginUrl }),
     }).catch((error: unknown) => {
         logger.error({ err: error }, "Failed to send welcome email:");
         Sentry.captureException(error, {

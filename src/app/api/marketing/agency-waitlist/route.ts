@@ -4,7 +4,7 @@ import { z } from "zod";
 import { captureMarketingLead } from "@/lib/enterprise/capture-marketing-lead";
 import { PARTNER_CONTACT_EMAIL } from "@/lib/campaign-content/partnerships-data";
 import { clientIpFrom, publicFormRateLimit } from "@/lib/auth/rate-limit";
-import { escapeHtml } from "@/lib/security/html-escape";
+import { formNotificationEmail } from "@/services/resend/templates/form-emails";
 import { sendEmail } from "@/services/resend/send-email";
 
 const waitlistSchema = z.object({
@@ -52,13 +52,7 @@ export async function POST(request: Request) {
         await sendEmail({
             to: PARTNER_CONTACT_EMAIL,
             subject: `[Agency dashboard waitlist] ${agencyName || email}`,
-            // Escaped - anonymous input rendered in our own inbox.
-            html: `<p>Agency dashboard waitlist signup</p>
-<ul>
-<li>Email: ${escapeHtml(email)}</li>
-<li>Agency: ${escapeHtml(agencyName || " - ")}</li>
-<li>Clients: ${escapeHtml(clientCount || " - ")}</li>
-</ul>`,
+            html: formNotificationEmail("Agency dashboard waitlist signup", { Email: email, Agency: agencyName || "Not provided", Clients: clientCount || "Not provided" }),
         });
     } catch (err) {
         logger.error({ err: err }, "[agency-waitlist] notify failed:");

@@ -1,3 +1,4 @@
+import { appEmailUrl } from "@/lib/email/app-email-url";
 import * as Sentry from "@sentry/nextjs";
 import type Stripe from "stripe";
 
@@ -145,7 +146,7 @@ export async function handleCheckoutSessionCompleted(
                     userName: session.customer_details?.name || "there",
                     planName,
                     isTrial,
-                    dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL || ""}/dashboard`,
+                    dashboardUrl: appEmailUrl("/dashboard"),
                 }),
             });
         }

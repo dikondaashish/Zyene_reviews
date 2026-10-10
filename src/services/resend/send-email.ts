@@ -1,3 +1,4 @@
+import { emailHtmlToText } from "@/lib/email/html-to-text";
 import { logger } from "@/lib/logger";
 import { resend } from "@/services/resend/client";
 
@@ -84,7 +85,7 @@ export async function sendEmail({ to, subject, html, text, from, replyTo, header
             to,
             subject,
             html,
-            ...(text ? { text } : {}),
+            text: text || emailHtmlToText(html),
             ...(attachments?.length ? { attachments } : {}),
             ...replyToPayload,
             ...headersPayload,

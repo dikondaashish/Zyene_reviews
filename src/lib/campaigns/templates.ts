@@ -35,7 +35,7 @@ export const CAMPAIGN_TEMPLATES: CampaignTemplate[] = [
             trigger_type: "manual_batch",
             sms_template: "Hi {customer_name}, thanks for choosing {business_name} for your appointment. How did we do? {review_link}",
             email_subject: "Thank you for your visit to {business_name}",
-            email_template: "<p>Hi {customer_name},</p><p>Standard service follow-up email...</p>", // Shortened for brevity
+            email_template: "<p>Hi {customer_name},</p><p>Thank you for choosing {business_name} for your appointment. We would appreciate your honest feedback.</p><p><a href=\"{review_link}\">Share your feedback</a></p><p>Thank you, the {business_name} team</p>",
             delay_minutes: 120,
             follow_up_enabled: false,
             follow_up_delay_hours: 24,
@@ -54,7 +54,7 @@ export const CAMPAIGN_TEMPLATES: CampaignTemplate[] = [
             trigger_type: "manual_batch",
             sms_template: "Hi {customer_name}, we miss you at {business_name}! Hope to see you soon. {review_link}",
             email_subject: "We miss you at {business_name}!",
-            email_template: "<p>Hi {customer_name},</p><p>It's been a while since your last visit...</p>",
+            email_template: "<p>Hi {customer_name},</p><p>It has been a while since your last visit to {business_name}. We would love to welcome you back.</p><p>If you would like to share feedback about your last experience, you can leave a review here:</p><p><a href=\"{review_link}\">Share your feedback</a></p><p>Thank you, the {business_name} team</p>",
             delay_minutes: 0,
             follow_up_enabled: true,
             follow_up_delay_hours: 72,
