@@ -78,8 +78,8 @@ export const post18: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/hvac-technician-customer-handshake.jpg",
-                alt: "HVAC technician shaking hands with a satisfied homeowner at the front door after completing a service call",
+                src: "/images/blog/covers/hvac-technician-customer-handshake-candid-v2.webp",
+                alt: "Service technician shaking hands with a homeowner after a visit",
                 width: 1672,
                 height: 941,
                 caption: "The moment after a successful service call is the best time to earn a genuine customer review.",
@@ -132,11 +132,11 @@ export const post18: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/hvac-review-request-sms.jpg",
-                alt: "Homeowner receiving a friendly review request text message on a smartphone after an HVAC service appointment",
+                src: "/images/blog/covers/hvac-review-request-sms-candid-v2.webp",
+                alt: "Customer reading a message on a smartphone at a kitchen counter",
                 width: 1672,
                 height: 941,
-                caption: "Automated SMS review requests sent within two hours of service completion earn the highest response rates.",
+                caption: "Use a clear, personal message when inviting a customer to share feedback.",
             },
         },
         {
@@ -163,8 +163,8 @@ export const post18: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/contractor-responding-review.jpg",
-                alt: "Home services business owner composing a professional response to a customer review on a laptop in a small office",
+                src: "/images/blog/covers/contractor-responding-review-candid-v2.webp",
+                alt: "Contractor writing a customer response on a laptop in a workshop",
                 width: 1672,
                 height: 941,
                 caption: "A professional response to a negative review shows prospective customers how you handle problems.",
@@ -235,11 +235,11 @@ export const post18: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/hvac-van-branded.jpg",
-                alt: "Branded HVAC service van parked in a residential driveway with a technician preparing for a service call",
+                src: "/images/blog/covers/hvac-van-branded-candid-v2.webp",
+                alt: "Technician carrying a tool bag toward an open service van on a residential street",
                 width: 1672,
                 height: 941,
-                caption: "Professional branding and an optimized Google Business Profile reinforce trust at every customer touchpoint.",
+                caption: "Everyday service work and an accurate business profile support a recognizable local presence.",
             },
         },
         {

@@ -49,7 +49,7 @@ export function MarketingHomeClosing() {
           </div>
           <div className="brand-moment-photo">
             <Image
-              src="/marketing/home/cafe-owner-feedback.webp"
+              src="/marketing/home/cafe-owner-feedback-candid-v2.webp"
               alt="A café owner reviewing customer feedback on a tablet"
               fill
               sizes="(max-width:767px) 100vw, 40vw"

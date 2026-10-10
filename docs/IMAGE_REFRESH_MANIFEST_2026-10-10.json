@@ -1,0 +1,3270 @@
+{
+  "date": "2026-10-10",
+  "baselineCommit": "eae71ae599bee025bdb629af95153d66b493fa9a",
+  "scope": "Repository-owned images in public/ and src/app/. Tenant uploads and external reviewer portraits are not included.",
+  "assessment": "Visual judgement of naturalness, not proof of how an original image was made.",
+  "generation": "AI-generated illustrative images; fictional subjects, not evidence of actual customers, staff, ratings or product interfaces.",
+  "inspectedOriginalAssets": 106,
+  "replacementScenes": 47,
+  "compatibilityAssets": 57,
+  "retainedOriginalAssets": 49,
+  "primaryBytes": 5397050,
+  "originalReplacedBytes": 26006865,
+  "compatibilityBytes": 21544002,
+  "assets": [
+    {
+      "id": "ai-review-reply-oversight",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: An independent shop owner, a woman in her late forties wearing a faded denim shirt, pauses over a laptop at a cramped shop counter, with a handwritten order pad beside it; she carefully checks a draft before sending, shelves of everyday stock behind her.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Shop owner checking a draft on a laptop beside an order notebook",
+      "primary": "public/images/blog/covers/ai-review-reply-oversight-candid-v2.webp",
+      "bytes": 115582,
+      "sha256": "3cd4f0ed8ae20a06b3cc21086a715de3c7da1c81f6b45661841a33ddfa29a24f",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/ai-review-reply-oversight.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 96556,
+          "bytes": 115582,
+          "sha256": "3cd4f0ed8ae20a06b3cc21086a715de3c7da1c81f6b45661841a33ddfa29a24f"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "ai-visibility-audit",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: An Asian local-business owner in his forties compares his phone with an open laptop and writes notes in a worn notebook at a cafe side table. Casual work clothes and ordinary daylight, no performative posing.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Business owner comparing a phone and laptop while taking notes at a cafe",
+      "primary": "public/images/blog/covers/ai-visibility-audit-candid-v2.webp",
+      "bytes": 128410,
+      "sha256": "3555577d5bbdc3e606f03556fdef0f41057910607c1caf7d67c69f1d04fd765d",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/ai-visibility-audit.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 106048,
+          "bytes": 128410,
+          "sha256": "3555577d5bbdc3e606f03556fdef0f41057910607c1caf7d67c69f1d04fd765d"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "birdeye-alternatives-cost-comparison",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A small-business manager with reading glasses and a worn green shirt sits at an ordinary office desk comparing a laptop with printed invoices; calculator, ring marks on the desk, filing shelf, a focused realistic expression.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Business manager checking paperwork and software costs beside a laptop",
+      "primary": "public/images/blog/covers/birdeye-alternatives-cost-comparison-candid-v2.webp",
+      "bytes": 116540,
+      "sha256": "6b59fb926d702d89c78cca81d4937154e5b4d283ef1cb163f939f7cbf76aea5f",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/birdeye-alternatives-cost-comparison.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 103226,
+          "bytes": 116540,
+          "sha256": "6b59fb926d702d89c78cca81d4937154e5b4d283ef1cb163f939f7cbf76aea5f"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "contractor-responding-review",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: An older tradesperson in a faded navy work shirt sits in a modest workshop office using a laptop to respond to customer feedback, a closed toolkit and job notebook on the desk, tools stored behind him.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Contractor writing a customer response on a laptop in a workshop",
+      "primary": "public/images/blog/covers/contractor-responding-review-candid-v2.webp",
+      "bytes": 110514,
+      "sha256": "4ccdfde2fb47eccd094dc883a5c7c609f69b8cdf88537b297ccf4bb0dd064492",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/contractor-responding-review.jpg",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 796302,
+          "bytes": 152164,
+          "sha256": "336bfdc91411b2a365ab5f293a706e004dc635553372f31c8d4628edf8a966a4"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-home-services.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "contractor-review-request-van",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A tradesperson in plain work clothes stands beside an unbranded white service van at the edge of a residential driveway, quietly sending a follow-up on a phone. Realistic slightly dusty van and lived-in street, no grin at camera.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Contractor checking a phone beside an open service van after a job",
+      "primary": "public/images/blog/covers/contractor-review-request-van-candid-v2.webp",
+      "bytes": 127116,
+      "sha256": "ae390390cc542fa127d67c603d6b9d75460944a7902e2e134682cf9f4f752a81",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/contractor-review-request-van.jpg",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 933045,
+          "bytes": 167950,
+          "sha256": "b3d4e1b1c015217aec9c40b218fbfbe04aa508d7012b346a6d2ffb9495a43076"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-ask-for-reviews.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "customer-submitting-google-review-phone",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: Close contextual photograph of a customer's naturally held smartphone at a neighborhood cafe table, phone screen oblique and softly out of focus, one hand steadying it and the other thumb typing, ordinary coffee cup, faint cafe background. No readable UI.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Customer using a smartphone at a cafe table",
+      "primary": "public/images/blog/covers/customer-submitting-google-review-phone-candid-v2.webp",
+      "bytes": 103018,
+      "sha256": "cd92acd92666b119cb0da523dd4feb87cb2b5b606fc6848566cba7738a19d0c5",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/customer-submitting-google-review-phone.jpg",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 681563,
+          "bytes": 144817,
+          "sha256": "d3c046c6ec2bc082a8602161e7878634fd9d3e705818fdc8cef51e7a11498f86"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-missing-reviews.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "delete-google-review-hero",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A cafe owner in his late forties sits at a side table reviewing customer feedback on an open laptop before opening; slightly tired thoughtful expression, ordinary cafe interior, overcast daylight, cups stacked behind him.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Cafe owner reviewing customer feedback on a laptop at the counter",
+      "primary": "public/images/blog/covers/delete-google-review-hero-candid-v2.webp",
+      "bytes": 102160,
+      "sha256": "e70d96c51838849f6d1a610e7a818fc7afe701f864869c6f0f42c5005c52a4b5",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/delete-google-review-hero.webp",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 84676,
+          "bytes": 83448,
+          "sha256": "9d39e0874348c5d4bb5ad02ea0dd3319dcb1862b8432ea2a526ae0156b76cfd5"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts",
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "dental-practice-reputation",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: In a modest dental reception office, a South Asian male practice administrator aged 58 with a bald head and salt-and-pepper moustache, wearing a plain maroon cardigan over a shirt, sorts a notebook and paper beside his laptop. Empty waiting chairs and neutral clinical walls behind him. Candid three-quarter side view, no patient information.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Dental practice administrator reviewing notes beside a laptop in reception",
+      "primary": "public/images/blog/covers/dental-practice-reputation-candid-v2.webp",
+      "bytes": 89718,
+      "sha256": "4f62dfc0b56286891e02e9452a2bb584963839e955d684697f0014f2054f5668",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/dental-practice-reputation.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 78702,
+          "bytes": 89718,
+          "sha256": "4f62dfc0b56286891e02e9452a2bb584963839e955d684697f0014f2054f5668"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": "Reduced repetitive subjects and settings across blog cards"
+    },
+    {
+      "id": "fake-review-evidence",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A Latina hardware shop owner aged 64, with closely cropped silver hair and a red knitted cardigan, sits at a plain laminate office desk sorting ordinary receipts and writing dates in a notebook, laptop off to her left. Hardware stock shelving and cardboard boxes in the background, overhead fluorescent light and a small window. Not a cafe or fashion shop.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Hardware shop owner organizing receipts and recording dates beside a laptop",
+      "primary": "public/images/blog/covers/fake-review-evidence-candid-v2.webp",
+      "bytes": 157314,
+      "sha256": "166502f70781ace001dc6eff99c9d3e2c46a922c4f1ec8c08a3985a203a8fff4",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/fake-review-evidence.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 107298,
+          "bytes": 157314,
+          "sha256": "166502f70781ace001dc6eff99c9d3e2c46a922c4f1ec8c08a3985a203a8fff4"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": "Reduced repetitive subjects and settings across blog cards"
+    },
+    {
+      "id": "five-star-review-collection",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A salon worker and a departing client chat at a small reception counter after a haircut, the client holding her phone below chest level, relaxed warm expressions, practical salon with real clutter and imperfect daylight.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Salon stylist speaking with a customer at checkout",
+      "primary": "public/images/blog/covers/five-star-review-collection-candid-v2.webp",
+      "bytes": 145172,
+      "sha256": "27077d4658259f7180b2a3f3683118951d4649c5689b54b25a6c250f7fc4bdbe",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/five-star-review-collection.webp",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 113070,
+          "bytes": 111224,
+          "sha256": "9052e4cc3f366bdd359ec7c8886c152e1be728ecf57770addc8224957ba396bd"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "google-business-profile-audit",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: An older Latino bakery owner aged 62 with short white hair and a stocky build, wearing a striped work apron over a white shirt, checks a paper list next to a laptop in his bakery work area. Stainless steel preparation counter, racks of bread behind him, diffuse early morning light, natural flour dust on his apron. No other prominent people.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Bakery owner checking a printed list beside a laptop in a bread preparation area",
+      "primary": "public/images/blog/covers/google-business-profile-audit-candid-v2.webp",
+      "bytes": 134752,
+      "sha256": "47091d7ac4f7d9a39a4b87bf2f6967b07f0fec4e911c3907ad0ab369963ff70a",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/google-business-profile-audit.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 117086,
+          "bytes": 134752,
+          "sha256": "47091d7ac4f7d9a39a4b87bf2f6967b07f0fec4e911c3907ad0ab369963ff70a"
+        }
+      ],
+      "sourceConsumers": [
+        "src/components/marketing/resource-imagery.ts",
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": "Reduced repetitive subjects and settings across blog cards"
+    },
+    {
+      "id": "google-review-policy-research",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A Black female office manager aged 38 with a close-cropped natural hairstyle and a pale blue button-down shirt reads at a desktop computer in a plain neighborhood service office. Camera is behind her shoulder at an angle, her hand resting on the mouse. Unreadable browser screen, ordinary filing shelves, no plants or cafe furnishings.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Office manager reading at a desktop computer in a neighborhood service office",
+      "primary": "public/images/blog/covers/google-review-policy-research-candid-v2.webp",
+      "bytes": 85236,
+      "sha256": "5f557fd70f41af080f09bba851db76432edc8379ffb2c94e9a0318bc4070052c",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/google-review-policy-research.webp",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 74512,
+          "bytes": 66888,
+          "sha256": "a596f91fb4e653d3c6280602d46494c2c90ee6fe26edbffeddffb96f87fe2eec"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "refinementReason": "Reduced repetitive subjects and settings across blog cards"
+    },
+    {
+      "id": "google-review-request-playbook",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape editorial photograph for a local-business blog cover about requesting honest customer reviews. Primary request: a candid cafe owner sending a follow-up message on a smartphone after the morning shift. Scene: an ordinary independent neighborhood cafe, a middle-aged woman in a washed cotton apron seated at a small side table, looking down at her phone held naturally below her face, used order pad and ceramic cup nearby, service counter softly in the background. Style: believable documentary photograph, available window light, 35mm lens, modest depth of field, realistic pores and fine lines, flyaway hair, worn wood, small everyday imperfections, restrained neutral color and subtle photographic grain. Framing: wide 16:9, subject centered enough for mobile crops, relaxed unposed body language. Constraints: one coherent photograph, anatomically natural hands, phone screen angled away and not readable, no legible text, no logos, no visible charts or invented product interface, no watermark. Avoid: airbrushed skin, glamour lighting, orange cinematic glow, staged stock-photo grin, symmetrical perfect interiors, artificial bokeh, 3D rendering. This is illustrative editorial imagery, not a real customer or a testimonial.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Cafe owner sending a follow-up message from a smartphone",
+      "primary": "public/images/blog/covers/google-review-request-playbook-candid-v2.webp",
+      "bytes": 145688,
+      "sha256": "3921cc85aaa3b4ca9fc9713558c46ee18baf48a95b19fee0a130bc6149e00ad0",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/google-review-request-playbook.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 108892,
+          "bytes": 145688,
+          "sha256": "3921cc85aaa3b4ca9fc9713558c46ee18baf48a95b19fee0a130bc6149e00ad0"
+        }
+      ],
+      "sourceConsumers": [
+        "src/app/(marketing)/marketing-layout-nav-feature.ts",
+        "src/components/marketing/resource-imagery.ts",
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "how-to-ask-for-reviews-hero",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A local bakery owner in her fifties stands behind a working counter after service and sends a message on her phone held below chest level; crumbs, practical apron and ordinary shelves, relaxed candid moment rather than a promotional pose.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Bakery owner using a smartphone behind the counter",
+      "primary": "public/images/blog/covers/how-to-ask-for-reviews-hero-candid-v2.webp",
+      "bytes": 137694,
+      "sha256": "0f6c8772130daca5c7fbdba7ba160fa4367d672c3eea2cb592d832eddf635c18",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/how-to-ask-for-reviews-hero.jpg",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 908314,
+          "bytes": 175264,
+          "sha256": "06c6c616dd3da3d6e6f2cd51cef1e44040bbea2339d01ff3bb124095d5bddae7"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts",
+        "src/lib/content/blog-posts-ask-for-reviews.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "hvac-google-maps-leads-hero",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: An HVAC owner and dispatcher, one seated and one standing, review a day's service schedule at a small practical office desk with a laptop, wall map deliberately out of focus, plain unbranded workshirts and natural expressions.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Contractor and dispatcher reviewing work together on a laptop in a service office",
+      "primary": "public/images/blog/covers/hvac-google-maps-leads-hero-candid-v2.webp",
+      "bytes": 95310,
+      "sha256": "b8e3b0108c3c7aaf78705d5623fe092d0a282b79030a44bab6aaf521acba3641",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/hvac-google-maps-leads-hero.jpg",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 800210,
+          "bytes": 138315,
+          "sha256": "d5f7f2c842e423d768e5099d46f267756d2817d5e9dd4ae16471577203701137"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts",
+        "src/lib/content/blog-posts-hvac-leads.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "hvac-review-request-sms",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A homeowner in a lived-in kitchen reads a follow-up message on her phone after a service appointment; ordinary dishes by the sink, a closed service folder on the table, phone screen not readable, soft daylight.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Customer reading a message on a smartphone at a kitchen counter",
+      "primary": "public/images/blog/covers/hvac-review-request-sms-candid-v2.webp",
+      "bytes": 122800,
+      "sha256": "b8fbfcd80889c434d3dcef3006519a60a3646f42de9f199dbcedd2ec73eb07d5",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/hvac-review-request-sms.jpg",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 708580,
+          "bytes": 155024,
+          "sha256": "770ce89551a2a61a65481baefb94ed51f3f074467d1876f914733661592ab32e"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-home-services.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "hvac-service-van-homeowner",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A tradesperson in an unbranded navy uniform talks with an older homeowner on the front path of a modest suburban house after a service call. Plain white service van parked in driveway, tool bag on ground, casual natural conversation.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Service technician speaking with a homeowner beside a van outside a house",
+      "primary": "public/images/blog/covers/hvac-service-van-homeowner-candid-v2.webp",
+      "bytes": 155736,
+      "sha256": "98f578b93cd2a55cbcfaeab578604cdefd5e0fb17105ad5ee8eee975c85f96c5",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/hvac-service-van-homeowner.jpg",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 958876,
+          "bytes": 187386,
+          "sha256": "2a6cfc96cf1aea3210434343a04807dac7c7074e15db457e272883b0fb03278d"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-hvac-leads.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "hvac-technician-customer-handshake",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: An HVAC technician in ordinary unbranded work clothes and a homeowner share a brief natural handshake on a modest front porch after a completed appointment. Correct hand anatomy, relaxed stances, tool bag set down, unbranded van softly visible.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Service technician shaking hands with a homeowner after a visit",
+      "primary": "public/images/blog/covers/hvac-technician-customer-handshake-candid-v2.webp",
+      "bytes": 168348,
+      "sha256": "246e4c4d5f2cd1e19611738e985030f837c8d4f362a4aaac0d43050ee175d5b9",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/hvac-technician-customer-handshake.jpg",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 982482,
+          "bytes": 194974,
+          "sha256": "18f095eb90c6565876118592dc067417741ed18a78e6f9d7c64e02ebf3e47c24"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts",
+        "src/lib/content/blog-posts-home-services.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "hvac-van-branded",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A realistic unbranded white service van parked on an ordinary residential street with an HVAC technician walking toward its open side door carrying a closed tool bag. Documentary wide photograph, dusty tires, practical work clothes, no text or logos.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Technician carrying a tool bag toward an open service van on a residential street",
+      "primary": "public/images/blog/covers/hvac-van-branded-candid-v2.webp",
+      "bytes": 203830,
+      "sha256": "d82a5211bc18603de0f4a0ceea66bf32d1761c6b7c38f5e513b7ddc574d737ac",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/hvac-van-branded.jpg",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 950762,
+          "bytes": 218545,
+          "sha256": "67c4840d3a39c3b6d9aef915dc2c33f4f84a7618413eaee41b2265cb7d429013"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-home-services.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "local-map-pack-visibility",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: An East Asian woman aged 43 with a short straight black pixie haircut and a rust-colored jacket checks her phone on an ordinary neighborhood shopping street outside a barbershop. Candid wider street-level view from across the pavement, brick storefront and bicycle rack, overcast daylight. Her phone screen is facing her, no legible shop signs, no cafe tables.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Customer checking a smartphone on a neighborhood shopping street",
+      "primary": "public/images/blog/covers/local-map-pack-visibility-candid-v2.webp",
+      "bytes": 171034,
+      "sha256": "9264fc406b54a1dff742624b1237dbff74bef7eec1ae92bc5b3663f37f4e85cd",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/local-map-pack-visibility.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 132184,
+          "bytes": 171034,
+          "sha256": "9264fc406b54a1dff742624b1237dbff74bef7eec1ae92bc5b3663f37f4e85cd"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": "Reduced repetitive subjects and settings across blog cards"
+    },
+    {
+      "id": "missing-google-reviews-laptop",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A small-business owner in his late forties quietly studies a laptop at his shop's back-office table, slightly puzzled but not exaggerated, notebooks nearby, normal window light, screen turned away from the camera.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Business owner checking customer feedback on a laptop",
+      "primary": "public/images/blog/covers/missing-google-reviews-laptop-candid-v2.webp",
+      "bytes": 102512,
+      "sha256": "48eaaa06adfc57354ee1bbd9518b9a35352b27898e34701dc6c2e3bc10b8f64d",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/missing-google-reviews-laptop.jpg",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 754638,
+          "bytes": 144285,
+          "sha256": "9fbea98f867f375e931dab9a0fafb140157f8e1fdc9f983c3cb4f5f9f0eefb6b"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts",
+        "src/lib/content/blog-posts-missing-reviews.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "online-reputation-business-impact",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: An older restaurant owner checks customer feedback on a phone in a quiet dining room before opening, chairs set normally, cloth folded on table, thoughtful candid expression, plain daylight with practical lamps.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Restaurant owner reading customer feedback on a smartphone",
+      "primary": "public/images/blog/covers/online-reputation-business-impact-candid-v2.webp",
+      "bytes": 122804,
+      "sha256": "355a1b088e5fd5ddcbad13565c9b9459ab8da93a875a7c2de40e233e45ab6e80",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/online-reputation-business-impact.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 87212,
+          "bytes": 122804,
+          "sha256": "355a1b088e5fd5ddcbad13565c9b9459ab8da93a875a7c2de40e233e45ab6e80"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "podium-pricing-comparison-desk",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: An East Asian female small-business owner aged 52 with a straight black chin-length bob and thin rectangular glasses checks a printed invoice with a calculator at a laminate desk beside a laptop. Grey work sweater, practical modest service office with metal filing cabinet. No fashion shop, no dog, no cafe counter. Medium wide side angle.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Business owner checking an invoice with a calculator beside a laptop",
+      "primary": "public/images/blog/covers/podium-pricing-comparison-desk-candid-v2.webp",
+      "bytes": 103396,
+      "sha256": "b2c0c061e8214243122029d7de8ce55cc63d6684b98e71ef8cf24f3af62ec458",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/podium-pricing-comparison-desk.jpg",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 765050,
+          "bytes": 142348,
+          "sha256": "91403791d02fc15ee097a485982579b19d2113e8c510a96570ac46c9a740fbf6"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts",
+        "src/lib/content/blog-posts-podium-pricing.ts"
+      ],
+      "refinementReason": "Reduced repetitive subjects and settings across blog cards"
+    },
+    {
+      "id": "positive-google-review-response",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A cafe owner takes a short break beside the counter and writes a thankful reply on her phone, subtle genuine half-smile, practical apron, slightly messy working cafe, ordinary daylight rather than warm glossy lighting.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.\nPerson: a Korean woman around 60 with a straight short gray bob and oval reading glasses, wearing a plain burgundy cardigan. Camera shows her in profile with the cafe counter visible.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Cafe owner writing a customer response on a smartphone",
+      "primary": "public/images/blog/covers/positive-google-review-response-candid-v2.webp",
+      "bytes": 142190,
+      "sha256": "c51912723456d45136b96da2eb74f371cd7e952f160b22f8779be9728b2dcba2",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/positive-google-review-response.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 110560,
+          "bytes": 142190,
+          "sha256": "c51912723456d45136b96da2eb74f371cd7e952f160b22f8779be9728b2dcba2"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "private-feedback-service-recovery",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A local business owner listens attentively to a customer across a small cafe table during a calm private conversation. Natural age lines, neutral expressions, both hands resting naturally, no confrontation or staged grin.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.\nPeople: a stocky Black male business owner around 45 with a closely shaved head, and a female customer around 65 with a cropped silver hairstyle. Camera at conversational distance, include their full seated upper bodies.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Cafe owner listening to a customer during a quiet conversation",
+      "primary": "public/images/blog/covers/private-feedback-service-recovery-candid-v2.webp",
+      "bytes": 145788,
+      "sha256": "15764a46c6d327dfd23ad5e95637f159af8812a3eaab3682ac86d518a39757ba",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/private-feedback-service-recovery.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 90754,
+          "bytes": 145788,
+          "sha256": "15764a46c6d327dfd23ad5e95637f159af8812a3eaab3682ac86d518a39757ba"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "reporting-google-review-laptop",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: Over-the-shoulder photograph of a local shop owner using a laptop at a modest desk to check a report, screen softly out of focus without readable data, notebook beside it, natural everyday workspace, believable hand placement.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Business owner taking notes while using a laptop at a cafe counter",
+      "primary": "public/images/blog/covers/reporting-google-review-laptop-candid-v2.webp",
+      "bytes": 119370,
+      "sha256": "a485c416c46388c8621b8f08bfb97a6b447fbc2c1bfa92f6737a8322fc145b8d",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/reporting-google-review-laptop.webp",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 63700,
+          "bytes": 91438,
+          "sha256": "a42573fe60ebc7e334a2d015b8ffee53d2e23d605cc41b73d7716d76eab49c92"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "reputation-dashboard-local-business",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A small cafe owner works with a laptop at the end of a real cafe counter before opening, equipment and stacked cups behind him, one hand on the touchpad, screen turned toward him and not readable, candid working moment.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Cafe owner reviewing customer feedback on a laptop",
+      "primary": "public/images/blog/covers/reputation-dashboard-local-business-candid-v2.webp",
+      "bytes": 134264,
+      "sha256": "ea76f8cda97fd6fb3138e05654ef4179c8962031e3347b4299366daa0a4dfae3",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/reputation-dashboard-local-business.jpg",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 849477,
+          "bytes": 172683,
+          "sha256": "971d335783e97b161456963aad049ba3801fbe2165c29e243d9b191c29403f2c"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-podium-pricing.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "reputation-dashboard-overview",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A modest small-business office desk with a plain monitor angled away showing only an unfocused neutral page, notebook, ordinary keyboard and mug; no fabricated numbers or charts, real cables, worn desk surface, natural window light.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Business owner reviewing information on a desktop monitor",
+      "primary": "public/images/blog/covers/reputation-dashboard-overview-candid-v2.webp",
+      "bytes": 89460,
+      "sha256": "c520083851c17596c726c65ea24953364344c2cb49825be05e4b4caf6bea9555",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/reputation-dashboard-overview.webp",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 85934,
+          "bytes": 71820,
+          "sha256": "3a495ffacaf3c1ab2ac7912a382f4e6a9963f27f815ad7432f9d57abb62ff555"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "responding-to-negative-review",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A restaurant owner in his fifties drafts a careful reply on a laptop at a quiet table after service, practical shirt with sleeves rolled down, thoughtful restrained expression, no exaggerated anger or sadness.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.\nPerson: a South Asian male restaurant owner around 55 with short silver hair and a neat moustache. Show him at a simple diner booth, camera from diagonally behind his shoulder, no cafe-style bistro counter.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Restaurant owner considering a customer response on a laptop in a diner booth",
+      "primary": "public/images/blog/covers/responding-to-negative-review-candid-v2.webp",
+      "bytes": 92528,
+      "sha256": "d8d783a983bd2c5bc0f3999a81418f36f862ec86c934cf2de2a128a29456280b",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/responding-to-negative-review.webp",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 98336,
+          "bytes": 74896,
+          "sha256": "b9a42be4a0c06e8bea584849043ba993d165291b1ab6f398a590accf62d3094d"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "responding-to-one-star-review",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A young local restaurant manager in a worn dark shirt reads a laptop at a corner table, pausing thoughtfully before replying, ordinary evening practical light with neutral white balance, realistic fatigue without melodrama.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.\nPerson: a Latino male manager around 27 with short black hair and clean-shaven face. Small takeaway restaurant context with practical tiled walls.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Takeaway restaurant owner drafting a customer response on a laptop",
+      "primary": "public/images/blog/covers/responding-to-one-star-review-candid-v2.webp",
+      "bytes": 83378,
+      "sha256": "d093ebee1ad58a9459327c4307650757a449f8966c583fd0a32fccd0cc12afd4",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/responding-to-one-star-review.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 62620,
+          "bytes": 83378,
+          "sha256": "d093ebee1ad58a9459327c4307650757a449f8966c583fd0a32fccd0cc12afd4"
+        }
+      ],
+      "sourceConsumers": [
+        "src/components/marketing/resource-imagery.ts",
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "restaurant-review-management",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: An independent restaurant owner speaks with a guest near a small dining table during a normal service, menu closed and dishes cleared, naturally attentive expression, slightly busy restaurant in background, no staged celebration.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.\nPeople: a Latina restaurant owner around 55 with a low gray-streaked ponytail and an elderly Asian male guest. Plain neighborhood diner setting and understated interaction.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Restaurant owner listening to a guest at a table during service",
+      "primary": "public/images/blog/covers/restaurant-review-management-candid-v2.webp",
+      "bytes": 116296,
+      "sha256": "ae85d621d3cccb1cd4bb685dafc3e231a5cf9b82cd3536879ffb72884abfaeb0",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/restaurant-review-management.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 130402,
+          "bytes": 116296,
+          "sha256": "ae85d621d3cccb1cd4bb685dafc3e231a5cf9b82cd3536879ffb72884abfaeb0"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "review-software-pricing-comparison",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A Black woman who runs a small business reviews a laptop and ordinary bills at a simple worktable near a window, pen in hand, realistic office clutter, neutral documentary photography with no readable figures.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Shop owner comparing costs using paperwork, a notebook, and a laptop",
+      "primary": "public/images/blog/covers/review-software-pricing-comparison-candid-v2.webp",
+      "bytes": 115792,
+      "sha256": "68d9c798255bb68902879004ed971acf4c695a15a04c8f7925b3eb98e08b7445",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/review-software-pricing-comparison.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 81204,
+          "bytes": 115792,
+          "sha256": "68d9c798255bb68902879004ed971acf4c695a15a04c8f7925b3eb98e08b7445"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "sms-review-request-mobile-screen",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: Close contextual photograph of a customer holding a phone at an everyday cafe table, thumb typing a short message, screen angled away and not readable, plain cup and scratched tabletop, natural daylight, believable hands.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Customer reading a smartphone message at a cafe table",
+      "primary": "public/images/blog/covers/sms-review-request-mobile-screen-candid-v2.webp",
+      "bytes": 163196,
+      "sha256": "169c3eb5850e80c081ef8cf4cd7e3c35950184b7fcc4f4510177fde70c1ba219",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/sms-review-request-mobile-screen.jpg",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 709101,
+          "bytes": 191527,
+          "sha256": "f93425da7a618bd6427cc60843481f766a130e7989c4cf841880918ff9f6c14b"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-podium-pricing.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "team-review-management",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: Three colleagues in a modest small-business office discuss feedback around a table with a laptop and notebooks. Mixed ages, realistic individual appearances, no one pointing dramatically or looking at camera, soft ordinary daylight.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.\nPeople: a South Asian woman around 45 with a short bob, an older white man with thinning hair, and a young Black woman with short natural hair. Plain small office, no decorative cafe counter.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Three colleagues discussing notes around a laptop in a small office",
+      "primary": "public/images/blog/covers/team-review-management-candid-v2.webp",
+      "bytes": 114026,
+      "sha256": "642985acb91f2b8c3bbbccd93adf730ab92d79e5f2a100c8bbe2a45a91df8f82",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/team-review-management.webp",
+          "dimensions": [
+            1376,
+            768
+          ],
+          "originalBytes": 99324,
+          "bytes": 90726,
+          "sha256": "5025db26821988f861d986707be7b0ae9cd8823b18fe74b0272fb1e35d77943c"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "why-google-reviews-matter",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A customer in casual everyday clothes checks local business reviews on a phone outside a neighborhood bakery before entering, candid side view, slightly worn doorway, cloudy daylight, no readable signs or screen.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.\nPerson: a Black male customer around 30 wearing a faded gray hoodie and carrying a bicycle helmet. Bakery doorway and street details visible.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Customer checking a smartphone outside a neighborhood bakery",
+      "primary": "public/images/blog/covers/why-google-reviews-matter-candid-v2.webp",
+      "bytes": 203210,
+      "sha256": "148737f34dbccd9ea01c374cbb8666a4678fcd9e18a557556f91353c3f7c03f0",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/covers/why-google-reviews-matter.webp",
+          "dimensions": [
+            1672,
+            941
+          ],
+          "originalBytes": 108356,
+          "bytes": 203210,
+          "sha256": "148737f34dbccd9ea01c374cbb8666a4678fcd9e18a557556f91353c3f7c03f0"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "google-review-link",
+      "kind": "blog",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: editorial website photograph for Zyene Reviews, a local-business reputation platform. Style: believable candid documentary photograph, available daylight or ordinary practical light, 35mm lens, natural skin pores and fine lines, fabric wear, real material grain, minor everyday mess, restrained colors and subtle photographic grain. Framing: one wide 16:9 photograph, main action near the center for responsive crops, unposed moment. Constraints: anatomically natural hands, ordinary believable objects and interiors; screens angled away or naturally out of focus; no readable text, no logos, no charts, no fabricated brand interfaces, no watermark. Avoid: airbrushing, glamour lighting, forced stock-photo grin, orange cinematic glow, perfect symmetry, glossy CGI, excessively blurred backgrounds. People are fictional illustrative subjects, never presented as real customers or staff.\nScene and action: A smartphone held naturally above an ordinary cafe table beside a laptop and cup, person checking a direct customer feedback link, screen seen obliquely and out of focus without identifiable UI, documentary close-up with realistic skin texture.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.\nShow a single older person's hand with natural wrinkles using a smartphone, simple laminate cafe table and plain white cup rather than rustic wood; no recognizable person.",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "alt": "Customer using a smartphone beside a laptop and coffee at a cafe table",
+      "primary": "public/images/blog/google_review_link-candid-v2.webp",
+      "bytes": 82660,
+      "sha256": "a7cc2a7282de2d0c45efaca9e18d01933267a0b18d24387ad1756adac5b0a12d",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/blog/google_review_link.jpg",
+          "dimensions": [
+            1200,
+            896
+          ],
+          "originalBytes": 660846,
+          "bytes": 123212,
+          "sha256": "be558a1e00f0af620c3bf423be94b4e12efc82feb24766dc06f066946b10e1f5"
+        }
+      ],
+      "sourceConsumers": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "dental",
+      "kind": "industry",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: website contextual photograph for Zyene Reviews. Style: candid documentary photography with available window light, realistic skin pores and fine lines, flyaway hair, practical worn fabric, believable material grain, minor everyday imperfections, restrained neutral color, moderate depth of field and subtle photographic grain. Constraints: one coherent real-world-looking scene, natural hand anatomy, no legible signs or private data, no logos, no watermark, screens turned away or out of focus. Avoid polished CGI, airbrushed skin, forced smiles, perfect symmetry, glamour lighting or orange cinematic grading. Fictional illustrative subjects, not claimed to be real customers or Zyene staff.\nScene and action: Square composition of an ordinary dental clinic during room preparation: a dentist and assistant wearing clean scrubs arranging a wrapped instrument tray beside an empty dental chair, no treatment or identifiable patient, normal clinical proportions, softly daylight-lit practical room.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.\nPeople: a Black male dentist around 45 and a female assistant with short auburn hair. Clean scrubs; both preparing equipment near an empty chair.",
+      "dimensions": [
+        900,
+        900
+      ],
+      "alt": "Dental team preparing instruments beside an empty treatment chair",
+      "primary": "public/images/industries/dental-candid-v2.webp",
+      "bytes": 65318,
+      "sha256": "318511925eb6636884363b45d9a37cde904690143314d6108052edf00bfd87f2",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/industries/dental.png",
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "originalBytes": 704626,
+          "bytes": 1319407,
+          "sha256": "400ac0e0919d45795e0eec7296d51a4b97e4d6b237792c78935fbd7da131e096"
+        },
+        {
+          "path": "public/images/industries/dental.webp",
+          "dimensions": [
+            900,
+            900
+          ],
+          "originalBytes": 81508,
+          "bytes": 65318,
+          "sha256": "318511925eb6636884363b45d9a37cde904690143314d6108052edf00bfd87f2"
+        }
+      ],
+      "sourceConsumers": [
+        "src/app/(marketing)/case-studies/[slug]/case-studies-slug-header-section.tsx",
+        "src/app/(marketing)/industries/[industry]/industries-industry-hero-section.tsx",
+        "src/app/(marketing)/industries/[industry]/industries-industry-use-case-section.tsx",
+        "src/app/(marketing)/industries/industries-industry-grid-section.tsx",
+        "src/app/(marketing)/marketing-layout-nav-dropdown.tsx",
+        "src/components/marketing/marketing-home/marketing-home-industries.tsx",
+        "src/lib/industries/industry-data.ts",
+        "src/lib/industries/industry-imagery.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "auto-repair",
+      "kind": "industry",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: website contextual photograph for Zyene Reviews. Style: candid documentary photography with available window light, realistic skin pores and fine lines, flyaway hair, practical worn fabric, believable material grain, minor everyday imperfections, restrained neutral color, moderate depth of field and subtle photographic grain. Constraints: one coherent real-world-looking scene, natural hand anatomy, no legible signs or private data, no logos, no watermark, screens turned away or out of focus. Avoid polished CGI, airbrushed skin, forced smiles, perfect symmetry, glamour lighting or orange cinematic grading. Fictional illustrative subjects, not claimed to be real customers or Zyene staff.\nScene and action: Square candid photograph of a middle-aged mechanic in worn coveralls checking an open engine bay in an independent auto-repair workshop, practical tools and a slightly dusty car, normal garage light with daylight from open door, no staged look at camera.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        900,
+        900
+      ],
+      "alt": "Mechanic working with tools beneath an open car bonnet",
+      "primary": "public/images/industries/auto-repair-candid-v2.webp",
+      "bytes": 89386,
+      "sha256": "4d558b9c8b05a502ece31284c4d038e3b31b472c088d82ee73dfccbcad59a301",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/industries/auto-repair.png",
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "originalBytes": 922145,
+          "bytes": 1465748,
+          "sha256": "e9d26f1c3a15aa7df8c80a5de9c67592768374d9ee6174cc7035f29235eab277"
+        },
+        {
+          "path": "public/images/industries/auto-repair.webp",
+          "dimensions": [
+            900,
+            900
+          ],
+          "originalBytes": 148850,
+          "bytes": 89386,
+          "sha256": "4d558b9c8b05a502ece31284c4d038e3b31b472c088d82ee73dfccbcad59a301"
+        }
+      ],
+      "sourceConsumers": [
+        "src/app/(marketing)/case-studies/[slug]/case-studies-slug-header-section.tsx",
+        "src/app/(marketing)/industries/[industry]/industries-industry-hero-section.tsx",
+        "src/app/(marketing)/industries/[industry]/industries-industry-use-case-section.tsx",
+        "src/app/(marketing)/industries/industries-industry-grid-section.tsx",
+        "src/app/(marketing)/marketing-layout-nav-dropdown.tsx",
+        "src/components/marketing/marketing-home/marketing-home-industries.tsx",
+        "src/lib/industries/industry-data.ts",
+        "src/lib/industries/industry-imagery.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "fitness",
+      "kind": "industry",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: website contextual photograph for Zyene Reviews. Style: candid documentary photography with available window light, realistic skin pores and fine lines, flyaway hair, practical worn fabric, believable material grain, minor everyday imperfections, restrained neutral color, moderate depth of field and subtle photographic grain. Constraints: one coherent real-world-looking scene, natural hand anatomy, no legible signs or private data, no logos, no watermark, screens turned away or out of focus. Avoid polished CGI, airbrushed skin, forced smiles, perfect symmetry, glamour lighting or orange cinematic grading. Fictional illustrative subjects, not claimed to be real customers or Zyene staff.\nScene and action: Square candid photograph of a trainer speaking with an adult gym member beside a rack of dumbbells in a neighborhood gym, ordinary athletic clothes, relaxed realistic physiques, slightly used flooring and everyday gym light, no glamorous bodybuilder pose.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.\nPeople: a woman trainer with short dark curly hair and a man around 55 with average build. Practical neighborhood gym, not a luxury studio.",
+      "dimensions": [
+        900,
+        900
+      ],
+      "alt": "Trainer speaking with a gym member beside a dumbbell rack",
+      "primary": "public/images/industries/fitness-candid-v2.webp",
+      "bytes": 79696,
+      "sha256": "5ff8b121364c183228c25171b91b9785428e1cb5d1bc1d8eca8b7c5de038b8ef",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/industries/fitness.png",
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "originalBytes": 878370,
+          "bytes": 1475632,
+          "sha256": "c5de885fc7c9a3c7a9cb19b872b739d25e7e1f752605684dbac00cd0ff1a7e5d"
+        },
+        {
+          "path": "public/images/industries/fitness.webp",
+          "dimensions": [
+            900,
+            900
+          ],
+          "originalBytes": 129646,
+          "bytes": 79696,
+          "sha256": "5ff8b121364c183228c25171b91b9785428e1cb5d1bc1d8eca8b7c5de038b8ef"
+        }
+      ],
+      "sourceConsumers": [
+        "src/app/(marketing)/case-studies/[slug]/case-studies-slug-header-section.tsx",
+        "src/app/(marketing)/industries/[industry]/industries-industry-hero-section.tsx",
+        "src/app/(marketing)/industries/[industry]/industries-industry-use-case-section.tsx",
+        "src/app/(marketing)/industries/industries-industry-grid-section.tsx",
+        "src/app/(marketing)/marketing-layout-nav-dropdown.tsx",
+        "src/components/marketing/marketing-home/marketing-home-industries.tsx",
+        "src/lib/industries/industry-data.ts",
+        "src/lib/industries/industry-imagery.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "hotels",
+      "kind": "industry",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: website contextual photograph for Zyene Reviews. Style: candid documentary photography with available window light, realistic skin pores and fine lines, flyaway hair, practical worn fabric, believable material grain, minor everyday imperfections, restrained neutral color, moderate depth of field and subtle photographic grain. Constraints: one coherent real-world-looking scene, natural hand anatomy, no legible signs or private data, no logos, no watermark, screens turned away or out of focus. Avoid polished CGI, airbrushed skin, forced smiles, perfect symmetry, glamour lighting or orange cinematic grading. Fictional illustrative subjects, not claimed to be real customers or Zyene staff.\nScene and action: Square contextual photograph of a modest independent hotel reception, a receptionist conversing with an arriving guest beside a suitcase, normal tidy counter, slightly worn floor, daylight, unobtrusive practical furniture, no luxury palace or readable hotel name.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.\nPeople: an older East Asian receptionist and a middle-aged Latino guest carrying a small suitcase. Modest hotel reception.",
+      "dimensions": [
+        900,
+        900
+      ],
+      "alt": "Hotel receptionist welcoming a guest with luggage at the front desk",
+      "primary": "public/images/industries/hotels-candid-v2.webp",
+      "bytes": 85644,
+      "sha256": "63fe2cf55f5b1b72980fcebf301c7a395ea32ab4ab6e47a685c1ed4c8a40c326",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/industries/hotels.png",
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "originalBytes": 935224,
+          "bytes": 1446123,
+          "sha256": "2614b03e5f0d8854da77e2d688fca801ec82e84f131a63c917fd22cb8bb6a5df"
+        },
+        {
+          "path": "public/images/industries/hotels.webp",
+          "dimensions": [
+            900,
+            900
+          ],
+          "originalBytes": 154856,
+          "bytes": 85644,
+          "sha256": "63fe2cf55f5b1b72980fcebf301c7a395ea32ab4ab6e47a685c1ed4c8a40c326"
+        }
+      ],
+      "sourceConsumers": [
+        "src/app/(marketing)/case-studies/[slug]/case-studies-slug-header-section.tsx",
+        "src/app/(marketing)/industries/[industry]/industries-industry-hero-section.tsx",
+        "src/app/(marketing)/industries/[industry]/industries-industry-use-case-section.tsx",
+        "src/app/(marketing)/industries/industries-industry-grid-section.tsx",
+        "src/app/(marketing)/marketing-layout-nav-dropdown.tsx",
+        "src/components/marketing/marketing-home/marketing-home-industries.tsx",
+        "src/lib/industries/industry-data.ts",
+        "src/lib/industries/industry-imagery.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "medical",
+      "kind": "industry",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: website contextual photograph for Zyene Reviews. Style: candid documentary photography with available window light, realistic skin pores and fine lines, flyaway hair, practical worn fabric, believable material grain, minor everyday imperfections, restrained neutral color, moderate depth of field and subtle photographic grain. Constraints: one coherent real-world-looking scene, natural hand anatomy, no legible signs or private data, no logos, no watermark, screens turned away or out of focus. Avoid polished CGI, airbrushed skin, forced smiles, perfect symmetry, glamour lighting or orange cinematic grading. Fictional illustrative subjects, not claimed to be real customers or Zyene staff.\nScene and action: Square contextual photograph of an ordinary outpatient clinic reception, a receptionist greeting an adult visitor across a desk with a closed folder, clean practical space, natural age lines, no treatment, no readable health information, no identifiable records.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.\nPeople: an Asian receptionist with cropped black hair and an older Black visitor with gray hair. Plain white outpatient reception with simple blue seating.",
+      "dimensions": [
+        900,
+        900
+      ],
+      "alt": "Clinic receptionist welcoming a visitor in a waiting area",
+      "primary": "public/images/industries/medical-candid-v2.webp",
+      "bytes": 45568,
+      "sha256": "afed224c4e7e7f32692969c884113d2d8bc92b3d7e886e658f0d285fabe87105",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/industries/medical.png",
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "originalBytes": 852743,
+          "bytes": 1146570,
+          "sha256": "3a140e2f82268a55f0102a8990112a8abcc4e8129f0e2baa7656b94ec503dba6"
+        },
+        {
+          "path": "public/images/industries/medical.webp",
+          "dimensions": [
+            900,
+            900
+          ],
+          "originalBytes": 123256,
+          "bytes": 45568,
+          "sha256": "afed224c4e7e7f32692969c884113d2d8bc92b3d7e886e658f0d285fabe87105"
+        }
+      ],
+      "sourceConsumers": [
+        "src/app/(marketing)/case-studies/[slug]/case-studies-slug-header-section.tsx",
+        "src/app/(marketing)/industries/[industry]/industries-industry-hero-section.tsx",
+        "src/app/(marketing)/industries/[industry]/industries-industry-use-case-section.tsx",
+        "src/app/(marketing)/industries/industries-industry-grid-section.tsx",
+        "src/app/(marketing)/marketing-layout-nav-dropdown.tsx",
+        "src/components/marketing/marketing-home/marketing-home-industries.tsx",
+        "src/lib/industries/industry-data.ts",
+        "src/lib/industries/industry-imagery.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "salons",
+      "kind": "industry",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: website contextual photograph for Zyene Reviews. Style: candid documentary photography with available window light, realistic skin pores and fine lines, flyaway hair, practical worn fabric, believable material grain, minor everyday imperfections, restrained neutral color, moderate depth of field and subtle photographic grain. Constraints: one coherent real-world-looking scene, natural hand anatomy, no legible signs or private data, no logos, no watermark, screens turned away or out of focus. Avoid polished CGI, airbrushed skin, forced smiles, perfect symmetry, glamour lighting or orange cinematic grading. Fictional illustrative subjects, not claimed to be real customers or Zyene staff.\nScene and action: Square candid photograph of a hairstylist gently combing a seated client's hair at a practical neighborhood salon station, real hair texture, natural reflections and correctly positioned hands, ordinary towels and tools, soft window light, relaxed expressions.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.\nPeople: a Black hairstylist with short natural hair and a middle-aged white female client with shoulder-length gray hair. Simple salon station, no luxury branding.",
+      "dimensions": [
+        900,
+        900
+      ],
+      "alt": "Hair stylist combing a client's hair in a neighborhood salon",
+      "primary": "public/images/industries/salons-candid-v2.webp",
+      "bytes": 75394,
+      "sha256": "0939df8ffdb2b6b2ab8012217c35d97a749ea899729c1c5c3ebfa7f36c1d3935",
+      "compatibilityAssets": [
+        {
+          "path": "public/images/industries/salons.png",
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "originalBytes": 750876,
+          "bytes": 1452939,
+          "sha256": "1b31d08aa8cc62646c0cf8defb5ad6d20e74429864539ed5e29e197417699676"
+        },
+        {
+          "path": "public/images/industries/salons.webp",
+          "dimensions": [
+            900,
+            900
+          ],
+          "originalBytes": 88378,
+          "bytes": 75394,
+          "sha256": "0939df8ffdb2b6b2ab8012217c35d97a749ea899729c1c5c3ebfa7f36c1d3935"
+        }
+      ],
+      "sourceConsumers": [
+        "src/app/(marketing)/case-studies/[slug]/case-studies-slug-header-section.tsx",
+        "src/app/(marketing)/industries/[industry]/industries-industry-hero-section.tsx",
+        "src/app/(marketing)/industries/[industry]/industries-industry-use-case-section.tsx",
+        "src/app/(marketing)/industries/industries-industry-grid-section.tsx",
+        "src/app/(marketing)/marketing-layout-nav-dropdown.tsx",
+        "src/components/marketing/feature-visual-data.ts",
+        "src/components/marketing/marketing-home/marketing-home-industries.tsx",
+        "src/lib/industries/industry-data.ts",
+        "src/lib/industries/industry-imagery.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "team-collaboration",
+      "kind": "marketing",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: website contextual photograph for Zyene Reviews. Style: candid documentary photography with available window light, realistic skin pores and fine lines, flyaway hair, practical worn fabric, believable material grain, minor everyday imperfections, restrained neutral color, moderate depth of field and subtle photographic grain. Constraints: one coherent real-world-looking scene, natural hand anatomy, no legible signs or private data, no logos, no watermark, screens turned away or out of focus. Avoid polished CGI, airbrushed skin, forced smiles, perfect symmetry, glamour lighting or orange cinematic grading. Fictional illustrative subjects, not claimed to be real customers or Zyene staff.\nScene and action: Square candid photograph of three small-business colleagues at a modest office table discussing a notebook and an open laptop, different ages and realistic individual appearances, regular casual work clothes, one person listening and another making notes, no one looks at camera, practical uncluttered office with normal daylight.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alt": "Three colleagues reviewing notes and a laptop around a table",
+      "primary": "public/marketing/about/team-collaboration-candid-v2.webp",
+      "bytes": 88908,
+      "sha256": "eb19524070e4391be5f6de532aa59aa41d70e6d1902975649186ba9e532dc120",
+      "compatibilityAssets": [
+        {
+          "path": "public/marketing/about/team-collaboration.png",
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "originalBytes": 896201,
+          "bytes": 1432185,
+          "sha256": "d5f0f873b864677f3daa345b4d31aec1cf3d452fe7e96cc73a2bd12ca26b8b46"
+        },
+        {
+          "path": "public/marketing/about/team-collaboration.webp",
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "originalBytes": 150242,
+          "bytes": 88908,
+          "sha256": "eb19524070e4391be5f6de532aa59aa41d70e6d1902975649186ba9e532dc120"
+        }
+      ],
+      "sourceConsumers": [
+        "src/app/(marketing)/about/page-view.tsx",
+        "src/app/(marketing)/agencies/agencies-hero-section.tsx",
+        "src/app/(marketing)/contact/contact-content-section.tsx",
+        "src/app/(marketing)/enterprise/enterprise-hero-section.tsx",
+        "src/app/(marketing)/integrations/integrations-hero-section.tsx",
+        "src/app/(marketing)/marketing-layout-nav-feature.ts",
+        "src/components/marketing/feature-visual-data.ts",
+        "src/components/marketing/marketing-home/marketing-home-workflow.tsx",
+        "src/lib/marketing/marketing-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "cafe-owner-feedback",
+      "kind": "marketing",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: website contextual photograph for Zyene Reviews. Style: candid documentary photography with available window light, realistic skin pores and fine lines, flyaway hair, practical worn fabric, believable material grain, minor everyday imperfections, restrained neutral color, moderate depth of field and subtle photographic grain. Constraints: one coherent real-world-looking scene, natural hand anatomy, no legible signs or private data, no logos, no watermark, screens turned away or out of focus. Avoid polished CGI, airbrushed skin, forced smiles, perfect symmetry, glamour lighting or orange cinematic grading. Fictional illustrative subjects, not claimed to be real customers or Zyene staff.\nScene and action: Wide 16:9 candid photograph of a middle-aged Black cafe owner in a washed dark apron standing at an ordinary working cafe counter and reading a tablet held below his face. Real facial texture, plain daylight, stacked cups and practical equipment, quiet working moment, no sales pose.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "alt": "Cafe owner checking a tablet behind the counter",
+      "primary": "public/marketing/home/cafe-owner-feedback-candid-v2.webp",
+      "bytes": 108990,
+      "sha256": "0a105c5ae413b793bb23a3fe9f6c548d0e370aaa55f7f218efd53c45b6d3a9d7",
+      "compatibilityAssets": [
+        {
+          "path": "public/marketing/home/cafe-owner-feedback.webp",
+          "dimensions": [
+            1536,
+            1024
+          ],
+          "originalBytes": 154338,
+          "bytes": 108990,
+          "sha256": "0a105c5ae413b793bb23a3fe9f6c548d0e370aaa55f7f218efd53c45b6d3a9d7"
+        }
+      ],
+      "sourceConsumers": [
+        "src/app/(marketing)/marketing-scenes.css",
+        "src/components/marketing/marketing-home/marketing-home-closing.tsx"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "storefront",
+      "kind": "marketing",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: website contextual photograph for Zyene Reviews. Style: candid documentary photography with available window light, realistic skin pores and fine lines, flyaway hair, practical worn fabric, believable material grain, minor everyday imperfections, restrained neutral color, moderate depth of field and subtle photographic grain. Constraints: one coherent real-world-looking scene, natural hand anatomy, no legible signs or private data, no logos, no watermark, screens turned away or out of focus. Avoid polished CGI, airbrushed skin, forced smiles, perfect symmetry, glamour lighting or orange cinematic grading. Fictional illustrative subjects, not claimed to be real customers or Zyene staff.\nScene and action: Square documentary street photograph of an independent neighborhood cafe storefront with painted timber door, slightly worn brickwork, a couple of ordinary chairs and small pots. Overcast daylight, realistic street scale, tiny everyday imperfections, no readable shop sign, no people prominently posing.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "alt": "Customers sitting outside a neighborhood cafe",
+      "primary": "public/marketing/home/storefront-candid-v2.webp",
+      "bytes": 174374,
+      "sha256": "35b0e2a6ff74cd4e393ea8ea8eeb4f2f234489288a7f89a822e67c3cc0ab7cfc",
+      "compatibilityAssets": [
+        {
+          "path": "public/marketing/home/storefront.png",
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "originalBytes": 1039509,
+          "bytes": 1777627,
+          "sha256": "29112325fa7e6d7a0157b480222cc0f9d0842d2a5c9a3a9452752d0378369785"
+        },
+        {
+          "path": "public/marketing/home/storefront.webp",
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "originalBytes": 222534,
+          "bytes": 174374,
+          "sha256": "35b0e2a6ff74cd4e393ea8ea8eeb4f2f234489288a7f89a822e67c3cc0ab7cfc"
+        }
+      ],
+      "sourceConsumers": [
+        "src/components/marketing/feature-visual-data.ts",
+        "src/lib/marketing/marketing-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "customer-avatar",
+      "kind": "avatar",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: website contextual photograph for Zyene Reviews. Style: candid documentary photography with available window light, realistic skin pores and fine lines, flyaway hair, practical worn fabric, believable material grain, minor everyday imperfections, restrained neutral color, moderate depth of field and subtle photographic grain. Constraints: one coherent real-world-looking scene, natural hand anatomy, no legible signs or private data, no logos, no watermark, screens turned away or out of focus. Avoid polished CGI, airbrushed skin, forced smiles, perfect symmetry, glamour lighting or orange cinematic grading. Fictional illustrative subjects, not claimed to be real customers or Zyene staff.\nScene and action: Square close candid portrait of an ordinary woman in her early forties in an everyday cafe, a small relaxed closed-mouth smile, visible natural skin texture and fine lines, off-white casual shirt, camera at eye level, mild background detail and daylight. Head and shoulders centered with room for a circular avatar crop, no fashion or glamour retouching.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        320,
+        320
+      ],
+      "alt": "Illustrative customer portrait",
+      "primary": "public/marketing/home/customer-avatar-candid-v2.webp",
+      "bytes": 17488,
+      "sha256": "4896019963c2fdddaf988b694f8d010b411a6a745b909d74b4f6b29e46ced8bf",
+      "compatibilityAssets": [
+        {
+          "path": "public/marketing/home/customer-avatar.png",
+          "dimensions": [
+            1536,
+            1024
+          ],
+          "originalBytes": 2214757,
+          "bytes": 2045276,
+          "sha256": "951df8830fb780b7d503ac1ae01af8304ebb8a47836c7d13d941353f925e56b4"
+        },
+        {
+          "path": "public/marketing/home/customer-avatar.webp",
+          "dimensions": [
+            320,
+            213
+          ],
+          "originalBytes": 9346,
+          "bytes": 12846,
+          "sha256": "a91dcfe2d1a3561fae948e13c9e7f4de0702b76f1a172cee1c3416a07e8afde9"
+        }
+      ],
+      "sourceConsumers": [
+        "src/components/marketing/marketing-home/home-customer-review-card.tsx",
+        "src/lib/marketing/marketing-images.ts"
+      ],
+      "refinementReason": null
+    },
+    {
+      "id": "alert-robert-hayes",
+      "kind": "avatar",
+      "tool": "image_gen.imagegen (built-in)",
+      "prompt": "Use case: photorealistic-natural. Asset type: website contextual photograph for Zyene Reviews. Style: candid documentary photography with available window light, realistic skin pores and fine lines, flyaway hair, practical worn fabric, believable material grain, minor everyday imperfections, restrained neutral color, moderate depth of field and subtle photographic grain. Constraints: one coherent real-world-looking scene, natural hand anatomy, no legible signs or private data, no logos, no watermark, screens turned away or out of focus. Avoid polished CGI, airbrushed skin, forced smiles, perfect symmetry, glamour lighting or orange cinematic grading. Fictional illustrative subjects, not claimed to be real customers or Zyene staff.\nScene and action: Square close candid portrait of an ordinary man in his late fifties with slightly graying hair and light stubble, wearing a plain faded blue shirt, subtle relaxed expression, visible pores and age lines, ordinary cafe background and daylight. Head and shoulders centered for circular avatar crop, no formal studio or glamour retouching.\nIndependent photograph: invent distinct people, clothing, room layout and camera composition for this scene. Do not reuse people or settings from earlier images. Show enough practical surroundings to communicate the specific business context.",
+      "dimensions": [
+        320,
+        320
+      ],
+      "alt": "Illustrative feedback portrait",
+      "primary": "public/marketing/home/alert-robert-hayes-candid-v2.webp",
+      "bytes": 19442,
+      "sha256": "055c2b67d0f97342c24b0914ff828e09d859ccb4324655211da9490079c6016e",
+      "compatibilityAssets": [
+        {
+          "path": "public/marketing/home/alert-robert-hayes.png",
+          "dimensions": [
+            1536,
+            1024
+          ],
+          "originalBytes": 1944448,
+          "bytes": 2254649,
+          "sha256": "4a836b34bcbbaec0547464dea48be1ba65919762b3e0aee5ee0298d734139d17"
+        },
+        {
+          "path": "public/marketing/home/alert-robert-hayes.webp",
+          "dimensions": [
+            320,
+            213
+          ],
+          "originalBytes": 5114,
+          "bytes": 14292,
+          "sha256": "e7bb78e09e89087c436500595eebb816896be08f7807ec4dc9ef125059de1630"
+        }
+      ],
+      "sourceConsumers": [
+        "src/components/marketing/marketing-home/home-customer-review-card.tsx",
+        "src/lib/marketing/marketing-images.ts"
+      ],
+      "refinementReason": null
+    }
+  ],
+  "originalInventory": [
+    {
+      "path": "public/Main logo.png",
+      "url": "/Main logo.png",
+      "size": [
+        1200,
+        1200
+      ],
+      "bytes": 68577,
+      "references": [],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "7fc123810d1ef3ebade4b7455c7932d53924348e1eae6d7b7b7cf6eb942f8fec"
+    },
+    {
+      "path": "public/brand/mascot/zyene-mascot-character-sheet-v1.png",
+      "url": "/brand/mascot/zyene-mascot-character-sheet-v1.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "bytes": 1493599,
+      "references": [],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "410382c06ab9335778b7b1697f435cc7da42fd5756d420f30e6ef9fef97cb23a"
+    },
+    {
+      "path": "public/brand/mascot/zyene-mascot-master-v1.png",
+      "url": "/brand/mascot/zyene-mascot-master-v1.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "bytes": 1365700,
+      "references": [
+        "src/components/brand/zyene-pet-loader.tsx"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "12a4a5f44698e502c52aeb42d532bb810a84187c7ee3492670b660056b52cc0a"
+    },
+    {
+      "path": "public/brand/mascot/zyene-mascot-needs-help-v1.png",
+      "url": "/brand/mascot/zyene-mascot-needs-help-v1.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "bytes": 1408799,
+      "references": [
+        "src/components/public/access-error-mascot.tsx"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "242df3dec810d351c2e194243a7d90dc083fd8e155cc6e8d3ae2085878ee192d"
+    },
+    {
+      "path": "public/favicon_io/android-chrome-192x192.png",
+      "url": "/favicon_io/android-chrome-192x192.png",
+      "size": [
+        192,
+        192
+      ],
+      "bytes": 9850,
+      "references": [
+        "src/app/layout-metadata.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "b121e241c226270a239933f53d3c3f90b02a45afbc63f1180b336d699ab84b75"
+    },
+    {
+      "path": "public/favicon_io/android-chrome-512x512.png",
+      "url": "/favicon_io/android-chrome-512x512.png",
+      "size": [
+        512,
+        512
+      ],
+      "bytes": 36098,
+      "references": [
+        "src/app/layout-metadata.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "94c2bf35f78a9ad77320c967910656373e706d88de582003a871060d8482a0dd"
+    },
+    {
+      "path": "public/favicon_io/apple-touch-icon.png",
+      "url": "/favicon_io/apple-touch-icon.png",
+      "size": [
+        180,
+        180
+      ],
+      "bytes": 8729,
+      "references": [
+        "src/app/layout-metadata.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "66bdf02f34b77d082648c2302393d8b69bc4df696a631e75eb1c75a387b0ff6b"
+    },
+    {
+      "path": "public/favicon_io/favicon-16x16.png",
+      "url": "/favicon_io/favicon-16x16.png",
+      "size": [
+        16,
+        16
+      ],
+      "bytes": 548,
+      "references": [
+        "src/app/layout-metadata.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "ad7e0814f8e1dba2f55b68f2cd7b5af79d4c18686d84895689a1bbdd7886c5e9"
+    },
+    {
+      "path": "public/favicon_io/favicon-32x32.png",
+      "url": "/favicon_io/favicon-32x32.png",
+      "size": [
+        32,
+        32
+      ],
+      "bytes": 1160,
+      "references": [
+        "src/app/layout-metadata.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "566434554150131a253c626b9c1d7a405e3c13b67511826193bebc7edfa3d8af"
+    },
+    {
+      "path": "public/favicon_io/favicon.ico",
+      "url": "/favicon_io/favicon.ico",
+      "size": [
+        48,
+        48
+      ],
+      "bytes": 15406,
+      "references": [
+        "tests/unit/marketing-seo-integrity.test.ts",
+        "src/app/layout-metadata.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "ce91e8447b7ea9c97a60ec3dc8e9690cf26c13fc84d36aeaa331ec107cafc297"
+    },
+    {
+      "path": "public/google-nfc-card-design.png",
+      "url": "/google-nfc-card-design.png",
+      "size": [
+        474,
+        710
+      ],
+      "bytes": 68204,
+      "references": [
+        "src/components/dashboard/customer-portal-card-nfc-upsell.tsx"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "dd3168f8931f86dea35d804919fe2251ae4372fb343b7e8eb455626feaff3e37"
+    },
+    {
+      "path": "public/images/blog/covers/ai-review-reply-oversight.webp",
+      "url": "/images/blog/covers/ai-review-reply-oversight.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 96556,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "ai-review-reply-oversight",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/ai-visibility-audit.webp",
+      "url": "/images/blog/covers/ai-visibility-audit.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 106048,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "ai-visibility-audit",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/birdeye-alternatives-cost-comparison.webp",
+      "url": "/images/blog/covers/birdeye-alternatives-cost-comparison.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 103226,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "birdeye-alternatives-cost-comparison",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/contractor-responding-review.jpg",
+      "url": "/images/blog/covers/contractor-responding-review.jpg",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 796302,
+      "references": [
+        "src/lib/content/blog-posts-home-services.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "contractor-responding-review",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/contractor-review-request-van.jpg",
+      "url": "/images/blog/covers/contractor-review-request-van.jpg",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 933045,
+      "references": [
+        "src/lib/content/blog-posts-ask-for-reviews.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "contractor-review-request-van",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/customer-submitting-google-review-phone.jpg",
+      "url": "/images/blog/covers/customer-submitting-google-review-phone.jpg",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 681563,
+      "references": [
+        "src/lib/content/blog-posts-missing-reviews.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "customer-submitting-google-review-phone",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/delete-google-review-hero.webp",
+      "url": "/images/blog/covers/delete-google-review-hero.webp",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 84676,
+      "references": [
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "delete-google-review-hero",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/dental-practice-reputation.webp",
+      "url": "/images/blog/covers/dental-practice-reputation.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 78702,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "dental-practice-reputation",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/fake-review-evidence.webp",
+      "url": "/images/blog/covers/fake-review-evidence.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 107298,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "fake-review-evidence",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/five-star-review-collection.webp",
+      "url": "/images/blog/covers/five-star-review-collection.webp",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 113070,
+      "references": [
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "five-star-review-collection",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/google-business-profile-audit.webp",
+      "url": "/images/blog/covers/google-business-profile-audit.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 117086,
+      "references": [
+        "src/components/marketing/resource-imagery.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "google-business-profile-audit",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/google-review-policy-research.webp",
+      "url": "/images/blog/covers/google-review-policy-research.webp",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 74512,
+      "references": [
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "google-review-policy-research",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/google-review-request-playbook.webp",
+      "url": "/images/blog/covers/google-review-request-playbook.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 108892,
+      "references": [
+        "src/app/(marketing)/marketing-layout-nav-feature.ts",
+        "src/components/marketing/resource-imagery.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "google-review-request-playbook",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/how-to-ask-for-reviews-hero.jpg",
+      "url": "/images/blog/covers/how-to-ask-for-reviews-hero.jpg",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 908314,
+      "references": [
+        "src/lib/content/blog-posts-ask-for-reviews.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "how-to-ask-for-reviews-hero",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/hvac-google-maps-leads-hero.jpg",
+      "url": "/images/blog/covers/hvac-google-maps-leads-hero.jpg",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 800210,
+      "references": [
+        "src/lib/content/blog-posts-hvac-leads.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "hvac-google-maps-leads-hero",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/hvac-review-request-sms.jpg",
+      "url": "/images/blog/covers/hvac-review-request-sms.jpg",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 708580,
+      "references": [
+        "src/lib/content/blog-posts-home-services.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "hvac-review-request-sms",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/hvac-service-van-homeowner.jpg",
+      "url": "/images/blog/covers/hvac-service-van-homeowner.jpg",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 958876,
+      "references": [
+        "src/lib/content/blog-posts-hvac-leads.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "hvac-service-van-homeowner",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/hvac-technician-customer-handshake.jpg",
+      "url": "/images/blog/covers/hvac-technician-customer-handshake.jpg",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 982482,
+      "references": [
+        "src/lib/content/blog-posts-home-services.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "hvac-technician-customer-handshake",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/hvac-van-branded.jpg",
+      "url": "/images/blog/covers/hvac-van-branded.jpg",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 950762,
+      "references": [
+        "src/lib/content/blog-posts-home-services.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "hvac-van-branded",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/local-map-pack-visibility.webp",
+      "url": "/images/blog/covers/local-map-pack-visibility.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 132184,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "local-map-pack-visibility",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/missing-google-reviews-laptop.jpg",
+      "url": "/images/blog/covers/missing-google-reviews-laptop.jpg",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 754638,
+      "references": [
+        "src/lib/content/blog-posts-missing-reviews.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "missing-google-reviews-laptop",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/online-reputation-business-impact.webp",
+      "url": "/images/blog/covers/online-reputation-business-impact.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 87212,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "online-reputation-business-impact",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/podium-pricing-comparison-desk.jpg",
+      "url": "/images/blog/covers/podium-pricing-comparison-desk.jpg",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 765050,
+      "references": [
+        "src/lib/content/blog-posts-podium-pricing.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "podium-pricing-comparison-desk",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/positive-google-review-response.webp",
+      "url": "/images/blog/covers/positive-google-review-response.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 110560,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "positive-google-review-response",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/private-feedback-service-recovery.webp",
+      "url": "/images/blog/covers/private-feedback-service-recovery.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 90754,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "private-feedback-service-recovery",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/reporting-google-review-laptop.webp",
+      "url": "/images/blog/covers/reporting-google-review-laptop.webp",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 63700,
+      "references": [
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "reporting-google-review-laptop",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/reputation-dashboard-local-business.jpg",
+      "url": "/images/blog/covers/reputation-dashboard-local-business.jpg",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 849477,
+      "references": [
+        "src/lib/content/blog-posts-podium-pricing.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "reputation-dashboard-local-business",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/reputation-dashboard-overview.webp",
+      "url": "/images/blog/covers/reputation-dashboard-overview.webp",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 85934,
+      "references": [
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "reputation-dashboard-overview",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/responding-to-negative-review.webp",
+      "url": "/images/blog/covers/responding-to-negative-review.webp",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 98336,
+      "references": [
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "responding-to-negative-review",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/responding-to-one-star-review.webp",
+      "url": "/images/blog/covers/responding-to-one-star-review.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 62620,
+      "references": [
+        "src/components/marketing/resource-imagery.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "responding-to-one-star-review",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/restaurant-review-management.webp",
+      "url": "/images/blog/covers/restaurant-review-management.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 130402,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "restaurant-review-management",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/review-software-pricing-comparison.webp",
+      "url": "/images/blog/covers/review-software-pricing-comparison.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 81204,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "review-software-pricing-comparison",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/sms-review-request-mobile-screen.jpg",
+      "url": "/images/blog/covers/sms-review-request-mobile-screen.jpg",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 709101,
+      "references": [
+        "src/lib/content/blog-posts-podium-pricing.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "sms-review-request-mobile-screen",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/team-review-management.webp",
+      "url": "/images/blog/covers/team-review-management.webp",
+      "size": [
+        1376,
+        768
+      ],
+      "bytes": 99324,
+      "references": [
+        "src/lib/content/blog-posts-delete-google-review.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "team-review-management",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/covers/why-google-reviews-matter.webp",
+      "url": "/images/blog/covers/why-google-reviews-matter.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "bytes": 108356,
+      "references": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "why-google-reviews-matter",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/blog/google_review_link.jpg",
+      "url": "/images/blog/google_review_link.jpg",
+      "size": [
+        1200,
+        896
+      ],
+      "bytes": 660846,
+      "references": [
+        "src/lib/content/blog-images.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "google-review-link",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/industries/auto-repair.png",
+      "url": "/images/industries/auto-repair.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 922145,
+      "references": [
+        "src/lib/industries/industry-data.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "auto-repair",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/industries/auto-repair.webp",
+      "url": "/images/industries/auto-repair.webp",
+      "size": [
+        900,
+        900
+      ],
+      "bytes": 148850,
+      "references": [
+        "src/lib/industries/industry-imagery.ts (dynamic slug mapping)"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "auto-repair",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/industries/dental.png",
+      "url": "/images/industries/dental.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 704626,
+      "references": [
+        "src/lib/industries/industry-data.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "dental",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/industries/dental.webp",
+      "url": "/images/industries/dental.webp",
+      "size": [
+        900,
+        900
+      ],
+      "bytes": 81508,
+      "references": [
+        "src/lib/industries/industry-imagery.ts (dynamic slug mapping)"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "dental",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/industries/fitness.png",
+      "url": "/images/industries/fitness.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 878370,
+      "references": [
+        "src/lib/industries/industry-data.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "fitness",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/industries/fitness.webp",
+      "url": "/images/industries/fitness.webp",
+      "size": [
+        900,
+        900
+      ],
+      "bytes": 129646,
+      "references": [
+        "src/lib/industries/industry-imagery.ts (dynamic slug mapping)"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "fitness",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/industries/home-services.png",
+      "url": "/images/industries/home-services.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 765042,
+      "references": [],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "685a278c2104f70a3f15c00c8cedead03936db9a07c0b2047bdb998619c75745"
+    },
+    {
+      "path": "public/images/industries/home-services.webp",
+      "url": "/images/industries/home-services.webp",
+      "size": [
+        900,
+        900
+      ],
+      "bytes": 103934,
+      "references": [
+        "src/lib/industries/industry-imagery.ts (dynamic slug mapping)"
+      ],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "508a6f8a77a95c27e17f5b0cf36997aa2a2a56a46c24490db1d7adfd5c0f8287"
+    },
+    {
+      "path": "public/images/industries/hotels.png",
+      "url": "/images/industries/hotels.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 935224,
+      "references": [
+        "src/lib/industries/industry-data.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "hotels",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/industries/hotels.webp",
+      "url": "/images/industries/hotels.webp",
+      "size": [
+        900,
+        900
+      ],
+      "bytes": 154856,
+      "references": [
+        "src/lib/industries/industry-imagery.ts (dynamic slug mapping)"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "hotels",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/industries/medical.png",
+      "url": "/images/industries/medical.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 852743,
+      "references": [
+        "src/lib/industries/industry-data.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "medical",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/industries/medical.webp",
+      "url": "/images/industries/medical.webp",
+      "size": [
+        900,
+        900
+      ],
+      "bytes": 123256,
+      "references": [
+        "src/lib/industries/industry-imagery.ts (dynamic slug mapping)"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "medical",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/industries/restaurant-guests.webp",
+      "url": "/images/industries/restaurant-guests.webp",
+      "size": [
+        1600,
+        1105
+      ],
+      "bytes": 212292,
+      "references": [
+        "src/lib/industries/industry-imagery.ts",
+        "src/lib/industries/industry-data.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Existing documentary photograph, with source and attribution recorded in docs/marketing-photography.md",
+      "replacementId": null,
+      "unchanged": "0372ce7f15d62ac47f51aa0b9a1ce447a0f346ee2553e7ad70a69b6c69cc818b"
+    },
+    {
+      "path": "public/images/industries/restaurants.png",
+      "url": "/images/industries/restaurants.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 946600,
+      "references": [],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "e41ed350fc540134eca5fdc19c3fc6155920fe5e57fc0a963a5ecf7baa2de085"
+    },
+    {
+      "path": "public/images/industries/restaurants.webp",
+      "url": "/images/industries/restaurants.webp",
+      "size": [
+        900,
+        900
+      ],
+      "bytes": 153780,
+      "references": [
+        "src/lib/industries/industry-imagery.ts (dynamic slug mapping)"
+      ],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "2f63a6bf629a968f6b98f674767f6a38e61c9ae471dd7692cea9cc179a2d323a"
+    },
+    {
+      "path": "public/images/industries/salons.png",
+      "url": "/images/industries/salons.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 750876,
+      "references": [
+        "src/lib/industries/industry-data.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "salons",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/industries/salons.webp",
+      "url": "/images/industries/salons.webp",
+      "size": [
+        900,
+        900
+      ],
+      "bytes": 88378,
+      "references": [
+        "src/components/marketing/feature-visual-data.ts",
+        "src/lib/industries/industry-imagery.ts (dynamic slug mapping)"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "salons",
+      "unchanged": null
+    },
+    {
+      "path": "public/images/industries/window-installation.webp",
+      "url": "/images/industries/window-installation.webp",
+      "size": [
+        1600,
+        1068
+      ],
+      "bytes": 74740,
+      "references": [
+        "src/app/(marketing)/industries/industries-hero-section.tsx",
+        "src/lib/industries/industry-imagery.ts",
+        "src/lib/industries/industry-data.ts",
+        "src/components/marketing/feature-visual-data.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Existing documentary photograph, with source and attribution recorded in docs/marketing-photography.md",
+      "replacementId": null,
+      "unchanged": "1897ab5c4f389d0ddadc7f537ced2a6ac9abf5b0cea370439078c684ee6816ae"
+    },
+    {
+      "path": "public/logo.png",
+      "url": "/logo.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 360098,
+      "references": [
+        "src/services/resend/templates/payment-success-email.ts",
+        "src/services/resend/templates/review-alert-email.ts",
+        "src/services/resend/templates/weekly-digest-email.ts",
+        "src/services/resend/templates/growth-emails.ts",
+        "src/services/resend/templates/welcome-email.ts",
+        "src/services/resend/templates/team-invite-email.ts",
+        "src/services/resend/templates/payment-failed-email.ts",
+        "src/services/resend/templates/subscription-success-email.ts",
+        "src/services/resend/templates/subscription-canceled-email.ts",
+        "tests/unit/aeo-phase3-integrations.test.ts",
+        "src/app/(dashboard)/google-seo-aeo/phase-3/phase3-config-panels.tsx"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "784a3376f950b26180f48b0e3e0f4276d978413e567bc47a0f65287f7793add4"
+    },
+    {
+      "path": "public/marketing/about/team-collaboration.png",
+      "url": "/marketing/about/team-collaboration.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 896201,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "team-collaboration",
+      "unchanged": null
+    },
+    {
+      "path": "public/marketing/about/team-collaboration.webp",
+      "url": "/marketing/about/team-collaboration.webp",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 150242,
+      "references": [
+        "src/app/(marketing)/marketing-layout-nav-feature.ts",
+        "tests/unit/marketing-landing-hero.test.ts",
+        "src/app/(marketing)/agencies/agencies-hero-section.tsx",
+        "src/app/(marketing)/integrations/integrations-hero-section.tsx",
+        "src/app/(marketing)/enterprise/enterprise-hero-section.tsx",
+        "src/app/(marketing)/about/page-view.tsx",
+        "src/lib/marketing/marketing-images.ts",
+        "src/components/marketing/feature-visual-data.ts",
+        "src/app/(marketing)/contact/contact-content-section.tsx",
+        "src/components/marketing/marketing-home/marketing-home-workflow.tsx"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "team-collaboration",
+      "unchanged": null
+    },
+    {
+      "path": "public/marketing/home/alert-emily-carter.png",
+      "url": "/marketing/home/alert-emily-carter.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "bytes": 2159334,
+      "references": [],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "52ab01da4d4597f3058e9bd0b946aaaa9aa268ad1e9e81f19f8094cc94711b10"
+    },
+    {
+      "path": "public/marketing/home/alert-emily-carter.webp",
+      "url": "/marketing/home/alert-emily-carter.webp",
+      "size": [
+        320,
+        213
+      ],
+      "bytes": 6246,
+      "references": [
+        "src/lib/marketing/marketing-images.ts"
+      ],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "36b04083eeb7c77ebf0307355d668e1a29ecc76999fd9468e1c0b4877d0095b6"
+    },
+    {
+      "path": "public/marketing/home/alert-robert-hayes.png",
+      "url": "/marketing/home/alert-robert-hayes.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "bytes": 1944448,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "alert-robert-hayes",
+      "unchanged": null
+    },
+    {
+      "path": "public/marketing/home/alert-robert-hayes.webp",
+      "url": "/marketing/home/alert-robert-hayes.webp",
+      "size": [
+        320,
+        213
+      ],
+      "bytes": 5114,
+      "references": [
+        "src/lib/marketing/marketing-images.ts",
+        "src/components/marketing/marketing-home/home-customer-review-card.tsx"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "alert-robert-hayes",
+      "unchanged": null
+    },
+    {
+      "path": "public/marketing/home/cafe-conversation.webp",
+      "url": "/marketing/home/cafe-conversation.webp",
+      "size": [
+        1200,
+        1800
+      ],
+      "bytes": 141912,
+      "references": [
+        "src/app/(marketing)/how-it-works/how-it-works-steps-section.tsx",
+        "src/components/marketing/feature-visual-data.ts",
+        "src/app/(marketing)/tools/page-view.tsx",
+        "src/components/marketing/marketing-home/marketing-home-workflow.tsx"
+      ],
+      "disposition": "retained",
+      "reason": "Existing documentary photograph, with source and attribution recorded in docs/marketing-photography.md",
+      "replacementId": null,
+      "unchanged": "c618adfdf5568ddf78cf552a99b23411495f28ba299225aaa275ff74b4fe2290"
+    },
+    {
+      "path": "public/marketing/home/cafe-owner-feedback.webp",
+      "url": "/marketing/home/cafe-owner-feedback.webp",
+      "size": [
+        1536,
+        1024
+      ],
+      "bytes": 154338,
+      "references": [
+        "src/components/marketing/marketing-home/marketing-home-closing.tsx"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "cafe-owner-feedback",
+      "unchanged": null
+    },
+    {
+      "path": "public/marketing/home/cafe-service.webp",
+      "url": "/marketing/home/cafe-service.webp",
+      "size": [
+        1200,
+        1800
+      ],
+      "bytes": 119528,
+      "references": [
+        "src/app/(marketing)/marketing-layout-nav-feature.ts",
+        "src/components/marketing/feature-visual-data.ts",
+        "src/components/marketing/marketing-home/marketing-home-workflow.tsx",
+        "src/components/marketing/resource-imagery.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Existing documentary photograph, with source and attribution recorded in docs/marketing-photography.md",
+      "replacementId": null,
+      "unchanged": "907a0e685b2faaca9390f6cb9837ed22ab4ab18a9b7163a6dd2b838e35dc284b"
+    },
+    {
+      "path": "public/marketing/home/customer-avatar.png",
+      "url": "/marketing/home/customer-avatar.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "bytes": 2214757,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "customer-avatar",
+      "unchanged": null
+    },
+    {
+      "path": "public/marketing/home/customer-avatar.webp",
+      "url": "/marketing/home/customer-avatar.webp",
+      "size": [
+        320,
+        213
+      ],
+      "bytes": 9346,
+      "references": [
+        "src/lib/marketing/marketing-images.ts",
+        "src/components/marketing/marketing-home/home-customer-review-card.tsx"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "customer-avatar",
+      "unchanged": null
+    },
+    {
+      "path": "public/marketing/home/hero-community-mug.webp",
+      "url": "/marketing/home/hero-community-mug.webp",
+      "size": [
+        634,
+        600
+      ],
+      "bytes": 66706,
+      "references": [
+        "src/components/marketing/marketing-home/home-scene-decor.tsx"
+      ],
+      "disposition": "retained",
+      "reason": "Intentional decorative object or designed guide cover, rather than a documentary business photo",
+      "replacementId": null,
+      "unchanged": "4b911aacb7bf96395b4d335875733f10b40ee51b9089dde7dd3d2115e2567054"
+    },
+    {
+      "path": "public/marketing/home/hero-desk-plant.webp",
+      "url": "/marketing/home/hero-desk-plant.webp",
+      "size": [
+        296,
+        600
+      ],
+      "bytes": 59916,
+      "references": [
+        "src/components/marketing/marketing-home/home-scene-decor.tsx"
+      ],
+      "disposition": "retained",
+      "reason": "Intentional decorative object or designed guide cover, rather than a documentary business photo",
+      "replacementId": null,
+      "unchanged": "5ae1e4a22150f98100a03687bdd9b2a97268e7013e3571f1f041c70d6dfd352c"
+    },
+    {
+      "path": "public/marketing/home/hero-local-owner.png",
+      "url": "/marketing/home/hero-local-owner.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "bytes": 2250098,
+      "references": [],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "30839dc3b0482f2711424bc5cd3f4cb68c20fa86b96b90573fd29a0130c38aa8"
+    },
+    {
+      "path": "public/marketing/home/hero-local-owner.webp",
+      "url": "/marketing/home/hero-local-owner.webp",
+      "size": [
+        1536,
+        1024
+      ],
+      "bytes": 94262,
+      "references": [
+        "src/lib/marketing/marketing-images.ts"
+      ],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "831aaef8c39352b4bd5584fa7e75227d2202a7f5543b207a9c7c1f4ddd89f9c3"
+    },
+    {
+      "path": "public/marketing/home/storefront.png",
+      "url": "/marketing/home/storefront.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 1039509,
+      "references": [],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "storefront",
+      "unchanged": null
+    },
+    {
+      "path": "public/marketing/home/storefront.webp",
+      "url": "/marketing/home/storefront.webp",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 222534,
+      "references": [
+        "src/lib/marketing/marketing-images.ts",
+        "src/components/marketing/feature-visual-data.ts"
+      ],
+      "disposition": "replaced",
+      "reason": "Visually synthetic-looking editorial photo or example portrait; replaced with a more natural generated scene",
+      "replacementId": "storefront",
+      "unchanged": null
+    },
+    {
+      "path": "public/marketing/home/testimonial-1.png",
+      "url": "/marketing/home/testimonial-1.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "bytes": 2378094,
+      "references": [],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "c28139f902836b0646aca8dade3b4dc020b9a542e39e656e50e11f2dc8f6922b"
+    },
+    {
+      "path": "public/marketing/home/testimonial-1.webp",
+      "url": "/marketing/home/testimonial-1.webp",
+      "size": [
+        320,
+        213
+      ],
+      "bytes": 9274,
+      "references": [
+        "src/lib/marketing/marketing-images.ts"
+      ],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "35990e7f7767c8b462f8171e83ddba68ba0eb0f2ee56ae3deb711831eb14f164"
+    },
+    {
+      "path": "public/marketing/home/testimonial-2.png",
+      "url": "/marketing/home/testimonial-2.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "bytes": 2063116,
+      "references": [],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "b6691ea5e6946a023eb3dac1eec4a7ab24a2f717a0cce5adbb6be96d0d244f44"
+    },
+    {
+      "path": "public/marketing/home/testimonial-2.webp",
+      "url": "/marketing/home/testimonial-2.webp",
+      "size": [
+        320,
+        213
+      ],
+      "bytes": 6966,
+      "references": [
+        "src/lib/marketing/marketing-images.ts"
+      ],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "bcf6598d113c7cf2589959214419e0bd981ccc64a429a206879977de6b3a92e0"
+    },
+    {
+      "path": "public/marketing/home/testimonial-3.png",
+      "url": "/marketing/home/testimonial-3.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "bytes": 2314282,
+      "references": [],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "d339128364b1f37a5f0eacece0b01edb26a3615c15275b2f30d35945d5e42381"
+    },
+    {
+      "path": "public/marketing/home/testimonial-3.webp",
+      "url": "/marketing/home/testimonial-3.webp",
+      "size": [
+        320,
+        213
+      ],
+      "bytes": 7714,
+      "references": [
+        "src/lib/marketing/marketing-images.ts"
+      ],
+      "disposition": "retained-inactive",
+      "reason": "No current rendered photo consumer found; old registry or unused source copy. Live testimonials use initials, and restaurant/home-services photos use the licensed replacements",
+      "replacementId": null,
+      "unchanged": "ee8ceef7acf5d1e984c2c7a443941866a89936578db06a4b26e8c6cda37e8daf"
+    },
+    {
+      "path": "public/marketing/home/zyene-overview-cover.png",
+      "url": "/marketing/home/zyene-overview-cover.png",
+      "size": [
+        900,
+        506
+      ],
+      "bytes": 524534,
+      "references": [],
+      "disposition": "retained",
+      "reason": "Intentional decorative object or designed guide cover, rather than a documentary business photo",
+      "replacementId": null,
+      "unchanged": "8609c1dc33f756270e0ea9dbe8e6b3c0626d778113a961993b07261f77025d44"
+    },
+    {
+      "path": "public/marketing/home/zyene-overview-cover.webp",
+      "url": "/marketing/home/zyene-overview-cover.webp",
+      "size": [
+        900,
+        506
+      ],
+      "bytes": 40430,
+      "references": [
+        "src/components/marketing/home-lead-wizard-visual.tsx"
+      ],
+      "disposition": "retained",
+      "reason": "Intentional decorative object or designed guide cover, rather than a documentary business photo",
+      "replacementId": null,
+      "unchanged": "44db740f5242f18eb7fff2e865f744b4cf982f6892bbcb917567f736a5c46c4e"
+    },
+    {
+      "path": "public/nfc/review-stand-10.jpg",
+      "url": "/nfc/review-stand-10.jpg",
+      "size": [
+        1200,
+        1200
+      ],
+      "bytes": 169064,
+      "references": [
+        "src/lib/nfc/catalog.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "5b9306f211d9199390b56fa4e918e7fad03561edbc170c364d9f730b091e5247"
+    },
+    {
+      "path": "public/nfc/review-stand-11.jpg",
+      "url": "/nfc/review-stand-11.jpg",
+      "size": [
+        1200,
+        1200
+      ],
+      "bytes": 175855,
+      "references": [
+        "src/lib/nfc/catalog.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "dbafc9d67ae9c10d92bdf1053d9892b8977d870d830e01c4c75bae5a0bb2856a"
+    },
+    {
+      "path": "public/nfc/review-stand-12.jpg",
+      "url": "/nfc/review-stand-12.jpg",
+      "size": [
+        1200,
+        1200
+      ],
+      "bytes": 194687,
+      "references": [
+        "src/lib/nfc/catalog.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "5414d2ef5de02b7d026a487167304697865fe49d0a21ec4f74efbdd5e7b94c71"
+    },
+    {
+      "path": "public/nfc/review-stand-2.jpg",
+      "url": "/nfc/review-stand-2.jpg",
+      "size": [
+        1200,
+        1200
+      ],
+      "bytes": 151213,
+      "references": [
+        "src/lib/nfc/catalog.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "eaaf67064d53d706b4712d2a1bc8b76943c64f354d26edfe1b7beac40fc090fd"
+    },
+    {
+      "path": "public/nfc/review-stand-3.jpg",
+      "url": "/nfc/review-stand-3.jpg",
+      "size": [
+        1200,
+        1200
+      ],
+      "bytes": 114916,
+      "references": [
+        "src/lib/nfc/catalog.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "bc931a613236c5aab49467ab371413a8156e4d572c7d3be3d2721b08e8a500ea"
+    },
+    {
+      "path": "public/nfc/review-stand-4.jpg",
+      "url": "/nfc/review-stand-4.jpg",
+      "size": [
+        1200,
+        1200
+      ],
+      "bytes": 195746,
+      "references": [
+        "src/lib/nfc/catalog.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "9bc282c42b3764ed2696a069b8f881a6e58b9db035be99bffd6204807df7590d"
+    },
+    {
+      "path": "public/nfc/review-stand-5.jpg",
+      "url": "/nfc/review-stand-5.jpg",
+      "size": [
+        1200,
+        1200
+      ],
+      "bytes": 155927,
+      "references": [
+        "src/lib/nfc/catalog.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "8950c6c4292d7270189e4dacb4e28bc37186c525f4aa083e86fd8330bf547071"
+    },
+    {
+      "path": "public/nfc/review-stand-6.jpg",
+      "url": "/nfc/review-stand-6.jpg",
+      "size": [
+        1200,
+        1200
+      ],
+      "bytes": 173745,
+      "references": [
+        "src/lib/nfc/catalog.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "fce8e7c0033dbbfe4487a892f9c276f13d1be475c9384db20e36fb52867d9d43"
+    },
+    {
+      "path": "public/nfc/review-stand-7.jpg",
+      "url": "/nfc/review-stand-7.jpg",
+      "size": [
+        1200,
+        1200
+      ],
+      "bytes": 187887,
+      "references": [
+        "src/lib/nfc/catalog.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "29685c27bd92f7d90ccf67cecf855a80a8972ca83213922e45ff72621951f5ad"
+    },
+    {
+      "path": "public/nfc/review-stand-8.jpg",
+      "url": "/nfc/review-stand-8.jpg",
+      "size": [
+        1200,
+        1200
+      ],
+      "bytes": 182429,
+      "references": [
+        "src/lib/nfc/catalog.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "d21e15caa92cf249c16847448d7d6cfc632df73f255291c3c277e3784927b0b5"
+    },
+    {
+      "path": "public/nfc/review-stand-9.jpg",
+      "url": "/nfc/review-stand-9.jpg",
+      "size": [
+        1200,
+        1200
+      ],
+      "bytes": 181316,
+      "references": [
+        "src/lib/nfc/catalog.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "c06201f85c5909c50c659dee2381f4fe719f9c63715fb47d36c8aa70f4f331ba"
+    },
+    {
+      "path": "public/nfc/review-stand.jpg",
+      "url": "/nfc/review-stand.jpg",
+      "size": [
+        1200,
+        1200
+      ],
+      "bytes": 155360,
+      "references": [
+        "tests/unit/nfc-order-catalog.test.ts",
+        "src/lib/nfc/catalog.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "0b0a485e2732e8d6748cf5e372d0d42f15194db068f1408e59b9596c065a456f"
+    },
+    {
+      "path": "public/widget-preview-landscape.svg",
+      "url": "/widget-preview-landscape.svg",
+      "size": null,
+      "bytes": 567,
+      "references": [
+        "src/components/widgets/builder/widget-template-thumbnail.tsx"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "7f2ab9dfd5dbc920df7051f5dac7f572de34a7517a73f8fec4821ccc7bb57c6a"
+    },
+    {
+      "path": "public/zyene-footer.png",
+      "url": "/zyene-footer.png",
+      "size": [
+        500,
+        500
+      ],
+      "bytes": 6622,
+      "references": [
+        "src/components/settings/review-content-footer-logo.ts"
+      ],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "dd61d8fed0132506a0f8b2450f0d0815b545431617f33635664f038eda1a5b18"
+    },
+    {
+      "path": "src/app/favicon.ico",
+      "url": "src/app/favicon.ico",
+      "size": [
+        48,
+        48
+      ],
+      "bytes": 15406,
+      "references": [],
+      "disposition": "retained",
+      "reason": "Brand/logo/icon/mascot, NFC product photo, or SVG preview; appropriate to its existing role",
+      "replacementId": null,
+      "unchanged": "ce91e8447b7ea9c97a60ec3dc8e9690cf26c13fc84d36aeaa331ec107cafc297"
+    }
+  ]
+}

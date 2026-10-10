@@ -32,6 +32,8 @@ consumers before retirement. Dated evidence is not proof of current deployment.
 - `PRODUCT.md` - product, voice and audience context consumed by the impeccable skill.
 - `docs/dashboard-color-audit.md` - design decisions referenced by PRODUCT.md and DESIGN.md.
 - `docs/marketing-component-licenses.md` - required attribution for live marketing adaptations.
+- [marketing-photography.md](marketing-photography.md) - documentary photo credits and generated-image provenance.
+- [IMAGE_REFRESH_2026-10-10.md](IMAGE_REFRESH_2026-10-10.md) and [IMAGE_REFRESH_MANIFEST_2026-10-10.json](IMAGE_REFRESH_MANIFEST_2026-10-10.json) - image review, all 47 replacements, final prompts, and compatibility paths.
 - [analytics-presentation.md](analytics-presentation.md) - current chart meaning, missing-data rules and presentation rationale.
 - [dashboard-loading.md](dashboard-loading.md) - current dashboard placeholder integration and reduced-motion behavior.
 - [review-widget-builder.md](review-widget-builder.md) - current widget setup, aggregate summaries and installation.

@@ -80,8 +80,8 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/delete-google-review-hero.webp",
-                alt: "Small business owner reviewing customer feedback on a laptop at a cafe counter",
+                src: "/images/blog/covers/delete-google-review-hero-candid-v2.webp",
+                alt: "Cafe owner reviewing customer feedback on a laptop at the counter",
                 width: 1672,
                 height: 941,
                 caption: "Understanding Google's review policies is the first step toward protecting your business reputation.",
@@ -117,8 +117,8 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/google-review-policy-research.webp",
-                alt: "Business manager reading Google's review content policies on a desktop monitor in a modern office",
+                src: "/images/blog/covers/google-review-policy-research-candid-v2.webp",
+                alt: "Office manager reading at a desktop computer in a neighborhood service office",
                 width: 1672,
                 height: 941,
                 caption: "Familiarizing yourself with Google's specific content policies strengthens your removal requests.",
@@ -161,8 +161,8 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/reporting-google-review-laptop.webp",
-                alt: "Close-up of hands using a laptop to navigate the Google Business Profile review reporting interface",
+                src: "/images/blog/covers/reporting-google-review-laptop-candid-v2.webp",
+                alt: "Business owner taking notes while using a laptop at a cafe counter",
                 width: 1672,
                 height: 941,
                 caption: "Report reviews directly from your Google Business Profile management panel.",
@@ -236,8 +236,8 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/responding-to-negative-review.webp",
-                alt: "Restaurant owner composing a thoughtful response to a negative customer review on a tablet",
+                src: "/images/blog/covers/responding-to-negative-review-candid-v2.webp",
+                alt: "Restaurant owner considering a customer response on a laptop in a diner booth",
                 width: 1672,
                 height: 941,
                 caption: "When removal isn't possible, a professional response demonstrates your commitment to customer satisfaction.",
@@ -275,8 +275,8 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/team-review-management.webp",
-                alt: "Local business team discussing customer feedback and review response strategy around a conference table",
+                src: "/images/blog/covers/team-review-management-candid-v2.webp",
+                alt: "Three colleagues discussing notes around a laptop in a small office",
                 width: 1672,
                 height: 941,
                 caption: "A consistent review response strategy protects your reputation even when individual reviews cannot be removed.",
@@ -293,8 +293,8 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/five-star-review-collection.webp",
-                alt: "Salon receptionist helping a customer leave honest feedback on a tablet at checkout",
+                src: "/images/blog/covers/five-star-review-collection-candid-v2.webp",
+                alt: "Salon stylist speaking with a customer at checkout",
                 width: 1672,
                 height: 941,
                 caption: "Making it easy for customers to share honest feedback is the foundation of long-term reputation management.",
@@ -312,11 +312,11 @@ export const post17: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/reputation-dashboard-overview.webp",
-                alt: "Zyene Reviews reputation management dashboard showing review trends and response tools on a desktop monitor",
+                src: "/images/blog/covers/reputation-dashboard-overview-candid-v2.webp",
+                alt: "Business owner reviewing information on a desktop monitor",
                 width: 1672,
                 height: 941,
-                caption: "A centralized dashboard helps you monitor, respond to, and collect reviews across every platform.",
+                caption: "Illustrative business scene; this is not a screenshot of the Zyene Reviews dashboard.",
             },
         },
     ],

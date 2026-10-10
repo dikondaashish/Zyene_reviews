@@ -6,8 +6,8 @@ export const marketingImages = {
       width: 800,
       height: 600,
     },
-    featureMonitor: { src: "/marketing/home/storefront.webp", alt: "Modern local business storefront managed by Zyene Reviews", width: 600, height: 300 },
-    featureAutomation: { src: "/marketing/home/customer-avatar.webp", alt: "Happy customer leaving a review via Zyene Reviews", width: 100, height: 100 },
+    featureMonitor: { src: "/marketing/home/storefront-candid-v2.webp", alt: "Customers sitting outside a neighborhood cafe", width: 1024, height: 1024 },
+    featureAutomation: { src: "/marketing/home/customer-avatar-candid-v2.webp", alt: "Illustrative customer portrait", width: 320, height: 320 },
     heroReviewAlerts: {
       fiveStar: {
         name: "Emily Carter",
@@ -18,10 +18,10 @@ export const marketingImages = {
       },
       oneStar: {
         name: "Robert Hayes",
-        src: "/marketing/home/alert-robert-hayes.webp",
-        alt: "Robert Hayes - 1-star review alert",
-        width: 64,
-        height: 64,
+        src: "/marketing/home/alert-robert-hayes-candid-v2.webp",
+        alt: "Illustrative feedback portrait",
+        width: 320,
+        height: 320,
       },
     },
     testimonials: {
@@ -34,7 +34,7 @@ export const marketingImages = {
     },
   },
   about: {
-    hero: { src: "/marketing/about/team-collaboration.webp", alt: "Zyene Reviews team collaborating on reputation management software", width: 900, height: 400 }
+    hero: { src: "/marketing/about/team-collaboration-candid-v2.webp", alt: "Three colleagues reviewing notes and a laptop around a table", width: 1024, height: 1024 }
   },
   birdeyeCompare: {
     reviewAlertPositive: {
@@ -44,10 +44,10 @@ export const marketingImages = {
       height: 120,
     },
     reviewAlertNegative: {
-      src: "/marketing/home/alert-robert-hayes.webp",
-      alt: "Illustrative Zyene Reviews in-app alert flagging a 1-star review for follow-up",
+      src: "/marketing/home/alert-robert-hayes-candid-v2.webp",
+      alt: "Illustrative feedback portrait",
       width: 320,
-      height: 120,
+      height: 320,
     },
     localOwnerWorkflow: {
       src: "/marketing/home/hero-local-owner.webp",
