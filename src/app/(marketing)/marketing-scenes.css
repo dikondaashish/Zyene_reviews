@@ -74,5 +74,7 @@ a:hover .resource-photo img { transform:scale(1.035); }
 /* Keep the photographed faces visible when portrait sources fill wider cards. */
 .marketing-site img[src*="cafe-service.webp"] { object-position:50% 28%; }
 .marketing-site img[src*="cafe-conversation.webp"] { object-position:65% 42%; }
-.marketing-site img[src*="cafe-owner-feedback.webp"] { object-position:65% 50%; }
+.marketing-site img[src*="cafe-owner-feedback-candid-v2.webp"] { object-position:35% 50%; }
+.marketing-site img[src*="team-collaboration-candid-v2.webp"] { object-position:50% 30%; }
+.marketing-site img[src*="industries"][src*="candid-v2.webp"] { object-position:50% 15%; }
 .marketing-site img[src*="window-installation.webp"] { object-position:45% 35%; }

@@ -75,11 +75,11 @@ export const post19: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/podium-pricing-comparison-desk.jpg",
-                alt: "Small business owner evaluating software pricing and features on a laptop in a modern office",
+                src: "/images/blog/covers/podium-pricing-comparison-desk-candid-v2.webp",
+                alt: "Business owner checking an invoice with a calculator beside a laptop",
                 width: 1672,
                 height: 941,
-                caption: "Local business owners frequently evaluate whether bundled communication tools justify Podium's $399+/month annual contract.",
+                caption: "Compare software costs with the work and limits your business needs.",
             },
         },
         {
@@ -205,11 +205,11 @@ export const post19: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/sms-review-request-mobile-screen.jpg",
-                alt: "Customer holding a smartphone displaying an incoming SMS review request with star rating prompt",
+                src: "/images/blog/covers/sms-review-request-mobile-screen-candid-v2.webp",
+                alt: "Customer reading a smartphone message at a cafe table",
                 width: 1672,
                 height: 941,
-                caption: "Direct, frictionless SMS review requests yield 4x to 6x higher completion rates than traditional email receipts.",
+                caption: "Keep feedback invitations short and easy to understand.",
             },
         },
         {
@@ -243,11 +243,11 @@ export const post19: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/reputation-dashboard-local-business.jpg",
-                alt: "Store owner reviewing incoming customer feedback and star ratings on a desktop screen",
+                src: "/images/blog/covers/reputation-dashboard-local-business-candid-v2.webp",
+                alt: "Cafe owner reviewing customer feedback on a laptop",
                 width: 1672,
                 height: 941,
-                caption: "A unified review inbox lets your team monitor feedback and deploy AI responses across Google, Facebook, and Yelp.",
+                caption: "A regular feedback review helps teams decide what deserves attention.",
             },
         },
         {

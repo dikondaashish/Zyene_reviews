@@ -7,7 +7,7 @@ export function HomeCustomerReviewCard({ placement }: { placement: "top" | "bott
       <div className="hero-review-card">
         <span className="hero-review-avatar">
           <Image
-            src={top ? "/marketing/home/customer-avatar.webp" : "/marketing/home/alert-robert-hayes.webp"}
+            src={top ? "/marketing/home/customer-avatar-candid-v2.webp" : "/marketing/home/alert-robert-hayes-candid-v2.webp"}
             alt=""
             fill
             sizes="(max-width: 767px) 40px, 70px"

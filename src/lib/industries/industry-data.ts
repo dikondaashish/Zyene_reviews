@@ -131,7 +131,7 @@ export const INDUSTRIES: IndustryData[] = [
             measures: "Track consented request delivery, new review volume, response time, unresolved feedback, and location-level trends. Do not attribute ranking changes to reviews alone.",
         },
         ctaJoinCopy: "Join other dental practices on Zyene",
-        imagePath: "/images/industries/dental.png",
+        imagePath: "/images/industries/dental-candid-v2.webp",
     },
 
     // ── 3. Auto Repair ───────────────────────────────────────────────────────
@@ -176,7 +176,7 @@ export const INDUSTRIES: IndustryData[] = [
             measures: "Track delivery, response coverage, review volume, rating distribution, and issue-resolution time. Local position must be measured separately and is not a promised outcome.",
         },
         ctaJoinCopy: "Join other auto repair shops on Zyene",
-        imagePath: "/images/industries/auto-repair.png",
+        imagePath: "/images/industries/auto-repair-candid-v2.webp",
     },
 
     // ── 4. Salons & Spas ─────────────────────────────────────────────────────
@@ -221,7 +221,7 @@ export const INDUSTRIES: IndustryData[] = [
             measures: "Track request delivery, new review volume, response time, rebooking, and feedback resolution. Booking or rating lift must be measured from the salon's own data.",
         },
         ctaJoinCopy: "Join other salon and spa owners on Zyene",
-        imagePath: "/images/industries/salons.png",
+        imagePath: "/images/industries/salons-candid-v2.webp",
     },
 
     // ── 5. Home Services ─────────────────────────────────────────────────────
@@ -311,7 +311,7 @@ export const INDUSTRIES: IndustryData[] = [
             measures: "Track request delivery, response coverage, time to resolution, and location trends without exposing patient information or promising appointment growth.",
         },
         ctaJoinCopy: "Join other medical practices on Zyene",
-        imagePath: "/images/industries/medical.png",
+        imagePath: "/images/industries/medical-candid-v2.webp",
     },
 
     // ── 7. Hotels & Hospitality ──────────────────────────────────────────────
@@ -356,7 +356,7 @@ export const INDUSTRIES: IndustryData[] = [
             measures: "Track response coverage, response time, genuine review volume, issue resolution, and direct bookings in separate systems. No booking lift is assumed.",
         },
         ctaJoinCopy: "Join other hotels and hospitality businesses on Zyene",
-        imagePath: "/images/industries/hotels.png",
+        imagePath: "/images/industries/hotels-candid-v2.webp",
     },
 
     // ── 8. Fitness ───────────────────────────────────────────────────────────
@@ -401,7 +401,7 @@ export const INDUSTRIES: IndustryData[] = [
             measures: "Track request delivery, response coverage, genuine review volume, cancellations resolved, and local position independently. No ranking or retention result is promised.",
         },
         ctaJoinCopy: "Join other gym and fitness studio owners on Zyene",
-        imagePath: "/images/industries/fitness.png",
+        imagePath: "/images/industries/fitness-candid-v2.webp",
     },
 
     // ── 9. HVAC ───────────────────────────────────────────────────────────

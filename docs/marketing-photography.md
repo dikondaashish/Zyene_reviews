@@ -1,5 +1,7 @@
 # Marketing photography
 
+The October 10, 2026 image refresh adds 47 AI-generated illustrative scenes across blogs, industry pages, shared marketing imagery, and labelled example portraits. See [the refresh report](IMAGE_REFRESH_2026-10-10.md) for the complete replacement ledger and [the manifest](IMAGE_REFRESH_MANIFEST_2026-10-10.json) for prompts, provenance, dimensions, and consumer files. The four documentary photographs below remain unchanged. Generated scenes are not photographs of actual Zyene customers or staff.
+
 The restaurant, café, and home-services replacements are photographs sourced from Pexels on September 7, 2026. They illustrate everyday business settings; the people pictured are not identified as Zyene customers, team members, or testimonial authors.
 
 | Local asset | Photographer | Original photograph |

@@ -75,11 +75,11 @@ export const post20: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/missing-google-reviews-laptop.jpg",
-                alt: "Small business owner puzzled looking at missing reviews on Google Business Profile on a laptop",
+                src: "/images/blog/covers/missing-google-reviews-laptop-candid-v2.webp",
+                alt: "Business owner checking customer feedback on a laptop",
                 width: 1672,
                 height: 941,
-                caption: "Google's increasingly strict spam detection algorithms frequently catch legitimate customer reviews in the crossfire.",
+                caption: "Check review visibility carefully before deciding what needs follow-up.",
             },
         },
         {
@@ -161,11 +161,11 @@ export const post20: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/customer-submitting-google-review-phone.jpg",
-                alt: "Customer submitting a five-star Google review on a smartphone at home",
+                src: "/images/blog/covers/customer-submitting-google-review-phone-candid-v2.webp",
+                alt: "Customer using a smartphone at a cafe table",
                 width: 1672,
                 height: 941,
-                caption: "Reviews submitted by established Google accounts over personal mobile data or home networks have the highest publication rate.",
+                caption: "Make it straightforward for customers to share their own honest experience.",
             },
         },
         {

@@ -75,11 +75,11 @@ export const post22: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/hvac-google-maps-leads-hero.jpg",
-                alt: "HVAC contractor business owner and dispatcher reviewing incoming customer calls and Google Maps reviews in an office",
+                src: "/images/blog/covers/hvac-google-maps-leads-hero-candid-v2.webp",
+                alt: "Contractor and dispatcher reviewing work together on a laptop in a service office",
                 width: 1672,
                 height: 941,
-                caption: "Top-performing HVAC contractors rely on organic Google Maps rankings to fill service boards without paying $100+ per click for search ads.",
+                caption: "Keep business details, customer feedback, and local visibility on the team's regular checklist.",
             },
         },
         {
@@ -151,11 +151,11 @@ export const post22: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/hvac-service-van-homeowner.jpg",
-                alt: "Uniformed HVAC technician greeting homeowner outside suburban house next to branded service van",
+                src: "/images/blog/covers/hvac-service-van-homeowner-candid-v2.webp",
+                alt: "Service technician speaking with a homeowner beside a van outside a house",
                 width: 1672,
                 height: 941,
-                caption: "Service calls that conclude with an automated SMS review request convert at more than triple the rate of manual follow-ups.",
+                caption: "Listen to the customer before inviting feedback after a service visit.",
             },
         },
         {

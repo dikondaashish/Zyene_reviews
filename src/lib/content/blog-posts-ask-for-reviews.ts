@@ -75,11 +75,11 @@ export const post21: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/how-to-ask-for-reviews-hero.jpg",
-                alt: "Local American small business owner smiling behind a cafe counter sending review request texts on a smartphone",
+                src: "/images/blog/covers/how-to-ask-for-reviews-hero-candid-v2.webp",
+                alt: "Bakery owner using a smartphone behind the counter",
                 width: 1672,
                 height: 941,
-                caption: "Timely, respectful review requests sent via SMS generate up to 4x higher response rates than traditional follow-up emails.",
+                caption: "A short, respectful follow-up can make sharing feedback part of the customer experience.",
             },
         },
         {
@@ -166,11 +166,11 @@ export const post21: BlogPost = {
         {
             type: "image",
             image: {
-                src: "/images/blog/covers/contractor-review-request-van.jpg",
-                alt: "Uniformed contractor standing next to a service van reviewing completed job feedback on a tablet",
+                src: "/images/blog/covers/contractor-review-request-van-candid-v2.webp",
+                alt: "Contractor checking a phone beside an open service van after a job",
                 width: 1672,
                 height: 941,
-                caption: "Dispatch technicians who trigger automated review texts immediately after completing a job see 3x higher response volume.",
+                caption: "Build review follow-up into the routine after a completed service visit.",
             },
         },
         {
