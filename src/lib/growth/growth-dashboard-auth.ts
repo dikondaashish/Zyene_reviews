@@ -1,7 +1,12 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 
 const COOKIE_NAME = "growth_dashboard_token";
-const TOKEN_PAYLOAD = "zyene-growth-dashboard-v1";
+export const GROWTH_DASHBOARD_SESSION_SECONDS = 60 * 60 * 24 * 7;
+const TOKEN_PATTERN = /^v2\.(\d{1,12})\.(\d{1,12})\.([a-f0-9]{32})\.([a-f0-9]{64})$/;
+
+function signSession(payload: string, secret: string): string {
+    return createHmac("sha256", secret).update(`zyene-growth-dashboard:${payload}`).digest("hex");
+}
 
 function normalizeEnvSecret(raw: string | undefined): string | null {
     if (raw == null) return null;
@@ -41,14 +46,25 @@ function secretsEqual(a: string, b: string): boolean {
 }
 
 export function createGrowthDashboardToken(secret: string): string {
-    return createHmac("sha256", secret).update(TOKEN_PAYLOAD).digest("hex");
+    const issuedAt = Math.floor(Date.now() / 1000);
+    const expiresAt = issuedAt + GROWTH_DASHBOARD_SESSION_SECONDS;
+    const payload = `v2.${issuedAt}.${expiresAt}.${randomBytes(16).toString("hex")}`;
+    return `${payload}.${signSession(payload, secret)}`;
 }
 
 export function verifyGrowthDashboardToken(token: string | undefined | null): boolean {
     const secret = getGrowthDashboardSecret();
-    if (!secret || !token) return false;
-    const expected = createGrowthDashboardToken(secret);
-    return secretsEqual(token.trim(), expected);
+    if (!secret || !token || token.length > 256) return false;
+    const normalized = token.trim();
+    const match = TOKEN_PATTERN.exec(normalized);
+    if (!match) return false;
+    const issuedAt = Number(match[1]);
+    const expiresAt = Number(match[2]);
+    const now = Math.floor(Date.now() / 1000);
+    if (issuedAt > now || expiresAt <= now || expiresAt - issuedAt !== GROWTH_DASHBOARD_SESSION_SECONDS)
+        return false;
+    const payload = normalized.slice(0, normalized.lastIndexOf("."));
+    return secretsEqual(match[4], signSession(payload, secret));
 }
 
 /** Bearer must match GROWTH_DASHBOARD_SECRET or a valid dashboard session cookie token. */

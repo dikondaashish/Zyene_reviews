@@ -212,6 +212,20 @@ From `docs/GROWTH_BLUEPRINT.md` § KPI Dashboard:
 3. Confirm `GET /api/internal/growth-metrics` returns 200 with Bearer token.
 4. Do not link `/growth` from public marketing nav or sitemap.
 
+Growth sessions use the HttpOnly `growth_dashboard_token` cookie. Their signed
+issue/expiry times are validated on the server; sessions expire after seven days
+even if the cookie or its token is copied into an Authorization header. Sessions
+issued before the October 10, 2026 fix must sign in again. Rotating
+`GROWTH_DASHBOARD_SECRET` revokes every session and the old automation secret.
+An operator who possesses the current secret can continue using it directly as
+a Bearer credential. There is no individual-session revocation or platform-admin
+role in this reporting surface. The shared API limiter also covers login; its
+Redis-failure behavior remains fail-open, so it is not a dedicated login limiter.
+
+The login endpoint accepts only a JSON object containing a nonempty string
+`password` (at most 2,048 characters before trimming). Malformed payloads return
+400, incorrect passwords return 401, and an unconfigured dashboard returns 503.
+
 ---
 
 *Update this runbook when adding routes, KPIs, or new lead sources.*
