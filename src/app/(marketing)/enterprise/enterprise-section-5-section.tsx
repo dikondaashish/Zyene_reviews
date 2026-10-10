@@ -34,7 +34,7 @@ export function EnterpriseSection5Section({ enterprisePlan }: { enterprisePlan: 
                             We will confirm the available features, implementation scope, and pricing before you commit.
                         </p>
                         <Button className="w-full gap-2" asChild>
-                            <Link href="/demo">
+                            <Link href="/demo" data-track="demo" data-track-location="enterprise">
                                 <Sparkles className="size-4" /> Book an enterprise demo
                             </Link>
                         </Button>

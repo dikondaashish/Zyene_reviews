@@ -74,7 +74,7 @@ export function MarketingHeaderAuth({
                     Log In
                 </Link>
                 <Button className="w-full rounded-md" asChild>
-                    <Link href={signupUrl} className="block mt-2 px-2" onClick={onNavigate}>
+                    <Link href={signupUrl} className="block mt-2 px-2" onClick={onNavigate} data-track="trial" data-track-location="nav">
                         Start Free Trial <ArrowRight className="ml-2 size-4" />
                     </Link>
                 </Button>
@@ -88,7 +88,7 @@ export function MarketingHeaderAuth({
                 Log In
             </Link>
             <Button className="rounded-md px-5 ml-1" asChild>
-                <Link href={signupUrl}>
+                <Link href={signupUrl} data-track="trial" data-track-location="nav">
                     Start Free Trial <ArrowRight className="ml-2 size-4" />
                 </Link>
             </Button>

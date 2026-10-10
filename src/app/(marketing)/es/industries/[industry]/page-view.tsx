@@ -41,7 +41,7 @@ export default async function EsIndustryPage({
 
                     <div className="flex flex-wrap gap-4">
                         <Button size="lg" className="rounded-xl" asChild>
-                            <Link href={SIGNUP_URL}>
+                            <Link href={SIGNUP_URL} data-track="trial" data-track-location="es-industry-hero">
                                 Prueba gratis <ArrowRight className="ml-2 size-4" />
                             </Link>
                         </Button>
@@ -84,7 +84,7 @@ export default async function EsIndustryPage({
                             con escudo de feedback negativo y respuestas con IA incluidas.
                         </p>
                         <Button size="lg" className="rounded-xl" asChild>
-                            <Link href={SIGNUP_URL}>
+                            <Link href={SIGNUP_URL} data-track="trial" data-track-location="es-industry-cta">
                                 Crear cuenta gratis <ArrowRight className="ml-2 size-4" />
                             </Link>
                         </Button>

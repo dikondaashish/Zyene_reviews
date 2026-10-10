@@ -58,6 +58,8 @@ export function HomeLeadWizardEmailStep({
         type="submit"
         className="home-lead-wizard-primary"
         disabled={isLoading}
+        data-track="guide"
+        data-track-location="home"
       >
         {isLoading ? (
           <>

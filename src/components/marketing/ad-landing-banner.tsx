@@ -50,6 +50,8 @@ export function AdLandingBanner({ className = "" }: { className?: string }) {
                 <Link
                     href={signupUrl}
                     className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:brightness-90 shrink-0"
+                    data-track="trial"
+                    data-track-location="ad-banner"
                 >
                     Start 7-day free trial <ArrowRight className="size-3.5" />
                 </Link>

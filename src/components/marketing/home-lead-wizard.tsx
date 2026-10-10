@@ -48,6 +48,11 @@ export function HomeLeadWizard() {
             setDownloadUrl(data.downloadUrl ?? "/zyene-overview.pdf");
             setEmailSent(data.emailSent === true);
             setStatus("success");
+            if (typeof window !== "undefined") {
+                const w = window as unknown as { dataLayer?: unknown[] };
+                w.dataLayer = w.dataLayer || [];
+                w.dataLayer.push({ event: "guide_download" });
+            }
         } catch {
             setStatus("error");
             setMessage("Network error. Please try again.");
@@ -66,7 +71,7 @@ export function HomeLeadWizard() {
                         Practical steps to collect useful feedback, reply with care, and make every customer feel heard.
                     </p>
                 </div>
-                <DialogPrimitive.Trigger className="marketing-button shrink-0">
+                <DialogPrimitive.Trigger className="marketing-button shrink-0" data-track="guide" data-track-location="home">
                     <BookOpen className="size-4" aria-hidden="true" /> Get the free guide
                 </DialogPrimitive.Trigger>
             </section>

@@ -37,7 +37,7 @@ export function IntegrationsDeveloperSection() {
                                 </Link>
                             </Button>
                             <Button variant="outline" className="gap-2 border-[color:var(--marketing-footer-muted)] text-[color:var(--marketing-footer-fg)] hover:bg-white/10" asChild>
-                                <Link href={SIGNUP_URL}>
+                                <Link href={SIGNUP_URL} data-track="trial" data-track-location="integrations-dev">
                                     <Sparkles className="size-4" /> Create an API Key
                                 </Link>
                             </Button>

@@ -17,7 +17,7 @@ export function MarketingHomeClosing() {
               Straight answers.
             </h2>
             <p className="mt-6 text-muted-foreground">Something else on your mind?</p>
-            <Link href="/contact" className="mt-2 inline-flex items-center gap-3 text-sm font-semibold">
+            <Link href="/contact" className="mt-2 inline-flex items-center gap-3 text-sm font-semibold" data-track="demo" data-track-location="closing">
               Talk to a real person <ArrowRight size={16} />
             </Link>
           </div>
@@ -43,7 +43,7 @@ export function MarketingHomeClosing() {
               deserve to be shared.
             </h2>
             <p>Let’s help more people discover what makes your business worth coming back to.</p>
-            <Link href={SIGNUP_URL} className="marketing-button">
+            <Link href={SIGNUP_URL} className="marketing-button" data-track="trial" data-track-location="closing">
               Make your next move <ArrowRight size={18} aria-hidden="true" />
             </Link>
           </div>

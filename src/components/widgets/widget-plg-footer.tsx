@@ -10,6 +10,8 @@ export function WidgetPlgFooter() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[11px] font-medium text-muted-foreground hover:text-primary transition-colors"
+                data-track="trial"
+                data-track-location="widget"
             >
                 Get your own review widget - start a free trial
             </a>

@@ -16,18 +16,8 @@ export { metadata, viewport } from "./layout-metadata";
 /** Inline before paint ,  keeps `class="dark"` in sync with localStorage + system (next-themes). */
 const themeInitScript = `(()=>{try{var t=localStorage.getItem('theme');var d=document.documentElement.classList;var dark=t==='dark'||(t!=='light'&&(!t||t==='system')&&window.matchMedia('(prefers-color-scheme:dark)').matches);d.toggle('dark',!!dark);}catch(e){}})();`;
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  preload: false,
-});
-
-/** Display / marketing hero face ,  geometric, Degular-like; UI stays Inter per docs/DESIGN.md */
+const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], preload: false });
 const syneDisplay = Syne({
   variable: "--font-display",
   subsets: ["latin"],
@@ -92,6 +82,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           data-id="239670"
           strategy="lazyOnload"
         />
+        {/* dataLayer CTA click listener for GTM conversion tracking */}
+        <Script id="cta-click-tracker" strategy="afterInteractive">
+          {`document.addEventListener('click',function(e){var el=e.target.closest('[data-track]');if(!el)return;window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:el.getAttribute('data-track')+'_click',cta_location:el.getAttribute('data-track-location')||'',cta_text:(el.innerText||'').trim().slice(0,60),cta_url:el.getAttribute('href')||''});});`}
+        </Script>
       </body>
     </html>
   );

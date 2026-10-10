@@ -25,7 +25,7 @@ export function IndustriesIndustryFinalCtaSection({ data }: { data: IndustryData
                     No credit card lock-in. Cancel before day 7 and pay nothing.
                 </p>
                 <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl" asChild>
-                    <Link href={SIGNUP_URL}>
+                    <Link href={SIGNUP_URL} data-track="trial" data-track-location="industry-cta">
                         Start Your Free Trial <ArrowRight className="ml-2 size-5" />
                     </Link>
                 </Button>

@@ -31,6 +31,10 @@ export function ReviewResponseGeneratorClient() {
                 return;
             }
             setResponse(json.response);
+            if (typeof window !== "undefined") {
+                (window as unknown as { dataLayer?: unknown[] }).dataLayer = (window as unknown as { dataLayer?: unknown[] }).dataLayer || [];
+                (window as unknown as { dataLayer?: unknown[] }).dataLayer!.push({ event: "tool_used", tool_name: "review-response-generator" });
+            }
         } catch {
             setError("Network error");
         } finally {
@@ -63,6 +67,10 @@ export function ReviewResponseGeneratorClient() {
                 return;
             }
             setBonusSent(Boolean(json.bonusSent));
+            if (typeof window !== "undefined") {
+                (window as unknown as { dataLayer?: unknown[] }).dataLayer = (window as unknown as { dataLayer?: unknown[] }).dataLayer || [];
+                (window as unknown as { dataLayer?: unknown[] }).dataLayer!.push({ event: "tool_used", tool_name: "review-response-generator" });
+            }
             if (!json.bonusSent) setError("Email could not be sent. Your editable draft is still available below.");
         } catch {
             setError("Network error");
@@ -126,7 +134,7 @@ export function ReviewResponseGeneratorClient() {
                             rows={4}
                             className="w-full rounded-lg border border-border px-4 py-3 text-sm"
                         />
-                        <Button type="button" onClick={generate} disabled={loading} className="w-full">
+                        <Button type="button" onClick={generate} disabled={loading} className="w-full" data-track="tool" data-track-location="review-response-generator">
                             {loading ? <Loader2 className="animate-spin size-4" /> : "Generate response"}
                         </Button>
                     </div>
@@ -149,7 +157,7 @@ export function ReviewResponseGeneratorClient() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full h-11 rounded-lg border border-border px-4 text-sm"
                             />
-                            <Button type="submit" disabled={loading} className="w-full">
+                            <Button type="submit" disabled={loading} className="w-full" data-track="tool" data-track-location="review-response-generator">
                                 Email bonus templates
                             </Button>
                         </form>

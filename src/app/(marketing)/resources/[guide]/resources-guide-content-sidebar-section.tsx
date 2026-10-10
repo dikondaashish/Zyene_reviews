@@ -56,6 +56,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                                                 <Link
                                                     href={link.href === "/signup" ? SIGNUP_URL : link.href}
                                                     className="inline-flex rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground hover:border-primary/50 hover:text-primary transition-colors"
+                                                    {...(link.href === "/signup" ? { "data-track": "trial", "data-track-location": "guide-related" } : {})}
                                                 >
                                                     {link.label}
                                                 </Link>
@@ -79,7 +80,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                                 <h3 className="text-xl font-bold text-foreground mb-2">Put this guide into practice with Zyene</h3>
                                 <p className="text-muted-foreground mb-5">Automate review collection, AI replies, and reputation protection. 7-day free trial, no credit card lock-in.</p>
                                 <Button className="gap-2" asChild>
-                                    <Link href={SIGNUP_URL}>
+                                    <Link href={SIGNUP_URL} data-track="trial" data-track-location="guide-footer">
                                         Start Free Trial <ArrowRight className="size-4" />
                                     </Link>
                                 </Button>
@@ -105,7 +106,7 @@ export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: {
                                 <p className="text-sm font-bold text-foreground mb-2">Try Zyene free</p>
                                 <p className="text-xs text-muted-foreground mb-4">Everything in this guide, automated. Review requests, AI replies, Shield, competitor tracking. $29.99/mo. No contract.</p>
                                 <Button size="sm" className="w-full gap-2" asChild>
-                                    <Link href={SIGNUP_URL}>
+                                    <Link href={SIGNUP_URL} data-track="trial" data-track-location="guide-sidebar">
                                         Start Free Trial <ArrowRight className="size-3.5" />
                                     </Link>
                                 </Button>

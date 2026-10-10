@@ -56,7 +56,7 @@ export const MarketingLayoutDesktopNav = forwardRef<
         <Link href="/pricing" className="mega-trigger" onClick={onCloseMenu}>
           Pricing
         </Link>
-        <button type="button" className="mega-trigger premium-nav-appointment" onClick={onBookAppointment}>
+        <button type="button" className="mega-trigger premium-nav-appointment" onClick={onBookAppointment} data-track="demo" data-track-location="nav">
           Book an appointment
         </button>
       </div>

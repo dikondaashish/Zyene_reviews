@@ -108,7 +108,7 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
             </p>
           </div>
           <div className="marketing-actions">
-            <Link href={SIGNUP_URL} className="marketing-button">
+            <Link href={SIGNUP_URL} className="marketing-button" data-track="trial" data-track-location="feature-cta">
               Start free trial <ArrowRight size={16} />
             </Link>
             <Link

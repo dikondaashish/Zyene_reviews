@@ -19,7 +19,7 @@ export function MarketingLayoutFooterCompanyColumn() {
                 </Link>
             </li>
             <li>
-                <Link href="/demo" className="hover:text-primary transition-colors">
+                <Link href="/demo" className="hover:text-primary transition-colors" data-track="demo" data-track-location="footer">
                     Book a demo
                 </Link>
             </li>

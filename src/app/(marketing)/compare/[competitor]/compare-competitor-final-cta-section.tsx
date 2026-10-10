@@ -16,7 +16,7 @@ export function CompareCompetitorFinalCtaSection({ data }: { data: CompetitorDat
                         Cancel before day 7 - pay nothing.
                     </p>
                     <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl" asChild>
-                        <Link href={SIGNUP_URL}>
+                        <Link href={SIGNUP_URL} data-track="trial" data-track-location="competitor-cta">
                             Start Your Free Trial <ArrowRight className="ml-2 size-5" />
                         </Link>
                     </Button>

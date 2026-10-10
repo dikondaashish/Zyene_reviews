@@ -95,6 +95,8 @@ export function MarketingExitIntentPopup() {
                 href="/demo"
                 className="marketing-exit-popup-cta"
                 onClick={() => trackAction("exit_intent_cta_click")}
+                data-track="demo"
+                data-track-location="exit-popup"
             >
                 See it in action <ArrowRight className="size-4" aria-hidden="true" />
             </Link>

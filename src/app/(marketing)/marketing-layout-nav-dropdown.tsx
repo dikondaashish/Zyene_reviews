@@ -137,7 +137,7 @@ export function MarketingLayoutNavDropdown({
                 "A better reputation starts with a conversation."
               )}
             </span>
-            <Link href="/demo" onClick={onClose}>
+            <Link href="/demo" onClick={onClose} data-track="demo" data-track-location="nav">
               Let’s show you around <ArrowRight size={15} aria-hidden="true" />
             </Link>
           </div>

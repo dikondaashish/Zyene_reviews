@@ -34,6 +34,10 @@ export function ReviewLinkGeneratorClient() {
                 return;
             }
             setResult({ reviewLink: json.reviewLink, businessName: json.businessName, emailSent: json.emailSent });
+            if (typeof window !== "undefined") {
+                (window as unknown as { dataLayer?: unknown[] }).dataLayer = (window as unknown as { dataLayer?: unknown[] }).dataLayer || [];
+                (window as unknown as { dataLayer?: unknown[] }).dataLayer!.push({ event: "tool_used", tool_name: "review-link-generator" });
+            }
             if (json.emailWarning) setError(json.emailWarning);
         } catch {
             setError("Network error");
@@ -97,7 +101,7 @@ export function ReviewLinkGeneratorClient() {
                                 <CopyResultButton text={result.reviewLink} />
                             </div>
                         )}
-                        <Button type="submit" disabled={loading} className="w-full">
+                        <Button type="submit" disabled={loading} className="w-full" data-track="tool" data-track-location="review-link-generator">
                             {loading ? <Loader2 className="animate-spin size-4" /> : "Get my review link"}
                         </Button>
                     </form>

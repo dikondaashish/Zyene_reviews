@@ -61,7 +61,7 @@ export default function FreeToolsHubPage() {
                         Zyene Reviews sends review requests, drafts AI replies, automatically replies to eligible new Google reviews, and tracks competitors - from $29.99/mo with a 7-day free trial.
                     </p>
                     <Button asChild size="lg" className="rounded-full">
-                        <Link href={SIGNUP_URL}>Start free trial</Link>
+                        <Link href={SIGNUP_URL} data-track="trial" data-track-location="tools">Start free trial</Link>
                     </Button>
                 </div>
             </section>

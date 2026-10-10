@@ -27,7 +27,11 @@ export function BlogSlugArticleBodySidebarSection({ post }: { post: (typeof BLOG
                             <h2 id="blog-resources-heading">Keep exploring</h2>
                             <div>
                                 {post.internalLinks.map((link) => (
-                                    <Link key={link.href} href={link.href === "/signup" ? SIGNUP_URL : link.href}>
+                                    <Link
+                                        key={link.href}
+                                        href={link.href === "/signup" ? SIGNUP_URL : link.href}
+                                        {...(link.href === "/signup" ? { "data-track": "trial", "data-track-location": "blog-resources" } : {})}
+                                    >
                                         <ArrowRight className="size-4" aria-hidden="true" />
                                         {link.label}
                                     </Link>
@@ -43,7 +47,7 @@ export function BlogSlugArticleBodySidebarSection({ post }: { post: (typeof BLOG
                             <p>Bring requests, replies, and feedback into one calm daily routine.</p>
                         </div>
                         <Button asChild>
-                            <Link href={SIGNUP_URL}>
+                            <Link href={SIGNUP_URL} data-track="trial" data-track-location="blog-cta">
                                 Start Free Trial <ArrowRight className="size-4" aria-hidden="true" />
                             </Link>
                         </Button>

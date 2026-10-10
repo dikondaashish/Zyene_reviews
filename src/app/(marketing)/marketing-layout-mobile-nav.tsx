@@ -34,7 +34,7 @@ export function MarketingLayoutMobileNav({ loginUrl, signupUrl, onNavigate, onBo
             ))}
             <div className="grid grid-cols-2 gap-x-4 py-3">
                 <Link href="/pricing" onClick={onNavigate} className="py-3 text-sm font-medium">Pricing</Link>
-                <button type="button" onClick={onBookAppointment} className="py-3 text-left text-sm font-medium">Book an appointment</button>
+                <button type="button" onClick={onBookAppointment} className="py-3 text-left text-sm font-medium" data-track="demo" data-track-location="nav">Book an appointment</button>
                 <Link href="/about" onClick={onNavigate} className="py-3 text-sm font-medium">About us</Link>
                 <Link href="/contact" onClick={onNavigate} className="py-3 text-sm font-medium">Contact</Link>
             </div>

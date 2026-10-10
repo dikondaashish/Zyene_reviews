@@ -13,7 +13,7 @@ export function EnterpriseSection6Section() {
                         {ENTERPRISE_SALES_EMAIL}.
                     </p>
                     <Button size="lg" asChild>
-                        <Link href="/demo">Schedule a demo</Link>
+                        <Link href="/demo" data-track="demo" data-track-location="enterprise-final">Schedule a demo</Link>
                     </Button>
                 </div>
             </section>

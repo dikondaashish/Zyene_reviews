@@ -26,7 +26,7 @@ export function MarketingHomeNextSteps() {
           <p className="mb-3 text-sm font-semibold">Starter · One business location</p>
           <PricingPriceDisplay plan={PLAN_MAP.starter_monthly} />
           <div className="marketing-actions mb-8">
-            <Link href={SIGNUP_URL} className="marketing-button">
+            <Link href={SIGNUP_URL} className="marketing-button" data-track="trial" data-track-location="pricing">
               Start 7-day free trial <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
             <Link href="/pricing" className="marketing-button marketing-button-secondary">

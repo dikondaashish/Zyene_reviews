@@ -53,11 +53,11 @@ export function LandingHero({ eyebrow, title, description, variant, media, image
                     {(primary || secondary) && (
                         <div className="marketing-actions">
                             {primary && (
-                                <Link className="marketing-button" href={primary.href === "/signup" ? SIGNUP_URL : primary.href}>
+                                <Link className="marketing-button" href={primary.href === "/signup" ? SIGNUP_URL : primary.href} {...(primary.href === "/signup" ? { "data-track": "trial", "data-track-location": "hero" } : primary.href === "/demo" ? { "data-track": "demo", "data-track-location": "hero" } : {})}>
                                     {primary.label} <ArrowRight aria-hidden="true" className="size-4" />
                                 </Link>
                             )}
-                            {secondary && <Link className="marketing-button marketing-button-secondary" href={secondary.href}>{secondary.label}</Link>}
+                            {secondary && <Link className="marketing-button marketing-button-secondary" href={secondary.href} {...(secondary.href === "/demo" ? { "data-track": "demo", "data-track-location": "hero" } : {})}>{secondary.label}</Link>}
                         </div>
                     )}
                     {children && <div className="landing-hero-extra">{children}</div>}

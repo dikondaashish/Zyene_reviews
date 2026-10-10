@@ -21,7 +21,7 @@ export function HomeHeroContent() {
       </p>
       <div className="home-hero-actions">
         <div className="hero-enter" style={{ animationDelay: "700ms" }}>
-          <Link href={SIGNUP_URL} className="marketing-button">
+          <Link href={SIGNUP_URL} className="marketing-button" data-track="trial" data-track-location="hero">
             Start your free trial <ArrowRight size={22} aria-hidden="true" />
           </Link>
         </div>

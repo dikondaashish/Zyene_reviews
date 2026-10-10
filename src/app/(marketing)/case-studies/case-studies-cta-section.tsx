@@ -14,7 +14,7 @@ export function CaseStudiesCtaSection() {
                         Start a 7-day free trial to explore requests, AI-assisted replies, and local review insights. No annual contract.
                     </p>
                     <Button size="lg" className="px-10 py-6 font-semibold rounded-xl" asChild>
-                        <Link href={SIGNUP_URL}>
+                        <Link href={SIGNUP_URL} data-track="trial" data-track-location="case-studies-cta">
                             Start Your Free Trial <ArrowRight className="ml-2 size-5" />
                         </Link>
                     </Button>

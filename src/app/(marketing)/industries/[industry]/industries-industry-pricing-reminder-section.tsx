@@ -123,7 +123,7 @@ export function IndustriesIndustryPricingReminderSection({ data }: { data: Indus
                                         className="w-full gap-2"
                                         variant={plan.highlighted ? "default" : "outline"}
                                      asChild>
-                                    <Link href={SIGNUP_URL}>
+                                    <Link href={SIGNUP_URL} data-track="trial" data-track-location="industry-pricing">
                                         Start Free Trial
                                         <ArrowRight className="size-4" />
                                     </Link>

@@ -100,7 +100,7 @@ export function HelpArticleView({
                                     Start with a 7-day free trial. Full access to all features.
                                 </p>
                                 <Button size="sm" className="w-full gap-2" asChild>
-                                    <Link href={SIGNUP_URL}>
+                                    <Link href={SIGNUP_URL} data-track="trial" data-track-location="help-sidebar">
                                         Start Free Trial <ArrowRight className="size-3.5" />
                                     </Link>
                                 </Button>

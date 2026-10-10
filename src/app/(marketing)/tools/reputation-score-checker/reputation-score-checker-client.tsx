@@ -43,6 +43,10 @@ export function ReputationScoreCheckerClient() {
             }
             setPreview(json.preview);
             setFullSent(Boolean(json.emailSent));
+            if (typeof window !== "undefined") {
+                (window as unknown as { dataLayer?: unknown[] }).dataLayer = (window as unknown as { dataLayer?: unknown[] }).dataLayer || [];
+                (window as unknown as { dataLayer?: unknown[] }).dataLayer!.push({ event: "tool_used", tool_name: "reputation-score-checker" });
+            }
             if (json.emailWarning) setError(json.emailWarning);
         } catch {
             setError("Network error");
@@ -80,7 +84,7 @@ export function ReputationScoreCheckerClient() {
                 <div className="container mx-auto max-w-2xl space-y-6">
                     <div className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-4">
                         <PlaceSearchInput onSelect={(p) => { setPlace(p); setPreview(null); setFullSent(false); setError(""); }} />
-                        <Button type="button" onClick={() => run(true)} disabled={loading || !place} className="w-full">
+                        <Button type="button" onClick={() => run(true)} disabled={loading || !place} className="w-full" data-track="tool" data-track-location="reputation-score-checker">
                             {loading ? <Loader2 className="animate-spin size-4" /> : "Check reputation"}
                         </Button>
                     </div>
@@ -118,7 +122,7 @@ export function ReputationScoreCheckerClient() {
                                 className="w-full h-11 rounded-lg border border-border px-4 text-sm"
                                 placeholder="you@business.com"
                             />
-                            <Button type="submit" disabled={loading} className="w-full">
+                            <Button type="submit" disabled={loading} className="w-full" data-track="tool" data-track-location="reputation-score-checker">
                                 Email snapshot
                             </Button>
                         </form>

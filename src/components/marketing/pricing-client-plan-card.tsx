@@ -32,6 +32,8 @@ export function PricingClientPlanCard({
       <Link
         href={enterprise ? "/demo" : signupUrl}
         className={`marketing-button ${styles.cta} ${isPopular ? "" : "marketing-button-secondary"}`}
+        data-track={enterprise ? "demo" : "trial"}
+        data-track-location="pricing"
       >
         {enterprise ? "Talk to sales" : "Start 7-day free trial"}
         <ArrowRight className="size-4" aria-hidden="true" />

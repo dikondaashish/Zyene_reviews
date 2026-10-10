@@ -21,7 +21,7 @@ export function IndustriesCtaSection() {
                         Plans start at $29.99/month. Cancel anytime.
                     </p>
                     <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl" asChild>
-                        <Link href={SIGNUP_URL}>
+                        <Link href={SIGNUP_URL} data-track="trial" data-track-location="industries-cta">
                             Start your 7-day free trial <ArrowRight className="ml-2 size-5" />
                         </Link>
                     </Button>

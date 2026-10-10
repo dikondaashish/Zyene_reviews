@@ -18,6 +18,7 @@ export function CompareHubLinksSection() {
                             key={link.href}
                             href={link.href === "/signup" ? SIGNUP_URL : link.href}
                             className="inline-flex items-center rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:border-primary/50 hover:text-primary transition-colors"
+                            {...(link.href === "/signup" ? { "data-track": "trial", "data-track-location": "compare-resources" } : {})}
                         >
                             {link.label}
                         </Link>

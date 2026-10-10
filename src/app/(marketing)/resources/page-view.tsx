@@ -78,7 +78,7 @@ export default function ResourcesHubPage() {
                     <h2 className="text-3xl font-bold text-foreground mb-3">Ready to put this into practice?</h2>
                     <p className="text-muted-foreground mb-8">Zyene Reviews automates review collection, AI replies, competitor tracking, and more. 7-day free trial, no credit card lock-in.</p>
                     <Button size="lg" className="gap-2 rounded-xl" asChild>
-                        <Link href={SIGNUP_URL}>
+                        <Link href={SIGNUP_URL} data-track="trial" data-track-location="resources-cta">
                             Start Free Trial <ArrowRight className="size-4" />
                         </Link>
                     </Button>
