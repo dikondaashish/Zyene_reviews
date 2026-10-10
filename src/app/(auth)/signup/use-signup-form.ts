@@ -67,6 +67,18 @@ export function useSignupForm() {
                 }
             } else {
                 setIsSuccess(true);
+                if (!inviteToken && typeof window !== "undefined") {
+                    const flag = "zyene_signup_complete_tracked";
+                    if (!sessionStorage.getItem(flag)) {
+                        sessionStorage.setItem(flag, "1");
+                        const w = window as unknown as { dataLayer?: unknown[] };
+                        w.dataLayer = w.dataLayer || [];
+                        w.dataLayer.push({
+                            event: "signup_complete",
+                            method: "email",
+                        });
+                    }
+                }
             }
         } catch {
             setFormError("We couldn’t create your account. Check your connection and try again.");

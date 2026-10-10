@@ -187,5 +187,7 @@ export async function runOAuthNewUserSignup(params: {
     });
 
     // New users go to onboarding on app subdomain
-    return NextResponse.redirect(`${appUrl}/onboarding`);
+    const provider = data.user.app_metadata?.provider || data.user.identities?.[0]?.provider;
+    const method = provider === "google" ? "google" : provider === "email" ? "email" : "other";
+    return NextResponse.redirect(`${appUrl}/onboarding?new_signup=${method}`);
 }

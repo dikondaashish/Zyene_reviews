@@ -109,4 +109,23 @@ export function useOnboardingUrlEffects({
             sessionStorage.removeItem("zyene_payment_pending");
         }
     }, [setShowPaymentCancelled]);
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const params = new URLSearchParams(window.location.search);
+        const newSignup = params.get("new_signup");
+        if (!newSignup) return;
+
+        const flag = "zyene_signup_complete_tracked";
+        if (!sessionStorage.getItem(flag)) {
+            sessionStorage.setItem(flag, "1");
+            const w = window as unknown as { dataLayer?: unknown[] };
+            w.dataLayer = w.dataLayer || [];
+            w.dataLayer.push({
+                event: "signup_complete",
+                method: newSignup === "google" ? "google" : newSignup === "email" ? "email" : "other",
+            });
+        }
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }, []);
 }
