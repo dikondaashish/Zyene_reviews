@@ -96,7 +96,10 @@ export async function fetchWithRetry(url: string, options: RequestInit, retries 
             // Discard the error body so the connection can close before we wait.
             await response.arrayBuffer().catch(() => undefined);
             const jitter = Math.random() * backoff;
-            logger.error(
+            // warn, not error: the request is still in flight and usually
+            // succeeds on the next attempt. Logging retries at error level
+            // made every transient Google 503/429 a Sentry issue.
+            logger.warn(
                 `[Google API] HTTP ${response.status}. Retrying in ${Math.round(jitter)}ms... (Attempts left: ${retries})`
             );
             await new Promise((resolve) => setTimeout(resolve, jitter));
@@ -117,7 +120,7 @@ export async function fetchWithRetry(url: string, options: RequestInit, retries 
     } catch (error) {
         if (retries > 0) {
             const jitter = Math.random() * backoff;
-            logger.error(
+            logger.warn(
                 { err: error, retriesLeft: retries, delayMs: Math.round(jitter) },
                 "[Google API] Fetch failed, retrying",
             );

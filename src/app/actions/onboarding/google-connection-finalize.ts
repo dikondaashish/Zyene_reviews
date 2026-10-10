@@ -85,24 +85,41 @@ export async function finalizeVerifiedGoogleConnection(
             .replace(/[^a-z0-9]+/g, "-")
             .replace(/^-+|-+$/g, "");
 
+        const businessUpdate = {
+            name: displayName || undefined,
+            address_line1: addr?.addressLines?.[0] ?? null,
+            city: addr?.locality || loc.city || null,
+            state: addr?.administrativeArea || loc.state || null,
+            zip: addr?.postalCode || null,
+            phone: phone || null,
+            website: ("websiteUri" in loc && loc.websiteUri) || null,
+            email: user.email || null,
+            category: mappedCategory || "other",
+            google_review_url: googleReviewUrl,
+            updated_at: new Date().toISOString(),
+        };
+
         const { error: businessError } = await supabase
             .from("businesses")
-            .update({
-                name: displayName || undefined,
-                address_line1: addr?.addressLines?.[0] ?? null,
-                city: addr?.locality || loc.city || null,
-                state: addr?.administrativeArea || loc.state || null,
-                zip: addr?.postalCode || null,
-                phone: phone || null,
-                website: ("websiteUri" in loc && loc.websiteUri) || null,
-                email: user.email || null,
-                category: mappedCategory || "other",
-                google_review_url: googleReviewUrl,
-                updated_at: new Date().toISOString(),
-                ...(slug ? { slug } : {}),
-            })
+            .update(slug ? { ...businessUpdate, slug } : businessUpdate)
             .eq("id", businessId);
-        if (businessError) throw businessError;
+
+        if (businessError) {
+            // A slug collision ("Joe's Pizza" twice) means another business
+            // already owns the slug derived from this Google profile's title.
+            // The slug only feeds public review-collection URLs, so keep the
+            // business's existing slug and save the rest of the Google
+            // details instead of failing the whole connection.
+            if (businessError.code === "23505" && slug) {
+                const { error: retryError } = await supabase
+                    .from("businesses")
+                    .update(businessUpdate)
+                    .eq("id", businessId);
+                if (retryError) throw retryError;
+            } else {
+                throw businessError;
+            }
+        }
 
         // Store platform tokens + GBP resource IDs (required for sync without listAccounts)
         const { googleAccountId, googleLocationId } = parseGoogleLocationResourceIds(
