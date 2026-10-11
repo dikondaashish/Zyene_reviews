@@ -1,0 +1,44 @@
+name: Marketing browser checks
+
+on:
+  pull_request:
+    paths:
+      - 'src/app/(marketing)/**'
+      - 'src/app/(auth)/**'
+      - 'src/components/marketing/**'
+      - 'src/lib/content/**'
+      - 'tests/visual/**'
+      - '.github/workflows/marketing-browser.yml'
+  workflow_dispatch:
+
+jobs:
+  public-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PLAYWRIGHT_PORT: '3026'
+      NEXT_PUBLIC_ROOT_DOMAIN: localhost:3026
+      NEXT_PUBLIC_SUPABASE_URL: https://fixture.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: fixture-public-key
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Public-page and mocked signup regressions
+        run: >-
+          pnpm exec playwright test --timeout=90000
+          tests/visual/seo-release.spec.ts tests/visual/auth-experience.spec.ts
+          tests/visual/marketing-hero.spec.ts tests/visual/marketing-auto-reply.spec.ts
+          tests/visual/marketing-demo.spec.ts
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: public-page-browser-results
+          path: test-results/
+          retention-days: 7
