@@ -32,12 +32,13 @@ export function HomeLeadWizardDialog({ open, onOpenChange, onCloseFocus }: Props
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: email.trim(), industry, goal }),
             });
-            const data = await response.json().catch(() => ({}));
             if (!response.ok) {
+                const data = await response.json().catch(() => ({}));
                 setStatus("error");
                 setMessage(data.error ?? "Something went wrong. Please try again.");
                 return;
             }
+            const data = await response.json().catch(() => ({}));
             setDownloadUrl(data.downloadUrl ?? "/zyene-overview.pdf");
             setEmailSent(data.emailSent === true);
             setStatus("success");
