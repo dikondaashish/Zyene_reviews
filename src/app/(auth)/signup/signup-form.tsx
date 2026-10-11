@@ -21,7 +21,7 @@ export function SignupForm({ googleClientId }: { googleClientId: string }) {
             <AuthHeading title={inviteToken ? "Join your team" : "Start something good."}>
                 {inviteToken
                     ? "Create your account with the email your team invited. Your workspace will be ready for you."
-                    : "Try Zyene Reviews free for 7 days. Cancel before your trial ends to avoid a charge."}
+                    : "7-day trial for eligible new subscriptions. Card required; your selected plan bills automatically unless you cancel in Billing."}
             </AuthHeading>
             <div>
                 <GoogleIdentityButton clientId={googleClientId} intent="signup" inviteToken={inviteToken} nextPath="/dashboard" />

@@ -1,3 +1,4 @@
+import { VERIFIED_COMPETITOR_FACTS, COMPETITOR_FACTS_CHECKED_ON, STARTER_REQUEST_ALLOWANCE } from "@/lib/comparisons/verified-competitor-facts";
 import type { FaqItem } from "@/components/seo/json-ld";
 import { prosperlyComparison } from "@/lib/comparisons/competitor-data-prosperly";
 
@@ -37,7 +38,7 @@ export interface CompetitorData {
     faqs?: FaqItem[];
 }
 
-export const COMPETITORS: CompetitorData[] = [
+const BASE_COMPETITORS: CompetitorData[] = [
 {
     "slug": "birdeye",
     "name": "Birdeye",
@@ -64,11 +65,7 @@ export const COMPETITORS: CompetitorData[] = [
         "Review inbox, customer feedback and request campaigns in one workspace",
         "Starter plan with published monthly request allowances"
     ],
-    "quickTable": [
-        { "feature": "Starting price", "zyene": "Starter: $29.99/month", "competitor": "Custom quote" },
-        { "feature": "Included sending volume", "zyene": "Starter: 50 SMS + 500 email requests/month", "competitor": "Check the selected plan" },
-        { "feature": "Business reply tools", "zyene": "AI drafts and optional automatic replies", "competitor": "Confirm included plan and supported platforms" }
-    ],
+    "quickTable": [],
     "featureBreakdown": [
         { "feature": "Location and billing scope", "zyene": "Starter: one location; other plans on pricing page", "competitor": "Confirm location count, term and total cost" },
         { "feature": "Integration compatibility", "zyene": "Check the available integrations and access requirements", "competitor": "Confirm your CRM/POS and supported actions" },
@@ -81,11 +78,6 @@ export const COMPETITORS: CompetitorData[] = [
         "Local businesses evaluating a shared review inbox and request workflow with published plan allowances."
     ],
     "accentColor": "blue",
-    "pricingSource": {
-        "label": "Birdeye official pricing",
-        "href": "https://birdeye.com/pricing/",
-        "checkedOn": "September 12, 2026"
-    },
     "openingSummary": "Use the same location count, sending volume and billing period when comparing offers. Birdeye and Zyene Reviews package capabilities differently; the lowest headline price does not establish feature equivalence. Verify the integrations and reply actions your team needs in a trial or demonstration, then compare the complete subscription cost."
 },
 {
@@ -114,11 +106,7 @@ export const COMPETITORS: CompetitorData[] = [
         "Review inbox, customer feedback and request campaigns in one workspace",
         "Starter plan with published monthly request allowances"
     ],
-    "quickTable": [
-        { "feature": "Starting price", "zyene": "Starter: $29.99/month", "competitor": "Custom quote" },
-        { "feature": "Included sending volume", "zyene": "Starter: 50 SMS + 500 email requests/month", "competitor": "Check the selected plan" },
-        { "feature": "Business reply tools", "zyene": "AI drafts and optional automatic replies", "competitor": "Confirm included plan and supported platforms" }
-    ],
+    "quickTable": [],
     "featureBreakdown": [
         { "feature": "Location and billing scope", "zyene": "Starter: one location; other plans on pricing page", "competitor": "Confirm location count, term and total cost" },
         { "feature": "Integration compatibility", "zyene": "Check the available integrations and access requirements", "competitor": "Confirm your CRM/POS and supported actions" },
@@ -135,20 +123,15 @@ export const COMPETITORS: CompetitorData[] = [
         "label": "Read the complete Podium pricing breakdown (2026)",
         "href": "/blog/podium-pricing-vs-zyene-reviews"
     },
-    "pricingSource": {
-        "label": "Podium official pricing",
-        "href": "https://www.podium.com/getpricing",
-        "checkedOn": "September 12, 2026"
-    },
     "openingSummary": "Use the same location count, sending volume and billing period when comparing offers. Podium and Zyene Reviews package capabilities differently; the lowest headline price does not establish feature equivalence. Verify the integrations and reply actions your team needs in a trial or demonstration, then compare the complete subscription cost."
 },
 {
     "slug": "nicejob",
     "name": "NiceJob",
     "price": "$75",
-    "priceNote": "Reviews is listed at $75/month USD; Pro at $125/month USD. Website services are priced separately.",
+    "priceNote": "Starter is listed at $75/month USD; Pro at $125/month USD. Website services are priced separately.",
     "contractRequired": false,
-    "billingTerms": "Reviews is listed at $75/month USD; Pro at $125/month USD. Website services are priced separately.",
+    "billingTerms": "Starter is listed at $75/month USD; Pro at $125/month USD. Website services are priced separately.",
     "keyAngle": "Compare review workflows, allowances and the current NiceJob offer.",
     "heroSub": "Compare Zyene Reviews and NiceJob using current public pricing and the workflows your team needs. Confirm plan-specific capabilities before subscribing.",
     "metaTitle": "NiceJob Alternative: Zyene Reviews vs NiceJob (2026)",
@@ -168,11 +151,7 @@ export const COMPETITORS: CompetitorData[] = [
         "Review inbox, customer feedback and request campaigns in one workspace",
         "Starter plan with published monthly request allowances"
     ],
-    "quickTable": [
-        { "feature": "Starting price", "zyene": "Starter: $29.99/month", "competitor": "$75" },
-        { "feature": "Included sending volume", "zyene": "Starter: 50 SMS + 500 email requests/month", "competitor": "Check the selected plan" },
-        { "feature": "Business reply tools", "zyene": "AI drafts and optional automatic replies", "competitor": "Confirm included plan and supported platforms" }
-    ],
+    "quickTable": [],
     "featureBreakdown": [
         { "feature": "Location and billing scope", "zyene": "Starter: one location; other plans on pricing page", "competitor": "Confirm location count, term and total cost" },
         { "feature": "Integration compatibility", "zyene": "Check the available integrations and access requirements", "competitor": "Confirm your CRM/POS and supported actions" },
@@ -185,11 +164,6 @@ export const COMPETITORS: CompetitorData[] = [
         "Local businesses evaluating a shared review inbox and request workflow with published plan allowances."
     ],
     "accentColor": "blue",
-    "pricingSource": {
-        "label": "NiceJob official pricing",
-        "href": "https://get.nicejob.com/pricing",
-        "checkedOn": "September 12, 2026"
-    },
     "openingSummary": "Use the same location count, sending volume and billing period when comparing offers. NiceJob and Zyene Reviews package capabilities differently; the lowest headline price does not establish feature equivalence. Verify the integrations and reply actions your team needs in a trial or demonstration, then compare the complete subscription cost."
 },
 {
@@ -218,11 +192,7 @@ export const COMPETITORS: CompetitorData[] = [
         "Review inbox, customer feedback and request campaigns in one workspace",
         "Starter plan with published monthly request allowances"
     ],
-    "quickTable": [
-        { "feature": "Starting price", "zyene": "Starter: $29.99/month", "competitor": "$99" },
-        { "feature": "Included sending volume", "zyene": "Starter: 50 SMS + 500 email requests/month", "competitor": "Check the selected plan" },
-        { "feature": "Business reply tools", "zyene": "AI drafts and optional automatic replies", "competitor": "Confirm included plan and supported platforms" }
-    ],
+    "quickTable": [],
     "featureBreakdown": [
         { "feature": "Location and billing scope", "zyene": "Starter: one location; other plans on pricing page", "competitor": "Confirm location count, term and total cost" },
         { "feature": "Integration compatibility", "zyene": "Check the available integrations and access requirements", "competitor": "Confirm your CRM/POS and supported actions" },
@@ -235,15 +205,23 @@ export const COMPETITORS: CompetitorData[] = [
         "Local businesses evaluating a shared review inbox and request workflow with published plan allowances."
     ],
     "accentColor": "blue",
-    "pricingSource": {
-        "label": "GatherUp official pricing",
-        "href": "https://gatherup.com/pricing/",
-        "checkedOn": "September 12, 2026"
-    },
     "openingSummary": "Use the same location count, sending volume and billing period when comparing offers. GatherUp and Zyene Reviews package capabilities differently; the lowest headline price does not establish feature equivalence. Verify the integrations and reply actions your team needs in a trial or demonstration, then compare the complete subscription cost."
 },
     prosperlyComparison,
 ];
+
+export const COMPETITORS: CompetitorData[] = BASE_COMPETITORS.map((entry) => {
+    const facts = VERIFIED_COMPETITOR_FACTS[entry.slug as keyof typeof VERIFIED_COMPETITOR_FACTS];
+    if (!facts) return entry;
+    return { ...entry, price: facts.price, priceNote: facts.pricingNote, billingTerms: facts.terms,
+        pricingSource: { label: `${facts.name} official pricing`, href: facts.source, checkedOn: COMPETITOR_FACTS_CHECKED_ON },
+        whoShouldUseCompetitor: [facts.bestFor], quickTable: [
+            { feature: "Starting monthly price", zyene: "Starter: $29.99/month", competitor: facts.price },
+            { feature: "Included sending volume", zyene: STARTER_REQUEST_ALLOWANCE, competitor: facts.sending },
+            { feature: "Business reply tools", zyene: "AI drafts + optional automatic Google replies", competitor: facts.aiReplies },
+            { feature: "Competitor tracking", zyene: "Included in paid plans", competitor: facts.competitorTracking },
+        ] };
+});
 
 export const COMPETITOR_MAP: Record<string, CompetitorData> = Object.fromEntries(COMPETITORS.map((c) => [c.slug, c]));
 export const COMPETITOR_SLUGS = COMPETITORS.map((c) => c.slug);

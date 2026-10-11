@@ -79,7 +79,7 @@ export const NEGATIVE_FEEDBACK_SHIELD = {
         "Customer visits branded review page (collectratings.com/{slug})",
         "They can share a rating and context about their experience",
         "A private feedback path gives the team the details to follow up",
-        "A public review path remains available for customers who choose to share publicly",
+        "Ratings at or above the configured threshold continue toward the public review; lower ratings enter private feedback",
     ],
     result: "A faster, more thoughtful response when an experience needs attention.",
     marketingNote:
@@ -125,23 +125,13 @@ export const ICP_SEGMENTS = {
 
 export const POSITIONING = {
     oneLiner:
-        "Enterprise-grade review management and local SEO intelligence for owner-operators - at 1/10th the cost of Birdeye, with no annual contract.",
+        "Review management, AI business replies and Google profile insights for local businesses, with published plans from $29.99/month.",
     pillars: [
-        "10× cheaper than enterprise tools - $29.99 vs $299+ (Birdeye) or $399+ (Podium)",
+        "Published pricing - compare your required scope and allowances",
         "Negative Feedback Shield - give customers a private feedback path so your team can follow up",
-        "Local SEO intelligence included on Starter - not locked behind enterprise tiers",
+        "Local SEO intelligence included on Starter - available on paid plans",
     ],
 } as const;
 
 /** Blueprint §2.2 - high-level capability matrix for marketing/compare pages */
-export const MARKET_COMPARISON_CAPABILITIES = [
-    { capability: "Google/Yelp/FB sync", zyene: true, birdeye: true, podium: true, nicejob: true },
-    { capability: "AI reply suggestions", zyene: "Included", birdeye: "Starter+", podium: "Add-on", nicejob: "Pro only" },
-    { capability: "Automatic Google replies", zyene: "Included", birdeye: "Available; confirm plan", podium: "Confirm plan and scope", nicejob: "Pro plan" },
-    { capability: "SMS review requests", zyene: true, birdeye: true, podium: true, nicejob: true },
-    { capability: "Negative Feedback Shield", zyene: true, birdeye: "Surveys only", podium: false, nicejob: false },
-    { capability: "Competitor tracking", zyene: true, birdeye: "Dominate tier", podium: false, nicejob: "Pro only" },
-    { capability: "GBP SEO dashboard", zyene: true, birdeye: true, podium: "Limited", nicejob: false },
-    { capability: "Developer API", zyene: "Included", birdeye: "Enterprise", podium: "Enterprise", nicejob: false },
-    { capability: "Annual contract required", zyene: false, birdeye: true, podium: true, nicejob: false },
-] as const;
+export { VERIFIED_COMPARISON_ROWS as MARKET_COMPARISON_CAPABILITIES } from "@/lib/comparisons/verified-competitor-facts";

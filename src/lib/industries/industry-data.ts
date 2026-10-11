@@ -100,7 +100,7 @@ export const INDUSTRIES: IndustryData[] = [
         accentColor: "chart1",
         metaTitle: "Dental Practice Review Management",
         metaDescription:
-            "Dental practices get more Google reviews with HIPAA-aware AI replies, the Negative Feedback Shield, and competitor tracking. From $29.99/mo.",
+            "Dental practices get more Google reviews with human-reviewed AI reply drafts, the Negative Feedback Shield, and competitor tracking. From $29.99/mo.",
         targetKeywords: ["dental practice reviews", "dentist reputation management", "dental google reviews", "how to get more dental patient reviews"],
         painPoints: [
             {
@@ -127,7 +127,7 @@ export const INDUSTRIES: IndustryData[] = [
         ],
         useCase: {
             startingPoint: "A dental group has uneven review coverage across locations and no shared process for requests, replies, or billing-related feedback.",
-            workflow: "Connect both locations, send policy-compliant requests after visits, route feedback to the responsible team, and review AI-assisted drafts before publishing.",
+            workflow: "Connect both locations, send requests to consented customers after visits, route feedback to the responsible team, and review AI-assisted drafts before publishing.",
             measures: "Track consented request delivery, new review volume, response time, unresolved feedback, and location-level trends. Do not attribute ranking changes to reviews alone.",
         },
         ctaJoinCopy: "Join other dental practices on Zyene",
@@ -156,7 +156,7 @@ export const INDUSTRIES: IndustryData[] = [
             {
                 stat: "Estimate disputes",
                 title: "Estimate surprises turn into 1-star reviews",
-                description: "The #1 source of 1-star auto repair reviews is unexpected additional charges or estimates that changed. Without a private resolution path, unhappy customers go straight to Google.",
+                description: "Customers may raise unexpected charges or changed estimates in auto repair feedback. Without a private resolution path, unhappy customers go straight to Google.",
             },
             {
                 stat: "Repeat business",
@@ -217,7 +217,7 @@ export const INDUSTRIES: IndustryData[] = [
         ],
         useCase: {
             startingPoint: "A salon relies on occasional organic reviews and has no consistent workflow for appointment follow-up or service-recovery feedback.",
-            workflow: "Send policy-compliant follow-ups after appointments, centralize new-review alerts, and give staff a clear process for editing and approving reply drafts.",
+            workflow: "Send consented follow-ups after appointments, centralize new-review alerts, and give staff a clear process for editing and approving reply drafts.",
             measures: "Track request delivery, new review volume, response time, rebooking, and feedback resolution. Booking or rating lift must be measured from the salon's own data.",
         },
         ctaJoinCopy: "Join other salon and spa owners on Zyene",
@@ -251,7 +251,7 @@ export const INDUSTRIES: IndustryData[] = [
             {
                 stat: "Pricing disputes",
                 title: "Price surprises are your biggest review risk",
-                description: "Unexpected charges, scope changes, and billing issues are the #1 source of 1-star reviews for home services. Without a private resolution path, upset homeowners post publicly.",
+                description: "Customers may raise unexpected charges, scope changes and billing issues in home services feedback. Without a private resolution path, upset homeowners post publicly.",
             },
         ],
         solutions: [
@@ -280,7 +280,7 @@ export const INDUSTRIES: IndustryData[] = [
         accentColor: "chart1",
         metaTitle: "Medical Practice Review Management",
         metaDescription:
-            "Medical practices attract patients with ethical review requests, HIPAA-aware AI replies, and the Negative Feedback Shield. From $29.99/mo.",
+            "Medical practices attract patients with ethical review requests, human-reviewed AI reply drafts, and the Negative Feedback Shield. From $29.99/mo.",
         targetKeywords: ["doctor review management", "clinic reputation management", "medical practice reviews", "healthcare reputation management", "physician google reviews"],
         painPoints: [
             {
@@ -341,7 +341,7 @@ export const INDUSTRIES: IndustryData[] = [
             {
                 stat: "Room complaints",
                 title: "Room quality complaints are your biggest review risk",
-                description: "Noise, cleanliness, and check-in experience are the most common sources of negative hotel reviews. Without a private resolution path, guests go straight to Google and TripAdvisor.",
+                description: "Hotel feedback may cover noise, cleanliness and the check-in experience. Without a private resolution path, guests go straight to Google and TripAdvisor.",
             },
         ],
         solutions: [
@@ -381,7 +381,7 @@ export const INDUSTRIES: IndustryData[] = [
             {
                 stat: "Cancellation reviews",
                 title: "Cancellation friction leads to angry 1-star reviews",
-                description: "Difficult cancellation processes and membership billing disputes are the #1 source of negative gym reviews. Without a private resolution path, these complaints go straight to Google.",
+                description: "Gym feedback may cover cancellation processes and membership billing disputes. Without a private resolution path, these complaints go straight to Google.",
             },
             {
                 stat: "Equipment & cleanliness",
@@ -435,7 +435,7 @@ export const INDUSTRIES: IndustryData[] = [
                 stat: "Pricing disputes",
                 title: "Quote changes turn into 1-star reviews",
                 description:
-                    "Scope changes and unexpected charges are the top source of negative HVAC reviews. Without a private resolution path, upset homeowners post publicly.",
+                    "HVAC feedback may cover scope changes and unexpected charges. Without a private resolution path, upset homeowners post publicly.",
             },
             {
                 stat: "Techs in the field",
@@ -490,7 +490,7 @@ export const INDUSTRIES: IndustryData[] = [
                 stat: "Price surprises",
                 title: "Estimate changes are your biggest review risk",
                 description:
-                    "Unexpected charges and changed quotes are the #1 source of 1-star plumbing reviews. Without a private resolution path, upset customers post on Google.",
+                    "Plumbing feedback may cover unexpected charges and changed quotes. Without a private resolution path, upset customers post on Google.",
             },
             {
                 stat: "Hands-on work",

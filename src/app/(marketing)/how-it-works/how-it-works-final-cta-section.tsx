@@ -11,7 +11,7 @@ export function HowItWorksFinalCtaSection() {
                     <h2 className="text-4xl font-bold text-foreground mb-4">Ready to try it yourself?</h2>
                     <p className="text-xl text-muted-foreground mb-10">
                         7-day free trial. Full access to every feature.<br />
-                        No credit card lock-in. Cancel anytime before day 7.
+                        Card required. Your selected plan bills automatically after the trial unless you cancel. Cancel anytime before day 7.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <Button size="lg" className="px-10 py-7 text-[1.05rem] font-semibold rounded-xl" asChild>

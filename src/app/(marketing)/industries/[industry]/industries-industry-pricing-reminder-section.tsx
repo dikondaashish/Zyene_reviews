@@ -134,7 +134,7 @@ export function IndustriesIndustryPricingReminderSection({ data }: { data: Indus
                 </div>
 
                 <p className="text-center text-xs text-muted-foreground mt-6">
-                    7-day free trial on all plans. No credit card lock-in.
+                    7-day free trial on all plans. Card required. Your selected plan bills automatically after the trial unless you cancel.
                 </p>
             </div>
         </section>

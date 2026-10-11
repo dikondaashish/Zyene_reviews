@@ -59,22 +59,6 @@ const BASELINE = {
     max: 299,
     why: "content dataset — industry-specific guide with trade-specific sections",
   },
-  "src/lib/content/blog-posts-podium-pricing.ts": {
-    max: 291,
-    why: "content dataset — competitor comparison guide with pricing tables and buyer FAQs",
-  },
-  "src/lib/content/blog-posts-missing-reviews.ts": {
-    max: 264,
-    why: "content dataset — troubleshooting guide for missing Google reviews with recovery steps",
-  },
-  "src/lib/content/blog-posts-ask-for-reviews.ts": {
-    max: 270,
-    why: "content dataset — review request templates guide with US compliance and industry scripts",
-  },
-  "src/lib/content/blog-posts-hvac-leads.ts": {
-    max: 235,
-    why: "content dataset — HVAC lead generation and Google Maps optimization guide",
-  },
   "src/lib/content/resource-data.ts": {
     max: 516,
     why: "content dataset — expanded SEO metadata for the local SEO checklist guide",

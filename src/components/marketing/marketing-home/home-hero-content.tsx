@@ -10,35 +10,36 @@ export function HomeHeroContent() {
       </p>
       <h1 id="home-hero-title">
         <span>
-          Review management for local businesses.
+          Review management software for local businesses.
         </span>
         <span>
           More Google reviews, less busywork.
         </span>
       </h1>
       <p className="home-hero-description">
-        Collect customer feedback by text, email, or QR code. Manage reviews and draft thoughtful replies in one workspace built for local businesses.
+        Zyene Reviews brings text and email requests, connected reviews, and AI-assisted replies into one workspace. Choose reviewed drafts or automatic replies for eligible new Google reviews.
       </p>
       <div className="home-hero-actions">
-        <div className="hero-enter" style={{ animationDelay: "700ms" }}>
+        <div>
           <Link href={SIGNUP_URL} className="marketing-button" data-track="trial" data-track-location="hero">
             Start your free trial <ArrowRight size={22} aria-hidden="true" />
           </Link>
         </div>
-        <div className="hero-enter" style={{ animationDelay: "780ms" }}>
+        <div>
           <Link href="#home-product-tour" className="marketing-button marketing-button-secondary">
             Try the product tour <ArrowRight size={22} aria-hidden="true" />
           </Link>
         </div>
       </div>
       <ul className="home-hero-benefits" aria-label="Trial details">
-        {["7 days free", "Cancel anytime", "Plans from $29.99/month"].map((benefit, index) => (
-          <li key={benefit} className="hero-enter" style={{ animationDelay: `${900 + index * 100}ms` }}>
+        {["7-day trial · card required", "Plans from $29.99/month", "Cancel in Billing"].map((benefit) => (
+          <li key={benefit}>
             <Check size={19} aria-hidden="true" />
             {benefit}
           </li>
         ))}
       </ul>
+      <p className="mt-4 text-sm text-muted-foreground">Your selected plan bills automatically after the trial unless you cancel.</p>
     </div>
   );
 }

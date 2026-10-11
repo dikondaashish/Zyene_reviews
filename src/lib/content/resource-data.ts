@@ -313,11 +313,11 @@ const guide3: ResourceGuide = {
     subtitle: "A practical checklist for U.S. local businesses and agencies: prioritize profile accuracy, honest review requests, website fixes, and measurable results.",
     excerpt: "The complete 2026 local SEO checklist. 40+ action items across Google Business Profile, citations, reviews, on-page optimization, and link building - all for local businesses.",
     purpose: "Rank for 'local SEO checklist' and 'local SEO 2026' clusters",
-    lastUpdated: "2026-09-29",
+    lastUpdated: "2026-10-11",
     readMinutes: 16,
-    metaTitle: "Local SEO Checklist 2026: Free 40-Point Checklist [PDF]",
+    metaTitle: "Local SEO Checklist 2026: 40+ Tasks for Local Businesses",
     metaDescription:
-        "Download the free 2026 local SEO checklist: 40+ actionable items for Google Business Profile, citations, reviews, links & tracking. No signup required.",
+        "Use a free local SEO checklist to improve your Google Business Profile, reviews, website and measurement. Practical tasks for US local businesses.",
     keywords: [
         "local seo checklist",
         "local seo checklist 2026",
@@ -327,7 +327,6 @@ const guide3: ResourceGuide = {
         "google local seo",
         "local seo guide 2026",
         "local search engine optimization checklist",
-        "local seo checklist pdf",
         "free local seo checklist",
     ],
     resourceLabel: "Free Checklist",
@@ -337,6 +336,7 @@ const guide3: ResourceGuide = {
         { label: "Review management for agencies", href: "/agencies" },
         { label: "Google Reviews guide", href: "/resources/google-reviews-guide" },
         { label: "Review request templates", href: "/resources/review-request-templates" },
+        { label: "Automated text and email requests", href: "/features/review-collection" }, { label: "Google Business Profile insights", href: "/features/local-seo" },
         { label: "Compare review platforms", href: "/compare" },
         { label: "Google: how local ranking works", href: "https://support.google.com/business/answer/7091" },
         { label: "Google: business representation guidelines", href: "https://support.google.com/business/answer/3038177" },
@@ -403,7 +403,7 @@ const guide3: ResourceGuide = {
     ],
     body: [
         { type: "h2", id: "first-week", text: "What to prioritize in your first week" },
-        { type: "ol", items: ["Day 1: Record Search Console clicks, impressions, and indexed service pages; record profile enquiries.", "Days 2–3: Correct business details, broken pages, and accidental indexing blocks.", "Days 4–5: Test your review link and introduce an honest request process for customers.", "Days 6–7: Improve one important service page, assign the remaining tasks, and record a review date."] },
+        { type: "ol", items: ["Day 1: Record Search Console clicks, impressions, and indexed service pages; record profile enquiries.", "Days 2–3: Correct business details, broken pages, and accidental indexing blocks.", "Days 4–5: Test your review link and introduce an honest request process for customers.", "Days 6–7: Improve one important service page, assign the remaining tasks, and record a review date.", "Example: an HVAC owner records AC-repair page clicks and qualified calls, fixes incorrect weekend hours, then improves that page with actual service coverage and appointment details. Keep the baseline, completion date and next review date in the same task record."] },
         { type: "h2", id: "google-business-profile", text: "Section 1: Google Business Profile Optimization" },
         { type: "p", text: "Google describes local ranking in terms of relevance, distance, and prominence. Start by correcting inaccurate profile information and confirming eligibility. Compare results within the area you actually serve; an accurate profile cannot remove the effect of distance." },
         { type: "ul", items: [

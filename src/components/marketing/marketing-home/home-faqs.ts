@@ -1,8 +1,8 @@
+import { TRIAL_DETAILS } from "@/lib/marketing/trial-copy";
 export const HOME_FAQS = [
     {
         question: "How does the 7-day free trial work?",
-        answer:
-            "Sign up for Starter or Professional and get full access to every feature for 7 days. Cancel before the trial ends and you won't be charged. No hidden fees, no annual contracts, cancel anytime from your billing settings.",
+        answer: TRIAL_DETAILS,
     },
     {
         question: "How do review requests work?",
@@ -22,11 +22,11 @@ export const HOME_FAQS = [
     {
         question: "How does private feedback work?",
         answer:
-            "Negative Feedback Shield gives customers a private way to share feedback and alerts your team so you can respond quickly. It supports service recovery; it does not block legitimate public reviews. Send review requests fairly and use private feedback to improve the next experience.",
+            "The branded review flow uses a configured rating threshold. Lower ratings enter a private feedback form for your team; ratings at or above the threshold continue toward a public review. Private feedback does not remove an existing Google review. Check the intended request workflow against the platform’s policies.",
     },
     {
         question: "Can I cancel anytime?",
         answer:
-            "Absolutely. You can cancel your subscription anytime from your billing settings. No contracts, no hidden fees, no questions asked.",
+            "Cancel future renewals in Billing. To avoid the automatic charge after an eligible trial, cancel before it ends. Check your selected billing period and checkout terms.",
     },
 ];

@@ -45,7 +45,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
             "Clínicas dentales: reseñas de Google, respuestas con IA y escudo de feedback negativo con enfoque en privacidad. Desde $29.99/mes.",
         heroTitle: "Reputación online para clínicas dentales",
         heroSubtitle:
-            "Flujos compatibles con HIPAA en tono, solicitudes post-cita y respuestas profesionales sin pasar horas en Google.",
+            "Borradores que tu equipo debe revisar para proteger la privacidad, solicitudes post-cita y respuestas profesionales sin pasar horas en Google.",
         bullets: [
             "Escudo de feedback negativo privado",
             "Seguimiento de competidores cercanos",
@@ -117,7 +117,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         bullets: [
             "Respuestas con tono clínico",
             "Multi-ubicación para grupos pequeños",
-            "Cumplimiento GDPR y políticas claras",
+            "Revisar permisos y políticas de comunicación",
         ],
     },
     {

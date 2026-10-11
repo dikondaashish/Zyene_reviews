@@ -26,7 +26,7 @@ for (const viewport of VIEWPORTS) {
     await page.evaluate(() => document.fonts.ready);
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator(".home-hero h1")).toHaveText(
-      "More reviews.Less busywork.",
+      "Review management software for local businesses.More Google reviews, less busywork.",
     );
     const shellStyle = await page
       .locator(".home-hero-shell")
@@ -61,7 +61,7 @@ for (const viewport of VIEWPORTS) {
       expect(box.right).toBeLessThanOrEqual(viewport.width);
     }
     await expect(page.locator(".home-hero-benefits")).toContainText(
-      "Cancel anytime",
+      "Cancel in Billing",
     );
     await expect(page.locator(".hero-dashboard-example")).toContainText(
       "Sample data",

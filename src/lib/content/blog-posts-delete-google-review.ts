@@ -8,7 +8,7 @@ export const post17: BlogPost = {
     pillar: "google-reviews",
     pillarLabel: "Google Reviews",
     publishedAt: "2026-09-10",
-    dateModified: "2026-09-10",
+    dateModified: "2026-10-11",
     readMinutes: 9,
     author: { name: "Marcus Vance", role: "Local SEO & Reputation" },
     metaTitle: "Can You Delete or Remove a Google Review? (2026 Guide)",
@@ -270,7 +270,7 @@ export const post17: BlogPost = {
         },
         {
             type: "tip",
-            text: "For detailed response templates by industry—including HIPAA-compliant healthcare responses—see our guide to responding to 1-star reviews.",
+            text: "For detailed response templates by industry—including privacy-conscious healthcare examples—see our guide to responding to 1-star reviews.",
         },
         {
             type: "image",

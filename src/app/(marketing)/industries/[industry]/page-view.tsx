@@ -1,3 +1,4 @@
+import { IndustryWorkflowSection } from "@/components/marketing/industry-workflow-section";
 import { BreadcrumbJsonLd, IndustryLocalBusinessJsonLd } from "@/components/seo/json-ld";
 import { notFound } from "next/navigation";
 import { INDUSTRY_MAP } from "@/lib/industries/industry-data";
@@ -29,6 +30,7 @@ export default async function IndustryPage(
             <IndustriesIndustryPainPointsSection data={data} />
             <IndustriesIndustryHowZyeneSolvesItSection data={data} />
             <IndustriesIndustryUseCaseSection data={data} />
+            <IndustryWorkflowSection slug={slug} />
             <IndustriesIndustryPricingReminderSection data={data} />
             <IndustriesIndustryFinalCtaSection data={data} />
         </>
