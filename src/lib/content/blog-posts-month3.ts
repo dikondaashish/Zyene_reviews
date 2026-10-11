@@ -168,7 +168,7 @@ export const post10: BlogPost = {
         },
         { type: "p", text: "This is the biggest compliance concern dental practices have about responding to reviews online. The key rule: never confirm or deny that a reviewer is a patient, and never discuss any aspect of treatment, diagnosis, or medical history in a public response - even if the patient disclosed it in their review." },
         { type: "warning", text: "If a patient writes 'I came in for a root canal and it hurt', do NOT respond 'We're sorry the root canal was painful, [Name].' That response confirms they were a patient and had a specific procedure - both of which are PHI. Instead, respond in general terms: 'We're sorry to hear about your experience. Patient comfort is our priority, and we'd welcome the chance to discuss this privately.'" },
-        { type: "p", text: "HHS has documented enforcement over patient information disclosed in public review replies. Review drafts with your privacy lead.", links: [{ label: "HHS dental review-response enforcement case", href: "https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/new-vision/index.html" }] },
+        { type: "cta", ctaLabel: "HHS: dental review-response enforcement case", ctaHref: "https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/new-vision/index.html" },
         { type: "h3", text: "Example Response for Privacy Review" },
         { type: "quote", text: "Thank you for the feedback. Please contact our office at [phone] and ask for [practice manager] to discuss any concerns privately." },
         { type: "h2", text: "Where Most Dental Negative Reviews Come From" },
@@ -205,7 +205,6 @@ export const post10: BlogPost = {
         { type: "cta", ctaLabel: "See how Zyene Reviews works for dental practices →", ctaHref: "/industries/dental" },
     ],
 };
-
 export const post11: BlogPost = {
     slug: "true-cost-of-bad-online-reputation",
     title: "The True Cost of a Bad Online Reputation for Local Businesses",

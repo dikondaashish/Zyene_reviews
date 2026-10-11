@@ -353,12 +353,11 @@ export const post7: BlogPost = {
             "Booking button: If you use an online booking system (Acuity, OpenTable, etc.), add the booking URL to your profile.",
             "Response commitment: Assign someone to answer enquiries received through the channels you publish.",
         ]},
-        { type: "p", text: "Google retired the former Business Profile chat and call history features in July 2024.", links: [{ label: "Google contact-feature changes", href: "https://support.google.com/business/answer/14919056" }] },
+        { type: "cta", ctaLabel: "Google: changes to chat and call history", ctaHref: "https://support.google.com/business/answer/14919056" },
         { type: "tip", text: "Use Zyene Reviews' GBP keyword performance dashboard to see which search queries are driving impressions and clicks to your Google Business Profile. This data shows you where to focus your optimization effort." },
         { type: "cta", ctaLabel: "Track your GBP keyword performance with Zyene Reviews →", ctaHref: "/features" },
     ],
 };
-
 export const post8: BlogPost = {
     slug: "how-reviews-impact-local-map-pack-ranking",
     title: "How Reviews Impact Your Google Local Map Pack Ranking",

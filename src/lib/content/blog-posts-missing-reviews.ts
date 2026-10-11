@@ -51,11 +51,10 @@ export const post20: BlogPost = {
         ] },
         { type: "p", text: "Zyene supports SMS/email requests and a configurable rating threshold: higher ratings proceed toward a public destination and lower ratings enter private feedback. This describes the current workflow; it does not establish a Google policy exception or prevent moderation." },
         { type: "h2", text: "Official sources" },
-        { type: "p", text: "Google's current guidance is the starting point for a specific case.", links: [
-            { label: "Missing or delayed reviews", href: "https://support.google.com/business/answer/10313341" },
-            { label: "Maps contribution policies", href: "https://support.google.com/contributionpolicy/answer/7400114" },
-            { label: "Business Profile support", href: "https://support.google.com/business/gethelp" },
-        ] },
+        { type: "p", text: "Google's current guidance is the starting point for a specific case." },
+        { type: "cta", ctaLabel: "Google: missing or delayed reviews", ctaHref: "https://support.google.com/business/answer/10313341" },
+        { type: "cta", ctaLabel: "Google Maps contribution policies", ctaHref: "https://support.google.com/contributionpolicy/answer/7400114" },
+        { type: "cta", ctaLabel: "Google Business Profile support", ctaHref: "https://support.google.com/business/gethelp" },
         { type: "cta", ctaLabel: "See the review collection workflow", ctaHref: "/features/review-collection" },
     ],
 };
