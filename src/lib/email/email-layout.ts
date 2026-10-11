@@ -21,7 +21,7 @@ export function emailLayout({
     const brand = whiteLabel && brandLogoUrl
         ? `<img src="${escapeHtml(brandLogoUrl)}" alt="${escapeHtml(brandName)}" width="160" height="40" style="display:block;max-width:100%;height:auto;border:0;">`
         : whiteLabel ? `<span style="font-size:20px;font-weight:700;">${escapeHtml(brandName)}</span>`
-        : `<table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0"><tr><td width="36" style="padding-right:10px;"><a href="${EMAIL_BRAND.website}" aria-label="Zyene Reviews website"><img src="${EMAIL_BRAND.logo}" alt="Zyene logo" width="36" height="36" style="display:block;width:36px;height:36px;border:0;border-radius:8px;"></a></td><td class="email-brand" style="color:#292524;font-size:19px;font-weight:600;line-height:1.3;">Zyene Reviews</td></tr></table><p class="email-muted" style="margin:6px 0 0;font-size:12px;line-height:1.5;font-weight:400;text-align:center;color:#57534e;">by Zyene</p>`;
+        : `<table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0"><tr><td width="36" style="padding-right:10px;"><a href="${EMAIL_BRAND.website}" aria-label="Zyene Reviews website"><img src="${EMAIL_BRAND.logo}" alt="Zyene logo" width="36" height="36" style="display:block;width:36px;height:36px;border:0;border-radius:8px;"></a></td><td class="email-brand" style="color:#292524;font-size:19px;font-weight:600;line-height:1.3;">Zyene Reviews</td></tr></table><p class="email-muted" style="margin:0;font-size:12px;line-height:1.25;font-weight:400;text-align:center;color:#57534e;">by Zyene</p>`;
     const footer = footerHtml ?? "";
     return `<!DOCTYPE html>
 <html lang="en" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -39,7 +39,7 @@ a{color:${EMAIL_BRAND.link}}h1{line-height:1.3}h2,h3{line-height:1.4}
 .email-cta{color:${EMAIL_BRAND.buttonText}!important;-webkit-text-fill-color:${EMAIL_BRAND.buttonText}!important}
 img{border:0;outline:none;text-decoration:none}a[x-apple-data-detectors]{color:inherit!important}
 @media only screen and (max-width:620px){
-.email-outer{padding:24px 12px 32px!important}.email-content{padding:28px 24px!important}
+.email-outer{padding:8px 12px 32px!important}.email-content{padding:28px 24px!important}
 .email-footer{padding:24px 12px 0!important}
 .email-heading{font-size:28px!important}.email-stat{padding:12px 4px!important}
 }
@@ -63,10 +63,10 @@ img{border:0;outline:none;text-decoration:none}a[x-apple-data-detectors]{color:i
 <body class="email-bg" style="margin:0;padding:0;width:100%;background-color:#f7f5f2;font-family:Arial,Helvetica,sans-serif;">
 <div aria-hidden="true" style="display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">${escapeHtml(preheader)}</div>
 <table class="email-bg" role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="width:100%;background-color:#f7f5f2;">
-<tr><td class="email-outer" align="center" style="padding:40px 20px;">
+<tr><td class="email-outer" align="center" style="padding:8px 20px 40px;">
 <!--[if mso]><table role="presentation" width="600" border="0" cellpadding="0" cellspacing="0"><tr><td><![endif]-->
 <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;table-layout:fixed;">
-<tr><td class="email-brand" align="center" style="padding:0 0 28px;color:#292524;">${brand}</td></tr>
+<tr><td class="email-brand" align="center" style="padding:0 0 8px;color:#292524;">${brand}</td></tr>
 <tr><td><table class="email-card" role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;background-color:#ffffff;border:1px solid #e7e2dc;border-radius:12px;border-collapse:separate;">
 <tr><td class="email-content" style="padding:40px;color:#57534e;font-size:15px;line-height:1.7;word-break:break-word;">
 ${!whiteLabel && brandName !== EMAIL_BRAND.name ? `<p style="margin:0 0 16px;font-weight:700;">${escapeHtml(brandName)}</p>` : ""}
