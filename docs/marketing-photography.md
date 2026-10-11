@@ -2,6 +2,8 @@
 
 The October 10, 2026 image refresh adds 47 AI-generated illustrative scenes across blogs, industry pages, shared marketing imagery, and labelled example portraits. See [the refresh report](IMAGE_REFRESH_2026-10-10.md) for the complete replacement ledger and [the manifest](IMAGE_REFRESH_MANIFEST_2026-10-10.json) for prompts, provenance, dimensions, and consumer files. The four documentary photographs below remain unchanged. Generated scenes are not photographs of actual Zyene customers or staff.
 
+The [October 11 follow-up audit](IMAGE_AUDIT_2026-10-11.md) reviewed all 153 repository-owned image files and 128 public sitemap pages. It adds distinct HVAC, plumbing, and electrician scenes, bringing the total to 50 generated scenes. These three trades now use their own images; general home services continues to use the window-installation photograph. Their final prompts, dimensions, hashes, and consumer locations are in [IMAGE_AUDIT_MANIFEST_2026-10-11.json](IMAGE_AUDIT_MANIFEST_2026-10-11.json). The audit also restores the missing default branded sharing-preview PNG from the existing code-defined design.
+
 The restaurant, café, and home-services replacements are photographs sourced from Pexels on September 7, 2026. They illustrate everyday business settings; the people pictured are not identified as Zyene customers, team members, or testimonial authors.
 
 | Local asset | Photographer | Original photograph |
