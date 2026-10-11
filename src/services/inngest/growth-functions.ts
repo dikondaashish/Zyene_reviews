@@ -14,6 +14,7 @@ import {
     MARKETING_NURTURE_STEPS,
 } from "@/lib/campaign-content/email-sequences-data";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { activeGrowthEmailPreferences } from "@/lib/growth/growth-email-preferences";
 
 async function markSequenceCompleted(sequenceKey: string, email: string, organizationId?: string) {
     const admin = createAdminClient();
@@ -22,6 +23,7 @@ async function markSequenceCompleted(sequenceKey: string, email: string, organiz
         .update({ status: "completed", completed_at: new Date().toISOString() })
         .eq("sequence_key", sequenceKey)
         .eq("recipient_email", email.toLowerCase());
+    q = q.eq("status", "active");
     if (organizationId) {
         q = q.eq("organization_id", organizationId);
     }
@@ -47,12 +49,15 @@ export const trialNurtureWorker = inngest.createFunction(
             }
 
             await step.run(`send-${nurtureStep.key}`, async () => {
+                const preferences = await activeGrowthEmailPreferences("trial_nurture", email, organizationId);
+                if (!preferences) return;
                 const { subject, html } = trialNurtureEmail({
                     userName,
                     dashboardUrl,
                     stepKey: nurtureStep.key,
+                    unsubscribeUrl: preferences.unsubscribeUrl,
                 });
-                await sendEmail({ to: email, subject, html });
+                await sendEmail({ to: email, subject, html, unsubscribeUrl: preferences.unsubscribeUrl });
             });
         }
 
@@ -80,6 +85,8 @@ export const onboardingDripWorker = inngest.createFunction(
             }
 
             await step.run(`send-${dripStep.key}`, async () => {
+                const preferences = await activeGrowthEmailPreferences("onboarding_drip", email, organizationId);
+                if (!preferences) return;
                 const url = /billing|pricing/.test(dripStep.key)
                     ? billingUrl
                     : dashboardUrl;
@@ -87,8 +94,9 @@ export const onboardingDripWorker = inngest.createFunction(
                     userName,
                     dashboardUrl: url,
                     stepKey: dripStep.key,
+                    unsubscribeUrl: preferences.unsubscribeUrl,
                 });
-                await sendEmail({ to: email, subject, html });
+                await sendEmail({ to: email, subject, html, unsubscribeUrl: preferences.unsubscribeUrl });
             });
         }
 
@@ -127,7 +135,9 @@ export const marketingNurtureWorker = inngest.createFunction(
                     stepKey: nurtureStep.key,
                     unsubscribeUrl,
                 });
-                await sendEmail({ to: email, subject, html });
+                await sendEmail({ to: email, subject, html,
+                    unsubscribeUrl: `${marketingCanonicalUrl("/api/marketing/newsletter/unsubscribe")}?id=${subscriber.id}`,
+                });
             });
         }
 
@@ -147,8 +157,10 @@ export const winbackWorker = inngest.createFunction(
         await step.sleep(`wait-${winStep.key}`, `${winStep.delayHours}h`);
 
         await step.run(`send-${winStep.key}`, async () => {
-            const { subject, html } = winbackFollowUpEmail({ userName, rejoinUrl });
-            await sendEmail({ to: email, subject, html });
+            const preferences = await activeGrowthEmailPreferences("winback", email, organizationId);
+            if (!preferences) return;
+            const { subject, html } = winbackFollowUpEmail({ userName, rejoinUrl, unsubscribeUrl: preferences.unsubscribeUrl });
+            await sendEmail({ to: email, subject, html, unsubscribeUrl: preferences.unsubscribeUrl });
         });
 
         await step.run("complete-sequence", async () => {

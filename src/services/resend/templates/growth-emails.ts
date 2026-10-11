@@ -1,3 +1,4 @@
+import { EMAIL_BRAND } from "@/lib/email/email-brand";
 import { emailButton, emailLayout, emailParagraph, emailSettingsFooter } from "@/lib/email/email-layout";
 
 interface GrowthEmailLayoutProps {
@@ -18,9 +19,10 @@ export interface TrialNurtureEmailProps {
     userName: string;
     dashboardUrl: string;
     stepKey: string;
+    unsubscribeUrl?: string;
 }
 
-export function trialNurtureEmail({ userName, dashboardUrl, stepKey }: TrialNurtureEmailProps): { subject: string; html: string } {
+export function trialNurtureEmail({ userName, dashboardUrl, stepKey, unsubscribeUrl }: TrialNurtureEmailProps): { subject: string; html: string } {
     const steps: Record<string, { subject: string; body: string; cta: string }> = {
         trial_day1_connect_google: {
             subject: "Day 1: Connect Google and see every review in one inbox",
@@ -53,7 +55,7 @@ export function trialNurtureEmail({ userName, dashboardUrl, stepKey }: TrialNurt
         trial_day6_case_study: {
             subject: "Day 6: How Sunrise Dental grew from 23 to 89 Google reviews",
             body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Sunrise Dental used automated SMS requests and the Negative Feedback Shield to grow from 4.1 to 4.7 stars in 90 days - without hiring marketing staff.</p>
-<p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="https://zyenereviews.com/case-studies/sunrise-dental-austin" style="color:#2563eb;">Read the full case study →</a></p>`,
+<p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="https://zyenereviews.com/case-studies/sunrise-dental-austin" style="color:${EMAIL_BRAND.link};">Read the full case study →</a></p>`,
             cta: "Go to dashboard",
         },
         trial_day7_upgrade: {
@@ -68,7 +70,7 @@ export function trialNurtureEmail({ userName, dashboardUrl, stepKey }: TrialNurt
     return {
         subject: step.subject,
         html: growthEmailLayout({
-            userName, title: step.subject,
+            userName, title: step.subject, unsubscribeUrl,
             bodyHtml: step.body,
             ctaLabel: step.cta,
             ctaUrl: dashboardUrl,
@@ -79,7 +81,7 @@ export function trialNurtureEmail({ userName, dashboardUrl, stepKey }: TrialNurt
 export function onboardingDripEmail({
     userName,
     dashboardUrl,
-    stepKey,
+    stepKey, unsubscribeUrl,
 }: TrialNurtureEmailProps): { subject: string; html: string } {
     const steps: Record<string, { subject: string; body: string; cta: string }> = {
         convert_benefits_recap: {
@@ -89,7 +91,7 @@ export function onboardingDripEmail({
         },
         convert_case_study: {
             subject: "How Wolfpack BBQ added 64 five-star reviews in 60 days",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Post-checkout SMS made review collection automatic. <a href="https://zyenereviews.com/case-studies/wolfpack-bbq-charlotte" style="color:#2563eb;">Read their story →</a></p>`,
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Post-checkout SMS made review collection automatic. <a href="https://zyenereviews.com/case-studies/wolfpack-bbq-charlotte" style="color:${EMAIL_BRAND.link};">Read their story →</a></p>`,
             cta: "Send your next campaign",
         },
         convert_pricing_reminder: {
@@ -99,28 +101,29 @@ export function onboardingDripEmail({
         },
         convert_last_chance_offer: {
             subject: "Review your plan before your next billing cycle",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">You're on a paid plan - keep your review automation, AI replies, and competitor tracking active. <a href="https://zyenereviews.com/pricing" style="color:#2563eb;">Review plan options →</a> or reply if you need help before your next billing cycle.</p>`,
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">You're on a paid plan - keep your review automation, AI replies, and competitor tracking active. <a href="https://zyenereviews.com/pricing" style="color:${EMAIL_BRAND.link};">Review plan options →</a> or reply if you need help before your next billing cycle.</p>`,
             cta: "Manage billing",
         },
     };
     const step = steps[stepKey] ?? steps.convert_benefits_recap;
     return {
         subject: step.subject,
-        html: growthEmailLayout({ userName, title: step.subject, bodyHtml: step.body, ctaLabel: step.cta, ctaUrl: dashboardUrl }),
+        html: growthEmailLayout({ userName, title: step.subject, unsubscribeUrl, bodyHtml: step.body, ctaLabel: step.cta, ctaUrl: dashboardUrl }),
     };
 }
 
 export function winbackFollowUpEmail({
     userName,
-    rejoinUrl,
+    rejoinUrl, unsubscribeUrl,
 }: {
     userName: string;
     rejoinUrl: string;
+    unsubscribeUrl?: string;
 }): { subject: string; html: string } {
     return {
         subject: "We miss you - here's what's new at Zyene Reviews",
         html: growthEmailLayout({
-            userName, title: "Ready to return to Zyene Reviews?",
+            userName, title: "Ready to return to Zyene Reviews?", unsubscribeUrl,
             bodyHtml: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Explore review requests, reply tools, and competitor benchmarks available with Zyene Reviews.</p>
 <p style="font-size:16px;line-height:1.6;color:#52525b;">Your billing page shows current plans, prices, and any available offers. Contact our team if you need help choosing a plan.</p>`,
             ctaLabel: "View available plans",

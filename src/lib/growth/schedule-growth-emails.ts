@@ -11,6 +11,12 @@ async function registerSequenceRun(
     userId?: string | null
 ): Promise<boolean> {
     const admin = createAdminClient();
+    if (sequenceKey !== "marketing_nurture") {
+        const preference = await admin.from("growth_email_runs").select("id")
+            .eq("recipient_email", email.toLowerCase()).eq("status", "canceled")
+            .in("sequence_key", ["trial_nurture", "onboarding_drip", "winback"]).limit(1);
+        if (preference.error || preference.data?.length) return false;
+    }
     const { error } = await admin.from("growth_email_runs").insert({
         sequence_key: sequenceKey,
         recipient_email: email.toLowerCase(),

@@ -12,6 +12,7 @@ const LITERAL_COLOR_FILES = new Set([
   "tests/unit/customer-portal-print-color-security.test.ts",
   // Standalone email documents and their preview gallery cannot resolve app CSS tokens.
   "src/lib/email/email-layout.ts", "src/lib/email/review-request-layout.ts",
+  "src/lib/email/email-brand.ts",
   "scripts/render-email-previews.ts",
 ]);
 

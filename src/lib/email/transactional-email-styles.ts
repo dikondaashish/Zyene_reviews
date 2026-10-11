@@ -1,3 +1,4 @@
+import { EMAIL_BRAND } from "@/lib/email/email-brand";
 /** Inline email colors and templates used by free tools and referrals. */
 import { escapeHtml } from "@/lib/security/html-escape";
 import { getAuthSiteUrl } from "@/lib/routing/platform-routes";
@@ -6,7 +7,7 @@ import { emailButton, emailLayout, emailPanel, emailParagraph } from "@/lib/emai
 const AUTH_SIGNUP_URL = getAuthSiteUrl(process.env.NEXT_PUBLIC_ROOT_DOMAIN || "zyenereviews.com", "/signup");
 export const EMAIL_COLORS = {
     body: "#52525b", muted: "#52525b", subtle: "#52525b",
-    heading: "#18181b", border: "#e4e4e7", link: "#2563eb",
+    heading: "#18181b", border: "#e4e4e7", link: EMAIL_BRAND.link,
 } as const;
 
 export function emailMutedFooter(text: string): string {
@@ -44,7 +45,7 @@ export function reviewLinkEmailHtml(name: string, reviewLink: string): string {
         title: `Your Google review link for ${name}`,
         preheader: "Save this link to share with customers after a visit.",
         bodyHtml: emailParagraph("Here is your direct Google review link:")
-            + `<p style="word-break:break-all;"><a href="${escapeHtml(reviewLink)}" style="color:#2563eb;text-decoration:underline;">${escapeHtml(reviewLink)}</a></p>`
+            + `<p style="word-break:break-all;"><a href="${escapeHtml(reviewLink)}" style="color:${EMAIL_BRAND.link};text-decoration:underline;">${escapeHtml(reviewLink)}</a></p>`
             + emailParagraph("Share this link via SMS, email, or a QR code. Invite honest feedback from every customer.")
             + emailButton("Explore automated requests", `${AUTH_SIGNUP_URL}?utm_source=free_tool&utm_medium=review_link`),
     });

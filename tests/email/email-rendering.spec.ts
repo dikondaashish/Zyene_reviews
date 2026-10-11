@@ -1,16 +1,19 @@
 import { expect, test } from "@playwright/test";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, readFileSync } from "node:fs";
+import { EMAIL_BRAND } from "@/lib/email/email-brand";
 import { emailPreviews } from "../fixtures/email-previews";
 
 const previews = emailPreviews();
 const widths = [320, 375, 430, 768, 1366];
 for (const width of widths) {
-    for (const mode of ["light", "dark", "inline-only", "outlook-dark"] as const) {
+    for (const mode of ["light", "dark", "images-blocked", "inline-only", "outlook-dark"] as const) {
         test(`${width}px ${mode}: all email templates`, async ({ page }, testInfo) => {
             await page.setViewportSize({ width, height: 900 });
             await page.emulateMedia({ colorScheme: mode === "dark" ? "dark" : "light" });
-            // All external assets are deliberately blocked: emails must be readable without images.
-            await page.route("**/*", route => route.abort());
+            // Load the exact production logo from its repository asset; keep network deterministic.
+            const logo = readFileSync("public/Main logo.png");
+            await page.route("**/*", route => route.request().url() === EMAIL_BRAND.logo && mode !== "images-blocked"
+                ? route.fulfill({ contentType: "image/png", body: logo }) : route.abort());
             for (const preview of previews) {
                 let html = mode === "inline-only" ? preview.html.replace(/<style>[\s\S]*?<\/style>/gi, "") : preview.html;
                 if (mode === "outlook-dark") html = html.replace("<body ", '<body data-ogsc="" ');
@@ -47,6 +50,12 @@ for (const width of widths) {
                     return issues;
                 });
                 expect(issues, `${preview.id} at ${width}px / ${mode}`).toEqual([]);
+                if (preview.id !== "aeo-report-white-label") {
+                    await expect(page.getByText(EMAIL_BRAND.address)).toBeVisible();
+                    const brandLogo = page.getByAltText("Zyene logo");
+                    await expect(brandLogo).toHaveAttribute("src", EMAIL_BRAND.logo);
+                    if (mode !== "images-blocked") await expect(brandLogo).toBeVisible();
+                }
                 if (testInfo.project.name === "chromium" && ["light", "dark"].includes(mode) && [375, 1366].includes(width)) {
                     const folder = "output/email-audit/screenshots";
                     mkdirSync(folder, { recursive: true });

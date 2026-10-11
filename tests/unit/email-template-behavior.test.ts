@@ -5,6 +5,7 @@ import { reviewRequestEmail, reviewRequestEmailPlainText } from "@/services/rese
 import { monthlyNewsletterEmail, newsletterWelcomeEmail } from "@/services/resend/templates/growth-marketing-emails";
 import { aeoAlertDigestEmail } from "@/services/resend/templates/aeo-alert-digest-email";
 import { supabaseAuthEmailTemplates } from "@/lib/email/supabase-auth-templates";
+import { EMAIL_BRAND, emailCompanyPlainText } from "@/lib/email/email-brand";
 
 const payload = '<img src=x onerror="alert(1)">';
 const request = { customerName: "Alex", businessName: "A & B", reviewLink: "https://collectratings.com/r/example?request=synthetic&source=email" };
@@ -19,6 +20,14 @@ describe("email content and fallback behavior", () => {
         expect(text.length).toBeGreaterThan(30);
         expect(text).not.toContain("@media");
         expect(text).not.toContain("<!--[if mso]");
+        if (preview.id !== "aeo-report-white-label") {
+            expect(preview.html).toContain(`src="${EMAIL_BRAND.logo}"`);
+            expect(preview.html).toContain(EMAIL_BRAND.address);
+            expect(preview.html).toContain(EMAIL_BRAND.company);
+            expect(preview.html).toContain(`mailto:${EMAIL_BRAND.support}`);
+            expect(preview.html).toContain(`${EMAIL_BRAND.website}/privacy`);
+            expect(text).toContain(EMAIL_BRAND.address);
+        }
     });
 
     it("uses a custom plain-text request in both message alternatives", () => {
@@ -26,6 +35,21 @@ describe("email content and fallback behavior", () => {
         expect(reviewRequestEmail(props)).toContain("A personal note from A &amp; B.");
         expect(reviewRequestEmail(props)).toContain('href="https://collectratings.com/r/example?request=synthetic&amp;source=email"');
         expect(reviewRequestEmailPlainText(props)).toContain("A personal note from A & B.");
+    });
+
+    it("brands complete custom HTML documents while retaining their content and styles", () => {
+        const html = reviewRequestEmail({ ...request, template: '<html><head><style>.merchant-note{font-weight:700}</style></head><body><p class="merchant-note">Hi {customer_name}</p></body></html>' });
+        expect(html.match(/<html /g)).toHaveLength(1);
+        expect(html).toContain('.merchant-note{font-weight:700}');
+        expect(html).toContain('Hi Alex');
+        expect(html).toContain(EMAIL_BRAND.logo);
+        expect(html).toContain(EMAIL_BRAND.address);
+        expect(reviewRequestEmailPlainText(request)).toContain(EMAIL_BRAND.address);
+    });
+
+    it("preserves a merchant's own company details in custom text rather than truncating the message", () => {
+        const html = reviewRequestEmail({ ...request, template: `Hello\n\n${emailCompanyPlainText()}\nThis note must remain in the message.` });
+        expect(html).toContain("This note must remain in the message.");
     });
 
     it("keeps customer-authored values as text inside merchant-authored markup", () => {

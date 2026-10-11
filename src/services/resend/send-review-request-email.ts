@@ -1,4 +1,5 @@
 import { logger } from "@/lib/logger";
+import { emailHtmlToText } from "@/lib/email/html-to-text";
 import { REVIEW_REQUEST_EMAIL_HEADERS } from "@/lib/email/review-request-signals";
 import { resendCollectratings } from "./collectratings-client";
 import { buildFromLine, sendEmail } from "./send-email";
@@ -66,8 +67,8 @@ export async function sendReviewRequestEmail({
             to,
             subject,
             html,
-            ...(text ? { text } : {}),
-            ...(replyList.length > 0 ? { reply_to: replyList } : {}),
+            text: text || emailHtmlToText(html),
+            ...(replyList.length > 0 ? { replyTo: replyList } : {}),
             ...(Object.keys(REVIEW_REQUEST_EMAIL_HEADERS).length > 0
                 ? { headers: REVIEW_REQUEST_EMAIL_HEADERS }
                 : {}),

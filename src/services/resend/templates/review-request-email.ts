@@ -1,3 +1,6 @@
+import { EMAIL_BRAND } from "@/lib/email/email-brand";
+import { emailCompanyPlainText } from "@/lib/email/email-brand";
+import { emailButton } from "@/lib/email/email-layout";
 import { emailHtmlToText } from "@/lib/email/html-to-text";
 import { escapeHtml } from "@/lib/security/html-escape";
 import { reviewRequestLayout } from "@/lib/email/review-request-layout";
@@ -38,7 +41,7 @@ export function reviewRequestEmailPlainText({
             .replace(/\{business_name\}/g, () => value(businessName))
             .replace(/\{review_link\}/g, () => value(reviewLink))
             .replace(/\{sender_name\}/g, () => value(sender));
-        return isHtml ? emailHtmlToText(rendered) : rendered;
+        return `${isHtml ? emailHtmlToText(rendered) : rendered}\n\n${emailCompanyPlainText()}`;
     }
 
     const intro = sender
@@ -57,6 +60,8 @@ export function reviewRequestEmailPlainText({
         "",
         "Thanks,",
         signoff,
+        "",
+        emailCompanyPlainText(),
     ].join("\n");
 }
 
@@ -75,15 +80,16 @@ export function reviewRequestEmail({
         const values: Record<string, string> = { customer_name: customerName || "", business_name: businessName, review_link: reviewLink, sender_name: senderName || "" };
         const html = template.replace(/\{(customer_name|business_name|review_link|sender_name)\}/g,
             (_, key: string) => escapeHtml(values[key]));
-        return /<html[\s>]/i.test(html) ? html : reviewRequestLayout(html);
+        return reviewRequestLayout(html, businessName);
     }
 
     if (template) {
-        const text = reviewRequestEmailPlainText({ customerName, businessName, reviewLink, template, senderName });
+        const text = reviewRequestEmailPlainText({ customerName, businessName, reviewLink, template, senderName })
+            .slice(0, -(`\n\n${emailCompanyPlainText()}`).length);
         const href = escapeHtml(reviewLink);
         const escaped = escapeHtml(text).replace(/\n/g, "<br>");
-        const body = href ? escaped.split(href).join(`<a href="${href}" style="color:#1a0dab;text-decoration:underline;word-break:break-all;">${href}</a>`) : escaped;
-        return reviewRequestLayout(`<p style="margin:0;white-space:pre-wrap;">${body}</p>`);
+        const body = href ? escaped.split(href).join(`<a href="${href}" style="color:${EMAIL_BRAND.link};text-decoration:underline;word-break:break-all;">${href}</a>`) : escaped;
+        return reviewRequestLayout(`<p style="margin:0;white-space:pre-wrap;">${body}</p>`, businessName);
     }
 
     const greeting = escapeHtml(firstName(customerName) || "there");
@@ -91,9 +97,6 @@ export function reviewRequestEmail({
     const sender = (senderName || "").trim();
     const senderEsc = escapeHtml(sender);
     const signoff = escapeHtml(sender || businessName);
-    const href = escapeHtml(reviewLink);
-    const linkText = escapeHtml(reviewLink);
-
     const intro = sender
         ? `This is ${senderEsc} from ${biz}.`
         : `Hope you had a good visit to ${biz}.`;
@@ -102,9 +105,9 @@ export function reviewRequestEmail({
     <p style="margin:0 0 16px;">Hi ${greeting},</p>
     <p style="margin:0 0 16px;">${intro}</p>
     <p style="margin:0 0 16px;">If you have a minute, we&rsquo;d love to hear how it went:</p>
-    <p style="margin:0 0 16px;"><a href="${href}" style="color:#1a0dab;text-decoration:underline;word-break:break-all;">${linkText}</a></p>
+    ${emailButton("Share your feedback", reviewLink)}
     <p style="margin:0 0 16px;color:#5f6368;">Thank you for sharing your honest feedback.</p>
     <p style="margin:0 0 4px;">Thanks,</p>
     <p style="margin:0;">${signoff}</p>
-`);
+`, businessName);
 }

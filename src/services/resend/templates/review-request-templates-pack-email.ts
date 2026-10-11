@@ -1,3 +1,4 @@
+import { EMAIL_BRAND } from "@/lib/email/email-brand";
 import { growthEmailLayout } from "@/services/resend/templates/growth-emails";
 
 const PACK_URL = "https://zyenereviews.com/resources/review-request-templates";
@@ -12,7 +13,7 @@ export function reviewRequestTemplatePackEmail({
         html: growthEmailLayout({
             userName: "there", title: "Your review request template pack", unsubscribeUrl,
             bodyHtml: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Thanks for requesting the review request template pack. Open the web version below and copy the scripts you need.</p>
-<p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="${PACK_URL}" style="color:#2563eb;font-weight:600;">Open your 22 templates →</a></p>
+<p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="${PACK_URL}" style="color:${EMAIL_BRAND.link};font-weight:600;">Open your 22 templates →</a></p>
 <h2 style="font-size:18px;color:#18181b;margin:24px 0 8px;">What&apos;s inside</h2>
 <ul style="font-size:16px;line-height:1.6;color:#52525b;padding-left:20px;margin:0 0 16px;">
 <li><strong>SMS templates</strong> - short, direct scripts after a visit or job</li>

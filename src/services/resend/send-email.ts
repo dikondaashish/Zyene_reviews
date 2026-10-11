@@ -1,4 +1,5 @@
 import { emailHtmlToText } from "@/lib/email/html-to-text";
+import { EMAIL_BRAND } from "@/lib/email/email-brand";
 import { logger } from "@/lib/logger";
 import { resend } from "@/services/resend/client";
 
@@ -18,6 +19,8 @@ interface SendEmailProps {
     replyTo?: string | string[];
     /** Custom MIME headers (e.g. Importance, Auto-Submitted). */
     headers?: Record<string, string>;
+    /** An HTTPS endpoint that accepts RFC 8058 one-click POST requests. */
+    unsubscribeUrl?: string;
     attachments?: Array<{ filename: string; content: string }>;
     /** Provider-side replay protection for an irreversible outbound email. */
     idempotencyKey?: string;
@@ -64,7 +67,7 @@ export function buildFromLine(input: { senderName?: string | null; businessName?
     return `${safeName} <${mailbox}>`;
 }
 
-export async function sendEmail({ to, subject, html, text, from, replyTo, headers, attachments, idempotencyKey }: SendEmailProps) {
+export async function sendEmail({ to, subject, html, text, from, replyTo, headers, unsubscribeUrl, attachments, idempotencyKey }: SendEmailProps) {
     const apiKey = process.env.RESEND_API_KEY?.trim();
     if (!apiKey) {
         logger.error("Resend API Key missing");
@@ -73,11 +76,15 @@ export async function sendEmail({ to, subject, html, text, from, replyTo, header
 
     const replyList =
         replyTo === undefined
-            ? []
+            ? [EMAIL_BRAND.support]
             : (Array.isArray(replyTo) ? replyTo : [replyTo]).filter((a) => typeof a === "string" && a.trim().length > 0);
-    const replyToPayload = replyList.length > 0 ? { reply_to: replyList } : {};
+    const replyToPayload = replyList.length > 0 ? { replyTo: replyList } : {};
 
-    const headersPayload = headers && Object.keys(headers).length > 0 ? { headers } : {};
+    const messageHeaders = { ...headers, ...(unsubscribeUrl ? {
+        "List-Unsubscribe": `<${unsubscribeUrl}>`,
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+    } : {}) };
+    const headersPayload = Object.keys(messageHeaders).length > 0 ? { headers: messageHeaders } : {};
 
     try {
         const { data, error } = await resend.emails.send({

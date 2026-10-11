@@ -1,3 +1,4 @@
+import { EMAIL_BRAND } from "@/lib/email/email-brand";
 import { getAuthSiteUrl } from "@/lib/routing/platform-routes";
 import { growthEmailLayout } from "@/services/resend/templates/growth-emails";
 import { escapeHtml } from "@/lib/security/html-escape";
@@ -26,7 +27,7 @@ export function marketingNurtureEmail({
         marketing_nurture_day2_shield: {
             subject: "Follow up when a customer gives a low rating",
             body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">When a customer gives a low rating through a Zyene review page, <strong>Negative Feedback Shield</strong> gives them a private form to describe the problem and alerts your team. Use it for follow-up, without review gating or suppressing honest public feedback.</p>
-<p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="https://zyenereviews.com/blog/negative-feedback-shield" style="color:#2563eb;">Read how Shield works →</a></p>`,
+<p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="https://zyenereviews.com/blog/negative-feedback-shield" style="color:${EMAIL_BRAND.link};">Read how Shield works →</a></p>`,
             cta: "See review collection",
             url: "https://zyenereviews.com/features/review-collection",
         },
@@ -85,7 +86,7 @@ export function monthlyNewsletterEmail(params: {
 <h2 style="font-size:18px;color:#18181b;margin:24px 0 8px;">${escapeHtml(tipTitle)}</h2>
 <p style="font-size:16px;line-height:1.6;color:#52525b;">${escapeHtml(tipBody)}</p>
 <h2 style="font-size:18px;color:#18181b;margin:24px 0 8px;">Case study</h2>
-<p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="${escapeHtml(caseStudyLink)}" style="color:#2563eb;">${escapeHtml(caseStudyTitle)} →</a></p>
+<p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="${escapeHtml(caseStudyLink)}" style="color:${EMAIL_BRAND.link};">${escapeHtml(caseStudyTitle)} →</a></p>
 `,
             ctaLabel: "Start your free trial",
             ctaUrl: "https://zyenereviews.com/pricing",

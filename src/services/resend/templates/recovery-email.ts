@@ -14,6 +14,5 @@ export function recoveryEmailTemplate({ businessName, customerName }: RecoveryEm
             + emailParagraph("If you provided contact details, a member of our team may follow up to learn more.")
             + emailParagraph(`Best regards, The ${businessName} team`),
         footerHtml: `Sent on behalf of ${escapeHtml(businessName)} via Zyene Reviews.`,
-        hidePoweredBy: true,
     });
 }

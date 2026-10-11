@@ -1,3 +1,4 @@
+import { EMAIL_BRAND } from "@/lib/email/email-brand";
 import { emailButton, emailLayout, emailParagraph, emailSettingsFooter } from "@/lib/email/email-layout";
 import { escapeHtml } from "@/lib/security/html-escape";
 
@@ -16,7 +17,7 @@ export function aeoAlertDigestEmail({ businessName, alerts, totalCount, dashboar
 <p class="email-muted" style="margin:0 0 4px;font-size:12px;font-weight:700;text-transform:uppercase;">${escapeHtml(alert.severity)} priority</p>
 <h2 style="margin:0 0 8px;font-size:18px;color:#18181b;">${escapeHtml(alert.title)}</h2>
 ${emailParagraph(alert.detail)}
-<p style="margin:0;font-size:14px;"><a href="${escapeHtml(alert.evidenceUrl)}" style="color:#2563eb;text-decoration:underline;">View evidence</a></p></div>`).join("");
+<p style="margin:0;font-size:14px;"><a href="${escapeHtml(alert.evidenceUrl)}" style="color:${EMAIL_BRAND.link};text-decoration:underline;">View evidence</a></p></div>`).join("");
     return emailLayout({
         title: "Your AI visibility alerts",
         preheader: `${totalCount} alerts detected for ${businessName}. Review the supporting evidence.`,
