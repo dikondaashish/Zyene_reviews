@@ -456,7 +456,7 @@ export const INDUSTRIES: IndustryData[] = [
             measures: "Track request delivery, review volume, rating distribution, response time, and resolved billing issues. Maps position depends on relevance, distance, and prominence - not reviews alone.",
         },
         ctaJoinCopy: "Join other HVAC companies on Zyene",
-        imagePath: "/images/industries/window-installation.webp",
+        imagePath: "/images/industries/hvac-candid-v2.webp",
     },
 
     // ── 10. Plumbing ───────────────────────────────────────────────────────
@@ -511,7 +511,7 @@ export const INDUSTRIES: IndustryData[] = [
             measures: "Track request delivery, review volume, rating distribution, response coverage, and resolved issues. Ranking is not a promised outcome.",
         },
         ctaJoinCopy: "Join other plumbing companies on Zyene",
-        imagePath: "/images/industries/window-installation.webp",
+        imagePath: "/images/industries/plumbing-candid-v2.webp",
     },
 
     // ── 11. Electricians ───────────────────────────────────────────────────
@@ -566,7 +566,7 @@ export const INDUSTRIES: IndustryData[] = [
             measures: "Track request delivery, review volume, response coverage, and rating distribution. Local position depends on factors beyond reviews.",
         },
         ctaJoinCopy: "Join other electricians on Zyene",
-        imagePath: "/images/industries/window-installation.webp",
+        imagePath: "/images/industries/electricians-candid-v2.webp",
     },
 ];
 

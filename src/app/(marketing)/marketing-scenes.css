@@ -77,4 +77,5 @@ a:hover .resource-photo img { transform:scale(1.035); }
 .marketing-site img[src*="cafe-owner-feedback-candid-v2.webp"] { object-position:35% 50%; }
 .marketing-site img[src*="team-collaboration-candid-v2.webp"] { object-position:50% 30%; }
 .marketing-site img[src*="industries"][src*="candid-v2.webp"] { object-position:50% 15%; }
+.marketing-site img[src*="electricians-candid-v2.webp"] { object-position:50% 0%; }
 .marketing-site img[src*="window-installation.webp"] { object-position:45% 35%; }

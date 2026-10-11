@@ -34,6 +34,7 @@ consumers before retirement. Dated evidence is not proof of current deployment.
 - `docs/marketing-component-licenses.md` - required attribution for live marketing adaptations.
 - [marketing-photography.md](marketing-photography.md) - documentary photo credits and generated-image provenance.
 - [IMAGE_REFRESH_2026-10-10.md](IMAGE_REFRESH_2026-10-10.md) and [IMAGE_REFRESH_MANIFEST_2026-10-10.json](IMAGE_REFRESH_MANIFEST_2026-10-10.json) - image review, all 47 replacements, final prompts, and compatibility paths.
+- [IMAGE_AUDIT_2026-10-11.md](IMAGE_AUDIT_2026-10-11.md) and [IMAGE_AUDIT_MANIFEST_2026-10-11.json](IMAGE_AUDIT_MANIFEST_2026-10-11.json) - follow-up review of all 153 images and 128 public pages, three additional trade scenes, and the missing sharing-preview fix.
 - [analytics-presentation.md](analytics-presentation.md) - current chart meaning, missing-data rules and presentation rationale.
 - [dashboard-loading.md](dashboard-loading.md) - current dashboard placeholder integration and reduced-motion behavior.
 - [review-widget-builder.md](review-widget-builder.md) - current widget setup, aggregate summaries and installation.
