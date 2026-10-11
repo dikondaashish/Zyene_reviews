@@ -18,6 +18,8 @@ for (const width of widths) {
                 let html = mode === "inline-only" ? preview.html.replace(/<style>[\s\S]*?<\/style>/gi, "") : preview.html;
                 if (mode === "outlook-dark") html = html.replace("<body ", '<body data-ogsc="" ');
                 await page.setContent(html, { waitUntil: "domcontentloaded" });
+                // A long preceding email can leave the next document scrolled past its logo.
+                await page.evaluate(() => window.scrollTo(0, 0));
                 const issues = await page.evaluate(() => {
                     const issues: string[] = [];
                     if (document.documentElement.scrollWidth > innerWidth + 1) issues.push(`horizontal overflow: ${document.documentElement.scrollWidth}`);

@@ -1,6 +1,6 @@
 # Email template audit — October 10, 2026
 
-The audit covers every application email renderer and all 13 Supabase authentication/security email templates. Every Zyene email now uses a simple, unboxed reading column, the official orange logo, white button labels, and the owner-confirmed company footer. Action buttons and accents use the owner-requested `#FF4F01` brand orange. White button labels are 19px bold: the measured 3.2963:1 contrast meets the 3:1 requirement for large text; ordinary body and link text retain the 4.5:1 threshold. Preview data is synthetic; no customer emails were sent during testing.
+The audit covers every application email renderer and all 13 Supabase authentication/security email templates. Every Zyene email now uses a warm off-white canvas, a rounded white message card, the official orange logo above the card, and a separate company footer. The final structure adapts the owner-provided Gusto verification email reviewed in Gmail: centered logo, bordered message section, clear sans-serif heading, rounded action and quiet footer. Zyene retains its own identity and copy. Action buttons and accents use the owner-requested `#FF4F01` brand orange. White button labels are 19px bold: the measured 3.2963:1 contrast meets the 3:1 requirement for large text; ordinary body and link text retain the 4.5:1 threshold. Preview data is synthetic; no customer emails were sent during testing.
 
 Company footer:
 
@@ -28,8 +28,8 @@ The footer also includes support, website, privacy and copyright details. Existi
 
 ## Changes
 
-- Shared email-safe inline/table layout with a 580px reading column, 32px logo, 15px body copy, restrained headings, and a quiet company footer. Removed the outer card, colored top border, oversized header and full-width mobile buttons.
-- Orange action buttons use exactly `#FF4F01`, with 19px bold white labels in light, dark and fallback modes. Buttons remain at least 48px tall; inline colors, preheaders, mobile spacing, dark styles and Outlook width/padding fallbacks are retained.
+- Shared email-safe inline/table layout with a 600px shell, warm off-white background, a white card with a fine border and 12px corners, centered 36px logo above the card, dark centered 28px heading, 15px body copy, and a separate muted footer. Detail panels use a pale peach background and 8px corners. Mobile keeps the background and rounded card visible with narrower padding.
+- Orange action buttons use exactly `#FF4F01`, with 19px bold white labels in light, dark and fallback modes. Buttons are centered with 8px corners and remain at least 48px tall; inline colors, preheaders, mobile spacing, dark styles and Outlook width/padding fallbacks are retained.
 - Shortened the welcome email to a personal greeting, concise introduction and one primary action. Its plain-text version derives from the same content, including the correct support address and company footer.
 - Fixed malformed alert/digest tables; replaced CSS-grid report layouts with email-safe tables.
 - Added plain-text alternatives to application emails, retaining action URLs/company details and removing hidden preheaders/CSS.
@@ -46,7 +46,7 @@ The footer also includes support, website, privacy and copyright details. Existi
 
 ## Rendering checks
 
-Chromium and WebKit: 320, 375, 430, 768 and 1366px widths, each in light, dark, images-blocked, stylesheet-stripped and Outlook dark-selector modes. Every mode tests all 71 previews: **3,550 render checks** across **50 configurations**. The final simplified design was retested in all configurations. The automated checks cover horizontal overflow, table structure, destination attributes, action-button height, computed white button text and exact `#FF4F01` backgrounds in every mode, visible-text contrast, actual logo markup and company address.
+Chromium and WebKit: 320, 375, 430, 768 and 1366px widths, each in light, dark, images-blocked, stylesheet-stripped and Outlook dark-selector modes. Every mode tests all 71 previews: **3,550 render checks** across **50 configurations**. The final rounded design was retested in all configurations. The runner resets scroll position between documents so a preceding long email cannot crop the next preview. The automated checks cover horizontal overflow, table structure, destination attributes, action-button height, computed white button text and exact `#FF4F01` backgrounds in every mode, visible-text contrast, actual logo markup and company address.
 
 Normal rendering uses the exact official PNG from the repository. The public production PNG separately returned HTTP 200 and loaded at its full 1200px width in both a direct browser view and an ordinary email preview. The images-blocked mode verifies readable identity and content when images cannot load.
 
@@ -78,7 +78,7 @@ The preview command also exports `auth-templates.json` and individual `auth-*-so
 - Color guard: passed; standalone email layouts and preview HTML explicitly use literal colors because inboxes cannot resolve application CSS tokens.
 - Final rendering rerun: all 50 configurations passed (3,550 template checks); 284 phone/laptop light/dark screenshots saved.
 - Production webpack build: passed, including TypeScript and all 281 static pages.
-- Supabase hosted bodies: all 13 redesigned bodies saved in production, reloaded, and compared exactly to the maintained source. Rate-limited or interrupted saves were retried and verified before completion. The existing professional subjects were retained; signup subject was also read back. All seven optional security-notification switches remain disabled. The five authentication templates with buttons were subsequently updated to the exact `#FF4F01` background and 19px bold white labels, saved and reloaded for exact comparison. The other eight bodies were unchanged. The hosted password-reset preview also confirmed the computed background, text color, size and weight.
+- Supabase hosted bodies: the earlier design was saved and compared byte-for-byte in all 13 templates. The final rounded design was then pasted from the maintained export, saved, reloaded, and checked through each provider preview for the expected heading, brand identity, company address and provider variables. Current verification uses preview content and source excerpts; it does not claim a fresh byte-for-byte comparison of every rounded body. An empty invitation body was caught during readback, restored, saved and verified. Every later save checked the complete preview first. Existing subjects were retained and all seven optional security-notification switches remain disabled.
 - Zyene sender DNS: removed the effective duplicate DMARC policy by renaming the old `p=none` record to `_dmarc-legacy`. One existing `p=quarantine` policy remains active; its contents were preserved. Both authoritative nameservers and a recursive resolver confirmed the result. [RFC 7489](https://www.rfc-editor.org/rfc/rfc7489) stops policy processing when multiple DMARC records remain.
 - CollectRatings sender DNS: SPF, DKIM and SES feedback MX exist for the configured `send.collectratings.com` sender. Added the missing root DMARC policy (`v=DMARC1; p=none; adkim=r; aspf=r`), verified on both authoritative nameservers. This non-enforcing policy completes the published authentication setup without rejecting existing mail.
 
