@@ -30,6 +30,7 @@ The footer also includes support, website, privacy and copyright details. Existi
 
 - Shared email-safe inline/table layout with a 600px shell, warm off-white background, a white card with a fine border and 12px corners, centered 36px logo above the card, dark centered 28px heading, 15px body copy, and a separate muted footer. Detail panels use a pale peach background and 8px corners. Mobile keeps the background and rounded card visible with narrower padding.
 - Orange action buttons use exactly `#FF4F01`, with 19px bold white labels in light, dark and fallback modes. Buttons are centered with 8px corners and remain at least 48px tall; inline colors, preheaders, mobile spacing, dark styles and Outlook width/padding fallbacks are retained.
+- Added the owner-requested “by Zyene” line centered beneath the Zyene Reviews logo. Agency white-label headers retain their own identity.
 - Shortened the welcome email to a personal greeting, concise introduction and one primary action. Its plain-text version derives from the same content, including the correct support address and company footer.
 - Fixed malformed alert/digest tables; replaced CSS-grid report layouts with email-safe tables.
 - Added plain-text alternatives to application emails, retaining action URLs/company details and removing hidden preheaders/CSS.

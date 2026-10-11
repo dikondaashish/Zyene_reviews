@@ -21,7 +21,7 @@ export function emailLayout({
     const brand = whiteLabel && brandLogoUrl
         ? `<img src="${escapeHtml(brandLogoUrl)}" alt="${escapeHtml(brandName)}" width="160" height="40" style="display:block;max-width:100%;height:auto;border:0;">`
         : whiteLabel ? `<span style="font-size:20px;font-weight:700;">${escapeHtml(brandName)}</span>`
-        : `<table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0"><tr><td width="36" style="padding-right:10px;"><a href="${EMAIL_BRAND.website}" aria-label="Zyene Reviews website"><img src="${EMAIL_BRAND.logo}" alt="Zyene logo" width="36" height="36" style="display:block;width:36px;height:36px;border:0;border-radius:8px;"></a></td><td class="email-brand" style="color:#292524;font-size:19px;font-weight:600;line-height:1.3;">Zyene Reviews</td></tr></table>`;
+        : `<table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0"><tr><td width="36" style="padding-right:10px;"><a href="${EMAIL_BRAND.website}" aria-label="Zyene Reviews website"><img src="${EMAIL_BRAND.logo}" alt="Zyene logo" width="36" height="36" style="display:block;width:36px;height:36px;border:0;border-radius:8px;"></a></td><td class="email-brand" style="color:#292524;font-size:19px;font-weight:600;line-height:1.3;">Zyene Reviews</td></tr></table><p class="email-muted" style="margin:6px 0 0;font-size:12px;line-height:1.5;font-weight:400;text-align:center;color:#57534e;">by Zyene</p>`;
     const footer = footerHtml ?? "";
     return `<!DOCTYPE html>
 <html lang="en" xmlns:o="urn:schemas-microsoft-com:office:office">
