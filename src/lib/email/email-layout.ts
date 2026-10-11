@@ -86,7 +86,7 @@ ${whiteLabel ? `<p style="margin:12px 0 0;">© ${new Date().getFullYear()} ${esc
 export function emailButton(label: string, url: string): string {
     return `<table class="email-button" role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin:24px 0;width:auto;max-width:100%;">
 <tr><td align="center" bgcolor="${EMAIL_BRAND.button}" style="background-color:${EMAIL_BRAND.button};border-radius:5px;mso-padding-alt:12px 20px;">
-<a class="email-cta" href="${escapeHtml(url)}" style="display:block;padding:12px 20px;font-size:14px;line-height:20px;font-weight:600;color:${EMAIL_BRAND.buttonText};text-decoration:none;word-break:normal;">${escapeHtml(label)}</a>
+<a class="email-cta" href="${escapeHtml(url)}" style="display:block;padding:12px 20px;font-size:19px;line-height:24px;font-weight:700;color:${EMAIL_BRAND.buttonText};text-decoration:none;word-break:normal;">${escapeHtml(label)}</a>
 </td></tr></table>`;
 }
 

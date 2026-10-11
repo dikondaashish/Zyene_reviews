@@ -29,6 +29,7 @@ for (const width of widths) {
                         if (!a.getAttribute("href") || a.getAttribute("href") === "#") issues.push("empty destination");
                         if (a.classList.contains("email-cta") && a.getBoundingClientRect().height < 44) issues.push("button is shorter than 44px");
                         if (a.classList.contains("email-cta") && getComputedStyle(a).color !== "rgb(255, 255, 255)") issues.push("button text is not white");
+                        if (a.classList.contains("email-cta") && getComputedStyle(a.parentElement!).backgroundColor !== "rgb(255, 79, 1)") issues.push("button background differs from the brand orange");
                     }
                     const luminance = (rgb: number[]) => rgb.slice(0, 3).map(c => c / 255).map(c => c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
                         .reduce((sum, c, i) => sum + c * [0.2126, 0.7152, 0.0722][i], 0);

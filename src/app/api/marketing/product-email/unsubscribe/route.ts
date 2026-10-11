@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     return htmlResponse(emailLayout({
         title: "Stop product tips?", preheader: "Manage your Zyene Reviews product emails.",
         bodyHtml: emailParagraph("Unsubscribe from onboarding tips and promotional follow-ups. Account security, billing, and essential service emails will continue.")
-            + `<form method="post"><input type="hidden" name="id" value="${id.data}"><button type="submit" style="padding:12px 20px;background:${EMAIL_BRAND.button};color:${EMAIL_BRAND.buttonText};border:0;border-radius:5px;font-size:14px;line-height:20px;font-weight:600;cursor:pointer;">Unsubscribe from product tips</button></form>`,
+            + `<form method="post"><input type="hidden" name="id" value="${id.data}"><button type="submit" style="padding:12px 20px;background:${EMAIL_BRAND.button};color:${EMAIL_BRAND.buttonText};border:0;border-radius:5px;font-size:19px;line-height:24px;font-weight:700;cursor:pointer;">Unsubscribe from product tips</button></form>`,
     }));
 }
 

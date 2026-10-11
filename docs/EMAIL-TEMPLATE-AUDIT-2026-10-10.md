@@ -1,6 +1,6 @@
 # Email template audit — October 10, 2026
 
-The audit covers every application email renderer and all 13 Supabase authentication/security email templates. Every Zyene email now uses a simple, unboxed reading column, the official orange logo, white button labels, and the owner-confirmed company footer. The original `#ff4f00` brand accent remains in the logo; action buttons use `#c93c00` to give white labels sufficient contrast. Preview data is synthetic; no customer emails were sent during testing.
+The audit covers every application email renderer and all 13 Supabase authentication/security email templates. Every Zyene email now uses a simple, unboxed reading column, the official orange logo, white button labels, and the owner-confirmed company footer. Action buttons and accents use the owner-requested `#FF4F01` brand orange. White button labels are 19px bold: the measured 3.2963:1 contrast meets the 3:1 requirement for large text; ordinary body and link text retain the 4.5:1 threshold. Preview data is synthetic; no customer emails were sent during testing.
 
 Company footer:
 
@@ -29,7 +29,7 @@ The footer also includes support, website, privacy and copyright details. Existi
 ## Changes
 
 - Shared email-safe inline/table layout with a 580px reading column, 32px logo, 15px body copy, restrained headings, and a quiet company footer. Removed the outer card, colored top border, oversized header and full-width mobile buttons.
-- Compact orange action buttons use white labels in light, dark and fallback modes. Buttons remain at least 44px tall; inline colors, preheaders, mobile spacing, dark styles and Outlook width/padding fallbacks are retained.
+- Orange action buttons use exactly `#FF4F01`, with 19px bold white labels in light, dark and fallback modes. Buttons remain at least 48px tall; inline colors, preheaders, mobile spacing, dark styles and Outlook width/padding fallbacks are retained.
 - Shortened the welcome email to a personal greeting, concise introduction and one primary action. Its plain-text version derives from the same content, including the correct support address and company footer.
 - Fixed malformed alert/digest tables; replaced CSS-grid report layouts with email-safe tables.
 - Added plain-text alternatives to application emails, retaining action URLs/company details and removing hidden preheaders/CSS.
@@ -46,7 +46,7 @@ The footer also includes support, website, privacy and copyright details. Existi
 
 ## Rendering checks
 
-Chromium and WebKit: 320, 375, 430, 768 and 1366px widths, each in light, dark, images-blocked, stylesheet-stripped and Outlook dark-selector modes. Every mode tests all 71 previews: **3,550 render checks** across **50 configurations**. The final simplified design was retested in all configurations. The automated checks cover horizontal overflow, table structure, destination attributes, action-button height, computed white button text in every mode, visible-text contrast, actual logo markup and company address.
+Chromium and WebKit: 320, 375, 430, 768 and 1366px widths, each in light, dark, images-blocked, stylesheet-stripped and Outlook dark-selector modes. Every mode tests all 71 previews: **3,550 render checks** across **50 configurations**. The final simplified design was retested in all configurations. The automated checks cover horizontal overflow, table structure, destination attributes, action-button height, computed white button text and exact `#FF4F01` backgrounds in every mode, visible-text contrast, actual logo markup and company address.
 
 Normal rendering uses the exact official PNG from the repository. The public production PNG separately returned HTTP 200 and loaded at its full 1200px width in both a direct browser view and an ordinary email preview. The images-blocked mode verifies readable identity and content when images cannot load.
 
@@ -54,7 +54,7 @@ Mobile light/dark screenshots for every template were inspected together, with r
 
 These are browser and fallback simulations. Native Gmail, Apple Mail and Word-based Outlook inbox rendering, deliverability, spam placement, provider tracking rewrites and actual authentication redemption have **not** been verified. Merchant-authored styles need their own preview checks. Supabase's sandboxed dashboard preview did not load the external logo; the saved URL, public asset and ordinary email preview were verified independently.
 
-The compatibility approach follows [Gmail's supported CSS guidance](https://developers.google.com/gmail/design/css), [Supabase's email-template variables](https://supabase.com/docs/guides/auth/auth-email-templates), and [Microsoft's email-rendering guidance](https://learn.microsoft.com/en-us/dynamics365/customer-insights/journeys/email-troubleshoot-rendering).
+Button typography follows [W3C contrast guidance](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html). The compatibility approach follows [Gmail's supported CSS guidance](https://developers.google.com/gmail/design/css), [Supabase's email-template variables](https://supabase.com/docs/guides/auth/auth-email-templates), and [Microsoft's email-rendering guidance](https://learn.microsoft.com/en-us/dynamics365/customer-insights/journeys/email-troubleshoot-rendering).
 
 Sender headers and opt-out behavior follow [Google's sender guidelines](https://support.google.com/mail/answer/81126) and [RFC 8058](https://www.rfc-editor.org/rfc/rfc8058). This audit does not claim complete legal compliance or inbox placement.
 
@@ -78,7 +78,7 @@ The preview command also exports `auth-templates.json` and individual `auth-*-so
 - Color guard: passed; standalone email layouts and preview HTML explicitly use literal colors because inboxes cannot resolve application CSS tokens.
 - Final rendering rerun: all 50 configurations passed (3,550 template checks); 284 phone/laptop light/dark screenshots saved.
 - Production webpack build: passed, including TypeScript and all 281 static pages.
-- Supabase hosted bodies: all 13 redesigned bodies saved in production, reloaded, and compared exactly to the maintained source. Rate-limited or interrupted saves were retried and verified before completion. The existing professional subjects were retained; signup subject was also read back. All seven optional security-notification switches remain disabled.
+- Supabase hosted bodies: all 13 redesigned bodies saved in production, reloaded, and compared exactly to the maintained source. Rate-limited or interrupted saves were retried and verified before completion. The existing professional subjects were retained; signup subject was also read back. All seven optional security-notification switches remain disabled. The five authentication templates with buttons were subsequently updated to the exact `#FF4F01` background and 19px bold white labels, saved and reloaded for exact comparison. The other eight bodies were unchanged. The hosted password-reset preview also confirmed the computed background, text color, size and weight.
 - Zyene sender DNS: removed the effective duplicate DMARC policy by renaming the old `p=none` record to `_dmarc-legacy`. One existing `p=quarantine` policy remains active; its contents were preserved. Both authoritative nameservers and a recursive resolver confirmed the result. [RFC 7489](https://www.rfc-editor.org/rfc/rfc7489) stops policy processing when multiple DMARC records remain.
 - CollectRatings sender DNS: SPF, DKIM and SES feedback MX exist for the configured `send.collectratings.com` sender. Added the missing root DMARC policy (`v=DMARC1; p=none; adkim=r; aspf=r`), verified on both authoritative nameservers. This non-enforcing policy completes the published authentication setup without rejecting existing mail.
 
