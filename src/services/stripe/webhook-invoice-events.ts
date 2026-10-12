@@ -1,3 +1,4 @@
+import { appEmailUrl } from "@/lib/email/app-email-url";
 import type Stripe from "stripe";
 import { stripe } from "@/services/stripe/client";
 import { stripeSubscriptionToOrganizationUpdate } from "@/services/stripe/organization-billing-sync";
@@ -47,7 +48,7 @@ export async function handleInvoicePaymentFailed(
                 html: paymentFailedEmail({
                     userName: invoice.customer_name || "there",
                     amount: formatInvoiceAmount(invoice.amount_due || 0, invoice.currency),
-                    updateCardUrl: `${process.env.NEXT_PUBLIC_APP_URL || ""}/settings/billing`,
+                    updateCardUrl: appEmailUrl("/settings/billing"),
                 }),
             });
         }
@@ -92,7 +93,7 @@ export async function handleInvoicePaymentSucceeded(
                     date: new Date().toLocaleDateString(),
                     invoiceUrl:
                         invoice.hosted_invoice_url ||
-                        `${process.env.NEXT_PUBLIC_APP_URL || ""}/settings/billing`,
+                        appEmailUrl("/settings/billing"),
                 }),
             });
         }

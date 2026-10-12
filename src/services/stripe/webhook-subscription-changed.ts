@@ -1,3 +1,4 @@
+import { appEmailUrl } from "@/lib/email/app-email-url";
 import type Stripe from "stripe";
 
 import { logger } from "@/lib/logger";
@@ -95,7 +96,7 @@ export async function handleSubscriptionDeleted(
                 html: subscriptionCanceledEmail({
                     userName: customer.name || "there",
                     endDate,
-                    rejoinUrl: `${process.env.NEXT_PUBLIC_APP_URL || ""}/settings/billing`,
+                    rejoinUrl: appEmailUrl("/settings/billing"),
                 }),
             });
         }

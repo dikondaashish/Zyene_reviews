@@ -14,16 +14,16 @@ export const MONTHLY_NEWSLETTER_EDITIONS: MonthlyNewsletterEdition[] = [
             "Industry landing pages, case studies, and partner program are live - plus improved trial email guides for new signups.",
         tipTitle: "Respond to every Google review within 24 hours",
         tipBody:
-            "Businesses that reply within a day see higher local rankings and more repeat customers. Use AI reply suggestions to stay consistent without spending evenings on Google.",
+            "A timely, thoughtful reply shows customers that you listen to their feedback. Use AI reply suggestions to stay consistent without spending evenings on Google.",
         caseStudySlug: "sunrise-dental-austin",
         caseStudyTitle: "How Sunrise Dental grew from 23 to 89 Google reviews",
     },
     {
         productUpdate:
             "Competitor watch alerts and GBP SEO dashboards continue to improve - check your dashboard for new benchmark insights.",
-        tipTitle: "Send review requests right after a great visit",
+        tipTitle: "Send review requests after a customer visit",
         tipBody:
-            "SMS and email requests sent within 24 hours of checkout convert 3-5× better than requests sent a week later. Automate the timing with Zyene campaigns.",
+            "Send a clear request while the experience is still fresh, and invite honest feedback from every customer. Automate the timing with Zyene campaigns.",
         caseStudySlug: "wolfpack-bbq-charlotte",
         caseStudyTitle: "Wolfpack BBQ added 64 five-star reviews in 60 days",
     },

@@ -34,7 +34,7 @@ export const TRIAL_NURTURE_STEPS: GrowthEmailStep[] = [
         key: "trial_day4_feedback_shield",
         dayOffset: 4,
         delayHours: 72,
-        subject: "Day 4: Protect your rating with the Negative Feedback Shield",
+        subject: "Day 4: Follow up on customer feedback",
         preview: "Give low ratings a private feedback path and alert your team.",
     },
     {
@@ -55,7 +55,7 @@ export const TRIAL_NURTURE_STEPS: GrowthEmailStep[] = [
         key: "trial_day7_upgrade",
         dayOffset: 7,
         delayHours: 168,
-        subject: "Day 7: Your trial ends soon - keep your momentum",
+        subject: "Day 7: Review your plan and next steps",
         preview: "Plans from $29.99/mo. No annual contract.",
     },
 ];
@@ -66,8 +66,8 @@ export const ONBOARDING_DRIP_STEPS: GrowthEmailStep[] = [
         key: "convert_benefits_recap",
         dayOffset: 0,
         delayHours: 2,
-        subject: "Welcome to paid - here's everything you unlocked",
-        preview: "AI replies, competitor tracking, and unlimited review requests on your plan.",
+        subject: "Your plan is active: explore your features",
+        preview: "Explore the features and usage limits included in your plan.",
     },
     {
         key: "convert_case_study",
@@ -87,7 +87,7 @@ export const ONBOARDING_DRIP_STEPS: GrowthEmailStep[] = [
         key: "convert_last_chance_offer",
         dayOffset: 14,
         delayHours: 336,
-        subject: "Last chance: lock in your plan before limits reset",
+        subject: "Review your plan before your next billing cycle",
         preview: "Stay on paid - keep AI replies, competitor tracking, and review automation.",
     },
 ];
@@ -127,7 +127,7 @@ export const WINBACK_STEPS: GrowthEmailStep[] = [
         dayOffset: 14,
         delayHours: 336,
         subject: "We miss you - here's what's new at Zyene Reviews",
-        preview: "New features since you left, plus 25% off if you come back.",
+        preview: "Explore current plans and available features.",
     },
 ];
 

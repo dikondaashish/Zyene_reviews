@@ -1,3 +1,4 @@
+import { appEmailUrl } from "@/lib/email/app-email-url";
 import { logger } from "@/lib/logger";
 import { inngest } from "@/services/inngest/client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
@@ -109,8 +110,8 @@ export const weeklyDigestWorker = inngest.createFunction(
         totalNew,
         avgRating,
         pendingCount: pendingCount || 0,
-        dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
-        settingsUrl: `${process.env.NEXT_PUBLIC_APP_URL}/settings/notifications`
+        dashboardUrl: appEmailUrl("/dashboard"),
+        settingsUrl: appEmailUrl("/settings/notifications")
       });
 
       return { businessName: business.name, recipients, emailHtml };

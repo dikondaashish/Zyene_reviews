@@ -11,7 +11,7 @@ import type {
     ReviewAlertPayload,
 } from "@/types/notifications";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.zyenereviews.com";
 
 export async function sendReviewAlert(review: ReviewAlertPayload) {
     // Logic: Urgency >= 7 OR Rating <= 2 -> SMS + Email
