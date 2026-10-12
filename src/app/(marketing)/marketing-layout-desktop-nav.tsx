@@ -16,9 +16,8 @@ export const MarketingLayoutDesktopNav = forwardRef<
     onToggleMenu: (menu: MarketingNavMenu) => void;
     onOpenMenu: (menu: MarketingNavMenu) => void;
     onCloseMenu: () => void;
-    onBookAppointment: () => void;
   }
->(function MarketingLayoutDesktopNav({ loginUrl, signupUrl, openMenu, onToggleMenu, onOpenMenu, onCloseMenu, onBookAppointment }, ref) {
+>(function MarketingLayoutDesktopNav({ loginUrl, signupUrl, openMenu, onToggleMenu, onOpenMenu, onCloseMenu }, ref) {
   const motionGroup = useId();
   return (
     <nav ref={ref} className="premium-desktop-nav" aria-label="Main navigation">
@@ -56,9 +55,17 @@ export const MarketingLayoutDesktopNav = forwardRef<
         <Link href="/pricing" className="mega-trigger" onClick={onCloseMenu}>
           Pricing
         </Link>
-        <button type="button" className="mega-trigger premium-nav-appointment" onClick={onBookAppointment} data-track="demo" data-track-location="nav">
+        <a
+          href="https://cal.com/zyenereviews/15min"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mega-trigger premium-nav-appointment"
+          onClick={onCloseMenu}
+          data-track="demo"
+          data-track-location="nav"
+        >
           Book an appointment
-        </button>
+        </a>
       </div>
       <div className="premium-nav-auth">
         <MarketingHeaderAuth loginUrl={loginUrl} signupUrl={signupUrl} />

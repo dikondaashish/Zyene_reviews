@@ -6,11 +6,10 @@ import { ChevronDown } from "lucide-react";
 import { MarketingHeaderAuth } from "@/components/marketing/marketing-header-auth";
 import { PRODUCT_LINKS, RESOURCES_LINKS, SOLUTIONS_LINKS } from "@/app/(marketing)/marketing-layout-nav-data";
 
-export function MarketingLayoutMobileNav({ loginUrl, signupUrl, onNavigate, onBookAppointment }: {
+export function MarketingLayoutMobileNav({ loginUrl, signupUrl, onNavigate }: {
     loginUrl: string;
     signupUrl: string;
     onNavigate: () => void;
-    onBookAppointment: () => void;
 }) {
     return (
         <nav id="marketing-mobile-nav" aria-label="Main navigation" className="lg:hidden max-h-[calc(100dvh-76px)] overflow-y-auto border-t border-border bg-background px-5 pb-6">
@@ -34,7 +33,17 @@ export function MarketingLayoutMobileNav({ loginUrl, signupUrl, onNavigate, onBo
             ))}
             <div className="grid grid-cols-2 gap-x-4 py-3">
                 <Link href="/pricing" onClick={onNavigate} className="py-3 text-sm font-medium">Pricing</Link>
-                <button type="button" onClick={onBookAppointment} className="py-3 text-left text-sm font-medium" data-track="demo" data-track-location="nav">Book an appointment</button>
+                <a
+                  href="https://cal.com/zyenereviews/15min"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={onNavigate}
+                  className="py-3 text-left text-sm font-medium"
+                  data-track="demo"
+                  data-track-location="nav"
+                >
+                  Book an appointment
+                </a>
                 <Link href="/about" onClick={onNavigate} className="py-3 text-sm font-medium">About us</Link>
                 <Link href="/contact" onClick={onNavigate} className="py-3 text-sm font-medium">Contact</Link>
             </div>

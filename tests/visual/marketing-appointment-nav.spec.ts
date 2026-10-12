@@ -4,17 +4,14 @@ test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("cookie-consent", "declined"));
 });
 
-test("appointment booking opens the calendar overlay from desktop and mobile navigation", async ({ page }) => {
+test("appointment booking links to Cal.com from desktop and mobile navigation", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/", { waitUntil: "networkidle" });
 
   const desktopNav = page.getByRole("navigation", { name: "Main navigation" });
-  await desktopNav.getByRole("button", { name: "Book an appointment" }).click();
-  const bookingDialog = page.getByRole("dialog", { name: "Book a Zyene Reviews demo" });
-  await expect(bookingDialog).toBeVisible();
-  await expect(bookingDialog.getByTitle("Schedule a Zyene Reviews demo on Cal.com")).toHaveAttribute("src", /cal\.com\/zyenereviews\/15min/);
-  await bookingDialog.getByRole("button", { name: "Close booking calendar" }).click();
-  await expect(bookingDialog).toBeHidden();
+  const desktopLink = desktopNav.getByRole("link", { name: "Book an appointment" });
+  await expect(desktopLink).toHaveAttribute("href", "https://cal.com/zyenereviews/15min");
+  await expect(desktopLink).toHaveAttribute("target", "_blank");
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/", { waitUntil: "networkidle" });
@@ -22,6 +19,7 @@ test("appointment booking opens the calendar overlay from desktop and mobile nav
   await menuButton.click();
   const mobileNav = page.locator("#marketing-mobile-nav");
   await expect(mobileNav).toBeVisible();
-  await mobileNav.getByRole("button", { name: "Book an appointment" }).click();
-  await expect(bookingDialog).toBeVisible();
+  const mobileLink = mobileNav.getByRole("link", { name: "Book an appointment" });
+  await expect(mobileLink).toHaveAttribute("href", "https://cal.com/zyenereviews/15min");
+  await expect(mobileLink).toHaveAttribute("target", "_blank");
 });
