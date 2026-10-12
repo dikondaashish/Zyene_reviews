@@ -36,4 +36,14 @@ describe("Cal.com embed URL", () => {
         expect(url).toContain("zyenereviews/15min");
         if (prev !== undefined) process.env.NEXT_PUBLIC_CAL_COM_EMBED_URL = prev;
     });
+
+    it("rejects obsolete cal.com/zyene/ env value and falls back to zyenereviews/15min", () => {
+        const prev = process.env.NEXT_PUBLIC_CAL_COM_EMBED_URL;
+        process.env.NEXT_PUBLIC_CAL_COM_EMBED_URL = "https://cal.com/zyene/30-min-meeting?overlayCalendar=true";
+        const url = getCalComEmbedUrlFromEnv();
+        expect(url).toContain("zyenereviews/15min");
+        expect(url).not.toContain("zyene/30-min-meeting");
+        if (prev !== undefined) process.env.NEXT_PUBLIC_CAL_COM_EMBED_URL = prev;
+        else delete process.env.NEXT_PUBLIC_CAL_COM_EMBED_URL;
+    });
 });
