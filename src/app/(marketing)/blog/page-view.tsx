@@ -3,6 +3,7 @@ import { BLOG_POSTS } from "@/lib/content/blog-data";
 import { BlogHeroSection } from "./blog-hero-section";
 import { BlogCatalog } from "./blog-catalog";
 import { BlogNewsletterCtaSection } from "./blog-newsletter-cta-section";
+import { PopularResourcesBlock } from "@/components/marketing/popular-resources-block";
 
 export default function BlogHubPage() {
     return (
@@ -16,6 +17,7 @@ export default function BlogHubPage() {
             <BlogHeroSection />
             <BlogCatalog posts={BLOG_POSTS} />
             <BlogNewsletterCtaSection />
+            <PopularResourcesBlock />
         </>
     );
 }

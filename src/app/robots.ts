@@ -1,10 +1,6 @@
 import type { MetadataRoute } from "next";
 import { headers } from "next/headers";
-import {
-    AI_CRAWLER_ALLOW,
-    AI_CRAWLER_DISALLOW,
-    MARKETING_ROBOTS_DISALLOW,
-} from "@/lib/seo/robots-disallow-paths";
+import { MARKETING_ROBOTS_DISALLOW } from "@/lib/seo/robots-disallow-paths";
 import { MARKETING_SITE_ORIGIN } from "@/lib/seo/marketing-site-url";
 
 const AUTH_DISALLOW = ["/", "/login", "/signup", "/forgot-password", "/reset-password"];
@@ -38,28 +34,16 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
                 disallow: [...MARKETING_ROBOTS_DISALLOW],
             },
             {
-                userAgent: "GPTBot",
-                allow: [...AI_CRAWLER_ALLOW],
-                disallow: [...AI_CRAWLER_DISALLOW],
-            },
-            {
-                userAgent: "CCBot",
-                disallow: ["/"],
-            },
-            {
-                userAgent: "anthropic-ai",
-                allow: [...AI_CRAWLER_ALLOW],
-                disallow: [...AI_CRAWLER_DISALLOW],
-            },
-            {
-                userAgent: "ClaudeBot",
-                allow: [...AI_CRAWLER_ALLOW],
-                disallow: [...AI_CRAWLER_DISALLOW],
-            },
-            {
-                userAgent: "PerplexityBot",
-                allow: [...AI_CRAWLER_ALLOW],
-                disallow: [...AI_CRAWLER_DISALLOW],
+                userAgent: [
+                    "GPTBot",
+                    "OAI-SearchBot",
+                    "ClaudeBot",
+                    "PerplexityBot",
+                    "Google-Extended",
+                    "anthropic-ai",
+                ],
+                allow: ["/"],
+                disallow: [...MARKETING_ROBOTS_DISALLOW],
             },
         ],
         sitemap: `${MARKETING_SITE_ORIGIN}/sitemap.xml`,
