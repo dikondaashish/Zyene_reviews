@@ -7,13 +7,13 @@ import {
 
 describe("Cal.com embed URL", () => {
     it("appends embed=true when missing", () => {
-        const url = normalizeCalComEmbedUrl("https://cal.com/zyene/enterprise-demo");
+        const url = normalizeCalComEmbedUrl("https://cal.com/zyenereviews/enterprise-demo");
         expect(url).toContain("embed=true");
     });
 
     it("preserves existing embed param", () => {
-        const url = normalizeCalComEmbedUrl("https://cal.com/zyene/demo?embed=true");
-        expect(url).toBe("https://cal.com/zyene/demo?embed=true");
+        const url = normalizeCalComEmbedUrl("https://cal.com/zyenereviews/demo?embed=true");
+        expect(url).toBe("https://cal.com/zyenereviews/demo?embed=true");
     });
 
     it("preserves query params and adds embed for demo link", () => {

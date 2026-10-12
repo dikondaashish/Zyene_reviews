@@ -18,7 +18,7 @@ export function getCalComEmbedUrlFromEnv(): string | null {
 
 /**
  * Ensures ?embed=true for Cal.com iframe embeds.
- * Example: https://cal.com/team/zyene/enterprise-demo → same with embed=true
+ * Example: https://cal.com/zyenereviews/15min → same with embed=true
  */
 export function normalizeCalComEmbedUrl(raw: string | null | undefined): string | null {
     if (!raw?.trim()) return null;
