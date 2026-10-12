@@ -28,14 +28,14 @@ export default function DemoPage() {
                     <div className="bg-card border border-border rounded-2xl p-6 md:p-8">
                         <h2 className="text-xl font-bold mb-2">Pick a time that suits you</h2>
                         <p className="text-sm text-muted-foreground mb-6">
-                            Pick a time that works for your team. Typical demo: 30 minutes. We’ll show how to select a business, choose a reply tone and star threshold, and turn on automatic Google replies.
+                            Pick a time that works for your team. Typical demo: 15 minutes. We’ll show how to select a business, choose a reply tone and star threshold, and turn on automatic Google replies.
                         </p>
                         {calComEmbedUrl ? (
                             <DemoBookingCalendar src={calComEmbedUrl} />
                         ) : (
                             <div className="rounded-xl border border-dashed border-border bg-muted/40 p-8 text-center text-sm text-muted-foreground">
                                 <p className="mb-4">Choose a time on our booking page, or send your details and we’ll arrange a demo.</p>
-                                <a href="https://cal.com/zyene/30-min-meeting" target="_blank" rel="noopener noreferrer" className="marketing-button">Choose a time</a>
+                                <a href="https://cal.com/zyenereviews/15min" target="_blank" rel="noopener noreferrer" className="marketing-button">Choose a time</a>
                             </div>
                         )}
                     </div>
