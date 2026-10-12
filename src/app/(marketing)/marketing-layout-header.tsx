@@ -9,10 +9,12 @@ import { MarketingLayoutHeaderBrand } from "@/app/(marketing)/marketing-layout-h
 import { MarketingLayoutDesktopNav } from "@/app/(marketing)/marketing-layout-desktop-nav";
 import { MarketingLayoutMobileNav } from "@/app/(marketing)/marketing-layout-mobile-nav";
 import { MarketingNavigationProgress } from "@/components/marketing/marketing-navigation-progress";
+import { MarketingAppointmentDialog } from "@/components/marketing/marketing-appointment-dialog";
 
 export function MarketingLayoutHeader({ pending = false, pendingLabel = "Opening page…" }: { pending?: boolean; pendingLabel?: string }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<MarketingNavMenu | null>(null);
+  const [appointmentOpen, setAppointmentOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const desktopNavRef = useRef<HTMLDivElement>(null);
   const mobileTriggerRef = useRef<HTMLButtonElement>(null);
@@ -49,6 +51,11 @@ export function MarketingLayoutHeader({ pending = false, pendingLabel = "Opening
   }, []);
 
   const closeMobile = () => setMobileMenuOpen(false);
+  const openAppointment = () => {
+    closeMobile();
+    setOpenMenu(null);
+    setAppointmentOpen(true);
+  };
 
   const toggleMenu = (menu: MarketingNavMenu) => {
     setOpenMenu((current) => (current === menu ? null : menu));
@@ -83,6 +90,7 @@ export function MarketingLayoutHeader({ pending = false, pendingLabel = "Opening
           onToggleMenu={toggleMenu}
           onOpenMenu={handleOpenMenu}
           onCloseMenu={handleCloseMenu}
+          onBookAppointment={openAppointment}
         />
         <Button
           variant="ghost"
@@ -107,8 +115,10 @@ export function MarketingLayoutHeader({ pending = false, pendingLabel = "Opening
           loginUrl={LOGIN_URL}
           signupUrl={SIGNUP_URL}
           onNavigate={closeMobile}
+          onBookAppointment={openAppointment}
         />
       ) : null}
+      <MarketingAppointmentDialog open={appointmentOpen} onOpenChange={setAppointmentOpen} />
     </header>
   );
 }
