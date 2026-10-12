@@ -1,4 +1,6 @@
-import type { Metadata } from "next";
+// Deterministic on server and client — avoids the hydration mismatch a live
+// `new Date()` causes across cached HTML day boundaries (Sentry ZYENE-REVIEWS-Z).
+const LAST_UPDATED = "October 12, 2026";
 
 export function TermsContentSection() {
     return (
@@ -7,7 +9,7 @@ export function TermsContentSection() {
                 <h1 className="text-4xl font-bold text-foreground mb-8">Terms of Service</h1>
 
                 <div className="prose max-w-none prose-headings:text-foreground prose-a:text-primary hover:prose-a:brightness-90 prose-p:text-muted-foreground prose-li:text-muted-foreground">
-                    <p className="text-sm text-muted-foreground mb-8">Last Updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                    <p className="text-sm text-muted-foreground mb-8">Last Updated: {LAST_UPDATED}</p>
 
                     <p>
                         Welcome to Zyene Reviews, a product of{" "}
