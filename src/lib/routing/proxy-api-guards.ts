@@ -18,6 +18,13 @@ const RATE_LIMIT_EXEMPT = ["/api/webhooks", "/api/inngest", "/api/cron", "/api/a
  */
 const CSRF_EXEMPT = ["/api/webhooks", "/api/inngest", "/api/cron", "/api/v1", "/api/aeo/crawler-logs"];
 
+// RFC 8058 providers POST without Origin. These exact routes authorize only
+// an unsubscribe using an opaque recipient token; they never use session cookies.
+const EMAIL_UNSUBSCRIBE_POSTS = [
+    "/api/marketing/newsletter/unsubscribe",
+    "/api/marketing/product-email/unsubscribe",
+];
+
 const MUTATING_METHODS = ["POST", "PUT", "DELETE", "PATCH"];
 
 /**
@@ -49,7 +56,8 @@ export async function handleApiGuards(
         }
     }
 
-    if (!CSRF_EXEMPT.some((p) => pathname.startsWith(p))) {
+    const emailUnsubscribe = request.method === "POST" && EMAIL_UNSUBSCRIBE_POSTS.includes(pathname);
+    if (!emailUnsubscribe && !CSRF_EXEMPT.some((p) => pathname.startsWith(p))) {
         const origin = request.headers.get("origin");
         const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN;
         const allowedOrigins = [
