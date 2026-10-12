@@ -36,7 +36,7 @@ export function DemoBookingCalendar({ src }: { src: string }) {
         <iframe
           src={src}
           title="Schedule a Zyene Reviews demo on Cal.com"
-          sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
           className="w-full min-h-[520px] rounded-xl"
           onLoad={() => setLoading(false)}
           onError={() => setSlow(true)}
