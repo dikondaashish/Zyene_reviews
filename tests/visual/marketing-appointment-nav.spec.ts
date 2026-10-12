@@ -12,7 +12,7 @@ test("appointment booking opens the calendar overlay from desktop and mobile nav
   await desktopNav.getByRole("button", { name: "Book an appointment" }).click();
   const bookingDialog = page.getByRole("dialog", { name: "Book a Zyene Reviews demo" });
   await expect(bookingDialog).toBeVisible();
-  await expect(bookingDialog.getByTitle("Schedule a Zyene Reviews demo on Cal.com")).toHaveAttribute("src", /cal\.com\/zyene\/30-min-meeting/);
+  await expect(bookingDialog.getByTitle("Schedule a Zyene Reviews demo on Cal.com")).toHaveAttribute("src", /cal\.com\/zyenereviews\/15min/);
   await bookingDialog.getByRole("button", { name: "Close booking calendar" }).click();
   await expect(bookingDialog).toBeHidden();
 

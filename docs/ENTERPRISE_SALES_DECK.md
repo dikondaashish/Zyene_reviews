@@ -2,7 +2,7 @@
 
 > **Internal / outbound asset.** Export to PDF or Notion for prospects.  
 > **Last updated:** Phase 8 (Scale & Enterprise)  
-> **Inbound:** [zyenereviews.com/demo](https://zyenereviews.com/demo) · [Cal.com booking](https://cal.com/zyene/30-min-meeting) · **sales@zyenereviews.com**
+> **Inbound:** [zyenereviews.com/demo](https://zyenereviews.com/demo) · [Cal.com booking](https://cal.com/zyenereviews/15min) · **sales@zyenereviews.com**
 
 ---
 

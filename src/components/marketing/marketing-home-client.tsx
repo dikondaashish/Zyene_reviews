@@ -10,6 +10,7 @@ import { ProductShowcase } from "@/components/marketing/product-tour/product-sho
 import { MarketingScrollReveal } from "@/components/marketing/marketing-scroll-reveal";
 import { HomeLeadWizard } from "@/components/marketing/home-lead-wizard";
 import { IllustrativeBrandsBar } from "@/components/marketing/social-proof-illustrative-brands-bar";
+import { PopularResourcesBlock } from "@/components/marketing/popular-resources-block";
 
 export function MarketingHomeClient() {
   return (
@@ -53,6 +54,7 @@ export function MarketingHomeClient() {
       <MarketingScrollReveal className="home-scroll-section" delay={140}>
         <MarketingHomeNextSteps />
       </MarketingScrollReveal>
+      <PopularResourcesBlock />
       <MarketingScrollReveal
         className="home-scroll-section"
         delay={160}

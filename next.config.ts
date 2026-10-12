@@ -89,7 +89,7 @@ export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options
 
-  org: "zyene",
+  org: "zyene-inc",
   project: "zyene-reviews",
 
   // Source-map upload is for Vercel/CI. Skip it on local builds.

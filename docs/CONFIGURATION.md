@@ -159,6 +159,12 @@ Also see [PRODUCTION_CHECKLIST.md](./PRODUCTION_CHECKLIST.md).
 | `sentry.server.config.ts` / `sentry.edge.config.ts` / `src/instrumentation-client.ts` | Sentry init (shared options in `src/lib/monitoring/sentry-init-options.ts`; server `beforeSend` + Pino bridge; client Session Replay) |
 | `src/services/inngest/sentry-middleware.ts` | Inngest terminal failures → Sentry |
 
+Sentry uses organization `zyene-inc`, project `zyene-reviews` (numeric ID
+`4510977316159488`). Its DSN is independent of the `trackmyopt` project in the
+same organization. Set a dedicated `SENTRY_AUTH_TOKEN` in the `zyene-reviews`
+Vercel project's production environment for source-map uploads; never copy
+TrackMyOPT's DSN or store an auth token in a `NEXT_PUBLIC_` variable.
+
 ---
 
 ## 6. Future extension

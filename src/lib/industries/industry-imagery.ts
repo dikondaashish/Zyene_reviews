@@ -10,9 +10,18 @@ const PHOTOS: Record<string, { src: string; alt: string }> = {
     alt: "Guests sharing a meal and conversation at a restaurant",
   },
   "home-services": HOME_SERVICE_PHOTO,
-  hvac: HOME_SERVICE_PHOTO,
-  plumbing: HOME_SERVICE_PHOTO,
-  electricians: HOME_SERVICE_PHOTO,
+  hvac: {
+    src: "/images/industries/hvac-candid-v2.webp",
+    alt: "HVAC technician inspecting an outdoor air-conditioning unit beside a home",
+  },
+  plumbing: {
+    src: "/images/industries/plumbing-candid-v2.webp",
+    alt: "Plumber checking a drain pipe beneath a kitchen sink",
+  },
+  electricians: {
+    src: "/images/industries/electricians-candid-v2.webp",
+    alt: "Electrician preparing cable and tools at a workshop bench",
+  },
   dental: {
     src: "/images/industries/dental-candid-v2.webp",
     alt: "Dental team preparing instruments beside an empty treatment chair",
