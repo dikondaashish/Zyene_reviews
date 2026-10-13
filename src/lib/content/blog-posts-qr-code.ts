@@ -25,12 +25,12 @@ export const post23: BlogPost = {
     relatedSlugs: [
         "how-to-get-a-google-review-link",
         "how-to-ask-customers-for-reviews-sms-email-templates",
-        "how-negative-feedback-shield-protects-ratings",
+        "negative-feedback-shield",
     ],
     internalLinks: [
         { label: "Google Review Link Guide", href: "/blog/how-to-get-a-google-review-link" },
-        { label: "Negative Feedback Shield", href: "/features/feedback-shield" },
-        { label: "Collect Ratings Capture Flow", href: "/product" },
+        { label: "Review Collection Features", href: "/features/review-collection" },
+        { label: "Negative Feedback Shield Guide", href: "/blog/negative-feedback-shield" },
     ],
     faqs: [
         {
