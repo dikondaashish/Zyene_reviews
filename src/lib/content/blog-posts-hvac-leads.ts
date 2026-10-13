@@ -1,4 +1,5 @@
 import type { BlogPost } from "./blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const post22: BlogPost = {
     slug: "how-to-get-hvac-leads-from-google-maps",
@@ -34,12 +35,13 @@ export const post22: BlogPost = {
         "how-reviews-impact-local-map-pack-ranking",
     ],
     internalLinks: [
+        { label: "HVAC Reputation Management & Review Software", href: "/industries/hvac" },
         { label: "HVAC & Home Services Reputation Guide", href: "/blog/hvac-home-services-reputation-management" },
         { label: "Google Business Profile Optimization Checklist", href: "/blog/google-business-profile-optimization-checklist" },
         { label: "How Reviews Impact Google Local Map Pack Ranking", href: "/blog/how-reviews-impact-local-map-pack-ranking" },
         { label: "How to Get 50 Google Reviews in 30 Days", href: "/blog/how-to-get-50-google-reviews-in-30-days" },
         { label: "Review Automation Features", href: "/features" },
-        { label: "Start a 7-Day Free Trial", href: "/signup" },
+        { label: "Start a 7-Day Free Trial", href: SIGNUP_URL },
     ],
     faqs: [
         {
@@ -204,10 +206,7 @@ export const post22: BlogPost = {
                 "Deploy AI-Powered Review Responses: Respond to every review within 24 hours. Using Zyene Reviews' AI assistant, craft thoughtful, personalized responses that naturally weave in local keywords and service terms.",
             ],
         },
-        {
-            type: "h2",
-            text: "The 4 Costly Mistakes That Drop HVAC Companies from the Map Pack",
-        },
+        { type: "h2", text: "The 4 Costly Mistakes That Drop HVAC Companies from the Map Pack" },
         {
             type: "ul",
             items: [
@@ -217,19 +216,16 @@ export const post22: BlogPost = {
                 "Violating FTC Review Gating Rules: Offering gift cards or discounts for reviews violates federal guidelines. Always focus on genuine, compliant review collection.",
             ],
         },
-        {
-            type: "h2",
-            text: "Scale Your Inbound HVAC Lead Volume with Zyene Reviews",
-        },
+        { type: "h2", text: "Scale Your Inbound HVAC Lead Volume with Zyene Reviews" },
         {
             type: "p",
-            text: "Zyene Reviews gives HVAC and trade contractors everything needed to dominate local search without agency retainers or high-priced software subscriptions. From automated SMS review requests and Negative Feedback Shield to competitor benchmarking and AI reply drafting, your review pipeline runs on autopilot.",
+            text: "Zyene Reviews gives HVAC and trade contractors everything needed to dominate local search without agency retainers or high-priced software subscriptions. Explore our dedicated HVAC reputation management software (/industries/hvac) for automated SMS review requests, Negative Feedback Shield, competitor benchmarking, and AI reply drafting.",
         },
         {
             type: "cta",
             text: "Ready to stop paying $100+ per click for HVAC leads? Start your 7-day free trial of Zyene Reviews today and watch your Google Maps ranking soar.",
             ctaLabel: "Try Zyene Reviews Free for 7 Days",
-            ctaHref: "/signup",
+            ctaHref: SIGNUP_URL,
         },
     ],
 };

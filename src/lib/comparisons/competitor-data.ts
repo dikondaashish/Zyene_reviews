@@ -86,7 +86,11 @@ export const COMPETITORS: CompetitorData[] = [
         "href": "https://birdeye.com/pricing/",
         "checkedOn": "September 12, 2026"
     },
-    "openingSummary": "Use the same location count, sending volume and billing period when comparing offers. Birdeye and Zyene Reviews package capabilities differently; the lowest headline price does not establish feature equivalence. Verify the integrations and reply actions your team needs in a trial or demonstration, then compare the complete subscription cost."
+    "openingSummary": "Use the same location count, sending volume and billing period when comparing offers. Birdeye and Zyene Reviews package capabilities differently; the lowest headline price does not establish feature equivalence. Verify the integrations and reply actions your team needs in a trial or demonstration, then compare the complete subscription cost.",
+    "deepDiveLink": {
+        "label": "5 Cheaper Birdeye Alternatives for Local Businesses (2026)",
+        "href": "/blog/birdeye-alternatives-for-local-businesses"
+    }
 },
 {
     "slug": "podium",

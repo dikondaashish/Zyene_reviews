@@ -37,6 +37,7 @@ export const AnimatedReviewCards = ({
     shellSubtitle,
     manageAllHref,
     manageAllLabel,
+    reviewsHref = "/features/ai-replies",
 }: AnimatedReviewCardsProps) => {
     void _horizontalSpacing;
     const reduceMotion = useReducedMotion();
@@ -117,6 +118,7 @@ export const AnimatedReviewCards = ({
                 setFocusWithin={setFocusWithin}
                 onKeyDown={onKeyDown}
                 shellTitle={shellTitle}
+                reviewsHref={reviewsHref}
                 setIsInteracting={setIsInteracting}
                 handleInteraction={handleInteraction}
             />

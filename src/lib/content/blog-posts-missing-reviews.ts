@@ -1,4 +1,5 @@
 import type { BlogPost } from "./blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const post20: BlogPost = {
     slug: "why-are-my-google-reviews-not-showing-up",
@@ -39,33 +40,15 @@ export const post20: BlogPost = {
         { label: "Get 50 Google Reviews in 30 Days", href: "/blog/how-to-get-50-google-reviews-in-30-days" },
         { label: "How to Handle Fake Google Reviews", href: "/blog/how-to-handle-fake-google-reviews" },
         { label: "Review Management Features", href: "/features" },
-        { label: "Start a 7-Day Free Trial", href: "/signup" },
+        { label: "Start a 7-Day Free Trial", href: SIGNUP_URL },
     ],
     faqs: [
-        {
-            question: "Why can a customer see their review, but nobody else can?",
-            answer: "When a review is visible to the person who wrote it but hidden from the public, Google's automated spam filter has 'shadow-banned' the review. The reviewer's browser still renders the review from their local cache or authenticated profile, but Google has unindexed it from the public Google Maps and Search listing.",
-        },
-        {
-            question: "How long does Google take to publish a new review?",
-            answer: "Most Google reviews appear immediately or within 2 to 6 hours. However, Google's automated content moderation pipeline routinely holds reviews for 24 to 72 hours if the text contains trigger words, the reviewer account has low activity history, or the business received an unusual influx of recent feedback.",
-        },
-        {
-            question: "Can asking customers to review on store Wi-Fi cause reviews to disappear?",
-            answer: "Yes, this is one of the most common causes of missing reviews. When multiple customers post reviews from your shop's public Wi-Fi network, they all share your business's public IP address. Google flags this as internal review manipulation or self-reviewing and automatically removes or suppresses them.",
-        },
-        {
-            question: "What should I do if a batch of legitimate reviews disappeared overnight?",
-            answer: "Do not panic or immediately ask customers to repost identical text. First, wait 48 hours to confirm whether it is a temporary Google server glitch or sync latency. If reviews remain absent after 72 hours, ask the customer for a screenshot of the review from their own Google account and open a ticket with Google Business Profile Support.",
-        },
-        {
-            question: "Can Google Business Profile Support actually restore missing reviews?",
-            answer: "Yes. Google support representatives can manually reinstate reviews that were falsely flagged by automated spam algorithms, provided you supply the reviewer's Google profile name, the approximate date the review was submitted, and an uncropped screenshot of the review taken from the customer's device.",
-        },
-        {
-            question: "Does using automated review software cause Google to filter reviews?",
-            answer: "Compliant review software does not cause filtering when configured correctly. Modern platforms like Zyene Reviews distribute requests via automated drip sequences and direct customers to genuine review URLs, preventing sudden velocity spikes and avoiding shared IP footprints.",
-        },
+        { question: "Why can a customer see their review, but nobody else can?", answer: "When a review is visible to the person who wrote it but hidden from the public, Google's automated spam filter has 'shadow-banned' the review. The reviewer's browser still renders the review from their local cache or authenticated profile, but Google has unindexed it from the public Google Maps and Search listing." },
+        { question: "How long does Google take to publish a new review?", answer: "Most Google reviews appear immediately or within 2 to 6 hours. However, Google's automated content moderation pipeline routinely holds reviews for 24 to 72 hours if the text contains trigger words, the reviewer account has low activity history, or the business received an unusual influx of recent feedback." },
+        { question: "Can asking customers to review on store Wi-Fi cause reviews to disappear?", answer: "Yes, this is one of the most common causes of missing reviews. When multiple customers post reviews from your shop's public Wi-Fi network, they all share your business's public IP address. Google flags this as internal review manipulation or self-reviewing and automatically removes or suppresses them." },
+        { question: "What should I do if a batch of legitimate reviews disappeared overnight?", answer: "Do not panic or immediately ask customers to repost identical text. First, wait 48 hours to confirm whether it is a temporary Google server glitch or sync latency. If reviews remain absent after 72 hours, ask the customer for a screenshot of the review from their own Google account and open a ticket with Google Business Profile Support." },
+        { question: "Can Google Business Profile Support actually restore missing reviews?", answer: "Yes. Google support representatives can manually reinstate reviews that were falsely flagged by automated spam algorithms, provided you supply the reviewer's Google profile name, the approximate date the review was submitted, and an uncropped screenshot of the review taken from the customer's device." },
+        { question: "Does using automated review software cause Google to filter reviews?", answer: "Compliant review software does not cause filtering when configured correctly. Modern platforms like Zyene Reviews distribute requests via automated drip sequences and direct customers to genuine review URLs, preventing sudden velocity spikes and avoiding shared IP footprints." },
     ],
     body: [
         {
@@ -258,7 +241,7 @@ export const post20: BlogPost = {
             type: "cta",
             text: "Stop losing reviews to Google's spam filters. Try Zyene Reviews free for 7 days to automate safe, steady review collection with smart velocity pacing.",
             ctaLabel: "Start Your 7-Day Free Trial",
-            ctaHref: "/signup",
+            ctaHref: SIGNUP_URL,
         },
     ],
 };

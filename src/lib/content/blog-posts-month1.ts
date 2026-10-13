@@ -4,6 +4,7 @@
  */
 
 import type { BlogPost } from "./blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const post1: BlogPost = {
     slug: "how-to-get-50-google-reviews-in-30-days",
@@ -20,9 +21,10 @@ export const post1: BlogPost = {
     keywords: ["how to get more google reviews", "get 50 google reviews", "google review strategy", "review request strategy"],
     relatedSlugs: ["why-google-reviews-matter-in-2026", "how-reviews-impact-local-map-pack-ranking", "birdeye-pricing-breakdown-2026"],
     internalLinks: [
+        { label: "Free Google Review Link Generator", href: "/tools/review-link-generator" },
         { label: "See how Zyene Reviews automates review requests", href: "/features" },
         { label: "Compare review software pricing (Birdeye vs Zyene Reviews)", href: "/blog/birdeye-pricing-breakdown-2026" },
-        { label: "Try Zyene Reviews free for 7 days", href: "/signup" },
+        { label: "Try Zyene Reviews free for 7 days", href: SIGNUP_URL },
     ],
     faqs: [
         {
@@ -263,13 +265,13 @@ export const post3: BlogPost = {
     internalLinks: [
         { label: "Free review request template pack (SMS + email)", href: "/resources/review-request-templates" },
         { label: "Full comparison: Zyene Reviews vs Birdeye", href: "/compare/birdeye" },
-        { label: "Compare all review platforms", href: "/compare" },
+        { label: "5 cheaper Birdeye alternatives", href: "/blog/birdeye-alternatives-for-local-businesses" },
+        { label: "20+ negative review response templates & scripts", href: "/resources/negative-review-templates" },
+        { label: "How to respond to 1-star reviews on Google", href: "/blog/how-to-respond-to-a-1-star-review" },
+        { label: "5 AI review reply mistakes to avoid", href: "/blog/ai-reply-mistakes-to-avoid" },
         { label: "Zyene Reviews pricing (public plans)", href: "/pricing" },
         { label: "Review collection & Negative Feedback Shield", href: "/features/review-collection" },
-        { label: "Negative Feedback Shield deep-dive", href: "/blog/negative-feedback-shield" },
-        { label: "All product features", href: "/features" },
-        { label: "5 cheaper Birdeye alternatives", href: "/blog/birdeye-alternatives-for-local-businesses" },
-        { label: "Start a 7-day free trial", href: "/signup" },
+        { label: "Start a 7-day free trial", href: SIGNUP_URL },
     ],
     faqs: [
         {
@@ -471,7 +473,7 @@ export const post3: BlogPost = {
             "If you want more alternatives, read /blog/birdeye-alternatives-for-local-businesses after you finish the tables above.",
         ]},
         { type: "cta", ctaLabel: "See the full Zyene Reviews vs Birdeye comparison →", ctaHref: "/compare/birdeye" },
-        { type: "cta", ctaLabel: "Start your 7-day free trial →", ctaHref: "/signup" },
+        { type: "cta", ctaLabel: "Start your 7-day free trial →", ctaHref: SIGNUP_URL },
     ],
 };
 
@@ -492,8 +494,11 @@ export const post4: BlogPost = {
     internalLinks: [
         { label: "Birdeye pricing breakdown (line items & quote checklist)", href: "/blog/birdeye-pricing-breakdown-2026" },
         { label: "Compare Zyene Reviews vs Birdeye in detail", href: "/compare/birdeye" },
+        { label: "De-escalate customer complaints with negative review templates", href: "/resources/negative-review-templates" },
+        { label: "Step-by-step playbook: How to respond to a 1-star review", href: "/blog/how-to-respond-to-a-1-star-review" },
+        { label: "AI review reply mistakes to avoid", href: "/blog/ai-reply-mistakes-to-avoid" },
         { label: "Zyene Reviews public pricing", href: "/pricing" },
-        { label: "Start Zyene Reviews free for 7 days", href: "/signup" },
+        { label: "Start Zyene Reviews free for 7 days", href: SIGNUP_URL },
     ],
     faqs: [
         {
@@ -613,6 +618,6 @@ export const post4: BlogPost = {
         },
         { type: "p", text: "For local business owners - restaurants, dental practices, auto repair shops, salons, home services - the majority of Birdeye's pricing is spent on enterprise infrastructure you'll never use. The core features that matter for local businesses: review monitoring, AI replies, automated requests, and a shield against bad reviews - are available for $30-$100/month." },
         { type: "p", text: "If you're currently paying $299+/month for Birdeye and primarily using it for reviews, you have a real opportunity to reinvest that $2,400+/year into your business." },
-        { type: "cta", ctaLabel: "Try Zyene Reviews free for 7 days - no credit card lock-in →", ctaHref: "/signup" },
+        { type: "cta", ctaLabel: "Try Zyene Reviews free for 7 days - no credit card lock-in →", ctaHref: SIGNUP_URL },
     ],
 };

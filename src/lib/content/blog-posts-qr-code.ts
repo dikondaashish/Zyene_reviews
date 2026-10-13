@@ -1,4 +1,5 @@
 import type { BlogPost } from "./blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const post23: BlogPost = {
     slug: "how-to-create-a-google-review-qr-code",
@@ -29,6 +30,7 @@ export const post23: BlogPost = {
     ],
     internalLinks: [
         { label: "Google Review Link Guide", href: "/blog/how-to-get-a-google-review-link" },
+        { label: "Google Review Link Generator", href: "/tools/review-link-generator" },
         { label: "Review Collection Features", href: "/features/review-collection" },
         { label: "Negative Feedback Shield Guide", href: "/blog/negative-feedback-shield" },
     ],
@@ -69,7 +71,7 @@ export const post23: BlogPost = {
         },
         {
             type: "p",
-            text: "Never link your QR code to your general Google Maps listing. If you do, customers must scroll down, hunt for the reviews section, and click 'Write a review.' Instead, use Google's direct review trigger URL:"
+            text: "Never link your QR code to your general Google Maps listing. If you do, customers must scroll down, hunt for the reviews section, and click 'Write a review.' Instead, use our [free Google review link generator](/tools/review-link-generator) or grab Google's direct review trigger URL manually:"
         },
         {
             type: "ol",
@@ -168,7 +170,7 @@ export const post23: BlogPost = {
         {
             type: "cta",
             ctaLabel: "Generate Your Branded Google Review QR Code →",
-            ctaHref: "/signup"
+            ctaHref: SIGNUP_URL
         }
     ]
 };

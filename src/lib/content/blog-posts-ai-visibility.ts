@@ -3,6 +3,7 @@
  */
 
 import type { BlogPost } from "./blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const post14: BlogPost = {
     slug: "ai-visibility-audit-local-businesses",
@@ -37,7 +38,7 @@ export const post14: BlogPost = {
         { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
         { label: "Local SEO checklist (40+ items)", href: "/resources/local-seo-checklist" },
         { label: "Zyene Reviews pricing", href: "/pricing" },
-        { label: "Start a 7-day free trial", href: "/signup" },
+        { label: "Start a 7-day free trial", href: SIGNUP_URL },
     ],
     faqs: [
         {
@@ -118,6 +119,6 @@ export const post14: BlogPost = {
         },
         { type: "h2", text: "How this connects to Zyene Reviews" },
         { type: "p", text: "Zyene Reviews does not control third-party AI models. It helps you execute the reputation slice of this audit: automated review requests, alerts, AI-assisted replies, Negative Feedback Shield for private issues, and competitor tracking. Pair it with your local SEO checklist and manual AI query tests." },
-        { type: "cta", ctaLabel: "Try Zyene Reviews free for 7 days →", ctaHref: "/signup" },
+        { type: "cta", ctaLabel: "Try Zyene Reviews free for 7 days →", ctaHref: SIGNUP_URL },
     ],
 };

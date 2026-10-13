@@ -24,6 +24,47 @@ export function CompareCompetitorOtherComparisonsSection({ data, slug }: { data:
                             return acc;
                         }, [])}
                     </div>
+                    {slug === "birdeye" ? (
+                        <div className="mt-10 border-t border-border pt-8 text-center">
+                            <p className="text-sm font-semibold text-muted-foreground mb-4">Related guides & resources</p>
+                            <div className="flex flex-wrap justify-center gap-3">
+                                <Link
+                                    href="/blog/birdeye-pricing-breakdown-2026"
+                                    className="text-sm text-foreground underline underline-offset-4 hover:text-primary"
+                                >
+                                    Birdeye pricing breakdown & quote analysis
+                                </Link>
+                                <span className="text-muted-foreground">•</span>
+                                <Link
+                                    href="/blog/birdeye-alternatives-for-local-businesses"
+                                    className="text-sm text-foreground underline underline-offset-4 hover:text-primary"
+                                >
+                                    5 cheaper Birdeye alternatives
+                                </Link>
+                                <span className="text-muted-foreground">•</span>
+                                <Link
+                                    href="/resources/negative-review-templates"
+                                    className="text-sm text-foreground underline underline-offset-4 hover:text-primary"
+                                >
+                                    Negative review response templates
+                                </Link>
+                                <span className="text-muted-foreground">•</span>
+                                <Link
+                                    href="/blog/how-to-respond-to-a-1-star-review"
+                                    className="text-sm text-foreground underline underline-offset-4 hover:text-primary"
+                                >
+                                    How to respond to a 1-star review
+                                </Link>
+                                <span className="text-muted-foreground">•</span>
+                                <Link
+                                    href="/blog/ai-reply-mistakes-to-avoid"
+                                    className="text-sm text-foreground underline underline-offset-4 hover:text-primary"
+                                >
+                                    AI review reply mistakes to avoid
+                                </Link>
+                            </div>
+                        </div>
+                    ) : null}
                 </div>
             </section>
     );

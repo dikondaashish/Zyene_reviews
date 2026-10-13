@@ -1,4 +1,5 @@
 import type { BlogPost } from "./blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const post21: BlogPost = {
     slug: "how-to-ask-customers-for-reviews-sms-email-templates",
@@ -39,33 +40,15 @@ export const post21: BlogPost = {
         { label: "Negative Feedback Shield Explained", href: "/blog/negative-feedback-shield" },
         { label: "Why Google Reviews Disappear or Delay", href: "/blog/why-are-my-google-reviews-not-showing-up" },
         { label: "Review Automation Features", href: "/features" },
-        { label: "Start a 7-Day Free Trial", href: "/signup" },
+        { label: "Start a 7-Day Free Trial", href: SIGNUP_URL },
     ],
     faqs: [
-        {
-            question: "Is it legal for US businesses to text customers asking for reviews?",
-            answer: "Yes, provided you comply with the Telephone Consumer Protection Act (TCPA) and carrier 10DLC regulations. You must have prior express consent to contact the customer (e.g., provided during service intake or checkout), your business must clearly identify itself, and you must include an opt-out mechanism such as 'Reply STOP to opt out'.",
-        },
-        {
-            question: "What is 10DLC and why does it affect review requests?",
-            answer: "10DLC (10-Digit Long Code) is the US telecommunications framework required by carriers like AT&T, Verizon, and T-Mobile for application-to-person (A2P) business messaging. Unregistered business phone numbers face aggressive filtering, message throttling, and carrier fines. Modern review platforms like Zyene Reviews handle 10DLC registration automatically to ensure high message deliverability.",
-        },
-        {
-            question: "When is the best time to send a review request text message?",
-            answer: "For in-home services, auto repair, and personal appointments, the optimal window is 1 to 2 hours after service completion when satisfaction and recall are fresh. For retail and dining, same-day evening messages (between 5:00 PM and 7:30 PM local time) convert best. Avoid sending text messages before 8:00 AM or after 9:00 PM in the recipient's time zone.",
-        },
-        {
-            question: "Can US businesses offer discounts or gift cards in exchange for Google reviews?",
-            answer: "No. Federal Trade Commission (FTC) guidelines and Google's terms of service strictly prohibit offering incentives—including discounts, free items, contest entries, or gift cards—in exchange for reviews. Doing so exposes your business to civil penalties and risks permanent suspension of your Google Business Profile.",
-        },
-        {
-            question: "Should I ask for reviews via SMS or email?",
-            answer: "SMS delivers an average 98% open rate and 20% to 35% click-through rate, making it roughly 4x to 6x more effective than email for local businesses. However, high-ticket B2B services, legal practices, and medical consultations often benefit from a hybrid approach: an SMS request first, followed by a gentle email reminder 3 to 5 days later.",
-        },
-        {
-            question: "How do I ask for a review without sounding pushy or desperate?",
-            answer: "Frame the request around helping future local customers and supporting your service team. Instead of asking for a favor, express gratitude for their business, ask for their honest feedback, and provide a direct 1-click link that takes under 30 seconds to complete.",
-        },
+        { question: "Is it legal for US businesses to text customers asking for reviews?", answer: "Yes, provided you comply with the Telephone Consumer Protection Act (TCPA) and carrier 10DLC regulations. You must have prior express consent to contact the customer (e.g., provided during service intake or checkout), your business must clearly identify itself, and you must include an opt-out mechanism such as 'Reply STOP to opt out'." },
+        { question: "What is 10DLC and why does it affect review requests?", answer: "10DLC (10-Digit Long Code) is the US telecommunications framework required by carriers like AT&T, Verizon, and T-Mobile for application-to-person (A2P) business messaging. Unregistered business phone numbers face aggressive filtering, message throttling, and carrier fines. Modern review platforms like Zyene Reviews handle 10DLC registration automatically to ensure high message deliverability." },
+        { question: "When is the best time to send a review request text message?", answer: "For in-home services, auto repair, and personal appointments, the optimal window is 1 to 2 hours after service completion when satisfaction and recall are fresh. For retail and dining, same-day evening messages (between 5:00 PM and 7:30 PM local time) convert best. Avoid sending text messages before 8:00 AM or after 9:00 PM in the recipient's time zone." },
+        { question: "Can US businesses offer discounts or gift cards in exchange for Google reviews?", answer: "No. Federal Trade Commission (FTC) guidelines and Google's terms of service strictly prohibit offering incentives—including discounts, free items, contest entries, or gift cards—in exchange for reviews. Doing so exposes your business to civil penalties and risks permanent suspension of your Google Business Profile." },
+        { question: "Should I ask for reviews via SMS or email?", answer: "SMS delivers an average 98% open rate and 20% to 35% click-through rate, making it roughly 4x to 6x more effective than email for local businesses. However, high-ticket B2B services, legal practices, and medical consultations often benefit from a hybrid approach: an SMS request first, followed by a gentle email reminder 3 to 5 days later." },
+        { question: "How do I ask for a review without sounding pushy or desperate?", answer: "Frame the request around helping future local customers and supporting your service team. Instead of asking for a favor, express gratitude for their business, ask for their honest feedback, and provide a direct 1-click link that takes under 30 seconds to complete." },
     ],
     body: [
         {
@@ -264,7 +247,7 @@ export const post21: BlogPost = {
             type: "cta",
             text: "Ready to turn happy customers into a steady stream of 5-star Google reviews? Start your 7-day free trial of Zyene Reviews today.",
             ctaLabel: "Try Zyene Reviews Free for 7 Days",
-            ctaHref: "/signup",
+            ctaHref: SIGNUP_URL,
         },
     ],
 };

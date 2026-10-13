@@ -86,6 +86,7 @@ export function DashboardAnimatedReviewCardsLazy({
             shellSubtitle={shellSubtitle}
             manageAllHref={manageAllHref}
             manageAllLabel={manageAllLabel}
+            reviewsHref="/reviews"
         />
     );
 }

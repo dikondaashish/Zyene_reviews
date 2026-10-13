@@ -1,6 +1,7 @@
 import type { FaqItem } from "@/components/seo/json-ld";
 import type { ResourceGuide } from "./resource-data";
 import { REVIEW_REQUEST_TEMPLATES_BODY } from "./resource-review-request-templates-body";
+import { SIGNUP_URL } from "@/config/env";
 
 /** Phase 3 lead magnet - /resources/review-request-templates */
 export const reviewRequestTemplatesGuide: ResourceGuide = {
@@ -27,11 +28,12 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
     openingSummary:
         "This pack gives local owners 20+ short SMS and email scripts for honest Google review requests - plus reminders, thank-yous, and private feedback follow-ups. Use it to start outreach today; automate campaigns and alerts with Zyene Reviews when manual copy-paste stops scaling.",
     internalLinks: [
+        { label: "Google Review Link Generator", href: "/tools/review-link-generator" },
         { label: "Review collection features", href: "/features/review-collection" },
         { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
         { label: "Compare review platforms", href: "/compare" },
         { label: "Zyene Reviews pricing", href: "/pricing" },
-        { label: "Start free trial", href: "/signup" },
+        { label: "Start free trial", href: SIGNUP_URL },
     ],
     faqs: [
         {

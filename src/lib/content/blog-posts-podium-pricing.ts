@@ -1,4 +1,5 @@
 import type { BlogPost } from "./blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const post19: BlogPost = {
     slug: "podium-pricing-vs-zyene-reviews",
@@ -39,33 +40,15 @@ export const post19: BlogPost = {
         { label: "Birdeye Pricing vs Zyene Reviews (2026)", href: "/blog/birdeye-pricing-breakdown-2026" },
         { label: "Negative Feedback Shield Explained", href: "/blog/negative-feedback-shield" },
         { label: "How to Get 50 Google Reviews in 30 Days", href: "/blog/how-to-get-50-google-reviews-in-30-days" },
-        { label: "Start a 7-Day Free Trial", href: "/signup" },
+        { label: "Start a 7-Day Free Trial", href: SIGNUP_URL },
     ],
     faqs: [
-        {
-            question: "How much does Podium cost per month in 2026?",
-            answer: "Podium typically starts around $399 per month for its Core/Essentials tier and scales to $599+ per month for Pro plans, usually requiring an annual commitment ($4,788 to $7,188+ annually). Podium does not publish flat public pricing on its website and requires a sales consultation. Zyene Reviews publishes transparent monthly plans starting at $29.99 per month with no annual contract.",
-        },
-        {
-            question: "Does Podium require an annual contract?",
-            answer: "In most cases, yes. Standard Podium agreements require a 12-month contract billed either annually upfront or monthly with an annual commitment. Many contracts include auto-renewal clauses requiring written notice 30 to 60 days before the contract end date. In contrast, Zyene Reviews operates month-to-month with no long-term lock-in.",
-        },
-        {
-            question: "What are the common hidden costs associated with Podium?",
-            answer: "Frequent additional costs reported by Podium customers include onboarding or implementation fees ($250 to $500), carrier pass-through fees and 10DLC registration costs for SMS, charges for additional user seats or phone lines, and charges for higher-volume text messaging tiers. Always request a full, itemized quote before signing.",
-        },
-        {
-            question: "Where does Podium outperform Zyene Reviews?",
-            answer: "Podium is built as a complete customer communication and conversational commerce suite. It outperforms Zyene Reviews for large multi-location businesses, multi-rooftop auto dealerships, and retailers that need Text-to-Pay invoicing, VoIP team phone systems, website live-chat routing, and complex enterprise CRM integrations like Reynolds & Reynolds or CDK.",
-        },
-        {
-            question: "Where does Zyene Reviews outperform Podium for local businesses?",
-            answer: "Zyene Reviews is specifically designed for local service businesses and owner-operators who want higher star ratings, steady Google reviews, and protection against public negative feedback without paying $400+/month. Zyene includes automated SMS/email requests, AI review response drafts on standard plans, Negative Feedback Shield, and competitor tracking at roughly one-tenth the annual cost.",
-        },
-        {
-            question: "Can I switch from Podium to Zyene Reviews without losing existing reviews?",
-            answer: "Yes. Your Google, Facebook, and Yelp reviews reside on third-party platforms, not inside Podium. Switching software never deletes or affects your existing public reviews. You simply connect your profiles to Zyene Reviews, import your customer list, and continue sending review requests seamlessly.",
-        },
+        { question: "How much does Podium cost per month in 2026?", answer: "Podium typically starts around $399 per month for its Core/Essentials tier and scales to $599+ per month for Pro plans, usually requiring an annual commitment ($4,788 to $7,188+ annually). Podium does not publish flat public pricing on its website and requires a sales consultation. Zyene Reviews publishes transparent monthly plans starting at $29.99 per month with no annual contract." },
+        { question: "Does Podium require an annual contract?", answer: "In most cases, yes. Standard Podium agreements require a 12-month contract billed either annually upfront or monthly with an annual commitment. Many contracts include auto-renewal clauses requiring written notice 30 to 60 days before the contract end date. In contrast, Zyene Reviews operates month-to-month with no long-term lock-in." },
+        { question: "What are the common hidden costs associated with Podium?", answer: "Frequent additional costs reported by Podium customers include onboarding or implementation fees ($250 to $500), carrier pass-through fees and 10DLC registration costs for SMS, charges for additional user seats or phone lines, and charges for higher-volume text messaging tiers. Always request a full, itemized quote before signing." },
+        { question: "Where does Podium outperform Zyene Reviews?", answer: "Podium is built as a complete customer communication and conversational commerce suite. It outperforms Zyene Reviews for large multi-location businesses, multi-rooftop auto dealerships, and retailers that need Text-to-Pay invoicing, VoIP team phone systems, website live-chat routing, and complex enterprise CRM integrations like Reynolds & Reynolds or CDK." },
+        { question: "Where does Zyene Reviews outperform Podium for local businesses?", answer: "Zyene Reviews is specifically designed for local service businesses and owner-operators who want higher star ratings, steady Google reviews, and protection against public negative feedback without paying $400+/month. Zyene includes automated SMS/email requests, AI review response drafts on standard plans, Negative Feedback Shield, and competitor tracking at roughly one-tenth the annual cost." },
+        { question: "Can I switch from Podium to Zyene Reviews without losing existing reviews?", answer: "Yes. Your Google, Facebook, and Yelp reviews reside on third-party platforms, not inside Podium. Switching software never deletes or affects your existing public reviews. You simply connect your profiles to Zyene Reviews, import your customer list, and continue sending review requests seamlessly." },
     ],
     body: [
         {
@@ -285,7 +268,7 @@ export const post19: BlogPost = {
             type: "cta",
             text: "Ready to stop overpaying for review management? Start your 7-day free trial of Zyene Reviews today—no sales demo, no credit card required.",
             ctaLabel: "Try Zyene Reviews Free for 7 Days",
-            ctaHref: "/signup",
+            ctaHref: SIGNUP_URL,
         },
     ],
 };

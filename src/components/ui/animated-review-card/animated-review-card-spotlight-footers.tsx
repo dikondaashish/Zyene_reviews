@@ -20,9 +20,17 @@ interface SpotlightCardFootersProps {
     classNames?: ClassNames;
     labels?: SpotlightLabels;
     starColors: { active: string; inactive: string };
+    reviewsHref?: string;
 }
 
-export function SpotlightCardFooters({ review, theme, classNames, labels, starColors }: SpotlightCardFootersProps) {
+export function SpotlightCardFooters({
+    review,
+    theme,
+    classNames,
+    labels,
+    starColors,
+    reviewsHref = "/features/ai-replies",
+}: SpotlightCardFootersProps) {
     if (!labels) return null;
 
     if (theme === "default") {
@@ -30,7 +38,7 @@ export function SpotlightCardFooters({ review, theme, classNames, labels, starCo
             <div className="mt-auto flex shrink-0 flex-col gap-2 border-t border-border/50 pt-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-wrap items-center gap-2">
                     <Link
-                        href="/reviews"
+                        href={reviewsHref}
                         className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted/70"
                     >
                         <Reply className="size-3.5" aria-hidden />
@@ -48,7 +56,7 @@ export function SpotlightCardFooters({ review, theme, classNames, labels, starCo
                     </Button>
                 </div>
                 <Link
-                    href="/reviews"
+                    href={reviewsHref}
                     className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
                 >
                     Open
@@ -75,7 +83,7 @@ export function SpotlightCardFooters({ review, theme, classNames, labels, starCo
                         />
                     ))}
                 </div>
-                <Link href="/reviews" className="text-xs font-semibold text-primary hover:underline">
+                <Link href={reviewsHref} className="text-xs font-semibold text-primary hover:underline">
                     {labels.viewInReviews}
                 </Link>
             </div>

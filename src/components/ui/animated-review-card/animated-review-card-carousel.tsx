@@ -30,6 +30,7 @@ interface AnimatedReviewCardCarouselProps {
     setFocusWithin: (v: boolean) => void;
     onKeyDown: (e: KeyboardEvent) => void;
     shellTitle?: string;
+    reviewsHref?: string;
     setIsInteracting: (v: boolean) => void;
     handleInteraction: (index: number) => void;
 }
@@ -50,6 +51,7 @@ export function AnimatedReviewCardCarousel({
     setFocusWithin,
     onKeyDown,
     shellTitle,
+    reviewsHref,
     setIsInteracting,
     handleInteraction,
 }: AnimatedReviewCardCarouselProps) {
@@ -128,6 +130,7 @@ export function AnimatedReviewCardCarousel({
                                 classNames={classNames}
                                 labels={labels}
                                 starColors={starColors}
+                                reviewsHref={reviewsHref}
                             />
                         </motion.div>
                     ))}

@@ -31,6 +31,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/product", destination: "/features", permanent: true },
+      {
+        source: "/blog/how-to-get-a-google-review-link-for-your-business-2026",
+        destination: "/blog/how-to-get-a-google-review-link",
+        permanent: true,
+      },
       ...legacyBlogCoverNames.map((name) => ({
         source: `/images/blog/covers/${name}.jpg`,
         destination: `/images/blog/covers/${name}.webp`,
