@@ -161,6 +161,13 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         height: 941,
         caption: "Keep business details, customer feedback, and local visibility on the team's regular checklist.",
     },
+    "how-to-create-a-google-review-qr-code": {
+        src: "/images/blog/google_review_qr_code.jpg",
+        alt: "Clear acrylic countertop stand displaying a Google review QR code with five gold stars at a clinic reception desk",
+        width: 800,
+        height: 600,
+        caption: "Countertop acrylic QR stands capture feedback at checkout while customer delight is highest.",
+    },
 };
 
 export function getBlogImage(slug: string): ContentImage {

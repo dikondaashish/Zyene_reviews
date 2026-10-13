@@ -30,6 +30,7 @@ import { post19 } from "./blog-posts-podium-pricing";
 import { post20 } from "./blog-posts-missing-reviews";
 import { post21 } from "./blog-posts-ask-for-reviews";
 import { post22 } from "./blog-posts-hvac-leads";
+import { post23 } from "./blog-posts-qr-code";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Export
@@ -41,7 +42,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
     post9, post10, post11, post12,
     post13, post14, post15, post16,
     post17, post18, post19, post20,
-    post21, post22,
+    post21, post22, post23,
 ];
 
 export const BLOG_POSTS: BlogPost[] = RAW_BLOG_POSTS.map((post) => ({
