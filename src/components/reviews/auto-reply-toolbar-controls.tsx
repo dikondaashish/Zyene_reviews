@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, ChevronDown, Loader2 } from "lucide-react";
+import { ChevronDown, Reply, Loader2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -27,7 +27,7 @@ export function AutoReplyToolbarControls({
     return (
         <details className="group rounded-xl border border-border bg-card">
             <summary className="flex min-h-16 cursor-pointer list-none items-center gap-3 rounded-xl px-4 py-3 focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted"><Bot className="size-4 text-muted-foreground" aria-hidden="true" /></span>
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted"><Reply className="size-4 text-muted-foreground" aria-hidden="true" /></span>
                 <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-2 text-sm font-medium">
                         Automatic replies
@@ -43,7 +43,7 @@ export function AutoReplyToolbarControls({
             <section aria-label="Automatic Google replies" className="space-y-4 border-t border-border p-4 sm:p-5">
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-3">
-                    <Bot className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
+                    <Reply className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
                     <div>
                         <Label htmlFor="auto-reply-enabled" className="cursor-pointer text-sm font-semibold">
                             Automatically publish AI replies to Google

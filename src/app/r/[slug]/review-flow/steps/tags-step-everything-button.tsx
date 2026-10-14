@@ -24,7 +24,7 @@ export function TagsStepEverythingButton({
                 TAG_ACTION_BTN_CLASS,
                 selectedTags.includes(EVERYTHING_TAG)
                     ? "text-primary-foreground"
-                    : "text-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
+                    : "text-foreground border-border hover:bg-muted dark:bg-muted dark:border-border dark:hover:bg-accent"
             )}
             style={{
                 color: selectedTags.includes(EVERYTHING_TAG) ? readableForeground(resolvedBrandColor) : undefined,

@@ -4,9 +4,9 @@ import {
   LayoutDashboard,
   LayoutGrid,
   MessageSquare,
+  Reply,
   Send,
   Settings,
-  Sparkles,
 } from "lucide-react";
 import { ZYENE_REVIEWS_LOGO_SRC } from "@/lib/brand/logo";
 
@@ -14,7 +14,7 @@ const SIDEBAR = [
   { icon: LayoutDashboard, label: "Dashboard" },
   { icon: MessageSquare, label: "Reviews" },
   { icon: Send, label: "Get Reviews" },
-  { icon: Sparkles, label: "AI Replies" },
+  { icon: Reply, label: "AI Replies" },
   { icon: BarChart3, label: "Analytics" },
   { icon: LayoutGrid, label: "Widgets" },
   { icon: Settings, label: "Settings" },

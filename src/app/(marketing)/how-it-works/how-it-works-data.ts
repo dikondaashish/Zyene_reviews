@@ -7,8 +7,8 @@ export const STEPS = [
     {
         step: "01",
         icon: Link2,
-        iconBg: "bg-chart-1/10",
-        iconColor: "text-chart-1",
+        iconBg: "bg-accent",
+        iconColor: "text-foreground",
         accentColor: "border-l-chart-1",
         title: "Connect",
         headline: "Connect your profile and make the first request easy",
@@ -30,8 +30,8 @@ export const STEPS = [
     {
         step: "02",
         icon: Bell,
-        iconBg: "bg-chart-4/10",
-        iconColor: "text-chart-4",
+        iconBg: "bg-accent",
+        iconColor: "text-foreground",
         accentColor: "border-l-chart-4",
         title: "Monitor",
         headline: "See what needs a response while it is still fresh",
@@ -53,8 +53,8 @@ export const STEPS = [
     {
         step: "03",
         icon: Megaphone,
-        iconBg: "bg-chart-2/10",
-        iconColor: "text-chart-2",
+        iconBg: "bg-accent",
+        iconColor: "text-foreground",
         accentColor: "border-l-chart-2",
         title: "Collect",
         headline: "Invite feedback. Follow up thoughtfully.",
@@ -78,8 +78,8 @@ export const STEPS = [
     {
         step: "04",
         icon: TrendingUp,
-        iconBg: "bg-sync-action/10",
-        iconColor: "text-sync-action",
+        iconBg: "bg-accent",
+        iconColor: "text-foreground",
         accentColor: "border-l-sync-action",
         title: "Improve",
         headline: "Turn review patterns into your next improvement",

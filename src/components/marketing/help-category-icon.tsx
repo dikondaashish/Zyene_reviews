@@ -1,9 +1,9 @@
 import type { LucideIcon } from "lucide-react";
-import { BarChart3, CreditCard, Megaphone, Plug, Rocket, Star } from "lucide-react";
+import { BarChart3, CreditCard, Megaphone, Plug, Signpost, Star } from "lucide-react";
 import type { HelpCategory } from "@/lib/content/help-types";
 
 const HELP_CATEGORY_ICON_BY_KEY: Record<HelpCategory, LucideIcon> = {
-    "getting-started": Rocket,
+    "getting-started": Signpost,
     reviews: Star,
     campaigns: Megaphone,
     analytics: BarChart3,

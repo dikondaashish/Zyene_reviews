@@ -16,7 +16,7 @@ export function ZyenePlatformLowRatingAlertsCard({
     lowRatingsLength: number;
 }) {
     return (
-        <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20">
+        <Card className="bg-card border-border transition-all hover:border-primary/20">
             <CardHeader>
                 <div className="flex items-center justify-between">
                     <div className="space-y-1">

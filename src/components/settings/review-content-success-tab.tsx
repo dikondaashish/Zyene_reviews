@@ -37,7 +37,7 @@ export function ReviewContentSuccessTab({ form }: ReviewContentTabProps) {
                                             <FormItem>
                                                 <FormLabel>Heading</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Thank You!" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
+                                                    <Input placeholder="Thank you" {...field} className="bg-muted/30 focus:bg-background transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -51,7 +51,7 @@ export function ReviewContentSuccessTab({ form }: ReviewContentTabProps) {
                                                 <FormLabel>Message Body</FormLabel>
                                                 <FormControl>
                                                     <Textarea
-                                                        placeholder="Your feedback means the world to us."
+                                                        placeholder="We read every response."
                                                         className="min-h-[80px] bg-muted/30 focus:bg-background transition-colors resize-none"
                                                         {...field}
                                                     />

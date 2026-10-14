@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check, Code2, Globe, Sparkles } from "lucide-react";
+import { Check, Code2, Globe, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SIGNUP_URL } from "@/config/env";
 
@@ -38,7 +38,7 @@ export function IntegrationsDeveloperSection() {
                             </Button>
                             <Button variant="outline" className="gap-2 border-[color:var(--marketing-footer-muted)] text-[color:var(--marketing-footer-fg)] hover:bg-white/10" asChild>
                                 <Link href={SIGNUP_URL} data-track="trial" data-track-location="integrations-dev">
-                                    <Sparkles className="size-4" /> Create an API Key
+                                    <KeyRound className="size-4" /> Create an API key
                                 </Link>
                             </Button>
                         </div>

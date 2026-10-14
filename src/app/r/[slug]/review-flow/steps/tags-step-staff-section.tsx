@@ -19,7 +19,7 @@ export function TagsStepStaffSection({
 
     const selected = new Set(selectedStaff);
     return (
-        <div className="pt-3 border-t border-border dark:border-white/10">
+        <div className="pt-3 border-t border-border dark:border-border">
             <p className="text-center text-sm font-medium text-foreground mb-2">
                 Who served you?{" "}
                 <span className="font-normal text-muted-foreground">(optional)</span>
@@ -36,7 +36,7 @@ export function TagsStepStaffSection({
                             "border-2 active:scale-95",
                             selected.has(name)
                                 ? "text-primary-foreground dark:border-white/25 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_20px_rgba(0,0,0,0.45)] scale-105 shadow-md"
-                                : "bg-background text-muted-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
+                                : "bg-background text-muted-foreground border-border hover:bg-muted dark:bg-muted dark:border-border dark:hover:bg-accent"
                         )}
                         style={{
                             backgroundColor: selected.has(name) ? resolvedBrandColor : undefined,

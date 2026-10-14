@@ -1,4 +1,4 @@
-import { Link2, Send, Sparkles, Store } from "lucide-react";
+import { Link2, Lightbulb, Send, Store } from "lucide-react";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
@@ -39,7 +39,7 @@ export function ZapierHowItWorksCard() {
                 />
 
                 <div className="mt-6 flex items-start gap-2 rounded-lg border border-border bg-muted/50 p-3 text-xs text-foreground/90">
-                    <Sparkles className="mt-0.5 shrink-0 text-sync-action size-3.5" aria-hidden />
+                    <Lightbulb className="mt-0.5 shrink-0 text-muted-foreground size-3.5" aria-hidden />
                     <p>
                         <span className="font-medium text-foreground">Tip:</span>{" "}
                         Set <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">channel</code> to{" "}
