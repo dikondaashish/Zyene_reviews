@@ -34,31 +34,38 @@ export class StripeOverageChargeGateway implements OverageChargeGateway {
         stripeCustomerId: string;
         amountMicroUsd: number;
     }): Promise<OverageChargeResult> {
-        // Stripe cents. Rounds rather than truncates: a truncated fraction of a
-        // cent would be silently under-collected on every single overage event.
-        const amountCents = Math.round(input.amountMicroUsd / 10_000);
-
         try {
-            await stripe.invoiceItems.create(
-                {
-                    customer: input.stripeCustomerId,
-                    currency: "usd",
-                    pricing: { price: AEO_OVERAGE_PRICE_ID },
-                },
-                { idempotencyKey: `aeo-overage-item-${input.sampleId}` }
-            );
-
+            // Invoice first, then the item attached to it by id. Creating the
+            // item as a free-floating pending item and then calling
+            // invoices.create does NOT pick it up: since API 2022-08-01,
+            // pending_invoice_items_behavior defaults to "exclude", which left
+            // an empty $0 invoice and parked the $2.50 on the customer's next
+            // subscription invoice. Attaching by id also avoids "include",
+            // which would sweep in unrelated pending items (e.g. prorations).
+            //
+            // Keys are v2: a v1 key replayed with these new params would fail
+            // Stripe's idempotency parameter check rather than resolve.
             const invoice = await stripe.invoices.create(
                 {
                     customer: input.stripeCustomerId,
                     collection_method: "charge_automatically",
                     auto_advance: true,
+                    pending_invoice_items_behavior: "exclude",
                 },
-                { idempotencyKey: `aeo-overage-invoice-${input.sampleId}` }
+                { idempotencyKey: `aeo-overage-invoice-v2-${input.sampleId}` }
+            );
+            if (!invoice.id) throw new Error("Stripe returned an invoice without an id");
+
+            const item = await stripe.invoiceItems.create(
+                {
+                    customer: input.stripeCustomerId,
+                    invoice: invoice.id,
+                    pricing: { price: AEO_OVERAGE_PRICE_ID },
+                },
+                { idempotencyKey: `aeo-overage-item-v2-${input.sampleId}` }
             );
 
-            const item = invoice.lines?.data.find((line) => line.amount === amountCents);
-            return { charged: true, stripeInvoiceItemId: item?.id ?? invoice.id ?? "" };
+            return { charged: true, stripeInvoiceItemId: item.id };
         } catch (err) {
             // A declined card or a missing payment method is an expected outcome
             // of billing someone automatically, not a bug - return it as data so
