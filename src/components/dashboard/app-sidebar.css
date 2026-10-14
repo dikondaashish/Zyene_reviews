@@ -1,6 +1,7 @@
 /* Reference: OptiMonk's 76px rail, 20px icons, Funnel Sans 10px/16px labels. */
 .app-sidebar {
-  --nav-muted: #8f97a4;
+  --nav-muted: #4a4540;
+  --nav-icon: #6d685d;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -8,7 +9,7 @@
   color: var(--sidebar-foreground);
   background: var(--sidebar);
 }
-.dark .app-sidebar { --nav-muted: #b9bec6; }
+.dark .app-sidebar { --nav-muted: #e8e4da; --nav-icon: #c5c0b1; }
 .app-sidebar-header {
   position: relative;
   display: flex;
@@ -39,11 +40,15 @@
   text-align: left; color: var(--nav-muted); cursor: pointer;
   transition: color 120ms ease, background-color 120ms ease;
 }
-.app-sidebar-link:hover { color: var(--sidebar-foreground); background: var(--accent); }
+.app-sidebar-link:hover { color: var(--sidebar-foreground); background: var(--sidebar-accent); }
+.app-sidebar-link:hover .app-sidebar-icon { color: var(--primary); }
 .app-sidebar-link[aria-current="page"], .app-sidebar-link[data-active="true"] {
-  color: var(--primary); background: var(--sidebar-accent);
+  color: var(--primary); font-weight: 600;
+  background: color-mix(in srgb, var(--primary) 10%, var(--sidebar));
+  box-shadow: inset 3px 0 0 var(--primary);
 }
-.app-sidebar-icon { width: 20px; height: 20px; flex-shrink: 0; stroke-width: 1.75; }
+.app-sidebar-icon { width: 20px; height: 20px; flex-shrink: 0; stroke-width: 1.75; color: var(--nav-icon); transition: color 120ms ease; }
+.app-sidebar-link[aria-current="page"] .app-sidebar-icon, .app-sidebar-link[data-active="true"] .app-sidebar-icon { color: var(--primary); stroke-width: 2; }
 .app-sidebar-footer { flex-shrink: 0; padding: 8px; max-height: 50%; overflow-y: auto; }
 .app-sidebar-settings-list { list-style: none; margin: 4px 0 0 20px; padding: 0 0 0 8px; border-left: 1px solid var(--sidebar-border); }
 .app-sidebar-settings-list .app-sidebar-link { font-size: 13px; }
@@ -64,8 +69,8 @@
   transition: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .app-sidebar-link { transition: none; }
+  .app-sidebar-link, .app-sidebar-icon { transition: none; }
 }
 @media (prefers-contrast: more) {
-  .app-sidebar { --nav-muted: var(--foreground); }
+  .app-sidebar { --nav-muted: var(--foreground); --nav-icon: var(--foreground); }
 }
