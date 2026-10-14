@@ -274,7 +274,7 @@ export const post12: BlogPost = {
     dateModified: "2026-05-24",
     readMinutes: 7,
     author: { name: "Zyene Reviews Team", role: "Editorial" },
-    metaTitle: "How to Handle Fake Google Reviews: Step-by-Step Guide",
+    metaTitle: "How to Handle Fake Google Reviews",
     metaDescription:
         "How to handle fake Google reviews: identify, flag, report, and respond to suspicious reviews while protecting your rating during Google's review.",
     keywords: ["fake google reviews", "how to report fake google reviews", "remove fake google reviews", "fake review google business profile", "suspicious google reviews"],

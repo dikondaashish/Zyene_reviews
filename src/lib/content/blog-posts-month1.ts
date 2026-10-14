@@ -484,7 +484,7 @@ export const post4: BlogPost = {
     dateModified: "2026-05-24",
     readMinutes: 10,
     author: { name: "Alex Morgan", role: "Competitive Intelligence" },
-    metaTitle: "5 Cheaper Birdeye Alternatives for Local Businesses (2026)",
+    metaTitle: "5 Cheaper Birdeye Alternatives (2026)",
     metaDescription: "The 5 best Birdeye alternatives for local businesses in 2026. Compare pricing, features, and fit for owner-operators looking for affordable review management.",
     keywords: ["birdeye alternatives", "cheaper than birdeye", "birdeye alternative 2026", "best review management software", "birdeye competitors"],
     relatedSlugs: ["birdeye-pricing-breakdown-2026", "why-google-reviews-matter-in-2026"],

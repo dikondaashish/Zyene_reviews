@@ -8,6 +8,7 @@ export function WebSiteJsonLd() {
         "@type": "WebSite",
         "@id": `${JSON_LD_BASE_URL}/#website`,
         name: "Zyene Reviews",
+        alternateName: ["ZyeneReviews", "Zyene"],
         url: JSON_LD_BASE_URL,
         publisher: buildOrganizationSchema(),
     };

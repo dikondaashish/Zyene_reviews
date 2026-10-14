@@ -2,26 +2,33 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { IllustrativeBrandsBar } from "@/components/marketing/social-proof-illustrative-brands-bar";
-import { ILLUSTRATIVE_BRANDS } from "@/lib/social-proof/illustrative-brands-data";
-import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 
-describe("illustrative brand carousel", () => {
+describe("homepage trust strip", () => {
   const render = () => renderToStaticMarkup(createElement(IllustrativeBrandsBar));
 
-  it("displays the trusted brands heading", () => {
-    expect(render()).toContain("Brands that trust Zyene Reviews");
-  });
-  it("provides an accessible pause control for the automatic slide", () => {
-    expect(render()).toContain('aria-label="Pause brand carousel"');
-  });
-  it("hides the repeated loop from assistive technology", () => {
-    expect(render()).toContain('class="home-brands-group" aria-hidden="true"');
-  });
-  it("renders all seven real logo URLs with readable industry labels", () => {
+  it("renders the neutral platform strip", () => {
     const html = render();
-    for (const brand of ILLUSTRATIVE_BRANDS) {
-      expect(html).toContain(encodeURIComponent(getBrandLogoUrl(brand.domain)));
-      expect(html).toContain(brand.industry.replaceAll("&", "&amp;"));
+    expect(html).toContain("Works with Google, Facebook and Yelp");
+  });
+
+  it("does not render unverified brands that trust heading", () => {
+    const html = render();
+    expect(html).not.toContain("Brands that trust Zyene Reviews");
+  });
+
+  it("does not render third-party company brand logos", () => {
+    const html = render();
+    const thirdPartyBrands = [
+      "Dunkin'",
+      "Chipotle",
+      "Aspen Dental",
+      "Great Clips",
+      "Jiffy Lube",
+      "Roto-Rooter",
+      "Planet Fitness",
+    ];
+    for (const brand of thirdPartyBrands) {
+      expect(html).not.toContain(brand);
     }
   });
 });

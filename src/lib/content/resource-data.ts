@@ -181,7 +181,7 @@ const guide2: ResourceGuide = {
     purpose: "Rank for 'how to respond to bad reviews' cluster",
     lastUpdated: "2026-05-25",
     readMinutes: 14,
-    metaTitle: "20+ Negative Review Response Templates (Google Reviews)",
+    metaTitle: "20+ Negative Review Response Templates",
     metaDescription: "Ready-to-use templates for responding to any negative Google review. 20+ templates organized by complaint type with customization instructions.",
     keywords: ["negative review response templates", "how to respond to bad reviews", "google review response templates", "1 star review response", "bad review templates"],
     openingSummary:
@@ -281,7 +281,7 @@ const guide3: ResourceGuide = {
     purpose: "Rank for 'local SEO checklist' and 'local SEO 2026' clusters",
     lastUpdated: "2026-09-29",
     readMinutes: 16,
-    metaTitle: "Local SEO Checklist 2026: Free 40-Point Checklist [PDF]",
+    metaTitle: "Local SEO Checklist 2026 (Free 40-Point PDF)",
     metaDescription:
         "Download the free 2026 local SEO checklist: 40+ actionable items for Google Business Profile, citations, reviews, links & tracking. No signup required.",
     keywords: [
