@@ -6,6 +6,7 @@ import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access"
 import { inngest } from "@/services/inngest/client";
 import { engineRegistry } from "@/services/aeo/engines/engine-registry";
 import { registerAeoAdapters } from "@/services/aeo/engines/register-adapters";
+import { loadAffordableTests } from "@/services/aeo/billing/aeo-balance";
 
 const schema = z.object({ businessId: z.string().uuid(), attempts: z.number().int().min(1).max(5) });
 
@@ -15,6 +16,7 @@ export async function runSamplingNow(input: unknown) {
     if (!user || !(await userCanAccessBusiness(db, user.id, parsed.data.businessId))) return { ok: false as const, error: "Unauthorized" };
     const business = await db.from("businesses").select("organization_id").eq("id", parsed.data.businessId).single();
     if (business.error) return { ok: false as const, error: "Business not found" };
+    if ((await loadAffordableTests(db, business.data.organization_id)) === 0) return { ok: false as const, error: "Your AI visibility balance is empty. Add balance to run tests." };
     registerAeoAdapters();
     const engineIds = engineRegistry.describeAll().filter((engine) => engine.state === "available" && engine.descriptor.id !== "copilot").map((engine) => engine.descriptor.id);
     if (!engineIds.length) return { ok: false as const, error: "No sampling engine is configured" };

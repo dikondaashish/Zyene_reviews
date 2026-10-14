@@ -1,6 +1,7 @@
 import { UserNav } from "@/components/dashboard/user-nav"
 import { ThemeToggle } from "@/components/dashboard/theme-toggle"
 import { HeaderHelpButton } from "@/components/dashboard/header-help-button"
+import { AeoBalanceHeader } from "@/components/google-seo-aeo/aeo-balance-header"
 import { BusinessSwitcher } from "@/components/dashboard/business-switcher"
 import { OrganizationSwitcher } from "@/components/dashboard/organization-switcher"
 import type { User } from "@supabase/supabase-js"
@@ -71,6 +72,7 @@ export function DashboardHeaderControls({
                 ) : null}
             </div>
             <div className="flex shrink-0 items-center gap-2">
+                <AeoBalanceHeader />
                 <HeaderHelpButton />
                 <ThemeToggle />
                 <UserNav user={user} />

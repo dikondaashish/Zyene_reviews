@@ -5,6 +5,8 @@ import type { AnswerEngineId } from "@/services/aeo/engines/engine-types";
 import { planRun } from "@/services/aeo/orchestration/run-plan";
 import { getAeoStores } from "@/services/aeo/orchestration/store-factory";
 import { isLiveSamplingEnabled } from "@/lib/features/aeo-surfaces";
+import { createAdminClient } from "@/lib/db/supabase/admin";
+import { loadAffordableTests } from "@/services/aeo/billing/aeo-balance";
 import { logger } from "@/lib/logger";
 
 /**
@@ -77,10 +79,19 @@ export const aeoRunPlanner = inngest.createFunction(
             );
         }
 
+        // Prepaid balance: never start more tests than the org has paid for.
+        // null = metered billing is off, so nothing is counted.
+        const affordableTests = await step.run("check-balance", () =>
+            loadAffordableTests(createAdminClient(), organizationId)
+        );
+        const dispatches = affordableTests === null ? plan.dispatches : plan.dispatches.slice(0, affordableTests);
+        const emptyReason =
+            dispatches.length === 0 && plan.dispatches.length > 0 ? "insufficient_balance" : plan.emptyReason;
+
         // A run that dispatches nothing is still recorded. Silently doing nothing
         // is indistinguishable from a broken scheduler when someone asks later
         // why a business has no data.
-        if (plan.dispatches.length === 0) {
+        if (dispatches.length === 0) {
             const { runId } = await step.run("create-empty-run", () =>
                 stores.runs.createRun({
                     businessId,
@@ -91,12 +102,15 @@ export const aeoRunPlanner = inngest.createFunction(
             );
             await step.run("close-empty-run", () =>
                 stores.runs.completeRun(runId, {
-                    status: plan.emptyReason === "budget_exhausted" ? "deferred" : "failed",
-                    errorMessage: plan.emptyReason,
+                    status:
+                        emptyReason === "budget_exhausted" || emptyReason === "insufficient_balance"
+                            ? "deferred"
+                            : "failed",
+                    errorMessage: emptyReason,
                     at: new Date().toISOString(),
                 })
             );
-            return { runId, dispatched: 0, reason: plan.emptyReason };
+            return { runId, dispatched: 0, reason: emptyReason };
         }
 
         const { runId } = await step.run("create-run", () =>
@@ -104,7 +118,7 @@ export const aeoRunPlanner = inngest.createFunction(
                 businessId,
                 trigger,
                 scheduledFor: event.data.scheduledFor ?? null,
-                expectedSamples: plan.dispatches.length,
+                expectedSamples: dispatches.length,
             })
         );
 
@@ -112,7 +126,7 @@ export const aeoRunPlanner = inngest.createFunction(
         // that was never written.
         await step.sendEvent(
             "fan-out",
-            plan.dispatches.map((d) => ({
+            dispatches.map((d) => ({
                 name: "aeo/dispatch.requested" as const,
                 data: { ...d, runId },
             }))
@@ -120,7 +134,8 @@ export const aeoRunPlanner = inngest.createFunction(
 
         return {
             runId,
-            dispatched: plan.dispatches.length,
+            dispatched: dispatches.length,
+            withheldForBalance: plan.dispatches.length - dispatches.length,
             projectedDeferredUnits: plan.projectedDeferredUnits,
             withheld: plan.withheld.map((w) => w.descriptor.id),
         };

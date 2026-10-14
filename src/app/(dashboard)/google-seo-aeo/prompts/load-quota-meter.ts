@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { computeQuotaMeter, type QuotaMeterResult } from "@/services/aeo/billing/quota-meter";
-import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
+import { loadAeoBalance } from "@/services/aeo/billing/aeo-balance";
 
 /**
  * F4.9: reads through the caller's RLS-scoped client - aeo_credit_balances'
@@ -14,18 +14,13 @@ export async function loadQuotaMeter(
     activePrompts: number,
     runnableEngines: number
 ): Promise<QuotaMeterResult> {
-    const result = await db
-        .from("aeo_credit_balances")
-        .select("balance_micro_usd")
-        .eq("organization_id", organizationId)
-        .maybeSingle();
-    assertAeoQueriesSucceeded("Unable to load AEO quota balance", result);
-    const balanceRow = result.data;
+    // Plan credit plus paid balance: both are spendable on tests.
+    const balance = await loadAeoBalance(db, organizationId);
 
     return computeQuotaMeter({
         activePrompts,
         runnableEngines,
         planId,
-        balanceMicroUsd: balanceRow?.balance_micro_usd ?? null,
+        balanceMicroUsd: balance.totalMicroUsd,
     });
 }
