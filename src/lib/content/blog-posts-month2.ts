@@ -25,8 +25,6 @@ export const post5: BlogPost = {
         { label: "See how Zyene Reviews' AI replies work", href: "/features/ai-replies" },
         { label: "20+ negative review response templates", href: "/resources/negative-review-templates" },
         { label: "5 AI review reply mistakes to avoid", href: "/blog/ai-reply-mistakes-to-avoid" },
-        { label: "Compare Zyene Reviews vs Birdeye for customer feedback management", href: "/compare/birdeye" },
-        { label: "5 cheaper Birdeye alternatives for reputation management", href: "/blog/birdeye-alternatives-for-local-businesses" },
     ],
     faqs: [
         { question: "Should I respond to every one-star Google review?", answer: "Yes. Prospects read negative reviews specifically to see how you handle problems. A calm, specific public reply within twenty-four to forty-eight hours beats silence - even when you move the real fix to email or phone." },
@@ -123,8 +121,6 @@ export const post6: BlogPost = {
         { label: "Try Zyene Reviews' AI reply feature", href: "/features/ai-replies" },
         { label: "How to respond to a 1-star review on Google", href: "/blog/how-to-respond-to-a-1-star-review" },
         { label: "20+ negative review response templates", href: "/resources/negative-review-templates" },
-        { label: "Compare Zyene Reviews vs Birdeye automated review workflows", href: "/compare/birdeye" },
-        { label: "Birdeye pricing breakdown and tier analysis", href: "/blog/birdeye-pricing-breakdown-2026" },
     ],
     faqs: [
         { question: "Is it okay to post AI-generated Google review replies?", answer: "Yes, if you edit them. Use AI for structure and tone, then add specifics from the customer's review. Unedited AI posts sound identical and can hurt trust more than they save time." },
