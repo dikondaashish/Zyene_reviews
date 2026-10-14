@@ -41,16 +41,29 @@ export default function FreeToolsHubPage() {
                 </div>
             </section>
             <section className="py-12 px-4 border-b border-border bg-muted/20">
-                <div className="container mx-auto max-w-3xl space-y-4">
-                    <h2 className="text-2xl font-bold text-foreground">Free review tools for local businesses</h2>
-                    <p className="text-muted-foreground leading-relaxed">
-                        These tools help you take the first step toward a stronger Google reputation: a direct review
-                        link customers can click, a quick snapshot of your public rating, and draft replies you can
-                        customize before posting.
-                    </p>
-                    <p className="text-muted-foreground leading-relaxed">
-                        When you are ready to automate requests, monitor every platform in one inbox, and use AI replies
-                        at scale, Zyene Reviews includes everything in plans from $29.99/mo with a 7-day free trial.
+                <div className="container mx-auto max-w-3xl space-y-6">
+                    <div>
+                        <h2 className="text-2xl font-bold text-foreground mb-3">Free review tools for local businesses</h2>
+                        <p className="text-muted-foreground leading-relaxed">
+                            These free utilities help local businesses handle essential reputation tasks without creating an account: creating a direct Google review link, checking public rating metrics, and drafting professional responses.
+                        </p>
+                    </div>
+                    <div className="space-y-3 rounded-xl border border-border bg-card p-5">
+                        <h3 className="font-semibold text-foreground text-base">What each tool does:</h3>
+                        <ul className="space-y-2.5 text-sm text-muted-foreground">
+                            <li>
+                                <strong className="text-foreground">Google Review Link Generator:</strong> Looks up your Google Place ID to create a direct URL that opens the Google Maps review box for customers without manual searching.
+                            </li>
+                            <li>
+                                <strong className="text-foreground">Reputation Score Checker:</strong> Retrieves your current public Google star rating and total review count in a fast diagnostic snapshot.
+                            </li>
+                            <li>
+                                <strong className="text-foreground">Review Response Generator:</strong> Provides customizable, rating-specific reply templates to help you structure professional responses to customer reviews.
+                            </li>
+                        </ul>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                        When you are ready to automate review collection after customer visits, monitor incoming feedback across platforms in one inbox, and use AI reply workflows, Zyene Reviews provides connected plans starting at $29.99/mo with a 7-day free trial.
                     </p>
                 </div>
             </section>

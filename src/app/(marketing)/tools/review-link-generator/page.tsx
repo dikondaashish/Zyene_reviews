@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { ReviewLinkGeneratorClient } from "./review-link-generator-client";
+import { ReviewLinkGeneratorGuide } from "./review-link-generator-guide";
 
 export const metadata: Metadata = mergeMarketingSocial({
     title: "How to Get a Google Review Link (Free Generator)",
@@ -20,5 +21,10 @@ export const metadata: Metadata = mergeMarketingSocial({
 });
 
 export default function ReviewLinkGeneratorPage() {
-    return <ReviewLinkGeneratorClient />;
+    return (
+        <>
+            <ReviewLinkGeneratorClient />
+            <ReviewLinkGeneratorGuide />
+        </>
+    );
 }

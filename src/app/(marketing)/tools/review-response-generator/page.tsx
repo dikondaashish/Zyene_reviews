@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { ReviewResponseGeneratorClient } from "./review-response-generator-client";
+import { ReviewResponseGeneratorGuide } from "./review-response-generator-guide";
 
 export const metadata: Metadata = mergeMarketingSocial({
     title: "Free Review Response Template Generator",
@@ -20,5 +21,10 @@ export const metadata: Metadata = mergeMarketingSocial({
 });
 
 export default function ReviewResponseGeneratorPage() {
-    return <ReviewResponseGeneratorClient />;
+    return (
+        <>
+            <ReviewResponseGeneratorClient />
+            <ReviewResponseGeneratorGuide />
+        </>
+    );
 }
