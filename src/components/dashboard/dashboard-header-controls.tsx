@@ -53,7 +53,7 @@ export function DashboardHeaderControls({
                             activeOrganizationId={organization?.id ?? null}
                         />
                     </div>
-                    <div className="min-w-0 flex-1 sm:flex-none">
+                    <div className="flex min-w-0 flex-1 sm:flex-none">
                         <BusinessSwitcher
                             businesses={businesses.map((b) => ({
                                 id: b.id,
@@ -71,7 +71,8 @@ export function DashboardHeaderControls({
                     </p>
                 ) : null}
             </div>
-            <div className="flex shrink-0 items-center gap-2">
+            {/* Phones can't fit the balance pill and help together; help yields on AEO pages. */}
+            <div className="flex shrink-0 items-center gap-2 max-sm:has-[[data-aeo-balance]]:[&>[data-header-help]]:hidden">
                 <AeoBalanceHeader />
                 <HeaderHelpButton />
                 <ThemeToggle />
