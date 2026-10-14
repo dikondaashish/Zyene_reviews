@@ -1,5 +1,28 @@
 # App dashboard palette
 
+## Current palette (October 2026)
+
+The app moved off the OptiMonk reference palette onto warm Zyene brand tokens, at the user's request (October 14, 2026). `src/app/dashboard-colors.css` maps every neutral to a warm equivalent of `src/app/globals.css`:
+
+| Role | Light | Dark |
+| --- | --- | --- |
+| Background / card | `#fffefb` | `#201515` / `#2a2222` |
+| Canvas | `#f7f5ef` | `#201515` |
+| Foreground | `#201515` | `#fffefb` |
+| Muted surface / text | `#f5f3ed` / `#6d685d` | `#2e2726` / `#c5c0b1` |
+| Secondary, accent | `#eceae3` | `#36342e` |
+| Border / input | `#e5e1d6` / `#c5c0b1` | `#4a4540` / `#5c564f` |
+| Primary / hover | `#ff4f00` / `#e64700` | `#ff4f00` / `#e64700` |
+| Primary text | `#c43d00` | `#ff9b79` |
+| Sidebar accent | `#fff0e8` | `#3c2924` |
+| Success | `#287653` | `#89cda8` |
+
+Contrast (WCAG 2.x): foreground on background 17.6:1; muted text 5.5:1 on cream, 5.0:1 on the muted surface, 4.6:1 on accent; primary text 5.2:1 on cream and 4.7:1 on the sidebar accent; dark muted text 8.5:1 on cards; dark primary text 8.7:1. White on `#ff4f00` is 3.3:1 (AA for large or bold text and UI components only), the same trade-off the marketing site makes.
+
+The sections below record the earlier OptiMonk reference audit for history.
+
+## Previous palette: OptiMonk reference
+
 The user requested OptiMonk's dashboard colors across the Zyene app, with existing layouts and both light and dark modes retained.
 
 ## Reference audit
@@ -44,7 +67,7 @@ Dashboard panels with literal forest green, blue, beige, or salmon colors now us
 
 ### Requested exceptions
 
-Smart Insights and Your Customer Portal retain their original colors at the user's request. Smart Insights uses its original warm light/dark neutrals and orange accents. The portal keeps its forest-green surface, blue NFC banner, white text, and coral QR action. Their loading states and QR/examples dialogs use the original local tokens; the rest of the app continues using the OptiMonk palette.
+Smart Insights and Your Customer Portal retain their original colors at the user's request. With the warm palette these differ from the rest of the app only in the darker `#c5c0b1` borders, the cream muted surface, and `#ff4f00` small text. Smart Insights uses its original warm light/dark neutrals and orange accents. The portal keeps its forest-green surface, blue NFC banner, white text, and coral QR action. Their loading states and QR/examples dialogs use the original local tokens; the rest of the app continues using the OptiMonk palette.
 
 ### Sidebar reference
 
