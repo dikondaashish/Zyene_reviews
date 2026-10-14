@@ -135,6 +135,8 @@ Auth: Supabase session (`getUser`) + active business context unless noted.
 | `GET` | `/api/competitors/range-data`, `range-meta`, `export` | Competitor watch data |
 | `GET` | `/api/analytics/range-data`, `export` | Analytics |
 | Various | `/api/aeo/*` | Exports, reports, crawler logs (session) |
+| `GET` | `/api/aeo/balance` | Prepaid AI visibility balance for the active org (plan credit + paid balance, tests left, `canTopUp`). Returns `{ live: false }` while `AEO_METERED_BILLING_LIVE` is off |
+| `POST` | `/api/aeo/balance/checkout` | Owner-only. Body `{ amountUsd }` (whole dollars, 10–500) → one-time Stripe Checkout URL; credited by the `checkout.session.completed` webhook |
 | `POST` | `/api/review-flow/generate` | Generate/configure review flow |
 | `GET`/`POST` | `/api/referral` | Referral program |
 | `POST` | `/api/nfc/checkout` | NFC card order checkout |

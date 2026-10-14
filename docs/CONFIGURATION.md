@@ -64,6 +64,7 @@ Missing **required** vars accessed via `required()` throw at use/import time wit
 | `STRIPE_WEBHOOK_SECRET` | Webhook verify |
 | `STRIPE_*_PRICE_ID` | Plan prices |
 | Coupon IDs | Optional new-customer promos |
+| `AEO_METERED_BILLING_LIVE` | `true` turns on prepaid AEO balance: plan credit grants, per-test debits, the header balance pill, "Add balance" checkout, and pausing tests at $0. Anything else = off (tests are not counted) |
 
 ### Twilio / Resend
 

@@ -157,6 +157,8 @@ Pending team invites (email, role, token, expiry) — see audit/schema fix migra
 | `stripe_webhook_events` | Idempotency for Stripe deliveries |
 | API keys tables | Hashed keys, scopes, business binding (`src/lib/api-keys`) |
 | `aeo_public_api_keys` / credit ledgers | AEO quota (feature area) |
+| `aeo_credit_balances` | One row per org. `balance_micro_usd` = plan credit ($5 Starter / $10 Professional), reset each billing cycle. `purchased_balance_micro_usd` = paid "Add balance" top-ups, never reset. Tests ($2.50 each) draw plan credit first; tests pause at $0 (prepaid, no automatic card charges) |
+| `aeo_credit_ledger_entries` | Append-only journal: `grant_reset`, `credit_consumed`, `topup_purchased` (unique per `stripe_checkout_session_id`), legacy `overage_charged` |
 
 ---
 

@@ -12,6 +12,7 @@ import { subscriptionSuccessEmail } from "@/services/resend/templates/subscripti
 
 import { isNfcCheckoutSession } from "@/lib/nfc/checkout-session";
 import { fulfillNfcCheckout } from "@/services/nfc/fulfill-checkout";
+import { fulfillAeoTopupCheckout, isAeoTopupCheckoutSession } from "@/services/aeo/billing/fulfill-topup-checkout";
 
 import type { WebhookAdminClient } from "./webhook-types";
 
@@ -54,6 +55,11 @@ export async function handleCheckoutSessionCompleted(
 
     if (isNfcCheckoutSession(session)) {
         await fulfillNfcCheckout(session, supabase);
+        return;
+    }
+
+    if (isAeoTopupCheckoutSession(session)) {
+        await fulfillAeoTopupCheckout(session, supabase);
         return;
     }
 
