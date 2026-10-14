@@ -17,7 +17,7 @@ export function RatingStepBusinessHeader({
     return (
         <div className="flex flex-col items-center gap-4">
             {logoUrl ? (
-                <div className="rounded-full border-4 border-background overflow-hidden bg-background dark:bg-[rgb(30,41,59)] dark:border-[rgb(30,41,59)] size-24">
+                <div className="rounded-full border-4 border-background overflow-hidden bg-background dark:bg-muted dark:border-muted size-24">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={logoUrl} alt={businessName} className="object-cover size-full" />
                 </div>

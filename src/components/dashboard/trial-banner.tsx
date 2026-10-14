@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock, Zap, AlertTriangle } from "lucide-react";
+import { Clock, AlertTriangle } from "lucide-react";
 import { formatDistanceToNow, isPast, parseISO } from "date-fns";
 import { useRouter } from "next/navigation";
 import type { TrialOrganizationSummary } from "@/types/components";
@@ -64,8 +64,7 @@ export function TrialBanner({ organization }: { organization: TrialOrganizationS
                         : "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border h-8 px-4"
                     }
                 >
-                    <Zap className="mr-2 fill-current size-3.5" />
-                    Upgrade Now
+                    Upgrade
                 </Button>
             </div>
         </div>

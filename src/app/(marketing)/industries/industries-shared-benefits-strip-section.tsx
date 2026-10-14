@@ -1,4 +1,4 @@
-import { BarChart3, Bot, MessageSquare, Shield } from "lucide-react";
+import { BarChart3, MessageSquare, Reply, Shield } from "lucide-react";
 
 const BENEFITS = [
     {
@@ -7,7 +7,7 @@ const BENEFITS = [
         desc: "Invite customers by SMS, email, shareable link, or QR code after a visit or completed service.",
     },
     {
-        icon: Bot,
+        icon: Reply,
         title: "AI drafts & automatic Google replies",
         desc: "Edit a draft yourself, or automatically publish replies to eligible new Google reviews in your chosen tone.",
     },

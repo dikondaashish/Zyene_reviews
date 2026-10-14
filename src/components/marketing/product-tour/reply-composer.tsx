@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState, type Dispatch } from "react";
-import { ArrowUpRight, Check, Sparkles } from "lucide-react";
+import { ArrowUpRight, Check, Reply } from "lucide-react";
 import type { DemoDraft, ReviewDemoAction } from "@/types/marketing-product-demo";
 import { useDemoTyping } from "@/components/marketing/product-tour/use-demo-typing";
 
@@ -12,7 +12,7 @@ export function DemoReplyComposer({ draft, replies, dispatch }: { draft: DemoDra
   const { preview, typing, start, cancel } = useDemoTyping();
   return (
     <div className="tour-composer">
-      <div className="tour-composer-top"><strong><Sparkles size={16} aria-hidden="true" />A reply that sounds like you</strong><span>{typing ? "Writing your reply…" : "Sample AI draft"}</span></div>
+      <div className="tour-composer-top"><strong><Reply size={16} aria-hidden="true" />A reply that sounds like you</strong><span>{typing ? "Writing your reply…" : "Sample AI draft"}</span></div>
       <div className="tour-tones" aria-label="Example reply tone">
         {(["friendly", "professional", "concise"] as const).map(tone => (
           <button type="button" key={tone} aria-pressed={draft.tone === tone} onClick={event => {

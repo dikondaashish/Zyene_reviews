@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { domAnimation, LazyMotion, m } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
-import { Zap } from "lucide-react";
+import { Filter } from "lucide-react";
 
 import { pct } from "@/components/analytics/zyene-platform-analytics-math";
 
@@ -26,11 +26,11 @@ export function ZyenePlatformReviewRequestFunnelCard({
   totalSent: number;
 }) {
   return (
-    <Card className="bg-card/60 border-border/50 backdrop-blur-md overflow-hidden">
+    <Card className="bg-card border-border overflow-hidden">
       <CardHeader>
         <div className="space-y-1">
           <CardTitle className="text-lg font-bold flex items-center gap-2">
-            <Zap className="text-primary size-5" />
+            <Filter className="text-primary size-5" aria-hidden="true" />
             Review Request Funnel
           </CardTitle>
           <div className="flex flex-wrap items-center gap-2">

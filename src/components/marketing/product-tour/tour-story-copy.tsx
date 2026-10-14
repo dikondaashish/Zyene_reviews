@@ -1,8 +1,8 @@
-import { ArrowDown, ArrowUpRight, BarChart3, Send, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowUpRight, BarChart3, Reply, Send } from "lucide-react";
 import type { ProductTourTab } from "@/components/marketing/product-tour/product-tour";
 
 const STORIES = {
-  reviews: { number: "01", label: "Replies", icon: Sparkles, title: "Your voice. Even when you’re busy.", description: "Automatically publish AI replies to new, unanswered Google reviews. Choose which star ratings to respond to and a tone that fits your business. Turn it off anytime.", hint: "Turn on “Try automatic replies” in the demo", detail: "Or draft, edit, and publish a reply yourself." },
+  reviews: { number: "01", label: "Replies", icon: Reply, title: "Your voice. Even when you’re busy.", description: "Automatically publish AI replies to new, unanswered Google reviews. Choose which star ratings to respond to and a tone that fits your business. Turn it off anytime.", hint: "Turn on “Try automatic replies” in the demo", detail: "Or draft, edit, and publish a reply yourself." },
   requests: { number: "02", label: "Requests", icon: Send, title: "A small ask. A lasting impression.", description: "Turn a great visit into your next review. Personalize an invitation, send a sample, and see exactly what your customer receives.", hint: "Send a sample request, then open its link", detail: "From a visit to a conversation." },
   reports: { number: "03", label: "Insights", icon: BarChart3, title: "Less guesswork. More perspective.", description: "See the story behind your stars. Explore review activity, compare platforms, and find the patterns that help you plan your next move.", hint: "Change the date range or explore a chart bar", detail: "A clearer picture of what’s working." },
 };

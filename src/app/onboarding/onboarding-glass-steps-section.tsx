@@ -37,8 +37,6 @@ export function OnboardingGlassStepsSection({
 
     return (
         <div className="relative">
-            <div className="absolute -inset-1 bg-gradient-to-br from-primary/5 via-transparent to-sync-action/5 rounded-[2rem] blur-sm" />
-
             <div className="relative pro-card p-5 sm:p-7">
                 {currentStep === 1 && (
                     <div>

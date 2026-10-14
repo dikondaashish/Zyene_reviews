@@ -21,9 +21,8 @@ export function NegativeStepFooter({
             <button
                 type="submit"
                 className={cn(
-                    "w-full h-14 rounded-2xl text-base font-semibold text-primary-foreground transition-all duration-300",
-                    "bg-gradient-to-r from-primary to-primary/90 hover:from-primary/95 hover:to-primary",
-                    "shadow-lg shadow-primary/20 hover:shadow-primary/30",
+                    "w-full h-14 rounded-2xl text-base font-semibold text-primary-foreground transition-colors",
+                    "bg-primary hover:bg-primary/90",
                     "active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed",
                     "flex items-center justify-center gap-2"
                 )}

@@ -78,10 +78,10 @@ export function useReviewContentFormLoad(
                     private_feedback_offer_mode:
                         data.private_feedback_offer_mode === "visible" ? "visible" : "hidden",
                     private_feedback_offer_message: data.private_feedback_offer_message || "",
-                    thank_you_heading: data.thank_you_heading || "Thank You!",
+                    thank_you_heading: data.thank_you_heading || "Thank you",
                     thank_you_message:
                         data.thank_you_message ||
-                        "Your feedback means the world to us.\nWe appreciate you taking the time.",
+                        "We read every response.\nThanks for taking the time.",
                     footer_text: data.footer_text || DEFAULT_REVIEW_FOOTER_TEXT,
                     footer_company_name: data.footer_company_name || DEFAULT_REVIEW_FOOTER_COMPANY_NAME,
                     footer_link: data.footer_link || DEFAULT_REVIEW_FOOTER_LINK,

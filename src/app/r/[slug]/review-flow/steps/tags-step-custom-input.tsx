@@ -37,7 +37,7 @@ export function TagsStepCustomInput({
                     "flex items-center justify-center gap-2",
                     showCustomInput || addedCustomTags.length > 0
                         ? "text-primary-foreground"
-                        : "text-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
+                        : "text-foreground border-border hover:bg-muted dark:bg-muted dark:border-border dark:hover:bg-accent"
                 )}
                 aria-expanded={showCustomInput}
                 style={{
@@ -79,7 +79,7 @@ export function TagsStepCustomInput({
                             enterKeyHint="done"
                             maxLength={80}
                             disabled={addedCustomTags.length >= MAX_CUSTOM_TAG_CHIPS}
-                            className="flex-1 min-w-0 h-11 px-3 rounded-xl border-2 border-border bg-background text-foreground text-base focus:border-primary focus:outline-none dark:bg-[rgb(30,41,59)] dark:border-white/10"
+                            className="flex-1 min-w-0 h-11 px-3 rounded-xl border-2 border-border bg-background text-foreground text-base focus:border-primary focus:outline-none dark:bg-muted dark:border-border"
                         />
                         <button
                             type="button"

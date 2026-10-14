@@ -11,7 +11,7 @@ export function NegativeStepHeader({ rating, apologyMsg, negativeSubheading }: N
 
     return (
         <div className="flex items-center gap-4">
-            <div className="bg-muted rounded-2xl flex items-center justify-center flex-shrink-0 border border-border dark:bg-[rgb(30,41,59)] dark:border-white/10 size-16">
+            <div className="bg-muted rounded-2xl flex items-center justify-center flex-shrink-0 border border-border dark:bg-muted dark:border-border size-16">
                 <RatingIcon className="size-10 text-primary" aria-hidden="true" />
             </div>
             <div className="text-left">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/lib/language-context";
-import { Zap } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import type { Step4SubscriptionFormProps } from "./step4-subscription-form-types";
 import { useStep4SubscriptionForm } from "./use-step4-subscription-form";
@@ -30,7 +30,7 @@ export function Step4SubscriptionForm({
             <Step4SubscriptionDecorativeShell>
                 {isCancelled && (
                     <Alert className="mb-6 bg-primary/10 border-primary/20">
-                        <Zap className="text-primary size-4" />
+                        <AlertCircle className="text-primary size-4" />
                         <AlertTitle className="text-foreground">Payment not completed</AlertTitle>
                         <AlertDescription className="text-muted-foreground">
                             It looks like the checkout process wasn&apos;t finished. You can try again or choose a

@@ -1,4 +1,4 @@
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Eye, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -9,7 +9,7 @@ export function DemoModeBanner({ className = "" }: { className?: string }) {
             <div className="flex flex-col items-start justify-between gap-5 lg:flex-row lg:items-center">
                 <div className="flex items-start gap-4">
                     <div className="rounded-xl bg-primary/10 p-3 text-primary">
-                        <Sparkles className="size-5" aria-hidden />
+                        <Eye className="size-5" aria-hidden />
                     </div>
                     <div className="space-y-2">
                         <div className="flex flex-wrap items-center gap-2">

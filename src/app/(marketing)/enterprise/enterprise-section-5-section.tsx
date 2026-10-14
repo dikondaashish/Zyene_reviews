@@ -1,7 +1,7 @@
 import { getEnterprisePlan } from "@/services/stripe/plans";
 
 import Link from "next/link";
-import { Check, Users, Sparkles, FileText } from "lucide-react";
+import { Check, Users, CalendarDays, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function EnterpriseSection5Section({ enterprisePlan }: { enterprisePlan: NonNullable<ReturnType<typeof getEnterprisePlan>> }) {
@@ -35,7 +35,7 @@ export function EnterpriseSection5Section({ enterprisePlan }: { enterprisePlan: 
                         </p>
                         <Button className="w-full gap-2" asChild>
                             <Link href="/demo" data-track="demo" data-track-location="enterprise">
-                                <Sparkles className="size-4" /> Book an enterprise demo
+                                <CalendarDays className="size-4" /> Book an enterprise demo
                             </Link>
                         </Button>
                         <Link href="/security" className="block mt-4 text-sm text-primary hover:underline text-center">

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-    Star, Bot, ShieldCheck, BarChart3, TrendingUp, Sparkles,
-    ArrowRight, Check, Globe, MessageSquare, QrCode, Users, Zap, Code2,
+    Star, Reply, ShieldCheck, BarChart3, TrendingUp,
+    ArrowRight, Check, Globe, MessageSquare, QrCode, Users, Code2,
 } from "lucide-react";
 import { INTEGRATION_BRAND_CHIPS } from "@/lib/marketing/integration-brands";
 
@@ -10,8 +10,8 @@ export const PILLARS = [
     {
         id: "review-monitoring",
         icon: Star,
-        iconBg: "bg-chart-4/10",
-        iconColor: "text-chart-4",
+        iconBg: "bg-accent",
+        iconColor: "text-foreground",
         title: "Review Monitoring & Inbox",
         tagline: "Keep connected review feedback in one working view",
         bullets: [
@@ -25,10 +25,10 @@ export const PILLARS = [
     },
     {
         id: "ai-replies",
-        icon: Bot,
-        iconBg: "bg-chart-1/10",
-        iconColor: "text-chart-1",
-        title: "AI-Powered Review Replies",
+        icon: Reply,
+        iconBg: "bg-accent",
+        iconColor: "text-foreground",
+        title: "AI Review Replies",
         tagline: "Professional responses in seconds, in your voice",
         bullets: [
             "One-click AI reply suggestions for every review",
@@ -42,8 +42,8 @@ export const PILLARS = [
     {
         id: "review-collection",
         icon: ShieldCheck,
-        iconBg: "bg-chart-2/10",
-        iconColor: "text-chart-2",
+        iconBg: "bg-accent",
+        iconColor: "text-foreground",
         title: "Review Collection & Negative Feedback Shield",
         tagline: "Invite feedback fairly, follow up thoughtfully, and resolve issues sooner.",
         bullets: [
@@ -59,8 +59,8 @@ export const PILLARS = [
     {
         id: "competitor-tracking",
         icon: TrendingUp,
-        iconBg: "bg-primary/10",
-        iconColor: "text-primary",
+        iconBg: "bg-accent",
+        iconColor: "text-foreground",
         title: "Competitor Intelligence",
         tagline: "Know exactly where you stand in your market",
         bullets: [
@@ -75,8 +75,8 @@ export const PILLARS = [
     {
         id: "local-seo",
         icon: Globe,
-        iconBg: "bg-sync-action/10",
-        iconColor: "text-sync-action",
+        iconBg: "bg-accent",
+        iconColor: "text-foreground",
         title: "Local SEO Dashboard",
         tagline: "Understand and improve your Google Business Profile",
         bullets: [
@@ -91,8 +91,8 @@ export const PILLARS = [
     {
         id: "analytics",
         icon: BarChart3,
-        iconBg: "bg-destructive/10",
-        iconColor: "text-destructive",
+        iconBg: "bg-accent",
+        iconColor: "text-foreground",
         title: "Analytics & Reporting",
         tagline: "Understand what's working and share results",
         bullets: [

@@ -3,7 +3,7 @@ import {
     Loader2,
     Copy,
     ExternalLink,
-    Sparkles,
+    PenLine,
     ArrowLeft,
     Check,
 } from "lucide-react";
@@ -54,8 +54,8 @@ export function AiReviewStep({
             <div className="relative">
                 <div className="absolute -top-3 left-4 bg-background px-2">
                     <div className="flex items-center gap-1 text-xs font-semibold text-primary">
-                        <Sparkles className="size-3.5" />
-                        AI Generated
+                        <PenLine className="size-3.5" aria-hidden="true" />
+                        AI draft · edit freely
                     </div>
                 </div>
                 <textarea
@@ -70,7 +70,7 @@ export function AiReviewStep({
                 className={cn(
                     "w-full h-14 rounded-2xl text-base font-semibold transition-all duration-300 relative overflow-hidden",
                     isRedirecting
-                        ? "bg-muted cursor-wait ring-0 dark:bg-[rgb(51,65,85)]"
+                        ? "bg-muted cursor-wait ring-0 dark:bg-accent"
                         : "text-primary-foreground shadow-lg hover:shadow-xl active:scale-[0.98]",
                     !isRedirecting && "disabled:opacity-60 disabled:cursor-not-allowed"
                 )}
