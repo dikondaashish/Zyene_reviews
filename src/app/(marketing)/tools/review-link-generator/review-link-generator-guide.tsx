@@ -12,7 +12,7 @@ const FAQS: FaqItem[] = [
     },
     {
         question: "What size should a review QR code be for print?",
-        answer: "For receipts, business cards, table tents, or counter signage, print your QR code at least 1 x 1 inch (25 x 25 mm). Ensure high contrast with dark elements on a light background and at least 4 mm of quiet margin around the code.",
+        answer: "For receipts, business cards, table tents, or counter signage, print your QR code at least 1 x 1 inch (25 x 25 mm). Ensure high contrast with dark elements on a light background and a clear blank border around the code.",
     },
     {
         question: "Do customers need a Google account to submit a review?",
@@ -63,7 +63,7 @@ export function ReviewLinkGeneratorGuide() {
                         A typical post-service follow-up message can be short and direct: <em className="text-foreground">&quot;Hi John, thanks for visiting Apex Auto today. If you have a minute, please share your experience on Google: [Your Link]&quot;</em>.
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
-                        If you convert your review URL into a printed QR code for invoices, appointment cards, or counter displays, print it at a minimum of 1 x 1 inch (25 x 25 mm). Maintain high contrast and adequate white border space around the code so smartphone cameras can scan it without focusing delays.
+                        If you convert your review URL into a printed QR code for invoices, appointment cards, or counter displays, print it at a minimum of 1 x 1 inch (25 x 25 mm). Maintain high contrast and a clear blank border around the code so smartphone cameras can scan it without focusing delays.
                     </p>
                 </div>
 

@@ -4,7 +4,7 @@ import { FAQPageJsonLd, type FaqItem } from "@/components/seo/json-ld";
 const FAQS: FaqItem[] = [
     {
         question: "How long should a Google review response be?",
-        answer: "Aim for 3 to 5 sentences or approximately 50 to 120 words. Concise responses communicate professionalism and accountability; overly long responses often look defensive or combative to prospective buyers reading the thread.",
+        answer: "Aim for 3 to 5 sentences or roughly 50 to 150 words. Concise responses communicate professionalism and accountability; overly long responses often look defensive or combative to prospective buyers reading the thread.",
     },
     {
         question: "Should a business reply to every customer review?",
@@ -20,7 +20,7 @@ const FAQS: FaqItem[] = [
     },
     {
         question: "Can I use the exact same response template for every customer?",
-        answer: "No. Using identical copy on multiple reviews signals to customers and search engines that responses are automated. Always adapt the template by inserting unique details from the customer's specific feedback.",
+        answer: "No. Using identical copy on multiple reviews signals to customers that responses are automated. Always adapt the template by inserting unique details from the customer's specific feedback.",
     },
 ];
 
@@ -63,7 +63,7 @@ export function ReviewResponseGeneratorGuide() {
                         For a 2-star review citing a long wait, start with the generator&apos;s template and insert personal specifics: <em className="text-foreground">&quot;Hi Marcus, thank you for sharing this feedback. We apologize for the wait time during your Friday afternoon visit—our kitchen fell behind our usual standard. We have reviewed staffing for that shift. Please contact us at support@example.com so we can make this right.&quot;</em>
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
-                        Always keep public responses under 150 words. Avoid debating facts or negotiating financial settlements in public comments; instead, direct sensitive discussions to a private phone number or email address.
+                        Aim for roughly 50 to 150 words per public response. Avoid debating facts or negotiating financial settlements in public comments; instead, direct sensitive discussions to a private phone number or email address.
                     </p>
                 </div>
 
