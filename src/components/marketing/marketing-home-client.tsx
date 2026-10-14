@@ -5,6 +5,7 @@ import { MarketingHomeIndustries } from "@/components/marketing/marketing-home/m
 import { MarketingHomeNextSteps } from "@/components/marketing/marketing-home/marketing-home-next-steps";
 import { MarketingHomeClosing } from "@/components/marketing/marketing-home/marketing-home-closing";
 import { MarketingHomeTestimonials } from "@/components/marketing/marketing-home/marketing-home-testimonials";
+import { HOME_TESTIMONIALS } from "@/components/marketing/marketing-home/home-testimonials";
 import { MarketingHomeFeatureConstellation } from "@/components/marketing/marketing-home/marketing-home-feature-constellation";
 import { ProductShowcase } from "@/components/marketing/product-tour/product-showcase";
 import { MarketingScrollReveal } from "@/components/marketing/marketing-scroll-reveal";
@@ -44,13 +45,15 @@ export function MarketingHomeClient() {
       <MarketingScrollReveal className="home-scroll-section" delay={100}>
         <MarketingHomeIndustries />
       </MarketingScrollReveal>
-      <MarketingScrollReveal
-        className="home-scroll-section"
-        delay={120}
-        intensity="subtle"
-      >
-        <MarketingHomeTestimonials />
-      </MarketingScrollReveal>
+      {HOME_TESTIMONIALS.length > 0 && (
+        <MarketingScrollReveal
+          className="home-scroll-section"
+          delay={120}
+          intensity="subtle"
+        >
+          <MarketingHomeTestimonials />
+        </MarketingScrollReveal>
+      )}
       <MarketingScrollReveal className="home-scroll-section" delay={140}>
         <MarketingHomeNextSteps />
       </MarketingScrollReveal>

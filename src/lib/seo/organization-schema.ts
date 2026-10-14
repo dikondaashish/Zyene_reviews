@@ -12,7 +12,7 @@ export function buildOrganizationSchema(): Record<string, unknown> {
         "@type": "Organization",
         "@id": JSON_LD_ORGANIZATION_ID,
         name: "Zyene Reviews",
-        alternateName: "Zyene",
+        alternateName: ["ZyeneReviews", "Zyene"],
         url: JSON_LD_ORGANIZATION_URL,
         logo: {
             "@type": "ImageObject",

@@ -12,7 +12,7 @@ export const post17: BlogPost = {
     dateModified: "2026-09-10",
     readMinutes: 9,
     author: { name: "Marcus Vance", role: "Local SEO & Reputation" },
-    metaTitle: "Can You Delete or Remove a Google Review? (2026 Guide)",
+    metaTitle: "Delete or Remove a Google Review? (2026)",
     metaDescription:
         "Learn when Google will remove a review, how to report policy violations, appeal a rejected report, and respond to legitimate negative feedback.",
     keywords: [
