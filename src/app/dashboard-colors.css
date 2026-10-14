@@ -1,94 +1,97 @@
-/* Measured in OptiMonk's signed-in dashboard, campaigns, and analytics.
+/* Warm Zyene palette for the signed-in app, aligned with the brand tokens in
+ * globals.css (cream, ink, muted brown, warm borders, orange #ff4f00).
  * Scope at the document root so body portals (menus, dialogs, and toasts)
  * inherit the same palette. Public loaders can opt in with data-app-palette.
- * Dark values are a Zyene adaptation, not an observed OptiMonk dark theme.
+ * Muted surfaces and borders sit a step lighter than marketing so dense
+ * dashboard tables stay calm. Text pairs meet WCAG AA (4.5:1) on their surfaces;
+ * white on #ff4f00 is 3.3:1, so filled actions rely on semibold button text.
  */
 :root:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) {
   color-scheme: light;
-  --background: #ffffff;
-  --foreground: #23262a;
-  --card: #ffffff;
-  --card-foreground: #23262a;
-  --popover: #ffffff;
-  --popover-foreground: #23262a;
-  --brand-accent: #ed5a29;
-  --primary: #ed5a29;
+  --background: #fffefb;
+  --foreground: #201515;
+  --card: #fffefb;
+  --card-foreground: #201515;
+  --popover: #fffefb;
+  --popover-foreground: #201515;
+  --brand-accent: #ff4f00;
+  --primary: #ff4f00;
   --primary-foreground: #ffffff;
-  --primary-text: #ed5a29;
-  --primary-hover: #ed5a29;
+  --primary-text: #c43d00;
+  --primary-hover: #e64700;
   --cta: var(--primary);
   --cta-foreground: var(--primary-foreground);
-  --secondary: #f1f2f4;
-  --secondary-foreground: #505763;
-  --muted: #f7f7f8;
-  --muted-foreground: #6c757d;
-  --accent: #f1f2f4;
-  --accent-foreground: #23262a;
+  --secondary: #eceae3;
+  --secondary-foreground: #4a4540;
+  --muted: #f5f3ed;
+  --muted-foreground: #6d685d;
+  --accent: #eceae3;
+  --accent-foreground: #201515;
   --destructive: #dc3545;
   --destructive-foreground: #ffffff;
   --warning: #ffc107;
-  --warning-foreground: #505763;
-  --success: #28a745;
+  --warning-foreground: #4a4540;
+  --success: #287653;
   --success-foreground: #ffffff;
-  --border: #e3e5e8;
-  --input: #d5d8dd;
-  --ring: #ed5a29;
-  --chart-1: #ed5a29;
-  --chart-2: #28a745;
+  --border: #e5e1d6;
+  --input: #c5c0b1;
+  --ring: #ff4f00;
+  --chart-1: #ff4f00;
+  --chart-2: #287653;
   --chart-3: #9c968a;
   --chart-4: #ffc107;
   --chart-5: #17a2b8;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #505763;
+  --sidebar: #fffefb;
+  --sidebar-foreground: #4a4540;
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: #feefea;
-  --sidebar-accent-foreground: #ed5a29;
-  --sidebar-border: #e3e5e8;
+  --sidebar-accent: #fff0e8;
+  --sidebar-accent-foreground: #c43d00;
+  --sidebar-border: #e5e1d6;
   --sidebar-ring: var(--ring);
-  --canvas: #f9fafb;
-  --canvas-elevated: #f7f7f8;
+  --canvas: #f7f5ef;
+  --canvas-elevated: #f9f7f3;
   --sync-action: var(--primary);
   --sync-action-hover: var(--primary-hover);
-  --tour-overlay-scrim: rgb(35 38 42 / 58%);
+  --tour-overlay-scrim: rgb(32 21 21 / 58%);
 }
 
 :root.dark:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) {
   color-scheme: dark;
-  --background: #17191c;
-  --foreground: #f9fafb;
-  --card: #23262a;
-  --card-foreground: #f9fafb;
-  --popover: #292d33;
-  --popover-foreground: #f9fafb;
+  --background: #201515;
+  --foreground: #fffefb;
+  --card: #2a2222;
+  --card-foreground: #fffefb;
+  --popover: #312828;
+  --popover-foreground: #fffefb;
   --primary-text: #ff9b79;
-  --primary-hover: #d94e21;
-  --secondary: #30353d;
-  --secondary-foreground: #e3e5e8;
-  --muted: #292d33;
-  --muted-foreground: #b9bec6;
-  --accent: #30353d;
-  --accent-foreground: #f9fafb;
+  --primary-hover: #e64700;
+  --secondary: #36342e;
+  --secondary-foreground: #e8e4da;
+  --muted: #2e2726;
+  --muted-foreground: #c5c0b1;
+  --accent: #36342e;
+  --accent-foreground: #fffefb;
   --destructive: #ff8b96;
-  --destructive-foreground: #17191c;
+  --destructive-foreground: #201515;
   --warning: #ffc107;
   --warning-foreground: #ffc107;
-  --success: #71d58a;
-  --success-foreground: #17191c;
-  --border: #3c424b;
-  --input: #505763;
-  --chart-1: #ed5a29;
-  --chart-2: #71d58a;
+  --success: #89cda8;
+  --success-foreground: #201515;
+  --border: #4a4540;
+  --input: #5c564f;
+  --chart-1: #ff4f00;
+  --chart-2: #89cda8;
   --chart-3: #9c968a;
   --chart-4: #ffc107;
   --chart-5: #65cbdc;
-  --sidebar: #1c1f23;
-  --sidebar-foreground: #b9bec6;
+  --sidebar: #1c1212;
+  --sidebar-foreground: #c5c0b1;
   --sidebar-accent: #3c2924;
   --sidebar-accent-foreground: #ff9b79;
-  --sidebar-border: #3c424b;
-  --canvas: #17191c;
-  --canvas-elevated: #292d33;
+  --sidebar-border: #4a4540;
+  --canvas: #201515;
+  --canvas-elevated: #312828;
   --tour-overlay-scrim: rgb(0 0 0 / 70%);
 }
 
@@ -103,8 +106,10 @@
   border-color: var(--primary-hover);
 }
 
-/* User-requested exceptions: Smart Insights and Your Customer Portal retain
- * their pre-OptiMonk palette, including their loading states and QR/examples dialogs. */
+/* User-requested exceptions: Smart Insights and Your Customer Portal keep the
+ * marketing-level brand tokens (cream muted surface, darker #c5c0b1 borders)
+ * rather than the lighter dashboard steps above, including their loading
+ * states and QR/examples dialogs. */
 [data-original-dashboard-colors] {
   --background: #fffefb;
   --foreground: #120909;
