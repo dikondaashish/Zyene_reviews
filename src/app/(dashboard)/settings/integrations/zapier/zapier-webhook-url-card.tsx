@@ -35,7 +35,7 @@ export function ZapierWebhookUrlCard({
 
     return (
         <Card className="overflow-hidden border-primary/20 bg-card">
-            <div className="h-1 w-full bg-gradient-to-r from-sync-action to-primary" />
+            <div className="h-1 w-full bg-primary" />
             <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0 border-b border-border/60 bg-muted/15 pb-4">
                 <div className="space-y-1">
                     <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Setup</p>

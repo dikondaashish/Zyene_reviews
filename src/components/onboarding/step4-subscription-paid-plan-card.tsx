@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Crown, Zap, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import * as PricingCard from "@/components/ui/pricing-card";
@@ -50,7 +50,6 @@ export function Step4SubscriptionPaidPlanCard({
             <PricingCard.Header className="relative z-10 mb-2 p-2">
                 <PricingCard.Plan>
                     <PricingCard.PlanName>
-                        {isPro ? <Crown className="text-primary" aria-hidden /> : <Zap className="text-primary" aria-hidden />}
                         <span className="text-foreground">{plan.name}</span>
                     </PricingCard.PlanName>
                     <PricingCard.Badge>{isPro ? "Multi-location" : "Single location"}</PricingCard.Badge>

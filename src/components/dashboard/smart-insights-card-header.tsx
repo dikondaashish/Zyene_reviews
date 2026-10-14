@@ -1,4 +1,3 @@
-import { Sparkles } from "lucide-react";
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
 
 interface SmartInsightsCardHeaderProps {
@@ -19,7 +18,6 @@ export function SmartInsightsCardHeader({
             <div className="min-w-0 flex-1 space-y-4">
                 <div className="flex items-center gap-3 flex-wrap">
                     <div className="flex items-center gap-1.5 bg-primary/10 text-foreground px-2.5 py-1 rounded-[6px] text-xs font-semibold tracking-wide">
-                        <Sparkles className="text-primary size-3.5" />
                         Smart insights
                     </div>
                     <span className="text-[13px] font-medium text-muted-foreground">

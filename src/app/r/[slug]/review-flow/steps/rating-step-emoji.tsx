@@ -29,7 +29,7 @@ export function RatingStepEmoji({ rating, hoverRating, onRate, onHoverRating }: 
                             ? "border-primary/50 bg-primary/10 scale-105 shadow-md"
                             : rating === r.value
                                 ? "border-primary bg-primary/10 ring-2 ring-primary/20 shadow-md scale-105 z-10"
-                                : "border-border bg-background dark:border-white/10 dark:bg-[rgb(30,41,59)]"
+                                : "border-border bg-background dark:border-border dark:bg-muted"
                     )}
                 >
                     <span

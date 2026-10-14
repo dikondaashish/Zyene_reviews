@@ -1,6 +1,6 @@
 /** Resolve a brand color: if truthy, use it; otherwise fall back to a refined dark default. */
 export function resolveBrandColor(color?: string | null): string {
-    if (!color || !/^#([0-9a-fA-F]{3}){1,2}$/.test(color)) return "#0f172a";
+    if (!color || !/^#([0-9a-fA-F]{3}){1,2}$/.test(color)) return "#201515";
     if (color.length === 4) {
         const [r, g, b] = color.slice(1);
         return `#${r}${r}${g}${g}${b}${b}`;

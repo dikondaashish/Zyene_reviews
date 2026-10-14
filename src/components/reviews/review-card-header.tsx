@@ -1,4 +1,4 @@
-import { Zap } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Review } from "@/components/reviews/review-card-types";
 import { ReviewPlatform } from "@/components/reviews/review-platform";
@@ -76,8 +76,8 @@ export function ReviewCardHeader({
                 <div className="flex min-w-0 flex-wrap items-center gap-1.5 sm:max-w-[45%] sm:justify-end sm:gap-2">
                     {review.urgency_score && review.urgency_score >= 7 && (
                         <span className="flex items-center gap-1 text-[10px] font-bold text-destructive bg-destructive/10 border border-destructive/20 px-2 py-0.5 rounded-full">
-                            <Zap className="fill-destructive size-3" />
-                            URGENT
+                            <AlertTriangle className="size-3" aria-hidden="true" />
+                            Urgent
                         </span>
                     )}
                     {review.sentiment && (

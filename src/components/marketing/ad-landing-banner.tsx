@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useMarketingSignupUrl } from "@/lib/growth/marketing-signup-url";
@@ -50,7 +50,7 @@ export function AdLandingBanner({ className = "" }: { className?: string }) {
         >
             <div className="container mx-auto max-w-6xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-start gap-2">
-                    <Sparkles className="text-primary shrink-0 mt-0.5 size-4" />
+                    <Tag className="text-primary shrink-0 mt-0.5 size-4" />
                     <div>
                         <p className="text-sm font-semibold text-foreground">{banner.headline}</p>
                         <p className="text-xs text-muted-foreground">{banner.subheadline}</p>

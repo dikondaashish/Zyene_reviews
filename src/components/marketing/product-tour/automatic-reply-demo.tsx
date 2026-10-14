@@ -1,7 +1,7 @@
 "use client";
 
 import { useId } from "react";
-import { Bot, CheckCheck, RotateCcw } from "lucide-react";
+import { CheckCheck, Reply, RotateCcw } from "lucide-react";
 import { useAutoReplyDemo } from "@/components/marketing/product-tour/use-auto-reply-demo";
 import type { DemoAutoRating } from "@/types/marketing-product-demo";
 
@@ -15,7 +15,7 @@ export function AutomaticReplyDemo() {
   return (
     <section className="tour-auto" aria-label="Automatic reply demo">
       <div className="tour-auto-heading">
-        <Bot size={20} aria-hidden="true" />
+        <Reply size={20} aria-hidden="true" />
         <div><label htmlFor={`${id}-enabled`}>Try automatic replies</label><p id={`${id}-explanation`}>Choose your settings, then watch a new Google review receive a reply.</p></div>
         <button id={`${id}-enabled`} type="button" className="tour-auto-switch" role="switch" aria-checked={settings.enabled} aria-label="Try automatic replies" aria-describedby={`${id}-explanation ${id}-disclosure`} onClick={event => toggle(event.detail > 0)}><span /></button>
       </div>

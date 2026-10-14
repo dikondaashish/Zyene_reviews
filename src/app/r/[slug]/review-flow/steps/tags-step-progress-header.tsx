@@ -15,7 +15,7 @@ export function TagsStepProgressHeader({
             <div className="flex items-center gap-2" role="img" aria-label="Step 2 of 3">
                 <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor, color: readableForeground(resolvedBrandColor) }} />
                 <div className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: resolvedBrandColor, color: readableForeground(resolvedBrandColor) }} />
-                <div className="h-1.5 flex-1 bg-muted rounded-full dark:bg-[rgb(51,65,85)]" />
+                <div className="h-1.5 flex-1 bg-muted rounded-full dark:bg-accent" />
             </div>
 
             <div className="text-center space-y-1.5">

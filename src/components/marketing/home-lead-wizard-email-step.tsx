@@ -3,7 +3,7 @@
 import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 import type { FormEvent } from "react";
-import { ArrowRight, Loader2, Sparkles } from "lucide-react";
+import { ArrowRight, Download, Loader2 } from "lucide-react";
 
 type HomeLeadWizardEmailStepProps = {
   email: string;
@@ -25,7 +25,7 @@ export function HomeLeadWizardEmailStep({
   return (
     <form className="home-lead-wizard-step" key="step-two" onSubmit={onSubmit}>
       <p className="home-lead-wizard-kicker">
-        <Sparkles size={15} aria-hidden="true" /> One useful download, straight
+        <Download size={15} aria-hidden="true" /> One useful download, straight
         to you
       </p>
       <DialogTitle asChild>

@@ -1,4 +1,4 @@
-import { Sparkles } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 export function GeneratingStep() {
     return (
@@ -10,16 +10,13 @@ export function GeneratingStep() {
             </div>
 
             <div className="flex justify-center">
-                <div className="relative">
-                    <div className="bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 animate-pulse size-16">
-                        <Sparkles className="text-primary-foreground size-8" />
-                    </div>
-                    <div className="absolute -top-1 -right-1 bg-chart-4 rounded-full animate-ping size-4" />
+                <div className="flex items-center justify-center rounded-full bg-primary/10 size-16">
+                    <Loader2 className="text-primary animate-spin size-7" aria-hidden="true" />
                 </div>
             </div>
             <div>
-                <h2 className="text-xl font-bold text-foreground">Crafting your review...</h2>
-                <p className="text-sm text-muted-foreground mt-1">Just a moment…</p>
+                <h2 className="text-xl font-bold text-foreground">Writing a draft from your answers</h2>
+                <p className="text-sm text-muted-foreground mt-1">This takes a few seconds. You can edit it next.</p>
             </div>
         </div>
     );

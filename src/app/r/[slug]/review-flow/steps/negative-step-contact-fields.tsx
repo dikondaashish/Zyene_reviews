@@ -38,7 +38,7 @@ export function NegativeStepContactFields({
                             type="email"
                             autoComplete="email"
                             placeholder="you@example.com"
-                            className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:text-foreground"
+                            className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground dark:bg-muted dark:border-border dark:text-foreground"
                             value={customerEmail}
                             onChange={(e) => onCustomerEmailChange(e.target.value)}
                             onKeyDown={(e) => {
@@ -70,7 +70,7 @@ export function NegativeStepContactFields({
                             inputMode="tel"
                             autoComplete="tel"
                             placeholder="+1 (555) 000-0000"
-                            className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:text-foreground"
+                            className="w-full h-12 pl-11 pr-4 rounded-2xl border-2 border-border focus:border-primary focus:ring-0 outline-none transition-colors bg-muted text-sm placeholder:text-muted-foreground dark:bg-muted dark:border-border dark:text-foreground"
                             value={customerPhone}
                             onChange={(e) => onCustomerPhoneChange(e.target.value)}
                             onKeyDown={(e) => {

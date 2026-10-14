@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AlertTriangle, CheckCircle2, Loader2, Sparkles, Star } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Loader2, Star } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useGoogleSyncRemoteState } from "@/hooks/use-google-sync-remote-state";
@@ -87,9 +87,8 @@ export function Step5FormCelebration({
                 className="inline-flex"
             >
                 <div className="relative">
-                    <div className="absolute inset-0 bg-primary/15 rounded-full animate-ping opacity-40" />
-                    <div className="relative bg-gradient-to-br from-primary/10 to-primary/5 rounded-full flex items-center justify-center ring-1 ring-primary/20 size-16">
-                        <Sparkles className="text-primary size-8" />
+                    <div className="relative bg-primary/10 rounded-full flex items-center justify-center size-16">
+                        <CheckCircle2 className="text-primary size-8" aria-hidden="true" />
                     </div>
                 </div>
             </motion.div>

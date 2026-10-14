@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Loader2, Sparkles } from "lucide-react";
+import { ArrowRight, Clock, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -57,9 +57,9 @@ export function Step1Form({ onNext, isLoading, organizationId, initialOrgName = 
                 transition={{ delay: 0.3 }}
                 className="flex items-start gap-3 p-4 bg-primary/[0.04] border border-primary/10 rounded-2xl"
             >
-                <Sparkles className="text-primary mt-0.5 shrink-0 size-4" />
+                <Clock className="text-primary mt-0.5 shrink-0 size-4" />
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                    <span className="font-semibold text-foreground">Quick setup</span>, Most users complete
+                    <span className="font-semibold text-foreground">About 2 minutes.</span> Most people finish
                     onboarding in under 2 minutes. We&apos;ll guide you through each step.
                 </p>
             </motion.div>

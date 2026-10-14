@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Crown, Loader2, Zap } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -38,11 +38,6 @@ export function UpgradeModalPlanCards({
                         <PricingCard.Header className="relative z-10 mb-3 p-3">
                             <PricingCard.Plan>
                                 <PricingCard.PlanName>
-                                    {isPro ? (
-                                        <Crown className="text-primary" aria-hidden />
-                                    ) : (
-                                        <Zap className="text-primary" aria-hidden />
-                                    )}
                                     <span className="text-foreground">{plan.name}</span>
                                 </PricingCard.PlanName>
                                 <PricingCard.Badge>{isPro ? "Multi-location" : "Single location"}</PricingCard.Badge>

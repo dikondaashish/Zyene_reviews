@@ -1,4 +1,4 @@
-import { Check, MessageSquareText, Sparkles, Star } from "lucide-react";
+import { Check, MessageSquareText, Reply, Star } from "lucide-react";
 
 export function AuthBrandPanel() {
     return (
@@ -24,7 +24,7 @@ export function AuthBrandPanel() {
                     <blockquote>“Great coffee, a warm welcome, and a team that remembers your name. Already looking forward to my next visit.”</blockquote>
                 </div>
                 <div className="auth-reply">
-                    <div className="auth-reply-label"><Sparkles size={15} aria-hidden="true" /> A reply that sounds like you</div>
+                    <div className="auth-reply-label"><Reply size={15} aria-hidden="true" /> A reply that sounds like you</div>
                     <p>Thanks, Jordan! It means a lot to be part of your day. We’ll have your favorite ready next time.</p>
                     <span><Check size={14} aria-hidden="true" /> Ready for your review</span>
                 </div>

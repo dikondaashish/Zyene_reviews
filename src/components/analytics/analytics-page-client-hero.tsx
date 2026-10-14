@@ -1,6 +1,6 @@
 "use client";
 
-import { ChartNoAxesCombined, Sparkles } from "lucide-react";
+import { ChartNoAxesCombined } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AnalyticsReportGenerator } from "@/components/analytics/analytics-charts-registry";
 import { ExportDataButton } from "@/components/analytics/export-data-button";
@@ -47,7 +47,6 @@ export function AnalyticsPageClientHero({
                                     variant="outline"
                                     className="border-primary/30 bg-primary/10 text-primary flex items-center gap-1.5 px-3 font-bold tracking-tight"
                                 >
-                                    <Sparkles className="size-3.5" />
                                     Demo
                                 </Badge>
                             )}
