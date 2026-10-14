@@ -1,57 +1,76 @@
 import { RunAuditControls } from "@/components/google-seo-aeo/run-audit-controls";
 import { areEstimatedAeoSurfacesEnabled } from "@/lib/features/aeo-surfaces";
-import { getAuditFixAction, type AuditStatus } from "./google-seo-aeo-audit-utils";
+import { getAuditFixAction, type AuditItem, type AuditStatus } from "./google-seo-aeo-audit-utils";
 import type { GoogleSeoAeoContentProps } from "./google-seo-aeo-content-props";
 import { AuditCheckRow } from "./audit-check-row";
 import { summarizeAudits } from "./audit-presentation";
 import { AeoProfileHealthSummary } from "./aeo-profile-health-summary";
+import { SeoSection } from "./seo-section";
 
 /** Why a row carries no score. Distinct wording per cause, never a blanket one. */
 const UNSCORED_LABEL: Partial<Record<AuditStatus, string>> = {
-    pending: "Not built yet",
+    pending: "Coming soon",
     unavailable: "No data from Google",
     "not-applicable": "Does not apply",
 };
 
+/** Secondary lists stay one click away instead of pushing the work list down the page. */
+function CollapsedChecks({ title, audits, unscored }: { title: string; audits: AuditItem[]; unscored?: boolean }) {
+    if (audits.length === 0) return null;
+    return (
+        <details className="group border-t border-border">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3 text-sm font-medium text-muted-foreground hover:bg-muted/40 hover:text-foreground sm:px-6 [&::-webkit-details-marker]:hidden">
+                <span>
+                    {title} <span className="tabular-nums">({audits.length})</span>
+                </span>
+                <span className="text-xs group-open:hidden">Show</span>
+                <span className="hidden text-xs group-open:inline">Hide</span>
+            </summary>
+            <div className="divide-y divide-border border-t border-border bg-muted/20">
+                {audits.map((audit) => (
+                    <AuditCheckRow
+                        key={audit.id}
+                        audit={audit}
+                        action={unscored ? undefined : getAuditFixAction(audit.id)}
+                        statusLabel={unscored ? (UNSCORED_LABEL[audit.status] ?? "Not scored") : "On track"}
+                    />
+                ))}
+            </div>
+        </details>
+    );
+}
+
 export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoAeoContentProps }) {
     const summary = summarizeAudits(content.audits);
-    const firstPriority = summary.needsAttention[0];
+    const toFix = summary.needsAttention.length;
 
     return (
-        <section className="space-y-5" aria-labelledby="google-visibility-title">
-            <header className="flex flex-col gap-3 border-b border-border pb-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="space-y-6">
+            <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div className="min-w-0">
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Local discovery</p>
-                    <h1
-                        id="google-visibility-title"
-                        className="mt-2 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
-                    >
+                    <h1 id="google-visibility-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">
                         Google SEO &amp; AI visibility
                     </h1>
-                    <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-                        A practical view of what will strengthen {content.businessName} in Google Search and answer
-                        engines.
+                    <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted-foreground">
+                        How {content.businessName} shows up in Google Search and AI answers, and what to improve next.
                     </p>
                 </div>
                 {areEstimatedAeoSurfacesEnabled() ? <RunAuditControls businessId={content.businessId} /> : null}
             </header>
 
-            <AeoProfileHealthSummary content={content} summary={summary} priorityAudit={firstPriority} />
+            <AeoProfileHealthSummary content={content} summary={summary} priorityAudit={summary.needsAttention[0]} />
 
-            <section className="overflow-hidden rounded-xl border bg-card" aria-labelledby="audit-results-title">
-                <div className="flex flex-col gap-2 border-b border-border px-5 py-5 sm:px-6 sm:py-6">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                        <h2 id="audit-results-title" className="text-lg font-semibold">
-                            What to work on
-                        </h2>
-                        <span className="text-sm text-muted-foreground">Direct Google-ready actions</span>
-                    </div>
-                    <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-                        Improvements lead the list. Completed checks stay visible below, with their related workflow one
-                        click away.
-                    </p>
-                </div>
-                {summary.needsAttention.length > 0 ? (
+            <SeoSection
+                id="audit-results-title"
+                title="What to fix"
+                description="Highest-impact improvements first. Each one links straight to where you fix it."
+                actions={
+                    <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium tabular-nums text-muted-foreground">
+                        {toFix === 0 ? "All clear" : `${toFix} open`}
+                    </span>
+                }
+            >
+                {toFix > 0 ? (
                     <div className="divide-y divide-border">
                         {summary.needsAttention.map((audit) => (
                             <AuditCheckRow
@@ -63,51 +82,13 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
                         ))}
                     </div>
                 ) : (
-                    <div className="px-5 py-6 text-sm text-muted-foreground sm:px-6">
-                        Every measured check is currently on track.
-                    </div>
+                    <p className="px-5 py-6 text-sm text-muted-foreground sm:px-6">
+                        Nothing to fix right now. Every measured check is on track.
+                    </p>
                 )}
-                {summary.onTrack.length > 0 ? (
-                    <div className="border-t border-border bg-muted/25">
-                        <div className="px-5 py-3 text-sm font-medium text-muted-foreground sm:px-6">On track</div>
-                        <div className="divide-y divide-border">
-                            {summary.onTrack.map((audit) => (
-                                <AuditCheckRow
-                                    key={audit.id}
-                                    audit={audit}
-                                    action={getAuditFixAction(audit.id)}
-                                    statusLabel="On track"
-                                />
-                            ))}
-                        </div>
-                    </div>
-                ) : null}
-            </section>
-
-            {summary.unscored.length > 0 ? (
-                <section
-                    className="overflow-hidden rounded-xl border border-dashed bg-muted/20"
-                    aria-labelledby="unscored-checks-title"
-                >
-                    <div className="border-b border-dashed border-border px-5 py-4 sm:px-6">
-                        <h2 id="unscored-checks-title" className="font-medium text-foreground">
-                            Outside the score
-                        </h2>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                            These checks have a distinct status and do not affect profile health.
-                        </p>
-                    </div>
-                    <div className="divide-y divide-dashed divide-border">
-                        {summary.unscored.map((audit) => (
-                            <AuditCheckRow
-                                key={audit.id}
-                                audit={audit}
-                                statusLabel={UNSCORED_LABEL[audit.status] ?? "Not scored"}
-                            />
-                        ))}
-                    </div>
-                </section>
-            ) : null}
-        </section>
+                <CollapsedChecks title="On track" audits={summary.onTrack} />
+                <CollapsedChecks title="Not scored" audits={summary.unscored} unscored />
+            </SeoSection>
+        </div>
     );
 }

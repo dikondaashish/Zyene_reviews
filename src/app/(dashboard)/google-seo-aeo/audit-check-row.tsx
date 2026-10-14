@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, Check, CircleDashed, TriangleAlert } from "lucide-react";
+import { ArrowRight, Check, CircleDashed, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { AuditFixAction, AuditItem } from "./google-seo-aeo-audit-utils";
@@ -13,47 +13,48 @@ type AuditCheckRowProps = {
 export function AuditCheckRow({ audit, action, statusLabel }: AuditCheckRowProps) {
     const isPassing = audit.status === "pass";
     const needsAttention = audit.status === "fail";
+    const isUnscored = !isPassing && !needsAttention;
     const Icon = isPassing ? Check : needsAttention ? TriangleAlert : CircleDashed;
 
     return (
-        <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:gap-4 sm:px-6">
+        <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-3 gap-y-3 px-5 py-4 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:gap-x-4 sm:px-6">
             <span
                 aria-hidden="true"
                 className={cn(
-                    "grid size-8 shrink-0 place-items-center rounded-full",
+                    "mt-0.5 grid size-7 shrink-0 place-items-center rounded-full sm:mt-0",
                     isPassing && "bg-success/10 text-success",
                     needsAttention && "bg-destructive/10 text-destructive",
-                    !isPassing && !needsAttention && "bg-muted text-muted-foreground",
+                    isUnscored && "bg-muted text-muted-foreground",
                 )}
             >
-                <Icon className="size-4" />
+                <Icon className="size-3.5" />
             </span>
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                    <h3 className="font-medium text-foreground">{audit.label}</h3>
+                    <h3 className="text-sm font-medium text-foreground">{audit.label}</h3>
+                    {/* The list heading already says "fix" or "on track"; only unscored rows need a visible reason. */}
                     <span
                         className={cn(
-                            "text-xs font-medium",
-                            isPassing && "text-success",
-                            needsAttention && "text-destructive",
-                            !isPassing && !needsAttention && "text-muted-foreground",
+                            isUnscored
+                                ? "rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
+                                : "sr-only",
                         )}
                     >
                         {statusLabel}
                     </span>
                 </div>
-                <p className="mt-1 text-sm leading-5 text-muted-foreground">{audit.detail}</p>
+                <p className="mt-0.5 text-sm leading-6 text-muted-foreground">{audit.detail}</p>
             </div>
             {action ? (
                 <Button
                     asChild
                     size="sm"
                     variant={needsAttention ? "default" : "outline"}
-                    className="shrink-0 self-start sm:self-auto"
+                    className="col-start-2 justify-self-start sm:col-start-auto"
                 >
                     <Link href={action.href}>
                         {action.label}
-                        <ArrowUpRight className="size-3.5" />
+                        <ArrowRight className="size-3.5" />
                     </Link>
                 </Button>
             ) : null}
