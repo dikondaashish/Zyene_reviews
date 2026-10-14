@@ -1,44 +1,31 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { Loader2 } from "lucide-react";
+import { useTransition } from "react";
+import { Loader2, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { runGoogleSeoAeoSyncNow } from "@/app/actions/google-seo-aeo";
 import { useRouter } from "next/navigation";
 
-export function RunAuditControls({
-    businessId,
-}: {
-    businessId: string;
-}) {
+/** Re-runs this page's audit pipeline only - not tied to cron jobs or review sync. */
+export function RunAuditControls({ businessId }: { businessId: string }) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
-    const [busy, setBusy] = useState(false);
 
     const runSync = () => {
-        setBusy(true);
         startTransition(async () => {
             const r = await runGoogleSeoAeoSyncNow(businessId);
             if (r.success) {
-                toast.success("Google SEO/AEO sync queued.");
+                toast.success("Refresh queued. New results appear in a few minutes.");
                 router.refresh();
-            } else toast.error(r.error || "Failed to queue Google SEO/AEO sync.");
-            setBusy(false);
+            } else toast.error(r.error || "Could not start the refresh. Try again.");
         });
     };
 
     return (
-        <div className="rounded-lg border p-3">
-            <p className="text-sm font-medium mb-2">Google SEO/AEO Sync</p>
-            <p className="text-xs text-muted-foreground mb-3">
-                Runs this page audit pipeline only. Not tied to cron jobs or review sync.
-            </p>
-            <Button onClick={runSync} disabled={isPending || busy}>
-                {busy ? <Loader2 className="mr-2 animate-spin size-4" /> : null}
-                Sync
-            </Button>
-        </div>
+        <Button variant="outline" onClick={runSync} disabled={isPending} className="shrink-0">
+            {isPending ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}
+            {isPending ? "Refreshing…" : "Refresh audit"}
+        </Button>
     );
 }
-
