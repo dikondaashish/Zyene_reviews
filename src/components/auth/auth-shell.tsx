@@ -11,7 +11,7 @@ import "@/components/auth/auth-form.css";
 
 export function AuthShell({ children }: { children: ReactNode }) {
     return (
-        <div className="auth-shell">
+        <div className="auth-shell" data-app-palette>
             <a href="#auth-content" className="auth-skip">Skip to form</a>
             <header className="auth-header">
                 <ZyeneReviewsLogoLink href={MARKETING_SITE_ORIGIN} size={36} priority />
@@ -23,7 +23,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
                 <AuthBrandPanel />
                 <div className="auth-main-column">
                     <main id="auth-content" className="auth-main" tabIndex={-1}>
-                        <div className="auth-form-container">
+                        <div className="auth-form-container auth-card">
                             <p className="auth-kicker"><SceneStars delay={0.2} size={13} /> Reviews, replies and ratings in one place</p>
                             {children}
                         </div>

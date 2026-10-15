@@ -86,7 +86,7 @@ export function GoogleIdentityButton({
             button.replaceChildren();
             window.google?.accounts.id.renderButton(button, {
                 type: "standard", theme: "outline", size: "large",
-                text: intent === "signin" ? "signin_with" : "signup_with",
+                text: "continue_with",
                 shape: "rectangular", logo_alignment: "left", width,
             });
         });

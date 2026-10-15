@@ -6,8 +6,19 @@
 .auth-form-stack > :nth-child(4) { animation-delay: 120ms; }
 .auth-form-stack > :nth-child(n + 5) { animation-delay: 160ms; }
 @keyframes auth-rise { from { opacity: 0; transform: translateY(10px); } }
-.auth-form-heading h1 { font-size: 32px; font-weight: 600; line-height: 1.16; letter-spacing: -.04em; margin: 0 0 12px; }
-.auth-form-heading p { font-size: 15px; line-height: 1.6; color: var(--muted-foreground); }
+/* Desktop: the form sits in a white card on the cool #f9fafb app canvas. */
+@media (min-width: 961px) {
+  .auth-card {
+    max-width: 464px;
+    padding: 40px 40px 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--foreground) 6%, transparent), 0 24px 48px -28px color-mix(in srgb, var(--foreground) 22%, transparent);
+  }
+}
+.auth-form-heading h1 { font-size: 28px; font-weight: 650; line-height: 1.18; letter-spacing: -.03em; margin: 0 0 8px; text-wrap: balance; }
+.auth-form-heading p { font-size: 15px; line-height: 1.55; color: var(--muted-foreground); text-wrap: pretty; }
 .auth-fields { display: grid; gap: 18px; }
 .auth-field { display: grid; gap: 8px; }
 .auth-field label, .auth-label { font-size: 13px; font-weight: 550; color: var(--foreground); }
@@ -19,17 +30,21 @@
   border: 1px solid var(--input);
   border-radius: 10px;
   color: var(--foreground);
-  background: var(--background);
+  background: var(--card);
   font-size: 16px;
   line-height: 24px;
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--foreground) 5%, transparent);
   transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
 }
-.auth-input::placeholder { color: var(--muted-foreground); opacity: .8; }
-.auth-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent); }
+.auth-input::placeholder { color: var(--muted-foreground); opacity: .75; }
+.auth-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 14%, transparent); }
 .auth-input:disabled { opacity: .6; cursor: not-allowed; }
-.auth-password { position: relative; }
+.auth-input-wrap { position: relative; }
+.auth-input-wrap .auth-input { padding-left: 42px; }
+.auth-input-icon { position: absolute; left: 14px; top: 50%; translate: 0 -50%; color: var(--muted-foreground); pointer-events: none; transition: color 150ms ease-out; }
+.auth-input-wrap:focus-within .auth-input-icon { color: var(--primary-text); }
 .auth-password .auth-input { padding-right: 50px; }
-.auth-password-toggle { display: grid; place-items: center; width: 44px; height: 44px; position: absolute; right: 2px; top: 2px; color: var(--muted-foreground); border-radius: 8px; cursor: pointer; }
+.auth-password-toggle { display: grid; place-items: center; width: 44px; height: 44px; position: absolute; right: 2px; top: 50%; translate: 0 -50%; color: var(--muted-foreground); border-radius: 8px; cursor: pointer; }
 .auth-submit {
   width: 100%;
   min-height: 48px;
@@ -45,14 +60,15 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: box-shadow 160ms ease-out, transform 160ms ease-out;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--primary-foreground) 18%, transparent), 0 1px 2px color-mix(in srgb, var(--primary) 35%, transparent);
+  transition: box-shadow 160ms ease-out, transform 160ms ease-out, background-color 160ms ease-out;
 }
 .auth-submit:disabled { opacity: .6; cursor: wait; }
 .auth-submit:active:not(:disabled) { transform: scale(var(--motion-press-scale-subtle)); }
 .auth-submit svg:last-child { transition: transform var(--motion-response-fast) var(--motion-ease-damped); }
 .auth-text-link { color: var(--foreground); font-size: 13px; font-weight: 550; text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 4px; }
-.auth-divider { display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--muted-foreground); }
-.auth-divider::before, .auth-divider::after { content: ""; height: 1px; flex: 1; background: color-mix(in srgb, var(--border) 65%, transparent); }
+.auth-divider { display: flex; align-items: center; gap: 14px; font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
+.auth-divider::before, .auth-divider::after { content: ""; height: 1px; flex: 1; background: var(--border); }
 .auth-switch { font-size: 14px; color: var(--muted-foreground); text-align: center; line-height: 1.6; }
 .auth-switch a { font-size: inherit; margin-left: 4px; }
 .auth-hint { font-size: 12px; line-height: 1.6; color: var(--muted-foreground); }
@@ -71,16 +87,19 @@
 .auth-consent a { text-decoration: underline; text-underline-offset: 2px; }
 .auth-error { display: flex; align-items: flex-start; gap: 9px; padding: 12px 14px; border-radius: 10px; border: 1px solid color-mix(in srgb, var(--destructive) 35%, var(--border)); background: color-mix(in srgb, var(--destructive) 5%, var(--background)); font-size: 13px; line-height: 1.5; }
 .auth-error svg { flex-shrink: 0; margin-top: 2px; }
-.auth-status-icon { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 14px; background: color-mix(in srgb, var(--primary) 8%, var(--background)); color: var(--foreground); }
+.auth-status-icon { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 14px; background: color-mix(in srgb, var(--primary) 10%, var(--card)); color: var(--primary-text); }
+.auth-status-icon--success { background: color-mix(in srgb, var(--success) 12%, var(--card)); color: var(--success); }
+.auth-status-icon--warning { background: color-mix(in srgb, var(--destructive) 10%, var(--card)); color: var(--destructive); }
 .auth-status-email { overflow-wrap: anywhere; color: var(--foreground); font-weight: 550; }
 .auth-google-note { margin-top: 10px; text-align: center; font-size: 12px; line-height: 1.5; color: var(--muted-foreground); }
 .auth-google { position: relative; width: 100%; min-height: 44px; display: flex; justify-content: center; }
 .auth-google-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--input); background: var(--background); color: var(--muted-foreground); border-radius: 10px; font-size: 13px; pointer-events: none; }
-.auth-google-unavailable { border: 1px solid var(--border); background: var(--canvas); padding: 12px; border-radius: 10px; text-align: center; color: var(--muted-foreground); font-size: 13px; line-height: 1.5; }
+.auth-google-unavailable { border: 1px dashed var(--input); background: var(--canvas); padding: 12px; border-radius: 10px; text-align: center; color: var(--muted-foreground); font-size: 13px; line-height: 1.5; }
 .auth-google-button { width: 100%; min-height: 44px; display: flex; justify-content: center; }
 .auth-loading { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 300px; color: var(--muted-foreground); font-size: 14px; }
 @media (hover: hover) and (pointer: fine) {
-  .auth-submit:hover:not(:disabled) { box-shadow: 0 8px 20px -6px color-mix(in srgb, var(--primary) 45%, transparent); }
+  .auth-submit:hover:not(:disabled) { background-color: var(--primary-hover); border-color: var(--primary-hover); box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--primary) 55%, transparent); }
+  .auth-input:hover:not(:focus):not(:disabled) { border-color: color-mix(in srgb, var(--foreground) 28%, var(--input)); }
   .auth-submit:hover:not(:disabled) svg:last-child { transform: translateX(3px); }
   .auth-text-link:hover { text-decoration-color: var(--foreground); }
   .auth-help:hover, .auth-footer a:hover, .auth-password-toggle:hover { color: var(--foreground); }
@@ -136,6 +155,43 @@
   .auth-password-toggle { width: 36px; height: 36px; }
   .auth-fields .auth-field > .auth-hint { display: none; }
   .auth-legal { font-size: 10px; line-height: 1.35; }
+}
+/*
+ * Desktop card: spacing scales with window height so even the long sign-up
+ * form never scrolls. The .auth-card prefix outranks the max-height steps
+ * above, which still govern phones.
+ */
+@media (min-width: 961px) {
+  .auth-card {
+    --auth-pad: clamp(16px, 3.6vh, 40px);
+    --auth-gap: clamp(10px, 2vh, 24px);
+    --auth-fields-gap: clamp(8px, 1.4vh, 16px);
+    padding: var(--auth-pad) clamp(26px, 2.6vw, 40px);
+  }
+  /* The long sign-up form scales tighter. */
+  .auth-card:has(.auth-optional) {
+    --auth-pad: clamp(12px, 2.4vh, 40px);
+    --auth-gap: clamp(6px, 1vh, 24px);
+    --auth-fields-gap: clamp(6px, 1vh, 16px);
+  }
+  .auth-card .auth-form-stack { gap: var(--auth-gap); }
+  .auth-card .auth-fields { gap: var(--auth-fields-gap); }
+  .auth-card .auth-field { gap: clamp(4px, .6vh, 8px); }
+  .auth-card .auth-input, .auth-card .auth-submit { min-height: 0; height: clamp(40px, 5vh, 48px); }
+  .auth-card .auth-form-heading h1 { font-size: clamp(22px, 3vh, 28px); margin-bottom: clamp(4px, .7vh, 8px); }
+  .auth-card .auth-form-heading p { font-size: clamp(13px, 1.6vh, 15px); line-height: 1.45; }
+  .auth-card .auth-google-note { display: none; }
+}
+@media (min-width: 961px) and (max-height: 760px) {
+  .auth-card .auth-fields .auth-field > .auth-hint { display: none; }
+}
+@media (min-width: 961px) and (max-height: 700px) {
+  .auth-card { padding-block: 12px; border-radius: 16px; }
+  .auth-card .auth-form-stack, .auth-card .auth-fields { gap: 6px; }
+}
+@media (min-width: 961px) and (max-height: 640px) {
+  .auth-card { padding-block: 8px; }
+  .auth-card .auth-input, .auth-card .auth-submit { height: 38px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .auth-shell *, .auth-shell *::before, .auth-shell *::after { transition: none !important; animation: none !important; }

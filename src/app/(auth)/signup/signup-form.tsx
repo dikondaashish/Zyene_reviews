@@ -18,7 +18,7 @@ export function SignupForm({ googleClientId }: { googleClientId: string }) {
     }
     return (
         <div className="auth-form-stack">
-            <AuthHeading title={inviteToken ? "Join your team" : "Start something good."}>
+            <AuthHeading title={inviteToken ? "Join your team on Zyene Reviews" : "Create your account"}>
                 {inviteToken
                     ? "Create your account with the email your team invited. Your workspace will be ready for you."
                     : "7-day trial on eligible new plans. Card required; your plan bills automatically unless you cancel in Billing."}

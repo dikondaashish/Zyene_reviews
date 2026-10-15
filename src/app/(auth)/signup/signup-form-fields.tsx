@@ -1,6 +1,7 @@
 "use client";
 
-import { AuthError, AuthPasswordField, AuthSubmit } from "@/components/auth/auth-form-ui";
+import { Mail, UserRound } from "lucide-react";
+import { AuthError, AuthInput, AuthPasswordField, AuthSubmit } from "@/components/auth/auth-form-ui";
 import { PasswordStrengthIndicator } from "@/components/auth/password-strength";
 import { SignupFormPhoneFields } from "@/app/(auth)/signup/signup-form-phone-fields";
 import type { useSignupForm } from "@/app/(auth)/signup/use-signup-form";
@@ -13,15 +14,15 @@ export function SignupFormFields(props: ReturnType<typeof useSignupForm>) {
             <AuthError message={formError} />
             <div className="auth-field">
                 <label htmlFor="fullName">Full name</label>
-                <input id="fullName" name="fullName" type="text" placeholder="Your full name"
+                <AuthInput icon={UserRound} id="fullName" name="fullName" type="text" placeholder="Your full name"
                     value={fullName} onChange={(e) => setFullName(e.target.value)} required
-                    disabled={isLoading} autoComplete="name" className="auth-input" />
+                    disabled={isLoading} autoComplete="name" />
             </div>
             <div className="auth-field">
                 <label htmlFor="email">Email address</label>
-                <input id="email" name="email" type="email" placeholder="you@business.com"
+                <AuthInput icon={Mail} id="email" name="email" type="email" placeholder="you@business.com"
                     value={email} onChange={(e) => setEmail(e.target.value)} required disabled={isLoading}
-                    autoComplete="email" autoCapitalize="none" autoCorrect="off" className="auth-input" />
+                    autoComplete="email" autoCapitalize="none" autoCorrect="off" />
             </div>
             <div className="auth-field">
                 <label htmlFor="password">Password</label>

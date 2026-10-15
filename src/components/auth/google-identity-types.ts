@@ -18,7 +18,7 @@ export interface GoogleIdentityApi {
             type: "standard";
             theme: "filled_black" | "outline";
             size: "large";
-            text: "signin_with" | "signup_with";
+            text: "signin_with" | "signup_with" | "continue_with" | "signin";
             shape: "pill" | "rectangular";
             logo_alignment: "left";
             width: number;

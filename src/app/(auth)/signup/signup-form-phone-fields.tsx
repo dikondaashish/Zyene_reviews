@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Smartphone } from "lucide-react";
+import { AuthInput } from "@/components/auth/auth-form-ui";
 import { MARKETING_SITE_ORIGIN } from "@/lib/seo/marketing-site-url";
 
 type SignupFormPhoneFieldsProps = {
@@ -20,9 +21,9 @@ export function SignupFormPhoneFields({ phone, setPhone, smsReviewAlertsConsent,
             <div className="auth-optional-content">
                 <div className="auth-field">
                     <label htmlFor="phone">Mobile number</label>
-                    <input id="phone" name="phone" type="tel" placeholder="+1 555 123 4567" value={phone}
+                    <AuthInput icon={Smartphone} id="phone" name="phone" type="tel" placeholder="+1 555 123 4567" value={phone}
                         onChange={(e) => setPhone(e.target.value)} disabled={isLoading} autoComplete="tel"
-                        aria-describedby="phone-help" className="auth-input" />
+                        aria-describedby="phone-help" />
                     <p id="phone-help" className="auth-hint">Include your country code. You can also set this up later in Settings.</p>
                 </div>
                 <div className="auth-consent">
