@@ -16,9 +16,9 @@
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.78);
   border-radius: 30px;
-  background: linear-gradient(140deg, #fffdfa 0%, #fffaf5 46%, #fffefb 100%);
+  background: linear-gradient(140deg, var(--card) 0%, var(--card) 46%, var(--card) 100%);
   box-shadow:
-    0 20px 60px rgba(75, 43, 28, 0.08),
+    0 20px 60px color-mix(in srgb, var(--foreground) 8%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 .home-hero-shell::before {
@@ -100,7 +100,7 @@
   padding: 8px 14px;
   margin-bottom: 24px;
   background: var(--brand-wash);
-  color: #c83b00;
+  color: var(--brand-orange-ink);
   font-size: 11px;
   font-weight: 650;
   letter-spacing: 0.065em;
@@ -118,7 +118,7 @@
   letter-spacing: -0.05em;
   line-height: 1.1;
   text-wrap: initial;
-  color: #150d0b;
+  color: var(--foreground);
 }
 .home-hero h1 span {
   display: block;
@@ -149,8 +149,8 @@
   white-space: nowrap;
 }
 .home-hero-actions .marketing-button-secondary {
-  border-color: #ddd8d3;
-  background: #fffefb;
+  border-color: var(--border);
+  background: var(--card);
 }
 .home-hero-benefits {
   display: flex;
@@ -169,18 +169,18 @@
 .home-hero-benefits svg {
   width: 16px;
   height: 16px;
-  color: #201515;
+  color: var(--foreground);
   flex-shrink: 0;
 }
 @media (hover: hover) and (pointer: fine) {
   .home-hero-actions .marketing-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px #ff4f0026;
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--brand-orange) 14.9%, transparent);
   }
   .home-hero-actions .marketing-button-secondary:hover {
     background: var(--brand-wash);
     box-shadow: none;
-    border-color: #d2c8c0;
+    border-color: var(--input);
   }
   .home-hero-actions .marketing-button:hover svg {
     transform: translateX(4px);
@@ -309,7 +309,7 @@
 @media (prefers-reduced-transparency: reduce) {
   .home-hero-shell {
     background: var(--background);
-    box-shadow: 0 8px 24px rgba(32, 21, 21, 0.06);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--foreground) 6%, transparent);
   }
   .home-hero-shell::before {
     display: none;

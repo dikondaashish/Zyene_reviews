@@ -70,59 +70,75 @@
 
 :root {
   --radius: 0.5rem;
-  --background: #fffefb;
-  --foreground: #120909;
-  --card: #fffefb;
-  --card-foreground: #201515;
-  --popover: #fffefb;
-  --popover-foreground: #201515;
-  --brand-accent: #ff4f00;
-  --primary: #ff4f00;
-  /* Preserve Zyene’s original brand orange for actions in both themes. */
+  --background: #f7f5f1;
+  --foreground: #23262a;
+  --card: #ffffff;
+  --card-foreground: #23262a;
+  --popover: #ffffff;
+  --popover-foreground: #23262a;
+  --brand-accent: #ed5a29;
+  --primary: #ed5a29;
+  /* Brand orange (OptiMonk-matched #ed5a29) for actions in both themes. */
   --primary-foreground: #ffffff;
   --cta: var(--primary);
-  --cta-foreground: #fffefb;
-  --secondary: #eceae3;
-  --secondary-foreground: #36342e;
-  --muted: #fffdf9;
-  --muted-foreground: #6d685d;
-  --accent: #eceae3;
-  --accent-foreground: #201515;
-  --destructive: oklch(0.6 0.2 25);
+  --cta-foreground: #ffffff;
+  --secondary: #f1f2f4;
+  --secondary-foreground: #23262a;
+  --muted: #f2f0eb;
+  --muted-foreground: #505763;
+  --accent: #f1f2f4;
+  --accent-foreground: #23262a;
+  --destructive: #cc0000;
   --destructive-foreground: #ffffff;
   /* Caution, not failure: quota approaching a limit, a medium-severity finding.
      `--warning` is the tint (backgrounds, borders); `--warning-foreground` is
      the text sitting on that tint, darkened here so it clears contrast on a
      light surface. Replaces scattered `amber-500/amber-700` literals. */
-  --warning: oklch(0.75 0.15 70);
-  --warning-foreground: oklch(0.45 0.12 70);
-  --success: #287653;
+  --warning: #fbbf24;
+  --warning-foreground: #854d0e;
+  --success: #166534;
   --success-foreground: #ffffff;
-  --border: #c5c0b1;
-  --input: #c5c0b1;
-  --ring: #ff4f00;
-  --chart-1: oklch(0.6 0.2 250);
-  --chart-2: oklch(0.7 0.15 180);
-  --chart-3: oklch(0.45 0.1 220);
-  --chart-4: oklch(0.85 0.15 80);
-  --chart-5: oklch(0.75 0.15 60);
-  --sidebar: #fffefb;
-  --sidebar-foreground: #201515;
+  --border: #e3e5e8;
+  --input: #d5d8dd;
+  --ring: #ed5a29;
+  --chart-1: #ed5a29;
+  --chart-2: #2cc896;
+  --chart-3: #505763;
+  --chart-4: #fbbf24;
+  --chart-5: #3b82f6;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #23262a;
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #eceae3;
-  --sidebar-accent-foreground: #201515;
-  --sidebar-border: #c5c0b1;
+  --sidebar-accent: #feefea;
+  --sidebar-accent-foreground: #b8410f;
+  --sidebar-border: #e3e5e8;
   --sidebar-ring: var(--ring);
-  --canvas: #f7f5ef;
-  --canvas-elevated: #f9f7f3;
-  --marketing-footer-bg: #201515;
-  --marketing-footer-fg: #fffefb;
-  --marketing-footer-muted: #c5c0b1;
-  --marketing-footer-subtle: #939084;
-  --marketing-footer-border: #36342e;
+  --canvas: #f7f5f1;
+  --canvas-elevated: #ffffff;
+  /* Marketing brand scale (matched to optimonk.com). Defined at the root too so
+     marketing dialogs portalled outside .marketing-site still resolve. */
+  --brand-orange: #ed5a29;
+  --brand-orange-hover: #dd4513;
+  --brand-orange-light: #f17e58;
+  --brand-orange-active: #d14212;
+  --brand-orange-ink: #b8410f;
+  --brand-wash: #feefea;
+  --brand-wash-border: #f8cdbb;
+  --brand-focus: #f7b59f;
+  --ink-subtle: #8f97a4;
+  --ink-inverse: #ffffff;
+  --surface-dark: #23262a;
+  --surface-dark-panel: #1a1c1f;
+  --success-wash: #dcfce7;
+  --success-bright: #2cc896;
+  --marketing-footer-bg: #23262a;
+  --marketing-footer-fg: #ffffff;
+  --marketing-footer-muted: #b9bec6;
+  --marketing-footer-subtle: #8f97a4;
+  --marketing-footer-border: #3a3e44;
   --embed-widget-rating: #241a59;
-  --marketing-footer-list: #eceae3;
+  --marketing-footer-list: #e3e5e8;
   --brand-google: #4285f4;
   /* Google "G" multi-color (official brand); used by inline SVGs */
   --google-logo-green: #34a853;
@@ -153,7 +169,7 @@
   /* Hero grid background */
   --hero-grid-line: rgba(0, 0, 0, 0.07);
   --hero-grid-dot: rgba(0, 0, 0, 0.18);
-  --hero-grid-glow: rgba(255, 79, 0, 0.05);
+  --hero-grid-glow: rgba(237, 90, 41, 0.05);
 
   /* ---------------------------------------------------------------------
    * Motion - Apple's damping/response model (see .claude/skills/apple-design).
@@ -181,46 +197,46 @@
 }
 
 .dark {
-  --background: #201515;
-  --foreground: #fffefb;
-  --card: #2a2222;
-  --card-foreground: #fffefb;
-  --popover: #2a2222;
-  --popover-foreground: #fffefb;
-  --primary: #ff4f00;
+  --background: #1a1c1f;
+  --foreground: #f9fafb;
+  --card: #23262a;
+  --card-foreground: #f9fafb;
+  --popover: #23262a;
+  --popover-foreground: #f9fafb;
+  --primary: #ed5a29;
   /* Keep primary button text readable on orange in dark mode */
   --primary-foreground: #ffffff;
   --cta: var(--primary);
   --cta-foreground: var(--primary-foreground);
-  --secondary: #36342e;
-  --secondary-foreground: #fffefb;
-  --muted: #2d2d2e;
-  --muted-foreground: #c5c0b1;
-  --accent: #36342e;
-  --accent-foreground: #fffefb;
-  --destructive: #ef8f8f;
-  --destructive-foreground: #201515;
+  --secondary: #2e3237;
+  --secondary-foreground: #f9fafb;
+  --muted: #23262a;
+  --muted-foreground: #b9bec6;
+  --accent: #2e3237;
+  --accent-foreground: #f9fafb;
+  --destructive: #f87171;
+  --destructive-foreground: #111213;
   /* Dark theme: the tint stays close, the text lightens to clear contrast on a
      dark surface - mirroring the old `dark:text-amber-400` override. */
-  --warning: oklch(0.8 0.13 70);
-  --warning-foreground: oklch(0.85 0.12 80);
-  --success: #89cda8;
-  --success-foreground: #201515;
-  --border: #4a4540;
-  --input: #4a4540;
-  --ring: #ff4f00;
-  --chart-1: oklch(0.65 0.18 250);
-  --chart-2: oklch(0.75 0.12 180);
-  --chart-3: oklch(0.55 0.1 220);
-  --chart-4: oklch(0.9 0.12 80);
-  --chart-5: oklch(0.8 0.12 60);
-  --sidebar: #201515;
-  --sidebar-foreground: #fffefb;
+  --warning: #fbbf24;
+  --warning-foreground: #fcd34d;
+  --success: #2cc896;
+  --success-foreground: #111213;
+  --border: #3a3e44;
+  --input: #4a4f56;
+  --ring: #ed5a29;
+  --chart-1: #f17e58;
+  --chart-2: #2cc896;
+  --chart-3: #b9bec6;
+  --chart-4: #fbbf24;
+  --chart-5: #60a5fa;
+  --sidebar: #111213;
+  --sidebar-foreground: #f9fafb;
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: #36342e;
-  --sidebar-accent-foreground: #fffefb;
-  --sidebar-border: #4a4540;
+  --sidebar-accent: #3c2621;
+  --sidebar-accent-foreground: #f17e58;
+  --sidebar-border: #3a3e44;
   --sidebar-ring: var(--ring);
   --canvas: var(--background);
   --canvas-elevated: var(--card);
@@ -240,7 +256,7 @@
   /* Hero grid background */
   --hero-grid-line: rgba(255, 255, 255, 0.08);
   --hero-grid-dot: rgba(255, 255, 255, 0.20);
-  --hero-grid-glow: rgba(255, 79, 0, 0.05);
+  --hero-grid-glow: rgba(237, 90, 41, 0.05);
 }
 
 @layer base {

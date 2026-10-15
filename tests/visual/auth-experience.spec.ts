@@ -16,7 +16,7 @@ test("dark mode preserves readable controls and the brand orange", async ({ page
   await page.addInitScript(() => localStorage.setItem("theme", "dark"));
   await page.goto("/login", { waitUntil: "domcontentloaded" });
   await expect(page.locator("html")).toHaveClass(/dark/);
-  await expect(page.getByRole("button", { name: "Log in", exact: true })).toHaveCSS("background-color", "rgb(255, 79, 0)");
+  await expect(page.getByRole("button", { name: "Log in", exact: true })).toHaveCSS("background-color", "rgb(237, 90, 41)");
   await expect(page.getByLabel("Email address")).toBeVisible();
   await page.setViewportSize({ width: 320, height: 900 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
@@ -30,7 +30,7 @@ for (const path of ["/login", "/signup", "/forgot-password"]) {
       await page.setViewportSize({ width, height: 900 });
       await expect(page.getByLabel("Email address")).toBeVisible();
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
-      await expect(page.locator('button[type="submit"]')).toHaveCSS("background-color", "rgb(255, 79, 0)");
+      await expect(page.locator('button[type="submit"]')).toHaveCSS("background-color", "rgb(237, 90, 41)");
       await expect(page.getByLabel("Email address")).toHaveCSS("font-size", "16px");
       if (width !== 390) {
         await page.screenshot({ path: test.info().outputPath(`auth-${width}.png`), fullPage: true });

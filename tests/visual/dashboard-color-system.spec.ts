@@ -15,7 +15,7 @@ for (const themeName of ["light", "dark"]) {
     await page.goto("/__color-fixture");
     await expect(page.getByTestId("page-title")).toHaveCSS("font-size", "24px");
     await expect(page.getByTestId("body-copy")).toHaveCSS("font-size", "14px");
-    await expect(page.getByTestId("action")).toHaveCSS("background-color", "rgb(255, 79, 0)");
+    await expect(page.getByTestId("action")).toHaveCSS("background-color", "rgb(237, 90, 41)");
     for (const status of ["success", "warning"]) {
       const ratio = await page.getByTestId(status).evaluate(element => {
         const canvas = document.createElement("canvas"); canvas.width = canvas.height = 1;
