@@ -1,4 +1,4 @@
-import type { BlogPost, ContentSection } from "@/lib/content/blog-types";
+import type { BlogPostSource, ContentSection } from "@/lib/content/blog-types";
 
 const TEMPLATES = [
   ["SMS: completed service", "Hi [first name], thanks for choosing [business]. Would you share an honest review of your experience? [review link] Reply STOP to opt out."],
@@ -18,13 +18,13 @@ const TEMPLATES = [
   ["Email: optional reminder", "Subject: An optional reminder from [business]\nIf you have not already shared feedback and would like to, here is the review link: [review link]. Thank you for your time. [Unsubscribe link]"],
 ] as const;
 
-export const post21: BlogPost = {
+export const howToAskCustomersForReviewsSmsEmailTemplatesPost: BlogPostSource = {
   slug: "how-to-ask-customers-for-reviews-sms-email-templates",
   title: "How to Ask for Reviews via Text & Email (15 US Templates)",
   excerpt: "15 example SMS and email templates, with a practical workflow for consent, timing, honest feedback and measuring request results.",
   pillar: "google-reviews", pillarLabel: "Google Reviews",
-  publishedAt: "2026-10-06", dateModified: "2026-10-11", readMinutes: 7,
-  author: { name: "Zyene Reviews", role: "Editorial team" },
+  publishedAt: "2026-10-06", dateModified: "2026-10-11",
+  author: { name: "Zyene Reviews Team", role: "Editorial" },
   metaTitle: "How to Ask for Reviews via Text & Email (15 Templates)",
   metaDescription: "Use 15 example SMS and email review request templates for US local businesses. Plan consent, timing, reminders and a clear link for honest feedback.",
   keywords: ["how to ask customers for reviews", "review request text message templates", "sms review request templates", "email review request templates"],

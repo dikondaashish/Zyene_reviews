@@ -1,13 +1,13 @@
-import type { BlogPost } from "@/lib/content/blog-types";
+import type { BlogPostSource } from "@/lib/content/blog-types";
 import { VENDOR_COMPARISON_TABLE, VENDOR_QUOTE_CHECKLIST, VENDOR_SOURCE_LINKS } from "@/lib/content/vendor-comparison-content";
 
-export const post3: BlogPost = {
+export const birdeyePricingBreakdown2026Post: BlogPostSource = {
   slug: "birdeye-pricing-breakdown-2026",
   title: "Birdeye Pricing vs Zyene Reviews (2026): A Quote Checklist",
   excerpt: "Compare an itemized Birdeye quote with Zyene's public plans, including locations, sending volume, AI tools and contract terms.",
   pillar: "competitor-analysis", pillarLabel: "Competitor Analysis",
-  publishedAt: "2026-03-24", dateModified: "2026-10-11", readMinutes: 5,
-  author: { name: "Zyene Reviews", role: "Editorial team" },
+  publishedAt: "2026-03-24", dateModified: "2026-10-11",
+  author: { name: "Zyene Reviews Team", role: "Editorial" },
   metaTitle: "Birdeye Pricing vs Zyene Reviews: 2026 Quote Guide",
   metaDescription: "Birdeye pricing requires a quote. Compare scope, AI replies, request allowances and contract terms with Zyene's published plans from $29.99/month.",
   keywords: ["birdeye pricing", "birdeye vs zyene reviews", "birdeye cost", "birdeye pricing 2026"],

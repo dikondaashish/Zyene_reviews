@@ -1,7 +1,7 @@
-import type { BlogPost } from "./blog-types";
+import type { BlogPostSource } from "@/lib/content/blog-types";
 import { SIGNUP_URL } from "@/config/env";
 
-export const post18: BlogPost = {
+export const hvacHomeServicesReputationManagementPost: BlogPostSource = {
     slug: "hvac-home-services-reputation-management",
     title: "HVAC & Home Services Reputation Management: The 2026 Guide",
     excerpt:
@@ -10,7 +10,6 @@ export const post18: BlogPost = {
     pillarLabel: "Industry Specific",
     publishedAt: "2026-09-17",
     dateModified: "2026-09-17",
-    readMinutes: 9,
     author: { name: "Marcus Vance", role: "Local SEO & Reputation" },
     metaTitle: "HVAC & Home Services Reputation Management (2026)",
     metaDescription:

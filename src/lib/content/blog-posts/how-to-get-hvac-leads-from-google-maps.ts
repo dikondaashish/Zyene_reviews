@@ -1,12 +1,12 @@
-import type { BlogPost } from "@/lib/content/blog-types";
+import type { BlogPostSource } from "@/lib/content/blog-types";
 
-export const post22: BlogPost = {
+export const howToGetHvacLeadsFromGoogleMapsPost: BlogPostSource = {
   slug: "how-to-get-hvac-leads-from-google-maps",
   title: "How to Get HVAC Leads from Google Maps: A Practical Guide",
   excerpt: "Improve your HVAC business's profile, service pages and follow-up process, then measure qualified enquiries rather than assuming rankings or free leads.",
   pillar: "industry-specific", pillarLabel: "Industry Specific",
-  publishedAt: "2026-10-09", dateModified: "2026-10-11", readMinutes: 6,
-  author: { name: "Zyene Reviews", role: "Editorial team" },
+  publishedAt: "2026-10-09", dateModified: "2026-10-11",
+  author: { name: "Zyene Reviews Team", role: "Editorial" },
   metaTitle: "How to Get HVAC Leads from Google Maps (2026 Guide)",
   metaDescription: "A practical HVAC Google Maps guide: accurate service areas, useful service pages, honest review requests and measurement of qualified local enquiries.",
   keywords: ["how to get hvac leads", "hvac leads from google maps", "hvac local seo", "hvac google business profile optimization"],
@@ -18,6 +18,13 @@ export const post22: BlogPost = {
     { label: "Local SEO checklist", href: "/resources/local-seo-checklist" },
     { label: "Google profile insights in Zyene", href: "/features/local-seo" },
     { label: "Review collection and request limits", href: "/features/review-collection" },
+  ],
+  faqs: [
+    { question: "How do HVAC companies get leads from Google Maps?", answer: "Keep an accurate Business Profile with the right categories, services, service areas and hours, publish service pages that answer buying questions, ask completed-job customers for honest reviews, and answer calls and messages promptly. Google weighs relevance, distance and prominence, so no single step guarantees a map position." },
+    { question: "Should an HVAC business show its address on Google Maps?", answer: "Only if customers visit that address during stated hours. Businesses that serve customers at their homes should follow Google's service-area business guidance and set service areas instead of showing a private address." },
+    { question: "How many Google reviews does an HVAC company need?", answer: "Google publishes no review-count threshold. Review count and positive ratings can help local prominence, but a steady flow of honest, recent reviews from completed jobs is a better goal than a fixed number." },
+    { question: "Can I offer a discount for HVAC customers who leave a Google review?", answer: "No. Google's policies prohibit offering incentives for reviews. Ask every completed-job customer the same way, without choosing customers by their expected rating." },
+    { question: "How should an HVAC business measure Google Maps leads?", answer: "Track profile calls and website clicks as interest, then record qualified enquiries, booked jobs and completed work in your dispatch system. Compare similar seasons and service areas, because demand changes sharply with the weather." },
   ],
   body: [
     { type: "summary", text: "HVAC leads from Google Maps begin with an eligible, accurate Business Profile, useful service information and a team ready to respond. Google considers relevance, distance and prominence. No review count, profile edit or software subscription guarantees a map position or a lead-generation timeline." },

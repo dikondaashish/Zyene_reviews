@@ -1,11 +1,7 @@
-/**
- * Blog post - Negative Feedback Shield deep-dive (Phase 3 asset).
- */
-
-import type { BlogPost } from "./blog-types";
+import type { BlogPostSource } from "@/lib/content/blog-types";
 import { SIGNUP_URL } from "@/config/env";
 
-export const post13: BlogPost = {
+export const negativeFeedbackShieldPost: BlogPostSource = {
     slug: "negative-feedback-shield",
     title: "Negative Feedback Shield: How It Works for Local Businesses",
     excerpt:
@@ -14,7 +10,6 @@ export const post13: BlogPost = {
     pillarLabel: "Reputation Management",
     publishedAt: "2026-05-24",
     dateModified: "2026-05-25",
-    readMinutes: 11,
     author: { name: "Jamie Rivera", role: "Product Marketing" },
     metaTitle: "Negative Feedback Shield Explained",
     metaDescription:

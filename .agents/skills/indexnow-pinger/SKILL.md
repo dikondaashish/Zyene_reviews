@@ -46,7 +46,7 @@ Notify Bing and other IndexNow engines **after production** has the live URL. In
 | Case study | `https://zyenereviews.com/case-studies/{slug}` |
 | Compare / industry / feature pillar | Matching production path |
 
-Blog slugs live in `src/lib/phase4/blog-posts-month*.ts` → `blog-data.ts`.
+Each blog post lives in `src/lib/content/blog-posts/{slug}.ts`, registered in `blog-posts/index.ts` → `blog-data.ts`.
 
 ## Agent checklist (new blog post)
 

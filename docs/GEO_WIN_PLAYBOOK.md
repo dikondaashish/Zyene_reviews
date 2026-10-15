@@ -62,8 +62,8 @@
 | Help center (23 articles) | Shipped | `src/lib/content/help-data.ts`, `/help/*` |
 | Article + FAQ JSON-LD | Partial | Home + pricing + help; **blog posts lack FAQ schema** |
 | Newsletter signup | Shipped | `NewsletterSignup`, `/api/marketing/newsletter/subscribe` |
-| Inverted pyramid summaries | **Complete (12/12 posts)** | `summary` blocks after every major `h2` in `blog-posts-month*.ts` |
-| Blog FAQ + FAQPage JSON-LD | **Complete (12/12 posts)** | `faqs[]` on every post; `FAQPageJsonLd` on `/blog/[slug]` |
+| Inverted pyramid summaries | **Complete (23/23 posts)** | Opening `summary` block plus one after each major `h2` in `src/lib/content/blog-posts/{slug}.ts` |
+| Blog FAQ + FAQPage JSON-LD | **Complete (23/23 posts)** | `faqs[]` on every post; `FAQPageJsonLd` on `/blog/[slug]` |
 | Lead magnets (gated PDF) | **Not yet** | — |
 | Repurpose packs | **Not yet** | — |
 | `/research` benchmark reports | **Not yet** | — |

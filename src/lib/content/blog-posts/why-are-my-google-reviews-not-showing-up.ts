@@ -1,11 +1,11 @@
-import type { BlogPost } from "@/lib/content/blog-types";
+import type { BlogPostSource } from "@/lib/content/blog-types";
 
-export const post20: BlogPost = {
+export const whyAreMyGoogleReviewsNotShowingUpPost: BlogPostSource = {
     slug: "why-are-my-google-reviews-not-showing-up",
     title: "Why Are My Google Reviews Not Showing Up? What to Check",
     excerpt: "Check the right listing, publication status and Google's documented reasons for missing reviews before assuming a cause.",
     pillar: "google-reviews", pillarLabel: "Google Reviews",
-    publishedAt: "2026-09-29", dateModified: "2026-10-11", readMinutes: 5,
+    publishedAt: "2026-09-29", dateModified: "2026-10-11",
     author: { name: "Zyene Reviews Team", role: "Editorial" },
     metaTitle: "Google Reviews Not Showing Up: Troubleshooting Guide",
     metaDescription: "Missing Google reviews? Check the listing, moderation delays, profile changes and Google's support guidance. No software guarantees publication.",

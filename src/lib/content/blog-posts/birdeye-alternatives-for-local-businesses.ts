@@ -1,14 +1,14 @@
-import type { BlogPost } from "@/lib/content/blog-types";
+import type { BlogPostSource } from "@/lib/content/blog-types";
 import { VERIFIED_COMPETITOR_FACTS } from "@/lib/comparisons/verified-competitor-facts";
 import { VENDOR_COMPARISON_TABLE, VENDOR_QUOTE_CHECKLIST, VENDOR_SOURCE_LINKS } from "@/lib/content/vendor-comparison-content";
 
-export const post4: BlogPost = {
+export const birdeyeAlternativesForLocalBusinessesPost: BlogPostSource = {
   slug: "birdeye-alternatives-for-local-businesses",
   title: "Birdeye Alternatives for Local Businesses (2026)",
   excerpt: "Compare Zyene, NiceJob, GatherUp and Podium by current pricing, AI replies, sending allowances and business fit.",
   pillar: "competitor-analysis", pillarLabel: "Competitor Analysis",
-  publishedAt: "2026-03-31", dateModified: "2026-10-11", readMinutes: 6,
-  author: { name: "Zyene Reviews", role: "Editorial team" },
+  publishedAt: "2026-03-31", dateModified: "2026-10-11",
+  author: { name: "Zyene Reviews Team", role: "Editorial" },
   metaTitle: "Birdeye Alternatives Compared (2026)",
   metaDescription: "Compare Birdeye alternatives: Zyene, NiceJob, GatherUp and Podium. Check current prices, AI replies, review requests, contract terms and business fit.",
   keywords: ["birdeye alternatives", "birdeye alternative", "review management software", "birdeye competitors"],

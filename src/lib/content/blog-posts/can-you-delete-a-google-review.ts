@@ -1,7 +1,7 @@
-import type { BlogPost } from "./blog-types";
+import type { BlogPostSource } from "@/lib/content/blog-types";
 import { SIGNUP_URL } from "@/config/env";
 
-export const post17: BlogPost = {
+export const canYouDeleteAGoogleReviewPost: BlogPostSource = {
     slug: "can-you-delete-a-google-review",
     title: "Can You Delete or Remove a Google Review? (What Actually Works)",
     excerpt:
@@ -10,7 +10,6 @@ export const post17: BlogPost = {
     pillarLabel: "Google Reviews",
     publishedAt: "2026-09-10",
     dateModified: "2026-10-11",
-    readMinutes: 9,
     author: { name: "Marcus Vance", role: "Local SEO & Reputation" },
     metaTitle: "Delete or Remove a Google Review? (2026)",
     metaDescription:

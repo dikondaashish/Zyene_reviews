@@ -1,6 +1,6 @@
-import type { BlogPost } from "./blog-types";
+import type { BlogPostSource } from "@/lib/content/blog-types";
 
-export const post15: BlogPost = {
+export const howToRespondToAPositiveReviewPost: BlogPostSource = {
     slug: "how-to-respond-to-a-positive-review",
     title: "How to Respond to Positive Google Reviews (15 Examples)",
     excerpt:
@@ -9,7 +9,6 @@ export const post15: BlogPost = {
     pillarLabel: "Responding to Reviews",
     publishedAt: "2026-09-05",
     dateModified: "2026-10-11",
-    readMinutes: 8,
     author: { name: "Jamie Rivera", role: "Product Marketing" },
     metaTitle: "Positive Review Responses (15 Examples)",
     metaDescription:
@@ -54,12 +53,12 @@ export const post15: BlogPost = {
     ],
     body: [
         {
-            type: "p",
-            text: "When a customer leaves a 5-star review, many business owners simply mentally thank them and move on. But leaving a positive review unanswered is a missed opportunity to build loyalty, showcase your customer service, and even improve your local SEO."
-        },
-        {
             type: "summary",
             text: "Responding to positive Google reviews is the digital equivalent of thanking a customer as they walk out your door. It builds brand loyalty, provides fresh content for your Google Business Profile, and shows prospective customers that you care about their experience."
+        },
+        {
+            type: "p",
+            text: "When a customer leaves a 5-star review, many business owners simply mentally thank them and move on. But leaving a positive review unanswered is a missed opportunity to build loyalty, showcase your customer service, and even improve your local SEO."
         },
         {
             type: "h2",

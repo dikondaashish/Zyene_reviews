@@ -1,7 +1,7 @@
 import type { BlogAuthor } from "@/lib/content/blog-types";
 
 export const DEFAULT_BLOG_AUTHOR: BlogAuthor = {
-    name: "Zyene Team",
+    name: "Zyene Reviews Team",
     role: "Editorial",
 };
 

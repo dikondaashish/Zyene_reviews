@@ -1,11 +1,7 @@
-/**
- * Blog post - AI visibility audit for local businesses (GEO Priority 5).
- */
-
-import type { BlogPost } from "./blog-types";
+import type { BlogPostSource } from "@/lib/content/blog-types";
 import { SIGNUP_URL } from "@/config/env";
 
-export const post14: BlogPost = {
+export const aiVisibilityAuditLocalBusinessesPost: BlogPostSource = {
     slug: "ai-visibility-audit-local-businesses",
     title: "AI Visibility Audit for Local Businesses: What to Check in 2026",
     excerpt:
@@ -14,7 +10,6 @@ export const post14: BlogPost = {
     pillarLabel: "Local SEO",
     publishedAt: "2026-05-25",
     dateModified: "2026-05-25",
-    readMinutes: 10,
     author: { name: "Marcus Webb", role: "Local SEO Strategist" },
     metaTitle: "AI Visibility Audit for Local Businesses (2026)",
     metaDescription:

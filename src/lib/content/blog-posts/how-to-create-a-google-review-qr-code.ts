@@ -1,7 +1,7 @@
-import type { BlogPost } from "./blog-types";
+import type { BlogPostSource } from "@/lib/content/blog-types";
 import { SIGNUP_URL } from "@/config/env";
 
-export const post23: BlogPost = {
+export const howToCreateAGoogleReviewQrCodePost: BlogPostSource = {
     slug: "how-to-create-a-google-review-qr-code",
     title: "How to Create a Google Review QR Code (Free & Paid Methods for 2026)",
     excerpt:
@@ -10,7 +10,6 @@ export const post23: BlogPost = {
     pillarLabel: "Google Reviews",
     publishedAt: "2026-10-13",
     dateModified: "2026-10-13",
-    readMinutes: 8,
     author: { name: "Marcus Vance", role: "Local SEO & Reputation" },
     metaTitle: "How to Create a Google Review QR Code (2026 Guide)",
     metaDescription:

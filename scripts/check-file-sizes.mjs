@@ -45,17 +45,13 @@ const EXEMPT = [
  */
 const BASELINE = {
   // ── Static content datasets ────────────────────────────────────────────────
-  // Single cohesive datasets — marketing copy, not logic. Splitting a 639-line
-  // array of blog posts across files buys nothing and makes edits harder. These
-  // are expected to stay.
-  "src/lib/content/blog-posts-month1.ts": { max: 639, why: "content dataset" },
-  "src/lib/content/blog-posts-month2.ts": { max: 456, why: "content dataset" },
-  "src/lib/content/blog-posts-month3.ts": { max: 430, why: "content dataset" },
-  "src/lib/content/blog-posts-delete-google-review.ts": {
+  // Marketing copy, not logic. Blog posts live one per file in
+  // src/lib/content/blog-posts/; only the two long-form guides exceed 200.
+  "src/lib/content/blog-posts/can-you-delete-a-google-review.ts": {
     max: 323,
     why: "content dataset — comprehensive SEO guide with long-tail Q&A sections",
   },
-  "src/lib/content/blog-posts-home-services.ts": {
+  "src/lib/content/blog-posts/hvac-home-services-reputation-management.ts": {
     max: 299,
     why: "content dataset — industry-specific guide with trade-specific sections",
   },

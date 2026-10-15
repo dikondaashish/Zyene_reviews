@@ -1,6 +1,6 @@
-import type { BlogPost } from "@/lib/content/blog-types";
+import type { BlogPostSource } from "@/lib/content/blog-types";
 
-export const post16: BlogPost = {
+export const howToGetAGoogleReviewLinkPost: BlogPostSource = {
     slug: "how-to-get-a-google-review-link",
     title: "How to Get a Google Review Link and QR Code (2026)",
     excerpt:
@@ -9,7 +9,6 @@ export const post16: BlogPost = {
     pillarLabel: "Google Reviews",
     publishedAt: "2026-09-08",
     dateModified: "2026-09-29",
-    readMinutes: 6,
     author: { name: "Jamie Rivera", role: "Product Marketing" },
     metaTitle: "How to Get a Google Review Link and QR Code (2026)",
     metaDescription:

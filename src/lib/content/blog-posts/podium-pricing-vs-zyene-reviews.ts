@@ -1,13 +1,13 @@
-import type { BlogPost } from "@/lib/content/blog-types";
+import type { BlogPostSource } from "@/lib/content/blog-types";
 import { VENDOR_COMPARISON_TABLE, VENDOR_QUOTE_CHECKLIST, VENDOR_SOURCE_LINKS } from "@/lib/content/vendor-comparison-content";
 
-export const post19: BlogPost = {
+export const podiumPricingVsZyeneReviewsPost: BlogPostSource = {
   slug: "podium-pricing-vs-zyene-reviews",
   title: "Podium Pricing vs Zyene Reviews (2026): Compare the Scope",
   excerpt: "Compare your written Podium offer with Zyene's published review-management plans, request allowances and billing terms.",
   pillar: "competitor-analysis", pillarLabel: "Competitor Analysis",
-  publishedAt: "2026-09-21", dateModified: "2026-10-11", readMinutes: 5,
-  author: { name: "Zyene Reviews", role: "Editorial team" },
+  publishedAt: "2026-09-21", dateModified: "2026-10-11",
+  author: { name: "Zyene Reviews Team", role: "Editorial" },
   metaTitle: "Podium Pricing vs Zyene Reviews (2026 Guide)",
   metaDescription: "Podium pricing is sales-led. Compare your quote, message allowances and contract terms with Zyene's published review-management plans.",
   keywords: ["podium pricing", "podium vs zyene reviews", "podium cost per month", "podium alternatives"],

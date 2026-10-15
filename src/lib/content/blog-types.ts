@@ -83,3 +83,6 @@ export interface BlogPost {
     /** Concept-specific editorial image used by cards, article pages, and schema. */
     image?: ContentImage;
 }
+
+/** A post as authored. `readMinutes` is derived from the content in blog-data. */
+export type BlogPostSource = Omit<BlogPost, "readMinutes">;
