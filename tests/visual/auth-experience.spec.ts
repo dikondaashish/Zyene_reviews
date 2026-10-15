@@ -95,7 +95,7 @@ test("password reset confirms privately without sending a real email", async ({ 
   await expect(page.locator("a button")).toHaveCount(0);
 });
 
-test("every auth page uses the app's #f9fafb canvas in light mode", async ({ page }) => {
+test("every auth page uses the app canvas colour in light mode", async ({ page }) => {
   for (const path of ["/login", "/signup", "/forgot-password", "/reset-password"]) {
     await page.goto(path, { waitUntil: "domcontentloaded" });
     await expect(page.locator(".auth-shell")).toHaveCSS("background-color", "rgb(249, 250, 251)");
