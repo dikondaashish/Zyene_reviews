@@ -1,4 +1,5 @@
 import type { BlogPostSource } from "@/lib/content/blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const howToGetAGoogleReviewLinkPost: BlogPostSource = {
     slug: "how-to-get-a-google-review-link",
@@ -8,7 +9,7 @@ export const howToGetAGoogleReviewLinkPost: BlogPostSource = {
     pillar: "google-reviews",
     pillarLabel: "Google Reviews",
     publishedAt: "2026-09-08",
-    dateModified: "2026-09-29",
+    dateModified: "2026-10-15",
     author: { name: "Karthik", role: "Founder" },
     metaTitle: "How to Get a Google Review Link and QR Code (2026)",
     metaDescription:
@@ -63,6 +64,10 @@ export const howToGetAGoogleReviewLinkPost: BlogPostSource = {
         {
             type: "p",
             text: "A direct review link gives customers a clear route to your business's review form. It avoids asking them to search for your name and choose the correct location. Invite honest feedback from customers regardless of whether their experience was positive or negative.",
+        },
+        {
+            type: "callout",
+            text: "Free tools: [Google review link generator](/tools/review-link-generator) and [reputation score checker](/tools/reputation-score-checker).",
         },
         { type: "h2", text: "Copy your review link from Google Business Profile" },
         {
@@ -134,5 +139,12 @@ export const howToGetAGoogleReviewLinkPost: BlogPostSource = {
             text: "Zyene Reviews helps businesses and agencies organize review requests by SMS, email, and QR code, monitor feedback, and prepare replies. Start with a tested link and a consistent, honest request process before adding automation.",
         },
         { type: "cta", ctaLabel: "Explore review collection with Zyene Reviews", ctaHref: "/features/review-collection" },
+        {
+            type: "cta",
+            ctaLabel: "Try Zyene Reviews free for 7 days — automated review requests, private feedback routing, and AI replies.",
+            ctaHref: SIGNUP_URL,
+            ctaTrackLocation: "how-to-get-a-google-review-link",
+            ctaButtonText: "Start Free Trial",
+        },
     ],
 };

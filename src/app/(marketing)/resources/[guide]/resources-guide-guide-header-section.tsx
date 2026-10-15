@@ -38,7 +38,7 @@ export function ResourcesGuideGuideHeaderSection({ resource }: { resource: (type
                             {resource.readMinutes} min read
                         </div>
                         <span>·</span>
-                        <span>Updated {new Date(resource.lastUpdated).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</span>
+                        <span>Last updated: {new Date(resource.lastUpdated + "T12:00:00").toLocaleDateString("en-US", { month: "long", year: "numeric" })}</span>
                     </div>
                 </div>
             </header>
