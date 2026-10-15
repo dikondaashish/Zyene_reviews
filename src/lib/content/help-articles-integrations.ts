@@ -59,9 +59,11 @@ export const int2: HelpArticle = {
                 ["phone", "Conditional", "Required if sending SMS. E.164 format preferred (+1XXXXXXXXXX)"],
                 ["email", "Conditional", "Required if sending email. At least one of phone/email required."],
                 ["location_id", "Multi-location only", "Your Zyene location ID from Settings → Locations"],
+                ["amount", "Optional", "Sale total in dollars (e.g. 42.50). Sales below your Min Transaction setting are skipped."],
+                ["delay_minutes", "Optional", "Overrides your Delay setting for this call. Use 0 to send right away."],
             ],
         }},
-        { type: "tip", text: "Set a delay filter in your Zap to only trigger for transactions above a minimum value (e.g., $10+). This filters out small tip adjustments or returns that shouldn't trigger review requests." },
+        { type: "tip", text: "Zyene waits the Delay (minutes) from Settings → Business information → Review Request Settings before sending, so the customer hears from you after the visit rather than at the till. Map the sale total to amount and Zyene also skips sales below your Min Transaction setting. Contacts asked within your frequency cap, or who opted out, are still skipped when the delayed send runs." },
     ],
 };
 

@@ -1,11 +1,8 @@
 import { serve } from "inngest/next";
 import { inngest } from "@/services/inngest/client";
 import {
-    processCampaignContact,
-    processReviewAnalysisBatch,
-    processAutoReplyReview,
-    syncGoogleReviews,
-    processScheduledReviewRequest,
+    processCampaignContact, processReviewAnalysisBatch, processAutoReplyReview,
+    syncGoogleReviews, processScheduledReviewRequest, sendDelayedPosReviewRequest,
 } from "@/services/inngest/functions";
 import {
     syncPlatformWorker,
@@ -57,6 +54,7 @@ export const { GET, POST, PUT } = serve({
     functions: [
         processCampaignContact,
         processScheduledReviewRequest,
+        sendDelayedPosReviewRequest,
         processReviewAnalysisBatch,
         processAutoReplyReview,
         syncGoogleReviews,

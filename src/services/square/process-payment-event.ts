@@ -1,23 +1,20 @@
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { fetchSquarePayment } from "@/services/square/api-client";
-import { claimSquarePaymentSend } from "@/services/square/claim-send";
 import { getSquareEnvironment } from "@/services/square/config";
 import { decryptSquareAccessToken } from "@/services/square/decrypt-access-token";
+import { dispatchSquarePaymentSend } from "@/services/square/dispatch-payment-send";
 import {
     findSquarePaymentEvent,
     insertSquarePaymentEvent,
     patchSquarePaymentEvent,
     resolveSquareContactViaCustomerId,
 } from "@/services/square/payment-event-store";
+import { extractSquarePaymentAmountCents } from "@/services/square/payment-amount";
 import { resolveContactFromSquarePayment } from "@/services/square/resolve-contact";
-import {
-    sendSquareReviewRequest,
-    squareStatusFromSendOutcome,
-} from "@/services/square/send-from-payment";
 import type { ParsedSquarePaymentEvent } from "@/services/square/webhook-parse";
 
-/** Phase 2: resolve contact, then send when auto_send_enabled. */
+/** Phase 2: resolve contact, then send (now or after the business delay) when auto_send_enabled. */
 export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent): Promise<void> {
     const admin = createAdminClient();
     const env = getSquareEnvironment();
@@ -102,37 +99,13 @@ export async function processSquarePaymentEvent(event: ParsedSquarePaymentEvent)
             customer_name: contact.name,
         });
 
-        if (!(await claimSquarePaymentSend(admin, event.merchantId, event.paymentId))) {
-            logger.info({ paymentId: event.paymentId }, "[square] send claim lost - skip duplicate");
-            return;
-        }
-
-        const sendOutcome = await sendSquareReviewRequest({
-            businessId: connection.business_id,
-            autoSendEnabled: connection.auto_send_enabled,
-            environment: connection.environment,
+        await dispatchSquarePaymentSend({
+            admin,
+            event,
+            connection,
             contact,
+            amountCents: extractSquarePaymentAmountCents(payment),
         });
-
-        const status = squareStatusFromSendOutcome(sendOutcome);
-        const patch: Record<string, unknown> = { status };
-        if (sendOutcome.kind === "sent") patch.review_request_id = sendOutcome.requestId;
-        if (sendOutcome.kind === "skipped_guard" || sendOutcome.kind === "send_failed") {
-            patch.error_message = sendOutcome.message.slice(0, 500);
-        }
-        await patchSquarePaymentEvent(admin, event, patch);
-
-        logger.info(
-            {
-                businessId: connection.business_id,
-                merchantId: event.merchantId,
-                paymentId: event.paymentId,
-                eventType: event.eventType,
-                status,
-                requestId: sendOutcome.kind === "sent" ? sendOutcome.requestId : null,
-            },
-            "[square] Phase2 payment processed",
-        );
     } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "unknown error";
         await patchSquarePaymentEvent(admin, event, {

@@ -29,7 +29,7 @@ export function ReviewSettingsFormTimingFields({ form }: { form: UseFormReturn<R
                                 onChange={(e) => field.onChange(e.target.valueAsNumber)}
                             />
                         </FormControl>
-                        <FormDescription>Time after payment to send request</FormDescription>
+                        <FormDescription>Wait after a Square or Zapier sale before sending (0 = immediately)</FormDescription>
                         <FormMessage />
                     </FormItem>
                 )}
@@ -48,7 +48,7 @@ export function ReviewSettingsFormTimingFields({ form }: { form: UseFormReturn<R
                                 onChange={(e) => field.onChange(e.target.valueAsNumber)}
                             />
                         </FormControl>
-                        <FormDescription>Minimum spend to trigger request</FormDescription>
+                        <FormDescription>Sales below this are skipped (0 = no minimum)</FormDescription>
                         <FormMessage />
                     </FormItem>
                 )}

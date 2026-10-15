@@ -14,6 +14,7 @@ import type {
     AeoRunRequestedEvent,
 } from "./aeo/aeo-events";
 import { inngestSentryMiddleware } from "./sentry-middleware";
+import type { PosDelayedSendData } from "@/services/review-requests/pos-delayed-send";
 
 
 type CampaignSendEvent = {
@@ -116,6 +117,11 @@ type ScheduledReviewRequestSendEvent = {
     };
 };
 
+/** Square payment or Zapier trigger waiting out `review_request_delay_minutes`. */
+type PosDelayedSendEvent = {
+    data: PosDelayedSendData;
+};
+
 type TrialNurtureStartEvent = {
     data: {
         email: string;
@@ -164,6 +170,7 @@ type Events = {
     "google-seo-aeo/heatmap.run": GoogleSeoAeoHeatmapRunEvent;
     "google-seo-aeo/sync.run": GoogleSeoAeoSyncRunEvent;
     "review-request/scheduled.send": ScheduledReviewRequestSendEvent;
+    "review-request/pos.delayed-send": PosDelayedSendEvent;
     "growth/trial-nurture.start": TrialNurtureStartEvent;
     "growth/onboarding-drip.start": OnboardingDripStartEvent;
     "growth/winback.start": WinbackStartEvent;
