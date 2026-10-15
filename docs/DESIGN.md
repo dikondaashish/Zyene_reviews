@@ -4,7 +4,7 @@ Zyene Reviews helps local businesses turn customer feedback into a manageable da
 
 ## Identity and restraint
 
-Marketing preserves the cream canvas and original orange (`#ff4f00`). The app uses the same warm brand palette in a calmer form: cream panels, a warm canvas, ink text, muted-brown supporting text, light warm borders, and orange (`#ff4f00`) actions. Keep both light and dark modes. Product screens should prioritize customer content over large brand marks, decorative gradients, or animated panels.
+Colours are matched to OptiMonk (colours only: no logo, copy or imagery). Marketing uses a warm paper canvas (`#f7f5f1`), white cards, slate ink (`#23262a`) and orange (`#ed5a29`) actions; it is light-only. The app uses white panels and sidebar on a cool `#f9fafb` canvas, slate ink, cool-grey borders and the same orange. Keep both light and dark modes in the app; dark values come from the same grey scale (`#1a1c1f` / `#23262a` / `#2e3237`). Product screens should prioritize customer content over large brand marks, decorative gradients, or animated panels.
 
 Premium quality comes from complete workflows, readable typography, deliberate spacing, and useful feedback. Use one prominent action per decision area. Make supporting actions quiet but discoverable.
 
@@ -12,19 +12,19 @@ Premium quality comes from complete workflows, readable typography, deliberate s
 
 | Role | Light | Dark | Use |
 |---|---|---|---|
-| Background | `#fffefb` | `#201515` | Main surface |
-| Canvas | `#f7f5ef` | `#201515` | Workspace around panels |
-| Card | `#fffefb` | `#2a2222` | Solid content panels |
-| Primary | `#ff4f00` | `#ff4f00` | Filled actions |
+| Background | `#ffffff` | `#1a1c1f` | Main surface |
+| Canvas | `#f9fafb` | `#1a1c1f` | Workspace around panels |
+| Card | `#ffffff` | `#23262a` | Solid content panels |
+| Primary | `#ed5a29` | `#ed5a29` | Filled actions (hover `#dd4513`, pressed `#d14212`) |
 | Primary foreground | `#ffffff` | `#ffffff` | Text on primary |
-| Primary text | `#c43d00` | `#ff9b79` | Small links and selected labels |
-| Brand accent | `#ff4f00` | `#ff4f00` | App identity |
-| Muted foreground | `#6d685d` | `#c5c0b1` | Supporting text |
-| Success | `#287653` | `#89cda8` | Completed, sent, connected and positive states |
-| Success foreground | `#ffffff` | `#201515` | Text on a filled success surface |
-| Border | `#e5e1d6` | `#4a4540` | Grouping and controls |
+| Primary text | `#b8410f` | `#f17e58` | Small links and selected labels |
+| Brand accent | `#ed5a29` | `#ed5a29` | App identity |
+| Muted foreground | `#505763` | `#b9bec6` | Supporting text |
+| Success | `#15803d` | `#2cc896` | Completed, sent, connected and positive states |
+| Success foreground | `#ffffff` | `#111213` | Text on a filled success surface |
+| Border | `#e3e5e8` | `#3a3e44` | Grouping and controls |
 
-The app palette is defined in `src/app/dashboard-colors.css`. Text pairs meet WCAG AA; small orange text uses the darker `#c43d00`. White on `#ff4f00` is 3.3:1, so filled-action labels stay semibold; see [dashboard color audit](dashboard-color-audit.md).
+The app palette is defined in `src/app/dashboard-colors.css`; marketing tokens live in `src/app/(marketing)/marketing.css`. Text pairs meet WCAG AA; small orange text uses the darker `#b8410f`, and muted text uses `#505763` rather than the reference's `#8f97a4` (3:1). White on `#ed5a29` is 3.4:1, so filled-action labels stay bold, and hover darkens instead of lightening; see [dashboard color audit](dashboard-color-audit.md).
 
 Use semantic tokens from `src/app/globals.css`. Do not use chart fill colors as text colors for status messages; use success, warning/destructive and their foreground roles. Success text uses `text-success` on neutral or lightly tinted surfaces; warning text uses `text-warning-foreground`. Keep chart series separate from status labels. The legacy sync-action token aliases primary, so AI and sync do not introduce another brand color. Custom business colors use `readableForeground` for filled controls so text remains readable. A color must not be the only indication of selection or status.
 
