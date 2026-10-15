@@ -157,7 +157,7 @@ Also see [PRODUCTION_CHECKLIST.md](./PRODUCTION_CHECKLIST.md).
 | `playwright.config.ts` | Visual tests |
 | `vercel.json` | Cron / hosting hints |
 | `components.json` | shadcn |
-| `sentry.server.config.ts` / `sentry.edge.config.ts` / `src/instrumentation-client.ts` | Sentry init (shared options in `src/lib/monitoring/sentry-init-options.ts`; server `beforeSend` + Pino bridge; client Session Replay) |
+| `sentry.server.config.ts` / `sentry.edge.config.ts` / `src/instrumentation-client.ts` | Sentry init (shared options in `src/lib/monitoring/sentry-init-options.ts`; server `beforeSend` + Pino bridge; client Session Replay is attached only after analytics consent via `src/lib/monitoring/sentry-replay-consent.ts`) |
 | `src/services/inngest/sentry-middleware.ts` | Inngest terminal failures → Sentry |
 
 Sentry uses organization `zyene-inc`, project `zyene-reviews` (numeric ID

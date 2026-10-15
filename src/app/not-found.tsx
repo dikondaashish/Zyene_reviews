@@ -3,7 +3,6 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MarketingLayoutHeader } from "@/app/(marketing)/marketing-layout-header";
 import { MarketingLayoutFooter } from "@/app/(marketing)/marketing-layout-footer";
-import { CookieBanner } from "@/components/ui/cookie-banner";
 
 export default function NotFound() {
     return (
@@ -38,7 +37,6 @@ export default function NotFound() {
                     </div>
                 </section>
             </main>
-            <CookieBanner />
             <MarketingLayoutFooter />
         </div>
     );
