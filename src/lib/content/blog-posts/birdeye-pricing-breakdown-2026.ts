@@ -19,11 +19,11 @@ export const birdeyePricingBreakdown2026Post: BlogPostSource = {
     { label: "Zyene plans and trial terms", href: "/pricing" },
   ],
   faqs: [
-    { question: "How much does Birdeye cost in 2026?", answer: "Birdeye's current official pricing page asks you to request pricing. It does not establish a universal monthly starting price. Ask for an itemized offer for your selected products and locations." },
+    { question: "How much does Birdeye cost in 2026?", answer: "Birdeye does not publish its prices. Third-party pricing trackers report roughly $299 to $449 per location per month as of 2026; confirm with Birdeye. Ask for an itemized offer for your selected products and locations. Pricing last reviewed: October 2026." },
     { question: "Is Zyene cheaper than Birdeye?", answer: "Zyene Starter is $29.99 per month. Savings depend on your actual Birdeye quote and whether the offers cover the same work. Compare total cost and scope." },
   ],
   body: [
-    { type: "summary", text: "Birdeye pricing is quote-based on its current public website. Zyene publishes monthly and annual plans. Compare the total cost of the review, messaging, listing and automation work your business needs." },
+    { type: "summary", text: "Birdeye does not publish its prices. Third-party pricing trackers report roughly $299 to $449 per location per month as of 2026; confirm with Birdeye. Zyene publishes monthly and annual plans. Compare the total cost of the review, messaging, listing and automation work your business needs. Pricing last reviewed: October 2026." },
     { type: "h2", text: "What Birdeye's public pricing page establishes" },
     { type: "p", text: "The pricing form asks about your business and location count. Its broader platform includes reviews, listings, messaging and customer experience products. A historical price from another article does not establish what your offer costs today." },
     { type: "p", text: "Birdeye may suit a team consolidating several products across locations. Zyene may suit an owner wanting a review-focused inbox, request campaigns, AI reply tools and Google Business Profile insights with published allowances. Evaluate required integrations and controls before choosing." },

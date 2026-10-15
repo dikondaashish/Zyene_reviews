@@ -4,14 +4,14 @@ import { getPricingPresentation } from "@/lib/marketing/pricing-presentation";
 
 describe("marketing pricing presentation", () => {
   it.each([
-    ["starter_monthly", "$29.99", "$0.99", "$49.99"],
-    ["professional_monthly", "$59.99", "$1.98", "$89.99"],
-  ])("keeps the actual monthly charge and catalog reference for %s", (id, monthly, daily, reference) => {
+    ["starter_monthly", "$29.99", "$0.99"],
+    ["professional_monthly", "$59.99", "$1.98"],
+  ])("keeps the actual monthly charge for %s without reference price", (id, monthly, daily) => {
     expect(getPricingPresentation(PLAN_MAP[id])).toMatchObject({
       monthlyPrice: monthly,
       dailyPrice: daily,
       dailyPrefix: "Daily equivalent",
-      referencePrice: reference,
+      referencePrice: null,
       annualCharge: null,
       billingText: "Billed monthly. Cancel anytime.",
     });
@@ -31,10 +31,9 @@ describe("marketing pricing presentation", () => {
     });
   });
 
-  it("does not fabricate a reference price when the catalog has none", () => {
-    expect(
-      getPricingPresentation({ ...PLAN_MAP.professional_monthly, originalPrice: null })?.referencePrice,
-    ).toBeNull();
+  it("shows no reference price for any plan", () => {
+    expect(getPricingPresentation(PLAN_MAP.starter_monthly)?.referencePrice).toBeNull();
+    expect(getPricingPresentation(PLAN_MAP.professional_monthly)?.referencePrice).toBeNull();
   });
 
   it("keeps Enterprise non-numeric", () => {

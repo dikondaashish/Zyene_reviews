@@ -25,7 +25,7 @@ export const birdeyeAlternativesForLocalBusinessesPost: BlogPostSource = {
     { question: "Does NiceJob offer AI replies and competitor tracking?", answer: "Yes. NiceJob includes AI Replies and Competitive Intel in Pro at $125/month USD, rather than its $75/month Starter plan." },
   ],
   body: [
-    { type: "summary", text: "Compare Birdeye alternatives against the tasks your team needs, not an assumed Birdeye list price. Zyene, NiceJob, GatherUp and Podium combine collection, replies, monitoring and communication differently." },
+    { type: "summary", text: "Birdeye does not publish its prices. Third-party pricing trackers report roughly $299 to $449 per location per month as of 2026; confirm with Birdeye. Zyene, NiceJob, GatherUp and Podium combine collection, replies, monitoring and communication differently. Pricing last reviewed: October 2026." },
     VENDOR_COMPARISON_TABLE,
     { type: "h2", text: "Zyene Reviews: a review-focused workspace" },
     { type: "p", text: "Starter is $29.99/month for one location with 500 SMS and 500 email review requests per month. Professional is $59.99/month for up to three locations, with 700 SMS and 700 email requests per location. Both include AI business drafts and optional automatic replies to eligible new Google reviews. Link requests and AI customer review drafts have separate limits." },

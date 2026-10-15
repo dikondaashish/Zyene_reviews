@@ -40,11 +40,15 @@ export function MarketingHomeFeatureConstellation() {
           <article className="home-feature-card home-feature-card-campaign">
             <div className="home-feature-card-title"><Send size={18} aria-hidden="true" /><h3>Review request campaigns</h3></div>
             <p>Reach customers by text or email at the moment their experience is fresh.</p>
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[10px] text-white/40 uppercase tracking-wider">Channel response</span>
+              <span className="text-[10px] text-white/40">Example data</span>
+            </div>
             <div className="home-feature-variant-grid" aria-label="Campaign channel comparison">
               <div className="home-feature-variant"><span>SMS</span><strong>32%</strong><div className="home-feature-bar"><i className="is-wide" /></div><small>response rate</small></div>
               <div className="home-feature-variant"><span>Email</span><strong>24%</strong><div className="home-feature-bar"><i className="is-medium" /></div><small>response rate</small></div>
             </div>
-            <div className="home-feature-callout"><TrendingUp size={15} aria-hidden="true" /><strong>+28%</strong><span>more reviews this month</span></div>
+            <div className="home-feature-callout"><TrendingUp size={15} aria-hidden="true" /><strong>+28%</strong><span>more reviews this month</span><span className="text-[10px] text-white/40 ml-auto">Example data</span></div>
           </article>
 
           <article className="home-feature-card home-feature-card-flow">

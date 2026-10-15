@@ -69,7 +69,7 @@ export const META_ADS_CAMPAIGNS: MetaAdsCampaign[] = [
     {
         audience: "retarget_competitor",
         audienceLabel: "Birdeye / Podium page visitors",
-        creativeHook: "$30/mo vs $300/mo",
+        creativeHook: "Birdeye doesn't publish prices. Zyene Reviews starts at $29.99/mo.",
         creativeDetail: "Price comparison for visitors who compared enterprise tools.",
         landingPath: "/compare/birdeye",
         utmCampaign: "meta_retarget_compare",

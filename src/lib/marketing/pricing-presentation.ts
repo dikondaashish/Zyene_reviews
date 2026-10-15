@@ -13,7 +13,7 @@ export function getPricingPresentation(
 
   return {
     monthlyPrice: `$${monthlyPrice}`,
-    referencePrice: !yearly && plan.originalPrice !== null ? `$${plan.originalPrice.toFixed(2)}` : null,
+    referencePrice: null,
     annualCharge: yearly ? `$${plan.price.toFixed(2)}` : null,
     dailyPrefix: "Daily equivalent",
     dailyPrice: `$${plan.dailyEquivalent.toFixed(2)}`,

@@ -23,12 +23,6 @@ export function PricingPriceDisplay({
     <div className={styles.priceDisplay}>
       <div className={styles.priceContent} key={plan.interval}>
         <div className={styles.billingPrice}>
-          {price.referencePrice && (
-            <p className={styles.referencePrice}>
-              <span className="sr-only">Reference price: </span>
-              <s>{price.referencePrice}</s>
-            </p>
-          )}
           <p className={styles.monthlyPrice}>
             {!price.annualCharge && <span className="sr-only">Current price: </span>}
             {price.monthlyPrice}
