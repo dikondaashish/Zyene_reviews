@@ -21,7 +21,7 @@ export function SignupForm({ googleClientId }: { googleClientId: string }) {
             <AuthHeading title={inviteToken ? "Join your team" : "Start something good."}>
                 {inviteToken
                     ? "Create your account with the email your team invited. Your workspace will be ready for you."
-                    : "7-day trial for eligible new subscriptions. Card required; your selected plan bills automatically unless you cancel in Billing."}
+                    : "7-day trial on eligible new plans. Card required; your plan bills automatically unless you cancel in Billing."}
             </AuthHeading>
             <div>
                 <GoogleIdentityButton clientId={googleClientId} intent="signup" inviteToken={inviteToken} nextPath="/dashboard" />

@@ -281,7 +281,7 @@ const guide3: ResourceGuide = {
     purpose: "Rank for 'local SEO checklist' and 'local SEO 2026' clusters",
     lastUpdated: "2026-10-11",
     readMinutes: 16,
-    metaTitle: "Local SEO Checklist 2026: 40+ Tasks for Local Businesses",
+    metaTitle: "Local SEO Checklist 2026: 40+ Tasks",
     metaDescription:
         "Use a free local SEO checklist to improve your Google Business Profile, reviews, website and measurement. Practical tasks for US local businesses.",
     keywords: [

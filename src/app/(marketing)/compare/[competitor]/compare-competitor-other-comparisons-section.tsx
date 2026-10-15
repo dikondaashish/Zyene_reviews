@@ -39,7 +39,7 @@ export function CompareCompetitorOtherComparisonsSection({ data, slug }: { data:
                                     href="/blog/birdeye-alternatives-for-local-businesses"
                                     className="text-sm text-foreground underline underline-offset-4 hover:text-primary"
                                 >
-                                    5 cheaper Birdeye alternatives
+                                    Birdeye alternatives compared
                                 </Link>
                             </div>
                         </div>

@@ -1,3 +1,4 @@
+import { BLOG_POSTS } from "@/lib/content/blog-data";
 import { expect, test } from "./marketing-fixtures";
 
 test.beforeEach(async ({ page }) => {
@@ -60,12 +61,12 @@ test("guide dialog loads on opening, retains answers and returns keyboard focus"
 
 test("blog keeps every article available and search remains usable", async ({ page }) => {
     await page.goto("/blog");
-    await expect(page.locator(".blog-post-card")).toHaveCount(22);
+    await expect(page.locator(".blog-post-card")).toHaveCount(BLOG_POSTS.length);
     await page.getByRole("textbox", { name: "Search blog posts" }).fill("Birdeye");
     await expect(page.locator(".blog-post-card").first()).toContainText("Birdeye");
-    expect(await page.locator(".blog-post-card").count()).toBeLessThan(22);
+    expect(await page.locator(".blog-post-card").count()).toBeLessThan(BLOG_POSTS.length);
     await page.getByRole("textbox", { name: "Search blog posts" }).fill("");
-    await expect(page.locator(".blog-post-card")).toHaveCount(22);
+    await expect(page.locator(".blog-post-card")).toHaveCount(BLOG_POSTS.length);
 });
 
 for (const path of ["/features/ai-replies", "/features/review-collection", "/features/competitor-tracking", "/features/local-seo", "/industries/hotels", "/industries/salons", "/industries/home-services", "/resources/local-seo-checklist", "/compare"]) {

@@ -21,6 +21,7 @@ jobs:
       NEXT_PUBLIC_SUPABASE_URL: https://fixture.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: fixture-public-key
       NEXT_TELEMETRY_DISABLED: '1'
+      PLAYWRIGHT_WEB_SERVER_COMMAND: pnpm start --port 3026
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -30,6 +31,9 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
+      # A production build matches what ships; `next dev` currently 500s on
+      # the duplicate /sitemap.xml route and metadata files.
+      - run: pnpm build
       - name: Public-page and mocked signup regressions
         run: >-
           pnpm exec playwright test --timeout=90000

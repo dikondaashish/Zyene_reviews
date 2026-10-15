@@ -26,26 +26,11 @@ export const post9: BlogPost = {
         { label: "Start your free trial", href: SIGNUP_URL },
     ],
     faqs: [
-        {
-            question: "How do restaurants get more Google reviews?",
-            answer: "Ask at payment with a QR code, follow up by SMS one to two hours after dine-in, email catering clients, and use loyalty lists. Timing beats a generic please-review sign that guests ignore.",
-        },
-        {
-            question: "What should restaurants say in negative review responses?",
-            answer: "Name the dish or service issue without arguing, apologize for the visit, and invite them back through a manager contact. Keep it short - other diners are watching your tone.",
-        },
-        {
-            question: "Does review count matter more than star rating for restaurants?",
-            answer: "Often yes. A 4.5 with hundreds of reviews usually wins clicks over a 4.8 with twenty because volume signals consistent experience. Keep new reviews arriving every month.",
-        },
-        {
-            question: "How does Negative Feedback Shield help restaurants?",
-            answer: "Zyene Reviews routes low ratings on your branded collectratings.com page to private feedback first, so your team can respond to cold food or service issues quickly.",
-        },
-        {
-            question: "Can Zyene Reviews manage reviews for multiple restaurant locations?",
-            answer: "Professional plans support multiple locations with per-location analytics and team seats. Focus extra collection effort on the lowest-rated unit until it catches up to the brand average.",
-        },
+        { question: "How do restaurants get more Google reviews?", answer: "Ask at payment with a QR code, follow up by SMS one to two hours after dine-in, email catering clients, and use loyalty lists. Timing beats a generic please-review sign that guests ignore." },
+        { question: "What should restaurants say in negative review responses?", answer: "Name the dish or service issue without arguing, apologize for the visit, and invite them back through a manager contact. Keep it short - other diners are watching your tone." },
+        { question: "Does review count matter more than star rating for restaurants?", answer: "Often yes. A 4.5 with hundreds of reviews usually wins clicks over a 4.8 with twenty because volume signals consistent experience. Keep new reviews arriving every month." },
+        { question: "How does Negative Feedback Shield help restaurants?", answer: "Zyene Reviews routes low ratings on your branded collectratings.com page to private feedback first, so your team can respond to cold food or service issues quickly." },
+        { question: "Can Zyene Reviews manage reviews for multiple restaurant locations?", answer: "Professional plans support multiple locations with per-location analytics and team seats. Focus extra collection effort on the lowest-rated unit until it catches up to the brand average." },
     ],
     body: [
         { type: "p", text: "Restaurant reviews help prospective guests understand food, service, atmosphere, and value. Use recent feedback to improve the experience; a rating change alone does not establish a revenue impact." },
@@ -132,26 +117,11 @@ export const post10: BlogPost = {
         { label: "Start your free trial", href: SIGNUP_URL },
     ],
     faqs: [
-        {
-            question: "Can dental practices respond to Google reviews without violating HIPAA?",
-            answer: "Public replies can disclose sensitive information. Have your privacy lead review the workflow and wording, avoid confirming patient status or discussing treatment, and direct service concerns to an appropriate private channel. Templates do not establish compliance.",
-        },
-        {
-            question: "When should a dental office ask for a Google review?",
-            answer: "Two to three hours after checkout for SMS, twenty-four hours for email-only patients, and after the second visit when trust is established. Happy recall patients are strong candidates too.",
-        },
-        {
-            question: "What causes most negative dental reviews?",
-            answer: "Wait times, billing surprises, and front-desk experience dominate - often operational issues, not clinical skill. Fixing scheduling communication usually moves the needle faster than marketing alone.",
-        },
-        {
-            question: "Does Zyene Reviews work for dental practices?",
-            answer: "Zyene Reviews monitors Google, Facebook, and Yelp, provides AI reply drafts you must review, and runs SMS or email review campaigns. See /industries/dental for workflow examples.",
-        },
-        {
-            question: "Should dentists monitor Healthgrades and Google?",
-            answer: "Google drives local map discovery for most new patients; Healthgrades still matters for some searchers. Zyene supports Google, Facebook and Yelp monitoring; Healthgrades is not a native connected review platform.",
-        },
+        { question: "Can dental practices respond to Google reviews without violating HIPAA?", answer: "Public replies can disclose sensitive information. Have your privacy lead review the workflow and wording, avoid confirming patient status or discussing treatment, and direct service concerns to an appropriate private channel. Templates do not establish compliance." },
+        { question: "When should a dental office ask for a Google review?", answer: "Two to three hours after checkout for SMS, twenty-four hours for email-only patients, and after the second visit when trust is established. Happy recall patients are strong candidates too." },
+        { question: "What causes most negative dental reviews?", answer: "Wait times, billing surprises, and front-desk experience dominate - often operational issues, not clinical skill. Fixing scheduling communication usually moves the needle faster than marketing alone." },
+        { question: "Does Zyene Reviews work for dental practices?", answer: "Zyene Reviews monitors Google, Facebook, and Yelp, provides AI reply drafts you must review, and runs SMS or email review campaigns. See /industries/dental for workflow examples." },
+        { question: "Should dentists monitor Healthgrades and Google?", answer: "Google drives local map discovery for most new patients; Healthgrades still matters for some searchers. Zyene supports Google, Facebook and Yelp monitoring; Healthgrades is not a native connected review platform." },
     ],
     body: [
         { type: "p", text: "People choosing a dental practice may use reviews to understand communication, scheduling, and the overall experience. Listen to that feedback without assuming it represents every patient." },
@@ -227,26 +197,11 @@ export const post11: BlogPost = {
         { label: "Try Zyene Reviews free for 7 days", href: SIGNUP_URL },
     ],
     faqs: [
-        {
-            question: "How much does a bad online reputation cost a local business?",
-            answer: "It varies by traffic and ticket size, but the article walks through lost acquisition, lost repeat visits, higher ad reliance, and compounding damage from unanswered negatives - using published third-party stats, not Zyene Reviews customer benchmarks.",
-        },
-        {
-            question: "Does a half-star rating gap really change revenue?",
-            answer: "Industry research cited here - including ReviewTrackers and Harvard work on ratings and revenue - shows meaningful swings in whether consumers choose you. Run the worksheet table with your own GBP impressions and average ticket.",
-        },
-        {
-            question: "Can one bad review be offset?",
-            answer: "Consumer research often cited suggests many positive reviews are needed to neutralize the impact of a harsh negative. Respond quickly and keep collecting fresh positives so the bad review ages down the feed.",
-        },
-        {
-            question: "How does Negative Feedback Shield reduce reputation cost?",
-            answer: "Shield routes low ratings to private feedback on your Zyene Reviews review page so your team can organize service recovery. Outcomes depend on the service issue, the response, and the customer.",
-        },
-        {
-            question: "Is reputation management software worth $30 per month?",
-            answer: "If preventing one lost customer per month exceeds Starter on Zyene Reviews at $29.99, the math works. The article compares annual tool cost to illustrative revenue lines you fill in - not guaranteed ROI figures.",
-        },
+        { question: "How much does a bad online reputation cost a local business?", answer: "It varies by traffic and ticket size, but the article walks through lost acquisition, lost repeat visits, higher ad reliance, and compounding damage from unanswered negatives - using published third-party stats, not Zyene Reviews customer benchmarks." },
+        { question: "Does a half-star rating gap really change revenue?", answer: "Industry research cited here - including ReviewTrackers and Harvard work on ratings and revenue - shows meaningful swings in whether consumers choose you. Run the worksheet table with your own GBP impressions and average ticket." },
+        { question: "Can one bad review be offset?", answer: "Consumer research often cited suggests many positive reviews are needed to neutralize the impact of a harsh negative. Respond quickly and keep collecting fresh positives so the bad review ages down the feed." },
+        { question: "How does Negative Feedback Shield reduce reputation cost?", answer: "Shield routes low ratings to private feedback on your Zyene Reviews review page so your team can organize service recovery. Outcomes depend on the service issue, the response, and the customer." },
+        { question: "Is reputation management software worth $30 per month?", answer: "If preventing one lost customer per month exceeds Starter on Zyene Reviews at $29.99, the math works. The article compares annual tool cost to illustrative revenue lines you fill in - not guaranteed ROI figures." },
     ],
     body: [
         { type: "p", text: "Every local business owner knows a bad review hurts. But most think about the damage in vague terms - 'we might lose a few customers'. The actual financial impact is specific, measurable, and compounding - and for most local businesses, it's much larger than they realize." },
@@ -327,26 +282,11 @@ export const post12: BlogPost = {
         { label: "Start monitoring reviews with Zyene Reviews", href: SIGNUP_URL },
     ],
     faqs: [
-        {
-            question: "How do I know if a Google review is fake?",
-            answer: "Look for thin reviewer history, generic or recycled text, services you do not offer, impossible geography, or several negatives landing in a tight window. Document screenshots before you report.",
-        },
-        {
-            question: "How do I report a fake Google review?",
-            answer: "Use the three-dot menu on the review in Maps or the flag control in Google Business Profile, pick the closest policy reason, and wait for Google's review - often one to seven days, sometimes longer.",
-        },
-        {
-            question: "Should I respond publicly to a fake review?",
-            answer: "Yes - with a calm tone that notes you cannot verify the visit and inviting a direct contact. Avoid calling it fake aggressively; future customers read your professionalism.",
-        },
-        {
-            question: "What if Google does not remove the review?",
-            answer: "Keep the professional response, accelerate legitimate review collection, and consult counsel if you suspect a coordinated competitor attack. Never post fake reviews in retaliation.",
-        },
-        {
-            question: "Can Zyene Reviews alert me when suspicious reviews appear?",
-            answer: "Zyene Reviews sends real-time alerts when new Google, Facebook, or Yelp reviews arrive so you can flag and respond within hours instead of discovering fakes weeks later.",
-        },
+        { question: "How do I know if a Google review is fake?", answer: "Look for thin reviewer history, generic or recycled text, services you do not offer, impossible geography, or several negatives landing in a tight window. Document screenshots before you report." },
+        { question: "How do I report a fake Google review?", answer: "Use the three-dot menu on the review in Maps or the flag control in Google Business Profile, pick the closest policy reason, and wait for Google's review - often one to seven days, sometimes longer." },
+        { question: "Should I respond publicly to a fake review?", answer: "Yes - with a calm tone that notes you cannot verify the visit and inviting a direct contact. Avoid calling it fake aggressively; future customers read your professionalism." },
+        { question: "What if Google does not remove the review?", answer: "Keep the professional response, accelerate legitimate review collection, and consult counsel if you suspect a coordinated competitor attack. Never post fake reviews in retaliation." },
+        { question: "Can Zyene Reviews alert me when suspicious reviews appear?", answer: "Zyene Reviews sends real-time alerts when new Google, Facebook, or Yelp reviews arrive so you can flag and respond within hours instead of discovering fakes weeks later." },
     ],
     body: [
         { type: "p", text: "Fake Google reviews - from competitors, unhappy former employees, or review farms - are an increasingly common problem for local businesses. Unlike legitimate negative reviews that reflect real customer experiences, fake reviews are a form of business sabotage that can cost you customers and ranking without any corresponding business failure." },

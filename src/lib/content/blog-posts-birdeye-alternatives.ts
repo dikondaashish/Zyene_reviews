@@ -9,7 +9,7 @@ export const post4: BlogPost = {
   pillar: "competitor-analysis", pillarLabel: "Competitor Analysis",
   publishedAt: "2026-03-31", dateModified: "2026-10-11", readMinutes: 6,
   author: { name: "Zyene Reviews", role: "Editorial team" },
-  metaTitle: "Birdeye Alternatives for Local Businesses (2026)",
+  metaTitle: "Birdeye Alternatives Compared (2026)",
   metaDescription: "Compare Birdeye alternatives: Zyene, NiceJob, GatherUp and Podium. Check current prices, AI replies, review requests, contract terms and business fit.",
   keywords: ["birdeye alternatives", "birdeye alternative", "review management software", "birdeye competitors"],
   relatedSlugs: ["birdeye-pricing-breakdown-2026", "podium-pricing-vs-zyene-reviews"],
