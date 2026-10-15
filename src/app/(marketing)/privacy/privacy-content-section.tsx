@@ -1,9 +1,10 @@
 import { REGIONAL_COMPLIANCE_SECTIONS } from "@/lib/enterprise/compliance-data";
+import { PrivacyCookiesSection } from "./privacy-cookies-section";
 
 // Rendered on both server and client — a live `new Date()` would mismatch
 // hydration when the cached HTML crosses a day boundary (Sentry ZYENE-REVIEWS-Z).
 // Bump this when the policy materially changes.
-const LAST_UPDATED = "October 12, 2026";
+const LAST_UPDATED = "October 15, 2026";
 
 export function PrivacyContentSection() {
     return (
@@ -73,16 +74,7 @@ export function PrivacyContentSection() {
                         <li>With your consent.</li>
                     </ul>
 
-                    <h2 className="text-2xl font-semibold mt-10 mb-4">5. Cookies &amp; Tracking Technologies</h2>
-                    <p>We use cookies and similar tracking technologies to:</p>
-                    <ul className="list-disc pl-6 space-y-2 mb-6">
-                        <li>Remember your preferences and login sessions.</li>
-                        <li>Analyze site traffic and usage patterns (via Vercel Analytics).</li>
-                        <li>Improve the performance and reliability of our Services.</li>
-                    </ul>
-                    <p>
-                        You can manage cookie preferences through your browser settings. We do not use tracking technologies for third-party advertising.
-                    </p>
+                    <PrivacyCookiesSection />
 
                     <h2 className="text-2xl font-semibold mt-10 mb-4">6. Data Security</h2>
                     <p>

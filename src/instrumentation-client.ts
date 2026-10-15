@@ -10,13 +10,8 @@ import {
 Sentry.init({
     ...getSentryBaseInitOptions(),
     beforeSend: filterClientSentryEvent,
-    // Session Replay is browser-only; mask text/media by default (review PII).
-    integrations: [
-        Sentry.replayIntegration({
-            maskAllText: true,
-            blockAllMedia: true,
-        }),
-    ],
+    // Session Replay is attached only after analytics consent (see ConsentScripts /
+    // enableSentryReplay); these rates apply once it is added.
     replaysSessionSampleRate: getSentryReplaysSessionSampleRate(),
     replaysOnErrorSampleRate: getSentryReplaysOnErrorSampleRate(),
 });

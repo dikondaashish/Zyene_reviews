@@ -1,6 +1,7 @@
 "use client";
 
 import { deserializeUtm, UTM_COOKIE_NAME } from "@/lib/growth/utm";
+import { hasConsent } from "@/lib/consent/consent-store";
 
 function readUtmCookie() {
     const match = document.cookie
@@ -24,6 +25,8 @@ export function trackMarketingEventClient(
         metadata?: Record<string, string>;
     }
 ): void {
+    // First-party usage analytics (plus a sessionStorage dedupe flag): opt-in like any other analytics.
+    if (!hasConsent("analytics")) return;
     if (opts.oncePerSession) {
         const key = `zyene_me_${eventName}`;
         try {

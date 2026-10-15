@@ -6,6 +6,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { DashboardTourProvider } from "@/components/tours/dashboard-tour-provider";
+import { ManageCookiesButton } from "@/components/consent/manage-cookies-button";
 
 interface DashboardLayoutClientProps {
     children: React.ReactNode;
@@ -22,40 +23,6 @@ export function DashboardLayoutClient({
     const isTablet = useMediaQuery("(min-width: 768px) and (max-width: 1023px)");
     // Mobile: hidden (< 768px)
     const isMobile = !useMediaQuery("(min-width: 768px)");
-
-    const handleManageCookies = () => {
-        const w = window as Window & {
-            OneTrust?: { ToggleInfoDisplay?: () => void };
-            Cookiebot?: { renew?: () => void };
-            UC_UI?: { showSecondLayer?: () => void };
-            openCookiePreferences?: () => void;
-        };
-
-        if (typeof w.OneTrust?.ToggleInfoDisplay === "function") {
-            w.OneTrust.ToggleInfoDisplay();
-            return;
-        }
-        if (typeof w.Cookiebot?.renew === "function") {
-            w.Cookiebot.renew();
-            return;
-        }
-        if (typeof w.UC_UI?.showSecondLayer === "function") {
-            w.UC_UI.showSecondLayer();
-            return;
-        }
-        if (typeof w.openCookiePreferences === "function") {
-            w.openCookiePreferences();
-            return;
-        }
-        window.dispatchEvent(new Event("zyene:open-cookie-preferences"));
-
-        // Final fallback: open privacy policy section with cookie info
-        setTimeout(() => {
-            if (typeof w.openCookiePreferences !== "function") {
-                window.location.href = "/privacy";
-            }
-        }, 100);
-    };
 
     return (
         <DashboardTourProvider>
@@ -99,13 +66,7 @@ export function DashboardLayoutClient({
                     <Link href="/privacy" className="transition-colors hover:text-foreground">
                         Privacy
                     </Link>
-                    <button
-                        type="button"
-                        onClick={handleManageCookies}
-                        className="transition-colors hover:text-foreground"
-                    >
-                        Manage cookies
-                    </button>
+                    <ManageCookiesButton className="transition-colors hover:text-foreground" />
                 </div>
             </footer>
             </div>

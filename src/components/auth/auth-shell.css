@@ -28,7 +28,9 @@
 .auth-form-container { width: 100%; max-width: 400px; min-width: 0; }
 .auth-footer { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; padding: 16px 24px 8px; font-size: 12px; color: var(--muted-foreground); }
 .auth-footer nav { display: flex; gap: 16px; }
-.auth-footer a { display: inline-flex; align-items: center; min-height: 24px; }
+.auth-footer a, .auth-footer-button { display: inline-flex; align-items: center; min-height: 24px; }
+.auth-footer-button { padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.auth-footer-button:hover { color: var(--foreground); }
 .auth-brand {
   isolation: isolate;
   color: var(--stage-fg);
@@ -125,4 +127,9 @@
   .auth-main { padding: 10px 20px 12px; }
   .auth-footer { gap: 10px 14px; padding: 8px 16px 4px; font-size: 11px; }
   .auth-footer nav { gap: 10px; }
+}
+/* Last so it wins over the compact rules above: copyright + three legal links stay on one line at 320px. */
+@media (max-width: 374px) {
+  .auth-footer { gap: 4px 10px; padding-inline: 12px; }
+  .auth-footer nav { gap: 8px; }
 }
