@@ -195,7 +195,7 @@ Price ($/mo per location)
 
 | Former gap | Resolution |
 |------------|------------|
-| No sitemap / robots | `src/app/sitemap.ts`, `src/app/robots.ts` |
+| No sitemap / robots | `src/lib/seo/sitemap.ts`, `src/app/robots.ts` |
 | No OG / Twitter / JSON-LD | Per-page metadata + `json-ld` components |
 | No `/pricing`, `/features` | Live conversion pages |
 | No industry / compare pages | `/industries/*`, `/compare/*` |
@@ -453,7 +453,7 @@ Update in: homepage hero, pricing cards, FAQ, contact page, signup panel, onboar
 
 > **Status: Complete (May 2026)**
 > All engineering deliverables verified:
-> - Dynamic `sitemap.ts` with all marketing, industry, comparison, blog, help, feature pillar URLs — `src/app/sitemap.ts`
+> - Dynamic `sitemap.ts` with all marketing, industry, comparison, blog, help, feature pillar URLs — `src/lib/seo/sitemap.ts`
 > - `robots.ts` disallowing `/api/`, `/onboarding`, `/growth`, and app paths — `src/app/robots.ts`
 > - Open Graph metadata on every `(marketing)` page (unique title + description + url)
 > - Twitter `summary_large_image` cards on every `(marketing)` page
@@ -467,7 +467,7 @@ Update in: homepage hero, pricing cards, FAQ, contact page, signup panel, onboar
 
 | Task | Detail | File to create/edit |
 |------|--------|---------------------|
-| **Create `sitemap.ts`** | Dynamic sitemap with all marketing, industry, comparison, blog, docs, legal URLs | `src/app/sitemap.ts` |
+| **Create `sitemap.ts`** | Dynamic sitemap with all marketing, industry, comparison, blog, docs, legal URLs | `src/lib/seo/sitemap.ts` |
 | **Create `robots.ts`** | Allow marketing crawl; disallow `/api/`, `/onboarding`, app subdomain paths | `src/app/robots.ts` |
 | **Add Open Graph metadata** | Per-page title, description, image (1200×630) | Each `page.tsx` under `(marketing)` |
 | **Add Twitter card metadata** | `summary_large_image` card type | Same files |
@@ -1049,7 +1049,7 @@ The product already has upgrade modals at:
 <a id="page-architecture-map"></a>
 ## Page Architecture Map — Complete URL Inventory
 
-> **Status: Complete (May 2026)** — Canonical inventory: `src/lib/growth/page-inventory.ts` (100+ routes including blog, help, tools, ES pages, PLG surfaces). Browse and filter on `/growth` → **Page architecture** tab. Sitemap: `src/app/sitemap.ts`.
+> **Status: Complete (May 2026)** — Canonical inventory: `src/lib/growth/page-inventory.ts` (100+ routes including blog, help, tools, ES pages, PLG surfaces). Browse and filter on `/growth` → **Page architecture** tab. Sitemap: `src/lib/seo/sitemap.ts`.
 
 ### Existing Pages (Keep & Improve)
 

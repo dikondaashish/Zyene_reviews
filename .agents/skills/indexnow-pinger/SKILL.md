@@ -86,7 +86,7 @@ curl -X POST https://zyenereviews.com/api/indexnow \
 
 ## Does not replace
 
-- XML sitemap (`src/app/sitemap.ts`)
+- XML sitemap (`src/lib/seo/sitemap.ts`)
 - Google Search Console URL inspection
 - On-page SEO (`on-page-seo-auditor`, `meta-tags-optimizer`)
 

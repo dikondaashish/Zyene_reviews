@@ -113,7 +113,7 @@ rg -n "from \"\.\./\.\./\.\." src
 ## Marketing / SEO
 
 Handled by the **seo** skill — invoke it rather than re-implementing the checks. Flag
-here only if a new indexable page is missing from `src/app/sitemap.ts` (`pnpm test`
+here only if a new indexable page is missing from `src/lib/seo/sitemap.ts` (`pnpm test`
 already fails on this) or a marketing route lacks OG/Twitter metadata.
 
 ---

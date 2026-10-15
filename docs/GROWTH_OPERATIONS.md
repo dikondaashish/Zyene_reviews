@@ -167,7 +167,7 @@ If the variable is unset, `/growth` shows **—** for Visitor → signup and a n
 ## Page architecture
 
 - **Canonical inventory:** `src/lib/growth/page-inventory.ts` (used by `/growth` Page tab).
-- **Sitemap:** `src/app/sitemap.ts` — keep in sync when adding marketing routes.
+- **Sitemap:** `src/lib/seo/sitemap.ts` — keep in sync when adding marketing routes.
 - **Robots:** `/growth` and `/api/` disallowed; app routes blocked from crawlers.
 
 Blueprint note: case studies at `/case-studies`; `/customers` and `/customers/[slug]` redirect there. Help: category hubs `/help/{category}`, canonical articles `/help/{category}/{article}`, flat `/help/{slug}` still works.
