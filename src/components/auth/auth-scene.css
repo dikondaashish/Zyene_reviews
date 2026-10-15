@@ -49,7 +49,10 @@
   --scene-ease: var(--motion-ease-enter);
   position: relative;
   container-type: size;
-  height: clamp(300px, 46svh, 420px);
+  /* Takes the panel's leftover height (never more than 460px). */
+  flex: 1 1 0;
+  min-height: 0;
+  max-height: 460px;
   font-size: 12px;
   color: var(--paper-ink);
   overflow: clip;
@@ -67,7 +70,7 @@
 .scene-float--rating { left: 0; top: 15%; width: 43%; animation-duration: 8s; }
 .scene-float--google { right: 0; top: 3%; width: 53%; animation-delay: -2s; }
 .scene-float--yelp { right: 2%; top: 37%; width: 50%; animation-duration: 9s; animation-delay: -4s; }
-.scene-float--reply { right: 1%; top: 66%; width: 52%; animation-duration: 8s; animation-delay: -1s; }
+.scene-float--reply { right: 1%; top: 68%; width: 52%; animation-duration: 8s; animation-delay: -1s; }
 .scene-float--facebook { left: 2%; bottom: 3%; width: 40%; animation-duration: 10s; animation-delay: -6s; }
 .scene-enter { animation: scene-in 700ms var(--scene-ease) var(--scene-delay, 0s) both; }
 
@@ -200,6 +203,16 @@
   .scene-card { padding-block: 10px; }
   .scene-card > p { margin-top: 6px; }
   .scene-tag { display: none; }
+}
+
+/* Very short windows: keep the rating and two reviews, drop the reply. */
+@container (max-height: 290px) {
+  .scene-float--reply { display: none; }
+  .scene-float--rating { top: 22%; }
+  .scene-float--yelp { top: auto; bottom: 0; }
+}
+@container (max-height: 200px) {
+  .scene-float--yelp, .scene-spark { display: none; }
 }
 
 @keyframes scene-in { from { opacity: 0; transform: translateY(16px) scale(.96); } }

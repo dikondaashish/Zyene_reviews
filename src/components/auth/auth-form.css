@@ -86,7 +86,8 @@
   .auth-help:hover, .auth-footer a:hover, .auth-password-toggle:hover { color: var(--foreground); }
 }
 @media (max-width: 374px) { .auth-form-heading h1 { font-size: 28px; } }
-@media (max-height: 900px) {
+/* Compact form spacing up to 1060px tall so the longer sign-up form never scrolls. */
+@media (max-height: 1060px) {
   .auth-form-stack { gap: 14px; }
   .auth-form-heading h1 { font-size: 28px; margin-bottom: 8px; }
   .auth-form-heading p { font-size: 14px; line-height: 1.45; }
@@ -125,6 +126,16 @@
   .auth-optional summary { min-height: 36px; font-size: 12px; }
   .auth-optional-content { gap: 8px; padding-block: 6px 10px; }
   .auth-status-icon { width: 44px; height: 44px; border-radius: 12px; }
+}
+/* Short desktop windows (e.g. 1366×768 screens minus browser chrome). */
+@media (min-width: 961px) and (max-height: 700px) {
+  .auth-form-stack, .auth-fields { gap: 6px; }
+  .auth-form-heading h1 { font-size: 24px; margin-bottom: 4px; }
+  .auth-form-heading p { font-size: 13px; line-height: 1.35; }
+  .auth-input, .auth-submit { min-height: 40px; height: 40px; }
+  .auth-password-toggle { width: 36px; height: 36px; }
+  .auth-fields .auth-field > .auth-hint { display: none; }
+  .auth-legal { font-size: 10px; line-height: 1.35; }
 }
 @media (prefers-reduced-motion: reduce) {
   .auth-shell *, .auth-shell *::before, .auth-shell *::after { transition: none !important; animation: none !important; }
