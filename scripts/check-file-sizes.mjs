@@ -45,35 +45,15 @@ const EXEMPT = [
  */
 const BASELINE = {
   // ── Static content datasets ────────────────────────────────────────────────
-  // Single cohesive datasets — marketing copy, not logic. Splitting a 639-line
-  // array of blog posts across files buys nothing and makes edits harder. These
-  // are expected to stay.
-  "src/lib/content/blog-posts-month1.ts": { max: 639, why: "content dataset" },
-  "src/lib/content/blog-posts-month2.ts": { max: 456, why: "content dataset" },
-  "src/lib/content/blog-posts-month3.ts": { max: 430, why: "content dataset" },
-  "src/lib/content/blog-posts-delete-google-review.ts": {
+  // Marketing copy, not logic. Blog posts live one per file in
+  // src/lib/content/blog-posts/; only the two long-form guides exceed 200.
+  "src/lib/content/blog-posts/can-you-delete-a-google-review.ts": {
     max: 323,
     why: "content dataset — comprehensive SEO guide with long-tail Q&A sections",
   },
-  "src/lib/content/blog-posts-home-services.ts": {
+  "src/lib/content/blog-posts/hvac-home-services-reputation-management.ts": {
     max: 299,
     why: "content dataset — industry-specific guide with trade-specific sections",
-  },
-  "src/lib/content/blog-posts-podium-pricing.ts": {
-    max: 291,
-    why: "content dataset — competitor comparison guide with pricing tables and buyer FAQs",
-  },
-  "src/lib/content/blog-posts-missing-reviews.ts": {
-    max: 264,
-    why: "content dataset — troubleshooting guide for missing Google reviews with recovery steps",
-  },
-  "src/lib/content/blog-posts-ask-for-reviews.ts": {
-    max: 270,
-    why: "content dataset — review request templates guide with US compliance and industry scripts",
-  },
-  "src/lib/content/blog-posts-hvac-leads.ts": {
-    max: 235,
-    why: "content dataset — HVAC lead generation and Google Maps optimization guide",
   },
   "src/lib/content/resource-data.ts": {
     max: 516,

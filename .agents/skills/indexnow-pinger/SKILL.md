@@ -46,7 +46,7 @@ Notify Bing and other IndexNow engines **after production** has the live URL. In
 | Case study | `https://zyenereviews.com/case-studies/{slug}` |
 | Compare / industry / feature pillar | Matching production path |
 
-Blog slugs live in `src/lib/phase4/blog-posts-month*.ts` → `blog-data.ts`.
+Each blog post lives in `src/lib/content/blog-posts/{slug}.ts`, registered in `blog-posts/index.ts` → `blog-data.ts`.
 
 ## Agent checklist (new blog post)
 
@@ -86,7 +86,7 @@ curl -X POST https://zyenereviews.com/api/indexnow \
 
 ## Does not replace
 
-- XML sitemap (`src/app/sitemap.ts`)
+- XML sitemap (`src/lib/seo/sitemap.ts`)
 - Google Search Console URL inspection
 - On-page SEO (`on-page-seo-auditor`, `meta-tags-optimizer`)
 

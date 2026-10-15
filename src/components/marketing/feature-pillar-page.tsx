@@ -1,3 +1,5 @@
+import { FeatureWorkflowSection } from "@/components/marketing/feature-workflow-section";
+import { TrialTerms } from "@/components/marketing/trial-terms";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
@@ -69,6 +71,7 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
           </div>
         </div>
       </section>
+      <FeatureWorkflowSection slug={pillar.slug} />
       {pillar.slug === "ai-replies" && <AutomaticRepliesFeature />}
       {pillar.slug === "review-collection" && (
         <section className="marketing-section">
@@ -103,6 +106,7 @@ export function FeaturePillarPageView({ pillar }: { pillar: Pillar }) {
               <br />
               Less busywork.
             </h2>
+            <TrialTerms />
             <p className="mt-5 text-muted-foreground">
               Review monitoring, replies, collection, and reporting in one workspace. Try it free for 7 days.
             </p>

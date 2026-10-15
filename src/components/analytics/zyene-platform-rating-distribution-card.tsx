@@ -18,10 +18,10 @@ export function ZyenePlatformRatingDistributionCard({
     allSourceRatingsGivenLength: number;
 }) {
     return (
-        <Card className="bg-card/60 border-border/50 backdrop-blur-md transition-all hover:border-primary/20">
+        <Card className="bg-card border-border transition-all hover:border-primary/20">
             <CardHeader>
                 <div className="space-y-1">
-                    <CardTitle className="text-lg font-bold flex items-center gap-2">
+                    <CardTitle className="ui-card-title flex items-center gap-2">
                         <Star className="text-primary size-5" />
                         Rating Distribution
                     </CardTitle>

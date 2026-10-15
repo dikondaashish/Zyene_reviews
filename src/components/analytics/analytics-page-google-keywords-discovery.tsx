@@ -17,7 +17,7 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
             <Card className="lg:col-span-2 rounded-xl border-border bg-card overflow-hidden">
                 <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3">
                     <div className="space-y-1">
-                        <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                        <CardTitle className="ui-card-title flex items-center gap-2">
                             <Search className="text-primary size-5" />
                             Search Keywords
                         </CardTitle>
@@ -80,7 +80,7 @@ export function AnalyticsPageGoogleKeywordsDiscovery({
             <Card className="rounded-xl border-border bg-card flex flex-col">
                 <CardHeader>
                     <div className="space-y-1">
-                        <CardTitle className="text-sm font-semibold">Discovery Type</CardTitle>
+                        <CardTitle className="ui-card-title">Discovery Type</CardTitle>
                         <p className="text-xs text-muted-foreground font-medium">Estimated from search keywords</p>
                     </div>
                 </CardHeader>

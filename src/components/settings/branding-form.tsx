@@ -23,7 +23,7 @@ export function BrandingForm({ business, onValuesChange, onLogoChange }: Brandin
         <div className="rounded-xl border border-border bg-card p-6 space-y-8">
             <Form {...form}>
                 <div className="space-y-1">
-                    <h3 className="text-xl font-semibold text-foreground">Brand Identity</h3>
+                    <h3 className="ui-card-title text-foreground">Brand Identity</h3>
                     <p className="text-sm text-muted-foreground">
                         Customize your review page to match your brand&apos;s look and feel.
                     </p>

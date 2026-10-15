@@ -28,7 +28,7 @@ export function CampaignTemplateCard({ template, compact = false }: CampaignTemp
                     <Icon className="size-5" />
                 </div>
                 
-                <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+                <h3 className="ui-card-title text-foreground mb-1 group-hover:text-primary transition-colors">
                     {template.name}
                 </h3>
                 

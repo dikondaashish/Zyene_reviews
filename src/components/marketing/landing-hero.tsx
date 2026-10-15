@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 
 import { HeroMedia as HeroMediaView } from "@/components/marketing/interior/hero-media";
 import { SIGNUP_URL } from "@/config/env";
+import { TrialTerms } from "@/components/marketing/trial-terms";
 import type { HeroMedia, InteriorHeroVariant } from "@/types/marketing-interior";
 
 type HeroAction = { label: string; href: string };
@@ -60,6 +61,7 @@ export function LandingHero({ eyebrow, title, description, variant, media, image
                             {secondary && <Link className="marketing-button marketing-button-secondary" href={secondary.href} {...(secondary.href === "/demo" ? { "data-track": "demo", "data-track-location": "hero" } : {})}>{secondary.label}</Link>}
                         </div>
                     )}
+                    {primary?.href === "/signup" && <TrialTerms />}
                     {children && <div className="landing-hero-extra">{children}</div>}
                 </div>
                 {hasMedia && <HeroMediaView media={resolvedMedia} />}

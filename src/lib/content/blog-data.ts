@@ -1,6 +1,6 @@
 /**
  * Blog data barrel - Phase 4.
- * Re-exports types, aggregates all 12 posts, and exposes lookup maps.
+ * Re-exports types, aggregates every post in ./blog-posts, and exposes lookup maps.
  */
 
 export type {
@@ -9,44 +9,20 @@ export type {
     TableData,
     ContentSection,
     BlogPost,
+    BlogPostSource,
     BlogAuthor,
     BlogFaq,
 } from "./blog-types";
 export { DEFAULT_BLOG_AUTHOR, resolveBlogAuthor, blogAuthorInitials } from "./blog-authors";
 export { BLOG_IMAGES, getBlogImage } from "./blog-images";
 import type { ContentPillar, BlogPost } from "./blog-types";
-
-import { post1, post2, post3, post4 } from "./blog-posts-month1";
-import { post5, post6, post7, post8 } from "./blog-posts-month2";
-import { post9, post10, post11, post12 } from "./blog-posts-month3";
-import { post13 } from "./blog-posts-shield";
-import { post14 } from "./blog-posts-ai-visibility";
-import { post15 } from "./blog-posts-positive-reviews";
 import { BLOG_IMAGES } from "./blog-images";
-import { post16 } from "./blog-posts-google-review-link";
-import { post17 } from "./blog-posts-delete-google-review";
-import { post18 } from "./blog-posts-home-services";
-import { post19 } from "./blog-posts-podium-pricing";
-import { post20 } from "./blog-posts-missing-reviews";
-import { post21 } from "./blog-posts-ask-for-reviews";
-import { post22 } from "./blog-posts-hvac-leads";
-import { post23 } from "./blog-posts-qr-code";
+import { BLOG_POST_SOURCES } from "./blog-posts";
+import { estimateReadMinutes } from "./blog-read-time";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Export
-// ─────────────────────────────────────────────────────────────────────────────
-
-const RAW_BLOG_POSTS: BlogPost[] = [
-    post1, post2, post3, post4,
-    post5, post6, post7, post8,
-    post9, post10, post11, post12,
-    post13, post14, post15, post16,
-    post17, post18, post19, post20,
-    post21, post22, post23,
-];
-
-export const BLOG_POSTS: BlogPost[] = RAW_BLOG_POSTS.map((post) => ({
+export const BLOG_POSTS: BlogPost[] = BLOG_POST_SOURCES.map((post) => ({
     ...post,
+    readMinutes: estimateReadMinutes(post),
     image: BLOG_IMAGES[post.slug],
 }));
 

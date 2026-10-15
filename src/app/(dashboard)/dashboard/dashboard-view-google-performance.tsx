@@ -17,7 +17,7 @@ export function DashboardViewGooglePerformance({
     return (
         <div className="space-y-2">
             <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                <h2 className="ui-section-title">
                     Google listing performance
                 </h2>
                 <span className="shrink-0 text-xs text-muted-foreground">Last 12 months</span>

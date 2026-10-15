@@ -1,9 +1,21 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 function source(path: string): string {
     return readFileSync(resolve(process.cwd(), path), "utf8");
+}
+
+const BLOG_POSTS_DIR = "src/lib/content/blog-posts";
+
+function blogPost(slug: string): string {
+    return source(`${BLOG_POSTS_DIR}/${slug}.ts`);
+}
+
+function allBlogPosts(): string {
+    return readdirSync(resolve(process.cwd(), BLOG_POSTS_DIR))
+        .map((file) => source(`${BLOG_POSTS_DIR}/${file}`))
+        .join("\n");
 }
 
 describe("Phase 0 collateral integrity", () => {
@@ -17,8 +29,7 @@ describe("Phase 0 collateral integrity", () => {
 
     it("does not present undisclosed Google weighting as measured fact", () => {
         const content = [
-            source("src/lib/content/blog-posts-month1.ts"),
-            source("src/lib/content/blog-posts-month2.ts"),
+            allBlogPosts(),
             source("src/lib/content/resource-data.ts"),
         ].join("\n");
 
@@ -36,12 +47,9 @@ describe("Phase 0 collateral integrity", () => {
     });
 
     it("keeps the measurement limits explicit", () => {
-        const monthOne = source("src/lib/content/blog-posts-month1.ts");
-        const monthTwo = source("src/lib/content/blog-posts-month2.ts");
-
-        expect(monthOne).toContain("no review-specific weighting for AI Overviews");
-        expect(monthOne).toContain("publishes no fifty-review threshold");
-        expect(monthTwo).toContain("publishes no ninety-day review-weighting rule");
+        expect(blogPost("why-google-reviews-matter-in-2026")).toContain("no review-specific weighting for AI Overviews");
+        expect(blogPost("how-to-get-50-google-reviews-in-30-days")).toContain("publishes no fifty-review threshold");
+        expect(blogPost("how-reviews-impact-local-map-pack-ranking")).toContain("publishes no ninety-day review-weighting rule");
     });
 
     it("does not present illustrative industry workflows as customer proof", () => {

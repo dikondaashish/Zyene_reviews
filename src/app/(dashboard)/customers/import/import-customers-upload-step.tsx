@@ -13,7 +13,7 @@ export function ImportUploadStep({
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Upload CSV File</CardTitle>
+                <CardTitle className="ui-card-title">Upload CSV File</CardTitle>
                 <CardDescription>
                     Upload a CSV file containing your customer list. Your file should have a header row.
                 </CardDescription>

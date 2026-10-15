@@ -23,9 +23,9 @@ export function Step3FormHeader({
                 </div>
             </motion.div>
 
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+            <h1 className="ui-page-title text-foreground">
                 What&apos;s your industry?
-            </h2>
+            </h1>
             <p className="text-muted-foreground max-w-sm mx-auto leading-relaxed text-xs sm:text-sm">
                 We&apos;ll tailor your review templates and response suggestions to match.
             </p>

@@ -24,7 +24,7 @@ Default scan root: `src/app/(marketing)/`
 Also check when relevant:
 
 - `src/app/layout.tsx` — root metadata template, Organization JSON-LD
-- `src/app/sitemap.ts` — new URLs listed
+- `src/lib/seo/sitemap.ts` — new URLs listed
 - `src/app/robots.ts` — marketing paths not blocked
 - `src/components/seo/` — shared JSON-LD helpers
 - `src/app/r/` — review/collection pages (LocalBusiness if applicable)
@@ -114,13 +114,13 @@ rg 'target="_blank"' "src/app/(marketing)" -A1 | rg -v "noopener"
 
 For each new marketing path in the diff:
 
-- [ ] URL appears in `src/app/sitemap.ts` (or is generated from a slug list already in sitemap)
+- [ ] URL appears in `src/lib/seo/sitemap.ts` (or is generated from a slug list already in sitemap)
 - [ ] Path is not in `disallow` in `src/app/robots.ts` unless intentionally non-indexable
 
 Compare new routes:
 
 ```bash
-rg "url: \`\$\{BASE_URL\}" "src/app/sitemap.ts"
+rg "url: \`\$\{BASE_URL\}" "src/lib/seo/sitemap.ts"
 ```
 
 ## Output format
@@ -148,6 +148,6 @@ If violations exist, fix them or list them for the user before committing. Do no
 
 - Metadata template: `src/app/layout.tsx` (`title.template`)
 - JSON-LD helpers: `src/components/seo/json-ld.tsx`
-- Sitemap: `src/app/sitemap.ts`
+- Sitemap: `src/lib/seo/sitemap.ts`
 - Robots: `src/app/robots.ts`
 - Cursor rule: `.cursor/rules/seo.mdc`

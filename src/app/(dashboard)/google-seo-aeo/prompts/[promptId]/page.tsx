@@ -25,12 +25,12 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ p
                 >
                     <ArrowLeft className="size-3.5" /> Prompt library
                 </Link>
-                <h1 className="mt-1 break-words text-2xl font-bold tracking-tight">{data.promptText}</h1>
+                <h1 className="ui-page-title mt-1 break-words">{data.promptText}</h1>
             </div>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Visibility trend</CardTitle>
+                    <CardTitle className="ui-card-title">Visibility trend</CardTitle>
                     <CardDescription>
                         Weekly share of answered samples naming your brand, per engine. Gaps are weeks
                         with no samples, not measured zeros.
@@ -43,7 +43,7 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ p
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Head-to-head</CardTitle>
+                    <CardTitle className="ui-card-title">Head-to-head</CardTitle>
                     <CardDescription>Each engine&apos;s most recent answer to this prompt.</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -53,7 +53,7 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ p
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Content brief</CardTitle>
+                    <CardTitle className="ui-card-title">Content brief</CardTitle>
                     <CardDescription>
                         A concrete edit checklist for this exact prompt - never auto-published, always
                         copy-paste.

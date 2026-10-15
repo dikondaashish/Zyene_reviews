@@ -8,7 +8,7 @@ export function ZapierConfigureZapCard() {
     return (
         <Card className="overflow-hidden border-border bg-card">
             <CardHeader className="space-y-1 border-b border-border/60 bg-muted/15 pb-4">
-                <h2 className="text-lg font-semibold tracking-tight">
+                <h2 className="ui-section-title">
                     Configure your Zap
                 </h2>
                 <p className="text-sm text-muted-foreground">

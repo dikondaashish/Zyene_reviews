@@ -1,0 +1,90 @@
+/* Product type scale ------------------------------------------------------
+ * One heading scale for every signed-in surface (dashboard shell and
+ * onboarding). Sizes are fixed — no breakpoint variants — so a page title is
+ * the same size on phone, tablet and desktop.
+ *
+ *   Page title       24px / 1.2  / 600 / -0.022em   one <h1> per page (PageHeader)
+ *   Section heading  18px / 1.35 / 600 / -0.018em   <h2>  .ui-section-title
+ *   Card heading     16px / 1.4  / 600 / -0.011em   <h3> / CardTitle  .ui-card-title
+ *
+ * The classes and the shell h1/h2 rules are deliberately unlayered: they sit outside Tailwind's
+ * utilities layer, so a stray `text-3xl` or CardTitle's `leading-none` can
+ * never resize a heading that opted into the scale. Marketing pages keep
+ * their responsive editorial scale and never use these hooks. */
+:root {
+  --type-page-title: 1.5rem;
+  --type-page-title-leading: 1.2;
+  --type-page-title-weight: 600;
+  --type-page-title-tracking: -0.022em;
+  --type-section-title: 1.125rem;
+  --type-section-title-leading: 1.35;
+  --type-section-title-weight: 600;
+  --type-section-title-tracking: -0.018em;
+  --type-card-title: 1rem;
+  --type-card-title-leading: 1.4;
+  --type-card-title-weight: 600;
+  --type-card-title-tracking: -0.011em;
+  --type-body: 0.875rem;
+  --type-body-leading: 1.5;
+  --type-meta: 0.75rem;
+  --type-meta-leading: 1.4;
+  /* Page header rhythm: title → description, and text block → actions. */
+  --page-header-title-gap: 0.25rem;
+  --page-header-actions-gap: 1rem;
+}
+
+.ui-page-title,
+[data-dashboard-shell] h1,
+[data-app-onboarding] h1 {
+  font-size: var(--type-page-title);
+  line-height: var(--type-page-title-leading);
+  font-weight: var(--type-page-title-weight);
+  letter-spacing: var(--type-page-title-tracking);
+}
+
+/* h2 is pinned inside the signed-in shells too: some section headings come
+ * from src/components/ui (e.g. the dashboard review spotlight), which routes
+ * cannot restyle. Dialogs portal outside the shell and keep their own scale. */
+.ui-section-title,
+[data-dashboard-shell] h2,
+[data-app-onboarding] h2 {
+  font-size: var(--type-section-title);
+  line-height: var(--type-section-title-leading);
+  font-weight: var(--type-section-title-weight);
+  letter-spacing: var(--type-section-title-tracking);
+}
+
+.ui-card-title {
+  font-size: var(--type-card-title);
+  line-height: var(--type-card-title-leading);
+  font-weight: var(--type-card-title-weight);
+  letter-spacing: var(--type-card-title-tracking);
+}
+
+.ui-body-copy {
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
+}
+
+.ui-meta {
+  font-size: var(--type-meta);
+  line-height: var(--type-meta-leading);
+}
+
+/* Shell defaults ---------------------------------------------------------- */
+[data-dashboard-shell] {
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
+}
+
+[data-dashboard-shell] p:not([class~="text-xs"]):not([class~="text-sm"]):not([class~="text-base"]):not([class~="text-lg"]):not([class~="text-xl"]):not([class~="text-2xl"]):not([class~="text-3xl"]):not([class*="text-["]),
+[data-dashboard-shell] li:not([class~="text-xs"]):not([class~="text-sm"]):not([class~="text-base"]):not([class~="text-lg"]):not([class~="text-xl"]):not([class~="text-2xl"]):not([class~="text-3xl"]):not([class*="text-["]) {
+  font-size: var(--type-body);
+  line-height: var(--type-body-leading);
+}
+
+[data-dashboard-shell] small,
+[data-dashboard-shell] [data-type="meta"] {
+  font-size: var(--type-meta);
+  line-height: var(--type-meta-leading);
+}

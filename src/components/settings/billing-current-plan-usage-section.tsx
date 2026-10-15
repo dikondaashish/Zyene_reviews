@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, MessageSquare, Link as LinkIcon, Bot, MapPin } from "lucide-react";
+import { Mail, MessageSquare, Link as LinkIcon, Reply, MapPin } from "lucide-react";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { UsageBar } from "@/components/settings/billing-usage-bar";
 import type { BillingDerivedState } from "@/components/settings/billing-client-derived";
@@ -12,11 +12,11 @@ export function BillingCurrentPlanUsageSection(props: { billing: BillingDict; di
 
     return (
         <div className="space-y-4 lg:border-l lg:border-border lg:pl-8">
-            <h3 className="text-sm font-semibold text-foreground">{b.usage_title}</h3>
+            <h3 className="ui-card-title text-foreground">{b.usage_title}</h3>
             <UsageBar label={b.email_requests} stat={displayUsage.emailRequests} icon={<Mail className="size-3.5" />} />
             <UsageBar label={b.sms_requests} stat={displayUsage.smsRequests} icon={<MessageSquare className="size-3.5" />} />
             <UsageBar label={b.link_requests} stat={displayUsage.linkRequests} icon={<LinkIcon className="size-3.5" />} />
-            <UsageBar label={b.smart_replies} stat={displayUsage.smartReplies} icon={<Bot className="size-3.5" />} />
+            <UsageBar label={b.smart_replies} stat={displayUsage.smartReplies} icon={<Reply className="size-3.5" />} />
             <UsageBar label={b.locations} stat={displayUsage.businesses} icon={<MapPin className="size-3.5" />} />
         </div>
     );

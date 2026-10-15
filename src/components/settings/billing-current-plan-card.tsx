@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Plan } from "@/services/stripe/plans";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -60,7 +60,7 @@ export function BillingCurrentPlanCard(props: {
             <CardHeader>
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                        <CardTitle className="text-base font-semibold">{b.current_plan}</CardTitle>
+                        <CardTitle className="ui-card-title">{b.current_plan}</CardTitle>
                         <CardDescription>{b.active_subscription}</CardDescription>
                     </div>
                     <Badge
@@ -113,7 +113,6 @@ export function BillingCurrentPlanCard(props: {
 
             {!isPaidPlan && !hasStripeCustomer && (
                 <CardFooter className="bg-primary/10 dark:bg-primary/15 border-t flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4">
-                    <Sparkles className="text-primary shrink-0 hidden sm:block size-5" />
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-primary">{b.starter_msg}</p>
                         <p className="text-xs text-primary/90">

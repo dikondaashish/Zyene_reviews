@@ -4,7 +4,7 @@ Zyene Reviews helps local businesses turn customer feedback into a manageable da
 
 ## Identity and restraint
 
-Marketing preserves the cream canvas and original orange (`#ff4f00`). The app uses the user's requested OptiMonk palette: white panels, a cool gray canvas, charcoal text, and orange (`#ed5a29`) actions. Keep both light and dark modes. Product screens should prioritize customer content over large brand marks, decorative gradients, or animated panels.
+Colours are matched to OptiMonk (colours only: no logo, copy or imagery). Marketing uses a warm paper canvas (`#f7f5f1`), white cards, slate ink (`#23262a`) and orange (`#ed5a29`) actions; it is light-only. The app uses white panels and sidebar on a cool `#f9fafb` canvas, slate ink, cool-grey borders and the same orange. Keep both light and dark modes in the app; dark values come from the same grey scale (`#1a1c1f` / `#23262a` / `#2e3237`). Product screens should prioritize customer content over large brand marks, decorative gradients, or animated panels.
 
 Premium quality comes from complete workflows, readable typography, deliberate spacing, and useful feedback. Use one prominent action per decision area. Make supporting actions quiet but discoverable.
 
@@ -12,19 +12,19 @@ Premium quality comes from complete workflows, readable typography, deliberate s
 
 | Role | Light | Dark | Use |
 |---|---|---|---|
-| Background | `#ffffff` | `#17191c` | Main surface |
-| Canvas | `#f9fafb` | `#17191c` | Workspace around panels |
+| Background | `#ffffff` | `#1a1c1f` | Main surface |
+| Canvas | `#f9fafb` | `#1a1c1f` | Workspace around panels |
 | Card | `#ffffff` | `#23262a` | Solid content panels |
-| Primary | `#ed5a29` | `#ed5a29` | Filled actions |
+| Primary | `#ed5a29` | `#ed5a29` | Filled actions (hover `#dd4513`, pressed `#d14212`) |
 | Primary foreground | `#ffffff` | `#ffffff` | Text on primary |
-| Primary text | `#ed5a29` | `#ff9b79` | Small links and selected labels |
+| Primary text | `#b8410f` | `#f17e58` | Small links and selected labels |
 | Brand accent | `#ed5a29` | `#ed5a29` | App identity |
-| Muted foreground | `#6c757d` | `#b9bec6` | Supporting text |
-| Success | `#28a745` | `#71d58a` | Completed, sent, connected and positive states |
-| Success foreground | `#ffffff` | `#17191c` | Text on a filled success surface |
-| Border | `#e3e5e8` | `#3c424b` | Grouping and controls |
+| Muted foreground | `#505763` | `#b9bec6` | Supporting text |
+| Success | `#15803d` | `#2cc896` | Completed, sent, connected and positive states |
+| Success foreground | `#ffffff` | `#111213` | Text on a filled success surface |
+| Border | `#e3e5e8` | `#3a3e44` | Grouping and controls |
 
-The app palette was measured in OptiMonk's signed-in Chrome dashboard and is defined in `src/app/dashboard-colors.css`. Dark mode is adapted for Zyene. The reference's white-on-orange small button labels remain below WCAG AA contrast; see [dashboard color audit](dashboard-color-audit.md). Marketing keeps its original brand colors.
+The app palette is defined in `src/app/dashboard-colors.css`; marketing tokens live in `src/app/(marketing)/marketing.css`. Text pairs meet WCAG AA; small orange text uses the darker `#b8410f`, and muted text uses `#505763` rather than the reference's `#8f97a4` (3:1). White on `#ed5a29` is 3.4:1, so filled-action labels stay bold, and hover darkens instead of lightening; see [dashboard color audit](dashboard-color-audit.md).
 
 Use semantic tokens from `src/app/globals.css`. Do not use chart fill colors as text colors for status messages; use success, warning/destructive and their foreground roles. Success text uses `text-success` on neutral or lightly tinted surfaces; warning text uses `text-warning-foreground`. Keep chart series separate from status labels. The legacy sync-action token aliases primary, so AI and sync do not introduce another brand color. Custom business colors use `readableForeground` for filled controls so text remains readable. A color must not be the only indication of selection or status.
 
@@ -34,11 +34,19 @@ Use semantic tokens from `src/app/globals.css`. Do not use chart fill colors as 
 - **Funnel Sans**: app sidebar and its settings flyout, matching the OptiMonk reference. Compact labels are 10 px/16 px, weight 500; expanded labels are 14 px/20 px.
 - **Inter (`font-sans`)**: other navigation, forms, tables, body text, and supporting copy.
 - **Geist Mono**: code examples and user-editable message variables; avoid using code styling for ordinary product explanations.
-- Product page titles: 24 px in the dashboard shell and 24–32 px in editorial or onboarding surfaces, 600 weight, tight tracking.
-- Section headings: 18–20 px, 600 weight. Body and controls: 14–16 px. Supporting text: 12–14 px with sufficient contrast.
+- Signed-in heading scale (dashboard shell and onboarding), fixed at every breakpoint and defined once in `src/app/product-typography.css`:
+
+  | Role | Element | Hook | Size / leading / weight / tracking |
+  |---|---|---|---|
+  | Page title | the page's only `h1` | `PageHeader` (`@/components/dashboard/page-header`) or `.ui-page-title` | 24 px / 1.2 / 600 / -0.022em |
+  | Section heading | `h2` | `.ui-section-title` | 18 px / 1.35 / 600 / -0.018em |
+  | Card heading | `h3` or `CardTitle` | `.ui-card-title` | 16 px / 1.4 / 600 / -0.011em |
+
+  `PageHeader` fixes the header rhythm: 4 px title → description, 16 px between the text block and the actions, actions stacked under the title on phones. It carries no outer margin; the shell's 16/20 px section gap sets the space below. Inside the dashboard shell and onboarding every `h1` and `h2` is also pinned by an unlayered element rule, so headings that come from `src/components/ui` (such as the review spotlight) follow the scale; dialogs portal outside the shell and keep their own title size. Do not add `text-*`, `font-*`, `tracking-*` or `leading-*` utilities to signed-in headings; `tests/unit/app-heading-scale.test.ts` fails if you do. Display text that is not a heading (KPI values, print-card previews, insight headlines) uses `p`, and compact KPI labels keep `CardTitle className="text-sm font-medium"`.
+- Body and controls: 14–16 px. Supporting text: 12–14 px with sufficient contrast.
 - Allow headings, business names and labels to wrap. Avoid all-caps paragraphs and unnecessary text truncation. Maintain usable layouts under browser zoom and text enlargement.
 
-The shared dashboard shell now enforces one 24 px page-title scale, 14 px body rhythm, and 12 px metadata rhythm across every dashboard route. Route-level classes may still size intentional microcopy (badges, chart labels, and legal notes), but page titles should not introduce a second scale. The shell uses 16 px gutters on compact screens, 20 px at the small breakpoint, and 24 px on wide screens; marketing pages retain their larger responsive editorial headings and section spacing.
+The shared dashboard shell enforces the 24 px page-title scale, 14 px body rhythm, and 12 px metadata rhythm across every dashboard route. Route-level classes may still size intentional microcopy (badges, chart labels, and legal notes), but page titles should not introduce a second scale. The shell uses 16 px gutters on compact screens, 20 px at the small breakpoint, and 24 px on wide screens; marketing pages retain their larger responsive editorial headings and section spacing.
 
 ## Layout and hierarchy
 

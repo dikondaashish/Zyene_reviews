@@ -13,17 +13,23 @@
 @import "./marketing-home-features.css";
 @import "./marketing-interior-hero.css";
 @import "./blog.css";
-/* Public marketing has a consistent light canvas. Brand orange remains #ff4f00. */
+/* Public marketing is light-only, matched to optimonk.com: warm paper canvas,
+ * white cards, slate ink, cool-grey borders and orange #ed5a29 (pressed #d14212).
+ * Hover darkens to #dd4513 rather than the reference's lighter #f17e58, which
+ * would drop white text to 2.7:1; #f17e58 stays as the on-dark accent. Orange
+ * text uses the AA-safe #b8410f step. */
 .marketing-site {
- --background:#fffefb; --foreground:#201515; --card:#fffefb; --card-foreground:#201515;
- --popover:#fffefb; --popover-foreground:#201515; --muted:#f5f4f0; --muted-foreground:#68615e;
- --secondary:#f0efeb; --secondary-foreground:#201515; --accent:#f0efeb; --accent-foreground:#201515;
- --primary:#ff4f00; --cta:var(--primary); --primary-foreground:#ffffff; --cta-foreground:#ffffff; --border:#e4e1da; --input:#e4e1da; --ring:#ff4f00;
- --success:#287653; --success-foreground:#ffffff; --warning:oklch(0.75 0.15 70); --warning-foreground:oklch(0.45 0.12 70);
- --destructive:oklch(0.6 0.2 25); --destructive-foreground:#ffffff;
- --canvas:#f5f4f0; --brand-wash:#ffede4; --brand-orange:#ff4f00;
- --marketing-footer-bg:#201515; --marketing-footer-fg:#fffefb; --marketing-footer-muted:#c5c0b1;
- --marketing-footer-list:#eceae3; --marketing-footer-subtle:#b3aaa6; --marketing-footer-border:#493b35;
+ --background:#f7f5f1; --foreground:#23262a; --card:#ffffff; --card-foreground:#23262a;
+ --popover:#ffffff; --popover-foreground:#23262a; --muted:#f2f0eb; --muted-foreground:#505763;
+ --secondary:#f1f2f4; --secondary-foreground:#23262a; --accent:#f1f2f4; --accent-foreground:#23262a;
+ --primary:#ed5a29; --cta:var(--primary); --primary-foreground:#ffffff; --cta-foreground:#ffffff; --border:#e3e5e8; --input:#d5d8dd; --ring:#ed5a29;
+ --success:#166534; --success-foreground:#ffffff; --success-wash:#dcfce7; --success-bright:#2cc896; --warning:#fbbf24; --warning-foreground:#854d0e;
+ --destructive:#cc0000; --destructive-foreground:#ffffff;
+ --canvas:#f2f0eb; --brand-wash:#feefea; --brand-wash-border:#f8cdbb; --brand-orange:#ed5a29;
+ --brand-orange-hover:#dd4513; --brand-orange-light:#f17e58; --brand-orange-active:#d14212; --brand-orange-ink:#b8410f; --brand-focus:#f7b59f;
+ --ink-subtle:#8f97a4; --ink-inverse:#ffffff; --surface-dark:#23262a; --surface-dark-panel:#1a1c1f;
+ --marketing-footer-bg:#23262a; --marketing-footer-fg:#ffffff; --marketing-footer-muted:#b9bec6;
+ --marketing-footer-list:#e3e5e8; --marketing-footer-subtle:#8f97a4; --marketing-footer-border:#3a3e44;
  --ease-out:cubic-bezier(.22,1,.36,1); color-scheme:light; font-size:16px; line-height:1.6;
 }
 .animated-background-trigger { position:relative; isolation:isolate; }
@@ -41,8 +47,8 @@
 .marketing-eyebrow { color:var(--muted-foreground); font-size:12px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; margin-bottom:24px; }
 .marketing-actions { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:30px; }
 .marketing-button { display:inline-flex; align-items:center; justify-content:center; gap:22px; min-height:54px; padding:15px 26px; border:1px solid transparent; border-radius:999px; background:var(--primary); color:var(--primary-foreground); font-size:14px; font-weight:600; line-height:1.4; transition:background-color 180ms,transform 180ms var(--ease-out),box-shadow 180ms; }
-.marketing-button:hover { background:var(--primary); box-shadow:0 5px 16px #ff4f0024; }
-.marketing-button:active { transform:scale(.97); }
+.marketing-button:hover { background:var(--brand-orange-hover); box-shadow:0 5px 16px color-mix(in srgb, var(--brand-orange) 14%, transparent); }
+.marketing-button:active { background:var(--brand-orange-active); transform:scale(.97); }
 .marketing-button svg { transition:transform 180ms var(--ease-out); }
 .marketing-button:hover svg { transform:translateX(3px); }
 .marketing-button-secondary { background:transparent; border-color:var(--border); color:var(--foreground); }

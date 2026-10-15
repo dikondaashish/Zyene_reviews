@@ -101,4 +101,4 @@ Next.js / React specifics:
 - Missing structured logs, useful error messages, metrics, tracing, or health checks
   on critical flows: review sync, campaign send, billing webhook, onboarding.
 - Silent failure paths — a `catch` that logs nothing and returns a default.
-- New indexable marketing page missing from `src/app/sitemap.ts` (`pnpm test` enforces).
+- New indexable marketing page missing from `src/lib/seo/sitemap.ts` (`pnpm test` enforces).

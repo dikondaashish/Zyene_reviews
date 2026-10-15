@@ -14,7 +14,7 @@ export function PricingClientFinalCtaSection({ signupUrl }: PricingClientFinalCt
             <div className="container mx-auto max-w-3xl text-center">
                 <h2 className="text-4xl font-bold text-foreground mb-4">Ready to grow your reviews?</h2>
                 <p className="text-xl text-muted-foreground mb-10">
-                    Start your 7-day free trial. No credit card lock-in.
+                    Start your 7-day free trial. Card required. Your selected plan bills automatically after the trial unless you cancel.
                     <br />
                     Cancel before the trial ends and you won&apos;t be charged.
                 </p>
@@ -32,7 +32,7 @@ export function PricingClientFinalCtaSection({ signupUrl }: PricingClientFinalCt
                     </a>
                 </div>
                 <p className="mt-6 text-xs text-muted-foreground">
-                    Trusted by local businesses. GDPR compliant. No annual contracts.
+                    Monthly and annual plans. Clear request allowances.
                 </p>
             </div>
         </section>

@@ -21,7 +21,7 @@ export function RatingStepRadio({ rating, onRate }: RatingStepRadioProps) {
                         "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus:ring-2 focus:ring-primary/40 active:scale-[0.98]",
                         rating === r.value
                             ? "border-primary bg-primary/10 shadow-sm"
-                            : "border-border bg-background hover:border-primary/40 hover:bg-muted dark:border-white/10 dark:bg-[rgb(30,41,59)] dark:hover:bg-[rgb(51,65,85)]"
+                            : "border-border bg-background hover:border-primary/40 hover:bg-muted dark:border-border dark:bg-muted dark:hover:bg-accent"
                     )}
                 >
                     <div

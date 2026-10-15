@@ -21,7 +21,7 @@ export function ReviewsPageClientPrivatePanel({ loading, reviews }: ReviewsPageC
                     <div className="bg-muted rounded-full flex items-center justify-center mb-4 size-12">
                         <Lock className="text-muted-foreground size-6" />
                     </div>
-                    <h2 className="text-lg font-medium text-foreground">No private feedback yet</h2>
+                    <h2 className="ui-section-title text-foreground">No private feedback yet</h2>
                     <p className="text-muted-foreground max-w-sm mt-1">
                         Feedback shared privately through your review flow will appear here. Only your team can see it.
                     </p>

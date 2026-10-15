@@ -24,7 +24,7 @@ export function CompetitorsTableBenchmarkCard({
     return (
         <Card className="col-span-1 md:col-span-2">
             <CardHeader>
-                <CardTitle>Market Benchmark ({activeBenchmarkRange.label})</CardTitle>
+                <CardTitle className="ui-card-title">Market Benchmark ({activeBenchmarkRange.label})</CardTitle>
                 <CardDescription>
                     Your average rating uses reviews received in this period. Competitors use the latest
                     snapshot in this period (or current totals if no snapshot yet).{" "}

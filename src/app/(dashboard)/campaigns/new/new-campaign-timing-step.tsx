@@ -14,7 +14,7 @@ export function NewCampaignTimingStep({ form, updateForm }: NewCampaignTimingSte
     return (
         <div className="space-y-6">
             <div>
-                <h2 className="text-lg font-semibold mb-1">Timing & Follow-up</h2>
+                <h2 className="ui-section-title mb-1">Timing & Follow-up</h2>
                 <p className="text-sm text-muted-foreground">
                     Control when messages are sent and whether to send follow-ups.
                 </p>

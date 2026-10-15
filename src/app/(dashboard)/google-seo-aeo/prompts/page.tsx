@@ -28,7 +28,7 @@ export default async function AeoPromptsPage() {
         <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
             <GoogleSeoAeoSubnav active="/google-seo-aeo/prompts" />
             <div>
-                <h1 className="text-3xl font-bold tracking-tight">Prompt library</h1>
+                <h1 className="ui-page-title">Prompt library</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
                     The questions we ask answer engines on behalf of {data.businessName}.
                 </p>
@@ -44,11 +44,11 @@ export default async function AeoPromptsPage() {
                 </Alert>
             ) : null}
 
-            <div className="grid gap-6 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                 <div className="space-y-6 lg:col-span-2">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Add a prompt</CardTitle>
+                            <CardTitle className="ui-card-title">Add a prompt</CardTitle>
                             <CardDescription>
                                 New prompts start inactive. Nothing is sampled or charged until you
                                 switch one on.
@@ -60,14 +60,14 @@ export default async function AeoPromptsPage() {
                     </Card>
 
                     <Card>
-                        <CardHeader className="flex flex-row items-start justify-between gap-2">
-                            <CardTitle>
+                        <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
+                            <CardTitle className="ui-card-title">
                                 Prompts
                                 <span className="ml-2 text-sm font-normal text-muted-foreground">
                                     {data.activeCount} of {data.prompts.length} active
                                 </span>
                             </CardTitle>
-                            <div className="flex shrink-0 flex-wrap items-center gap-2">
+                            <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
                                 <SuggestPromptsButton businessId={data.businessId} />
                                 <Button variant="outline" size="sm" asChild>
                                     <a href="/api/aeo/prompts/export" target="_blank" rel="noopener noreferrer">

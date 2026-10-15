@@ -21,8 +21,8 @@ export function ZapierPageHeader() {
                         </svg>
                     </div>
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Zapier</h1>
-                        <p className="mt-1 max-w-2xl text-muted-foreground sm:text-base">
+                        <h1 className="ui-page-title">Zapier</h1>
+                        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
                             Use a Zapier webhook to send customer details to Zyene when a
                             job finishes in your POS or CRM. Zyene then sends the review
                             request automatically.

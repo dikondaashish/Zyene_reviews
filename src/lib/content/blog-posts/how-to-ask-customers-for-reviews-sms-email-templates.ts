@@ -1,0 +1,62 @@
+import type { BlogPostSource, ContentSection } from "@/lib/content/blog-types";
+
+const TEMPLATES = [
+  ["SMS: completed service", "Hi [first name], thanks for choosing [business]. Would you share an honest review of your experience? [review link] Reply STOP to opt out."],
+  ["SMS: auto repair", "Hi [first name], thank you for trusting [business] with your vehicle. Your feedback helps other local drivers: [review link] Reply STOP to opt out."],
+  ["SMS: HVAC visit", "Thanks for choosing [business] for your service visit. If you have a moment, please share your experience: [review link] Reply STOP to opt out."],
+  ["SMS: salon appointment", "Hi [first name], thanks for visiting [salon]. We welcome your honest feedback about the visit: [review link] Reply STOP to opt out."],
+  ["SMS: hotel checkout", "Thank you for staying at [hotel]. If you would like to share your experience with future guests, here is our review link: [review link] Reply STOP to opt out."],
+  ["SMS: restaurant visit", "Thanks for visiting [restaurant]. We would appreciate an honest review when convenient: [review link] Reply STOP to opt out."],
+  ["SMS: retail purchase", "Hi [first name], thanks for shopping with [business]. How was your experience? You can share a review here: [review link] Reply STOP to opt out."],
+  ["SMS: neutral reminder", "A brief reminder from [business]: if you would like to review your recent experience, here is the link: [review link]. No pressure. Reply STOP to opt out."],
+  ["Email: general follow-up", "Subject: Your experience with [business]\nHi [first name], thank you for choosing us. If you have a moment, please share an honest review: [review link]. Your feedback helps us learn and helps others decide. Thank you, [team]. [Unsubscribe link]"],
+  ["Email: home services", "Subject: Thank you for choosing [business]\nThank you for welcoming our team. We would value your feedback on your service experience: [review link]. For unresolved service questions, contact [support]. [Unsubscribe link]"],
+  ["Email: salon", "Subject: How was your visit?\nThanks for spending part of your day with [salon]. Please share your honest experience here: [review link]. We appreciate your time. [Unsubscribe link]"],
+  ["Email: hotel", "Subject: Thank you for staying with [hotel]\nWe hope your journey home went smoothly. If you would like to tell future guests about your stay, leave a review here: [review link]. [Unsubscribe link]"],
+  ["Email: professional service", "Subject: Feedback for [business]\nThank you for working with our team. Your honest feedback is welcome: [review link]. Please avoid sharing confidential information publicly. [Unsubscribe link]"],
+  ["Email: returning customer", "Subject: Thanks for visiting again\nThank you for returning to [business]. If you have a new experience to share, we welcome your feedback: [review link]. [Unsubscribe link]"],
+  ["Email: optional reminder", "Subject: An optional reminder from [business]\nIf you have not already shared feedback and would like to, here is the review link: [review link]. Thank you for your time. [Unsubscribe link]"],
+] as const;
+
+export const howToAskCustomersForReviewsSmsEmailTemplatesPost: BlogPostSource = {
+  slug: "how-to-ask-customers-for-reviews-sms-email-templates",
+  title: "How to Ask for Reviews via Text & Email (15 US Templates)",
+  excerpt: "15 example SMS and email templates, with a practical workflow for consent, timing, honest feedback and measuring request results.",
+  pillar: "google-reviews", pillarLabel: "Google Reviews",
+  publishedAt: "2026-10-06", dateModified: "2026-10-11",
+  author: { name: "Zyene Reviews Team", role: "Editorial" },
+  metaTitle: "How to Ask for Reviews via Text & Email (15 Templates)",
+  metaDescription: "Use 15 example SMS and email review request templates for US local businesses. Plan consent, timing, reminders and a clear link for honest feedback.",
+  keywords: ["how to ask customers for reviews", "review request text message templates", "sms review request templates", "email review request templates"],
+  relatedSlugs: ["how-to-get-a-google-review-link", "hvac-home-services-reputation-management"],
+  internalLinks: [
+    { label: "Set up SMS and email review collection", href: "/features/review-collection" },
+    { label: "Create a Google review link", href: "/tools/review-link-generator" },
+    { label: "Review request template pack", href: "/resources/review-request-templates" },
+    { label: "Review platform and plan allowances", href: "/pricing" },
+  ],
+  faqs: [
+    { question: "Should I use SMS or email?", answer: "Use a channel the customer agreed to receive. Compare delivery and engagement in your own audience; neither channel has a universal completion rate." },
+    { question: "When should I ask?", answer: "Try a respectful follow-up after the service or visit is complete, within the customer's agreed contact preferences. Measure timing with your own requests and avoid repeated reminders." },
+  ],
+  body: [
+    { type: "summary", text: "Ask for reviews with a short message that identifies your business, invites honest feedback and offers a clear link. Contact only people you have permission to message. These templates are examples to adapt, not measured conversion winners or a legal compliance certification." },
+    { type: "h2", text: "Plan the request before you send it" },
+    { type: "ol", items: [
+      "Record the customer's contact preference and permission for the message. A phone number alone does not establish every consent requirement.",
+      "Check the provider's sender registration, consent, identification and opt-out requirements. Have your adviser review requirements for your use case.",
+      "Use a neutral invitation. Do not offer an incentive, request a particular rating or select only customers you expect to praise you.",
+      "Test the destination on a phone. Use a real business review link, and explain any private-feedback path accurately.",
+      "Send after the experience is complete. Set a modest reminder limit and respect opt-outs. Do not send to purchased lists.",
+    ] },
+    { type: "cta", ctaLabel: "Google's review and rating-manipulation policy", ctaHref: "https://support.google.com/contributionpolicy/answer/7400114" },
+    { type: "cta", ctaLabel: "Twilio's messaging consent and opt-out policy", ctaHref: "https://www.twilio.com/en-us/legal/messaging-policy" },
+    { type: "h2", text: "15 templates to adapt to your business" },
+    { type: "p", text: "Replace placeholders and check your actual delivery channel's opt-out implementation. Never put sensitive service details, account information or medical information in a request. Healthcare teams should review wording and workflow with their privacy lead; a template is not proof of HIPAA compliance." },
+    ...TEMPLATES.flatMap(([title, text]): ContentSection[] => [{ type: "h3", text: title }, { type: "p", text }]),
+    { type: "h2", text: "Measure what happened, without guessing" },
+    { type: "p", text: "Track requests sent, delivery failures, link engagement and opt-outs by channel. A link click or public-review handoff does not prove that a review was published. Compare public review activity separately and avoid attributing every new review to a campaign." },
+    { type: "p", text: "Start with one approved message and a small test group. Confirm the correct business name, destination and opt-out behavior before scaling. If using Zyene's branded page, check its configured rating threshold: lower ratings enter private feedback and other ratings continue toward a public review. Review the intended flow against platform policies." },
+    { type: "cta", ctaLabel: "See Zyene review collection setup and limits", ctaHref: "/features/review-collection" },
+  ],
+};

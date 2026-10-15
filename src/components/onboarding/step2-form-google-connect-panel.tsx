@@ -11,8 +11,6 @@ export function Step2FormGoogleConnectPanel({ onConnectClick, pending, disabled 
 }) {
     return (
         <div className="relative p-8 sm:p-10 lg:p-12 flex flex-col justify-center overflow-hidden bg-primary/[0.03]">
-            <div className="absolute -top-24 -left-24 bg-primary/[0.06] rounded-full blur-3xl pointer-events-none size-72" />
-            <div className="absolute -bottom-20 -right-20 bg-primary/[0.04] rounded-full blur-3xl pointer-events-none size-56" />
 
             <div className="relative z-10 space-y-6">
                 <motion.div
@@ -27,7 +25,7 @@ export function Step2FormGoogleConnectPanel({ onConnectClick, pending, disabled 
                 </motion.div>
 
                 <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">Connect your business</h2>
+                    <h1 className="ui-page-title text-foreground">Connect your business</h1>
                     <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed max-w-xs">
                         Link Google to auto-fill your details, or enter them manually below.
                     </p>
@@ -38,14 +36,11 @@ export function Step2FormGoogleConnectPanel({ onConnectClick, pending, disabled 
                     onClick={onConnectClick}
                     disabled={pending || disabled}
                     aria-busy={pending}
-                    whileHover={{ scale: 1.01, translateY: -2 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full max-w-[340px] h-14 group relative flex items-center justify-between px-6 rounded-2xl bg-background/80 backdrop-blur-xl border border-border shadow-sm hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 transition-[box-shadow,border-color,opacity] duration-300 cursor-pointer overflow-hidden disabled:cursor-wait disabled:opacity-60"
+                    className="w-full max-w-[340px] h-14 group relative flex items-center justify-between px-6 rounded-2xl bg-background border border-border shadow-sm hover:border-primary/40 transition-[box-shadow,border-color,opacity] duration-300 cursor-pointer overflow-hidden disabled:cursor-wait disabled:opacity-60"
                 >
-                    <div className="absolute inset-x-0 top-0 h-px bg-white/20 pointer-events-none" />
-
                     <div className="flex items-center gap-3.5 relative z-10">
-                        <div className="p-2 bg-white rounded-xl shadow-sm border border-border/50 group-hover:scale-110 transition-transform duration-300">
+                        <div className="p-2 bg-white rounded-xl shadow-sm border border-border/50">
                             <Step2GoogleIcon />
                         </div>
                         <span className="text-[14px] font-bold text-foreground tracking-tight">
@@ -57,15 +52,13 @@ export function Step2FormGoogleConnectPanel({ onConnectClick, pending, disabled 
                         {pending ? <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" /> :
                             <ArrowRight className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-[color,transform] duration-300 size-5" />}
                     </div>
-
-                    <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </motion.button>
 
                 <div className="space-y-2.5">
                     {[
-                        "Auto-import all your reviews",
-                        "AI-powered response suggestions",
-                        "Real-time sync, new reviews appear instantly",
+                        "Imports your existing Google reviews",
+                        "Drafts replies in your tone for you to edit",
+                        "New reviews show up within minutes",
                     ].map((benefit) => (
                         <div key={benefit} className="flex items-center gap-2.5 text-[13px] text-muted-foreground">
                             <CheckCircle2 className="text-primary shrink-0 size-4" />

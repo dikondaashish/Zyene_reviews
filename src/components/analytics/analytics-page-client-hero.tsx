@@ -1,6 +1,6 @@
 "use client";
 
-import { ChartNoAxesCombined, Sparkles } from "lucide-react";
+import { ChartNoAxesCombined } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AnalyticsReportGenerator } from "@/components/analytics/analytics-charts-registry";
 import { ExportDataButton } from "@/components/analytics/export-data-button";
@@ -39,7 +39,7 @@ export function AnalyticsPageClientHero({
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="space-y-1">
-                        <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold tracking-tight sm:gap-3 sm:text-2xl">
+                        <h1 className="ui-page-title flex flex-wrap items-center gap-2 sm:gap-3">
                             <ChartNoAxesCombined className="size-6 text-primary" aria-hidden />
                             Analytics
                             {isDemo && (
@@ -47,7 +47,6 @@ export function AnalyticsPageClientHero({
                                     variant="outline"
                                     className="border-primary/30 bg-primary/10 text-primary flex items-center gap-1.5 px-3 font-bold tracking-tight"
                                 >
-                                    <Sparkles className="size-3.5" />
                                     Demo
                                 </Badge>
                             )}

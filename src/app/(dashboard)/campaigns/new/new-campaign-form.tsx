@@ -44,7 +44,7 @@ export function NewCampaignForm({ context }: { context: CampaignPreviewContext }
                     <ArrowLeft className="size-4" />
                 </Button>
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight">Create Campaign</h1>
+                    <h1 className="ui-page-title">Create Campaign</h1>
                     <p className="text-muted-foreground">Set up an automated review request campaign</p>
                 </div>
             </div>

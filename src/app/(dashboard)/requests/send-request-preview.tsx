@@ -11,7 +11,7 @@ export function SendRequestPreview({ preview, values, loading, onBack, onConfirm
     const email = values.channel !== "sms";
     const exhausted = (sms && preview.remainingSms === 0) || (email && preview.remainingEmail === 0);
     return <div className="space-y-4">
-        <h3 className="font-semibold">Review request for {preview.businessName}</h3>
+        <h3 className="ui-card-title">Review request for {preview.businessName}</h3>
         <p className="text-sm">To {values.customerName || "customer"}: {sms && values.customerPhone}{sms && email && " · "}{email && values.customerEmail}</p>
         <p className="text-sm text-muted-foreground">{values.scheduleEnabled ? `Scheduled: ${new Date(values.scheduleAt || "").toLocaleString()} (${Intl.DateTimeFormat().resolvedOptions().timeZone}, your device timezone).` : "Send immediately after confirmation."}</p>
         {sms && <section><h4 className="text-sm font-semibold">SMS message</h4><p className="mt-1 whitespace-pre-wrap break-words rounded-lg bg-muted p-3 text-sm">{preview.sms}</p><p className="mt-1 text-xs text-muted-foreground">1 SMS request · {preview.remainingSms ?? "Unlimited"} remaining this month. Carrier segmentation may vary.</p></section>}

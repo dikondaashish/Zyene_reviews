@@ -28,7 +28,7 @@ export function CompetitorsChartReviewsCard({
     return (
         <Card className="col-span-1 md:col-span-2 lg:col-span-1">
             <CardHeader>
-                <CardTitle>Review Volume Comparison</CardTitle>
+                <CardTitle className="ui-card-title">Review Volume Comparison</CardTitle>
                 <CardDescription>
                     Your total Google reviews vs competitors (public totals from sync).
                 </CardDescription>

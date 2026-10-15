@@ -24,6 +24,7 @@ export async function generateMetadata(
             url: `https://www.zyenereviews.com/blog/${slug}`,
             type: "article",
             publishedTime: post.publishedAt,
+            modifiedTime: post.dateModified ?? post.publishedAt,
             authors: [post.author.name],
             images: [{
                 url: "https://www.zyenereviews.com" + image.src,

@@ -19,7 +19,7 @@ export function EstimatedAeoSurfaces({ content }: { content: GoogleSeoAeoContent
 
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex flex-wrap items-center gap-2">
+                    <CardTitle className="ui-card-title flex flex-wrap items-center gap-2">
                         AI Visibility
                         <Badge variant="outline">Estimated</Badge>
                     </CardTitle>
@@ -35,7 +35,7 @@ export function EstimatedAeoSurfaces({ content }: { content: GoogleSeoAeoContent
                                 <span className="font-medium text-foreground">{content.latestAiRun.query}</span> ·{" "}
                                 {content.latestAiRun.status}
                             </p>
-                            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                                 {content.aiResults.map((m) => (
                                     <div key={m.model} className="rounded-lg border p-3">
                                         <p className="text-sm font-medium">{m.model}</p>
@@ -54,7 +54,7 @@ export function EstimatedAeoSurfaces({ content }: { content: GoogleSeoAeoContent
 
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex flex-wrap items-center gap-2">
+                    <CardTitle className="ui-card-title flex flex-wrap items-center gap-2">
                         Heatmap audits
                         <Badge variant="outline">Estimated</Badge>
                     </CardTitle>
@@ -70,7 +70,7 @@ export function EstimatedAeoSurfaces({ content }: { content: GoogleSeoAeoContent
                                 <span className="font-medium text-foreground">{content.latestHeatmapRun.keyword}</span>{" "}
                                 · {content.latestHeatmapRun.status}
                             </p>
-                            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                                 {content.heatmapCells.slice(0, 9).map((cell) => (
                                     <div key={cell.cell_label} className="rounded-lg border p-3">
                                         <p className="text-sm font-medium">{cell.cell_label}</p>

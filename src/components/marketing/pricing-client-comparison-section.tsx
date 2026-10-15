@@ -10,7 +10,7 @@ export function PricingClientComparisonSection() {
             <div className="container mx-auto max-w-5xl">
                 <h2 className="text-3xl font-bold text-foreground mb-2 text-center">See how we compare</h2>
                 <p className="text-muted-foreground text-center mb-10">
-                    Enterprise features at owner-operator pricing - no annual contracts required.
+                    Compare the workflows and allowances your business needs. A lower price does not mean identical coverage.
                 </p>
                 <div role="region" aria-label="Platform feature comparison" tabIndex={0} className="relative overflow-x-auto rounded-xl border border-border bg-card">
                     <table className="min-w-[640px] w-full text-sm text-left border-collapse">
@@ -27,17 +27,17 @@ export function PricingClientComparisonSection() {
                                 <th className="px-5 py-4 font-semibold text-muted-foreground border-b border-r border-border text-center w-[16%]">
                                     Birdeye
                                     <br />
-                                    <span className="text-xs font-normal">$299/mo</span>
+                                    <span className="text-xs font-normal">Custom quote</span>
                                 </th>
                                 <th className="px-5 py-4 font-semibold text-muted-foreground border-b border-r border-border text-center w-[16%]">
                                     Podium
                                     <br />
-                                    <span className="text-xs font-normal">$399/mo</span>
+                                    <span className="text-xs font-normal">Custom quote</span>
                                 </th>
                                 <th className="px-5 py-4 font-semibold text-muted-foreground border-b border-border text-center w-[16%]">
                                     NiceJob
                                     <br />
-                                    <span className="text-xs font-normal">$75/mo</span>
+                                    <span className="text-xs font-normal">Starter $75/mo</span>
                                 </th>
                             </tr>
                         </thead>
@@ -51,11 +51,7 @@ export function PricingClientComparisonSection() {
                                         {row.feature}
                                     </td>
                                     <td className="px-5 py-3.5 border-r border-border bg-primary/5 text-center">
-                                        {typeof row.zyene === "string" ? (
-                                            <span className="font-bold text-foreground">{row.zyene}</span>
-                                        ) : (
-                                            <CellIcon value={row.zyene} />
-                                        )}
+                                        <span className="font-bold text-foreground">{row.zyene}</span>
                                     </td>
                                     <td className="px-5 py-3.5 border-r border-border text-center">
                                         <CellIcon value={row.birdeye} />
@@ -72,8 +68,7 @@ export function PricingClientComparisonSection() {
                     </table>
                 </div>
                 <p className="text-center text-xs text-muted-foreground mt-4">
-                    Automatic-reply details checked September 12, 2026: <a href="https://help.nicejob.com/en/articles/10324617-ai-review-replies" className="underline">NiceJob</a> and <a href="https://support.birdeye.com/en/articles/12654785-how-to-configure-and-use-the-review-response-agent" className="underline">Birdeye</a>. Confirm current plans and platform coverage. Competitor pricing based on publicly listed rates as of 2026. Birdeye pricing may vary by package and
-                    contract - confirm with the vendor.{" "}
+                    Public sources checked October 11, 2026: <a href="https://birdeye.com/pricing/" className="underline">Birdeye</a>, <a href="https://www.podium.com/pricing" className="underline">Podium</a>, and <a href="https://get.nicejob.com/pricing" className="underline">NiceJob</a>. Confirm current quotes, plans and platform coverage.{" "}
                     <Link href="/compare/birdeye" className="underline hover:text-foreground">
                         Zyene Reviews vs Birdeye
                     </Link>

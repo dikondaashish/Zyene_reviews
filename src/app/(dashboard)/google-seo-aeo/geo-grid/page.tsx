@@ -26,7 +26,7 @@ export default async function GeoGridPage() {
         <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
             <GoogleSeoAeoSubnav active="/google-seo-aeo/geo-grid" />
             <div>
-                <h1 className="text-3xl font-bold tracking-tight">Local geo-grid</h1>
+                <h1 className="ui-page-title">Local geo-grid</h1>
                 <p className="text-muted-foreground mt-1 text-sm">
                     Where {data.businessName} actually ranks in Google Maps across real coordinates.
                 </p>
@@ -34,7 +34,7 @@ export default async function GeoGridPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Run a grid</CardTitle>
+                    <CardTitle className="ui-card-title">Run a grid</CardTitle>
                     <CardDescription>
                         Every cell is a real Google search from a real coordinate. Nothing here is
                         interpolated or estimated.
@@ -51,7 +51,7 @@ export default async function GeoGridPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>
+                    <CardTitle className="ui-card-title">
                         {run ? `“${run.keyword}”` : "Latest grid"}
                         {run ? (
                             <span className="text-muted-foreground ml-2 text-sm font-normal">

@@ -11,13 +11,11 @@ export interface CustomerLogo {
     colorClass: string;
 }
 
+/**
+ * A featured workflow example card. Cards link to an illustrative case study;
+ * there are no customer quotes, names, or ratings until real ones are approved.
+ */
 export interface TestimonialCard {
-    quote: string;
-    author: string;
-    role: string;
-    company: string;
-    industry: string;
-    rating: number;
     caseStudySlug: string;
 }
 
@@ -61,51 +59,11 @@ export const CUSTOMER_LOGOS: CustomerLogo[] = [
 ];
 
 export const FEATURED_TESTIMONIALS: TestimonialCard[] = [
-    {
-        quote: "We stopped dreading Google reviews. Unhappy patients reach us privately first, and happy patients actually leave reviews now.",
-        author: "Dr. Priya Mehta",
-        role: "Owner",
-        company: "Sunrise Dental",
-        industry: "Dental",
-        rating: 5,
-        caseStudySlug: "sunrise-dental-austin",
-    },
-    {
-        quote: "The SMS after dinner works better than anything we tried before. When something goes wrong, we hear about it in private.",
-        author: "Marcus Webb",
-        role: "Owner",
-        company: "Wolfpack BBQ",
-        industry: "Restaurant",
-        rating: 5,
-        caseStudySlug: "wolfpack-bbq-charlotte",
-    },
-    {
-        quote: "Homeowners choose us from Google before they call. More reviews mean we win jobs we used to lose.",
-        author: "James Ortiz",
-        role: "Owner",
-        company: "Apex HVAC & Plumbing",
-        industry: "Home Services",
-        rating: 5,
-        caseStudySlug: "apex-hvac-denver",
-    },
-    {
-        quote: "Clients mention their stylist in reviews now because our replies feel personal - but I'm not writing them from scratch at 10pm anymore.",
-        author: "Isabella Chen",
-        role: "Owner",
-        company: "Bella's Salon & Spa",
-        industry: "Salons & Spas",
-        rating: 5,
-        caseStudySlug: "bellas-salon-portland",
-    },
-    {
-        quote: "We're not a franchise - but on Google we look like we belong next to them now. The competitor dashboard alone was worth it.",
-        author: "Tom Reyes",
-        role: "Service Manager",
-        company: "Precision Auto Works",
-        industry: "Auto Repair",
-        rating: 5,
-        caseStudySlug: "precision-auto-works-phoenix",
-    },
+    { caseStudySlug: "sunrise-dental-austin" },
+    { caseStudySlug: "wolfpack-bbq-charlotte" },
+    { caseStudySlug: "apex-hvac-denver" },
+    { caseStudySlug: "bellas-salon-portland" },
+    { caseStudySlug: "precision-auto-works-phoenix" },
 ];
 
 export const THIRD_PARTY_TRUST: ThirdPartyTrustLink[] = [

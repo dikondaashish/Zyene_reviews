@@ -12,7 +12,7 @@ export function NewCampaignReviewStep({ form, context, customerCount = 0 }: NewC
     return (
         <div className="space-y-6">
             <div>
-                <h2 className="text-lg font-semibold mb-1">Review campaign</h2>
+                <h2 className="ui-section-title mb-1">Review campaign</h2>
                 <p className="text-sm text-muted-foreground">
                     Preview for {context.businessName}, using a sample customer. Business timezone: {context.timezone}. Message length and delivery eligibility vary by recipient; usage counts against your plan allowances.
                 </p>

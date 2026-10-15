@@ -1,11 +1,11 @@
 import {
     Calendar,
+    CreditCard,
     Lock,
     Mail,
     Megaphone,
     MessageSquare,
     Upload,
-    Zap,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,7 @@ export function NewCampaignBasicsStep({ form, updateForm, audienceSelected }: Ne
     return (
         <div className="space-y-6">
             <div>
-                <h2 className="text-lg font-semibold mb-1">Campaign Basics</h2>
+                <h2 className="ui-section-title mb-1">Campaign Basics</h2>
                 <p className="text-sm text-muted-foreground">Give your campaign a name and choose how to reach customers.</p>
             </div>
 
@@ -69,7 +69,7 @@ export function NewCampaignBasicsStep({ form, updateForm, audienceSelected }: Ne
                     {([
                         { value: "manual_batch" as const, label: "Manual Batch", icon: Upload, desc: "Upload or enter a list of contacts to send to", available: true },
                         { value: "scheduled" as const, label: "Scheduled", icon: Calendar, desc: "Send at specific times (e.g. every Friday at 2pm)", available: true },
-                        { value: "pos_payment" as const, label: "After Payment", icon: Zap, desc: "Automatically send after a POS transaction", available: false },
+                        { value: "pos_payment" as const, label: "After Payment", icon: CreditCard, desc: "Automatically send after a POS transaction", available: false },
                     ]).map((tr) => (
                         <button
                             key={tr.value}

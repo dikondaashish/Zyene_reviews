@@ -14,7 +14,7 @@ Applies to all work in this repository. Full detail: [AGENTS.md](../../AGENTS.md
 
 - Title ≤60, description ≤160 · no manual `| Zyene Reviews`
 - OG + Twitter on marketing pages · one `<h1>` · `next/image` + alt
-- Update `sitemap.ts` · JSON-LD via `@/components/seo/json-ld`
+- Update `src/lib/seo/sitemap.ts` · JSON-LD via `@/components/seo/json-ld`
 
 ## Never
 

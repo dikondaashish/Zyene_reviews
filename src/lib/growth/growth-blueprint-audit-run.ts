@@ -53,7 +53,7 @@ export function runGrowthBlueprintAudit(): BlueprintAuditItem[] {
         }
     }
 
-    if (!existsSync(path.join(process.cwd(), "src/app/sitemap.ts"))) {
+    if (!existsSync(path.join(process.cwd(), "src/lib/seo/sitemap.ts"))) {
         items.push({ id: "sitemap", severity: "error", area: "architecture", message: "sitemap.ts missing" });
     }
     if (!existsSync(path.join(process.cwd(), "src/app/robots.ts"))) {

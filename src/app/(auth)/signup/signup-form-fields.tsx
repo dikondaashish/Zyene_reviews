@@ -9,7 +9,7 @@ export function SignupFormFields(props: ReturnType<typeof useSignupForm>) {
     const { fullName, setFullName, email, setEmail, password, setPassword,
         showPassword, setShowPassword, isLoading, handleSubmit, formError } = props;
     return (
-        <form onSubmit={handleSubmit} className="auth-fields" aria-busy={isLoading}>
+        <form onSubmit={handleSubmit} onInput={props.trackStart} className="auth-fields" aria-busy={isLoading}>
             <AuthError message={formError} />
             <div className="auth-field">
                 <label htmlFor="fullName">Full name</label>

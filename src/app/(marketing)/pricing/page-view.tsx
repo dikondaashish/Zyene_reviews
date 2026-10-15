@@ -1,3 +1,4 @@
+import { TRIAL_DETAILS } from "@/lib/marketing/trial-copy";
 import { PricingPageClient } from "@/components/marketing/pricing-client";
 import { FAQPageJsonLd, PricingPlansJsonLd } from "@/components/seo/json-ld";
 import { SIGNUP_URL } from "@/config/env";
@@ -6,13 +7,12 @@ import type { Plan } from "@/services/stripe/plans";
 const PRICING_FAQS = [
     {
         question: "How does the 7-day free trial work?",
-        answer:
-            "Sign up for Starter or Professional and get full access to every feature for 7 days. Cancel before the trial ends and you won't be charged. No credit card lock-in, no annual contracts.",
+        answer: TRIAL_DETAILS,
     },
     {
         question: "What happens at the end of the trial?",
         answer:
-            "After 7 days your subscription starts automatically. You'll receive an email reminder 24 hours before your trial ends. Cancel anytime before that and you won't be charged anything.",
+            "Your selected subscription bills automatically after the trial unless you cancel in Billing. Check the price, billing period and any special-offer terms shown at checkout.",
     },
     {
         question: "Can I switch plans?",

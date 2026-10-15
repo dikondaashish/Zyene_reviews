@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Sparkles, X } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { EXIT_INTENT_SOURCE } from "@/lib/marketing/exit-intent-events";
@@ -86,8 +86,7 @@ export function MarketingExitIntentPopup() {
                 <X className="size-4" aria-hidden="true" />
             </button>
             <div className="marketing-exit-popup-kicker">
-                <span className="marketing-exit-popup-kicker-mark" aria-hidden="true"><Sparkles className="size-3" /></span>
-                <span>Before you go</span>
+                                <span>Before you go</span>
             </div>
             <h2 id="marketing-exit-popup-title">More reviews. Less busywork.</h2>
             <p id="marketing-exit-popup-description">See how Zyene Reviews brings requests, replies, and reputation insights into one calmer workflow.</p>

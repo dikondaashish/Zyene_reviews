@@ -18,7 +18,7 @@ export function Step1FormHeader() {
             </motion.div>
 
             <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">Name your workspace</h2>
+                <h1 className="ui-page-title text-foreground">Name your workspace</h1>
                 <p className="text-muted-foreground mt-1.5 text-sm max-w-xs mx-auto leading-relaxed">
                     This is your organization ,  the umbrella for all your business locations.
                 </p>

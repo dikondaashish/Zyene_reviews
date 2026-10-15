@@ -48,38 +48,4 @@ export class SupabaseCreditLedgerStore implements CreditLedgerStore {
 
         if (error) throw new Error(`aeo_reset_credit_grant failed: ${error.message}`);
     }
-
-    async recordOverageCharge(input: {
-        organizationId: string;
-        sampleId: string;
-        amountMicroUsd: number;
-        stripeInvoiceItemId: string;
-    }): Promise<void> {
-        const { error } = await this.db.from("aeo_credit_ledger_entries").insert({
-            organization_id: input.organizationId,
-            sample_id: input.sampleId,
-            kind: "overage_charged",
-            amount_micro_usd: input.amountMicroUsd,
-            stripe_invoice_item_id: input.stripeInvoiceItemId,
-        });
-
-        // 23505: a replayed billing step re-issued the same idempotent Stripe
-        // charge and is now recording it a second time. Same object, same
-        // invoice item id, so the conflict IS the correctness - one real
-        // charge, one audit row.
-        if (error && error.code !== "23505") {
-            throw new Error(`recordOverageCharge failed: ${error.message}`);
-        }
-    }
-
-    async hasGrantHistory(organizationId: string): Promise<boolean> {
-        const { data, error } = await this.db
-            .from("aeo_credit_balances")
-            .select("organization_id")
-            .eq("organization_id", organizationId)
-            .maybeSingle();
-
-        if (error) throw new Error(`hasGrantHistory failed: ${error.message}`);
-        return data !== null;
-    }
 }

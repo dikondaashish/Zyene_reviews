@@ -103,10 +103,8 @@ export function ZyenePlatformKeyMetricsRow({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.05 }}
-              whileHover={{ y: -4, scale: 1.01 }}
             >
-              <Card className="relative h-full overflow-hidden border-2 border-transparent bg-background/60 p-1 backdrop-blur-xl transition-colors hover:border-primary/20">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
+              <Card className="relative h-full overflow-hidden border border-border bg-card p-1 transition-colors hover:border-primary/30">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-semibold tracking-tight text-muted-foreground truncate">
                     {metric.title}

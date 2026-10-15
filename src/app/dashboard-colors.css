@@ -1,7 +1,15 @@
-/* Measured in OptiMonk's signed-in dashboard, campaigns, and analytics.
+/* Signed-in app palette, matched to the OptiMonk app dashboard: white cards
+ * and sidebar on a cool #f9fafb canvas, slate ink, cool-grey borders and the
+ * orange #ed5a29 (hover #dd4513, pressed #d14212). Dark values are derived
+ * from the same grey scale since the reference app has no dark theme.
  * Scope at the document root so body portals (menus, dialogs, and toasts)
  * inherit the same palette. Public loaders can opt in with data-app-palette.
- * Dark values are a Zyene adaptation, not an observed OptiMonk dark theme.
+ * Muted surfaces and borders sit a step lighter than marketing so dense
+ * dashboard tables stay calm. Text pairs meet WCAG AA (4.5:1) on their surfaces,
+ * so muted text uses #505763 (the reference's #8f97a4 is 3:1) and orange text
+ * uses #b8410f. White on #ed5a29 is 3.4:1, so filled actions rely on bold
+ * button text, as in the reference; hover darkens (the reference's lighter
+ * #f17e58 hover would drop white text to 2.7:1).
  */
 :root:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) {
   color-scheme: light;
@@ -14,40 +22,41 @@
   --brand-accent: #ed5a29;
   --primary: #ed5a29;
   --primary-foreground: #ffffff;
-  --primary-text: #ed5a29;
-  --primary-hover: #ed5a29;
+  --primary-text: #b8410f;
+  --primary-hover: #dd4513;
+  --primary-active: #d14212;
   --cta: var(--primary);
   --cta-foreground: var(--primary-foreground);
   --secondary: #f1f2f4;
   --secondary-foreground: #505763;
-  --muted: #f7f7f8;
-  --muted-foreground: #6c757d;
+  --muted: #f1f2f4;
+  --muted-foreground: #505763;
   --accent: #f1f2f4;
   --accent-foreground: #23262a;
-  --destructive: #dc3545;
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
   --warning: #ffc107;
-  --warning-foreground: #505763;
-  --success: #28a745;
+  --warning-foreground: #854d0e;
+  --success: #15803d;
   --success-foreground: #ffffff;
   --border: #e3e5e8;
   --input: #d5d8dd;
   --ring: #ed5a29;
   --chart-1: #ed5a29;
-  --chart-2: #28a745;
+  --chart-2: #2cc896;
   --chart-3: #8f97a4;
   --chart-4: #ffc107;
-  --chart-5: #17a2b8;
+  --chart-5: #3b82f6;
   --sidebar: #ffffff;
   --sidebar-foreground: #505763;
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
   --sidebar-accent: #feefea;
-  --sidebar-accent-foreground: #ed5a29;
+  --sidebar-accent-foreground: #b8410f;
   --sidebar-border: #e3e5e8;
   --sidebar-ring: var(--ring);
   --canvas: #f9fafb;
-  --canvas-elevated: #f7f7f8;
+  --canvas-elevated: #ffffff;
   --sync-action: var(--primary);
   --sync-action-hover: var(--primary-hover);
   --tour-overlay-scrim: rgb(35 38 42 / 58%);
@@ -55,44 +64,44 @@
 
 :root.dark:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) {
   color-scheme: dark;
-  --background: #17191c;
+  --background: #1a1c1f;
   --foreground: #f9fafb;
   --card: #23262a;
   --card-foreground: #f9fafb;
-  --popover: #292d33;
+  --popover: #2e3237;
   --popover-foreground: #f9fafb;
-  --primary-text: #ff9b79;
-  --primary-hover: #d94e21;
-  --secondary: #30353d;
+  --primary-text: #f17e58;
+  --primary-hover: #dd4513;
+  --secondary: #2e3237;
   --secondary-foreground: #e3e5e8;
-  --muted: #292d33;
+  --muted: #23262a;
   --muted-foreground: #b9bec6;
-  --accent: #30353d;
+  --accent: #2e3237;
   --accent-foreground: #f9fafb;
-  --destructive: #ff8b96;
-  --destructive-foreground: #17191c;
+  --destructive: #f87171;
+  --destructive-foreground: #111213;
   --warning: #ffc107;
   --warning-foreground: #ffc107;
-  --success: #71d58a;
-  --success-foreground: #17191c;
-  --border: #3c424b;
-  --input: #505763;
-  --chart-1: #ed5a29;
-  --chart-2: #71d58a;
-  --chart-3: #8f97a4;
+  --success: #2cc896;
+  --success-foreground: #111213;
+  --border: #3a3e44;
+  --input: #4a4f56;
+  --chart-1: #f17e58;
+  --chart-2: #2cc896;
+  --chart-3: #b9bec6;
   --chart-4: #ffc107;
-  --chart-5: #65cbdc;
-  --sidebar: #1c1f23;
+  --chart-5: #60a5fa;
+  --sidebar: #111213;
   --sidebar-foreground: #b9bec6;
-  --sidebar-accent: #3c2924;
-  --sidebar-accent-foreground: #ff9b79;
-  --sidebar-border: #3c424b;
-  --canvas: #17191c;
-  --canvas-elevated: #292d33;
+  --sidebar-accent: #3c2621;
+  --sidebar-accent-foreground: #f17e58;
+  --sidebar-border: #3a3e44;
+  --canvas: #1a1c1f;
+  --canvas-elevated: #2e3237;
   --tour-overlay-scrim: rgb(0 0 0 / 70%);
 }
 
-/* Selected labels and links share the requested brand orange. */
+/* Selected labels and links use the AA-safe orange text step. */
 :root:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) .text-primary {
   color: var(--primary-text);
 }
@@ -103,48 +112,56 @@
   border-color: var(--primary-hover);
 }
 
-/* User-requested exceptions: Smart Insights and Your Customer Portal retain
- * their pre-OptiMonk palette, including their loading states and QR/examples dialogs. */
+:root:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) [data-slot="button"][data-variant="default"]:active:not(:disabled),
+:root:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) .cta-button:active:not(:disabled) {
+  background-color: var(--primary-active);
+  border-color: var(--primary-active);
+}
+
+/* User-requested exceptions: Smart Insights and Your Customer Portal keep the
+ * marketing-level brand tokens (warm muted surface, darker #d5d8dd borders)
+ * rather than the lighter dashboard steps above, including their loading
+ * states and QR/examples dialogs. */
 [data-original-dashboard-colors] {
-  --background: #fffefb;
-  --foreground: #120909;
-  --card: #fffefb;
-  --card-foreground: #201515;
-  --primary: #ff4f00;
-  --primary-text: #ff4f00;
-  --secondary: #eceae3;
-  --secondary-foreground: #36342e;
-  --muted: #fffdf9;
-  --muted-foreground: #6d685d;
-  --accent: #eceae3;
-  --accent-foreground: #201515;
-  --destructive: oklch(0.6 0.2 25);
-  --warning: oklch(0.75 0.15 70);
-  --warning-foreground: oklch(0.45 0.12 70);
-  --success: #287653;
-  --border: #c5c0b1;
-  --input: #c5c0b1;
-  --ring: #ff4f00;
-  --canvas-elevated: #f9f7f3;
+  --background: #f7f5f1;
+  --foreground: #23262a;
+  --card: #ffffff;
+  --card-foreground: #23262a;
+  --primary: #ed5a29;
+  --primary-text: #b8410f;
+  --secondary: #f1f2f4;
+  --secondary-foreground: #23262a;
+  --muted: #f2f0eb;
+  --muted-foreground: #505763;
+  --accent: #f1f2f4;
+  --accent-foreground: #23262a;
+  --destructive: #cc0000;
+  --warning: #fbbf24;
+  --warning-foreground: #854d0e;
+  --success: #166534;
+  --border: #d5d8dd;
+  --input: #d5d8dd;
+  --ring: #ed5a29;
+  --canvas-elevated: #ffffff;
 }
 
 .dark [data-original-dashboard-colors] {
-  --background: #201515;
-  --foreground: #fffefb;
-  --card: #2a2222;
-  --card-foreground: #fffefb;
-  --secondary: #36342e;
-  --secondary-foreground: #fffefb;
-  --muted: #2d2d2e;
-  --muted-foreground: #c5c0b1;
-  --accent: #36342e;
-  --accent-foreground: #fffefb;
-  --destructive: #ef8f8f;
-  --warning: oklch(0.8 0.13 70);
-  --warning-foreground: oklch(0.85 0.12 80);
-  --success: #89cda8;
-  --border: #4a4540;
-  --input: #4a4540;
+  --background: #1a1c1f;
+  --foreground: #f9fafb;
+  --card: #23262a;
+  --card-foreground: #f9fafb;
+  --secondary: #2e3237;
+  --secondary-foreground: #f9fafb;
+  --muted: #23262a;
+  --muted-foreground: #b9bec6;
+  --accent: #2e3237;
+  --accent-foreground: #f9fafb;
+  --destructive: #f87171;
+  --warning: #fbbf24;
+  --warning-foreground: #fcd34d;
+  --success: #2cc896;
+  --border: #3a3e44;
+  --input: #4a4f56;
   --canvas-elevated: var(--card);
 }
 

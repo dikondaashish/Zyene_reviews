@@ -48,7 +48,7 @@ export function ReferralCard() {
                         <Gift className="size-5" />
                     </div>
                     <div>
-                        <CardTitle>Refer a friend</CardTitle>
+                        <CardTitle className="ui-card-title">Refer a friend</CardTitle>
                         <CardDescription>
                             Share Zyene Reviews and earn rewards when friends subscribe.
                         </CardDescription>

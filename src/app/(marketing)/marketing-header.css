@@ -28,9 +28,9 @@
 }
 .premium-header.is-scrolled .premium-header-inner {
   background: rgba(255, 255, 255, 0.88);
-  border-color: rgba(32, 21, 21, 0.12);
+  border-color: color-mix(in srgb, var(--foreground) 12%, transparent);
   box-shadow:
-    0 14px 34px rgba(55, 34, 24, 0.12),
+    0 14px 34px color-mix(in srgb, var(--foreground) 12%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 .premium-header .premium-header-inner {
@@ -42,7 +42,7 @@
   background: rgba(255, 255, 255, 0.8);
   border-color: rgba(255, 255, 255, 0.78);
   box-shadow:
-    0 12px 36px rgba(55, 34, 24, 0.08),
+    0 12px 36px color-mix(in srgb, var(--foreground) 8%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.92),
     inset 0 -1px 0 rgba(255, 255, 255, 0.38);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
@@ -86,7 +86,7 @@
 @media (hover: hover) and (pointer: fine) {
   .premium-header .premium-nav-auth [data-slot="button"]:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px #ff4f0026;
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--brand-orange) 14.9%, transparent);
   }
   .premium-header .premium-nav-auth [data-slot="button"]:hover svg {
     transform: translateX(4px);

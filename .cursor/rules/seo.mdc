@@ -60,5 +60,5 @@ Prefer shared components under `src/components/seo/` over one-off inline schemas
 
 ## SITEMAP & ROBOTS
 
-- New **marketing** URLs must be added to `src/app/sitemap.ts`.
+- New **marketing** URLs must be added to `src/lib/seo/sitemap.ts`.
 - New public marketing pages must **not** be disallowed in `src/app/robots.ts` unless they are internal, auth, or app-only routes.

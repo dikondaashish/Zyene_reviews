@@ -8,7 +8,7 @@ export function ImportingStep() {
         <Card>
             <CardContent className="py-12 flex flex-col items-center justify-center">
                 <Loader2 className="text-primary animate-spin mb-4 size-12" />
-                <h3 className="text-xl font-semibold">Importing Customers...</h3>
+                <h2 className="ui-section-title">Importing Customers...</h2>
                 <p className="text-muted-foreground mt-2">
                     Please wait while we process your file. This may take a minute.
                 </p>

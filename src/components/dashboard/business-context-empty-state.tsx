@@ -35,7 +35,7 @@ export function BusinessContextEmptyState({
                 <div className="mx-auto mb-5 flex items-center justify-center rounded-lg border border-primary/20 bg-primary/10 size-12">
                     <Icon className="text-primary size-6" aria-hidden />
                 </div>
-                <h1 className="text-xl font-semibold tracking-tight text-foreground mb-2">
+                <h1 className="ui-page-title text-foreground mb-2">
                     {title}
                 </h1>
                 <p className="text-sm text-muted-foreground leading-relaxed mb-4">
@@ -72,7 +72,7 @@ export function TeamMembershipEmptyState({ businessName }: TeamMembershipEmptySt
     return (
         <div className="flex flex-1 flex-col items-center justify-center p-6 sm:p-10">
             <div className="w-full max-w-md rounded-lg border border-border bg-card p-8 text-center shadow-none">
-                <h1 className="text-xl font-semibold tracking-tight text-foreground mb-2">
+                <h1 className="ui-page-title text-foreground mb-2">
                     You don&apos;t have access to this team
                 </h1>
                 <p className="text-sm text-muted-foreground leading-relaxed mb-6">

@@ -191,7 +191,7 @@ Use this document as the repeatable starting point for measuring GEO and SEO imp
 
 ## 7. Indexed priority URLs (reference)
 
-Static list from [src/app/sitemap.ts](../src/app/sitemap.ts). Confirm in GSC → Pages → Indexing.
+Static list from [src/lib/seo/sitemap.ts](../src/lib/seo/sitemap.ts). Confirm in GSC → Pages → Indexing.
 
 | URL | In sitemap | Indexed (GSC) | Notes |
 |-----|------------|---------------|-------|

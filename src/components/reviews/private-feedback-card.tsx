@@ -15,17 +15,15 @@ export function PrivateFeedbackCard({ feedback }: { feedback: PrivateFeedback })
     return (
         <div
             className={cn(
-                "group relative min-w-0 overflow-hidden space-y-4 rounded-lg border border-border border-l-4 bg-card p-4 transition-all duration-300 sm:p-5",
-                "hover:-translate-y-0.5 hover:shadow-lg hover:border-canvas-elevated/60",
+                "group relative min-w-0 overflow-hidden space-y-4 rounded-lg border border-border border-l-4 bg-card p-4 transition-shadow sm:p-5",
+                "hover:shadow-sm",
                 status === "open"
-                    ? "border-l-red-500"
+                    ? "border-l-destructive"
                     : status === "contacted"
                       ? "border-l-primary"
                       : "border-l-primary opacity-90",
             )}
         >
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-canvas-elevated/35 via-canvas-elevated/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
             <PrivateFeedbackCardHeader
                 feedback={feedback}
                 status={status}

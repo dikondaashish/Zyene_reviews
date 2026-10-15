@@ -14,7 +14,7 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                         Customers (excludes test tags)
                     </p>
-                    <h3 className="text-xl font-semibold text-foreground">{stats?.totalCustomers ?? "-"}</h3>
+                    <p className="text-xl font-semibold text-foreground">{stats?.totalCustomers ?? "-"}</p>
                 </div>
             </div>
             <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
@@ -25,9 +25,9 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                         Request completion
                     </p>
-                    <h3 className="text-xl font-semibold text-foreground">
+                    <p className="text-xl font-semibold text-foreground">
                         {stats != null ? `${stats.reviewConversionPercent}%` : "-"}
-                    </h3>
+                    </p>
                     <p className="text-[10px] text-muted-foreground">Feedback or Google handoff; publication unverified</p>
                 </div>
             </div>
@@ -39,7 +39,7 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                         Not completed
                     </p>
-                    <h3 className="text-xl font-semibold text-foreground">{stats?.neverReviewedCount ?? "-"}</h3>
+                    <p className="text-xl font-semibold text-foreground">{stats?.neverReviewedCount ?? "-"}</p>
                     <p className="text-[10px] text-muted-foreground">No completed request yet</p>
                 </div>
             </div>
@@ -51,9 +51,9 @@ export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManageme
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                         Avg requests sent
                     </p>
-                    <h3 className="text-xl font-semibold text-foreground">
+                    <p className="text-xl font-semibold text-foreground">
                         {stats != null ? stats.avgRequestsSent : "-"}
-                    </h3>
+                    </p>
                     <p className="text-[10px] text-muted-foreground">Per customer (all contacts)</p>
                 </div>
             </div>

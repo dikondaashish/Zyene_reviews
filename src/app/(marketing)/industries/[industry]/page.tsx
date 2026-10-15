@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { industryAlternates } from "@/lib/seo/industry-alternates";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { INDUSTRY_MAP, INDUSTRY_SLUGS } from "@/lib/industries/industry-data";
-import { getEsIndustryPathForEnglishSlug } from "@/lib/industries/localized-industries";
 
 export function generateStaticParams() {
     return INDUSTRY_SLUGS.map((slug) => ({ industry: slug }));
@@ -13,20 +13,10 @@ export async function generateMetadata(
     const { industry: slug } = await params;
     const data = INDUSTRY_MAP[slug];
     if (!data) return {};
-    const esPath = getEsIndustryPathForEnglishSlug(slug);
-    const languages: Record<string, string> = {
-        en: `https://www.zyenereviews.com/industries/${slug}`,
-    };
-    if (esPath) {
-        languages.es = `https://www.zyenereviews.com${esPath}`;
-    }
     return mergeMarketingSocial({
         title: data.metaTitle,
         description: data.metaDescription,
-        alternates: {
-            canonical: `https://www.zyenereviews.com/industries/${slug}`,
-            languages,
-        },
+        alternates: industryAlternates(slug),
         keywords: data.targetKeywords,
         openGraph: {
             title: data.metaTitle,

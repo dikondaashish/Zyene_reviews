@@ -7,9 +7,9 @@
   padding: 30px 30px 25px;
   border: 1px solid var(--border);
   border-radius: 24px;
-  background: #fffaf4;
+  background: var(--card);
   color: var(--foreground);
-  box-shadow: 0 24px 70px rgba(32, 21, 21, 0.2), 0 8px 24px rgba(32, 21, 21, 0.1);
+  box-shadow: 0 24px 70px color-mix(in srgb, var(--foreground) 20%, transparent), 0 8px 24px color-mix(in srgb, var(--foreground) 10%, transparent);
   animation: marketing-exit-popup-in 260ms var(--ease-out) both;
 }
 .marketing-exit-popup-close {
@@ -31,7 +31,7 @@
 .marketing-exit-popup h2 { max-width: 18ch; margin: 0; font-size: clamp(28px, 3vw, 34px); line-height: 1.04; letter-spacing: -.045em; }
 .marketing-exit-popup-description { max-width: 36ch; margin: 16px 0 24px; color: var(--muted-foreground); font-size: 15px; line-height: 1.55; }
 .marketing-exit-popup-cta { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 13px 20px; border-radius: 999px; background: var(--primary); color: #fff; font-size: 14px; font-weight: 750; transition: transform 160ms var(--ease-out), box-shadow 160ms, background-color 160ms; }
-.marketing-exit-popup-cta:hover { background: #ff641f; box-shadow: 0 8px 20px #ff4f0030; transform: translateY(-1px); }
+.marketing-exit-popup-cta:hover { background: var(--brand-orange); box-shadow: 0 8px 20px color-mix(in srgb, var(--brand-orange) 18.8%, transparent); transform: translateY(-1px); }
 .marketing-exit-popup-cta:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; }
 .marketing-exit-popup-cta svg { transition: transform 160ms var(--ease-out); }
 .marketing-exit-popup-cta:hover svg { transform: translateX(3px); }

@@ -8,6 +8,7 @@ import {
     isSupabaseEmailSendRateLimited,
 } from "@/lib/auth/supabase-email-rate-limit";
 import { useSignupSession } from "./use-signup-session";
+import { trackSignupEvent } from "@/lib/analytics/signup-events";
 
 export function useSignupForm() {
     const searchParams = useSearchParams();
@@ -67,18 +68,7 @@ export function useSignupForm() {
                 }
             } else {
                 setIsSuccess(true);
-                if (!inviteToken && typeof window !== "undefined") {
-                    const flag = "zyene_signup_complete_tracked";
-                    if (!sessionStorage.getItem(flag)) {
-                        sessionStorage.setItem(flag, "1");
-                        const w = window as unknown as { dataLayer?: unknown[] };
-                        w.dataLayer = w.dataLayer || [];
-                        w.dataLayer.push({
-                            event: "signup_complete",
-                            method: "email",
-                        });
-                    }
-                }
+                if (!inviteToken) trackSignupEvent("signup_verification_requested", "email");
             }
         } catch {
             setFormError("We couldn’t create your account. Check your connection and try again.");
@@ -105,5 +95,6 @@ export function useSignupForm() {
         isSuccess,
         checkingExistingSession,
         handleSubmit,
+        trackStart: () => { if (!inviteToken) trackSignupEvent("signup_started", "email"); },
     };
 }

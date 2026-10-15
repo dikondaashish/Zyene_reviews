@@ -22,7 +22,7 @@ export function DeveloperApiCard({ businessId, apiKey: initialKey, canManage }: 
 
     return (
         <Card className="overflow-hidden">
-            <div className="h-1 bg-gradient-to-r from-sync-action to-primary w-full" />
+            <div className="h-1 bg-primary w-full" />
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">

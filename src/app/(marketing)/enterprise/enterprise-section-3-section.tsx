@@ -6,7 +6,6 @@ import {
     Check,
     Shield,
     Users,
-    Sparkles,
     FileText,
 } from "lucide-react";
 import {

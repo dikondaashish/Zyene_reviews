@@ -26,7 +26,7 @@ export function RatingStepNumber({ rating, hoverRating, onRate, onHoverRating }:
                             ? "border-primary bg-primary text-primary-foreground scale-110 shadow-md ring-4 ring-primary/20 z-10"
                             : hoverRating === num
                                 ? "border-primary/50 bg-primary/10 text-primary scale-105"
-                                : "border-border bg-background text-muted-foreground hover:border-foreground/30 dark:border-white/10 dark:bg-[rgb(30,41,59)]"
+                                : "border-border bg-background text-muted-foreground hover:border-foreground/30 dark:border-border dark:bg-muted"
                     )}
                 >
                     {num}

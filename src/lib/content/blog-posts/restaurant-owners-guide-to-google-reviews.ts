@@ -1,0 +1,92 @@
+import type { BlogPostSource } from "@/lib/content/blog-types";
+import { SIGNUP_URL } from "@/config/env";
+
+export const restaurantOwnersGuideToGoogleReviewsPost: BlogPostSource = {
+    slug: "restaurant-owners-guide-to-google-reviews",
+    title: "Restaurant Owner's Guide to Google Reviews (2026 Edition)",
+    excerpt: "A practical guide for restaurant owners who want more Google reviews, clearer responses to complaints, and a consistent way to monitor their rating.",
+    pillar: "industry-specific",
+    pillarLabel: "Industry Specific",
+    publishedAt: "2026-05-05",
+    dateModified: "2026-10-11",
+    author: { name: "Karthik", role: "Founder" },
+    metaTitle: "Restaurant Owner's Guide to Google Reviews 2026",
+    metaDescription: "The complete Google review guide for restaurant owners. How to get more reviews, respond to complaints, protect your rating, and track competitors in 2026.",
+    keywords: ["restaurant google reviews", "restaurant review management", "how to get more restaurant reviews", "restaurant reputation management 2026"],
+    relatedSlugs: ["how-to-get-50-google-reviews-in-30-days", "how-to-respond-to-a-1-star-review", "birdeye-pricing-breakdown-2026"],
+    internalLinks: [
+        { label: "Zyene Reviews for Restaurants", href: "/industries/restaurants" },
+        { label: "Review tool pricing comparison (Birdeye vs Zyene Reviews)", href: "/blog/birdeye-pricing-breakdown-2026" },
+        { label: "Start your free trial", href: SIGNUP_URL },
+    ],
+    faqs: [
+        { question: "How do restaurants get more Google reviews?", answer: "Ask at payment with a QR code, follow up by SMS one to two hours after dine-in, email catering clients, and use loyalty lists. Timing beats a generic please-review sign that guests ignore." },
+        { question: "What should restaurants say in negative review responses?", answer: "Name the dish or service issue without arguing, apologize for the visit, and invite them back through a manager contact. Keep it short - other diners are watching your tone." },
+        { question: "Does review count matter more than star rating for restaurants?", answer: "Often yes. A 4.5 with hundreds of reviews usually wins clicks over a 4.8 with twenty because volume signals consistent experience. Keep new reviews arriving every month." },
+        { question: "How does Negative Feedback Shield help restaurants?", answer: "Zyene Reviews routes low ratings on your branded collectratings.com page to private feedback first, so your team can respond to cold food or service issues quickly." },
+        { question: "Can Zyene Reviews manage reviews for multiple restaurant locations?", answer: "Professional plans support multiple locations with per-location analytics and team seats. Focus extra collection effort on the lowest-rated unit until it catches up to the brand average." },
+    ],
+    body: [
+        { type: "summary", text: "Restaurants get more Google reviews by asking at natural moments, such as payment QR codes, table tents, post-meal texts and catering follow-ups. Reply to food complaints by naming the dish and inviting the guest back through a manager, and monitor each location separately so one weak unit does not hide behind the brand average." },
+        { type: "p", text: "Restaurant reviews help prospective guests understand food, service, atmosphere, and value. Use recent feedback to improve the experience; a rating change alone does not establish a revenue impact." },
+        { type: "p", text: "This guide is for restaurant owners and managers who want a practical, no-fluff system for growing their Google review count, responding professionally, and protecting their rating." },
+        { type: "h2", text: "Why Restaurant Reviews Deserve Attention" },
+        {
+            type: "summary",
+            text: "Diners choose in seconds from map results - star average, review count, and the latest comments matter more than your menu PDF. Thin profiles lose covers to competitors who look busier and more trusted online.",
+        },
+        { type: "p", text: "For restaurants, the decision cycle is short and high-frequency. Someone is hungry, they search 'Italian restaurant near me', they see 3-5 options, and they make a decision in 30 seconds based almost entirely on star rating, review count, and the first 2-3 reviews they read." },
+        { type: "p", text: "A restaurant with 200 reviews and a 4.5-star average will nearly always outperform a restaurant with 20 reviews and a 4.8-star average in both click-through rate and foot traffic - even though the latter has a higher rating." },
+        { type: "h2", text: "The 5 Moments to Ask for a Review" },
+        {
+            type: "summary",
+            text: "Payment QR codes, table tents, post-meal SMS, catering thank-you emails, and loyalty nudges cover most restaurant journeys. Zyene Reviews can automate SMS and email once you connect your guest list or POS via Zapier.",
+        },
+        { type: "ol", items: [
+            "At payment: A QR code on the receipt or payment terminal that goes directly to your Google review page. Keep it simple: 'Enjoyed your meal? Leave us a quick Google review →'",
+            "Table tent or menu card: A small card at every table with your review QR code and a friendly ask. Change the copy seasonally to keep it fresh.",
+            "SMS follow-up: Send a text 1-2 hours after a reservation-based meal when the experience is still fresh. For walk-in customers, collect numbers through your loyalty program or WiFi login.",
+            "Email after catering or private events: Thank the organizer and invite feedback after the event. Compare engagement with your own previous requests rather than assuming a response rate.",
+            "Loyalty program touchpoint: If you have a loyalty app or email list, send a periodic review request to members who haven't reviewed you yet.",
+        ]},
+        { type: "h2", text: "What Diner Reviews Actually Talk About" },
+        {
+            type: "summary",
+            text: "Food, service, ambiance, waits, and value are useful themes to look for. The table is a review checklist; measure how often these topics appear in your own feedback.",
+        },
+        { type: "p", text: "Understanding what diners write about in reviews helps you both solicit better ones and respond to them effectively." },
+        { type: "table", table: {
+            headers: ["Topic", "Look for", "Next step"],
+            rows: [
+                ["Food quality and presentation", "Specific dishes or preparation", "Share actionable feedback with the kitchen"],
+                ["Service and staff attitude", "Communication and attentiveness", "Discuss repeated patterns with the team"],
+                ["Ambiance and cleanliness", "Comfort and upkeep", "Check the areas guests mention"],
+                ["Wait time and seating", "Expectations and delays", "Review queue updates and staffing"],
+                ["Value for money", "Portion, price, and experience", "Understand the expectation behind the feedback"],
+            ],
+        }},
+        { type: "h2", text: "Responding to Food Quality Complaints" },
+        {
+            type: "summary",
+            text: "Reference the specific dish, skip excuses, and invite them back through a manager. A gracious public reply often matters more than the original star score for the next customer reading the thread.",
+        },
+        { type: "p", text: "Food quality complaints are the most common negative review category for restaurants. The best responses acknowledge the specific dish mentioned, don't make excuses (even if the reviewer ordered incorrectly), and invite them to return." },
+        { type: "quote", text: "Hi [Name], we're sorry the [dish] wasn't up to par on your visit - that's not the standard our kitchen holds itself to. We'd love to make it right. Please ask for [manager name] on your next visit and we'll take care of you. Thank you for the honest feedback." },
+        { type: "h2", text: "The Multi-Location Restaurant Challenge" },
+        {
+            type: "summary",
+            text: "Groups need per-location profiles and centralized monitoring so one weak unit does not drag the brand. Pour extra review requests into the lowest-rated store until its average recovers.",
+        },
+        { type: "p", text: "Restaurant groups with multiple locations face a unique challenge: review management at scale. Each location needs its own review profile, and inconsistency between locations (one at 4.6 stars, another at 3.9) can damage the overall brand." },
+        { type: "p", text: "Multi-location operators need a centralized dashboard to monitor all locations in one place, standardized response templates that can be personalized per location, and location-specific review collection strategies tailored to each unit's traffic patterns." },
+        { type: "tip", text: "For multi-location restaurants: the location with the lowest rating should get the most focused review collection effort, not just average treatment. Investigate service issues and use a consistent request process. Future ratings and timing depend on genuine customer feedback." },
+        { type: "h2", text: "Protecting Your Rating with the Negative Feedback Shield" },
+        {
+            type: "summary",
+            text: "Shield gives guests with low ratings a private feedback path on your Zyene Reviews review page, giving your team a chance to organize service recovery. It is built into Zyene Reviews paid plans for restaurants using collectratings.com links.",
+        },
+        { type: "p", text: "The hardest reviews to deal with are the ones that come from fixable problems - a cold dish, a wrong order, a long wait - where the customer didn't mention it to the server. By the time you see the review, it's too late." },
+        { type: "p", text: "The Negative Feedback Shield adds a private feedback step after a low rating on a Zyene review page. When a customer taps 'Not satisfied', they can describe the problem to the business so the team can follow up. It does not guarantee a customer outcome." },
+        { type: "cta", ctaLabel: "See how Zyene Reviews works for restaurants →", ctaHref: "/industries/restaurants" },
+    ],
+};
