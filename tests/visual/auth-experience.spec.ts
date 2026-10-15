@@ -42,7 +42,7 @@ for (const path of ["/login", "/signup", "/forgot-password"]) {
 for (const path of ["/login", "/signup?next=%2Fdashboard", "/forgot-password"]) {
   test(`${path} fits desktop and mobile viewports without page scrolling`, async ({ page }) => {
     await page.goto(path, { waitUntil: "domcontentloaded" });
-    for (const [width, height] of [[1440, 900], [1280, 720], [1024, 768], [900, 720], [390, 844], [390, 720], [320, 720]]) {
+    for (const [width, height] of [[1920, 960], [1512, 982], [1440, 900], [1366, 660], [1280, 720], [1024, 768], [900, 720], [390, 844], [390, 720], [320, 720]]) {
       await page.setViewportSize({ width, height });
       await page.evaluate(() => document.fonts.ready);
       await expect(page.locator("h1")).toHaveCount(1);
