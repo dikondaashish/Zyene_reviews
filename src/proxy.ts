@@ -1,6 +1,6 @@
 /**
  * Next.js middleware proxy - handles subdomain routing, auth session refresh,
- * API rate limiting, and CORS headers for the multi-tenant app.
+ * API rate limiting, CORS headers, and the privacy jurisdiction cookie for the multi-tenant app.
  *
  * Order matters: early exits (embeds, webhooks, preflight) run before the
  * Supabase client is built, then API guards, then one host-specific branch.
@@ -20,8 +20,13 @@ import {
     isReviewCaptureDomain,
 } from "@/lib/routing/proxy-review-domains";
 import { handleRootDomain } from "@/lib/routing/proxy-root-domain";
+import { withPrivacyJurisdiction } from "@/lib/routing/proxy-privacy-jurisdiction";
 
 export async function proxy(request: NextRequest) {
+    return withPrivacyJurisdiction(request, await routeRequest(request));
+}
+
+async function routeRequest(request: NextRequest): Promise<NextResponse> {
     const { pathname } = request.nextUrl;
 
     const hostHeader = request.headers.get("host") || "";

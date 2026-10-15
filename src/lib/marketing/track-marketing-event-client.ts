@@ -1,7 +1,7 @@
 "use client";
 
 import { deserializeUtm, UTM_COOKIE_NAME } from "@/lib/growth/utm";
-import { hasConsent } from "@/lib/consent/consent-store";
+import { hasConsent } from "@/lib/privacy/privacy-store";
 
 function readUtmCookie() {
     const match = document.cookie

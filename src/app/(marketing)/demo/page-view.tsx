@@ -5,6 +5,7 @@ import { ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DemoRequestForm } from "@/components/marketing/demo-request-form";
 import { DemoBookingCalendar } from "@/components/marketing/demo-booking-calendar";
+import { FunctionalEmbedGate } from "@/components/privacy/functional-embed-gate";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { ENTERPRISE_SALES_EMAIL } from "@/lib/enterprise/enterprise-data";
 import { getCalComEmbedUrlFromEnv } from "@/lib/enterprise/cal-com-embed";
@@ -31,7 +32,13 @@ export default function DemoPage() {
                             Pick a time that works for your team. Typical demo: 15 minutes. We’ll show how to select a business, choose a reply tone and star threshold, and turn on automatic Google replies.
                         </p>
                         {calComEmbedUrl ? (
-                            <DemoBookingCalendar src={calComEmbedUrl} />
+                            <FunctionalEmbedGate
+                                provider="Cal.com"
+                                actionLabel="Show available times"
+                                fallback={<a href="https://cal.com/zyenereviews/15min" target="_blank" rel="noopener noreferrer" className="text-sm underline underline-offset-4">Or open the booking page</a>}
+                            >
+                                <DemoBookingCalendar src={calComEmbedUrl} />
+                            </FunctionalEmbedGate>
                         ) : (
                             <div className="rounded-xl border border-dashed border-border bg-muted/40 p-8 text-center text-sm text-muted-foreground">
                                 <p className="mb-4">Choose a time on our booking page, or send your details and we’ll arrange a demo.</p>

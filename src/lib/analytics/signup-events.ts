@@ -1,10 +1,13 @@
+import { hasConsent } from "@/lib/privacy/privacy-store";
+
 type SignupEvent = "signup_started" | "signup_verification_requested" | "signup_complete";
 type SignupMethod = "email" | "google";
 const recorded = new Set<SignupEvent>();
 
 /** Browser funnel signals only; no identity, form values, URLs or payment data. */
 export function trackSignupEvent(event: SignupEvent, method: SignupMethod) {
-    if (typeof window === "undefined" || recorded.has(event)) return;
+    // dataLayer push + sessionStorage dedupe flag: analytics, so opt-in like GTM itself.
+    if (typeof window === "undefined" || recorded.has(event) || !hasConsent("analytics")) return;
     const flag = `zyene_${event}_tracked`;
     try {
         if (window.sessionStorage.getItem(flag)) return;
