@@ -127,7 +127,7 @@ When editing `src/app/(marketing)/`:
 - OG + Twitter metadata.
 - One `h1`; semantic landmarks.
 - `next/image` with alt; internal `next/link`.
-- New URLs → `src/app/sitemap.ts`.
+- New URLs → `src/lib/seo/sitemap.ts`.
 
 See `.cursor/rules/seo.mdc`.
 

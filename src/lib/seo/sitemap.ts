@@ -1,3 +1,10 @@
+/**
+ * Source of truth for marketing sitemap URLs. Add new marketing pages here.
+ *
+ * Served by route handlers, not a metadata `sitemap.ts`: src/app/sitemap.xml/route.ts
+ * (index) and src/app/sitemap/[file]/route.ts (/sitemap/<section>.xml). A metadata
+ * sitemap would also claim /sitemap.xml and break `next dev`.
+ */
 import type { MetadataRoute } from "next";
 import { BLOG_POSTS } from "@/lib/content/blog-data";
 import { RESOURCE_GUIDES } from "@/lib/content/resource-data";
@@ -118,25 +125,18 @@ export function getEsSitemap(): MetadataRoute.Sitemap {
     ];
 }
 
-export async function generateSitemaps() {
-    return [{ id: "core" }, { id: "support" }, { id: "es" }];
-}
+export type SitemapSection = "core" | "support" | "es";
 
-export default function sitemap(): MetadataRoute.Sitemap;
-export default function sitemap(props: {
-    id: Promise<string> | string;
-}): Promise<MetadataRoute.Sitemap>;
-export default function sitemap(props?: {
-    id: Promise<string> | string;
-}): MetadataRoute.Sitemap | Promise<MetadataRoute.Sitemap> {
-    if (!props) {
-        return [...getCoreSitemap(), ...getSupportSitemap(), ...getEsSitemap()];
-    }
+/** Per-section builders; each section is served at /sitemap/<section>.xml. */
+export const SITEMAP_SECTIONS: Record<SitemapSection, () => MetadataRoute.Sitemap> = {
+    core: getCoreSitemap,
+    support: getSupportSitemap,
+    es: getEsSitemap,
+};
 
-    return Promise.resolve(props.id).then((id) => {
-        if (id === "core") return getCoreSitemap();
-        if (id === "support") return getSupportSitemap();
-        if (id === "es") return getEsSitemap();
-        return [];
-    });
+export const SITEMAP_SECTION_IDS = Object.keys(SITEMAP_SECTIONS) as SitemapSection[];
+
+/** Every entry across all sections (used by coverage tests). */
+export function getAllSitemapEntries(): MetadataRoute.Sitemap {
+    return SITEMAP_SECTION_IDS.flatMap((id) => SITEMAP_SECTIONS[id]());
 }

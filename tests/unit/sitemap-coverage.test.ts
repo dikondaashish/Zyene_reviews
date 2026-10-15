@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-import sitemap, { getCoreSitemap, getSupportSitemap, getEsSitemap } from "../../src/app/sitemap";
+import { getAllSitemapEntries, getCoreSitemap, getSupportSitemap, getEsSitemap } from "../../src/lib/seo/sitemap";
 import { INDUSTRY_SLUGS } from "../../src/lib/industries/industry-data";
 import { COMPETITOR_SLUGS } from "../../src/lib/comparisons/competitor-data";
 import { FEATURE_PILLAR_SLUGS } from "../../src/lib/growth/feature-pillars";
@@ -20,7 +20,7 @@ import { LOCALIZED_INDUSTRY_PAGES } from "../../src/lib/industries/localized-ind
 /**
  * Guards organic traffic on an SEO-led product.
  *
- * src/app/sitemap.ts is a hand-maintained route manifest. Adding a marketing
+ * src/lib/seo/sitemap.ts is a hand-maintained route manifest. Adding a marketing
  * page without adding it here is silent — the page just never gets submitted for
  * indexing, and nothing fails. This test closes that gap by walking the actual
  * route tree on disk and asserting every indexable static page is present.
@@ -187,7 +187,7 @@ function routeExists(pathname: string): boolean {
 
 describe("sitemap coverage", () => {
     const routes = collectStaticRoutes(MARKETING_ROOT);
-    const entries = sitemap();
+    const entries = getAllSitemapEntries();
     const sitemapPaths = new Set(
         entries.map((e) => {
             const p = new URL(e.url).pathname.replace(/\/+$/, "");
@@ -206,7 +206,7 @@ describe("sitemap coverage", () => {
 
         expect(
             missing,
-            `These marketing pages are indexable but absent from src/app/sitemap.ts, so they will not be submitted for indexing. Add them there, or set robots: { index: false } if they are intentionally private:\n  ${missing.join("\n  ")}`,
+            `These marketing pages are indexable but absent from src/lib/seo/sitemap.ts, so they will not be submitted for indexing. Add them there, or set robots: { index: false } if they are intentionally private:\n  ${missing.join("\n  ")}`,
         ).toEqual([]);
     });
 

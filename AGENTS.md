@@ -121,7 +121,7 @@ Full rules: **`.cursor/rules/seo.mdc`** (always applied). Summary:
 | HTML | Use `<main>`, `<article>`, `<section>`, `<nav>`, `<header>`, `<footer>` |
 | Images | **`next/image`** only — never `<img>`; always `alt`; `width`/`height` or `fill`; `priority` only above-the-fold |
 | Links | Internal: **`next/link`**; external `target="_blank"`: `rel="noopener noreferrer"` |
-| Sitemap | Add new marketing URLs to **`src/app/sitemap.ts`** |
+| Sitemap | Add new marketing URLs to **`src/lib/seo/sitemap.ts`** |
 | Robots | Do not block public marketing paths in **`src/app/robots.ts`** |
 | JSON-LD | Key pages: Organization (home), Article (blog), Product/Offer (pricing), LocalBusiness (review surfaces). Use **`@/components/seo/json-ld`** helpers |
 

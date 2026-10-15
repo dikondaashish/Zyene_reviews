@@ -175,7 +175,7 @@ dateModified?: string; // ISO date for Article JSON-LD
 
 ### 1.4 Sitemap & robots
 
-- New routes (later phases): add to `src/app/sitemap.ts`
+- New routes (later phases): add to `src/lib/seo/sitemap.ts`
 - Follow `.cursor/rules/seo.mdc` for all new marketing pages
 
 ### Exit criteria

@@ -4,7 +4,7 @@ import { RESOURCE_GUIDES } from "@/lib/content/resource-data";
 import { headingAnchor } from "@/lib/content/heading-anchor";
 import { buildMarketingMetadata } from "@/lib/seo/marketing-page-metadata";
 import { buildPricingProductSchema } from "@/lib/seo/pricing-json-ld";
-import sitemap from "@/app/sitemap";
+import { getAllSitemapEntries } from "@/lib/seo/sitemap";
 import robots from "@/app/robots";
 
 const request = vi.hoisted(() => ({ host: "www.zyenereviews.com" }));
@@ -44,7 +44,7 @@ describe("public SEO integrity", () => {
     });
 
     it("uses real blog modification dates instead of the crawl time", () => {
-        const entries = sitemap();
+        const entries = getAllSitemapEntries();
         for (const post of BLOG_POSTS) {
             expect(entries.find((entry) => entry.url.endsWith(`/blog/${post.slug}`))?.lastModified)
                 .toBe(post.dateModified ?? post.publishedAt);
@@ -69,7 +69,7 @@ describe("public SEO integrity", () => {
     });
 
     it("keeps article descriptions concise and linked pages in the sitemap", () => {
-        const paths = new Set(sitemap().map((entry) => new URL(entry.url).pathname));
+        const paths = new Set(getAllSitemapEntries().map((entry) => new URL(entry.url).pathname));
         for (const post of BLOG_POSTS) {
             expect(post.metaDescription.length, post.slug).toBeLessThanOrEqual(160);
             for (const slug of post.relatedSlugs) {
