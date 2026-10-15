@@ -13,7 +13,7 @@ export const post9: BlogPost = {
     pillar: "industry-specific",
     pillarLabel: "Industry Specific",
     publishedAt: "2026-05-05",
-    dateModified: "2026-05-24",
+    dateModified: "2026-10-11",
     readMinutes: 9,
     author: { name: "Nina Patel", role: "Local SEO" },
     metaTitle: "Restaurant Owner's Guide to Google Reviews 2026",
@@ -28,8 +28,6 @@ export const post9: BlogPost = {
     faqs: [
         { question: "How do restaurants get more Google reviews?", answer: "Ask at payment with a QR code, follow up by SMS one to two hours after dine-in, email catering clients, and use loyalty lists. Timing beats a generic please-review sign that guests ignore." },
         { question: "What should restaurants say in negative review responses?", answer: "Name the dish or service issue without arguing, apologize for the visit, and invite them back through a manager contact. Keep it short - other diners are watching your tone." },
-        { question: "Can a restaurant remove a fake review on Google?", answer: "Flag it via Google Business Profile or Maps with policy grounds (off-topic, spam, conflict of interest). Google removes some; in the meantime, reply professionally so prospective diners see your side." },
-        { question: "How fast should restaurant managers reply to reviews?", answer: "Within 24 hours for negative feedback to salvage the guest relationship; within 48 to 72 hours for positive reviews to show appreciation." },
         { question: "Does review count matter more than star rating for restaurants?", answer: "Often yes. A 4.5 with hundreds of reviews usually wins clicks over a 4.8 with twenty because volume signals consistent experience. Keep new reviews arriving every month." },
         { question: "How does Negative Feedback Shield help restaurants?", answer: "Zyene Reviews routes low ratings on your branded collectratings.com page to private feedback first, so your team can respond to cold food or service issues quickly." },
         { question: "Can Zyene Reviews manage reviews for multiple restaurant locations?", answer: "Professional plans support multiple locations with per-location analytics and team seats. Focus extra collection effort on the lowest-rated unit until it catches up to the brand average." },
@@ -86,7 +84,7 @@ export const post9: BlogPost = {
         },
         { type: "p", text: "Restaurant groups with multiple locations face a unique challenge: review management at scale. Each location needs its own review profile, and inconsistency between locations (one at 4.6 stars, another at 3.9) can damage the overall brand." },
         { type: "p", text: "Multi-location operators need a centralized dashboard to monitor all locations in one place, standardized response templates that can be personalized per location, and location-specific review collection strategies tailored to each unit's traffic patterns." },
-        { type: "tip", text: "For multi-location restaurants: the location with the lowest rating should get the most focused review collection effort, not just average treatment. A systematic review push at a 3.9-star location can move it to 4.3+ within 60 days." },
+        { type: "tip", text: "For multi-location restaurants: the location with the lowest rating should get the most focused review collection effort, not just average treatment. Investigate service issues and use a consistent request process. Future ratings and timing depend on genuine customer feedback." },
         { type: "h2", text: "Protecting Your Rating with the Negative Feedback Shield" },
         {
             type: "summary",
@@ -105,12 +103,12 @@ export const post10: BlogPost = {
     pillar: "industry-specific",
     pillarLabel: "Industry Specific",
     publishedAt: "2026-05-12",
-    dateModified: "2026-05-24",
+    dateModified: "2026-10-11",
     readMinutes: 8,
     author: { name: "Zyene Reviews Team", role: "Editorial" },
     metaTitle: "Dental Practice Reputation Management Guide 2026",
     metaDescription:
-        "2026 reputation guide for dental practices: HIPAA-aware review responses, more patient reviews, and protecting your practice from negative feedback.",
+        "Dental reputation management: review requests, feedback follow-up, and public reply examples to discuss with your privacy team.",
     keywords: ["dental practice reputation management", "dentist google reviews", "dental reviews management 2026", "dentist reputation management strategy"],
     relatedSlugs: ["how-to-respond-to-a-1-star-review", "how-to-get-50-google-reviews-in-30-days", "birdeye-pricing-breakdown-2026"],
     internalLinks: [
@@ -119,21 +117,21 @@ export const post10: BlogPost = {
         { label: "Start your free trial", href: SIGNUP_URL },
     ],
     faqs: [
-        { question: "Can dental practices respond to Google reviews without violating HIPAA?", answer: "Yes, if you avoid confirming someone was a patient or discussing treatment. Use general language about comfort and invite them to call the office - never reference procedures they mentioned in their review." },
+        { question: "Can dental practices respond to Google reviews without violating HIPAA?", answer: "Public replies can disclose sensitive information. Have your privacy lead review the workflow and wording, avoid confirming patient status or discussing treatment, and direct service concerns to an appropriate private channel. Templates do not establish compliance." },
         { question: "When should a dental office ask for a Google review?", answer: "Two to three hours after checkout for SMS, twenty-four hours for email-only patients, and after the second visit when trust is established. Happy recall patients are strong candidates too." },
         { question: "What causes most negative dental reviews?", answer: "Wait times, billing surprises, and front-desk experience dominate - often operational issues, not clinical skill. Fixing scheduling communication usually moves the needle faster than marketing alone." },
-        { question: "Does Zyene Reviews work for dental practices?", answer: "Zyene Reviews monitors Google, Facebook, and Yelp, sends HIPAA-aware reply drafts you still edit, and runs SMS or email review campaigns. See /industries/dental for workflow examples." },
-        { question: "Should dentists monitor Healthgrades and Google?", answer: "Google drives local map discovery for most new patients; Healthgrades still matters for some searchers. A single inbox in Zyene Reviews reduces the chance a platform review sits unanswered." },
+        { question: "Does Zyene Reviews work for dental practices?", answer: "Zyene Reviews monitors Google, Facebook, and Yelp, provides AI reply drafts you must review, and runs SMS or email review campaigns. See /industries/dental for workflow examples." },
+        { question: "Should dentists monitor Healthgrades and Google?", answer: "Google drives local map discovery for most new patients; Healthgrades still matters for some searchers. Zyene supports Google, Facebook and Yelp monitoring; Healthgrades is not a native connected review platform." },
     ],
     body: [
         { type: "p", text: "People choosing a dental practice may use reviews to understand communication, scheduling, and the overall experience. Listen to that feedback without assuming it represents every patient." },
         { type: "h2", text: "The Dental Patient Review Journey" },
         {
             type: "summary",
-            text: "Patients scan the map pack, compare stars and volume, read recent reviews, check if the practice replies, then book or bounce. Eighty reviews at 4.5 often beats fifteen at 4.9 because volume signals experience.",
+            text: "People may compare recent feedback, ratings and public responses alongside location, services and appointment availability. Measure your own inquiry and booking data rather than assuming one review count always wins.",
         },
         { type: "p", text: "A new patient's decision process typically follows this pattern: search ('dentist near me' or '[city] family dentist'), scan the first 3-5 results in the Google Local Pack, compare star ratings and review counts, read 3-5 most recent reviews, check if the practice responds to reviews, then book or move on." },
-        { type: "p", text: "A practice with 15 reviews and a 4.9-star average will often lose to a practice with 80 reviews and a 4.5-star average - because patients assume more reviews means more experience and a more representative sample." },
+        { type: "p", text: "A rating average alone does not explain patient choice. Consider recent feedback, the services offered and the practical experience of booking an appointment." },
         { type: "h2", text: "HIPAA and Review Responses: What You Need to Know" },
         {
             type: "summary",
@@ -141,12 +139,13 @@ export const post10: BlogPost = {
         },
         { type: "p", text: "This is the biggest compliance concern dental practices have about responding to reviews online. The key rule: never confirm or deny that a reviewer is a patient, and never discuss any aspect of treatment, diagnosis, or medical history in a public response - even if the patient disclosed it in their review." },
         { type: "warning", text: "If a patient writes 'I came in for a root canal and it hurt', do NOT respond 'We're sorry the root canal was painful, [Name].' That response confirms they were a patient and had a specific procedure - both of which are PHI. Instead, respond in general terms: 'We're sorry to hear about your experience. Patient comfort is our priority, and we'd welcome the chance to discuss this privately.'" },
-        { type: "h3", text: "HIPAA-Safe Response Template" },
-        { type: "quote", text: "Thank you for sharing your experience. Patient comfort and satisfaction are our top priorities, and we're sorry to hear your visit fell short of expectations. We'd welcome the opportunity to address your concerns privately - please contact our office at [phone] and ask for [practice manager]. We'd love to hear from you." },
+        { type: "cta", ctaLabel: "HHS: dental review-response enforcement case", ctaHref: "https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/new-vision/index.html" },
+        { type: "h3", text: "Example Response for Privacy Review" },
+        { type: "quote", text: "Thank you for the feedback. Please contact our office at [phone] and ask for [practice manager] to discuss any concerns privately." },
         { type: "h2", text: "Where Most Dental Negative Reviews Come From" },
         {
             type: "summary",
-            text: "Wait times, billing confusion, and front-desk tone drive most one- and two-star dental reviews - patterns echoed in industry reputation research, not Zyene Reviews proprietary patient data.",
+            text: "Group your own feedback by topic. Scheduling, billing and communication are useful categories to investigate, rather than assumptions about the causes of every low rating.",
         },
         { type: "p", text: "Across dental practices, the top sources of negative reviews are consistent:" },
         { type: "ul", items: [
@@ -159,7 +158,7 @@ export const post10: BlogPost = {
         { type: "h2", text: "How to Get More Patient Reviews" },
         {
             type: "summary",
-            text: "Text a few hours after appointments, email patients without mobiles, weave asks into recall outreach, and funnel satisfied new patients after visit two. Zyene Reviews automates those sends once your PMS or list is connected.",
+            text: "Text a few hours after appointments, email patients without mobiles, weave asks into recall outreach, and funnel satisfied new patients after visit two. Import a consented customer list or verify a supported integration; do not assume your practice-management system connects natively.",
         },
         { type: "ol", items: [
             "Post-checkout text: Send a review request 2-3 hours after checkout when satisfaction is highest. Keep it simple and direct.",
@@ -170,14 +169,13 @@ export const post10: BlogPost = {
         { type: "h2", text: "Managing Reviews Across Multiple Platforms" },
         {
             type: "summary",
-            text: "Google remains the priority for local discovery, but Healthgrades and Facebook still surface for some patients. Zyene Reviews centralizes monitoring so nothing sits unreplied while you chairside.",
+            text: "Google remains the priority for local discovery, but Healthgrades and Facebook still surface for some patients. Check those sites separately where needed. Zyene connects Google, Facebook and Yelp; it does not provide a native Healthgrades connection.",
         },
         { type: "p", text: "Dental patients leave reviews across Google, Healthgrades, and Facebook - not just Google. While Google is the most important for local search ranking, the others matter for specific patient segments." },
         { type: "p", text: "Managing all platforms from a single dashboard - rather than logging into each separately - saves significant time and ensures no review goes unresponded to." },
         { type: "cta", ctaLabel: "See how Zyene Reviews works for dental practices →", ctaHref: "/industries/dental" },
     ],
 };
-
 export const post11: BlogPost = {
     slug: "true-cost-of-bad-online-reputation",
     title: "The True Cost of a Bad Online Reputation for Local Businesses",
@@ -185,7 +183,7 @@ export const post11: BlogPost = {
     pillar: "reputation-management",
     pillarLabel: "Reputation Management",
     publishedAt: "2026-05-19",
-    dateModified: "2026-05-24",
+    dateModified: "2026-10-11",
     readMinutes: 8,
     author: { name: "Chris Alvarez", role: "Industry Research" },
     metaTitle: "True Cost of Bad Online Reputation (Local Business)",
@@ -258,7 +256,7 @@ export const post11: BlogPost = {
             text: "Compare annual reputation risk you calculated to Starter on Zyene Reviews at $29.99 per month - about $360 per year. The question is active risk today, not whether software sounds nice.",
         },
         { type: "p", text: "Compare the subscription cost with observed time savings and service improvements. Starter at $29.99 per month totals $359.88 over twelve months before applicable taxes. No number of recovered customers, prevented negative reviews, or financial return is guaranteed." },
-        { type: "p", text: "If you are on an enterprise stack billed at $299+/mo annually, compare that spend to review-first alternatives in our Birdeye pricing breakdown before you renew - vendor pricing may vary; use your actual invoice, not list prices alone." },
+        { type: "p", text: "If you use an enterprise stack, compare your actual quoted cost and required products with review-focused alternatives before renewing." },
         { type: "p", text: "The better question isn't 'can we afford reputation management?' - it's 'what is our active reputation risk today, and what's it costing us?'" },
         { type: "cta", ctaLabel: "Protect your revenue with Zyene Reviews' Negative Feedback Shield →", ctaHref: "/features" },
     ],

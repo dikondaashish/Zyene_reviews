@@ -8,7 +8,7 @@ export const post15: BlogPost = {
     pillar: "responding-to-reviews",
     pillarLabel: "Responding to Reviews",
     publishedAt: "2026-09-05",
-    dateModified: "2026-09-05",
+    dateModified: "2026-10-11",
     readMinutes: 8,
     author: { name: "Jamie Rivera", role: "Product Marketing" },
     metaTitle: "Positive Review Responses (15 Examples)",
@@ -73,8 +73,8 @@ export const post15: BlogPost = {
             type: "ul",
             items: [
                 "**Retention:** A personalized thank-you makes the customer feel valued, increasing the likelihood of a return visit.",
-                "**Acquisition:** 93% of consumers read reviews before visiting a local business (BrightLocal, 2024). They read your replies, too, to gauge how you treat people.",
-                "**Relevance:** Naturally incorporating keywords in your response helps search engines understand what you do."
+                "**Acquisition:** Prospective customers can read your replies to understand how you respond to feedback.",
+                "**Clarity:** Refer to relevant service details naturally when appropriate; avoid stuffing search keywords into replies."
             ]
         },
         {
@@ -131,7 +131,7 @@ export const post15: BlogPost = {
         },
         {
             type: "summary",
-            text: "Manually writing a unique response for every review is time-consuming. AI review reply generators can draft personalized responses in seconds, ensuring you maintain a 100% response rate without sounding robotic."
+            text: "Manually writing a unique response for every review is time-consuming. AI review reply generators can draft personalized responses in seconds, helping your team keep up with replies. Review drafts for accuracy and tone before publishing."
         },
         {
             type: "p",

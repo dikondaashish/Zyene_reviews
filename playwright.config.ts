@@ -31,7 +31,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `pnpm dev --port ${PORT}`,
+    // CI can point this at `pnpm start` to test a production build instead.
+    command: process.env.PLAYWRIGHT_WEB_SERVER_COMMAND ?? `pnpm dev --port ${PORT}`,
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

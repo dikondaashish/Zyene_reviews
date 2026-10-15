@@ -196,7 +196,7 @@ export const post7: BlogPost = {
     pillar: "local-seo",
     pillarLabel: "Local SEO",
     publishedAt: "2026-04-21",
-    dateModified: "2026-05-24",
+    dateModified: "2026-10-11",
     readMinutes: 10,
     author: { name: "David Kim", role: "Customer Success" },
     metaTitle: "Google Business Profile Optimization Checklist 2026",
@@ -291,8 +291,8 @@ export const post7: BlogPost = {
             text: "Seed and answer real FAQs - parking, insurance, reservations - so shoppers do not guess. Owner answers rank prominently and can include natural keywords without stuffing.",
         },
         { type: "ul", items: [
-            "Seed common questions: Use a secondary account or ask a team member to submit the most frequently asked questions - do you take reservations? Is there parking? Do you accept insurance?",
-            "Answer all questions: As the business owner, your answers appear prominently. Use keyword-rich answers.",
+            "Document common questions: Answer real customer questions about reservations, parking and insurance on your website and available profile fields.",
+            "Answer clearly: Keep public answers factual and useful. Avoid manufacturing questions or stuffing keywords.",
             "Monitor regularly: Anyone can add questions. Check weekly and answer promptly.",
         ]},
         { type: "h2", text: "Section 7: Google Posts" },
@@ -301,26 +301,26 @@ export const post7: BlogPost = {
             text: "Weekly posts with photos and CTAs - Book, Order, Learn More - signal an active profile. Rotate offers, events, and product highlights so the listing never looks abandoned.",
         },
         { type: "ul", items: [
-            "Post frequency: Publish at least 1 Google Post per week. Posts expire after 7 days but contribute to profile freshness signals.",
+            "Post frequency: Use a schedule you can maintain and remove outdated offers. Check the dates and visibility of each post rather than assuming a universal expiry or ranking benefit.",
             "Post types: What's New, Event, Offer, Product - vary your post types.",
             "Include CTAs: Every post should have a call-to-action: Learn More, Book, Order, Sign Up.",
             "Include photos: Posts with photos get significantly more clicks.",
         ]},
-        { type: "h2", text: "Section 8: Messaging and Booking" },
+        { type: "h2", text: "Section 8: Contact and Booking" },
         {
             type: "summary",
-            text: "Turn on messaging and booking links only if you will respond within a day. Unanswered chats hurt the same way ignored reviews do - better to disable than look unavailable.",
+            text: "Make the phone, website and booking destinations useful and accurate. The former Google Business Profile chat feature was retired; verify any current contact option before relying on it.",
         },
         { type: "ul", items: [
-            "Enable messaging: Turn on Google Business Messages if you have capacity to respond promptly (within 24 hours).",
+            "Contact channels: Confirm the contact options currently available for your country and business category.",
             "Booking button: If you use an online booking system (Acuity, OpenTable, etc.), add the booking URL to your profile.",
-            "Response commitment: Only enable messaging if you'll actually respond. Unanswered messages hurt your profile score.",
+            "Response commitment: Assign someone to answer enquiries received through the channels you publish.",
         ]},
+        { type: "cta", ctaLabel: "Google: changes to chat and call history", ctaHref: "https://support.google.com/business/answer/14919056" },
         { type: "tip", text: "Use Zyene Reviews' GBP keyword performance dashboard to see which search queries are driving impressions and clicks to your Google Business Profile. This data shows you where to focus your optimization effort." },
         { type: "cta", ctaLabel: "Track your GBP keyword performance with Zyene Reviews →", ctaHref: "/features" },
     ],
 };
-
 export const post8: BlogPost = {
     slug: "how-reviews-impact-local-map-pack-ranking",
     title: "How Reviews Impact Your Google Local Map Pack Ranking",

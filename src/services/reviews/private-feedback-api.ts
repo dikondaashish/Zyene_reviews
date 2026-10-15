@@ -54,8 +54,6 @@ export async function handlePrivateFeedbackPost(request: Request) {
         }
 
         const supabase = createAdminClient();
-        let businessName: string | null | undefined;
-        let customerName: string | null | undefined;
 
         const { data: reviewRequest, error: requestErr } = await supabase
             .from("review_requests")
@@ -68,8 +66,8 @@ export async function handlePrivateFeedbackPost(request: Request) {
             return NextResponse.json({ error: "Invalid review request" }, { status: 404 });
         }
         const businessData = reviewRequest.businesses as { name?: string } | null;
-        businessName = businessData?.name;
-        customerName = reviewRequest.customer_name;
+        const businessName = businessData?.name;
+        const customerName = reviewRequest.customer_name;
 
         const { data: bizPlanRow } = await supabase
             .from("businesses")

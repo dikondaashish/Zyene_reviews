@@ -91,7 +91,7 @@ export function ContentRenderer({ sections, className }: { sections: ContentSect
                                 <p className="text-sm font-semibold text-foreground">{section.ctaLabel}</p>
                                 <Button size="sm" className="gap-2 rounded-lg" asChild>
                                     <Link href={section.ctaHref === "/signup" || !section.ctaHref ? SIGNUP_URL : section.ctaHref} className="shrink-0" {...(section.ctaHref === "/signup" || !section.ctaHref ? { "data-track": "trial", "data-track-location": "content-cta" } : {})}>
-                                        Get Started <ArrowRight className="size-3.5" />
+                                        {section.ctaHref?.startsWith("https://") ? "Read source" : "Get Started"} <ArrowRight className="size-3.5" />
                                     </Link>
                                 </Button>
                             </div>

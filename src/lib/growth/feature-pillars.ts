@@ -71,7 +71,7 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
             "Branded review requests by SMS, email, shareable link, or QR code",
             "Optional follow-up reminders for customers who have not engaged",
             "Private feedback and team alerts for timely service recovery",
-            "Fair public review requests with no review gating",
+            "Rating-dependent public-review and private-feedback paths",
             "Use the API or a secure webhook to trigger requests from your workflow",
         ],
         cta: { label: "See pricing", href: "/pricing" },
@@ -80,13 +80,13 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
     {
         slug: "competitor-tracking",
         title: "Competitor Intelligence",
-        tagline: "Know exactly where you stand in your market",
+        tagline: "Compare competitor ratings and review activity with your own",
         metaTitle: "Competitor Tracking",
         metaDescription:
-            "Track competitor ratings, review volume, and trends with AI market briefs and alerts on every paid plan. See where you rank locally.",
+            "Track competitor Google ratings, review counts and snapshot changes. Review provider freshness, alerts and AI market briefs on paid plans.",
         bullets: [
-            "Track up to 10 competitors per location",
-            "Compare review volume, average rating, and response rate",
+            "Track competitors for your active business location",
+            "Compare total reviews, average rating and available snapshot changes",
             "Spot changes in nearby competitors’ review activity",
             "Use competitor context alongside your own review trends",
             "Keep local comparison in view as you plan improvements",
@@ -99,12 +99,12 @@ export const FEATURE_PILLARS: FeaturePillarPage[] = [
         tagline: "Understand and improve your Google Business Profile",
         metaTitle: "Local SEO Dashboard",
         metaDescription:
-            "GBP keyword performance, search insights, and actionable SEO fixes - included on Starter, not locked behind enterprise tiers.",
+            "Review Google Business Profile performance, search-keyword impressions, profile audits and content drafts. Available data depends on Google access.",
         bullets: [
             "Google Business Profile keyword performance tracking",
             "Keyword insights: what customers search to find you",
-            "Photo, post, and Q&A management from one dashboard",
-            "Local pack ranking estimation for your top keywords",
+            "Profile audits and AI-assisted content drafts for human review",
+            "Search and Maps performance from available Google data",
             "Actionable recommendations to improve your GBP score",
         ],
         cta: { label: "See pricing", href: "/pricing" },

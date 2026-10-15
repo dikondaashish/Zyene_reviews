@@ -1,3 +1,4 @@
+import { TRIAL_DETAILS } from "@/lib/marketing/trial-copy";
 export const PRICING_FAQS = [
     {
         question: "Are automatic Google replies included?",
@@ -5,13 +6,12 @@ export const PRICING_FAQS = [
     },
     {
         question: "How does the 7-day free trial work?",
-        answer:
-            "Sign up for Starter or Professional and get full access to every feature for 7 days. Cancel before the trial ends and you won't be charged. No credit card lock-in, no annual contracts - cancel anytime from your billing settings.",
+        answer: TRIAL_DETAILS,
     },
     {
         question: "What happens at the end of the trial?",
         answer:
-            "After 7 days your subscription starts automatically. You'll receive an email reminder 24 hours before your trial ends. Cancel anytime before that and you won't be charged anything.",
+            "Your selected subscription bills automatically after the trial unless you cancel in Billing. Check the price, billing period and any special-offer terms shown at checkout.",
     },
     {
         question: "Can I switch plans?",
@@ -36,7 +36,7 @@ export const PRICING_FAQS = [
     {
         question: "Is there a free plan?",
         answer:
-            "There is no ongoing free tier, but all new accounts get a 7-day full-access trial. After the trial, a paid plan is required to continue using the platform.",
+            "There is no ongoing free tier, but eligible new subscriptions include a 7-day trial with the selected plan’s limits. After the trial, a paid plan is required to continue using the platform.",
     },
     {
         question: "Can I cancel anytime?",
@@ -45,16 +45,4 @@ export const PRICING_FAQS = [
     },
 ] as const;
 
-export const COMPARISON_ROWS = [
-    { feature: "Starting price (monthly)", zyene: "$29.99/mo", birdeye: "$299/mo", podium: "$399/mo", nicejob: "$75/mo" },
-    { feature: "Annual contract required", zyene: false, birdeye: true, podium: true, nicejob: false },
-    { feature: "7-day free trial", zyene: true, birdeye: false, podium: false, nicejob: true },
-    { feature: "AI reply suggestions", zyene: true, birdeye: "Add-on", podium: "Add-on", nicejob: false },
-    { feature: "Automatic Google replies", zyene: "Included", birdeye: "Available; confirm plan", podium: "Confirm plan and scope", nicejob: "Pro plan" },
-    { feature: "Negative Feedback Shield", zyene: true, birdeye: false, podium: false, nicejob: true },
-    { feature: "SMS review requests", zyene: true, birdeye: true, podium: true, nicejob: true },
-    { feature: "Competitor tracking", zyene: true, birdeye: "Premium tiers", podium: false, nicejob: false },
-    { feature: "GBP SEO keyword dashboard", zyene: true, birdeye: "Enterprise", podium: false, nicejob: false },
-    { feature: "Developer REST API (included)", zyene: true, birdeye: "Enterprise", podium: "Enterprise", nicejob: false },
-    { feature: "Embeddable review widgets", zyene: true, birdeye: true, podium: false, nicejob: true },
-] as const;
+export { VERIFIED_COMPARISON_ROWS as COMPARISON_ROWS } from "@/lib/comparisons/verified-competitor-facts";

@@ -37,12 +37,12 @@ describe("rendered marketing page titles", () => {
     {
       route: "/blog/birdeye-alternatives-for-local-businesses",
       getRawTitle: () => BLOG_POST_MAP["birdeye-alternatives-for-local-businesses"].metaTitle,
-      expectedRaw: "5 Cheaper Birdeye Alternatives (2026)",
+      expectedRaw: "Birdeye Alternatives Compared (2026)",
     },
     {
       route: "/resources/local-seo-checklist",
       getRawTitle: () => RESOURCE_MAP["local-seo-checklist"].metaTitle,
-      expectedRaw: "Local SEO Checklist 2026 (Free 40-Point PDF)",
+      expectedRaw: "Local SEO Checklist 2026: 40+ Tasks",
     },
     {
       route: "/resources/negative-review-templates",

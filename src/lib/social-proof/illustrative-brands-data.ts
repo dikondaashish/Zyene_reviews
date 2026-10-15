@@ -5,9 +5,10 @@ export interface IllustrativeBrand {
 }
 
 /**
- * Well-known consumer brands shown purely to illustrate the *type* of local business
- * Zyene is built for (by industry). These are NOT Zyene customers, partners, or endorsers -
- * render with the disclaimer in IllustrativeBrandsSection, never as a "trusted by" claim.
+ * The owner reports genuine customer relationships and logo permissions.
+ * Corporate versus franchise/location scope and approved wording still need
+ * per-brand verification. Withhold endorsements until that scope is verified;
+ * private relationship and permission records must remain outside Git.
  */
 export const ILLUSTRATIVE_BRANDS: IllustrativeBrand[] = [
     // Google's logo service resolves Dunkin's www host; the bare domain returns 404.

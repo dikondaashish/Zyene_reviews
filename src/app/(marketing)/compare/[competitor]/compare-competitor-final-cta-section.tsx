@@ -12,7 +12,7 @@ export function CompareCompetitorFinalCtaSection({ data }: { data: CompetitorDat
                         Try Zyene Reviews free for 7 days
                     </h2>
                     <p className="text-xl text-muted-foreground mb-10">
-                        No annual contract. No credit card lock-in.<br />
+                        No annual contract. Card required. Your selected plan bills automatically after the trial unless you cancel.<br />
                         Cancel before day 7 - pay nothing.
                     </p>
                     <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl" asChild>

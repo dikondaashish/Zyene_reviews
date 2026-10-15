@@ -22,7 +22,7 @@ export function IndustriesIndustryFinalCtaSection({ data }: { data: IndustryData
                 </h2>
                 <p className="text-xl text-muted-foreground mb-10">
                     Start your 7-day free trial today.<br />
-                    No credit card lock-in. Cancel before day 7 and pay nothing.
+                    Card required. Your selected plan bills automatically after the trial unless you cancel. Cancel before day 7 and pay nothing.
                 </p>
                 <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl" asChild>
                     <Link href={SIGNUP_URL} data-track="trial" data-track-location="industry-cta">
