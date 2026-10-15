@@ -20,7 +20,7 @@ export function GoogleSeoAeoBottomSection({ content }: { content: GoogleSeoAeoCo
                         Draft a better description and posts with AI. Nothing is published until you review it.
                     </p>
                 </div>
-                <div className="grid items-start gap-6 xl:grid-cols-2">
+                <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-2">
                     <div id="description-optimizer" className="scroll-mt-24">
                         <DescriptionOptimizerCard
                             businessId={content.businessId}

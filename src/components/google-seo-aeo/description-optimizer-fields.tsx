@@ -33,7 +33,7 @@ export function DescriptionOptimizerFields({
 }: DescriptionOptimizerFieldsProps) {
     return (
         <CardContent className="space-y-5">
-            <div className="grid gap-5 xl:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
                 <div className="space-y-2">
                     <p className="text-sm font-medium">Your current business description</p>
                     <Textarea value={currentDescription} readOnly rows={4} className="bg-muted/30" />
@@ -79,8 +79,8 @@ export function DescriptionOptimizerFields({
                 <p className="text-xs font-medium text-muted-foreground">Keywords to include naturally</p>
                 <div className="flex flex-wrap gap-1.5">
                     {topKeywords.slice(0, 8).map((keyword) => (
-                        <Badge key={keyword} variant="secondary" className="text-[11px]">
-                            {keyword}
+                        <Badge key={keyword} variant="secondary" className="max-w-full text-[11px]" title={keyword}>
+                            <span className="truncate">{keyword}</span>
                         </Badge>
                     ))}
                 </div>

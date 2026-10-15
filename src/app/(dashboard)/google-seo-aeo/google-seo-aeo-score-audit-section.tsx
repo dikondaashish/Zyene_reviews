@@ -48,7 +48,7 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
         <div className="space-y-6">
             <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div className="min-w-0">
-                    <h1 id="google-visibility-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                    <h1 id="google-visibility-title" className="text-2xl font-bold tracking-tight sm:text-3xl">
                         Google SEO &amp; AI visibility
                     </h1>
                     <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted-foreground">

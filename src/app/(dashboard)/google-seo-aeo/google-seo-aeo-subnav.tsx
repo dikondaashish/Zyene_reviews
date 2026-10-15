@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { SubnavScrollContainer } from "./subnav-scroll-container";
 import { isLiveCrawlingEnabled, isLiveAlertingEnabled } from "@/lib/features/aeo-surfaces";
 
 const TABS = [
@@ -15,8 +16,8 @@ const TABS = [
 /** Shared across every google-seo-aeo page - none of them linked to each other before this. */
 export function GoogleSeoAeoSubnav({ active }: { active: (typeof TABS)[number]["href"] }) {
     return (
-        <nav
-            aria-label="Google visibility sections"
+        <SubnavScrollContainer
+            label="Google visibility sections"
             className="max-w-full overflow-x-auto rounded-lg border bg-muted/35 p-1"
         >
             <div className="flex min-w-max gap-1">
@@ -41,6 +42,6 @@ export function GoogleSeoAeoSubnav({ active }: { active: (typeof TABS)[number]["
                     </Link>
                 ))}
             </div>
-        </nav>
+        </SubnavScrollContainer>
     );
 }
