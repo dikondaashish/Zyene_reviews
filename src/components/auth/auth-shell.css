@@ -116,3 +116,8 @@
   .auth-footer { gap: 10px 14px; padding: 8px 16px 4px; font-size: 11px; }
   .auth-footer nav { gap: 10px; }
 }
+/* Last so it wins over the compact rules above: copyright + three legal links stay on one line at 320px. */
+@media (max-width: 374px) {
+  .auth-footer { gap: 4px 10px; padding-inline: 12px; }
+  .auth-footer nav { gap: 8px; }
+}
