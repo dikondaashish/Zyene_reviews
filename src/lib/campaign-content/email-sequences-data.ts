@@ -48,8 +48,8 @@ export const TRIAL_NURTURE_STEPS: GrowthEmailStep[] = [
         key: "trial_day6_case_study",
         dayOffset: 6,
         delayHours: 120,
-        subject: "Day 6: How Sunrise Dental grew from 23 to 89 Google reviews",
-        preview: "A real local business playbook you can copy this week.",
+        subject: "Day 6: How local businesses grow customer reviews",
+        preview: "An illustrative case study on collecting customer feedback.",
     },
     {
         key: "trial_day7_upgrade",

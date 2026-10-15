@@ -43,17 +43,17 @@ export const post19: BlogPost = {
         { label: "Start a 7-Day Free Trial", href: SIGNUP_URL },
     ],
     faqs: [
-        { question: "How much does Podium cost per month in 2026?", answer: "Podium typically starts around $399 per month for its Core/Essentials tier and scales to $599+ per month for Pro plans, usually requiring an annual commitment ($4,788 to $7,188+ annually). Podium does not publish flat public pricing on its website and requires a sales consultation. Zyene Reviews publishes transparent monthly plans starting at $29.99 per month with no annual contract." },
+        { question: "How much does Podium cost per month in 2026?", answer: "Podium does not publish prices; third-party sources report about $399 per month and up, typically requiring an annual commitment. Podium does not publish flat public pricing on its website and requires a sales consultation. Zyene Reviews publishes transparent monthly plans starting at $29.99 per month with no annual contract. Pricing last reviewed: October 2026." },
         { question: "Does Podium require an annual contract?", answer: "In most cases, yes. Standard Podium agreements require a 12-month contract billed either annually upfront or monthly with an annual commitment. Many contracts include auto-renewal clauses requiring written notice 30 to 60 days before the contract end date. In contrast, Zyene Reviews operates month-to-month with no long-term lock-in." },
         { question: "What are the common hidden costs associated with Podium?", answer: "Frequent additional costs reported by Podium customers include onboarding or implementation fees ($250 to $500), carrier pass-through fees and 10DLC registration costs for SMS, charges for additional user seats or phone lines, and charges for higher-volume text messaging tiers. Always request a full, itemized quote before signing." },
         { question: "Where does Podium outperform Zyene Reviews?", answer: "Podium is built as a complete customer communication and conversational commerce suite. It outperforms Zyene Reviews for large multi-location businesses, multi-rooftop auto dealerships, and retailers that need Text-to-Pay invoicing, VoIP team phone systems, website live-chat routing, and complex enterprise CRM integrations like Reynolds & Reynolds or CDK." },
-        { question: "Where does Zyene Reviews outperform Podium for local businesses?", answer: "Zyene Reviews is specifically designed for local service businesses and owner-operators who want higher star ratings, steady Google reviews, and protection against public negative feedback without paying $400+/month. Zyene includes automated SMS/email requests, AI review response drafts on standard plans, Negative Feedback Shield, and competitor tracking at roughly one-tenth the annual cost." },
+        { question: "Where does Zyene Reviews outperform Podium for local businesses?", answer: "Zyene Reviews is specifically designed for local service businesses and owner-operators who want higher star ratings, steady Google reviews, and protection against public negative feedback. Podium does not publish prices; third-party sources report about $399 per month and up. Zyene includes automated SMS/email requests, AI review response drafts on standard plans, Negative Feedback Shield, and competitor tracking at roughly one-tenth the annual cost." },
         { question: "Can I switch from Podium to Zyene Reviews without losing existing reviews?", answer: "Yes. Your Google, Facebook, and Yelp reviews reside on third-party platforms, not inside Podium. Switching software never deletes or affects your existing public reviews. You simply connect your profiles to Zyene Reviews, import your customer list, and continue sending review requests seamlessly." },
     ],
     body: [
         {
             type: "summary",
-            text: "Short answer: Podium generally starts around $399 to $599+ per month on 12-month annual contracts ($4,788+ per year) and includes full multi-channel communication like webchat, phones, and Text-to-Pay. Zyene Reviews starts at $29.99 per month month-to-month for automated Google review generation, AI reply drafts, Negative Feedback Shield, and competitor benchmarking. If you primarily need reviews and reputation protection, Zyene Reviews delivers equivalent results at roughly one-tenth the cost.",
+            text: "Short answer: Podium does not publish prices; third-party sources report about $399 per month and up on 12-month annual contracts, including full multi-channel communication like webchat, phones, and Text-to-Pay. Zyene Reviews starts at $29.99 per month month-to-month for automated Google review generation, AI reply drafts, Negative Feedback Shield, and competitor benchmarking. Pricing last reviewed: October 2026.",
         },
         {
             type: "image",
@@ -71,11 +71,11 @@ export const post19: BlogPost = {
         },
         {
             type: "p",
-            text: "With that expanded scope came enterprise pricing. Today, many local business owners—contractors, auto mechanics, dental practices, med spas, and restaurant owners—find themselves paying upwards of $5,000 per year for features they rarely touch, simply to send automated text messages requesting Google reviews.",
+            text: "With that expanded scope came enterprise pricing. Today, many local business owners—contractors, auto mechanics, dental practices, med spas, and restaurant owners—find themselves paying for features they rarely touch, simply to send automated text messages requesting Google reviews.",
         },
         {
             type: "warning",
-            text: "Podium pricing is quote-based and customized by industry, location count, and package terms. The figures in this guide reflect standard market quotes, user-reported contract averages in 2026, and public industry data. Always request a binding itemized proposal from Podium. Zyene Reviews rates are publicly posted at /pricing.",
+            text: "Podium does not publish prices; third-party sources report about $399 per month and up. Pricing is quote-based and customized by industry, location count, and package terms. The figures in this guide reflect third-party reporting and public industry data. Always request a binding itemized proposal from Podium. Pricing last reviewed: October 2026. Zyene Reviews rates are publicly posted at /pricing.",
         },
         {
             type: "h2",
@@ -90,9 +90,9 @@ export const post19: BlogPost = {
             table: {
                 headers: ["Feature / Metric", "Podium (Typical 2026 Quote)", "Zyene Reviews (Public Plans)"],
                 rows: [
-                    ["Starting Monthly Price", "~$399 / month", "$29.99 / month (Starter)"],
+                    ["Starting Monthly Price", "Quote-based (~$399/mo est.)", "$29.99 / month (Starter)"],
                     ["Contract Commitment", "12-month annual agreement typical", "Month-to-month, cancel anytime"],
-                    ["Annual Upfront Commitment", "$4,788 – $7,188+", "None (billed monthly)"],
+                    ["Annual Upfront Commitment", "Annual commitment typical", "None (billed monthly)"],
                     ["Implementation / Setup Fee", "Often $250 – $500", "$0 (self-serve setup in 5 mins)"],
                     ["Automated SMS Review Requests", "Included (tiered messaging limits)", "Included (50 SMS + 500 email on Starter)"],
                     ["Negative Feedback Shield", "Not available (direct links only)", "Included on all paid plans"],
@@ -115,14 +115,14 @@ export const post19: BlogPost = {
         },
         {
             type: "p",
-            text: "Because Podium removed transparent public pricing tables from its main website, obtaining exact numbers requires scheduling a sales demo. However, contract patterns across SMB industries in 2026 generally follow three core tiers:",
+            text: "Podium does not publish prices; third-party sources report about $399 per month and up. Obtaining exact numbers requires scheduling a sales demo. However, reported package patterns across SMB industries in 2026 generally follow three core tiers:",
         },
         {
             type: "ul",
             items: [
-                "Core / Essentials (~$399/mo): Basic review requests, two-way SMS messaging, simple webchat, and a single phone line. Typically billed annually at roughly $4,788/year.",
-                "Pro (~$599/mo): Adds automated review workflows, AI message drafting, personalized SMS campaigns, and integrations with standard industry software. Annual commitment of ~$7,188/year.",
-                "Signature / Enterprise ($800–$1,200+/mo): Dedicated success manager, custom enterprise integrations, multi-location dashboards, and custom messaging volumes. Designed for automotive dealer groups and multi-regional service fleets.",
+                "Core / Essentials (~$399/mo est.): Basic review requests, two-way SMS messaging, simple webchat, and a single phone line. Typically requires an annual commitment.",
+                "Pro (~$599/mo est.): Adds automated review workflows, AI message drafting, personalized SMS campaigns, and integrations with standard industry software.",
+                "Signature / Enterprise: Dedicated success manager, custom enterprise integrations, multi-location dashboards, and custom messaging volumes.",
             ],
         },
         {
@@ -205,7 +205,7 @@ export const post19: BlogPost = {
         },
         {
             type: "p",
-            text: "Both Podium and Zyene Reviews support automated SMS and email review collection. Research shows that sending a text message within 1 to 2 hours of service completion delivers the highest conversion rate—often between 25% and 40% when the message includes a direct, one-click review link.",
+            text: "Both Podium and Zyene Reviews support automated SMS and email review collection. Sending a text message promptly within 1 to 2 hours of service completion delivers the highest conversion rate, especially when the message includes a direct, one-click review link.",
         },
         {
             type: "p",
@@ -247,7 +247,7 @@ export const post19: BlogPost = {
                     ["Dental Practice / Medical Clinic", "Zyene Reviews", "Requires compliant review collection without enterprise software bloat."],
                     ["Salon, Spa, or Wellness Studio", "Zyene Reviews", "Needs simple review collection and competitor tracking on a lean budget."],
                     ["Franchise with 50+ Units & Dedicated CX Team", "Podium or Birdeye", "Benefits from enterprise customer journey mapping and custom integrations."],
-                    ["Small Business Owner Tired of $400/mo Software Bills", "Zyene Reviews", "Saves over $4,000 annually while maintaining identical review growth."],
+                    ["Small Business Owner Tired of High Software Bills", "Zyene Reviews", "Saves significant software budget while maintaining steady review growth."],
                 ],
             },
         },

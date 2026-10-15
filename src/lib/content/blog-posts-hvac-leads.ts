@@ -50,7 +50,7 @@ export const post22: BlogPost = {
         },
         {
             question: "Why do Google Maps leads convert better than Google Ads clicks?",
-            answer: "Google Maps leads carry higher buyer intent because homeowners search during active emergencies (e.g., broken AC or furnace failure) and evaluate social proof—such as star rating, review recency, and technician photos—before calling. Studies show organic Maps calls close at 60% to 75%, compared to 15% to 25% for paid PPC landing pages.",
+            answer: "Google Maps leads carry higher buyer intent because homeowners search during active emergencies (e.g., broken AC or furnace failure) and evaluate social proof—such as star rating, review recency, and technician photos—before calling. Organic Maps calls typically close at significantly higher rates than paid PPC landing pages because customers have already vetted your reputation before dialing.",
         },
         {
             question: "What is the best primary Google Business Profile category for HVAC contractors?",
@@ -66,13 +66,13 @@ export const post22: BlogPost = {
         },
         {
             question: "How can HVAC technicians help collect more Google reviews?",
-            answer: "Equip service technicians with a simple closing script and automated post-job SMS triggers. When a technician explains that customer feedback directly impacts their performance and customer satisfaction, homeowners are 3x more likely to click the direct review link sent shortly after the appointment.",
+            answer: "Equip service technicians with a simple closing script and automated post-job SMS triggers. When a technician explains that customer feedback directly impacts their performance and customer satisfaction, homeowners are significantly more likely to click the direct review link sent shortly after the appointment.",
         },
     ],
     body: [
         {
             type: "summary",
-            text: "Short answer: HVAC contractors can generate high-converting, inbound leads without paid ads by dominating the Google Maps Local 3-Pack. The blueprint requires precise Google Business Profile category mapping, automated post-service SMS review requests to maintain steady velocity (3–5 reviews weekly), and protecting star ratings with private feedback routing. Organic Maps calls convert up to 3x higher than paid clicks at zero cost per lead.",
+            text: "Short answer: HVAC contractors can generate high-converting, inbound leads without paid ads by dominating the Google Maps Local 3-Pack. The blueprint requires precise Google Business Profile category mapping, automated post-service SMS review requests to maintain steady velocity (3–5 reviews weekly), and protecting star ratings with private feedback routing. Inbound calls from Maps typically convert at much higher rates than paid clicks, with no per-click cost.",
         },
         {
             type: "image",
@@ -90,7 +90,7 @@ export const post22: BlogPost = {
         },
         {
             type: "p",
-            text: "Meanwhile, the three HVAC companies sitting in the Google Maps Local 3-Pack capture over 60% of all emergency service phone calls—completely free. When a homeowner's air conditioning unit gives out in ninety-degree heat, they do not read sponsored landing pages. They look at Google Maps, verify star ratings and recent reviews, and tap to call.",
+            text: "Meanwhile, the HVAC companies sitting in the Google Maps Local 3-Pack capture the majority of emergency service phone calls—completely free. When a homeowner's air conditioning unit gives out in ninety-degree heat, they do not read sponsored landing pages. They look at Google Maps, verify star ratings and recent reviews, and tap to call.",
         },
         {
             type: "h2",
@@ -103,11 +103,11 @@ export const post22: BlogPost = {
         {
             type: "table",
             table: {
-                headers: ["Lead Source", "Average Cost Per Lead", "Closing / Conversion Rate", "Long-Term Equity"],
+                headers: ["Lead Source", "Average Cost Per Lead", "Closing / Conversion Profile", "Long-Term Equity"],
                 rows: [
-                    ["Google Search Ads (PPC)", "$150 – $300+ per lead", "15% – 25% closing rate", "Zero (leads stop the second budget ends)"],
-                    ["Google Local Services Ads (LSA)", "$45 – $95 per charged lead", "30% – 45% closing rate", "Temporary (tied to weekly ad spend)"],
-                    ["Google Maps Local 3-Pack", "$0 per inbound call", "60% – 75% closing rate", "Permanent brand authority & compounding value"],
+                    ["Google Search Ads (PPC)", "$150 – $300+ per lead", "Lower closing rate (requires high landing page trust)", "Zero (leads stop the second budget ends)"],
+                    ["Google Local Services Ads (LSA)", "$45 – $95 per charged lead", "Moderate closing rate", "Temporary (tied to weekly ad spend)"],
+                    ["Google Maps Local 3-Pack", "$0 per inbound call", "High closing rate (pre-qualified by reviews)", "Permanent brand authority & compounding value"],
                 ],
             },
         },
@@ -200,7 +200,7 @@ export const post22: BlogPost = {
         {
             type: "ul",
             items: [
-                "Upload Real Team & Fleet Photos: Replace stock imagery with high-resolution photos of your clean, branded vans, uniformed technicians, and tidy equipment installations. Authentic photos increase call clicks by over 35%.",
+                "Upload Real Team & Fleet Photos: Replace stock imagery with high-resolution photos of your clean, branded vans, uniformed technicians, and tidy equipment installations. Authentic photos build immediate trust and encourage prospective customers to call.",
                 "Turn on Google Business Messages: Many younger homeowners prefer sending an instant text over making a phone call. Enable messaging and maintain an average response time under 10 minutes.",
                 "Add Secondary Action Links: Link your Google Business Profile directly to your online booking scheduler or emergency service form.",
                 "Deploy AI-Powered Review Responses: Respond to every review within 24 hours. Using Zyene Reviews' AI assistant, craft thoughtful, personalized responses that naturally weave in local keywords and service terms.",

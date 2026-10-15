@@ -14,7 +14,7 @@ export const post21: BlogPost = {
     author: { name: "Marcus Webb", role: "Local SEO Strategist" },
     metaTitle: "How to Ask for Reviews via Text & Email (15 Templates)",
     metaDescription:
-        "15 proven SMS and email review request templates for US businesses. Learn optimal timing, TCPA/10DLC carrier compliance, and how to double review responses.",
+        "15 proven SMS and email review request templates for US businesses. Learn optimal timing, TCPA/10DLC carrier compliance, and how to improve review response rates.",
     keywords: [
         "how to ask customers for reviews",
         "review request text message templates",

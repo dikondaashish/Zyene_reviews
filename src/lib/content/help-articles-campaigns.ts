@@ -101,7 +101,7 @@ export const camp4: HelpArticle = {
         "Configure automatic follow-up review request messages for customers who did not respond to your first SMS or email request.",
     readMinutes: 3,
     body: [
-        { type: "p", text: "A single follow-up message sent 5-7 days after the initial review request typically increases your campaign conversion rate by 30-50%. Zyene can send this automatically." },
+        { type: "p", text: "A single follow-up message sent 5-7 days after the initial review request often helps capture reviews from customers who missed the first message. Zyene can send this automatically." },
         { type: "h2", text: "Configuring Follow-Ups for a Campaign" },
         { type: "ol", items: [
             "When creating or editing a campaign, scroll to the 'Follow-Up' section.",

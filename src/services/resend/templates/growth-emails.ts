@@ -53,9 +53,8 @@ export function trialNurtureEmail({ userName, dashboardUrl, stepKey, unsubscribe
             cta: "Add competitors",
         },
         trial_day6_case_study: {
-            subject: "Day 6: How Sunrise Dental grew from 23 to 89 Google reviews",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Sunrise Dental used automated SMS requests and the Negative Feedback Shield to grow from 4.1 to 4.7 stars in 90 days - without hiring marketing staff.</p>
-<p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="https://zyenereviews.com/case-studies/sunrise-dental-austin" style="color:${EMAIL_BRAND.link};">Read the full case study →</a></p>`,
+            subject: "Day 6: How local businesses grow customer reviews",
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">See how automated SMS requests and private feedback routing help local businesses collect authentic customer feedback in our <a href="https://zyenereviews.com/case-studies/sunrise-dental-austin" style="color:${EMAIL_BRAND.link};">illustrative case study</a> (this is an illustrative example; individual results vary).</p>`,
             cta: "Go to dashboard",
         },
         trial_day7_upgrade: {
