@@ -37,6 +37,7 @@ export interface AnimatedReviewCardsProps {
     shellSubtitle?: string;
     manageAllHref?: string;
     manageAllLabel?: string;
+    reviewsHref?: string;
     classNames?: {
         container?: string;
         card?: string;

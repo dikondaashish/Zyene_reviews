@@ -20,6 +20,7 @@ interface SpotlightCardColumnProps {
     classNames?: ClassNames;
     labels?: SpotlightLabels;
     starColors: { active: string; inactive: string };
+    reviewsHref?: string;
 }
 
 export function SpotlightCardColumn({
@@ -29,6 +30,7 @@ export function SpotlightCardColumn({
     classNames,
     labels,
     starColors,
+    reviewsHref,
 }: SpotlightCardColumnProps) {
     return (
         <div className={cn("flex h-full min-h-0 flex-col p-5 md:p-6", classNames?.cardContent)}>
@@ -39,6 +41,7 @@ export function SpotlightCardColumn({
                     classNames={classNames}
                     labels={labels}
                     starColors={starColors}
+                    reviewsHref={reviewsHref}
                 />
             ) : (
                 <SpotlightBackFace review={review} theme={theme} classNames={classNames} />
@@ -61,6 +64,7 @@ export function SpotlightCardColumn({
                     classNames={classNames}
                     labels={labels}
                     starColors={starColors}
+                    reviewsHref={reviewsHref}
                 />
             ) : null}
         </div>

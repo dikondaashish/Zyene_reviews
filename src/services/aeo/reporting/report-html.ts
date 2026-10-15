@@ -1,23 +1,32 @@
-import type { AeoReportModel } from "./report-model";
-import { percent } from "./report-model";
-import { DEFAULT_AEO_REPORT_COLOR } from "./report-colors";
-
-function escapeHtml(value: string): string {
-    return value.replace(/[&<>'"]/g, (char) => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;",
-    })[char] ?? char);
-}
+import { emailLayout, emailParagraph } from "@/lib/email/email-layout";
+import { escapeHtml } from "@/lib/security/html-escape";
+import type { AeoReportModel } from "@/services/aeo/reporting/report-model";
+import { percent } from "@/services/aeo/reporting/report-model";
+import { DEFAULT_AEO_REPORT_COLOR } from "@/services/aeo/reporting/report-colors";
 
 export function renderAeoReportHtml(model: AeoReportModel): string {
-    const rows = model.topPrompts.map((row) => `<tr><td>${escapeHtml(row.prompt)}</td><td>${row.named}/${row.samples}</td></tr>`).join("");
-    const brand = model.brandLogoUrl
-        ? `<img src="${escapeHtml(model.brandLogoUrl)}" alt="${escapeHtml(model.brandName)}" height="40">`
-        : escapeHtml(model.brandName);
-    const powered = model.hidePoweredBy ? "" : "<div>Powered by Zyene Reviews</div>";
-    return `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(model.businessName)} AEO report</title>
-<style>body{font-family:Arial,sans-serif;color:#17202a;max-width:900px;margin:40px auto;padding:0 24px}header{border-bottom:3px solid ${escapeHtml(model.brandColor ?? DEFAULT_AEO_REPORT_COLOR)};padding-bottom:18px}header img{max-width:220px;object-fit:contain}h1{font-size:28px;margin:12px 0 8px}.period{color:#52606d}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}.metric{border:1px solid #d9e2ec;padding:16px}.value{font-size:24px;font-weight:700;margin-top:6px}table{width:100%;border-collapse:collapse}th,td{text-align:left;border-bottom:1px solid #d9e2ec;padding:10px 6px}footer{color:#7b8794;font-size:12px;margin-top:30px}</style></head><body>
-<header><div>${brand}</div><h1>${escapeHtml(model.businessName)} AI visibility report</h1><div class="period">${model.periodStart} through ${model.periodEnd}</div></header>
-<section class="metrics"><div class="metric">Visibility<div class="value">${percent(model.visibilityPercent)}</div></div><div class="metric">Successful samples<div class="value">${model.successfulSamples}/${model.totalSamples}</div></div><div class="metric">Owned citations<div class="value">${model.ownCitations}/${model.citations}</div></div><div class="metric">Competitor mentions<div class="value">${model.competitorMentions}</div></div><div class="metric">Technical findings<div class="value">${model.technicalFindings}</div></div></section>
-<h2>Top tracked prompts</h2><table><thead><tr><th>Prompt</th><th>Brand named</th></tr></thead><tbody>${rows || '<tr><td colspan="2">No measured prompts in this period.</td></tr>'}</tbody></table>
-<footer>Measured from stored answer-engine samples. Failed and estimated samples are excluded from visibility.${powered}</footer></body></html>`;
+    const brandColor = /^#[0-9a-f]{6}$/i.test(model.brandColor ?? "") ? model.brandColor! : DEFAULT_AEO_REPORT_COLOR;
+    const metrics = [
+        ["Visibility", percent(model.visibilityPercent)],
+        ["Successful samples", `${model.successfulSamples}/${model.totalSamples}`],
+        ["Owned citations", `${model.ownCitations}/${model.citations}`],
+        ["Competitor mentions", String(model.competitorMentions)],
+        ["Technical findings", String(model.technicalFindings)],
+    ];
+    const rows = model.topPrompts.map(row => `<tr><td style="padding:12px 8px;border-bottom:1px solid #e4e4e7;">${escapeHtml(row.prompt)}</td><td style="padding:12px 8px;border-bottom:1px solid #e4e4e7;">${row.named}/${row.samples}</td></tr>`).join("");
+    return emailLayout({
+        title: `${model.businessName} AI visibility report`,
+        preheader: `Your measured AI visibility from ${model.periodStart} through ${model.periodEnd}.`,
+        brandName: model.brandName, brandLogoUrl: model.brandLogoUrl, hidePoweredBy: model.hidePoweredBy,
+        eyebrow: "AI visibility report",
+        bodyHtml: `<div style="border-top:3px solid ${brandColor};padding-top:16px;">${emailParagraph(`${model.periodStart} through ${model.periodEnd}`)}</div>`
+            + `<table class="email-panel" role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="table-layout:fixed;background-color:#f5f5f4;margin:24px 0;">${metrics.map(([label, value]) =>
+                `<tr><td width="60%" style="padding:12px;font-size:14px;">${label}</td><td width="40%" style="padding:12px;font-weight:700;">${value}</td></tr>`).join("")}</table>`
+            + `<h2 style="font-size:18px;color:#18181b;">Top tracked prompts</h2>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;font-size:14px;text-align:left;">
+<thead><tr><th scope="col" width="70%" style="padding:12px 8px;border-bottom:1px solid #e4e4e7;">Prompt</th><th scope="col" width="30%" style="padding:12px 8px;border-bottom:1px solid #e4e4e7;">Brand named</th></tr></thead>
+<tbody>${rows || '<tr><td colspan="2" style="padding:12px 8px;">No measured prompts in this period.</td></tr>'}</tbody></table>`,
+        footerHtml: "Measured from stored answer-engine samples. Failed and estimated samples are excluded from visibility."
+            + (model.hidePoweredBy ? "" : "<p style=\"margin:12px 0 0;\">Powered by Zyene Reviews</p>"),
+    });
 }

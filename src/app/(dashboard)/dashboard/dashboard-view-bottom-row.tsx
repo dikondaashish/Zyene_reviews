@@ -49,6 +49,7 @@ export function DashboardViewBottomRow({
                             shellSubtitle={dict.dashboard.review_spotlight_desc}
                             manageAllHref="/reviews"
                             manageAllLabel={dict.dashboard.review_spotlight_manage_all}
+                            reviewsHref="/reviews"
                         />
                     </div>
                 ) : (

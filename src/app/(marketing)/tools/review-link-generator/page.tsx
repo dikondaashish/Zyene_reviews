@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { ReviewLinkGeneratorClient } from "./review-link-generator-client";
+import { ReviewLinkGeneratorGuide } from "./review-link-generator-guide";
 
 export const metadata: Metadata = mergeMarketingSocial({
-    title: "How to Get a Google Review Link (Free Generator)",
+    title: "Free Google Review Link Generator",
     description:
         "Find your business on Google Maps and generate a direct review link to share by text, email or QR code. Free Google review link generator.",
     alternates: { canonical: "https://www.zyenereviews.com/tools/review-link-generator" },
@@ -20,5 +21,10 @@ export const metadata: Metadata = mergeMarketingSocial({
 });
 
 export default function ReviewLinkGeneratorPage() {
-    return <ReviewLinkGeneratorClient />;
+    return (
+        <>
+            <ReviewLinkGeneratorClient />
+            <ReviewLinkGeneratorGuide />
+        </>
+    );
 }

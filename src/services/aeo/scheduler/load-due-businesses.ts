@@ -20,10 +20,9 @@ const AEO_ELIGIBLE_PLAN_IDS = Object.keys(PLAN_CREDIT_GRANTS_MICRO_USD);
  * aeo_credit_balances row at all because their subscription predated the
  * grant wiring. Nothing in the prompt library gates prompt creation or
  * activation by plan or by grant history, so this loader is the only place
- * that can catch it before a real run is even dispatched - bill-test.ts's own
- * hasGrantHistory check is the second, independent layer that protects the
- * CUSTOMER side of this regardless of what triggered the sample; this one
- * additionally protects the VENDOR side, by not spending on the run at all.
+ * that can catch it before a real run is even dispatched. The run planner's
+ * prepaid-balance cap is the second, independent layer: it refuses tests the
+ * org's balance cannot cover, whatever triggered the run.
  *
  * See sampling-slot.ts for the (day, hour) assignment and DEFAULT_SLOT_HOURS
  * for why this only ever fires within 1-8 UTC.

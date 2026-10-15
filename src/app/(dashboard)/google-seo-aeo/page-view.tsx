@@ -1,8 +1,5 @@
-import Link from "next/link";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
-import { Building2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Building2, Plug } from "lucide-react";
 import { loadGoogleSeoAeoPageData } from "./load-google-seo-aeo-page-data";
 import { GoogleSeoAeoScoreAuditSection } from "./google-seo-aeo-score-audit-section";
 import { GoogleSeoAeoBottomSection } from "./google-seo-aeo-bottom-section";
@@ -27,19 +24,16 @@ export default async function GoogleSeoAeoPage() {
 
     if (data.kind === "no-platform") {
         return (
-            <div className="space-y-6">
-                <h1 className="text-3xl font-bold tracking-tight">Google SEO/AEO</h1>
-                <Card>
-                    <CardContent className="py-8">
-                        <p className="text-sm text-muted-foreground">
-                            Connect Google Business Profile first to start SEO/AEO auditing.
-                        </p>
-                        <Button asChild className="mt-4">
-                            <Link href="/settings/integrations">Open Integrations</Link>
-                        </Button>
-                    </CardContent>
-                </Card>
-            </div>
+            <BusinessContextEmptyState
+                icon={Plug}
+                title="Connect Google Business Profile"
+                description="We read your Google profile to score it, find what to fix, and track how AI answers mention you."
+                hint=""
+                primaryLabel="Connect Google"
+                primaryHref="/settings/integrations"
+                secondaryLabel="Back to dashboard"
+                secondaryHref="/dashboard"
+            />
         );
     }
 

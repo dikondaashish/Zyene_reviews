@@ -1,5 +1,9 @@
-import type { Metadata } from "next";
 import { REGIONAL_COMPLIANCE_SECTIONS } from "@/lib/enterprise/compliance-data";
+
+// Rendered on both server and client — a live `new Date()` would mismatch
+// hydration when the cached HTML crosses a day boundary (Sentry ZYENE-REVIEWS-Z).
+// Bump this when the policy materially changes.
+const LAST_UPDATED = "October 12, 2026";
 
 export function PrivacyContentSection() {
     return (
@@ -8,7 +12,7 @@ export function PrivacyContentSection() {
                 <h1 className="text-4xl font-bold text-foreground mb-8">Privacy Policy</h1>
 
                 <div className="prose max-w-none prose-headings:text-foreground prose-a:text-primary hover:prose-a:brightness-90 prose-p:text-muted-foreground prose-li:text-muted-foreground">
-                    <p className="text-sm text-muted-foreground mb-8">Last Updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                    <p className="text-sm text-muted-foreground mb-8">Last Updated: {LAST_UPDATED}</p>
 
                     <p>
                         Zyene Reviews, a product of{" "}

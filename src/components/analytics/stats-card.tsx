@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingDown, TrendingUp, Minus, Sparkles } from "lucide-react";
+import { TrendingDown, TrendingUp, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface StatsCardProps {
@@ -38,7 +38,6 @@ export function StatsCard({ title, value, description, trend, isDemo, className 
                         <span className="truncate">{title}</span>
                         {isDemo && (
                             <Badge variant="secondary" className="h-5 text-[9px] uppercase tracking-wider bg-primary/10 text-primary border-none ml-2 shrink-0 flex items-center gap-1 px-1.5 py-0 font-bold">
-                                <Sparkles className="size-2.5" />
                                 Demo
                             </Badge>
                         )}

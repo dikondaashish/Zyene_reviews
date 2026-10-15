@@ -1,4 +1,4 @@
-import { Inbox, ShieldCheck, Sparkles } from "lucide-react";
+import { Inbox, Nfc, ShieldCheck } from "lucide-react";
 
 const BENEFITS = [
     {
@@ -12,7 +12,7 @@ const BENEFITS = [
         body: "A 1-3 star tap routes to private feedback, not a public review.",
     },
     {
-        icon: Sparkles,
+        icon: Nfc,
         title: "Set up for this location",
         body: "We program the NFC chip and QR code with your review link.",
     },

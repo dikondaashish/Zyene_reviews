@@ -1,15 +1,13 @@
 import {
   Activity,
-  Bot,
   Check,
   GitBranch,
   MessageSquareText,
+  Reply,
   Send,
   ShieldCheck,
-  Sparkles,
   Star,
   TrendingUp,
-  Zap,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import Link from "next/link";
@@ -32,10 +30,8 @@ export function MarketingHomeFeatureConstellation() {
   return (
     <section className="marketing-section home-feature-constellation" aria-labelledby="home-feature-heading">
       <div className="home-feature-shell">
-        <div className="home-feature-glow home-feature-glow-one" aria-hidden="true" />
-        <div className="home-feature-glow home-feature-glow-two" aria-hidden="true" />
         <div className="home-feature-heading">
-          <FeatureLabel><Zap size={14} aria-hidden="true" /> POWERFUL FEATURES</FeatureLabel>
+          <FeatureLabel>What you get</FeatureLabel>
           <h2 id="home-feature-heading">A reputation routine that keeps working.</h2>
           <p>One calm workspace for collecting feedback, replying with care, and seeing what to improve next. The sample data below illustrates the product; it is not customer results.</p>
         </div>
@@ -63,11 +59,11 @@ export function MarketingHomeFeatureConstellation() {
           </article>
 
           <article className="home-feature-card home-feature-card-ai">
-            <div className="home-feature-card-title"><Bot size={18} aria-hidden="true" /><h3>Automatic Google replies</h3></div>
+            <div className="home-feature-card-title"><Reply size={18} aria-hidden="true" /><h3>Automatic Google replies</h3></div>
             <p>Your next Google reply, taken care of. Choose eligible star ratings and a tone that sounds like your business.</p>
             <div className="home-feature-conversation">
               <div className="home-feature-message home-feature-message-customer"><MessageSquareText size={14} aria-hidden="true" /><span>“Amazing service. We’ll be back.”</span></div>
-              <div className="home-feature-message home-feature-message-ai"><Sparkles size={14} aria-hidden="true" /><span>New review → AI reply → Published</span><small>Example · Automatic mode</small></div>
+              <div className="home-feature-message home-feature-message-ai"><Reply size={14} aria-hidden="true" /><span>New review → AI reply → Published</span><small>Example · Automatic mode</small></div>
             </div>
             <Link href="/features/ai-replies#automatic-replies-heading" className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-4">See automatic replies in action →</Link>
           </article>

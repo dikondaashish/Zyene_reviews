@@ -8,6 +8,7 @@ import { MarketingHomeFeatureConstellation } from "@/components/marketing/market
 import { ProductShowcase } from "@/components/marketing/product-tour/product-showcase";
 import { MarketingScrollReveal } from "@/components/marketing/marketing-scroll-reveal";
 import { HomeLeadWizard } from "@/components/marketing/home-lead-wizard";
+import { PopularResourcesBlock } from "@/components/marketing/popular-resources-block";
 
 export function MarketingHomeClient() {
   return (
@@ -41,6 +42,7 @@ export function MarketingHomeClient() {
       <MarketingScrollReveal className="home-scroll-section" delay={140}>
         <MarketingHomeNextSteps />
       </MarketingScrollReveal>
+      <PopularResourcesBlock />
       <MarketingScrollReveal
         className="home-scroll-section"
         delay={160}

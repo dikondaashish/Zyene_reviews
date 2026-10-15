@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { ChevronDown, Sparkles } from "lucide-react";
+import { ChevronDown, Lightbulb } from "lucide-react";
 import type { SmartInsightsSuggestion } from "@/components/dashboard/smart-insights-card-types";
 
 interface SmartInsightsCardSuggestionsTabProps {
@@ -44,7 +44,7 @@ export function SmartInsightsCardSuggestionsTab({
                             >
                                 <span className="shrink-0 pt-0.5">
                                     <span className="rounded-lg bg-primary/10 flex items-center justify-center size-8">
-                                        <Sparkles
+                                        <Lightbulb
                                             className={`${ (suggestion.urgency || "").toLowerCase().includes("now") ? "text-primary" : "text-foreground" } size-4`}
                                         />
                                     </span>

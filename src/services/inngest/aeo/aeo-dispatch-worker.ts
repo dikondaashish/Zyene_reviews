@@ -10,6 +10,7 @@ import { Phase2ExtractionStore } from "@/services/aeo/extraction/phase2-extracti
 import { analyzeMentions } from "@/services/aeo/analytics/mention-analyzer";
 import { isObservation } from "@/services/aeo/engines/engine-types";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { loadAffordableTests } from "@/services/aeo/billing/aeo-balance";
 import { isLiveSamplingEnabled } from "@/lib/features/aeo-surfaces";
 import { logger } from "@/lib/logger";
 import { deliverOutboundEvent } from "@/services/aeo/integrations/deliver-outbound-event";
@@ -68,6 +69,16 @@ export const aeoDispatchWorker = inngest.createFunction(
         }
 
         const stores = getAeoStores();
+
+        // Re-checked per unit: the planner's cap cannot see a second run
+        // (scheduled + manual) spending the same balance at the same time.
+        const affordableTests = await step.run("check-balance", () =>
+            loadAffordableTests(createAdminClient(), data.organizationId)
+        );
+        if (affordableTests === 0) {
+            logger.info({ runId: data.runId, organizationId: data.organizationId }, "AEO dispatch paused: balance empty");
+            return { skipped: "insufficient_balance" as const };
+        }
 
         const outcome = await dispatchUnit(
             {

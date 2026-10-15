@@ -10,6 +10,10 @@ const LITERAL_COLOR_FILES = new Set([
   "src/lib/design/contrast.ts", "tests/unit/brand-contrast.test.ts",
   // Print-sink injection/contrast fixtures must exercise actual color literals.
   "tests/unit/customer-portal-print-color-security.test.ts",
+  // Standalone email documents and their preview gallery cannot resolve app CSS tokens.
+  "src/lib/email/email-layout.ts", "src/lib/email/review-request-layout.ts",
+  "src/lib/email/email-brand.ts",
+  "scripts/render-email-previews.ts",
 ]);
 
 const SKIP_BASENAMES = new Set([

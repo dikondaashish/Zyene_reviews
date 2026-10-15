@@ -11,7 +11,7 @@ export const post15: BlogPost = {
     dateModified: "2026-10-11",
     readMinutes: 8,
     author: { name: "Jamie Rivera", role: "Product Marketing" },
-    metaTitle: "How to Respond to Positive Google Reviews (15 Examples)",
+    metaTitle: "Positive Review Responses (15 Examples)",
     metaDescription:
         "Responding to positive Google reviews builds customer loyalty and local SEO. Use these 15 templates to craft perfect review responses in seconds.",
     keywords: [
@@ -27,6 +27,7 @@ export const post15: BlogPost = {
     ],
     internalLinks: [
         { label: "AI Review Replies", href: "/features/ai-replies" },
+        { label: "Review Response Generator", href: "/tools/review-response-generator" },
         { label: "Google Reviews Guide", href: "/resources/google-reviews-guide" },
     ],
     faqs: [
@@ -134,7 +135,7 @@ export const post15: BlogPost = {
         },
         {
             type: "p",
-            text: "While authenticity is key, drafting replies from scratch doesn't scale. Modern platforms like Zyene Reviews use AI to read the customer's specific comments and draft a context-aware response."
+            text: "While authenticity is key, drafting replies from scratch doesn't scale. You can experiment with our [free review response generator](/tools/review-response-generator) or use modern platforms like Zyene Reviews that read customer feedback and draft context-aware replies automatically."
         },
         {
             type: "table",

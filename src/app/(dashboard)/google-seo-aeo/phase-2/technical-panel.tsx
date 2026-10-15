@@ -5,7 +5,7 @@ export function TechnicalPanel({ data }: { data: Phase2OperationsData }) {
     return (
         <section className="space-y-4" aria-labelledby="technical-heading">
             <div><h2 id="technical-heading" className="text-xl font-semibold">Technical and citation operations</h2><p className="text-sm text-muted-foreground">Measured crawler access and diagnostics. Text similarity does not establish that an AI engine used a review.</p></div>
-            <div className="grid gap-4 xl:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 <Card><CardHeader><CardTitle className="text-base">AI crawler activity · 30 days</CardTitle></CardHeader><CardContent>
                     {data.crawlerHits.length ? <div className="divide-y">{data.crawlerHits.map((row) => <div key={row.crawler} className="flex justify-between py-2 text-sm"><span>{row.crawler}</span><span>{row.count} hits · {new Date(row.latest).toLocaleDateString()}</span></div>)}</div> : <Empty text="Connect a log drain to measure crawler traffic." />}
                 </CardContent></Card>

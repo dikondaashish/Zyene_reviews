@@ -96,6 +96,7 @@ async function deliverMonthlyNewsletter(
     to: subscriber.email,
     subject,
     html,
+    unsubscribeUrl: `${marketingCanonicalUrl("/api/marketing/newsletter/unsubscribe")}?id=${subscriber.id}`,
     idempotencyKey: `monthly-newsletter-${content.editionKey}-${subscriber.id}`,
   });
 

@@ -29,7 +29,7 @@ export function MarketingAppointmentDialog({ open, onOpenChange }: MarketingAppo
         <DialogHeader className="relative border-b border-border px-5 py-4 pr-14 text-left sm:px-6">
           <DialogTitle>Book a Zyene Reviews demo</DialogTitle>
           <DialogDescription>
-            Pick a 30-minute time that works for you.
+            Pick a 15-minute time that works for you.
           </DialogDescription>
           <DialogClose
             aria-label="Close booking calendar"

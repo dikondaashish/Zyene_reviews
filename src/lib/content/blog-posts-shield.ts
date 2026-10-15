@@ -3,6 +3,7 @@
  */
 
 import type { BlogPost } from "./blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const post13: BlogPost = {
     slug: "negative-feedback-shield",
@@ -37,7 +38,7 @@ export const post13: BlogPost = {
         { label: "Compare vs Birdeye (Shield included)", href: "/compare/birdeye" },
         { label: "Birdeye pricing vs Zyene Reviews", href: "/blog/birdeye-pricing-breakdown-2026" },
         { label: "Zyene Reviews pricing", href: "/pricing" },
-        { label: "Start a 7-day free trial", href: "/signup" },
+        { label: "Start a 7-day free trial", href: SIGNUP_URL },
     ],
     faqs: [
         {
@@ -153,7 +154,7 @@ export const post13: BlogPost = {
             "Run a 7-day trial at /signup and send a small test campaign to your team first.",
             "Train staff: private feedback is for resolution and service recovery, with clear ownership for follow-up.",
         ]},
-        { type: "cta", ctaLabel: "Try review collection with Shield →", ctaHref: "/signup" },
+        { type: "cta", ctaLabel: "Try review collection with Shield →", ctaHref: SIGNUP_URL },
         { type: "cta", ctaLabel: "See review collection features →", ctaHref: "/features/review-collection" },
     ],
 };

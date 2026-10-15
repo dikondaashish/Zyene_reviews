@@ -62,6 +62,7 @@ export function DashboardAnimatedReviewCardsLazy({
     shellSubtitle,
     manageAllHref,
     manageAllLabel,
+    reviewsHref = "/reviews",
 }: {
     reviews: SpotlightReviewCard[];
     labels: {
@@ -74,6 +75,7 @@ export function DashboardAnimatedReviewCardsLazy({
     shellSubtitle?: string;
     manageAllHref?: string;
     manageAllLabel?: string;
+    reviewsHref?: string;
 }) {
     return (
         <AnimatedReviewCards
@@ -86,6 +88,7 @@ export function DashboardAnimatedReviewCardsLazy({
             shellSubtitle={shellSubtitle}
             manageAllHref={manageAllHref}
             manageAllLabel={manageAllLabel}
+            reviewsHref={reviewsHref}
         />
     );
 }

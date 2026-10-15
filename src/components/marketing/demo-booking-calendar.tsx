@@ -2,6 +2,17 @@
 
 import { useEffect, useState } from "react";
 
+function getDirectBookingUrl(src: string): string {
+  try {
+    const url = new URL(src);
+    url.searchParams.delete("embed");
+    url.searchParams.delete("overlayCalendar");
+    return url.toString();
+  } catch {
+    return "https://cal.com/zyenereviews/15min";
+  }
+}
+
 export function DemoBookingCalendar({ src }: { src: string }) {
   const [loading, setLoading] = useState(true);
   const [slow, setSlow] = useState(false);
@@ -25,7 +36,7 @@ export function DemoBookingCalendar({ src }: { src: string }) {
         <iframe
           src={src}
           title="Schedule a Zyene Reviews demo on Cal.com"
-          sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
           className="w-full min-h-[520px] rounded-xl"
           onLoad={() => setLoading(false)}
           onError={() => setSlow(true)}
@@ -33,7 +44,7 @@ export function DemoBookingCalendar({ src }: { src: string }) {
       </div>
       <p className="mt-3 text-sm text-muted-foreground">
         Prefer a separate window?{" "}
-        <a href="https://cal.com/zyene/30-min-meeting" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground underline underline-offset-4">
+        <a href={getDirectBookingUrl(src)} target="_blank" rel="noopener noreferrer" className="font-medium text-foreground underline underline-offset-4">
           Open the booking page
         </a>
       </p>

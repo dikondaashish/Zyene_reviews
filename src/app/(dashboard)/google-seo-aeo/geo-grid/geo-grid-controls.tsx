@@ -50,7 +50,7 @@ export function GeoGridControls({
 
     return (
         <form onSubmit={run} className="space-y-3">
-            <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_120px_140px_auto] md:items-end">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,1fr)_120px_140px_auto] md:items-end">
                 <div className="space-y-1.5">
                     <Label htmlFor="geo-keyword">Keyword</Label>
                     <Input id="geo-keyword" value={keyword} onChange={(e) => setKeyword(e.target.value)}

@@ -29,11 +29,8 @@ export function Step2FormGoogleStateViews({
     if (googleState.status === "connecting") {
         return (
             <div className="flex flex-col items-center justify-center gap-5 py-20">
-                <div className="relative">
-                    <div className="absolute inset-0 bg-primary/15 blur-2xl rounded-full animate-pulse" />
-                    <Loader2 className="animate-spin text-primary relative z-10 size-12" />
-                </div>
-                <p className="text-sm font-semibold text-foreground animate-pulse">Connecting to Google…</p>
+                <Loader2 className="animate-spin text-primary size-10" aria-hidden="true" />
+                <p className="text-sm font-semibold text-foreground">Connecting to Google…</p>
             </div>
         );
     }

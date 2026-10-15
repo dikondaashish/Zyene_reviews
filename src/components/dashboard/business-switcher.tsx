@@ -63,7 +63,7 @@ export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses =
                     <span className="truncate">
                         {switching ? "Switching..." : activeBusiness?.name || "Select Business"}
                     </span>
-                    <ChevronsUpDown className="ml-2 shrink-0 opacity-50 size-4" />
+                    <ChevronsUpDown className="ml-2 hidden shrink-0 opacity-50 size-4 sm:block" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent

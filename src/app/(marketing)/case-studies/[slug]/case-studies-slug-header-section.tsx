@@ -18,8 +18,12 @@ export function CaseStudiesSlugHeaderSection({ study }: { study: (typeof CASE_ST
                 </nav>
 
                 <div className="mb-10 max-w-3xl border-y border-border py-4 text-sm leading-relaxed text-muted-foreground" role="note">
-                    <span className="font-semibold text-foreground">Representative example: </span>
-                    {CASE_STUDY_COMPOSITE_DISCLAIMER.replace(" - ", ": ")}
+                    <p className="font-semibold text-foreground">
+                        Illustrative example based on typical results. Not a real customer.
+                    </p>
+                    <p className="mt-1">
+                        {CASE_STUDY_COMPOSITE_DISCLAIMER.replace(" - ", ": ")}
+                    </p>
                 </div>
 
                 <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
@@ -30,9 +34,11 @@ export function CaseStudiesSlugHeaderSection({ study }: { study: (typeof CASE_ST
                             <span className="text-muted-foreground">{study.size}</span>
                         </div>
                         <h1 className="max-w-3xl text-balance text-4xl font-bold leading-[1.04] tracking-[-0.035em] text-foreground sm:text-5xl lg:text-6xl">
-                            {study.headline}
+                            Illustrative Example: {study.headline}
                         </h1>
-                        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">{study.excerpt}</p>
+                        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
+                            Illustrative workflow: {study.excerpt}
+                        </p>
                         <div className="mt-8 flex flex-wrap gap-3">
                             <Link href="#results" className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 font-semibold text-primary-foreground transition-transform hover:brightness-95 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                                 See the workflow <ArrowDown className="size-4" aria-hidden="true" />

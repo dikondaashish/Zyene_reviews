@@ -1,4 +1,5 @@
 import type { BlogPost } from "./blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const post18: BlogPost = {
     slug: "hvac-home-services-reputation-management",
@@ -33,6 +34,7 @@ export const post18: BlogPost = {
         "true-cost-of-bad-online-reputation",
     ],
     internalLinks: [
+        { label: "HVAC Reputation Management Software", href: "/industries/hvac" },
         { label: "Get 50 Google Reviews in 30 Days", href: "/blog/how-to-get-50-google-reviews-in-30-days" },
         { label: "Responding to 1-Star Reviews", href: "/blog/how-to-respond-to-a-1-star-review" },
         { label: "Negative Feedback Shield", href: "/blog/negative-feedback-shield" },
@@ -242,46 +244,28 @@ export const post18: BlogPost = {
                 caption: "Everyday service work and an accurate business profile support a recognizable local presence.",
             },
         },
-        {
-            type: "h2",
-            text: "Industry-Specific Challenges and Solutions",
-        },
-        {
-            type: "h3",
-            text: "HVAC Companies",
-        },
+        { type: "h2", text: "Industry-Specific Challenges and Solutions" },
+        { type: "h3", text: "HVAC Companies" },
         {
             type: "p",
-            text: "HVAC businesses face extreme seasonal demand swings. During summer cooling and winter heating peaks, technicians run six to eight calls per day with little time for follow-up. The solution: fully automated post-job review requests triggered by your dispatch software. Capture reviews during peak season when job volume is highest and customer urgency creates natural gratitude.",
+            text: "HVAC businesses face extreme seasonal demand swings. During summer cooling and winter heating peaks, technicians run six to eight calls per day with little time for follow-up. Using specialized HVAC reputation management software (/industries/hvac), you can trigger automated post-job review requests from your dispatch software to capture reviews when job volume and customer gratitude peak.",
         },
-        {
-            type: "h3",
-            text: "Plumbing Companies",
-        },
+        { type: "h3", text: "Plumbing Companies" },
         {
             type: "p",
             text: "Emergency plumbing calls often happen during stressful moments—flooded basements, broken water heaters, backed-up drains. Customers who were in crisis mode during the call may not feel inclined to write a review once the stress passes. Send the review request while the relief of resolution is still fresh, ideally within an hour of the repair.",
         },
-        {
-            type: "h3",
-            text: "Electrical Contractors",
-        },
+        { type: "h3", text: "Electrical Contractors" },
         {
             type: "p",
             text: "Electricians often work on projects that homeowners cannot visually evaluate—panel upgrades, rewiring, or code compliance work. Customers may hesitate to review because they feel unqualified to judge the quality. Your review request message can address this directly: 'How was your experience with our team?' focuses on the service interaction rather than technical expertise.",
         },
-        {
-            type: "h3",
-            text: "Roofing Companies",
-        },
+        { type: "h3", text: "Roofing Companies" },
         {
             type: "p",
             text: "Roofing projects have the longest sales cycles and highest price points in home services. Customers invest significant trust and money, making their reviews especially detailed and persuasive to future buyers. Send a review request after the final walkthrough—not after the initial estimate or midway through the project.",
         },
-        {
-            type: "h2",
-            text: "Building a Reputation System That Runs Without You",
-        },
+        { type: "h2", text: "Building a Reputation System That Runs Without You" },
         {
             type: "p",
             text: "The most successful home service companies treat reputation management as a system, not a task. The goal is a repeatable process where reviews flow in consistently, negative feedback is caught early, and responses are handled promptly—without the owner manually managing every interaction.",
@@ -293,7 +277,7 @@ export const post18: BlogPost = {
         {
             type: "cta",
             ctaLabel: "See How Zyene Reviews Works for Home Services →",
-            ctaHref: "/signup",
+            ctaHref: SIGNUP_URL,
         },
     ],
 };

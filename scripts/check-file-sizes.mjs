@@ -78,13 +78,6 @@ const BASELINE = {
   },
 
   // ── SEO surface ───────────────────────────────────────────────────────────
-  // sitemap.ts is one flat route manifest; splitting it hides what is indexed.
-  // Its real risk is a missing route, which tests/unit/sitemap-coverage.test.ts
-  // now guards instead.
-  "src/app/sitemap.ts": {
-    max: 311,
-    why: "route manifest, covered by sitemap-coverage test",
-  },
   "src/lib/growth/page-inventory.ts": { max: 286, why: "route manifest" },
 
   // ── Logic still owed a split ──────────────────────────────────────────────

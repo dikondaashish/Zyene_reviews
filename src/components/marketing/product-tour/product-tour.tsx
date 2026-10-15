@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState, type KeyboardEvent } from "react";
-import { BarChart3, Coffee, MessageSquare, RotateCcw, Send, ShieldCheck, ChevronDown, Sparkles } from "lucide-react";
+import { BarChart3, Coffee, MessageSquare, RotateCcw, Send, ShieldCheck, ChevronDown, Lightbulb } from "lucide-react";
 import { ReviewDemo } from "@/components/marketing/product-tour/review-demo";
 import { RequestDemo } from "@/components/marketing/product-tour/request-demo";
 import { ReportDemo } from "@/components/marketing/product-tour/report-demo";
@@ -48,7 +48,7 @@ function ProductTourSession({ active, setActive, onReset }: {
         <div className="tour-tabs" role="tablist" aria-label="Explore Zyene" aria-orientation="vertical">
           {TABS.map(({ key, label, icon: Icon }, index) => <button key={key} type="button" role="tab" id={`${id}-${key}`} aria-selected={active === key} aria-controls={`${id}-${key}-panel`} tabIndex={active === key ? 0 : -1} onClick={() => setActive(key)} onKeyDown={event => onKeyDown(event, index)}><Icon size={17} aria-hidden="true" /><span>{label}</span></button>)}
         </div>
-        <div className="tour-sidebar-tip"><Sparkles size={18} aria-hidden="true" /><strong>Your voice. A little faster.</strong><p>Try a tone. Watch your next reply come together.</p></div>
+        <div className="tour-sidebar-tip"><Lightbulb size={18} aria-hidden="true" /><strong>Your voice. A little faster.</strong><p>Try a tone. Watch your next reply come together.</p></div>
         <div className="tour-sidebar-user"><span>JC</span><div>Juniper Coffee<small>Business workspace</small></div></div>
       </aside>
       <div className="tour-workspace">

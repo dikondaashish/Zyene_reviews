@@ -2,6 +2,10 @@ import { Quote } from "lucide-react";
 import { HOME_TESTIMONIALS } from "@/components/marketing/marketing-home/home-testimonials";
 
 export function MarketingHomeTestimonials() {
+  if (HOME_TESTIMONIALS.length === 0) {
+    return null;
+  }
+
   return (
     <section id="testimonials" className="marketing-section owner-stories" aria-labelledby="owner-stories-heading">
       <div className="marketing-container">

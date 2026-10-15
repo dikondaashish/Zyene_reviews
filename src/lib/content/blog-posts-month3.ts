@@ -4,6 +4,7 @@
  */
 
 import type { BlogPost } from "./blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const post9: BlogPost = {
     slug: "restaurant-owners-guide-to-google-reviews",
@@ -22,7 +23,7 @@ export const post9: BlogPost = {
     internalLinks: [
         { label: "Zyene Reviews for Restaurants", href: "/industries/restaurants" },
         { label: "Review tool pricing comparison (Birdeye vs Zyene Reviews)", href: "/blog/birdeye-pricing-breakdown-2026" },
-        { label: "Start your free trial", href: "/signup" },
+        { label: "Start your free trial", href: SIGNUP_URL },
     ],
     faqs: [
         {
@@ -128,7 +129,7 @@ export const post10: BlogPost = {
     internalLinks: [
         { label: "Zyene Reviews for Dental Practices", href: "/industries/dental" },
         { label: "Compare enterprise review tool pricing", href: "/blog/birdeye-pricing-breakdown-2026" },
-        { label: "Start your free trial", href: "/signup" },
+        { label: "Start your free trial", href: SIGNUP_URL },
     ],
     faqs: [
         {
@@ -223,7 +224,7 @@ export const post11: BlogPost = {
         { label: "See how Zyene Reviews protects your reputation", href: "/features" },
         { label: "Negative Feedback Shield workflow", href: "/features/review-collection" },
         { label: "Enterprise review tool pricing (Birdeye vs Zyene Reviews)", href: "/blog/birdeye-pricing-breakdown-2026" },
-        { label: "Try Zyene Reviews free for 7 days", href: "/signup" },
+        { label: "Try Zyene Reviews free for 7 days", href: SIGNUP_URL },
     ],
     faqs: [
         {
@@ -316,14 +317,14 @@ export const post12: BlogPost = {
     dateModified: "2026-05-24",
     readMinutes: 7,
     author: { name: "Zyene Reviews Team", role: "Editorial" },
-    metaTitle: "How to Handle Fake Google Reviews: Step-by-Step Guide",
+    metaTitle: "How to Handle Fake Google Reviews",
     metaDescription:
         "How to handle fake Google reviews: identify, flag, report, and respond to suspicious reviews while protecting your rating during Google's review.",
     keywords: ["fake google reviews", "how to report fake google reviews", "remove fake google reviews", "fake review google business profile", "suspicious google reviews"],
     relatedSlugs: ["true-cost-of-bad-online-reputation", "how-to-respond-to-a-1-star-review"],
     internalLinks: [
         { label: "Zyene Reviews review monitoring", href: "/features" },
-        { label: "Start monitoring reviews with Zyene Reviews", href: "/signup" },
+        { label: "Start monitoring reviews with Zyene Reviews", href: SIGNUP_URL },
     ],
     faqs: [
         {

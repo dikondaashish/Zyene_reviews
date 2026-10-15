@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Loader2, Rocket, Send } from "lucide-react";
+import { ArrowRight, Loader2, Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -32,8 +32,7 @@ export function Step5FormCta({
                     <Loader2 className="animate-spin size-5" />
                 ) : (
                     <>
-                        <Rocket className="mr-2 size-5" />
-                        Go to my Dashboard
+                        Go to my dashboard
                         <ArrowRight className="ml-2 group-hover:translate-x-0.5 transition-transform size-5" />
                     </>
                 )}

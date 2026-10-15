@@ -1,6 +1,6 @@
 "use client";
 
-import { Crown, Zap, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import * as PricingCard from "@/components/ui/pricing-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -84,7 +84,6 @@ export function BillingPlanTierCard(props: {
             <PricingCard.Header glassEffect={false} className="relative z-10 mb-5 rounded-none border-0 bg-transparent p-0 dark:bg-transparent [&>div]:flex [&>div]:h-full [&>div]:flex-col">
                 <PricingCard.Plan className="mb-3 flex-wrap gap-2">
                     <PricingCard.PlanName className="text-base font-semibold">
-                        {isPro ? <Crown className="text-primary" aria-hidden /> : <Zap className="text-primary" aria-hidden />}
                         <span className="text-foreground">{plan.name}</span>
                     </PricingCard.PlanName>
                     <PricingCard.Badge>{isPro ? "Multi-location" : "Single location"}</PricingCard.Badge>

@@ -1,4 +1,5 @@
 import type { BlogPost } from "./blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const post17: BlogPost = {
     slug: "can-you-delete-a-google-review",
@@ -11,7 +12,7 @@ export const post17: BlogPost = {
     dateModified: "2026-10-11",
     readMinutes: 9,
     author: { name: "Marcus Vance", role: "Local SEO & Reputation" },
-    metaTitle: "Can You Delete or Remove a Google Review? (2026 Guide)",
+    metaTitle: "Delete or Remove a Google Review? (2026)",
     metaDescription:
         "Learn when Google will remove a review, how to report policy violations, appeal a rejected report, and respond to legitimate negative feedback.",
     keywords: [
@@ -43,34 +44,13 @@ export const post17: BlogPost = {
         { label: "Local SEO & Map Pack Impact", href: "/blog/how-reviews-impact-local-map-pack-ranking" },
     ],
     faqs: [
-        {
-            question: "Can you delete a Google review someone left for your business?",
-            answer: "No. Business owners have no delete button for reviews on their Google Business Profile. Your only options are reporting the review for a specific policy violation or asking Google Support to evaluate it. Google removes reviews only when they clearly breach its Prohibited and Restricted Content policies—not because the review is negative or unfair.",
-        },
-        {
-            question: "How long does Google take to evaluate a reported review?",
-            answer: "Google typically evaluates reported reviews within 3 to 5 business days. Complex cases involving legal disputes or sustained harassment may take longer. You can track your report status using the official Google Review Management Tool at support.google.com/business/workflow/9945796.",
-        },
-        {
-            question: "Can you pay a company to delete Google reviews?",
-            answer: "No legitimate company has back-door access to delete Google reviews. Agencies that guarantee removal use the same public reporting and appeal process available to any business owner. Some use prohibited tactics like mass-flagging or reviewer harassment that can result in your Business Profile being suspended.",
-        },
-        {
-            question: "What happens if Google refuses to remove a review?",
-            answer: "If Google denies your report and subsequent appeal, the review stays. Your best course of action is to write a professional, empathetic public response that addresses the concern and invites the customer to resolve the issue offline. This response is often more persuasive to future customers than the review itself.",
-        },
-        {
-            question: "Can a customer edit or delete their own Google review?",
-            answer: "Yes. Reviewers can edit or delete their own reviews at any time through Google Maps by navigating to 'Your contributions', finding the review, and selecting 'Edit review' or 'Delete review'. Resolving a customer's complaint offline is the most reliable way to prompt a voluntary update.",
-        },
-        {
-            question: "Does Google notify you when a review is removed?",
-            answer: "If you reported the review through the Review Management Tool, Google sends an email when the evaluation is complete. If the review is removed through automated spam detection, you may not receive a notification—the review simply disappears from your listing.",
-        },
-        {
-            question: "Can you remove a Google review that mentions an employee by name?",
-            answer: "If a review contains harassment, personal attacks, or threats directed at a named individual, it may violate Google's harassment policy. Report it under the 'Harassment' category. Reviews that simply mention an employee's name in the context of describing a service experience are generally not considered policy violations.",
-        },
+        { question: "Can you delete a Google review someone left for your business?", answer: "No. Business owners have no delete button for reviews on their Google Business Profile. Your only options are reporting the review for a specific policy violation or asking Google Support to evaluate it. Google removes reviews only when they clearly breach its Prohibited and Restricted Content policies—not because the review is negative or unfair." },
+        { question: "How long does Google take to evaluate a reported review?", answer: "Google typically evaluates reported reviews within 3 to 5 business days. Complex cases involving legal disputes or sustained harassment may take longer. You can track your report status using the official Google Review Management Tool at support.google.com/business/workflow/9945796." },
+        { question: "Can you pay a company to delete Google reviews?", answer: "No legitimate company has back-door access to delete Google reviews. Agencies that guarantee removal use the same public reporting and appeal process available to any business owner. Some use prohibited tactics like mass-flagging or reviewer harassment that can result in your Business Profile being suspended." },
+        { question: "What happens if Google refuses to remove a review?", answer: "If Google denies your report and subsequent appeal, the review stays. Your best course of action is to write a professional, empathetic public response that addresses the concern and invites the customer to resolve the issue offline. This response is often more persuasive to future customers than the review itself." },
+        { question: "Can a customer edit or delete their own Google review?", answer: "Yes. Reviewers can edit or delete their own reviews at any time through Google Maps by navigating to 'Your contributions', finding the review, and selecting 'Edit review' or 'Delete review'. Resolving a customer's complaint offline is the most reliable way to prompt a voluntary update." },
+        { question: "Does Google notify you when a review is removed?", answer: "If you reported the review through the Review Management Tool, Google sends an email when the evaluation is complete. If the review is removed through automated spam detection, you may not receive a notification—the review simply disappears from your listing." },
+        { question: "Can you remove a Google review that mentions an employee by name?", answer: "If a review contains harassment, personal attacks, or threats directed at a named individual, it may violate Google's harassment policy. Report it under the 'Harassment' category. Reviews that simply mention an employee's name in the context of describing a service experience are generally not considered policy violations." },
     ],
     body: [
         {
@@ -307,7 +287,7 @@ export const post17: BlogPost = {
         {
             type: "cta",
             ctaLabel: "Start Managing Your Reputation with Zyene Reviews →",
-            ctaHref: "/signup",
+            ctaHref: SIGNUP_URL,
         },
         {
             type: "image",

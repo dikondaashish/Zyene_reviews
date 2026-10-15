@@ -49,7 +49,6 @@ export function OnboardingStepTwoSection({
                 Back
             </button>
             <div className="relative">
-                <div className="absolute -inset-1 bg-gradient-to-br from-[rgba(212,160,84,0.08)] via-transparent to-primary/5 rounded-[2rem] blur-sm" />
                 <div className="relative">
                     <Step2Form
                         businessId={business.id}

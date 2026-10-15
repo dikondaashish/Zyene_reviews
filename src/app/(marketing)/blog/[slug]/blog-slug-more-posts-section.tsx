@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Facebook, Linkedin, Twitter } from "lucide-react";
 import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
+import { PopularResourcesBlock } from "@/components/marketing/popular-resources-block";
 import { BLOG_POSTS, BLOG_POST_MAP, PILLAR_LABELS } from "@/lib/content/blog-data";
 
 const SITE_URL = "https://www.zyenereviews.com";
@@ -13,7 +14,7 @@ function getRelatedPosts(slug: string) {
         return related ? [related] : [];
     }) ?? [];
     const fallback = BLOG_POSTS.filter((post) => post.slug !== slug && !preferred.some((related) => related.slug === post.slug));
-    return [...preferred, ...fallback].slice(0, 4);
+    return [...preferred, ...fallback].slice(0, 3);
 }
 
 export function BlogSlugMorePostsSection({ slug }: { slug: string }) {
@@ -44,7 +45,7 @@ export function BlogSlugMorePostsSection({ slug }: { slug: string }) {
                     </nav>
 
                     <section className="blog-related-section" aria-labelledby="blog-related-heading">
-                        <div className="blog-article-subheading"><h2 id="blog-related-heading">Related articles</h2><Link href="/blog">View all <ArrowUpRight className="size-4" aria-hidden="true" /></Link></div>
+                        <div className="blog-article-subheading"><h2 id="blog-related-heading">Related posts</h2><Link href="/blog">View all <ArrowUpRight className="size-4" aria-hidden="true" /></Link></div>
                         <div className="blog-related-grid">
                             {relatedPosts.map((post) => <Link key={post.slug} href={`/blog/${post.slug}`} className="blog-related-card group">
                                 <div className="blog-related-image">{post.image ? <Image src={post.image.src} alt={post.image.alt} fill sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 20vw" /> : null}</div>
@@ -64,6 +65,8 @@ export function BlogSlugMorePostsSection({ slug }: { slug: string }) {
                             <Link href="/contact"><span>Talk through your next move</span><ArrowRight className="size-4" aria-hidden="true" /></Link>
                         </div>
                     </section>
+
+                    <PopularResourcesBlock className="border-t border-border pt-12" />
                 </div>
             </div>
         </section>

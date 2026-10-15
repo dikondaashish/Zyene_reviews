@@ -8,6 +8,7 @@ import { IndustriesIndustryHowZyeneSolvesItSection } from "./industries-industry
 import { IndustriesIndustryUseCaseSection } from "./industries-industry-use-case-section";
 import { IndustriesIndustryPricingReminderSection } from "./industries-industry-pricing-reminder-section";
 import { IndustriesIndustryFinalCtaSection } from "./industries-industry-final-cta-section";
+import { IndustriesHomeServicesTradesSection } from "./industries-home-services-trades-section";
 
 export default async function IndustryPage(
     { params }: { params: Promise<{ industry: string }> }
@@ -29,6 +30,7 @@ export default async function IndustryPage(
             <IndustriesIndustryHeroSection data={data} slug={slug} />
             <IndustriesIndustryPainPointsSection data={data} />
             <IndustriesIndustryHowZyeneSolvesItSection data={data} />
+            {slug === "home-services" ? <IndustriesHomeServicesTradesSection /> : null}
             <IndustriesIndustryUseCaseSection data={data} />
             <IndustryWorkflowSection slug={slug} />
             <IndustriesIndustryPricingReminderSection data={data} />

@@ -4,6 +4,7 @@
  */
 
 import type { BlogPost } from "./blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const post5: BlogPost = {
     slug: "how-to-respond-to-a-1-star-review",
@@ -15,35 +16,22 @@ export const post5: BlogPost = {
     dateModified: "2026-05-24",
     readMinutes: 8,
     author: { name: "Priya Sharma", role: "Reputation Management" },
-    metaTitle: "How to Respond to a 1-Star Google Review (5 Templates)",
+    metaTitle: "Respond to a 1-Star Review (5 Templates)",
     metaDescription: "Proven 5-step framework and 5 ready-to-use templates for responding to 1-star Google reviews. Turn bad reviews into trust signals for new customers.",
     keywords: ["how to respond to a 1 star review", "respond to negative review", "bad google review response", "1 star review template", "negative review response"],
     relatedSlugs: ["ai-reply-mistakes-to-avoid", "why-google-reviews-matter-in-2026"],
     internalLinks: [
+        { label: "AI review response generator tool", href: "/tools/review-response-generator" },
         { label: "See how Zyene Reviews' AI replies work", href: "/features/ai-replies" },
-        { label: "Check out our negative review response template library", href: "/resources/negative-review-templates" },
+        { label: "20+ negative review response templates", href: "/resources/negative-review-templates" },
+        { label: "5 AI review reply mistakes to avoid", href: "/blog/ai-reply-mistakes-to-avoid" },
     ],
     faqs: [
-        {
-            question: "Should I respond to every one-star Google review?",
-            answer: "Yes. Prospects read negative reviews specifically to see how you handle problems. A calm, specific public reply within twenty-four to forty-eight hours beats silence - even when you move the real fix to email or phone.",
-        },
-        {
-            question: "Can I offer a refund in my public response?",
-            answer: "Avoid negotiating compensation in the thread. Invite the reviewer to contact you privately. Public refund offers can attract bad-faith reviews and make you look defensive to everyone else reading.",
-        },
-        {
-            question: "How long should a one-star review response be?",
-            answer: "Three to five sentences is enough: acknowledge, apologize for their experience, take responsibility where fair, offer a private resolution path, and close professionally. Long essays read as defensive.",
-        },
-        {
-            question: "Can Zyene Reviews help draft one-star responses?",
-            answer: "Zyene Reviews' AI suggest-reply flow gives you a structured starting point per review. Always personalize with details from their comment - never post a generic draft unchanged.",
-        },
-        {
-            question: "What if the one-star review is unfair or fake?",
-            answer: "Still respond professionally while you flag it through Google. See our fake-review guide for documentation steps. Zyene Reviews alerts you quickly so you can reply and report within hours, not weeks.",
-        },
+        { question: "Should I respond to every one-star Google review?", answer: "Yes. Prospects read negative reviews specifically to see how you handle problems. A calm, specific public reply within twenty-four to forty-eight hours beats silence - even when you move the real fix to email or phone." },
+        { question: "Can I offer a refund in my public response?", answer: "Avoid negotiating compensation in the thread. Invite the reviewer to contact you privately. Public refund offers can attract bad-faith reviews and make you look defensive to everyone else reading." },
+        { question: "How long should a one-star review response be?", answer: "Three to five sentences is enough: acknowledge, apologize for their experience, take responsibility where fair, offer a private resolution path, and close professionally. Long essays read as defensive." },
+        { question: "Can Zyene Reviews help draft one-star responses?", answer: "Zyene Reviews' AI suggest-reply flow gives you a structured starting point per review. Always personalize with details from their comment - never post a generic draft unchanged." },
+        { question: "What if the one-star review is unfair or fake?", answer: "Still respond professionally while you flag it through Google. See our fake-review guide for documentation steps. Zyene Reviews alerts you quickly so you can reply and report within hours, not weeks." },
     ],
     body: [
         { type: "p", text: "A 1-star review lands in your inbox and your stomach drops. Your first instinct might be to ignore it, argue with it, or delete your account entirely. All of these are the wrong move." },
@@ -129,29 +117,17 @@ export const post6: BlogPost = {
     keywords: ["ai reply mistakes", "ai review responses", "ai google review reply", "how to respond to reviews with ai", "review response ai tips"],
     relatedSlugs: ["how-to-respond-to-a-1-star-review", "why-google-reviews-matter-in-2026"],
     internalLinks: [
+        { label: "Draft review responses with our free generator", href: "/tools/review-response-generator" },
         { label: "Try Zyene Reviews' AI reply feature", href: "/features/ai-replies" },
+        { label: "How to respond to a 1-star review on Google", href: "/blog/how-to-respond-to-a-1-star-review" },
+        { label: "20+ negative review response templates", href: "/resources/negative-review-templates" },
     ],
     faqs: [
-        {
-            question: "Is it okay to post AI-generated Google review replies?",
-            answer: "Yes, if you edit them. Use AI for structure and tone, then add specifics from the customer's review. Unedited AI posts sound identical and can hurt trust more than they save time.",
-        },
-        {
-            question: "What is the biggest mistake with AI review responses?",
-            answer: "Publishing the first draft unchanged. Always reference something concrete - the dish, staff member, appointment type, or issue they mentioned - so readers know a human reviewed the reply.",
-        },
-        {
-            question: "Should I use AI for negative reviews?",
-            answer: "AI can outline a calm framework, but you must remove defensive phrasing and add a private contact path. Read the final reply as a skeptical customer before you publish.",
-        },
-        {
-            question: "How does Zyene Reviews' AI reply feature work?",
-            answer: "Zyene Reviews suggests Professional, Friendly, or Concise drafts you can edit and publish yourself. You can separately enable automatic Google replies for eligible new reviews, selecting a star threshold and tone before confirming public publishing.",
-        },
-        {
-            question: "Do AI replies help local SEO?",
-            answer: "Google indexes response text. Natural mentions of services or neighborhood context can support relevance, but keyword stuffing in replies looks spammy and should be avoided.",
-        },
+        { question: "Is it okay to post AI-generated Google review replies?", answer: "Yes, if you edit them. Use AI for structure and tone, then add specifics from the customer's review. Unedited AI posts sound identical and can hurt trust more than they save time." },
+        { question: "What is the biggest mistake with AI review responses?", answer: "Publishing the first draft unchanged. Always reference something concrete - the dish, staff member, appointment type, or issue they mentioned - so readers know a human reviewed the reply." },
+        { question: "Should I use AI for negative reviews?", answer: "AI can outline a calm framework, but you must remove defensive phrasing and add a private contact path. Read the final reply as a skeptical customer before you publish." },
+        { question: "How does Zyene Reviews' AI reply feature work?", answer: "Zyene Reviews suggests Professional, Friendly, or Concise drafts you can edit and publish yourself. You can separately enable automatic Google replies for eligible new reviews, selecting a star threshold and tone before confirming public publishing." },
+        { question: "Do AI replies help local SEO?", answer: "Google indexes response text. Natural mentions of services or neighborhood context can support relevance, but keyword stuffing in replies looks spammy and should be avoided." },
     ],
     body: [
         { type: "p", text: "AI tools for review responses are a genuine productivity breakthrough. The ability to generate a professional, well-structured reply to any review in seconds - rather than spending 5-10 minutes per response - can save a business owner several hours every week." },
@@ -229,30 +205,17 @@ export const post7: BlogPost = {
     keywords: ["google business profile optimization", "gbp optimization checklist", "google my business optimization 2026", "how to optimize google business profile"],
     relatedSlugs: ["how-reviews-impact-local-map-pack-ranking", "why-google-reviews-matter-in-2026"],
     internalLinks: [
+        { label: "Free local reputation score checker", href: "/tools/reputation-score-checker" },
+        { label: "AI visibility audit guide for local businesses", href: "/blog/ai-visibility-audit-local-businesses" },
         { label: "See Zyene Reviews' GBP keyword tracking feature", href: "/features" },
-        { label: "Try Zyene Reviews free", href: "/signup" },
+        { label: "Try Zyene Reviews free", href: SIGNUP_URL },
     ],
     faqs: [
-        {
-            question: "What is the most important part of Google Business Profile optimization?",
-            answer: "Primary category and complete, accurate basics - name, address, phone, hours, website - set the foundation. Reviews and photos layer on top; a wrong category undermines everything else.",
-        },
-        {
-            question: "How often should I post on Google Business Profile?",
-            answer: "Aim for at least one Google Post per week with a photo and CTA. Posts expire after about seven days but help freshness signals when you keep the profile active.",
-        },
-        {
-            question: "How many photos should my GBP listing have?",
-            answer: "Thirty-plus photos is a solid baseline; Google has cited much higher counts correlating with more direction requests. Add fresh interior, team, and product shots monthly.",
-        },
-        {
-            question: "Can Zyene Reviews track GBP search keywords?",
-            answer: "Yes - Zyene Reviews' local SEO features include GBP keyword performance so you see which queries drive impressions and clicks, then prioritize checklist items that match real search demand.",
-        },
-        {
-            question: "Do reviews belong in a GBP optimization checklist?",
-            answer: "Absolutely. Target fifty-plus reviews, reply to all of them, keep five to ten new reviews per month, and use Negative Feedback Shield on Zyene Reviews to reduce avoidable public one-stars while you grow.",
-        },
+        { question: "What is the most important part of Google Business Profile optimization?", answer: "Primary category and complete, accurate basics - name, address, phone, hours, website - set the foundation. Reviews and photos layer on top; a wrong category undermines everything else." },
+        { question: "How often should I post on Google Business Profile?", answer: "Aim for at least one Google Post per week with a photo and CTA. Posts expire after about seven days but help freshness signals when you keep the profile active." },
+        { question: "How many photos should my GBP listing have?", answer: "Thirty-plus photos is a solid baseline; Google has cited much higher counts correlating with more direction requests. Add fresh interior, team, and product shots monthly." },
+        { question: "Can Zyene Reviews track GBP search keywords?", answer: "Yes - Zyene Reviews' local SEO features include GBP keyword performance so you see which queries drive impressions and clicks, then prioritize checklist items that match real search demand." },
+        { question: "Do reviews belong in a GBP optimization checklist?", answer: "Absolutely. Target fifty-plus reviews, reply to all of them, keep five to ten new reviews per month, and use Negative Feedback Shield on Zyene Reviews to reduce avoidable public one-stars while you grow." },
     ],
     body: [
         { type: "p", text: "Your Google Business Profile is one of the main places customers find local businesses. Accurate categories, services, hours, photos, and review responses give Google and searchers clearer information, but no profile change guarantees a Local 3-Pack position or a set number of calls." },
@@ -373,30 +336,16 @@ export const post8: BlogPost = {
     keywords: ["local map pack ranking", "google reviews ranking factor", "how reviews affect local seo", "google 3 pack ranking", "reviews local search ranking"],
     relatedSlugs: ["google-business-profile-optimization-checklist", "how-to-get-50-google-reviews-in-30-days"],
     internalLinks: [
+        { label: "Audit your local AI visibility and citation presence", href: "/blog/ai-visibility-audit-local-businesses" },
         { label: "Zyene Reviews GBP keyword tracking", href: "/features" },
         { label: "How to get more reviews fast", href: "/blog/how-to-get-50-google-reviews-in-30-days" },
     ],
     faqs: [
-        {
-            question: "Do Google reviews affect Map Pack rankings?",
-            answer: "Yes. Google says review count and positive ratings can help local ranking. It does not publish a formula for recency, response rate, or review keywords, and relevance, distance, links, articles, and other prominence signals also matter.",
-        },
-        {
-            question: "What matters more: star rating or number of reviews?",
-            answer: "Google confirms that both review count and positive ratings can help, but it does not publish how they are weighted against each other. Compare your profile with nearby results and keep earning genuine reviews rather than targeting a universal ratio.",
-        },
-        {
-            question: "How recent should my Google reviews be?",
-            answer: "Google publishes no ninety-day review-weighting rule. Recent reviews still give customers a current picture of the business, so request genuine feedback consistently instead of relying on a one-time campaign.",
-        },
-        {
-            question: "Does replying to reviews help Map Pack placement?",
-            answer: "Google recommends helpful replies because they show that you value feedback and can help your profile stand out. It does not publish response rate as a separate ranking factor. Aim for complete, prompt coverage because customers read the exchange.",
-        },
-        {
-            question: "Can competitor review velocity pass me in the Map Pack?",
-            answer: "A competitor's rating and review count can improve while yours stays flat, but that alone cannot predict a Map Pack overtake or timeline. Zyene Reviews can surface changes in public competitor review metrics so you can investigate the full result set.",
-        },
+        { question: "Do Google reviews affect Map Pack rankings?", answer: "Yes. Google says review count and positive ratings can help local ranking. It does not publish a formula for recency, response rate, or review keywords, and relevance, distance, links, articles, and other prominence signals also matter." },
+        { question: "What matters more: star rating or number of reviews?", answer: "Google confirms that both review count and positive ratings can help, but it does not publish how they are weighted against each other. Compare your profile with nearby results and keep earning genuine reviews rather than targeting a universal ratio." },
+        { question: "How recent should my Google reviews be?", answer: "Google publishes no ninety-day review-weighting rule. Recent reviews still give customers a current picture of the business, so request genuine feedback consistently instead of relying on a one-time campaign." },
+        { question: "Does replying to reviews help Map Pack placement?", answer: "Google recommends helpful replies because they show that you value feedback and can help your profile stand out. It does not publish response rate as a separate ranking factor. Aim for complete, prompt coverage because customers read the exchange." },
+        { question: "Can competitor review velocity pass me in the Map Pack?", answer: "A competitor's rating and review count can improve while yours stays flat, but that alone cannot predict a Map Pack overtake or timeline. Zyene Reviews can surface changes in public competitor review metrics so you can investigate the full result set." },
     ],
     body: [
         { type: "p", text: "When someone searches 'dentist near me' or 'best pizza in Austin', Google may show a map with three business results: the Local 3-Pack. Its click share varies by query, device, and market, so use your own Business Profile performance data to judge its value." },
@@ -451,6 +400,6 @@ export const post8: BlogPost = {
         },
         { type: "p", text: "Consistent review management can compound operationally: more customer feedback reveals service issues, thoughtful replies build trust, and a dependable request process keeps the profile current. Search placement still depends on many signals." },
         { type: "p", text: "Competitor review growth is worth monitoring, but review velocity alone cannot predict whether or when another business will overtake your local position. Compare the actual result set and the broader profile instead." },
-        { type: "cta", ctaLabel: "Start automating your review collection with Zyene Reviews →", ctaHref: "/signup" },
+        { type: "cta", ctaLabel: "Start automating your review collection with Zyene Reviews →", ctaHref: SIGNUP_URL },
     ],
 };

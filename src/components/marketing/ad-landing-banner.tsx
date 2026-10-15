@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { useMemo } from "react";
+import { ArrowRight, Tag } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useMarketingSignupUrl } from "@/lib/growth/marketing-signup-url";
-import { getGoogleAdsBanner } from "@/lib/campaign-content/google-ads-data";
+import { getGoogleAdsBanner, type GoogleAdsCampaign } from "@/lib/campaign-content/google-ads-data";
 import { getMetaAdsBanner } from "@/lib/campaign-content/meta-ads-data";
 import { deserializeUtm, UTM_COOKIE_NAME } from "@/lib/growth/utm";
+
+type AdBanner = Pick<GoogleAdsCampaign, "headline" | "subheadline">;
 
 function readUtmCookie(): ReturnType<typeof deserializeUtm> {
     if (typeof document === "undefined") return null;
@@ -21,14 +23,21 @@ function readUtmCookie(): ReturnType<typeof deserializeUtm> {
 export function AdLandingBanner({ className = "" }: { className?: string }) {
     const searchParams = useSearchParams();
     const signupUrl = useMarketingSignupUrl("/signup");
+    const [banner, setBanner] = useState<AdBanner | null>(null);
 
-    const banner = useMemo(() => {
+    // Resolve the campaign only after hydration. Reading the UTM cookie at render
+    // would mismatch the server (which has no cookies) once a returning visitor
+    // carries a campaign cookie — a hydration error (Sentry ZYENE-REVIEWS-Z).
+    useEffect(() => {
         const campaign =
             searchParams.get("utm_campaign") ??
             readUtmCookie()?.utm_campaign ??
             null;
-        if (!campaign) return null;
-        return getGoogleAdsBanner(campaign) ?? getMetaAdsBanner(campaign) ?? null;
+        setBanner(
+            campaign
+                ? getGoogleAdsBanner(campaign) ?? getMetaAdsBanner(campaign) ?? null
+                : null,
+        );
     }, [searchParams]);
 
     if (!banner) return null;
@@ -41,7 +50,7 @@ export function AdLandingBanner({ className = "" }: { className?: string }) {
         >
             <div className="container mx-auto max-w-6xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-start gap-2">
-                    <Sparkles className="text-primary shrink-0 mt-0.5 size-4" />
+                    <Tag className="text-primary shrink-0 mt-0.5 size-4" />
                     <div>
                         <p className="text-sm font-semibold text-foreground">{banner.headline}</p>
                         <p className="text-xs text-muted-foreground">{banner.subheadline}</p>

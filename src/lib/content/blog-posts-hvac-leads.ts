@@ -13,6 +13,7 @@ export const post22: BlogPost = {
   relatedSlugs: ["hvac-home-services-reputation-management", "google-business-profile-optimization-checklist", "how-to-get-a-google-review-link"],
   internalLinks: [
     { label: "HVAC and home-services review management", href: "/industries/home-services" },
+    { label: "HVAC reputation management software", href: "/industries/hvac" },
     { label: "HVAC reputation management workflow", href: "/blog/hvac-home-services-reputation-management" },
     { label: "Local SEO checklist", href: "/resources/local-seo-checklist" },
     { label: "Google profile insights in Zyene", href: "/features/local-seo" },

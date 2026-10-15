@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Zap, Code2, MonitorPlay } from "lucide-react";
+import { Workflow, Code2, MonitorPlay } from "lucide-react";
 import { PlaceholderCard } from "@/components/integrations/placeholder-card";
 import { ZapierCard } from "@/components/integrations/zapier-card";
 import { CloverCard, type CloverConnectionSummary } from "@/components/integrations/clover-card";
@@ -34,7 +34,7 @@ export function IntegrationsPosAutomationSection({
             <IntegrationsSectionHeader
                 title="POS & Automation"
                 description="Trigger review requests automatically from payment and workflow tools"
-                icon={Zap}
+                icon={Workflow}
             />
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
                 <SquareCard

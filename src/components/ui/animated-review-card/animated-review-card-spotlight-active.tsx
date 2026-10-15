@@ -34,9 +34,17 @@ interface SpotlightActiveFaceProps {
     classNames?: ClassNames;
     labels?: SpotlightLabels;
     starColors: { active: string; inactive: string };
+    reviewsHref?: string;
 }
 
-export function SpotlightActiveFace({ review, theme, classNames, labels, starColors }: SpotlightActiveFaceProps) {
+export function SpotlightActiveFace({
+    review,
+    theme,
+    classNames,
+    labels,
+    starColors,
+    reviewsHref = "/features/ai-replies",
+}: SpotlightActiveFaceProps) {
     return (
         <div className={cn("mb-3 flex min-h-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between", classNames?.header)}>
             <div className="flex min-w-0 flex-1 gap-2.5 sm:gap-3">
@@ -112,7 +120,7 @@ export function SpotlightActiveFace({ review, theme, classNames, labels, starCol
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
-                            <Link href="/reviews">{labels.viewInReviews}</Link>
+                            <Link href={reviewsHref}>{labels.viewInReviews}</Link>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

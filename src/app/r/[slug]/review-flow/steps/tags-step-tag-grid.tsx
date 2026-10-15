@@ -34,7 +34,7 @@ export function TagsStepTagGrid({
                             "border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                             selected.has(tag)
                                 ? "text-primary-foreground"
-                                : "bg-background text-foreground border-border hover:bg-muted dark:bg-[rgb(30,41,59)] dark:border-white/10 dark:hover:bg-[rgb(51,65,85)]"
+                                : "bg-background text-foreground border-border hover:bg-muted dark:bg-muted dark:border-border dark:hover:bg-accent"
                         )}
                         style={{
                             backgroundColor: selected.has(tag) ? resolvedBrandColor : undefined,

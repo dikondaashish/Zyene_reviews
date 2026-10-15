@@ -48,7 +48,7 @@ const BASE_COMPETITORS: CompetitorData[] = [
     "billingTerms": "Pricing depends on products, locations and contract structure. Request a written quote.",
     "keyAngle": "Compare review workflows, allowances and the current Birdeye offer.",
     "heroSub": "Compare Zyene Reviews and Birdeye using current public pricing and the workflows your team needs. Confirm plan-specific capabilities before subscribing.",
-    "metaTitle": "Best Birdeye Alternative: Zyene Reviews vs Birdeye (2026)",
+    "metaTitle": "Birdeye Alternative: Zyene vs Birdeye (2026)",
     "metaDescription": "Looking for a Birdeye alternative? Compare Zyene Reviews and Birdeye on pricing, review workflows, and plan allowances for local businesses. From $29.99/mo.",
     "targetKeywords": [
         "birdeye alternative",
@@ -78,7 +78,11 @@ const BASE_COMPETITORS: CompetitorData[] = [
         "Local businesses evaluating a shared review inbox and request workflow with published plan allowances."
     ],
     "accentColor": "blue",
-    "openingSummary": "Use the same location count, sending volume and billing period when comparing offers. Birdeye and Zyene Reviews package capabilities differently; the lowest headline price does not establish feature equivalence. Verify the integrations and reply actions your team needs in a trial or demonstration, then compare the complete subscription cost."
+    "openingSummary": "Use the same location count, sending volume and billing period when comparing offers. Birdeye and Zyene Reviews package capabilities differently; the lowest headline price does not establish feature equivalence. Verify the integrations and reply actions your team needs in a trial or demonstration, then compare the complete subscription cost.",
+    "deepDiveLink": {
+        "label": "5 Cheaper Birdeye Alternatives for Local Businesses (2026)",
+        "href": "/blog/birdeye-alternatives-for-local-businesses"
+    }
 },
 {
     "slug": "podium",
@@ -89,7 +93,7 @@ const BASE_COMPETITORS: CompetitorData[] = [
     "billingTerms": "Podium requests your industry to prepare a custom quote. Confirm included products and contract terms.",
     "keyAngle": "Compare review workflows, allowances and the current Podium offer.",
     "heroSub": "Compare Zyene Reviews and Podium using current public pricing and the workflows your team needs. Confirm plan-specific capabilities before subscribing.",
-    "metaTitle": "Best Podium Alternative: Zyene Reviews vs Podium (2026)",
+    "metaTitle": "Podium Alternative: Zyene vs Podium (2026)",
     "metaDescription": "Looking for a Podium alternative? Compare Zyene Reviews and Podium on pricing, review workflows, and messaging for local businesses. From $29.99/mo.",
     "targetKeywords": [
         "podium alternative",
@@ -134,7 +138,7 @@ const BASE_COMPETITORS: CompetitorData[] = [
     "billingTerms": "Starter is listed at $75/month USD; Pro at $125/month USD. Website services are priced separately.",
     "keyAngle": "Compare review workflows, allowances and the current NiceJob offer.",
     "heroSub": "Compare Zyene Reviews and NiceJob using current public pricing and the workflows your team needs. Confirm plan-specific capabilities before subscribing.",
-    "metaTitle": "NiceJob Alternative: Zyene Reviews vs NiceJob (2026)",
+    "metaTitle": "NiceJob Alternative: Zyene vs NiceJob (2026)",
     "metaDescription": "Compare Zyene Reviews and NiceJob: pricing, automated review requests, AI replies, and which fits local service businesses. Zyene from $29.99/mo.",
     "targetKeywords": [
         "nicejob alternative",
@@ -175,7 +179,7 @@ const BASE_COMPETITORS: CompetitorData[] = [
     "billingTerms": "Small Business is listed at $99/month for one location. Multi-location and annual pricing differ; verify the selected billing period.",
     "keyAngle": "Compare review workflows, allowances and the current GatherUp offer.",
     "heroSub": "Compare Zyene Reviews and GatherUp using current public pricing and the workflows your team needs. Confirm plan-specific capabilities before subscribing.",
-    "metaTitle": "GatherUp Alternative: Zyene Reviews vs GatherUp (2026)",
+    "metaTitle": "GatherUp Alternative: Zyene vs GatherUp",
     "metaDescription": "Compare Zyene Reviews and GatherUp on pricing, SMS/email credits, review monitoring, and AI replies for local businesses. From $29.99/mo.",
     "targetKeywords": [
         "gatherup alternative",

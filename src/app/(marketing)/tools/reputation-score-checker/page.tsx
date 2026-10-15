@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { ReputationScoreCheckerClient } from "./reputation-score-checker-client";
+import { ReputationScoreCheckerGuide } from "./reputation-score-checker-guide";
 
 export const metadata: Metadata = mergeMarketingSocial({
     title: "Free Reputation Score Checker",
@@ -20,5 +21,10 @@ export const metadata: Metadata = mergeMarketingSocial({
 });
 
 export default function ReputationScoreCheckerPage() {
-    return <ReputationScoreCheckerClient />;
+    return (
+        <>
+            <ReputationScoreCheckerClient />
+            <ReputationScoreCheckerGuide />
+        </>
+    );
 }

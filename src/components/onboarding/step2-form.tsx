@@ -28,7 +28,7 @@ export function Step2Form(props: Step2FormProps) {
     }
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 rounded-2xl overflow-hidden border border-border bg-card/80 backdrop-blur-xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 rounded-2xl overflow-hidden border border-border bg-card">
             <Step2FormGoogleConnectPanel
                 onConnectClick={c.handleConnectClick}
                 pending={c.googleRedirectPending}

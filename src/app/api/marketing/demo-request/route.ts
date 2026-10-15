@@ -4,9 +4,8 @@ import { z } from "zod";
 import { captureMarketingLead } from "@/lib/enterprise/capture-marketing-lead";
 import { ENTERPRISE_SALES_EMAIL } from "@/lib/enterprise/enterprise-data";
 import { clientIpFrom, publicFormRateLimit } from "@/lib/auth/rate-limit";
-import { escapeHtml } from "@/lib/security/html-escape";
+import { formNotificationEmail, formReceiptEmail } from "@/services/resend/templates/form-emails";
 import { sendEmail } from "@/services/resend/send-email";
-import { emailMutedFooter } from "@/lib/email/transactional-email-styles";
 
 const demoRequestSchema = z.object({
     email: z.string().trim().email("Work email is required").max(320),
@@ -65,26 +64,13 @@ export async function POST(request: Request) {
         await sendEmail({
             to: salesInbox,
             subject: `[Demo request] ${company} - ${name}`,
-            // Escaped: these land in our own sales inbox, and an email client
-            // renders whatever markup an anonymous submitter put in them.
-            html: `<p><strong>Demo / enterprise inquiry</strong></p>
-<ul>
-<li><strong>Name:</strong> ${escapeHtml(name)}</li>
-<li><strong>Email:</strong> ${escapeHtml(email)}</li>
-<li><strong>Company:</strong> ${escapeHtml(company)}</li>
-<li><strong>Locations:</strong> ${escapeHtml(locations)}</li>
-</ul>
-<p><strong>Message:</strong></p>
-<p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>
-${emailMutedFooter("Submitted via zyenereviews.com/demo")}`,
+            html: formNotificationEmail("Demo / enterprise inquiry", { Name: name, Email: email, Company: company, Locations: locations }, message, "Submitted via zyenereviews.com/demo"),
             replyTo: email,
         });
         await sendEmail({
             to: email,
             subject: "We received your demo request - Zyene Reviews",
-            html: `<p>Hi ${escapeHtml(name)},</p>
-<p>Thanks for your interest in Zyene Reviews Enterprise. Our sales team will reach out within one business day to schedule a walkthrough.</p>
-<p> - Zyene Reviews Sales</p>`,
+            html: formReceiptEmail("demo", parsed.data.name || "there"),
         });
     } catch (err) {
         logger.error({ err: err }, "[demo-request] email failed:");

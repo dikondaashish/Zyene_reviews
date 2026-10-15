@@ -1,4 +1,5 @@
 import type { ContentSection } from "./blog-data";
+import { SIGNUP_URL } from "@/config/env";
 
 /** Body sections for /resources/review-request-templates (22 templates). */
 export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
@@ -10,6 +11,10 @@ export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
     {
         type: "warning",
         text: "Do not offer discounts, gifts, or incentives tied to a rating or review text. Do not pressure customers with repeated messages. Invite real customers honestly, keep outreach proportional (one follow-up max per visit), and configure the process to match your business's documented review policy.",
+    },
+    {
+        type: "p",
+        text: "Need the direct link to put into these scripts? Generate your clean review link in seconds with our [free Google review link generator](/tools/review-link-generator).",
     },
     { type: "h2", text: "SMS Review Request Templates" },
     { type: "h3", text: "1. General - short and direct" },
@@ -172,6 +177,6 @@ export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
         type: "tip",
         text: "Request the pack at the top of this page - we email a link to this URL (source: review_request_templates). No PDF attachment yet; the web version is ready now. Copy any preview template below without logging in.",
     },
-    { type: "cta", ctaLabel: "Automate review requests with Zyene Reviews →", ctaHref: "/signup" },
+    { type: "cta", ctaLabel: "Automate review requests with Zyene Reviews →", ctaHref: SIGNUP_URL },
     { type: "cta", ctaLabel: "See review collection features →", ctaHref: "/features/review-collection" },
 ];

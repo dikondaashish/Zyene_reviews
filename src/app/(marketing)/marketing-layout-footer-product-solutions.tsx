@@ -72,6 +72,21 @@ export function MarketingLayoutFooterSolutionsColumn() {
                 </Link>
             </li>
             <li>
+                <Link href="/industries/hvac" className="hover:text-primary transition-colors">
+                    HVAC
+                </Link>
+            </li>
+            <li>
+                <Link href="/industries/plumbing" className="hover:text-primary transition-colors">
+                    Plumbing
+                </Link>
+            </li>
+            <li>
+                <Link href="/industries/electricians" className="hover:text-primary transition-colors">
+                    Electricians
+                </Link>
+            </li>
+            <li>
                 <Link href="/industries/hotels" className="hover:text-primary transition-colors">
                     Hotels
                 </Link>

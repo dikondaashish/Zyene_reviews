@@ -4,6 +4,7 @@
  */
 
 import type { BlogPost } from "./blog-types";
+import { SIGNUP_URL } from "@/config/env";
 
 export const post1: BlogPost = {
     slug: "how-to-get-50-google-reviews-in-30-days",
@@ -22,7 +23,7 @@ export const post1: BlogPost = {
     internalLinks: [
         { label: "See how Zyene Reviews automates review requests", href: "/features" },
         { label: "Compare review software pricing (Birdeye vs Zyene Reviews)", href: "/blog/birdeye-pricing-breakdown-2026" },
-        { label: "Try Zyene Reviews free for 7 days", href: "/signup" },
+        { label: "Try Zyene Reviews free for 7 days", href: SIGNUP_URL },
     ],
     faqs: [
         {
