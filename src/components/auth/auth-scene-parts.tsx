@@ -37,20 +37,23 @@ interface SceneReviewCardProps {
     name: string;
     delay: number;
     className: string;
+    /** Optional sentiment chip, e.g. "Positive". */
+    tag?: string;
     children: ReactNode;
 }
 
 /** A review arriving: the outer element floats, the inner card handles the entrance. */
-export function SceneReviewCard({ platform, initials, name, delay, className, children }: SceneReviewCardProps) {
+export function SceneReviewCard({ platform, initials, name, delay, className, tag, children }: SceneReviewCardProps) {
     return (
         <div className={`scene-float ${className}`}>
-            <div className="scene-card scene-enter" style={{ "--scene-delay": `${delay}s` } as CSSProperties}>
+            <div className={`scene-card scene-review scene-review--${platform} scene-enter`} style={{ "--scene-delay": `${delay}s` } as CSSProperties}>
                 <div className="scene-card-head">
                     <span className="scene-avatar">{initials}</span>
                     <span className="scene-card-who"><strong>{name}</strong><PlatformMark platform={platform} /></span>
                     <SceneStars delay={delay + 0.35} />
                 </div>
                 <p>{children}</p>
+                {tag && <span className="scene-tag" style={{ "--scene-delay": `${delay + 0.9}s` } as CSSProperties}>{tag}</span>}
             </div>
         </div>
     );
