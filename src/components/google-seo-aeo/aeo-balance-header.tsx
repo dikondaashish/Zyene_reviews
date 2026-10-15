@@ -34,9 +34,10 @@ export function AeoBalanceHeader() {
         <>
             <Popover open={menuOpen} onOpenChange={setMenuOpen}>
                 <PopoverTrigger
+                    data-aeo-balance
                     aria-label={`AI visibility balance ${formatUsd(total)}${empty ? ", tests paused" : ""}`}
                     className={cn(
-                        "flex h-9 shrink-0 items-center gap-2 rounded-full border px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                        "flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-sm sm:gap-2 sm:px-3 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                         empty
                             ? "border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive/15"
                             : "bg-background text-foreground hover:bg-muted",
