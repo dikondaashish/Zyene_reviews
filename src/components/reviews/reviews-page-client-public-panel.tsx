@@ -58,7 +58,7 @@ export function ReviewsPageClientPublicPanel({
                         <div className="bg-muted rounded-full flex items-center justify-center mb-4 size-12">
                             {publicCount > 0 ? <SearchX className="size-6 text-muted-foreground" /> : <MessageSquare className="size-6 text-muted-foreground" />}
                         </div>
-                        <h2 className="text-lg font-medium text-foreground">
+                        <h2 className="ui-section-title text-foreground">
                             {isImportingGoogleReviews
                                 ? "Importing your Google reviews"
                                 : publicCount === 0

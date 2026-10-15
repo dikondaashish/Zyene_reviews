@@ -23,7 +23,7 @@ export default async function AeoAlertsPage() {
         <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
             <GoogleSeoAeoSubnav active="/google-seo-aeo/alerts" />
             <div>
-                <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Alerts</h1>
+                <h1 className="ui-page-title">Alerts</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
                     Only shown when a change clears a statistical significance bar - not every sampling wobble.
                 </p>
@@ -40,7 +40,7 @@ export default async function AeoAlertsPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Recent alerts</CardTitle>
+                    <CardTitle className="ui-card-title">Recent alerts</CardTitle>
                     <CardDescription>Last 90 days.</CardDescription>
                 </CardHeader>
                 <CardContent>

@@ -99,9 +99,9 @@ export function Step5FormCelebration({
                 transition={{ delay: 0.2 }}
                 className="space-y-2"
             >
-                <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+                <h1 className="ui-page-title text-foreground">
                     You&apos;re all set, {firstName}!
-                </h2>
+                </h1>
                 <p className="text-muted-foreground text-sm max-w-xs mx-auto">
                     Your Zyene Reviews dashboard is ready for{" "}
                     <strong className="text-foreground">{businessName}</strong>.

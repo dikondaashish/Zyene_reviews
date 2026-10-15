@@ -31,7 +31,7 @@ export function AuditCheckRow({ audit, action, statusLabel }: AuditCheckRowProps
             </span>
             <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                    <h3 className="text-sm font-medium text-foreground">{audit.label}</h3>
+                    <h3 className="ui-card-title text-foreground">{audit.label}</h3>
                     {/* The list heading already says "fix" or "on track"; only unscored rows need a visible reason. */}
                     <span
                         className={cn(

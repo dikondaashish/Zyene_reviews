@@ -62,7 +62,7 @@ export function CustomerManagementListRegion({
                         )}
                     </div>
                     <div className="max-w-md space-y-2">
-                        <h2 className="text-lg font-semibold tracking-tight text-foreground">
+                        <h2 className="ui-section-title text-foreground">
                             {databaseEmpty ? "No customers yet" : "No contacts in this view"}
                         </h2>
                         <p className="text-sm leading-relaxed text-muted-foreground">

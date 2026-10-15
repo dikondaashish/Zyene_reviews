@@ -11,7 +11,7 @@ export function SlugEditor(props: SlugEditorProps) {
     return (
         <div className="rounded-xl border border-border bg-card p-6 space-y-6">
             <div>
-                <h3 className="text-xl font-semibold text-foreground">Public Link</h3>
+                <h3 className="ui-card-title text-foreground">Public Link</h3>
                 <p className="text-sm text-muted-foreground mt-1">Customize your unique review page link.</p>
             </div>
 

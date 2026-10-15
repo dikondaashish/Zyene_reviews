@@ -52,6 +52,7 @@ export function processDashboardStatsQueryResults(
             stats,
             errorElement: (
                 <DashboardFetchError
+                    headingLevel="h2"
                     message="We could not load dashboard stats for this business. Check your connection and try again."
                     retryHref="/dashboard"
                 />

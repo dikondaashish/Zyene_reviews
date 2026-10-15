@@ -29,7 +29,7 @@ export function CompetitorsListMarketBriefCard({
             <Card className="min-w-0 border-border bg-canvas-elevated text-foreground">
                 <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
                     <div className="min-w-0 space-y-1.5">
-                        <CardTitle className="flex items-center gap-2">
+                        <CardTitle className="ui-card-title flex items-center gap-2">
                             AI market positioning brief
                         </CardTitle>
                         <CardDescription className="text-muted-foreground">

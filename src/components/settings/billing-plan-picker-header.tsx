@@ -18,7 +18,7 @@ export function BillingPlanPickerHeader(props: {
     return (
         <>
             <div className="mb-2">
-                <h2 className="text-xl font-semibold">
+                <h2 className="ui-section-title">
                     {hasPricedPlanOrEnterprise ? b.change_plan_title : b.choose_plan_title}
                 </h2>
                 <p className="text-sm text-muted-foreground mt-1 max-w-3xl">{b.plan_section_subtitle}</p>

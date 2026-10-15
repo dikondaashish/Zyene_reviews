@@ -32,6 +32,7 @@ export async function loadDashboardGoogleHealth(
                 brokenPlaceLinksCount,
                 errorElement: (
                     <DashboardFetchError
+                        headingLevel="h2"
                         message="We could not load Google health metrics. Check your connection and try again."
                         retryHref="/dashboard"
                     />
@@ -60,6 +61,7 @@ export async function loadDashboardGoogleHealth(
             brokenPlaceLinksCount,
             errorElement: (
                 <DashboardFetchError
+                    headingLevel="h2"
                     message="We could not load Google health metrics. Check your connection and try again."
                     retryHref="/dashboard"
                 />

@@ -70,7 +70,7 @@ export function GbpContentOptimizerCard({ businessId, topKeywords }: { businessI
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Services &amp; Google posts</CardTitle>
+                <CardTitle className="ui-card-title">Services &amp; Google posts</CardTitle>
                 <CardDescription>
                     Drafts built from your real Google category and the services you already list. Anything we cannot
                     verify comes back as a <code>{"{{placeholder}}"}</code> for you to fill. Publishing always requires

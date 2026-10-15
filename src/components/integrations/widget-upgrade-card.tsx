@@ -18,7 +18,7 @@ export function WidgetUpgradeCard() {
                         <MonitorPlay className="size-6" />
                     </div>
                     <div>
-                        <CardTitle className="text-xl">Website Widgets</CardTitle>
+                        <CardTitle className="ui-card-title">Website Widgets</CardTitle>
                         <CardDescription>Embed review carousels and rating badges on your site</CardDescription>
                     </div>
                 </CardHeader>

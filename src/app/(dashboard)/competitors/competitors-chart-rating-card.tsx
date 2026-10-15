@@ -28,7 +28,7 @@ export function CompetitorsChartRatingCard({
     return (
         <Card className="col-span-1 md:col-span-2 lg:col-span-1">
             <CardHeader>
-                <CardTitle>Rating Comparison</CardTitle>
+                <CardTitle className="ui-card-title">Rating Comparison</CardTitle>
                 <CardDescription>
                     Your business vs tracked competitors (stored average ratings, typically from
                     Google).

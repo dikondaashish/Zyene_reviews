@@ -29,7 +29,7 @@ export function CustomerDetailHeader({
                     <div className="rounded-lg border border-primary/20 bg-primary/10 p-1.5">
                         <UserRound className="text-primary size-4" />
                     </div>
-                    <h1 className="min-w-0 truncate text-xl font-bold tracking-tight text-foreground lg:text-2xl">
+                    <h1 className="ui-page-title min-w-0 truncate text-foreground">
                         {pageHeading}
                     </h1>
                 </div>

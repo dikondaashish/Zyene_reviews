@@ -16,7 +16,7 @@ export function IntegrationsSectionHeader({
                     <Icon className="text-primary size-4" />
                 </div>
                 <div>
-                    <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
+                    <h2 className="ui-section-title">{title}</h2>
                     <p className="text-sm text-muted-foreground">{description}</p>
                 </div>
             </div>

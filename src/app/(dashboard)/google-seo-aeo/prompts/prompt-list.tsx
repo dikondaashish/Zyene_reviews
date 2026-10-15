@@ -86,12 +86,12 @@ export function PromptList({
             {ordered.map(([clusterName, rows]) => (
                 <section key={clusterName}>
                     {groups.size > 1 ? (
-                        <h3 className="text-muted-foreground mb-1 text-xs font-semibold tracking-wide uppercase">
+                        <p className="text-muted-foreground mb-1 text-xs font-semibold tracking-wide uppercase">
                             {clusterName}
                             <span className="ml-2 font-normal normal-case">
                                 {rows.filter((r) => r.isActive).length} of {rows.length} active
                             </span>
-                        </h3>
+                        </p>
                     ) : null}
                     <PromptRows
                         rows={rows}

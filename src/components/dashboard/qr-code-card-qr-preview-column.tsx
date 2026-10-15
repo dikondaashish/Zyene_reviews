@@ -59,9 +59,9 @@ export function QrCodeCardQrPreviewColumn({
                 <DialogContent className="sm:max-w-md rounded-2xl p-4 sm:p-8 border-none">
                     <DialogTitle className="sr-only">QR Code for {businessName}</DialogTitle>
                     <div className="flex flex-col items-center mb-2">
-                        <h2 className="text-2xl font-bold text-foreground text-center mb-2">
+                        <p className="text-2xl font-bold text-foreground text-center mb-2">
                             {businessName} {dictReviewPage}
-                        </h2>
+                        </p>
                         <div
                             onClick={onCopyLink}
                             className="flex max-w-full items-center text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors mx-auto"

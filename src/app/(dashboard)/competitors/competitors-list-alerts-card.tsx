@@ -22,7 +22,7 @@ export function CompetitorsListAlertsCard({ alertEvents, rangeLabel }: Competito
     return (
                 <Card id="competitor-alerts">
                     <CardHeader>
-                        <CardTitle>Threshold alerts ({rangeLabel})</CardTitle>
+                        <CardTitle className="ui-card-title">Threshold alerts ({rangeLabel})</CardTitle>
                         <CardDescription>
                             Fired when a competitor crosses your{" "}
                             <Link href="/settings/competitor-alerts" className="text-primary underline underline-offset-2">

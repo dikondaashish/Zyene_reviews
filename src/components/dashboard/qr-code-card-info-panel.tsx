@@ -26,8 +26,8 @@ export function QrCodeCardInfoPanel({
                     <QrCode className="size-8" strokeWidth={1.5} />
                 </div>
                 <div className="min-w-0">
-                    <h2 className="text-3xl font-bold text-foreground tracking-tight mb-2">{businessName}</h2>
-                    <h3 className="text-xl font-medium text-foreground mb-4">{portalTitle}</h3>
+                    <p className="text-3xl font-bold text-foreground tracking-tight mb-2">{businessName}</p>
+                    <p className="text-xl font-medium text-foreground mb-4">{portalTitle}</p>
                     <p className="text-muted-foreground text-base max-w-md mb-6 leading-relaxed">{description}</p>
                     <div
                         onClick={onCopyLink}

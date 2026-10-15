@@ -10,7 +10,7 @@ export function CampaignDetailFunnel({ funnelStages, maxFunnel }: CampaignDetail
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="text-base">Conversion Funnel</CardTitle>
+                <CardTitle className="ui-card-title">Conversion Funnel</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="space-y-3">

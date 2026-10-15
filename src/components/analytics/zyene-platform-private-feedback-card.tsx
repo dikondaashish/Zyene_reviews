@@ -14,7 +14,7 @@ export function ZyenePlatformPrivateFeedbackCard({ privateFeedback }: { privateF
             <CardHeader>
                 <div className="flex items-center justify-between">
                     <div className="space-y-1">
-                        <CardTitle className="text-lg font-bold flex items-center gap-2">
+                        <CardTitle className="ui-card-title flex items-center gap-2">
                             <MessageCircle className="text-primary size-5" />
                             Private Feedback
                         </CardTitle>

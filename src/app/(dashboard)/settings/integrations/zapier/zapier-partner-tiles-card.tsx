@@ -81,7 +81,7 @@ export function ZapierPartnerTilesCard() {
     return (
         <Card className="overflow-hidden rounded-lg border border-border bg-card">
             <CardHeader className="space-y-1 border-b border-border/60 bg-muted/20 pb-4">
-                <h2 className="text-lg font-semibold tracking-tight">
+                <h2 className="ui-section-title">
                     Popular tools that work via Zapier
                 </h2>
                 <p className="text-sm text-muted-foreground">

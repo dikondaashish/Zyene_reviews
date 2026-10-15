@@ -41,7 +41,7 @@ export function Step4SubscriptionForm({
 
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
                     <div>
-                        <h3 className="text-lg font-semibold text-left">Unlock the full power of Zyene</h3>
+                        <h1 className="ui-page-title text-left">Unlock the full power of Zyene</h1>
                         <p className="text-xs text-muted-foreground text-left mt-1">
                             Your business is set up - choose a plan to start managing reviews with AI.
                         </p>

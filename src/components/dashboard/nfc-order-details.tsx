@@ -42,7 +42,7 @@ export function NfcOrderDetails({
                     </span>
                 </div>
 
-                <h3 className="mt-2 text-lg font-semibold tracking-tight text-foreground">
+                <h3 className="ui-card-title mt-2 text-foreground">
                     {NFC_CARD.name}
                 </h3>
                 <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">

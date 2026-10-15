@@ -10,6 +10,8 @@ type DashboardFetchErrorProps = {
     /** For server-rendered pages: full-page refresh via navigation */
     retryHref?: string;
     retryLabel?: string;
+    /** `h1` when the error replaces the whole page; `h2` when it sits inside one. */
+    headingLevel?: "h1" | "h2";
 };
 
 /**
@@ -21,7 +23,9 @@ export function DashboardFetchError({
     onRetry,
     retryHref,
     retryLabel = "Try again",
+    headingLevel = "h1",
 }: DashboardFetchErrorProps) {
+    const Heading = headingLevel;
     return (
         <div
             className="flex flex-col items-center justify-center gap-4 rounded-lg border border-border bg-card px-6 py-10 text-center"
@@ -31,7 +35,7 @@ export function DashboardFetchError({
                 <AlertTriangle className="text-destructive size-6" aria-hidden />
             </div>
             <div className="space-y-1 max-w-md">
-                <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+                <Heading className={headingLevel === "h1" ? "ui-page-title text-foreground" : "ui-section-title text-foreground"}>{title}</Heading>
                 <p className="text-sm text-muted-foreground leading-relaxed">{message}</p>
             </div>
             {onRetry ? (

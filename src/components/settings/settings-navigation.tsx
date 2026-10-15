@@ -77,7 +77,7 @@ export function SettingsNavigation(props: { children: React.ReactNode; access: S
 
   return (
     <div className="flex min-w-0 flex-col gap-0 overflow-x-clip">
-      <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Settings</h2>
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Settings</p>
       <nav
         className="-mx-1 mb-6 flex flex-col gap-5 border-b border-border px-1 pb-0 xl:flex-row xl:items-end xl:gap-8"
         aria-label="Settings sections"

@@ -42,7 +42,7 @@ export function CompetitorsListSyncHealthCard({
     return (
             <Card>
                 <CardHeader>
-                    <CardTitle>Last Sync Health</CardTitle>
+                    <CardTitle className="ui-card-title">Last Sync Health</CardTitle>
                     <CardDescription>
                         Scheduled job status for this business. Use &quot;Sync from Google&quot; above to refresh
                         ratings without waiting for the schedule (requires a server Google Maps API key).

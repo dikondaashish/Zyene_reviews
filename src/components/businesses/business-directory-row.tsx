@@ -23,7 +23,7 @@ export function BusinessDirectoryRow({ business, isActive, canDelete, disabled, 
                         <BusinessIdentity name={business.name} logoUrl={business.logoUrl} />
                         <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                                <h2 className="break-words text-base font-semibold tracking-tight [overflow-wrap:anywhere]">{business.name}</h2>
+                                <h3 className="ui-card-title break-words [overflow-wrap:anywhere]">{business.name}</h3>
                                 {isActive && <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-1.5 py-0.5 text-[11px] font-medium text-primary"><Check className="size-3" />Current</span>}
                                 {business.status && business.status !== "active" && <span className="text-xs capitalize text-muted-foreground">{business.status}</span>}
                             </div>

@@ -25,7 +25,7 @@ export function AnalyticsPageGooglePerformanceSection({
     return (
         <>
             <div className="space-y-1">
-                <h2 className="text-lg font-semibold tracking-tight">Google Business insights</h2>
+                <h2 className="ui-section-title">Google Business insights</h2>
                 <p className="text-sm text-muted-foreground">Understand how people find and interact with your business.</p>
             </div>
 
@@ -33,7 +33,7 @@ export function AnalyticsPageGooglePerformanceSection({
                 <Card className="rounded-xl border-border bg-card overflow-hidden">
                     <CardHeader className="pb-2">
                         <div className="space-y-1">
-                            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                            <CardTitle className="ui-card-title flex items-center gap-2">
                                 <MousePointer2 className="text-primary size-5" />
                                 Listing Performance
                             </CardTitle>

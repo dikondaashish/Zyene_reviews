@@ -11,7 +11,7 @@ export function ZapierHowItWorksCard() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     How it works
                 </p>
-                <h2 className="text-lg font-semibold tracking-tight">
+                <h2 className="ui-section-title">
                     Three steps from job done to review request sent
                 </h2>
             </CardHeader>

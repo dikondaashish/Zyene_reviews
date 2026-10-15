@@ -24,7 +24,7 @@ export function ImportMapStep({ state }: { state: ImportState }) {
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                    <CardTitle>Map Columns</CardTitle>
+                    <CardTitle className="ui-card-title">Map Columns</CardTitle>
                     <CardDescription>
                         Match your CSV columns to the customer fields in Zyene Reviews.
                     </CardDescription>

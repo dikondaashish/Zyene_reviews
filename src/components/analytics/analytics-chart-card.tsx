@@ -9,7 +9,7 @@ export function AnalyticsChartCard({ title, description, icon: Icon, children, c
         <header className="flex items-start gap-3 border-b border-border px-5 py-5 sm:px-6">
             <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground"><Icon className="size-4" strokeWidth={1.75} aria-hidden /></span>
             <div className="min-w-0 space-y-1.5">
-                <h2 className="text-sm font-semibold tracking-tight">{title}</h2>
+                <h3 className="ui-card-title">{title}</h3>
                 <p className="text-xs leading-relaxed text-muted-foreground">{description}</p>
             </div>
         </header>

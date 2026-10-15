@@ -24,7 +24,7 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
     return <Card>
         <CardHeader className="flex flex-row items-center gap-4">
             <div className="rounded-xl bg-primary/10 p-3 text-primary"><Code2 className="size-6" /></div>
-            <div><CardTitle className="text-xl">Website Widgets</CardTitle>
+            <div><CardTitle className="ui-card-title">Website Widgets</CardTitle>
                 <CardDescription>Create your Google Reviews widget</CardDescription></div>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -34,7 +34,7 @@ export function WidgetCard({ businessSlug }: { businessSlug: string }) {
                     { Icon: Palette, title: "Make it yours", text: "Six themes, custom colors, fonts, and filters" },
                     { Icon: Smartphone, title: "Every screen", text: "Live desktop and mobile previews" }].map(({ Icon, title, text }) =>
                     <div key={title} className="rounded-xl border border-border bg-muted/30 p-4"><Icon className="mb-3 size-5 text-primary" />
-                        <h3 className="text-sm font-semibold">{title}</h3><p className="mt-1 text-xs leading-relaxed text-muted-foreground">{text}</p></div>)}
+                        <h3 className="ui-card-title">{title}</h3><p className="mt-1 text-xs leading-relaxed text-muted-foreground">{text}</p></div>)}
             </div>
             <Button onClick={launch} disabled={!businessSlug.trim()}><LayoutTemplate className="mr-2 size-4" /> Open widget builder</Button>
             {!businessSlug.trim() && <p className="text-sm text-muted-foreground">Set your business slug in Business Information to create a widget.</p>}

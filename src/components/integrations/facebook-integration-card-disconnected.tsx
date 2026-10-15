@@ -23,7 +23,7 @@ export function FacebookIntegrationCardDisconnected({
             <CardHeader className="pb-3">
                 <div className="flex items-center gap-2">
                     <FacebookBrandIcon className="shrink-0 size-5" aria-hidden />
-                    <CardTitle className="text-base">Facebook</CardTitle>
+                    <CardTitle className="ui-card-title">Facebook</CardTitle>
                 </div>
                 <CardDescription>Track Facebook and Instagram page reviews &amp; recommendations</CardDescription>
             </CardHeader>

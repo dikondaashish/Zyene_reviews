@@ -10,7 +10,7 @@ export function PromptsSidebar({ engines, quotaMeter, businessId, activePrompts,
         <div className="space-y-6 lg:col-span-1">
             <Card>
                 <CardHeader>
-                    <CardTitle>Engine coverage</CardTitle>
+                    <CardTitle className="ui-card-title">Engine coverage</CardTitle>
                     <CardDescription>
                         Every engine we track, including those we cannot sample yet and why.
                     </CardDescription>
@@ -22,7 +22,7 @@ export function PromptsSidebar({ engines, quotaMeter, businessId, activePrompts,
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Quota &amp; cost</CardTitle>
+                    <CardTitle className="ui-card-title">Quota &amp; cost</CardTitle>
                     <CardDescription>Projected spend at your current prompt load.</CardDescription>
                 </CardHeader>
                 <CardContent>

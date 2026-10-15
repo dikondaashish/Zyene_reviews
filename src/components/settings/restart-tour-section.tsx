@@ -27,7 +27,7 @@ export function RestartTourSection() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
+                <CardTitle className="ui-card-title flex items-center gap-2">
                     <RotateCcw className="size-4" />
                     Product Tour
                 </CardTitle>

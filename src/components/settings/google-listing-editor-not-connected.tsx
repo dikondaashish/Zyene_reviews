@@ -9,7 +9,7 @@ export function GoogleListingEditorNotConnected() {
                 <CheckCircle2 className="text-primary opacity-50 size-6" />
             </div>
             <div className="space-y-1">
-                <h3 className="text-sm font-medium text-foreground">Google not connected</h3>
+                <h3 className="ui-card-title text-foreground">Google not connected</h3>
                 <p className="text-xs text-muted-foreground max-w-sm mx-auto">
                     Connect your Google Business Profile to edit your live listing details directly from this
                     dashboard.

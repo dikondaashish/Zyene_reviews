@@ -22,7 +22,7 @@ export function NewCampaignBasicsStep({ form, updateForm, audienceSelected }: Ne
     return (
         <div className="space-y-6">
             <div>
-                <h2 className="text-lg font-semibold mb-1">Campaign Basics</h2>
+                <h2 className="ui-section-title mb-1">Campaign Basics</h2>
                 <p className="text-sm text-muted-foreground">Give your campaign a name and choose how to reach customers.</p>
             </div>
 

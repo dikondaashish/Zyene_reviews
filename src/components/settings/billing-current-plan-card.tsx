@@ -60,7 +60,7 @@ export function BillingCurrentPlanCard(props: {
             <CardHeader>
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                        <CardTitle className="text-base font-semibold">{b.current_plan}</CardTitle>
+                        <CardTitle className="ui-card-title">{b.current_plan}</CardTitle>
                         <CardDescription>{b.active_subscription}</CardDescription>
                     </div>
                     <Badge
