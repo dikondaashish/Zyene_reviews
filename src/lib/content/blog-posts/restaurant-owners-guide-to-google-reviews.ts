@@ -9,7 +9,7 @@ export const restaurantOwnersGuideToGoogleReviewsPost: BlogPostSource = {
     pillarLabel: "Industry Specific",
     publishedAt: "2026-05-05",
     dateModified: "2026-10-11",
-    author: { name: "Nina Patel", role: "Local SEO" },
+    author: { name: "Karthik", role: "Founder" },
     metaTitle: "Restaurant Owner's Guide to Google Reviews 2026",
     metaDescription: "The complete Google review guide for restaurant owners. How to get more reviews, respond to complaints, protect your rating, and track competitors in 2026.",
     keywords: ["restaurant google reviews", "restaurant review management", "how to get more restaurant reviews", "restaurant reputation management 2026"],

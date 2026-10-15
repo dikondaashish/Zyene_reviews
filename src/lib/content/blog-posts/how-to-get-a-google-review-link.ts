@@ -9,7 +9,7 @@ export const howToGetAGoogleReviewLinkPost: BlogPostSource = {
     pillarLabel: "Google Reviews",
     publishedAt: "2026-09-08",
     dateModified: "2026-09-29",
-    author: { name: "Jamie Rivera", role: "Product Marketing" },
+    author: { name: "Karthik", role: "Founder" },
     metaTitle: "How to Get a Google Review Link and QR Code (2026)",
     metaDescription:
         "Find and copy your Google review link, download a free QR code, and test both before sharing. Step-by-step instructions for businesses and agencies.",

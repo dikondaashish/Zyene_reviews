@@ -10,7 +10,7 @@ export const negativeFeedbackShieldPost: BlogPostSource = {
     pillarLabel: "Reputation Management",
     publishedAt: "2026-05-24",
     dateModified: "2026-05-25",
-    author: { name: "Jamie Rivera", role: "Product Marketing" },
+    author: { name: "Karthik", role: "Founder" },
     metaTitle: "Negative Feedback Shield Explained",
     metaDescription:
         "Negative Feedback Shield: capture private feedback early, respond fast, and configure a rating-based feedback path for service recovery.",

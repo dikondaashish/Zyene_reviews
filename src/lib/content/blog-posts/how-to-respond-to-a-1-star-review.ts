@@ -8,7 +8,7 @@ export const howToRespondToA1StarReviewPost: BlogPostSource = {
     pillarLabel: "Responding to Reviews",
     publishedAt: "2026-04-07",
     dateModified: "2026-05-24",
-    author: { name: "Priya Sharma", role: "Reputation Management" },
+    author: { name: "Karthik", role: "Founder" },
     metaTitle: "Respond to a 1-Star Review (5 Templates)",
     metaDescription: "Proven 5-step framework and 5 ready-to-use templates for responding to 1-star Google reviews. Turn bad reviews into trust signals for new customers.",
     keywords: ["how to respond to a 1 star review", "respond to negative review", "bad google review response", "1 star review template", "negative review response"],

@@ -9,7 +9,7 @@ export const trueCostOfBadOnlineReputationPost: BlogPostSource = {
     pillarLabel: "Reputation Management",
     publishedAt: "2026-05-19",
     dateModified: "2026-10-11",
-    author: { name: "Chris Alvarez", role: "Industry Research" },
+    author: { name: "Karthik", role: "Founder" },
     metaTitle: "True Cost of Bad Online Reputation (Local Business)",
     metaDescription: "Calculate the real revenue cost of a bad online reputation. Lost customers, higher ad costs, and compounding effects explained for local business owners.",
     keywords: ["cost of bad online reputation", "online reputation cost", "reputation management roi", "negative reviews revenue impact", "bad reviews cost business"],

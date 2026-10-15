@@ -10,7 +10,7 @@ export const aiVisibilityAuditLocalBusinessesPost: BlogPostSource = {
     pillarLabel: "Local SEO",
     publishedAt: "2026-05-25",
     dateModified: "2026-05-25",
-    author: { name: "Marcus Webb", role: "Local SEO Strategist" },
+    author: { name: "Karthik", role: "Founder" },
     metaTitle: "AI Visibility Audit for Local Businesses (2026)",
     metaDescription:
         "Run an AI visibility audit: brand mentions in ChatGPT, Perplexity, Gemini, and Google AI Overviews plus local SEO, reviews, and structured data checks.",

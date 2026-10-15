@@ -10,7 +10,7 @@ export const canYouDeleteAGoogleReviewPost: BlogPostSource = {
     pillarLabel: "Google Reviews",
     publishedAt: "2026-09-10",
     dateModified: "2026-10-11",
-    author: { name: "Marcus Vance", role: "Local SEO & Reputation" },
+    author: { name: "Karthik", role: "Founder" },
     metaTitle: "Delete or Remove a Google Review? (2026)",
     metaDescription:
         "Learn when Google will remove a review, how to report policy violations, appeal a rejected report, and respond to legitimate negative feedback.",

@@ -9,7 +9,7 @@ export const howToRespondToAPositiveReviewPost: BlogPostSource = {
     pillarLabel: "Responding to Reviews",
     publishedAt: "2026-09-05",
     dateModified: "2026-10-11",
-    author: { name: "Jamie Rivera", role: "Product Marketing" },
+    author: { name: "Karthik", role: "Founder" },
     metaTitle: "Positive Review Responses (15 Examples)",
     metaDescription:
         "Responding to positive Google reviews builds customer loyalty and local SEO. Use these 15 templates to craft perfect review responses in seconds.",

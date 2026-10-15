@@ -9,7 +9,7 @@ export const howToGet50GoogleReviewsIn30DaysPost: BlogPostSource = {
     pillarLabel: "Google Reviews",
     publishedAt: "2026-03-10",
     dateModified: "2026-10-11",
-    author: { name: "Marcus Webb", role: "Local SEO Strategist" },
+    author: { name: "Karthik", role: "Founder" },
     metaTitle: "How to Get 50 Google Reviews in 30 Days",
     metaDescription: "A step-by-step playbook for getting 50 Google reviews in 30 days. Includes request scripts, channel selection, a planning example, and automation tips.",
     keywords: ["how to get more google reviews", "get 50 google reviews", "google review strategy", "review request strategy"],

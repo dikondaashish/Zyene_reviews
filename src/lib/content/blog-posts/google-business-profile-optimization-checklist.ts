@@ -9,7 +9,7 @@ export const googleBusinessProfileOptimizationChecklistPost: BlogPostSource = {
     pillarLabel: "Local SEO",
     publishedAt: "2026-04-21",
     dateModified: "2026-10-11",
-    author: { name: "David Kim", role: "Customer Success" },
+    author: { name: "Karthik", role: "Founder" },
     metaTitle: "Google Business Profile Optimization Checklist 2026",
     metaDescription:
         "Google Business Profile optimization checklist for 2026: 30+ steps to improve profile completeness, visibility fundamentals, and customer actions.",

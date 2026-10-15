@@ -10,7 +10,7 @@ export const hvacHomeServicesReputationManagementPost: BlogPostSource = {
     pillarLabel: "Industry Specific",
     publishedAt: "2026-09-17",
     dateModified: "2026-09-17",
-    author: { name: "Marcus Vance", role: "Local SEO & Reputation" },
+    author: { name: "Karthik", role: "Founder" },
     metaTitle: "HVAC & Home Services Reputation Management (2026)",
     metaDescription:
         "Reputation management guide for HVAC, plumbing, and roofing contractors. Collect Google reviews, handle complaints, and convert reputation into local leads.",

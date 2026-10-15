@@ -10,7 +10,7 @@ export const howToCreateAGoogleReviewQrCodePost: BlogPostSource = {
     pillarLabel: "Google Reviews",
     publishedAt: "2026-10-13",
     dateModified: "2026-10-13",
-    author: { name: "Marcus Vance", role: "Local SEO & Reputation" },
+    author: { name: "Karthik", role: "Founder" },
     metaTitle: "How to Create a Google Review QR Code (2026 Guide)",
     metaDescription:
         "Step-by-step guide to creating a Google review QR code for your business. Discover the 10:1 print sizing formula, static vs dynamic codes, and smart shields.",
