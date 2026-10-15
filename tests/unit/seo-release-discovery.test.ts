@@ -15,13 +15,10 @@ describe("organic discovery", () => {
         for (const post of BLOG_POSTS) expect(html, post.slug).toContain(`href="/blog/${post.slug}"`);
     });
 
-    it("returns matching English and Spanish alternates for actual translated industry pairs", () => {
+    it("returns canonical without hreflang language alternates for translated industry pairs", () => {
         for (const page of LOCALIZED_INDUSTRY_PAGES) {
             const alternates = industryAlternates(page.industrySlug);
-            expect(alternates.languages, page.industrySlug).toEqual({
-                en: `https://www.zyenereviews.com/industries/${page.industrySlug}`,
-                es: `https://www.zyenereviews.com/es/industries/${page.localizedSlug}`,
-            });
+            expect(alternates.languages, page.industrySlug).toBeUndefined();
             expect(alternates.canonical).toBe(`https://www.zyenereviews.com/industries/${page.industrySlug}`);
         }
     });

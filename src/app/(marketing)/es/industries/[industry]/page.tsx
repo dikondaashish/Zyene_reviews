@@ -22,6 +22,10 @@ export async function generateMetadata({
     return mergeMarketingSocial({
         title: data.metaTitle,
         description: data.metaDescription,
+        robots: {
+            index: false,
+            follow: true,
+        },
         alternates: industryAlternates(data.industrySlug, "es"),
         openGraph: {
             title: data.metaTitle,

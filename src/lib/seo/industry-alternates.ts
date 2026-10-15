@@ -7,5 +7,5 @@ export function industryAlternates(industrySlug: string, locale: "en" | "es" = "
     const esPath = getEsIndustryPathForEnglishSlug(industrySlug);
     if (!esPath) return { canonical: en };
     const es = `https://www.zyenereviews.com${esPath}`;
-    return { canonical: locale === "es" ? es : en, languages: { en, es } };
+    return { canonical: locale === "es" ? es : en };
 }

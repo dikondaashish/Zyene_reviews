@@ -226,11 +226,10 @@ describe("sitemap coverage", () => {
         expect(dupes, `Duplicate sitemap URLs:\n  ${dupes.join("\n  ")}`).toEqual([]);
     });
 
-    it("every URL in all three sitemaps maps to a real route and does not redirect", () => {
+    it("every URL in active sitemaps maps to a real route and does not redirect", () => {
         const sitemaps = [
             { name: "core", entries: getCoreSitemap() },
             { name: "support", entries: getSupportSitemap() },
-            { name: "es", entries: getEsSitemap() },
         ];
 
         for (const { name, entries: list } of sitemaps) {
@@ -246,6 +245,14 @@ describe("sitemap coverage", () => {
                     `Sitemap ${name} contains non-existent route: ${pathname}`,
                 ).toBe(true);
             }
+        }
+    });
+
+    it("excludes the /es/industries hub and all /es/industries/* pages from the sitemaps", () => {
+        expect(getEsSitemap()).toEqual([]);
+        expect(sitemapPaths.has("/es/industries")).toBe(false);
+        for (const p of LOCALIZED_INDUSTRY_PAGES) {
+            expect(sitemapPaths.has(`/es/industries/${p.localizedSlug}`)).toBe(false);
         }
     });
 
