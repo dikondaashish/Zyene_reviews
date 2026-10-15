@@ -1,6 +1,6 @@
 .auth-shell {
   min-height: 100svh;
-  background: var(--background);
+  background: var(--canvas);
   color: var(--foreground);
 }
 .auth-header {

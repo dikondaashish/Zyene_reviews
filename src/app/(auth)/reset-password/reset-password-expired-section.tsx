@@ -1,34 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
+import { ArrowRight, ShieldAlert } from "lucide-react";
+import { AuthHeading } from "@/components/auth/auth-form-ui";
 
 export function ResetPasswordExpiredSection() {
     return (
         <div className="auth-form-stack">
-            <div className="auth-status-icon">
-                <ShieldCheck className="text-destructive size-8" />
-            </div>
-            <div className="auth-form-heading">
-                <h1 className="text-2xl font-bold text-foreground">Link expired</h1>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                    This password reset link has expired or already been used.
-                    <br />
-                    Request a new one below.
-                </p>
-            </div>
-            <Link
-                href="/forgot-password"
-                className="auth-submit"
-            >
-                Request new reset link
+            <div className="auth-status-icon auth-status-icon--warning"><ShieldAlert size={24} aria-hidden="true" /></div>
+            <AuthHeading title="This link has expired">
+                Password reset links work once and expire after a while. Request a new one and we’ll email it right away.
+            </AuthHeading>
+            <Link href="/forgot-password" className="auth-submit">
+                Request a new reset link <ArrowRight size={17} aria-hidden="true" />
             </Link>
-            <p className="text-center text-sm text-muted-foreground">
-                Remember your password?{" "}
-                <Link href="/login" className="auth-text-link">
-                    Log in
-                </Link>
-            </p>
+            <p className="auth-switch">Remember your password? <Link href="/login" className="auth-text-link">Log in</Link></p>
         </div>
     );
 }

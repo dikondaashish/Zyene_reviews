@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { GoogleIdentityButton } from "@/components/auth/google-identity-button";
-import { AuthDivider, AuthError, AuthHeading, AuthPasswordField, AuthSubmit } from "@/components/auth/auth-form-ui";
+import { Mail } from "lucide-react";
+import { AuthDivider, AuthError, AuthHeading, AuthInput, AuthPasswordField, AuthSubmit } from "@/components/auth/auth-form-ui";
 import { useLoginForm } from "@/app/(auth)/login/use-login-form";
 
 export function LoginForm({ googleClientId }: { googleClientId: string }) {
@@ -11,16 +12,15 @@ export function LoginForm({ googleClientId }: { googleClientId: string }) {
     if (inviteToken) signupQuery.set("invite", inviteToken);
     return (
         <div className="auth-form-stack">
-            <AuthHeading title="Welcome back">Log in to your workspace. Your next great customer conversation starts here.</AuthHeading>
+            <AuthHeading title="Log in to Zyene Reviews">Welcome back. Pick up your reviews, replies and requests right where you left off.</AuthHeading>
             <GoogleIdentityButton clientId={googleClientId} intent="signin" inviteToken={inviteToken} nextPath={nextPath} />
             <AuthDivider />
             <form onSubmit={onSubmit} className="auth-fields" aria-busy={isLoading}>
                 <AuthError message={formError} />
                 <div className="auth-field">
                     <label htmlFor="email">Email address</label>
-                    <input id="email" name="email" placeholder="you@business.com" type="email"
-                        autoCapitalize="none" autoComplete="email" autoCorrect="off" required
-                        disabled={isLoading} className="auth-input" />
+                    <AuthInput icon={Mail} id="email" name="email" placeholder="you@business.com" type="email"
+                        autoCapitalize="none" autoComplete="email" autoCorrect="off" required disabled={isLoading} />
                 </div>
                 <div className="auth-field">
                     <div className="auth-label-row">
