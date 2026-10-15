@@ -7,7 +7,7 @@
  *   Section heading  18px / 1.35 / 600 / -0.018em   <h2>  .ui-section-title
  *   Card heading     16px / 1.4  / 600 / -0.011em   <h3> / CardTitle  .ui-card-title
  *
- * The classes are deliberately unlayered: they sit outside Tailwind's
+ * The classes and the shell h1/h2 rules are deliberately unlayered: they sit outside Tailwind's
  * utilities layer, so a stray `text-3xl` or CardTitle's `leading-none` can
  * never resize a heading that opted into the scale. Marketing pages keep
  * their responsive editorial scale and never use these hooks. */
@@ -42,7 +42,12 @@
   letter-spacing: var(--type-page-title-tracking);
 }
 
-.ui-section-title {
+/* h2 is pinned inside the signed-in shells too: some section headings come
+ * from src/components/ui (e.g. the dashboard review spotlight), which routes
+ * cannot restyle. Dialogs portal outside the shell and keep their own scale. */
+.ui-section-title,
+[data-dashboard-shell] h2,
+[data-app-onboarding] h2 {
   font-size: var(--type-section-title);
   line-height: var(--type-section-title-leading);
   font-weight: var(--type-section-title-weight);

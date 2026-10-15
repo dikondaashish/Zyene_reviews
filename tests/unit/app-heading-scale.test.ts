@@ -57,6 +57,11 @@ describe("signed-in heading scale", () => {
             }
         }
         expect(css).not.toMatch(/@media/);
+        // Headings rendered by src/components/ui (which routes cannot restyle) are pinned by the shell.
+        for (const shell of ["[data-dashboard-shell]", "[data-app-onboarding]"]) {
+            expect(css).toContain(`${shell} h1`);
+            expect(css).toContain(`${shell} h2`);
+        }
         expect(fs.readFileSync(path.join(ROOT, "src/app/globals.css"), "utf8")).toContain('@import "./product-typography.css"');
     });
 });
