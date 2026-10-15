@@ -10,7 +10,7 @@ import {
 Sentry.init({
     ...getSentryBaseInitOptions(),
     beforeSend: filterClientSentryEvent,
-    // Session Replay is attached only after analytics consent (see ConsentScripts /
+    // Session Replay is attached only after analytics consent (see PrivacyScripts /
     // enableSentryReplay); these rates apply once it is added.
     replaysSessionSampleRate: getSentryReplaysSessionSampleRate(),
     replaysOnErrorSampleRate: getSentryReplaysOnErrorSampleRate(),

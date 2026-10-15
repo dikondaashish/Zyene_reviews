@@ -113,6 +113,16 @@ Missing **required** vars accessed via `required()` throw at use/import time wit
 
 Facebook, Yelp, Square, Clover, Sentry, Better Stack heartbeats, Cal.com embed, referral cents, IndexNow, GSC export — all annotated in `.env.example`.
 
+### Privacy / consent
+
+| Var | Scope | Notes |
+|-----|-------|-------|
+| `NEXT_PUBLIC_GTM_ID` | public | GTM container; defaults to the production container. Loaded only after analytics or marketing consent |
+| `NEXT_PUBLIC_META_PIXEL_ID` | public | Unset = no pixel. Loaded only after marketing consent (and never with GPC) |
+| `PRIVACY_REGION_OVERRIDE` | server, dev only | `EU_EEA`, `UK`, `US` or `OTHER`; ignored when `NODE_ENV=production`. Per-page alternative: `?privacy_region=` |
+
+Region comes from Vercel's `x-vercel-ip-country` header (no key needed). See `docs/PRIVACY.md`.
+
 ---
 
 ## 3. Recommended local setup

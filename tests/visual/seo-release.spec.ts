@@ -16,6 +16,8 @@ test("email signup records a start and verification request, without reporting c
         status: 200, contentType: "application/json",
         body: JSON.stringify({ user: { id: "fixture-user", identities: [], user_metadata: {}, app_metadata: {} }, session: null }),
     }));
+    // Funnel events are analytics, so they need consent (beforeEach seeds "declined").
+    await page.addInitScript(() => localStorage.setItem("cookie-consent", "accepted"));
     await page.goto("/signup");
     await expect(page.getByRole("main")).toContainText("Card required");
     await expect(page.getByRole("main")).toContainText("bills automatically");

@@ -39,6 +39,7 @@ export function MarketingAppointmentDialog({ open, onOpenChange }: MarketingAppo
           </DialogClose>
         </DialogHeader>
         <div className="min-h-0 overflow-y-auto p-4 sm:p-6">
+          {/* Not consent-gated: opening "Book an appointment" is the visitor's request for this embed. */}
           {calComEmbedUrl ? (
             <DemoBookingCalendar src={calComEmbedUrl} />
           ) : (

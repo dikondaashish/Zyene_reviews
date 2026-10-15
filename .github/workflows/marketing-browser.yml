@@ -39,7 +39,7 @@ jobs:
           pnpm exec playwright test --timeout=90000
           tests/visual/seo-release.spec.ts tests/visual/auth-experience.spec.ts
           tests/visual/marketing-hero.spec.ts tests/visual/marketing-auto-reply.spec.ts
-          tests/visual/marketing-demo.spec.ts
+          tests/visual/marketing-demo.spec.ts tests/visual/privacy-consent.spec.ts
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
