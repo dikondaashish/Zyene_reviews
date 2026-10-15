@@ -21,7 +21,7 @@ export function ZyenePlatformRatingDistributionCard({
         <Card className="bg-card border-border transition-all hover:border-primary/20">
             <CardHeader>
                 <div className="space-y-1">
-                    <CardTitle className="text-lg font-bold flex items-center gap-2">
+                    <CardTitle className="ui-card-title flex items-center gap-2">
                         <Star className="text-primary size-5" />
                         Rating Distribution
                     </CardTitle>

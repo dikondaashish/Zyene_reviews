@@ -1,4 +1,5 @@
 import { Puzzle, Star } from "lucide-react";
+import { PageHeader } from "@/components/dashboard/page-header";
 
 export function IntegrationsPageHeader({
     connectedCount,
@@ -9,14 +10,10 @@ export function IntegrationsPageHeader({
 }) {
     return (
         <div className="space-y-4">
-            <div className="flex flex-col gap-1">
-                <h1 className="text-3xl font-bold tracking-tight">Integrations</h1>
-                <p className="text-muted-foreground max-w-2xl">
-                    Connect your review platforms, POS systems, and
-                    developer tools to consolidate reviews and automate
-                    your workflow.
-                </p>
-            </div>
+            <PageHeader
+                title="Integrations"
+                description="Connect your review platforms, POS systems, and developer tools to consolidate reviews and automate your workflow."
+            />
 
             {connectedCount > 0 && (
                 <div className="flex items-center gap-3 flex-wrap">

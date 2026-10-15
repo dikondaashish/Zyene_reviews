@@ -8,7 +8,7 @@ type CustomerPortalCardQrPreviewProps = {
 export function CustomerPortalCardQrPreview({ loading, qrDataUrl }: CustomerPortalCardQrPreviewProps) {
     return (
         <div className="relative z-10 flex flex-col items-center justify-center mb-6">
-            <h3 className="text-[28px] font-bold text-white mb-2">Scan to Review</h3>
+            <p className="text-[28px] font-bold text-white mb-2">Scan to Review</p>
             <div className="bg-white p-4 rounded-[20px] shadow-lg border border-white/10">
                 {loading ? (
                     <div className="flex items-center justify-center text-[11px] text-[rgb(161,161,170)] font-medium bg-[rgba(24,24,27,0.5)] rounded-xl size-[180px]">

@@ -27,7 +27,7 @@ export function CompetitorsTableInsightsSection({
     return (
         <Card className="col-span-1 md:col-span-2">
             <CardHeader>
-                <CardTitle>AI Competitor Insights</CardTitle>
+                <CardTitle className="ui-card-title">AI Competitor Insights</CardTitle>
                 <CardDescription>
                     Latest AI-generated insights from recent competitor movement.
                 </CardDescription>

@@ -29,7 +29,7 @@ export function ZyenePlatformReviewRequestFunnelCard({
     <Card className="bg-card border-border overflow-hidden">
       <CardHeader>
         <div className="space-y-1">
-          <CardTitle className="text-lg font-bold flex items-center gap-2">
+          <CardTitle className="ui-card-title flex items-center gap-2">
             <Filter className="text-primary size-5" aria-hidden="true" />
             Review Request Funnel
           </CardTitle>

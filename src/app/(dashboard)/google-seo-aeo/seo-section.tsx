@@ -30,7 +30,7 @@ export function SeoSection({
             <header className="flex flex-col gap-3 border-b border-border px-5 py-4 sm:flex-row sm:items-start sm:justify-between sm:px-6">
                 <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                        <h2 id={id} className="text-base font-semibold text-foreground">
+                        <h2 id={id} className="ui-section-title text-foreground">
                             {title}
                         </h2>
                         {meta}

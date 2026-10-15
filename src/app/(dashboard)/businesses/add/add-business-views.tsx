@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowLeft, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { BusinessLimitUpgradePanel } from "@/components/businesses/business-limit-upgrade-panel";
 
 export function AddBusinessLoadingView() {
@@ -50,7 +50,7 @@ export function AddBusinessConnectView({ onConnect }: { onConnect: () => void })
                         <div className="mx-auto mb-4 flex items-center justify-center rounded-full bg-primary/10 border border-primary/20 size-12">
                             <Store className="text-primary size-6" />
                         </div>
-                        <CardTitle className="text-2xl">Add a Business</CardTitle>
+                        <h1 className="ui-page-title">Add a Business</h1>
                         <CardDescription>
                             Connect your Google Business Profile to start managing reviews for a new location.
                             You can use a different Google account than the one you signed up with.

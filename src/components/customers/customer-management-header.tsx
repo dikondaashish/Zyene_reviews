@@ -21,7 +21,7 @@ export function CustomerManagementHeader({
                     <div className="rounded-lg border border-primary/20 bg-primary/10 p-1.5">
                         <Users className="text-primary size-4" />
                     </div>
-                    <h1 className="text-xl font-bold tracking-tight text-foreground lg:text-2xl">Customers</h1>
+                    <h1 className="ui-page-title text-foreground">Customers</h1>
                 </div>
                 <p className="text-sm text-muted-foreground">
                     Keep your contacts organized and ready for your next campaign.

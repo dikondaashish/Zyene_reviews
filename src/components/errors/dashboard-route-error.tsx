@@ -35,7 +35,7 @@ export function DashboardRouteError({
                 <AlertCircle className="size-8 text-destructive" />
             </div>
             <div className="max-w-sm space-y-2">
-                <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+                <h1 className="ui-page-title">{title}</h1>
                 <p className="text-sm text-muted-foreground">{description}</p>
             </div>
             <Button onClick={() => reset()} className="mt-2 gap-2">

@@ -20,7 +20,7 @@ export function ZyenePlatformLowRatingAlertsCard({
             <CardHeader>
                 <div className="flex items-center justify-between">
                     <div className="space-y-1">
-                        <CardTitle className="text-lg font-bold flex items-center gap-2">
+                        <CardTitle className="ui-card-title flex items-center gap-2">
                             <AlertTriangle className="text-warning-foreground size-5" />
                             Low Rating Alerts
                         </CardTitle>

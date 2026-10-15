@@ -19,7 +19,7 @@ export function EstimatedAeoSurfaces({ content }: { content: GoogleSeoAeoContent
 
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex flex-wrap items-center gap-2">
+                    <CardTitle className="ui-card-title flex flex-wrap items-center gap-2">
                         AI Visibility
                         <Badge variant="outline">Estimated</Badge>
                     </CardTitle>
@@ -54,7 +54,7 @@ export function EstimatedAeoSurfaces({ content }: { content: GoogleSeoAeoContent
 
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex flex-wrap items-center gap-2">
+                    <CardTitle className="ui-card-title flex flex-wrap items-center gap-2">
                         Heatmap audits
                         <Badge variant="outline">Estimated</Badge>
                     </CardTitle>

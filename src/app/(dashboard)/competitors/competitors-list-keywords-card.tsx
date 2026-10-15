@@ -24,7 +24,7 @@ export function CompetitorsListKeywordsCard({
     return (
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="ui-card-title flex items-center gap-2">
                         <Hash className="text-muted-foreground size-5" />
                         Your Google search terms
                     </CardTitle>

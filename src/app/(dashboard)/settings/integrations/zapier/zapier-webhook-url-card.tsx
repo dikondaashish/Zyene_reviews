@@ -39,7 +39,7 @@ export function ZapierWebhookUrlCard({
             <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0 border-b border-border/60 bg-muted/15 pb-4">
                 <div className="space-y-1">
                     <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Setup</p>
-                    <h2 className="text-lg font-semibold tracking-tight">Webhook endpoint</h2>
+                    <h2 className="ui-section-title">Webhook endpoint</h2>
                 </div>
                 <Badge className="border-0 bg-primary/10 text-primary">Bearer auth</Badge>
             </CardHeader>

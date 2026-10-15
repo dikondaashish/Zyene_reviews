@@ -74,7 +74,7 @@ export function BusinessDirectory({ businesses, activeBusinessId }: {
                 ) : (
                     <div className="flex flex-col items-center px-6 py-14 text-center">
                         <Search className="mb-3 size-6 text-muted-foreground" aria-hidden="true" />
-                        <h2 className="font-semibold">{search ? "No matching businesses" : "You’re all connected"}</h2>
+                        <h2 className="ui-section-title">{search ? "No matching businesses" : "You’re all connected"}</h2>
                         <p className="mt-1 max-w-sm text-sm text-muted-foreground">{search ? "Try another business name, category, or location." : "Every business has a connected Google Business Profile."}</p>
                         <Button variant="outline" className="mt-5 rounded-lg" onClick={() => { setQuery(""); setAttentionOnly(false); }}>Show all businesses</Button>
                     </div>

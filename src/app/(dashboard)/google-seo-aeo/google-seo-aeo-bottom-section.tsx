@@ -13,7 +13,7 @@ export function GoogleSeoAeoBottomSection({ content }: { content: GoogleSeoAeoCo
         <>
             <section className="space-y-4" aria-labelledby="content-workspace-title">
                 <div>
-                    <h2 id="content-workspace-title" className="text-lg font-semibold tracking-tight">
+                    <h2 id="content-workspace-title" className="ui-section-title">
                         Improve your Google profile
                     </h2>
                     <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">

@@ -1,5 +1,6 @@
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/dashboard/page-header";
 import { SendRequestDialog } from "./send-request-dialog";
 
 export function RequestsPageHeader({
@@ -14,14 +15,11 @@ export function RequestsPageHeader({
     initialCustomer?: { name: string; phone: string; email: string };
 }) {
     return (
-        <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="min-w-0">
-                <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">Review Requests</h1>
-                <p className="mt-1 text-sm text-muted-foreground lg:text-base">
-                    Manage and track your review invitations.
-                </p>
-            </div>
-            <div className="flex w-full min-w-0 flex-wrap items-center gap-2 lg:w-auto lg:shrink-0">
+        <PageHeader
+            title="Review Requests"
+            description="Manage and track your review invitations."
+            actionsClassName="w-full sm:w-auto"
+            actions={<>
                 <Button variant="outline" className="min-w-0 flex-1 sm:flex-initial" asChild>
                     <a href={`/api/requests/export`} className="inline-flex items-center justify-center gap-2">
                         <Download className="shrink-0 size-4" />
@@ -38,7 +36,7 @@ export function RequestsPageHeader({
                         autoOpen={!!initialCustomer}
                     />
                 </div>
-            </div>
-        </div>
+            </>}
+        />
     );
 }

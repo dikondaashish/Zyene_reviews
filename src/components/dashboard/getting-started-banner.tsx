@@ -76,7 +76,7 @@ export function GettingStartedBanner({
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h2 className="text-lg font-bold text-foreground">Get Started</h2>
+          <h2 className="ui-section-title text-foreground">Get Started</h2>
           <p className="text-sm text-muted-foreground mt-1">
             Complete these steps to unlock the full power of Zyene Reviews
           </p>

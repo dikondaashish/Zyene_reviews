@@ -8,7 +8,7 @@ export function BusinessesEmptyState() {
             <div className="mb-5 flex size-14 items-center justify-center rounded-2xl border border-primary/15 bg-primary/5">
                 <Building2 className="size-6 text-primary" aria-hidden="true" />
             </div>
-            <h2 className="text-xl font-semibold tracking-tight">Your first location starts here</h2>
+            <h2 className="ui-section-title">Your first location starts here</h2>
             <p className="mb-6 mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
                 Add a business, connect your review platforms, and give every customer conversation a home.
             </p>

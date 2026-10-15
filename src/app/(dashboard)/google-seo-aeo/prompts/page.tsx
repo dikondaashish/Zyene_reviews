@@ -28,7 +28,7 @@ export default async function AeoPromptsPage() {
         <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
             <GoogleSeoAeoSubnav active="/google-seo-aeo/prompts" />
             <div>
-                <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Prompt library</h1>
+                <h1 className="ui-page-title">Prompt library</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
                     The questions we ask answer engines on behalf of {data.businessName}.
                 </p>
@@ -48,7 +48,7 @@ export default async function AeoPromptsPage() {
                 <div className="space-y-6 lg:col-span-2">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Add a prompt</CardTitle>
+                            <CardTitle className="ui-card-title">Add a prompt</CardTitle>
                             <CardDescription>
                                 New prompts start inactive. Nothing is sampled or charged until you
                                 switch one on.
@@ -61,7 +61,7 @@ export default async function AeoPromptsPage() {
 
                     <Card>
                         <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
-                            <CardTitle>
+                            <CardTitle className="ui-card-title">
                                 Prompts
                                 <span className="ml-2 text-sm font-normal text-muted-foreground">
                                     {data.activeCount} of {data.prompts.length} active

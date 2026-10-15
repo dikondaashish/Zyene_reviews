@@ -31,7 +31,7 @@ export function CompetitorsTrackedSection({
     return (
         <Card className="col-span-1 md:col-span-2">
             <CardHeader>
-                <CardTitle>Tracked Competitors</CardTitle>
+                <CardTitle className="ui-card-title">Tracked Competitors</CardTitle>
                 <CardDescription>
                     Ratings and reviews from Google Places. Primary category, website, and short
                     description come from public listing data after sync - not competitors&apos; private

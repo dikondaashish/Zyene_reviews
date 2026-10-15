@@ -20,7 +20,7 @@ export function CompetitorsTableMovementSection({
     return (
         <Card className="col-span-1 md:col-span-2">
             <CardHeader>
-                <CardTitle>Market Movement ({rangeLabel})</CardTitle>
+                <CardTitle className="ui-card-title">Market Movement ({rangeLabel})</CardTitle>
                 <CardDescription>
                     Rating and review-count movement based on recorded competitor snapshots.
                 </CardDescription>

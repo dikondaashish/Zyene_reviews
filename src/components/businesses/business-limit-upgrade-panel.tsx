@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { UpgradeModal } from "@/components/settings/upgrade-modal";
 import { getUpgradeModalCopy } from "@/lib/billing/upgrade-modal-copy";
 import { BUSINESS_LIMIT_UPGRADE_BILLING_HREF } from "@/lib/billing/business-limit-upgrade-href";
@@ -27,7 +27,7 @@ export function BusinessLimitUpgradePanel() {
                         <div className="mx-auto mb-4 flex items-center justify-center rounded-full bg-primary/10 border-2 border-primary/30 size-14">
                             <Lock className="text-primary size-7" />
                         </div>
-                        <CardTitle className="text-2xl font-bold text-foreground">{copy.title}</CardTitle>
+                        <h1 className="ui-page-title text-foreground">{copy.title}</h1>
                         <CardDescription className="text-muted-foreground font-medium">
                             Maximum business locations reached for your current plan.
                         </CardDescription>

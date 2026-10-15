@@ -26,14 +26,14 @@ export function SmartInsightsCardHeader({
                 </div>
 
                 <div>
-                    <h2 className="text-2xl md:text-3xl font-semibold font-sans leading-[1.05] tracking-[-0.02em] text-foreground">
+                    <p className="text-2xl md:text-3xl font-semibold font-sans leading-[1.05] tracking-[-0.02em] text-foreground">
                         {firstPart}
                         {secondPart && (
                             <span className="block text-primary">
                                 {secondPart}
                             </span>
                         )}
-                    </h2>
+                    </p>
                 </div>
 
                 <p className="text-sm text-foreground/70 leading-relaxed max-w-lg mt-2">

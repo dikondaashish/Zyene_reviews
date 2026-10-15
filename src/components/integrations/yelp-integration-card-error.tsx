@@ -18,7 +18,7 @@ export function YelpIntegrationCardError({ onReconnect }: YelpIntegrationCardErr
                     <div className="flex items-center gap-3">
                         <YelpCardIcon className="text-destructive size-6" />
                         <div>
-                            <h3 className="font-semibold text-sm">Yelp</h3>
+                            <h3 className="ui-card-title">Yelp</h3>
                             <p className="text-xs text-muted-foreground">Business reviews</p>
                         </div>
                     </div>

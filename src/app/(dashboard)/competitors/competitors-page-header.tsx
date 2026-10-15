@@ -1,13 +1,12 @@
+import { PageHeader } from "@/components/dashboard/page-header";
+
 export function CompetitorsPageHeader({ recentAlertsCount }: { recentAlertsCount: number }) {
     return (
-        <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-            <div className="min-w-0 flex-1">
-                <h1 className="text-xl font-bold tracking-tight sm:text-2xl lg:text-3xl">Competitor Monitoring</h1>
-                <p className="text-sm text-muted-foreground lg:text-base">
-                    Keep track of your competitors&apos; review performance to stay ahead.
-                </p>
-            </div>
-            {recentAlertsCount > 0 ? (
+        <PageHeader
+            title="Competitor Monitoring"
+            description="Keep track of your competitors' review performance to stay ahead."
+            actionsClassName="w-full sm:w-auto"
+            actions={recentAlertsCount > 0 ? (
                 <a
                     href="#competitor-alerts"
                     className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg border bg-muted/40 px-3 py-2 text-sm font-medium hover:bg-muted/60 sm:w-fit sm:justify-start"
@@ -18,6 +17,6 @@ export function CompetitorsPageHeader({ recentAlertsCount }: { recentAlertsCount
                     Alerts in period
                 </a>
             ) : null}
-        </div>
+        />
     );
 }

@@ -36,7 +36,7 @@ export default async function QuestionsPage() {
     if (qaUnavailable) {
         return (
             <div className="flex w-full max-w-lg flex-col gap-4">
-                <h1 className="text-3xl font-bold tracking-tight">Google Q&A</h1>
+                <h1 className="ui-page-title">Google Q&A</h1>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                     Google Q&A isn&apos;t available for this business listing. We didn&apos;t receive any Q&amp;A data
                     from Google for this location, so this feature stays hidden.

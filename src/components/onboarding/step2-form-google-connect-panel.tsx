@@ -25,7 +25,7 @@ export function Step2FormGoogleConnectPanel({ onConnectClick, pending, disabled 
                 </motion.div>
 
                 <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">Connect your business</h2>
+                    <h1 className="ui-page-title text-foreground">Connect your business</h1>
                     <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed max-w-xs">
                         Link Google to auto-fill your details, or enter them manually below.
                     </p>

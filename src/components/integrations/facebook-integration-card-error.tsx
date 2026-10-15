@@ -21,7 +21,7 @@ export function FacebookIntegrationCardError({
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <FacebookBrandIcon className="shrink-0 size-5" aria-hidden />
-                        <CardTitle className="text-base">Facebook</CardTitle>
+                        <CardTitle className="ui-card-title">Facebook</CardTitle>
                     </div>
                     <div className="flex items-center gap-1.5 text-xs font-medium text-destructive">
                         <XCircle className="size-3.5" />

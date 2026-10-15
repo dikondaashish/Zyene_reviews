@@ -19,7 +19,7 @@ export function CampaignDetailContacts({ requests, mounted }: CampaignDetailCont
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="text-base">Contacts ({requests.length})</CardTitle>
+                <CardTitle className="ui-card-title">Contacts ({requests.length})</CardTitle>
             </CardHeader>
             <CardContent>
                 {requests.length === 0 ? (

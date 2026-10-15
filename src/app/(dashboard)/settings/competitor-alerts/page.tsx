@@ -38,7 +38,7 @@ export default async function CompetitorAlertsSettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-lg font-medium">Competitor alerts</h1>
+        <h1 className="ui-page-title">Competitor alerts</h1>
         <p className="text-sm text-muted-foreground max-w-xl">
           When the daily competitor job detects a rating jump or review spike
           above these thresholds, we record an alert and optionally email your

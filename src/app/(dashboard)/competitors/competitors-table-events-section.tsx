@@ -22,7 +22,7 @@ export function CompetitorsTableEventsSection({
     return (
         <Card className="col-span-1 md:col-span-2">
             <CardHeader>
-                <CardTitle>Recent Competitor Events ({rangeLabel})</CardTitle>
+                <CardTitle className="ui-card-title">Recent Competitor Events ({rangeLabel})</CardTitle>
                 <CardDescription>
                     Event timeline generated from competitor monitoring workflows.
                 </CardDescription>

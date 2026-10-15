@@ -21,7 +21,7 @@ export function CampaignDetailHeader({ campaign, detail }: CampaignDetailHeaderP
                 </Button>
                 <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                        <h1 className="break-words text-xl font-bold tracking-tight sm:text-2xl">{campaign.name}</h1>
+                        <h1 className="ui-page-title break-words">{campaign.name}</h1>
                         <Badge
                             variant={campaign.status === "active" ? "default" : "secondary"}
                             className={

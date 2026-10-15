@@ -18,7 +18,7 @@ export function ImportSuccessStep({
                 <div className="bg-chart-2/15 rounded-full flex items-center justify-center mb-4 size-16">
                     <CheckCircle2 className="text-success size-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground">Import Complete!</h3>
+                <h2 className="ui-section-title text-foreground">Import Complete!</h2>
 
                 <div className="flex items-center justify-center gap-6 mt-6 p-4 bg-muted/50 rounded-xl border w-full max-w-sm">
                     <div className="text-center">

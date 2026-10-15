@@ -52,7 +52,7 @@ export function ReviewContentForm({
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <Tabs defaultValue="rating" className="w-full" onValueChange={onTabChange}>
                         <div className="border-b bg-muted/40 px-6 pt-5 pb-0">
-                            <h3 className="text-lg font-semibold text-foreground mb-1">Review Flow Content</h3>
+                            <h3 className="ui-card-title text-foreground mb-1">Review Flow Content</h3>
                             <p className="text-sm text-muted-foreground mb-4">
                                 Customize every step of your customer review experience.
                             </p>

@@ -39,7 +39,7 @@ export function AnalyticsPageClientHero({
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="space-y-1">
-                        <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold tracking-tight sm:gap-3 sm:text-2xl">
+                        <h1 className="ui-page-title flex flex-wrap items-center gap-2 sm:gap-3">
                             <ChartNoAxesCombined className="size-6 text-primary" aria-hidden />
                             Analytics
                             {isDemo && (

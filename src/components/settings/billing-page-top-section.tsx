@@ -19,7 +19,7 @@ export function BillingPageTopSection(props: {
     return (
         <>
             <div>
-                <h1 className="text-3xl font-bold tracking-tight">{b.title}</h1>
+                <h1 className="ui-page-title">{b.title}</h1>
                 <p className="text-muted-foreground">{b.subtitle}</p>
             </div>
 

@@ -13,7 +13,7 @@ export function DemoModeBanner({ className = "" }: { className?: string }) {
                     </div>
                     <div className="space-y-2">
                         <div className="flex flex-wrap items-center gap-2">
-                            <h3 className="text-lg font-semibold tracking-tight">Explore your workspace</h3>
+                            <h3 className="ui-card-title">Explore your workspace</h3>
                             <Badge variant="secondary">Demo</Badge>
                         </div>
                         <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">

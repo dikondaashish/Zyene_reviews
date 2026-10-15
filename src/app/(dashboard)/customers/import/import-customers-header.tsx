@@ -10,7 +10,7 @@ export function ImportCustomersHeader() {
                     <ArrowLeft className="size-4" />
                 </Link>
             </Button>
-            <h1 className="text-3xl font-bold tracking-tight">Import Customers</h1>
+            <h1 className="ui-page-title">Import Customers</h1>
         </div>
     );
 }

@@ -21,7 +21,7 @@ export function NewCampaignMessageStep({
     return (
         <div className="space-y-6">
             <div>
-                <h2 className="text-lg font-semibold mb-1">Message Templates</h2>
+                <h2 className="ui-section-title mb-1">Message Templates</h2>
                 <p className="text-sm text-muted-foreground">
                     Craft your review request message. Use {"{customer_name}"}, {"{business_name}"}, and {"{review_link}"} as placeholders.
                 </p>

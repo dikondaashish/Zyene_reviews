@@ -14,7 +14,7 @@ export function DataExportsSection() {
             className="flex flex-col gap-3 border-t border-border pt-6 text-sm sm:flex-row sm:items-center sm:justify-between"
             aria-labelledby="data-exports-title"
         >
-            <h2 id="data-exports-title" className="font-medium text-muted-foreground">
+            <h2 id="data-exports-title" className="ui-section-title">
                 Download CSV
             </h2>
             <ul className="flex flex-wrap gap-x-5 gap-y-2">

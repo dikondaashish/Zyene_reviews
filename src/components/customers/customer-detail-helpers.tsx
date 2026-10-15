@@ -89,7 +89,7 @@ export function SectionHeading({
     return (
         <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
             <div>
-                <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground">
+                <h2 className="ui-section-title flex items-center gap-2 text-foreground">
                     <span className="flex items-center justify-center rounded-lg bg-muted size-8">
                         <Icon className="text-muted-foreground size-4" />
                     </span>

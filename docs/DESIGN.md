@@ -34,11 +34,19 @@ Use semantic tokens from `src/app/globals.css`. Do not use chart fill colors as 
 - **Funnel Sans**: app sidebar and its settings flyout, matching the OptiMonk reference. Compact labels are 10 px/16 px, weight 500; expanded labels are 14 px/20 px.
 - **Inter (`font-sans`)**: other navigation, forms, tables, body text, and supporting copy.
 - **Geist Mono**: code examples and user-editable message variables; avoid using code styling for ordinary product explanations.
-- Product page titles: 24 px in the dashboard shell and 24–32 px in editorial or onboarding surfaces, 600 weight, tight tracking.
-- Section headings: 18–20 px, 600 weight. Body and controls: 14–16 px. Supporting text: 12–14 px with sufficient contrast.
+- Signed-in heading scale (dashboard shell and onboarding), fixed at every breakpoint and defined once in `src/app/product-typography.css`:
+
+  | Role | Element | Hook | Size / leading / weight / tracking |
+  |---|---|---|---|
+  | Page title | the page's only `h1` | `PageHeader` (`@/components/dashboard/page-header`) or `.ui-page-title` | 24 px / 1.2 / 600 / -0.022em |
+  | Section heading | `h2` | `.ui-section-title` | 18 px / 1.35 / 600 / -0.018em |
+  | Card heading | `h3` or `CardTitle` | `.ui-card-title` | 16 px / 1.4 / 600 / -0.011em |
+
+  `PageHeader` fixes the header rhythm: 4 px title → description, 16 px between the text block and the actions, actions stacked under the title on phones. It carries no outer margin; the shell's 16/20 px section gap sets the space below. Do not add `text-*`, `font-*`, `tracking-*` or `leading-*` utilities to signed-in headings; `tests/unit/app-heading-scale.test.ts` fails if you do. Display text that is not a heading (KPI values, print-card previews, insight headlines) uses `p`, and compact KPI labels keep `CardTitle className="text-sm font-medium"`.
+- Body and controls: 14–16 px. Supporting text: 12–14 px with sufficient contrast.
 - Allow headings, business names and labels to wrap. Avoid all-caps paragraphs and unnecessary text truncation. Maintain usable layouts under browser zoom and text enlargement.
 
-The shared dashboard shell now enforces one 24 px page-title scale, 14 px body rhythm, and 12 px metadata rhythm across every dashboard route. Route-level classes may still size intentional microcopy (badges, chart labels, and legal notes), but page titles should not introduce a second scale. The shell uses 16 px gutters on compact screens, 20 px at the small breakpoint, and 24 px on wide screens; marketing pages retain their larger responsive editorial headings and section spacing.
+The shared dashboard shell enforces the 24 px page-title scale, 14 px body rhythm, and 12 px metadata rhythm across every dashboard route. Route-level classes may still size intentional microcopy (badges, chart labels, and legal notes), but page titles should not introduce a second scale. The shell uses 16 px gutters on compact screens, 20 px at the small breakpoint, and 24 px on wide screens; marketing pages retain their larger responsive editorial headings and section spacing.
 
 ## Layout and hierarchy
 

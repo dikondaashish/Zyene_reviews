@@ -74,7 +74,7 @@ export function DescriptionOptimizerCard({
     return (
         <Card className="h-full overflow-hidden border">
             <CardHeader>
-                <CardTitle>Business description workspace</CardTitle>
+                <CardTitle className="ui-card-title">Business description workspace</CardTitle>
                 <CardDescription>
                     Draft a clearer, keyword-aware description, review it, then save the version you approve to Google.
                 </CardDescription>

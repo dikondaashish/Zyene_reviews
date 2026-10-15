@@ -66,7 +66,7 @@ export class ErrorBoundary extends React.Component<
                             <line x1="12" y1="16" x2="12.01" y2="16" />
                         </svg>
                     </div>
-                    <h3 className="text-lg font-semibold">
+                    <h3 className="ui-card-title">
                         Something went wrong
                     </h3>
                     <p className="text-sm text-muted-foreground max-w-md">

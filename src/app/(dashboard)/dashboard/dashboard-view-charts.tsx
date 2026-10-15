@@ -33,7 +33,7 @@ export function DashboardViewCharts({
             <Card className="flex flex-col">
                 <CardHeader className="flex flex-col gap-2 pb-0 sm:flex-row sm:items-start sm:justify-between lg:items-center">
                     <div className="min-w-0">
-                        <CardTitle className="text-base font-bold text-foreground">
+                        <CardTitle className="ui-card-title text-foreground">
                             Review volume
                         </CardTitle>
                         <CardDescription className="mt-0.5 text-[13px] text-muted-foreground/80">
@@ -64,7 +64,7 @@ export function DashboardViewCharts({
             <Card className="flex flex-col">
                 <CardHeader className="flex flex-col gap-2 pb-0 sm:flex-row sm:items-start sm:justify-between lg:items-center">
                     <div className="min-w-0">
-                        <CardTitle className="text-base font-bold text-foreground">
+                        <CardTitle className="ui-card-title text-foreground">
                             Star distribution
                         </CardTitle>
                         <CardDescription className="mt-0.5 text-[13px] text-muted-foreground/80">

@@ -12,10 +12,10 @@ export function Phase3ConfigPanels({ branding, webhookCount, bigQueryCount }: {
     branding: Branding; webhookCount: number; bigQueryCount: number;
 }) {
     return <section className="space-y-4" aria-labelledby="phase3-config">
-        <div><h2 id="phase3-config" className="text-xl font-semibold">Agency delivery</h2>
+        <div><h2 id="phase3-config" className="ui-section-title">Agency delivery</h2>
             <p className="text-sm text-muted-foreground">Tenant-scoped branding, signed events, and structured warehouse export.</p></div>
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-            <Card><CardHeader><CardTitle className="text-base">White-label reports</CardTitle></CardHeader>
+            <Card><CardHeader><CardTitle className="ui-card-title">White-label reports</CardTitle></CardHeader>
                 <CardContent className="space-y-3"><form action={saveWhiteLabel} className="grid gap-2">
                     <label className="grid gap-1.5 text-sm font-medium">Agency name<Input name="name" required defaultValue={branding?.name ?? ""} placeholder="Your agency" /></label>
                     <label className="grid gap-1.5 text-sm font-medium">Logo URL<Input name="logoUrl" type="url" defaultValue={branding?.logo_url ?? ""} placeholder="https://.../logo.png" /></label>
@@ -25,7 +25,7 @@ export function Phase3ConfigPanels({ branding, webhookCount, bigQueryCount }: {
                     <Button type="submit">Save branding</Button>
                 </form><form action={checkSenderDomain}><Button type="submit" variant="outline" className="w-full">Verify sender domain</Button></form>
                 <p className="text-xs text-muted-foreground">Sender: {branding?.aeo_sender_domain_status ?? "not configured"}</p></CardContent></Card>
-            <Card><CardHeader><CardTitle className="text-base">Outbound webhooks</CardTitle></CardHeader>
+            <Card><CardHeader><CardTitle className="ui-card-title">Outbound webhooks</CardTitle></CardHeader>
                 <CardContent className="space-y-3"><form action={createPhase3Webhook} className="grid gap-2">
                     <label className="grid gap-1.5 text-sm font-medium">Webhook name<Input name="name" required placeholder="Automation webhook" /></label>
                     <label className="grid gap-1.5 text-sm font-medium">Endpoint URL<Input name="endpoint" type="url" required placeholder="https://..." /></label>
@@ -34,7 +34,7 @@ export function Phase3ConfigPanels({ branding, webhookCount, bigQueryCount }: {
                     <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="events" value="aeo.run.completed" defaultChecked /> Run completed</label>
                     <Button type="submit">Add webhook</Button>
                 </form><p className="text-xs text-muted-foreground">{webhookCount} configured endpoint{webhookCount === 1 ? "" : "s"}</p></CardContent></Card>
-            <Card><CardHeader><CardTitle className="text-base">BigQuery export</CardTitle></CardHeader>
+            <Card><CardHeader><CardTitle className="ui-card-title">BigQuery export</CardTitle></CardHeader>
                 <CardContent className="space-y-3"><form action={saveBigQuery} className="grid gap-2">
                     <label className="grid gap-1.5 text-sm font-medium">Google Cloud project ID<Input name="projectId" required placeholder="my-project" /></label>
                     <label className="grid gap-1.5 text-sm font-medium">Dataset ID<Input name="datasetId" required placeholder="Dataset" /></label>

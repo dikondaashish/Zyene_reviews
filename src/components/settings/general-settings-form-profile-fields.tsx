@@ -15,7 +15,7 @@ export function GeneralSettingsFormProfileFields({
     return (
         <section aria-labelledby="profile-section-heading" className="grid gap-6 p-5 sm:p-7 xl:grid-cols-[200px_minmax(0,1fr)] xl:gap-10">
             <div className="space-y-2">
-                <h2 id="profile-section-heading" className="text-base font-semibold tracking-tight">Your profile</h2>
+                <h2 id="profile-section-heading" className="ui-section-title">Your profile</h2>
                 <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
                     How your name appears to the people you work with.
                 </p>
