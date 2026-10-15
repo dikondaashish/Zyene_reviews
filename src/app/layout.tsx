@@ -4,10 +4,7 @@ import { QueryProvider } from "@/components/providers/query-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { MotionProvider } from "@/components/providers/motion-provider";
 import { LanguageProvider } from "@/lib/language-context";
-import { CookieBanner } from "@/components/consent/cookie-banner";
-import { ConsentScripts } from "@/components/consent/consent-scripts";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { PrivacyManager } from "@/components/privacy/privacy-manager";
 import Script from "next/script";
 import "./globals.css";
 
@@ -48,19 +45,11 @@ export default function RootLayout({
               <MotionProvider>
                 {children}
                 <Toaster />
-                <CookieBanner />
-                <ConsentScripts />
-                <Analytics />
-                <SpeedInsights />
+                <PrivacyManager />
               </MotionProvider>
             </QueryProvider>
           </LanguageProvider>
         </ThemeProvider>
-        <Script
-          src="https://uptime.betterstack.com/widgets/announcement.js"
-          data-id="239670"
-          strategy="lazyOnload"
-        />
       </body>
     </html>
   );

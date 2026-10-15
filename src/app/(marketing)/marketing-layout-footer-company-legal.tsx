@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 import { PUBLIC_STATUS_URL } from "./marketing-layout-nav-data";
 import { MarketingLayoutFooterLinkColumn } from "./marketing-layout-footer-link-column";
-import { ManageCookiesButton } from "@/components/consent/manage-cookies-button";
+import { PrivacyChoicesButton } from "@/components/privacy/privacy-choices-button";
 
 export function MarketingLayoutFooterCompanyColumn() {
     return (
@@ -85,7 +85,7 @@ export function MarketingLayoutFooterLegalColumn() {
                 </Link>
             </li>
             <li>
-                <ManageCookiesButton className="cursor-pointer bg-transparent p-0 text-sm text-muted-foreground hover:text-primary transition-colors text-left" />
+                <PrivacyChoicesButton className="cursor-pointer bg-transparent p-0 text-sm text-muted-foreground hover:text-primary transition-colors text-left" />
             </li>
         </MarketingLayoutFooterLinkColumn>
     );

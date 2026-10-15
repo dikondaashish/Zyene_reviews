@@ -1,10 +1,10 @@
 import Script from "next/script";
 
-const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() || "";
+import { META_PIXEL_ID } from "@/lib/privacy/tracking-config";
 
 /**
- * Meta (Facebook) Pixel. Rendered only by `ConsentScripts` once the visitor
- * has granted marketing consent, and renders nothing when the id is unset.
+ * Meta (Facebook) Pixel. Rendered by `PrivacyScripts` only after marketing
+ * consent, and renders nothing when the id is unset.
  * There is deliberately no `noscript` beacon: without JS nobody can consent.
  */
 export function MetaPixel() {

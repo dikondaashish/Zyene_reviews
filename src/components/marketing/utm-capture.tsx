@@ -9,12 +9,12 @@ import {
     serializeUtm,
     hasUtmParams,
 } from "@/lib/growth/utm";
-import { useConsent } from "@/lib/consent/consent-store";
+import { usePrivacy } from "@/lib/privacy/privacy-store";
 
 /** Persists UTM params from landing URLs into a cookie for signup attribution. */
 export function UtmCapture() {
     const searchParams = useSearchParams();
-    const marketingConsent = useConsent().granted.marketing;
+    const marketingConsent = usePrivacy().granted.marketing;
 
     useEffect(() => {
         const params = parseUtmFromSearchParams(searchParams);

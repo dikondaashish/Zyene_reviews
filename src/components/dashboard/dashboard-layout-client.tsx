@@ -6,7 +6,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { DashboardTourProvider } from "@/components/tours/dashboard-tour-provider";
-import { ManageCookiesButton } from "@/components/consent/manage-cookies-button";
+import { PrivacyChoicesButton } from "@/components/privacy/privacy-choices-button";
 
 interface DashboardLayoutClientProps {
     children: React.ReactNode;
@@ -66,7 +66,7 @@ export function DashboardLayoutClient({
                     <Link href="/privacy" className="transition-colors hover:text-foreground">
                         Privacy
                     </Link>
-                    <ManageCookiesButton className="transition-colors hover:text-foreground" />
+                    <PrivacyChoicesButton className="transition-colors hover:text-foreground" />
                 </div>
             </footer>
             </div>

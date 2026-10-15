@@ -1,6 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-afterEach(() => vi.unstubAllGlobals());
+const consent = vi.hoisted(() => ({ analytics: true }));
+vi.mock("@/lib/privacy/privacy-store", () => ({ hasConsent: () => consent.analytics }));
+
+afterEach(() => {
+    vi.unstubAllGlobals();
+    consent.analytics = true;
+});
 
 describe("signup analytics", () => {
     it("records request and registration as separate, deduplicated steps without personal data", async () => {
@@ -35,5 +41,17 @@ describe("signup analytics", () => {
         expect(() => trackSignupEvent("signup_complete", "google")).not.toThrow();
         trackSignupEvent("signup_complete", "google");
         expect(dataLayer).toEqual([{ event: "signup_complete", method: "google" }]);
+    });
+
+    it("records nothing and touches no storage until analytics consent exists", async () => {
+        vi.resetModules();
+        consent.analytics = false;
+        const dataLayer: unknown[] = [];
+        const setItem = vi.fn();
+        vi.stubGlobal("window", { dataLayer, sessionStorage: { getItem: vi.fn(), setItem } });
+        const { trackSignupEvent } = await import("@/lib/analytics/signup-events");
+        trackSignupEvent("signup_started", "email");
+        expect(dataLayer).toEqual([]);
+        expect(setItem).not.toHaveBeenCalled();
     });
 });

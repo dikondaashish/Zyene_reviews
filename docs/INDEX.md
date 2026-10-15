@@ -16,6 +16,7 @@ consumers before retirement. Dated evidence is not proof of current deployment.
 - `docs/PUBLIC_API.md` — internal modules to reuse (not an npm package).
 - `docs/AUTHENTICATION.md` — sessions, tenancy, API keys.
 - `docs/CONFIGURATION.md` — env vars and config loading.
+- `docs/PRIVACY.md` — consent/PrivacyManager architecture, region rules, cookie inventory.
 - `docs/CODING_CONVENTIONS.md` — naming, layering, testing.
 - `.cursor/rules/documentation.mdc` — keep docs in sync with code.
 - `CLAUDE.md` — Claude/agent entry with pointers to the knowledge base.
