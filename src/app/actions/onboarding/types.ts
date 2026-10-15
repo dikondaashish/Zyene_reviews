@@ -5,7 +5,7 @@ import {
   bootstrapGoogleReviewsForPlatform,
   syncGoogleReviewsForPlatform,
 } from "@/services/google/sync-service";
-import { isGoogleSyncConflictError } from "@/services/google/sync-lock-utils";
+import { isGoogleSyncConflictError, isGoogleSyncCooldownError } from "@/services/google/sync-lock-utils";
 import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
 import { syncGooglePhase2ForPlatform } from "@/services/google/phase2-sync";
 import { syncGoogleListingProfileForPlatform } from "@/services/google/phase3-sync";
@@ -83,9 +83,14 @@ export async function enqueueGooglePostConnectSync(
   }
 
   let completedInline = false;
+  let recentlySynced = false;
   try {
     const bootstrap = await bootstrapGoogleReviewsForPlatform(platformId).catch((err) => {
       if (isGoogleSyncConflictError(err)) return null;
+      if (isGoogleSyncCooldownError(err)) {
+        recentlySynced = true;
+        return null;
+      }
       logger.error({ err: err }, "[Onboarding] bootstrapGoogleReviewsForPlatform:");
       return null;
     });
@@ -94,6 +99,13 @@ export async function enqueueGooglePostConnectSync(
     revalidatePath("/dashboard");
   } catch (bootstrapErr) {
     logger.error({ err: bootstrapErr }, "[Onboarding] bootstrapGoogleReviewsForPlatform failed:");
+  }
+
+  // A sync completed moments ago (e.g. right after Google connect); queueing
+  // another would only hit the same cooldown in the worker.
+  if (recentlySynced) {
+    logger.info({ platformId }, "[Onboarding] Skipping post-connect sync - platform synced moments ago");
+    return { mode: "inline" };
   }
 
   if (completedInline) {

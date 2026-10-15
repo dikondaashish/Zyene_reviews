@@ -9,6 +9,11 @@ function getGoogleOAuthClientId(): string | undefined {
     return process.env.GOOGLE_CLIENT_ID?.trim() || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.trim();
 }
 
+/** False when the server is missing the OAuth client credentials (an env problem, not a token problem). */
+export function isGoogleOAuthConfigured(): boolean {
+    return Boolean(getGoogleOAuthClientId() && process.env.GOOGLE_CLIENT_SECRET);
+}
+
 export async function refreshGoogleToken(refreshToken: string): Promise<GoogleTokenResponse> {
     const clientId = getGoogleOAuthClientId();
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;

@@ -10,46 +10,6 @@ import {
   type StepCategoryFormData,
 } from "@/lib/validations/onboarding";
 
-export async function updateBusinessAndLocation(
-  businessId: string,
-  data: { businessName: string; address?: string; city?: string; state?: string; phone?: string }
-) {
-  try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      return { success: false, error: "You are not authenticated." };
-    }
-    const slug = data.businessName
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-    const { error } = await supabase
-      .from("businesses")
-      .update({
-        name: data.businessName,
-        slug,
-        address_line1: data.address || null,
-        city: data.city || null,
-        state: data.state || null,
-        phone: data.phone || null,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", businessId);
-    if (error) {
-      logger.error({ err: error }, "Error updating business:");
-      return { success: false, error: "Failed to update business." };
-    }
-    revalidatePath("/onboarding");
-    return { success: true };
-  } catch (error: unknown) {
-    logger.error({ err: error }, "updateBusinessAndLocation:");
-    return { success: false, error: "An unexpected error occurred." };
-  }
-}
-
 /**
  * Step 2: Create Business + Location Details
  * User enters business name + location details → Creates business record with location info
@@ -90,22 +50,31 @@ export async function createBusinessWithLocation(
       .replace(/^-+|-+$/g, "");
 
     // Create business with location info
-    const { data: business, error: businessError } = await supabase
-      .from("businesses")
-      .insert({
-        organization_id: organizationId,
-        name: data.businessName,
-        slug: businessSlug,
-        address_line1: data.address,
-        city: data.city,
-        state: data.state.toUpperCase(),
-        phone: data.phone || null,
-        category: "uncategorized", // Will be set in Step 3
-        country: "US", // Default to US
-        timezone: "America/Los_Angeles", // Default timezone, can be updated later
-      })
-      .select()
-      .single();
+    const insertBusiness = (slug: string) =>
+      supabase
+        .from("businesses")
+        .insert({
+          organization_id: organizationId,
+          name: data.businessName,
+          slug,
+          address_line1: data.address,
+          city: data.city,
+          state: data.state.toUpperCase(),
+          phone: data.phone || null,
+          category: "uncategorized", // Will be set in Step 3
+          country: "US", // Default to US
+          timezone: "America/Los_Angeles", // Default timezone, can be updated later
+        })
+        .select()
+        .single();
+    let { data: business, error: businessError } = await insertBusiness(businessSlug);
+    // Slug taken by another business ("Joe's Pizza" twice): retry with a short suffix.
+    if (businessError?.code === "23505" && businessError.message.includes("slug")) {
+      const suffix = Math.random().toString(36).substring(2, 6);
+      ({ data: business, error: businessError } = await insertBusiness(
+        businessSlug ? `${businessSlug}-${suffix}` : suffix,
+      ));
+    }
 
     if (businessError || !business) {
       logger.error({ err: businessError }, "Error creating business:");

@@ -2,7 +2,7 @@
 
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { refreshGoogleToken } from "@/services/google/business-profile";
+import { isGoogleOAuthConfigured, refreshGoogleToken } from "@/services/google/business-profile";
 import { TOKEN_EXPIRY_BUFFER_MS } from "@/services/google/constants";
 import type { GooglePlatformWithTokens } from "@/types/google-sync";
 import type { AdminClient } from "./helpers";
@@ -86,6 +86,13 @@ async function refreshPlatformAccessToken(
         logger.error(`[Token] CRITICAL: Refresh Token is missing for platform ${platformId}. Sync cannot proceed.`);
         await admin.from("review_platforms").update({ sync_status: "error_no_refresh_token" }).eq("id", platformId);
         throw new Error("No refresh token available - Please reconnect Google Account");
+    }
+
+    // Missing OAuth env vars say nothing about this platform's token, so don't
+    // mark the connection as broken (sync_status) for every business.
+    if (!isGoogleOAuthConfigured()) {
+        logger.warn(`[Token] Skipping refresh for platform ${platformId}: Google OAuth client is not configured`);
+        throw new Error("Google OAuth is not configured on this server.");
     }
 
     try {
