@@ -27,12 +27,12 @@ export async function Phase3Page() {
     ];
     return <div className="min-w-0 space-y-8 overflow-x-hidden p-4 md:p-8">
         <GoogleSeoAeoSubnav active="/google-seo-aeo/phase-3" />
-        <header className="flex flex-wrap items-start justify-between gap-4"><div><h1 className="text-3xl font-bold">Differentiation</h1>
+        <header className="flex flex-wrap items-start justify-between gap-4"><div><h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Advanced tools</h1>
             <p className="mt-1 text-sm text-muted-foreground">Advanced measurement and agency delivery for {data.businessName}.</p></div>
             <form action={runPhase3Refresh}><Button type="submit"><RefreshCw className="mr-2 size-4" />Refresh insights</Button></form></header>
         <section className="space-y-4" aria-labelledby="phase3-signals"><div><h2 id="phase3-signals" className="text-xl font-semibold">Operational signals</h2>
             <p className="text-sm text-muted-foreground">Measured results retain explicit unavailable and insufficient-history states.</p></div>
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{signals.map(([label, value]) => <Card key={label}>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{signals.map(([label, value]) => <Card key={label}>
                 <CardHeader className="pb-2"><CardTitle className="text-sm">{label}</CardTitle></CardHeader>
                 <CardContent className="text-sm text-muted-foreground">{value}</CardContent></Card>)}</div></section>
         <Phase3ConfigPanels branding={data.branding} webhookCount={data.webhooks.length} bigQueryCount={data.bigquery.length} />

@@ -48,7 +48,7 @@ export function AeoVisibilitySection({ content }: { content: AeoVisibilityConten
                 )}
             </div>
 
-            <ul className="-mb-px -mr-px grid border-t border-border sm:grid-cols-2 xl:grid-cols-3">
+            <ul className="-mb-px -mr-px grid grid-cols-1 border-t border-border sm:grid-cols-2 xl:grid-cols-3">
                 {content.tiles.map((tile) => (
                     <li key={tile.engineId} className="min-w-0 border-b border-r border-border p-4 sm:p-5">
                         <div className="flex items-center justify-between gap-2">

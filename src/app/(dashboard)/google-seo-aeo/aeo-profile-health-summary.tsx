@@ -16,7 +16,7 @@ export function AeoProfileHealthSummary({ content, summary, priorityAudit }: Aeo
     return (
         <section
             aria-label="Profile health summary"
-            className="grid overflow-hidden rounded-xl border bg-card lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+            className="grid grid-cols-1 overflow-hidden rounded-xl border bg-card lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
         >
             <div className="p-5 sm:p-6">
                 <p className="text-sm font-medium text-muted-foreground">Google profile score</p>

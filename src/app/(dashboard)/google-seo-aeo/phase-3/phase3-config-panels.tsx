@@ -14,7 +14,7 @@ export function Phase3ConfigPanels({ branding, webhookCount, bigQueryCount }: {
     return <section className="space-y-4" aria-labelledby="phase3-config">
         <div><h2 id="phase3-config" className="text-xl font-semibold">Agency delivery</h2>
             <p className="text-sm text-muted-foreground">Tenant-scoped branding, signed events, and structured warehouse export.</p></div>
-        <div className="grid gap-4 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
             <Card><CardHeader><CardTitle className="text-base">White-label reports</CardTitle></CardHeader>
                 <CardContent className="space-y-3"><form action={saveWhiteLabel} className="grid gap-2">
                     <label className="grid gap-1.5 text-sm font-medium">Agency name<Input name="name" required defaultValue={branding?.name ?? ""} placeholder="Your agency" /></label>

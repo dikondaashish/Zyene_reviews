@@ -10,7 +10,7 @@ export function IntegrationsPanel({ data, businessId }: { data: Phase2Operations
     return (
         <section className="space-y-4" aria-labelledby="integrations-heading">
             <div><h2 id="integrations-heading" className="text-xl font-semibold">Enterprise integrations</h2><p className="text-sm text-muted-foreground">Scoped API access, crawler log ingestion, and encrypted Slack or webhook delivery.</p></div>
-            <div className="grid gap-4 xl:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 <Card><CardHeader><CardTitle className="text-base">Data access</CardTitle></CardHeader><CardContent className="space-y-4">
                     <SecretCreator businessId={businessId} kind="api" />
                     <SecretCreator businessId={businessId} kind="logs" />
@@ -19,7 +19,7 @@ export function IntegrationsPanel({ data, businessId }: { data: Phase2Operations
                 </CardContent></Card>
                 <Card><CardHeader><CardTitle className="text-base">Alert channels</CardTitle></CardHeader><CardContent className="space-y-4">
                     <form action={createAlertChannel} className="grid gap-3">
-                        <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
                             <label className="grid gap-1.5 text-sm font-medium">Channel name<Input name="name" required minLength={2} placeholder="Marketing alerts" /></label>
                             <label className="grid gap-1.5 text-sm font-medium">Channel type<select name="type" className="h-9 rounded-md border bg-background px-3 text-sm"><option value="slack">Slack</option><option value="webhook">Webhook</option></select></label>
                         </div>

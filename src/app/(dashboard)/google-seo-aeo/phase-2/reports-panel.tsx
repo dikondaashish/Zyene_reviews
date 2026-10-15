@@ -10,10 +10,10 @@ export function ReportsPanel({ data }: { data: Phase2OperationsData }) {
     return (
         <section className="space-y-4" aria-labelledby="reports-heading">
             <div><h2 id="reports-heading" className="text-xl font-semibold">Reporting and multi-location rollup</h2><p className="text-sm text-muted-foreground">Branded date-ranged artifacts, scheduled delivery, and one scorecard across the organization.</p></div>
-            <div className="grid gap-4 xl:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 <Card><CardHeader><CardTitle className="text-base">Reports</CardTitle></CardHeader><CardContent className="space-y-4">
                     <form action={generateReportNow}><Button><FileText className="size-4" />Generate 30-day PDF</Button></form>
-                    <form action={createReportSchedule} className="grid gap-3 border-t pt-4 sm:grid-cols-[120px_1fr]">
+                    <form action={createReportSchedule} className="grid grid-cols-1 gap-3 border-t pt-4 sm:grid-cols-[120px_minmax(0,1fr)]">
                         <label className="grid gap-1.5 text-sm font-medium">Frequency<select name="cadence" className="h-9 rounded-md border bg-background px-3 text-sm"><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></label>
                         <label className="grid gap-1.5 text-sm font-medium">Recipients<Input name="recipients" type="text" required placeholder="owner@example.com, agency@example.com" /></label>
                         <p className="text-xs text-muted-foreground sm:col-span-2">Separate multiple email addresses with commas.</p>
