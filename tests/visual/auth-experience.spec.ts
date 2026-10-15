@@ -56,7 +56,8 @@ for (const path of ["/login", "/signup?next=%2Fdashboard", "/forgot-password"]) 
 }
 
 test("login keeps password controls, invitation context, and recoverable errors", async ({ page }) => {
-  await page.goto("/login?invite=test-invitation&next=%2Freviews", { waitUntil: "domcontentloaded" });
+  // Wait for hydration so the show-password click reaches React's handler.
+  await page.goto("/login?invite=test-invitation&next=%2Freviews", { waitUntil: "networkidle" });
   await expect(page.getByRole("link", { name: "Create an account" })).toHaveAttribute(
     "href", "/signup?next=%2Freviews&invite=test-invitation");
   await page.getByLabel("Email address").fill("auth-ui-test@example.com");
@@ -83,8 +84,10 @@ test("password reset confirms privately without sending a real email", async ({ 
   await page.route("**/auth/v1/recover**", (route) => route.fulfill({
     status: 200, contentType: "application/json", body: "{}",
   }));
-  await page.goto("/forgot-password", { waitUntil: "domcontentloaded" });
+  // The email input is controlled: typing before hydration gets reset to "".
+  await page.goto("/forgot-password", { waitUntil: "networkidle" });
   await page.getByLabel("Email address").fill("auth-ui-test@example.com");
+  await expect(page.getByLabel("Email address")).toHaveValue("auth-ui-test@example.com");
   await page.getByRole("button", { name: "Send reset link" }).click();
   await expect(page.getByRole("heading", { name: "Check your inbox" })).toBeVisible();
   await expect(page.getByRole("main")).toContainText("If an account exists");
