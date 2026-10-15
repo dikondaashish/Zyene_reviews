@@ -62,6 +62,21 @@ export const POPULAR_RESOURCES = [
         title: "How to Get 50 Google Reviews in 30 Days",
         description: "A practical step-by-step playbook to rapidly increase local Google reviews.",
     },
+    {
+        href: "/resources/google-reviews-guide",
+        title: "Google Reviews: The Complete Local Business Guide",
+        description: "A comprehensive guide to generating, managing, and leveraging Google reviews for local growth.",
+    },
+    {
+        href: "/blog/how-to-handle-fake-google-reviews",
+        title: "How to Handle Fake Google Reviews",
+        description: "How to identify, flag, and remove illegitimate reviews while protecting your rating.",
+    },
+    {
+        href: "/blog/dental-practice-reputation-management-2026",
+        title: "Dental Practice Reputation Management Guide",
+        description: "Proven review generation and patient feedback strategies for dental clinics.",
+    },
 ] as const;
 
 export function PopularResourcesBlock({ className = "" }: { className?: string }) {

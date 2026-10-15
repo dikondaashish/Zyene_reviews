@@ -1,4 +1,4 @@
-import { BreadcrumbJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/seo/json-ld";
+import { ArticleJsonLd, BreadcrumbJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/seo/json-ld";
 import { notFound } from "next/navigation";
 import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/content/resource-data";
 import { ResourcesGuideGuideHeaderSection } from "./resources-guide-guide-header-section";
@@ -22,6 +22,7 @@ export default async function ResourceGuidePage(
 
     return (
         <>
+            <ArticleJsonLd resource={resource} />
             {faqs.length > 0 ? <FAQPageJsonLd faqs={faqs} /> : null}
             {howToSteps.length > 0 ? (
                 <HowToJsonLd

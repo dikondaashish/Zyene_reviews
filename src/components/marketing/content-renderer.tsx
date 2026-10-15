@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { SIGNUP_URL } from "@/config/env";
 import { cn } from "@/lib/utils";
 import { headingAnchor } from "@/lib/content/heading-anchor";
+import { renderInlineContent } from "./render-inline-content";
+
 export function ContentRenderer({ sections, className }: { sections: ContentSection[]; className?: string }) {
     return (
         <div className={cn(className ? "text-foreground" : "prose-zyene space-y-5 text-foreground", className)}>
@@ -20,13 +22,9 @@ export function ContentRenderer({ sections, className }: { sections: ContentSect
                         );
                     case "summary":
                         return (
-                            <p
-                                key={sectionKey}
-                                className="text-sm text-foreground leading-relaxed rounded-xl border border-primary/20 bg-primary/5 px-5 py-4"
-                                data-geo-summary=""
-                            >
+                            <p key={sectionKey} className="text-sm text-foreground leading-relaxed rounded-xl border border-primary/20 bg-primary/5 px-5 py-4" data-geo-summary="">
                                 <span className="sr-only">Key takeaway: </span>
-                                {section.text}
+                                {renderInlineContent(section.text)}
                             </p>
                         );
                     case "h3":
@@ -38,8 +36,16 @@ export function ContentRenderer({ sections, className }: { sections: ContentSect
                     case "p":
                         return (
                             <p key={sectionKey} className="text-base text-muted-foreground leading-relaxed">
-                                {section.text}
+                                {renderInlineContent(section.text)}
                             </p>
+                        );
+                    case "callout":
+                        return (
+                            <div key={sectionKey} className="rounded-xl border border-primary/25 bg-primary/5 p-5 text-sm text-foreground">
+                                <p className="font-medium text-foreground leading-relaxed">
+                                    {renderInlineContent(section.text)}
+                                </p>
+                            </div>
                         );
                     case "ul":
                         return (
@@ -47,7 +53,7 @@ export function ContentRenderer({ sections, className }: { sections: ContentSect
                                 {section.items?.map((item) => (
                                     <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground leading-relaxed">
                                         <span className="mt-1.5 shrink-0 rounded-full bg-primary size-1.5" />
-                                        <span>{item}</span>
+                                        <span>{renderInlineContent(item)}</span>
                                     </li>
                                 ))}
                             </ul>
@@ -60,7 +66,7 @@ export function ContentRenderer({ sections, className }: { sections: ContentSect
                                         <span className="mt-0.5 flex shrink-0 items-center justify-center rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary size-6">
                                             {j + 1}
                                         </span>
-                                        <span className="mt-0.5">{item}</span>
+                                        <span className="mt-0.5">{renderInlineContent(item)}</span>
                                     </li>
                                 ))}
                             </ol>
@@ -69,14 +75,14 @@ export function ContentRenderer({ sections, className }: { sections: ContentSect
                         return (
                             <div key={sectionKey} className="flex gap-3 rounded-xl border border-primary/20 bg-primary/5 px-5 py-4">
                                 <Lightbulb className="shrink-0 text-primary mt-0.5 size-5" />
-                                <p className="text-sm text-foreground leading-relaxed">{section.text}</p>
+                                <p className="text-sm text-foreground leading-relaxed">{renderInlineContent(section.text)}</p>
                             </div>
                         );
                     case "warning":
                         return (
                             <div key={sectionKey} className="flex gap-3 rounded-xl border border-chart-4/20 bg-chart-4/5 px-5 py-4">
                                 <AlertTriangle className="shrink-0 text-warning-foreground mt-0.5 size-5" />
-                                <p className="text-sm text-foreground leading-relaxed">{section.text}</p>
+                                <p className="text-sm text-foreground leading-relaxed">{renderInlineContent(section.text)}</p>
                             </div>
                         );
                     case "quote":
@@ -86,12 +92,15 @@ export function ContentRenderer({ sections, className }: { sections: ContentSect
                             </blockquote>
                         );
                     case "cta":
+                        const isSignup = !section.ctaHref || section.ctaHref === "/signup" || section.ctaHref === SIGNUP_URL;
+                        const ctaTarget = isSignup ? SIGNUP_URL : section.ctaHref!;
+                        const isExt = section.ctaHref?.startsWith("https://") && !isSignup;
                         return (
                             <div key={sectionKey} className="rounded-xl border border-primary/30 bg-primary/5 px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                 <p className="text-sm font-semibold text-foreground">{section.ctaLabel}</p>
                                 <Button size="sm" className="gap-2 rounded-lg" asChild>
-                                    <Link href={section.ctaHref === "/signup" || !section.ctaHref ? SIGNUP_URL : section.ctaHref} className="shrink-0" {...(section.ctaHref === "/signup" || !section.ctaHref ? { "data-track": "trial", "data-track-location": "content-cta" } : {})}>
-                                        {section.ctaHref?.startsWith("https://") ? "Read source" : "Get Started"} <ArrowRight className="size-3.5" />
+                                    <Link href={ctaTarget} className="shrink-0" {...(isSignup ? { "data-track": "trial", "data-track-location": section.ctaTrackLocation ?? "content-cta" } : {})}>
+                                        {isExt ? "Read source" : (section.ctaButtonText ?? "Get Started")} <ArrowRight className="size-3.5" />
                                     </Link>
                                 </Button>
                             </div>
@@ -99,49 +108,22 @@ export function ContentRenderer({ sections, className }: { sections: ContentSect
                     case "image":
                         return section.image ? (
                             <figure key={sectionKey} className="rounded-xl border border-border overflow-hidden bg-muted/30">
-                                <Image
-                                    src={section.image.src}
-                                    alt={section.image.alt}
-                                    width={section.image.width} height={section.image.height}
-                                    sizes="(max-width: 768px) 100vw, 768px"
-                                    className="w-full h-auto object-cover"
-                                />
-                                {section.image.caption ? (
-                                    <figcaption className="px-4 py-3 text-xs text-muted-foreground leading-relaxed border-t border-border">
-                                        {section.image.caption}
-                                    </figcaption>
-                                ) : null}
+                                <Image src={section.image.src} alt={section.image.alt} width={section.image.width} height={section.image.height} sizes="(max-width: 768px) 100vw, 768px" className="w-full h-auto object-cover" />
+                                {section.image.caption ? <figcaption className="px-4 py-3 text-xs text-muted-foreground leading-relaxed border-t border-border">{section.image.caption}</figcaption> : null}
                             </figure>
                         ) : null;
                     case "table":
                         return (
                             <div key={sectionKey} className="overflow-x-auto rounded-xl border border-border">
                                 <table className="w-full text-sm border-collapse">
-                                    <thead>
-                                        <tr className="bg-muted">
-                                            {section.table?.headers.map((h) => (
-                                                <th key={h} className="px-4 py-3 font-semibold text-foreground border-b border-border text-left">
-                                                    {h}
-                                                </th>
-                                            ))}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {section.table?.rows.map((row) => (
-                                            <tr key={JSON.stringify(row)} className="border-b border-border last:border-0 hover:bg-muted/30">
-                                                {row.map((cell, k) => (
-                                                    <td key={section.table?.headers[k] ?? cell} className="px-4 py-3 text-muted-foreground">
-                                                        {cell}
-                                                    </td>
-                                                ))}
-                                            </tr>
-                                        ))}
-                                    </tbody>
+                                    <thead><tr className="bg-muted">{section.table?.headers.map((h) => (<th key={h} className="px-4 py-3 font-semibold text-foreground border-b border-border text-left">{h}</th>))}</tr></thead>
+                                    <tbody>{section.table?.rows.map((row) => (<tr key={JSON.stringify(row)} className="border-b border-border last:border-0 hover:bg-muted/30">{row.map((cell, k) => (<td key={section.table?.headers[k] ?? cell} className="px-4 py-3 text-muted-foreground">{cell}</td>))}</tr>))}</tbody>
                                 </table>
                             </div>
                         );
                     default: return null;
                 }
-            })}</div>
+            })}
+        </div>
     );
 }

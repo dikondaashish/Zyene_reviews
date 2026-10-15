@@ -25,7 +25,11 @@ export function BlogSlugArticleHeaderSection({ post }: { post: BlogPost }) {
                     {updatedAt ? (
                         <span className="blog-article-meta-item">
                             <RefreshCw className="size-4" aria-hidden="true" />
-                            Updated <time dateTime={updatedAt}>{formatBlogPublishedDate(updatedAt, "long")}</time>
+                            {post.slug === "how-to-get-a-google-review-link" ? (
+                                <>Last updated: <time dateTime={updatedAt}>October 2026</time></>
+                            ) : (
+                                <>Updated <time dateTime={updatedAt}>{formatBlogPublishedDate(updatedAt, "long")}</time></>
+                            )}
                         </span>
                     ) : null}
                     <span className="blog-article-meta-item">

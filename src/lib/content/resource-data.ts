@@ -15,6 +15,7 @@ export interface ResourceGuide {
     excerpt: string;
     purpose: string;
     lastUpdated: string;
+    dateModified?: string;
     readMinutes: number;
     metaTitle: string;
     metaDescription: string;
@@ -37,7 +38,8 @@ const guide1: ResourceGuide = {
     subtitle: "Everything local business owners need to know about Google Reviews in 2026 - collection, responses, ranking, and reputation protection.",
     excerpt: "A practical guide to Google Reviews for local businesses, covering collection, responses, local ranking signals, and reputation work.",
     purpose: "Rank for 'google reviews' cluster keywords",
-    lastUpdated: "2026-08-15",
+    lastUpdated: "2026-10-15",
+    dateModified: "2026-10-15",
     readMinutes: 18,
     metaTitle: "Google Reviews Guide for Local Businesses (2026)",
     metaDescription:
@@ -76,6 +78,10 @@ const guide1: ResourceGuide = {
         { type: "h2", id: "what-are-google-reviews", text: "What Are Google Reviews?" },
         { type: "p", text: "Google Reviews are customer-generated ratings and written testimonials that appear on a business's Google Business Profile - the listing that shows in Google Maps and in local search results. Each review consists of a star rating (1-5 stars) and an optional written comment." },
         { type: "p", text: "Only customers with a Google account can leave reviews, which provides some level of authenticity verification. Businesses can respond to reviews publicly, and those responses are visible to all visitors to the Google Business Profile." },
+        {
+            type: "callout",
+            text: "Free tools: [Google review link generator](/tools/review-link-generator) and [reputation score checker](/tools/reputation-score-checker).",
+        },
         { type: "h2", text: "Why Google Reviews Matter" },
         { type: "p", text: "Google Reviews appear beside a business in Google Search and Maps, so customers often read them before they call, visit, or book. They describe individual experiences; they are not a substitute for checking the business's services, policies, or current information." },
         { type: "ul", items: [
@@ -160,7 +166,7 @@ const guide1: ResourceGuide = {
             "GBP keyword performance dashboard",
             "Pricing without annual contracts",
         ]},
-        { type: "cta", ctaLabel: "Try Zyene Reviews free for 7 days →", ctaHref: SIGNUP_URL },
+        { type: "cta", ctaLabel: "Try Zyene Reviews free for 7 days →", ctaHref: SIGNUP_URL, ctaTrackLocation: "google-reviews-guide" },
         { type: "h2", text: "Frequently Asked Questions" },
         { type: "h3", text: "Can I remove a negative Google review?" },
         { type: "p", text: "You cannot unilaterally remove a Google review. You can flag it for removal if it violates Google's policies (spam, fake, offensive content). Google then decides whether to remove it. If the review is genuine, the best approach is a professional response and ongoing review collection to dilute its impact." },
@@ -170,6 +176,13 @@ const guide1: ResourceGuide = {
         { type: "p", text: "Google Reviews are mainly relevant to local search in Google Maps and the Local 3-Pack, not to every organic ranking for your website. Review markup may qualify a page for a rich result, but Google decides whether to show it and does not guarantee a click-through improvement." },
         { type: "h3", text: "Can I respond to reviews from a mobile device?" },
         { type: "p", text: "Yes. You can respond to reviews through the Google Maps app, the Google Business Profile app, or any browser via business.google.com. Using a review management tool like Zyene lets you monitor and respond from a single dashboard across all platforms." },
+        {
+            type: "cta",
+            ctaLabel: "Start your 7-day free trial of Zyene Reviews",
+            ctaHref: SIGNUP_URL,
+            ctaTrackLocation: "google-reviews-guide",
+            ctaButtonText: "Start Free Trial",
+        },
     ],
 };
 

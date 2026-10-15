@@ -23,7 +23,8 @@ export type SectionType =
     | "cta"
     | "quote"
     | "table"
-    | "image";
+    | "image"
+    | "callout";
 
 export interface ContentImage {
     src: string;
@@ -53,6 +54,8 @@ export interface ContentSection {
     image?: ContentImage;
     ctaLabel?: string;
     ctaHref?: string;
+    ctaTrackLocation?: string;
+    ctaButtonText?: string;
 }
 
 export interface BlogAuthor {
