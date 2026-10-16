@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { FEATURE_CATEGORIES, featurePillarsByCategory } from "@/lib/growth/feature-pillars";
-import { FEATURE_NAV_ICONS } from "@/app/(marketing)/marketing-layout-nav-product-groups";
+import { FEATURE_NAV_ICONS } from "@/app/(marketing)/feature-nav-icons";
 
 /** /features index: every feature page, grouped the way the app is used. */
 export function FeaturesFeaturePillarsSection() {

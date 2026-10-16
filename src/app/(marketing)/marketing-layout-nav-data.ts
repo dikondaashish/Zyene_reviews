@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { FEATURE_PILLARS } from "@/lib/growth/feature-pillars";
-import { FEATURE_NAV_ICONS } from "@/app/(marketing)/marketing-layout-nav-product-groups";
+import { FEATURE_NAV_ICONS } from "@/app/(marketing)/feature-nav-icons";
 
 export const PUBLIC_STATUS_URL = "https://status.zyenereviews.com/";
 
