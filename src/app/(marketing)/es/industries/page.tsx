@@ -10,9 +10,12 @@ export const metadata: Metadata = mergeMarketingSocial({
     title: "Industrias, Gestión de reseñas en español",
     description:
         "Páginas en español para restaurantes, clínicas, talleres, salones y más. Automatiza reseñas de Google con Zyene Reviews.",
+    robots: {
+        index: false,
+        follow: true,
+    },
     alternates: {
         canonical: "https://www.zyenereviews.com/es/industries",
-        languages: { en: "https://www.zyenereviews.com/industries", es: "https://www.zyenereviews.com/es/industries" },
     },
     openGraph: {
         title: "Industrias",

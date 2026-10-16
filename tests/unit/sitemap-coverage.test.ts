@@ -1,8 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-
-import { getAllSitemapEntries, getCoreSitemap, getSupportSitemap, getEsSitemap } from "../../src/lib/seo/sitemap";
+import { getAllSitemapEntries, getCoreSitemap, getSupportSitemap, SITEMAP_SECTION_IDS } from "../../src/lib/seo/sitemap";
 import { INDUSTRY_SLUGS } from "../../src/lib/industries/industry-data";
 import { COMPETITOR_SLUGS } from "../../src/lib/comparisons/competitor-data";
 import { FEATURE_PILLAR_SLUGS } from "../../src/lib/growth/feature-pillars";
@@ -226,11 +225,10 @@ describe("sitemap coverage", () => {
         expect(dupes, `Duplicate sitemap URLs:\n  ${dupes.join("\n  ")}`).toEqual([]);
     });
 
-    it("every URL in all three sitemaps maps to a real route and does not redirect", () => {
+    it("every URL in active sitemaps maps to a real route and does not redirect", () => {
         const sitemaps = [
             { name: "core", entries: getCoreSitemap() },
             { name: "support", entries: getSupportSitemap() },
-            { name: "es", entries: getEsSitemap() },
         ];
 
         for (const { name, entries: list } of sitemaps) {
@@ -246,6 +244,46 @@ describe("sitemap coverage", () => {
                     `Sitemap ${name} contains non-existent route: ${pathname}`,
                 ).toBe(true);
             }
+        }
+    });
+    it("excludes the /es/industries hub and all /es/industries/* pages from the sitemaps", () => {
+        expect(sitemapPaths.has("/es/industries")).toBe(false);
+        for (const p of LOCALIZED_INDUSTRY_PAGES) {
+            expect(sitemapPaths.has(`/es/industries/${p.localizedSlug}`)).toBe(false);
+        }
+    });
+
+    it("does not include an es sitemap section in SITEMAP_SECTION_IDS or generateStaticParams", async () => {
+        expect(SITEMAP_SECTION_IDS).toEqual(["core", "support"]);
+        expect(SITEMAP_SECTION_IDS).not.toContain("es");
+
+        const { generateStaticParams } = await import("../../src/app/sitemap/[file]/route");
+        expect(generateStaticParams()).toEqual([{ file: "core.xml" }, { file: "support.xml" }]);
+    });
+
+    it("sitemap index route contains core and support but no es entry", async () => {
+        const { GET } = await import("../../src/app/sitemap.xml/route");
+        const res = GET();
+        const xml = await res.text();
+        expect(xml).toContain("/sitemap/core.xml");
+        expect(xml).toContain("/sitemap/support.xml");
+        expect(xml).not.toContain("es.xml");
+        expect(xml).not.toContain("/sitemap/es");
+    });
+
+    it("Spanish industry detail pages have no hreflang alternates pointing back to English", async () => {
+        const { generateMetadata } = await import(
+            "../../src/app/(marketing)/es/industries/[industry]/page"
+        );
+        for (const p of LOCALIZED_INDUSTRY_PAGES) {
+            const meta = await generateMetadata({
+                params: Promise.resolve({ industry: p.localizedSlug }),
+            });
+            expect(meta.robots).toEqual({ index: false, follow: true });
+            expect(meta.alternates?.canonical).toBe(
+                `https://www.zyenereviews.com/es/industries/${p.localizedSlug}`,
+            );
+            expect(meta.alternates?.languages).toBeUndefined();
         }
     });
 

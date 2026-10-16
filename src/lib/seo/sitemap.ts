@@ -16,7 +16,6 @@ import {
 import { CASE_STUDY_SLUGS } from "@/lib/social-proof/case-study-data";
 import { FREE_TOOLS } from "@/lib/free-tools/free-tools-data";
 import { FEATURE_PILLAR_SLUGS } from "@/lib/growth/feature-pillars";
-import { LOCALIZED_INDUSTRY_PAGES } from "@/lib/industries/localized-industries";
 import { INDUSTRY_SLUGS } from "@/lib/industries/industry-data";
 import { COMPETITOR_SLUGS } from "@/lib/comparisons/competitor-data";
 import { DOC_NAV_GROUPS } from "@/lib/docs/doc-nav";
@@ -114,24 +113,12 @@ export function getSupportSitemap(): MetadataRoute.Sitemap {
     ];
 }
 
-export function getEsSitemap(): MetadataRoute.Sitemap {
-    return [
-        { url: `${BASE_URL}/es/industries`, changeFrequency: "monthly", priority: 0.7 },
-        ...LOCALIZED_INDUSTRY_PAGES.map((p) => ({
-            url: `${BASE_URL}/es/industries/${p.localizedSlug}`,
-            changeFrequency: "monthly" as const,
-            priority: 0.65,
-        })),
-    ];
-}
-
-export type SitemapSection = "core" | "support" | "es";
+export type SitemapSection = "core" | "support";
 
 /** Per-section builders; each section is served at /sitemap/<section>.xml. */
 export const SITEMAP_SECTIONS: Record<SitemapSection, () => MetadataRoute.Sitemap> = {
     core: getCoreSitemap,
     support: getSupportSitemap,
-    es: getEsSitemap,
 };
 
 export const SITEMAP_SECTION_IDS = Object.keys(SITEMAP_SECTIONS) as SitemapSection[];
