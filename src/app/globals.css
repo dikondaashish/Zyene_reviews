@@ -111,7 +111,7 @@
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #feefea;
-  --sidebar-accent-foreground: #b8410f;
+  --sidebar-accent-foreground: #ed5a29;
   --sidebar-border: #e3e5e8;
   --sidebar-ring: var(--ring);
   --canvas: #f7f5f1;
@@ -122,7 +122,7 @@
   --brand-orange-hover: #dd4513;
   --brand-orange-light: #f17e58;
   --brand-orange-active: #d14212;
-  --brand-orange-ink: #b8410f;
+  --brand-orange-ink: #ed5a29;
   --brand-wash: #feefea;
   --brand-wash-border: #f8cdbb;
   --brand-focus: #f7b59f;

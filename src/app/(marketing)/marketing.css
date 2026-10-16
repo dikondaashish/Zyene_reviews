@@ -25,7 +25,7 @@
  * white cards, slate ink, cool-grey borders and orange #ed5a29 (pressed #d14212).
  * Hover darkens to #dd4513 rather than the reference's lighter #f17e58, which
  * would drop white text to 2.7:1; #f17e58 stays as the on-dark accent. Orange
- * text uses the AA-safe #b8410f step. */
+ * text uses the brand #ed5a29 (owner decision, 2026-10-16). */
 .marketing-site {
  --background:#f7f5f1; --foreground:#23262a; --card:#ffffff; --card-foreground:#23262a;
  --popover:#ffffff; --popover-foreground:#23262a; --muted:#f2f0eb; --muted-foreground:#505763;
@@ -34,7 +34,7 @@
  --success:#166534; --success-foreground:#ffffff; --success-wash:#dcfce7; --success-bright:#2cc896; --warning:#fbbf24; --warning-foreground:#854d0e;
  --destructive:#cc0000; --destructive-foreground:#ffffff;
  --canvas:#f2f0eb; --brand-wash:#feefea; --brand-wash-border:#f8cdbb; --brand-orange:#ed5a29;
- --brand-orange-hover:#dd4513; --brand-orange-light:#f17e58; --brand-orange-active:#d14212; --brand-orange-ink:#b8410f; --brand-focus:#f7b59f;
+ --brand-orange-hover:#dd4513; --brand-orange-light:#f17e58; --brand-orange-active:#d14212; --brand-orange-ink:#ed5a29; --brand-focus:#f7b59f;
  --ink-subtle:#8f97a4; --ink-inverse:#ffffff; --surface-dark:#23262a; --surface-dark-panel:#1a1c1f;
  --marketing-footer-bg:#23262a; --marketing-footer-fg:#ffffff; --marketing-footer-muted:#b9bec6;
  --marketing-footer-list:#e3e5e8; --marketing-footer-subtle:#8f97a4; --marketing-footer-border:#3a3e44;

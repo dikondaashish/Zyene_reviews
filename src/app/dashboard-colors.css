@@ -7,7 +7,7 @@
  * Muted surfaces and borders sit a step lighter than marketing so dense
  * dashboard tables stay calm. Text pairs meet WCAG AA (4.5:1) on their surfaces,
  * so muted text uses #505763 (the reference's #8f97a4 is 3:1) and orange text
- * uses #b8410f. White on #ed5a29 is 3.4:1, so filled actions rely on bold
+ * uses the brand #ed5a29 (owner decision; about 3.3:1 on white). White on #ed5a29 is 3.4:1, so filled actions rely on bold
  * button text, as in the reference; hover darkens (the reference's lighter
  * #f17e58 hover would drop white text to 2.7:1).
  */
@@ -22,7 +22,7 @@
   --brand-accent: #ed5a29;
   --primary: #ed5a29;
   --primary-foreground: #ffffff;
-  --primary-text: #b8410f;
+  --primary-text: #ed5a29;
   --primary-hover: #dd4513;
   --primary-active: #d14212;
   --cta: var(--primary);
@@ -52,7 +52,7 @@
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
   --sidebar-accent: #feefea;
-  --sidebar-accent-foreground: #b8410f;
+  --sidebar-accent-foreground: #ed5a29;
   --sidebar-border: #e3e5e8;
   --sidebar-ring: var(--ring);
   --canvas: #f9fafb;
@@ -128,7 +128,7 @@
   --card: #ffffff;
   --card-foreground: #23262a;
   --primary: #ed5a29;
-  --primary-text: #b8410f;
+  --primary-text: #ed5a29;
   --secondary: #f1f2f4;
   --secondary-foreground: #23262a;
   --muted: #f2f0eb;

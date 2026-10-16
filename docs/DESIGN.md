@@ -17,14 +17,14 @@ Premium quality comes from complete workflows, readable typography, deliberate s
 | Card | `#ffffff` | `#23262a` | Solid content panels |
 | Primary | `#ed5a29` | `#ed5a29` | Filled actions (hover `#dd4513`, pressed `#d14212`) |
 | Primary foreground | `#ffffff` | `#ffffff` | Text on primary |
-| Primary text | `#b8410f` | `#f17e58` | Small links and selected labels |
+| Primary text | `#ed5a29` | `#f17e58` | Small links and selected labels |
 | Brand accent | `#ed5a29` | `#ed5a29` | App identity |
 | Muted foreground | `#505763` | `#b9bec6` | Supporting text |
 | Success | `#15803d` | `#2cc896` | Completed, sent, connected and positive states |
 | Success foreground | `#ffffff` | `#111213` | Text on a filled success surface |
 | Border | `#e3e5e8` | `#3a3e44` | Grouping and controls |
 
-The app palette is defined in `src/app/dashboard-colors.css`; marketing tokens live in `src/app/(marketing)/marketing.css`. Text pairs meet WCAG AA; small orange text uses the darker `#b8410f`, and muted text uses `#505763` rather than the reference's `#8f97a4` (3:1). White on `#ed5a29` is 3.4:1, so filled-action labels stay bold, and hover darkens instead of lightening; see [dashboard color audit](dashboard-color-audit.md).
+The app palette is defined in `src/app/dashboard-colors.css`; marketing tokens live in `src/app/(marketing)/marketing.css`. Orange text uses the brand `#ed5a29` (owner decision, 2026-10-16; about 3.3:1 on white, below AA for small text), and muted text uses `#505763` rather than the reference's `#8f97a4` (3:1). White on `#ed5a29` is 3.4:1, so filled-action labels stay bold, and hover darkens instead of lightening; see [dashboard color audit](dashboard-color-audit.md).
 
 Use semantic tokens from `src/app/globals.css`. Do not use chart fill colors as text colors for status messages; use success, warning/destructive and their foreground roles. Success text uses `text-success` on neutral or lightly tinted surfaces; warning text uses `text-warning-foreground`. Keep chart series separate from status labels. The legacy sync-action token aliases primary, so AI and sync do not introduce another brand color. Custom business colors use `readableForeground` for filled controls so text remains readable. A color must not be the only indication of selection or status.
 
