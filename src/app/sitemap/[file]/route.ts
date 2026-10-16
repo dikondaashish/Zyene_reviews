@@ -13,7 +13,7 @@ function isSection(value: string): value is SitemapSection {
     return (SITEMAP_SECTION_IDS as string[]).includes(value);
 }
 
-/** Per-section sitemaps: /sitemap/core.xml, /sitemap/support.xml, /sitemap/es.xml. */
+/** Per-section sitemaps: /sitemap/core.xml, /sitemap/support.xml. */
 export async function GET(_request: Request, { params }: { params: Promise<{ file: string }> }) {
     const { file } = await params;
     const id = file.replace(/\.xml$/, "");

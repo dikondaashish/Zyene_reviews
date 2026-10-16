@@ -113,17 +113,12 @@ export function getSupportSitemap(): MetadataRoute.Sitemap {
     ];
 }
 
-export function getEsSitemap(): MetadataRoute.Sitemap {
-    return [];
-}
-
-export type SitemapSection = "core" | "support" | "es";
+export type SitemapSection = "core" | "support";
 
 /** Per-section builders; each section is served at /sitemap/<section>.xml. */
 export const SITEMAP_SECTIONS: Record<SitemapSection, () => MetadataRoute.Sitemap> = {
     core: getCoreSitemap,
     support: getSupportSitemap,
-    es: getEsSitemap,
 };
 
 export const SITEMAP_SECTION_IDS = Object.keys(SITEMAP_SECTIONS) as SitemapSection[];

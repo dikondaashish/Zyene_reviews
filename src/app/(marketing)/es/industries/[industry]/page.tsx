@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { industryAlternates } from "@/lib/seo/industry-alternates";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import {
     ES_INDUSTRY_LOCALIZED_SLUGS,
@@ -26,7 +25,9 @@ export async function generateMetadata({
             index: false,
             follow: true,
         },
-        alternates: industryAlternates(data.industrySlug, "es"),
+        alternates: {
+            canonical: canonicalUrl,
+        },
         openGraph: {
             title: data.metaTitle,
             description: data.metaDescription,
