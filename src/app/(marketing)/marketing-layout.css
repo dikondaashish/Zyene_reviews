@@ -4,7 +4,8 @@
 .premium-nav-links { display:flex; align-items:center; }
 .premium-nav-auth { display:flex; align-items:center; }
 .mega-trigger { display:flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:12px 14px; border-radius:8px; cursor:pointer; color:var(--foreground); transition:background-color 160ms; }
-.premium-nav-appointment { color:var(--primary); font-weight:600; }
+.premium-nav-appointment { color:var(--primary); font-weight:600; white-space:nowrap; }
+.premium-desktop-nav :where(a,button) { white-space:nowrap; }
 .premium-nav-appointment:hover { background:var(--brand-wash); }
 .mega-trigger:hover { background:var(--muted); }
 .mega-trigger-highlight { background:var(--muted); }
@@ -48,3 +49,4 @@
  .premium-desktop-nav { display:none; }
  #marketing-mobile-nav { position:absolute; top:100%; left:16px; right:16px; margin-top:10px; max-height:calc(100dvh - var(--marketing-menu-clearance,94px)); overscroll-behavior:contain; border:1px solid var(--border); border-radius:16px; box-shadow:0 16px 30px color-mix(in srgb, var(--foreground) 4.7%, transparent); }
 }
+.premium-header-inner :where(a,button) { white-space:nowrap; }

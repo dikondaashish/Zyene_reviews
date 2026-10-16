@@ -10,7 +10,7 @@ export function AgenciesSection3Section() {
     return (
         <section className="py-20 px-4 bg-background border-b border-border">
                 <div className="container mx-auto max-w-5xl">
-                    <h2 className="text-3xl font-bold mb-8">Agency pricing tiers</h2>
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold mb-8">Agency pricing tiers</h2>
                     <p className="text-muted-foreground mb-10 max-w-2xl">
                         Choose pricing that grows with your client roster. Configure automatic Google replies for each eligible client business with its own tone and star threshold. Our partnerships team can help scope your rollout.
                     </p>

@@ -8,7 +8,7 @@ export function CaseStudiesSlugRelatedSection({ study }: { study: (typeof CASE_S
             <div className="container mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:px-8 md:flex-row md:items-end md:justify-between">
                 <div>
                     <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Ready to build trust?</p>
-                    <h2 className="mt-3 max-w-xl text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Build a review routine for your {study.industry.toLowerCase()} team.</h2>
+                    <h2 className="text-[length:var(--fs-h2)] mt-3 max-w-xl font-semibold tracking-tight text-foreground">Build a review routine for your {study.industry.toLowerCase()} team.</h2>
                     <p className="mt-4 max-w-lg text-lg text-muted-foreground">Start a 7-day free trial to explore the workflow at your own pace, with no annual contract.</p>
                 </div>
                 <div className="flex flex-col items-start gap-4 md:items-end">

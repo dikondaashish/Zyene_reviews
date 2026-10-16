@@ -33,7 +33,7 @@ export function CaseStudiesSlugHeaderSection({ study }: { study: (typeof CASE_ST
                             <span className="flex items-center gap-1.5 text-muted-foreground"><MapPin className="size-4" aria-hidden="true" />{study.location}</span>
                             <span className="text-muted-foreground">{study.size}</span>
                         </div>
-                        <h1 className="max-w-3xl text-balance text-4xl font-bold leading-[1.04] tracking-[-0.035em] text-foreground sm:text-5xl lg:text-6xl">
+                        <h1 className="text-[length:var(--fs-display)] max-w-3xl text-balance font-semibold leading-[1.04] tracking-[-0.035em] text-foreground">
                             Illustrative Example: {study.headline}
                         </h1>
                         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">

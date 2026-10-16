@@ -51,7 +51,7 @@ export function ReviewLinkGeneratorClient() {
             <section className="pt-16 pb-12 px-4 border-b border-border">
                 <div className="container mx-auto max-w-2xl">
                     <Link href="/tools" className="text-sm text-primary hover:underline">← All free tools</Link>
-                    <h1 className="text-3xl md:text-4xl font-bold mt-4 mb-3">Google Review Link Generator</h1>
+                    <h1 className="text-[length:var(--fs-display)] font-semibold mt-4 mb-3">Google Review Link Generator</h1>
                     <p className="text-muted-foreground">
                         Find your business and get a direct Google review link immediately. Email is optional.
                     </p>

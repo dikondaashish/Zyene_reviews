@@ -5,7 +5,7 @@ export function CompareCompetitorWhereEachWinsSection({ data }: { data: Competit
     return (
         <section className="py-20 px-4 bg-background border-t border-border">
                 <div className="container mx-auto max-w-5xl">
-                    <h2 className="text-3xl font-bold text-foreground text-center mb-12">What to evaluate</h2>
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground text-center mb-12">What to evaluate</h2>
                     <div className="grid md:grid-cols-2 gap-8">
                         {/* Competitor wins */}
                         <div className="bg-card border border-border rounded-2xl p-8">

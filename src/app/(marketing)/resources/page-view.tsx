@@ -75,7 +75,7 @@ export default function ResourcesHubPage() {
             {/* ── Product CTA ── */}
             <section className="py-20 px-4 bg-background border-t border-border">
                 <div className="container mx-auto max-w-3xl text-center">
-                    <h2 className="text-3xl font-bold text-foreground mb-3">Ready to put this into practice?</h2>
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-3">Ready to put this into practice?</h2>
                     <p className="text-muted-foreground mb-8">Zyene Reviews automates review collection, AI replies, competitor tracking, and more. 7-day free trial, card required; your selected plan bills automatically after the trial unless you cancel.</p>
                     <Button size="lg" className="gap-2 rounded-xl" asChild>
                         <Link href={SIGNUP_URL} data-track="trial" data-track-location="resources-cta">

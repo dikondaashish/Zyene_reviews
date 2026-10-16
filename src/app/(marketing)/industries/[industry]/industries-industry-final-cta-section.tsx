@@ -17,7 +17,7 @@ export function IndustriesIndustryFinalCtaSection({ data }: { data: IndustryData
                     className="mx-auto mb-6 h-[3px] w-16 rounded-full"
                     style={{ background: accent }}
                 />
-                <h2 className="text-4xl font-bold text-foreground mb-4 tracking-tight">
+                <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-4 tracking-tight">
                     {data.ctaJoinCopy}
                 </h2>
                 <p className="text-xl text-muted-foreground mb-10">

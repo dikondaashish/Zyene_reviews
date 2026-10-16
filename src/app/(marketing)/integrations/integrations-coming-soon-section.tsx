@@ -7,7 +7,7 @@ export function IntegrationsComingSoonSection() {
     return (
         <section className="py-20 px-4 bg-background border-t border-border">
             <div className="container mx-auto max-w-6xl">
-                <h2 className="text-3xl font-bold text-foreground mb-2 text-center">Coming soon</h2>
+                <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-2 text-center">Coming soon</h2>
                 <p className="text-muted-foreground text-center mb-12">More integrations are on the roadmap. Join the waitlist.</p>
                 <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
                     {COMING_INTEGRATIONS.map((int) => (

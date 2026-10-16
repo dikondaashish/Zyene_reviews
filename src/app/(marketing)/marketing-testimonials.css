@@ -1,7 +1,7 @@
 .owner-stories { background:var(--muted); }
 .owner-stories-heading { text-align:center; margin-bottom:52px; }
 .owner-stories-heading .marketing-eyebrow { margin-bottom:20px; }
-.owner-stories-heading h2 { font-size:clamp(36px,4.2vw,60px); }
+.owner-stories-heading h2 { font-size:var(--fs-h2); }
 .owner-stories-heading h2 > span { color:var(--primary); }
 .owner-stories-grid { display:grid; grid-template-columns:1.05fr 1fr; gap:22px; }
 .owner-story-slot { min-width:0; }
@@ -22,7 +22,7 @@
 .owner-story-featured figure { padding:44px; }
 .owner-story-featured .owner-story-topline { margin-bottom:52px; }
 .owner-story-featured .owner-story-topline > svg { width:42px; height:42px; }
-.owner-story-featured blockquote { font-size:clamp(28px,2.65vw,38px); line-height:1.4; letter-spacing:-.04em; margin-bottom:52px; }
+.owner-story-featured blockquote { font-size:var(--fs-h4); line-height:1.4; letter-spacing:-.04em; margin-bottom:52px; }
 .owner-story-featured blockquote strong { text-decoration:underline; text-decoration-color:color-mix(in srgb, var(--brand-orange) 43.9%, transparent); text-underline-offset:7px; text-decoration-thickness:2px; }
 .owner-story-featured figcaption { padding-top:28px; border-top:1px solid var(--brand-wash-border); }
 .owner-story-featured .owner-story-avatar { width:52px; height:52px; background:var(--primary); color:#ffffff; font-size:14px; }

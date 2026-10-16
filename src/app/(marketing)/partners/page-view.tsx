@@ -9,7 +9,7 @@ export default function PartnersPage() {
         <PartnersHeroSection />
         <section className="marketing-section">
             <div className="marketing-container space-y-8">
-                <h2 className="text-3xl font-bold">Find the right way to work together</h2>
+                <h2 className="text-[length:var(--fs-h2)] font-semibold">Find the right way to work together</h2>
                 <div className="grid gap-6 md:grid-cols-3">
                     {[
                         ["Agencies and consultants", "Manage reviews for the local businesses you support. Discuss client access, location limits, and reporting with us."],

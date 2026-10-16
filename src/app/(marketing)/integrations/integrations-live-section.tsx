@@ -7,7 +7,7 @@ export function IntegrationsLiveSection() {
     return (
         <section className="py-20 px-4 bg-muted border-t border-border">
             <div className="container mx-auto max-w-6xl">
-                <h2 className="text-3xl font-bold text-foreground mb-2 text-center">Available connections</h2>
+                <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-2 text-center">Available connections</h2>
                 <p className="text-muted-foreground text-center mb-12">Bring feedback together, then connect completed-customer events to a review-request workflow.</p>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {LIVE_INTEGRATIONS.map((int) => (

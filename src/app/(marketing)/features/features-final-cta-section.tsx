@@ -8,7 +8,7 @@ export function FeaturesFinalCtaSection() {
     return (
         <section className="py-24 px-4 bg-background border-t border-border">
                 <div className="container mx-auto max-w-3xl text-center">
-                    <h2 className="text-4xl font-bold text-foreground mb-4">All features. One platform. One price.</h2>
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-4">All features. One platform. One price.</h2>
                     <p className="text-xl text-muted-foreground mb-10">
                         Starting at $29.99/mo - no annual contracts, no add-ons, no surprises.
                     </p>

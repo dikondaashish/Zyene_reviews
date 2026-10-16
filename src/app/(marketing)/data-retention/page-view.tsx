@@ -20,7 +20,7 @@ export default function DataRetentionPage() {
                         <div className="bg-primary/10 text-primary rounded-lg border border-primary/20 flex items-center justify-center mx-auto mb-6 size-16">
                             <Database className="size-8" />
                         </div>
-                        <h1 className="text-4xl font-bold tracking-tight mb-4 text-foreground">Data Retention Policy</h1>
+                        <h1 className="text-[length:var(--fs-display)] font-semibold tracking-tight mb-4 text-foreground">Data Retention Policy</h1>
                         <p className="text-muted-foreground text-lg">Last Updated: March 2026</p>
                     </div>
 

@@ -34,7 +34,7 @@ export function IndustriesHomeServicesTradesSection() {
             <div className="container mx-auto max-w-5xl">
                 <div className="text-center mb-12">
                     <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-2">Specialized Solutions</p>
-                    <h2 className="text-3xl font-bold text-foreground tracking-tight">Home services by trade</h2>
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground tracking-tight">Home services by trade</h2>
                     <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
                         Explore dedicated reputation management workflows built for the specific operational demands of your trade.
                     </p>

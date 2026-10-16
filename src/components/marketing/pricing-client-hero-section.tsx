@@ -15,7 +15,7 @@ export function PricingClientHeroSection({
       <div className="interior-pricing-intro" data-hero-media="none">
         <div className={styles.introCopy}>
           <p className="marketing-eyebrow">Simple plans. Plenty of room to grow.</p>
-          <h1 className="mb-5 max-w-2xl text-4xl md:text-6xl">
+          <h1 className="text-[length:var(--fs-display)] mb-5 max-w-2xl">
             A better reputation.
             <br />
             At a sensible price.

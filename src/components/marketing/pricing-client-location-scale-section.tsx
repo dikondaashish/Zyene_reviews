@@ -4,7 +4,7 @@ export function PricingClientLocationScaleSection() {
     return (
         <section className="py-20 px-4 bg-muted/50 border-y border-border">
             <div className="container mx-auto max-w-4xl">
-                <h2 className="text-3xl font-bold text-foreground mb-2 text-center">
+                <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-2 text-center">
                     How Professional scales per location
                 </h2>
                 <p className="text-muted-foreground text-center mb-10">

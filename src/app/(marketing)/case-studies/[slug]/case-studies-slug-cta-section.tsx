@@ -7,7 +7,7 @@ export function CaseStudiesSlugCtaSection({ related }: { related: (typeof CASE_S
         <section className="border-t border-border bg-muted/35 py-16 sm:py-20">
             <div className="container mx-auto max-w-6xl px-4 sm:px-8">
                 <div className="mb-8 flex items-end justify-between gap-4">
-                    <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">More case studies</h2>
+                    <h2 className="text-[length:var(--fs-h2)] text-2xl font-semibold tracking-tight text-foreground">More case studies</h2>
                     <Link href="/case-studies" className="hidden items-center gap-2 text-sm font-semibold text-primary hover:underline sm:inline-flex">
                         All workflows <ArrowLeft className="size-4" aria-hidden="true" />
                     </Link>

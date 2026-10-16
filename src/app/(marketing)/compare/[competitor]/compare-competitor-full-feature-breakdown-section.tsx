@@ -6,7 +6,7 @@ export function CompareCompetitorFullFeatureBreakdownSection({ data }: { data: C
     return (
         <section className="py-20 px-4 bg-muted border-t border-border">
                 <div className="container mx-auto max-w-4xl">
-                    <h2 className="text-3xl font-bold text-foreground text-center mb-3">Feature-by-feature breakdown</h2>
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground text-center mb-3">Feature-by-feature breakdown</h2>
                     <p className="text-muted-foreground text-center mb-10">Every feature, side by side. No marketing speak.</p>
                     <div className="overflow-x-auto rounded-xl border border-border bg-card">
                         <table className="w-full text-sm border-collapse">

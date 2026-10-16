@@ -8,7 +8,7 @@ export function PricingClientComparisonSection() {
     return (
         <section className="py-20 px-4 bg-background">
             <div className="container mx-auto max-w-5xl">
-                <h2 className="text-3xl font-bold text-foreground mb-2 text-center">See how we compare</h2>
+                <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-2 text-center">See how we compare</h2>
                 <p className="text-muted-foreground text-center mb-10">
                     Compare the workflows and allowances your business needs. A lower price does not mean identical coverage.
                 </p>

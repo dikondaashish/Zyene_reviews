@@ -8,7 +8,7 @@ export function CompareCompetitorFinalCtaSection({ data }: { data: CompetitorDat
     return (
         <section className="py-24 px-4 bg-background border-t border-border">
                 <div className="container mx-auto max-w-3xl text-center">
-                    <h2 className="text-4xl font-bold text-foreground mb-4">
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-4">
                         Try Zyene Reviews free for 7 days
                     </h2>
                     <p className="text-xl text-muted-foreground mb-10">

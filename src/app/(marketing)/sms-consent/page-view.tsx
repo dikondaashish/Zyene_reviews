@@ -11,7 +11,7 @@ export default function SmsConsentPage() {
                     <div className="mb-5 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-primary">
                         <MessageSquareText size={18} aria-hidden="true" /> SMS compliance
                     </div>
-                    <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">{SMS_CONSENT_COPY.title}</h1>
+                    <h1 className="text-[length:var(--fs-display)] font-semibold tracking-tight">{SMS_CONSENT_COPY.title}</h1>
                     <p className="mt-5 text-lg leading-8 text-muted-foreground">{SMS_CONSENT_COPY.description}</p>
                 </header>
 

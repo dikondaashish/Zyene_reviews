@@ -62,7 +62,7 @@ export function HelpArticleView({
                         <HelpCategoryIcon category={article.category} className="text-primary" size={20} />
                         <span className="text-sm font-semibold text-muted-foreground">{catInfo.label}</span>
                     </div>
-                    <h1 className="text-4xl font-bold tracking-tight text-foreground mb-3">
+                    <h1 className="text-[length:var(--fs-display)] font-semibold tracking-tight text-foreground mb-3">
                         {article.title}
                     </h1>
                     <p className="text-lg text-muted-foreground mb-6">{article.excerpt}</p>

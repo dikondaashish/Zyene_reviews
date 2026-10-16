@@ -6,7 +6,7 @@ export function TermsContentSection() {
     return (
         <div className="min-h-screen bg-background py-24 text-foreground">
             <div className="container mx-auto px-4 sm:px-8 max-w-4xl bg-card p-8 md:p-16 rounded-lg border border-border">
-                <h1 className="text-4xl font-bold text-foreground mb-8">Terms of Service</h1>
+                <h1 className="text-[length:var(--fs-display)] font-semibold text-foreground mb-8">Terms of Service</h1>
 
                 <div className="prose max-w-none prose-headings:text-foreground prose-a:text-primary hover:prose-a:brightness-90 prose-p:text-muted-foreground prose-li:text-muted-foreground">
                     <p className="text-sm text-muted-foreground mb-8">Last Updated: {LAST_UPDATED}</p>

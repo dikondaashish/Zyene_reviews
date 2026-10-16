@@ -11,7 +11,7 @@ export function MarketingHomeClosing() {
         <div className="marketing-container grid gap-12 lg:grid-cols-[.85fr_1.15fr]">
           <div>
             <p className="marketing-eyebrow">A little more clarity</p>
-            <h2 className="text-4xl lg:text-5xl">
+            <h2 className="text-[length:var(--fs-h2)]">
               Good questions.
               <br />
               Straight answers.

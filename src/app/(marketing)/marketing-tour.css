@@ -27,7 +27,7 @@
 .product-tour :where(textarea, select) { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 9px; background: var(--background); color: var(--foreground); }
 .product-tour textarea { resize: vertical; line-height: 1.6; }
 .tour-toolbar { display: flex; align-items: center; gap: 24px; padding: 20px 26px; border-bottom: 1px solid var(--border); }
-.tour-wordmark { display: inline-flex; gap: 4px; color: var(--primary); font-size: 22px; font-weight: 750; letter-spacing: -.06em; }
+.tour-wordmark { display: inline-flex; gap: 4px; color: var(--primary); font-size: 22px; font-weight: 750; letter-spacing:-.035em; }
 .tour-wordmark > span { color: var(--foreground); }
 .tour-business { display: flex; align-items: center; gap: 10px; margin-left: auto; font-size: 13px; font-weight: 600; }
 .tour-business > svg { color: var(--muted-foreground); }
@@ -57,7 +57,7 @@
 .tour-sandbox-note svg { flex-shrink: 0; }
 .product-tour-section { padding-block: clamp(52px, 6vw, 84px); }
 .product-tour-section .marketing-section-heading { margin-bottom: 34px; }
-.product-tour-section .marketing-section-heading h2 { font-size: clamp(32px, 3.5vw, 48px); }
+.product-tour-section .marketing-section-heading h2 { font-size:var(--fs-h3); }
 .product-tour, .workflow-product { --chart-2: #267861; --chart-4: #906021; --destructive: #b42318; }
 .product-tour[data-pointer-motion=true] :is(.tour-review-detail, .tour-published-reply, .tour-panel:not([hidden]), .tour-rating-confirmation, .tour-demo-delivered) { animation: tour-demo-enter 200ms var(--ease-out); }
 @keyframes tour-demo-enter { from { opacity: .3; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }

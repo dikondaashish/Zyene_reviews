@@ -7,7 +7,7 @@ export function PricingClientFaqSection() {
     return (
         <section className="py-20 px-4 bg-muted border-t border-border">
             <div className="container mx-auto max-w-3xl">
-                <h2 className="text-3xl font-bold text-foreground mb-2 text-center">Frequently Asked Questions</h2>
+                <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-2 text-center">Frequently Asked Questions</h2>
                 <p className="text-muted-foreground text-center mb-10">Everything you need to know before signing up.</p>
                 <div className="bg-card rounded-xl border border-border p-8">
                     {PRICING_FAQS.map((faq) => (

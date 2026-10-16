@@ -21,7 +21,7 @@ export function AgenciesSection4Section() {
                 <div className="container mx-auto max-w-5xl">
                     <div className="flex items-center gap-3 mb-4">
                         <LayoutDashboard className="text-primary size-8" />
-                        <h2 className="text-3xl font-bold">{AGENCY_DASHBOARD_ROADMAP.title}</h2>
+                        <h2 className="text-[length:var(--fs-h2)] font-semibold">{AGENCY_DASHBOARD_ROADMAP.title}</h2>
                         <span className="text-xs font-bold uppercase tracking-wider bg-primary/10 text-primary px-2 py-1 rounded-full">
                             {AGENCY_DASHBOARD_ROADMAP.status}
                         </span>

@@ -9,7 +9,7 @@ export function EnterpriseSection5Section({ enterprisePlan }: { enterprisePlan: 
         <section className="py-20 px-4 bg-background">
                 <div className="container mx-auto max-w-5xl grid lg:grid-cols-2 gap-10 items-start">
                     <div>
-                        <h2 className="text-3xl font-bold mb-4 flex items-center gap-2">
+                        <h2 className="text-[length:var(--fs-h2)] font-semibold mb-4 flex items-center gap-2">
                             <Users className="text-primary size-8" />
                             What&apos;s included
                         </h2>

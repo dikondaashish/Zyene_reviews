@@ -9,7 +9,7 @@ export function CaseStudiesCtaSection() {
         <section className="py-20 px-4 bg-muted border-t border-border">
                 <div className="container mx-auto max-w-3xl text-center">
                     <TrendingUp className="text-primary mx-auto mb-4 size-10" />
-                    <h2 className="text-3xl font-bold text-foreground mb-3">Ready to build your own review routine?</h2>
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-3">Ready to build your own review routine?</h2>
                     <p className="text-muted-foreground mb-8">
                         Start a 7-day free trial to explore requests, AI-assisted replies, and local review insights. No annual contract.
                     </p>

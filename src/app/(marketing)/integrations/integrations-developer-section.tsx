@@ -12,7 +12,7 @@ export function IntegrationsDeveloperSection() {
                         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-4 py-2 rounded-full border border-primary/20 mb-6">
                             <Code2 className="size-3.5" /> For Developers
                         </div>
-                        <h2 className="text-4xl font-bold mb-4 leading-tight">Build review requests into your workflow</h2>
+                        <h2 className="text-[length:var(--fs-h2)] font-semibold mb-4 leading-tight">Build review requests into your workflow</h2>
                         <p className="text-[color:var(--marketing-footer-muted)] mb-6 leading-relaxed text-lg">
                             Use a scoped REST API key to send review requests from your own system, list reviews, and retrieve aggregate review and request activity. A generic inbound webhook is available when your automation tool can send the customer event.
                         </p>

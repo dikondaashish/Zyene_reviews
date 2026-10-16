@@ -11,7 +11,7 @@ export function EnterpriseSection4Section() {
     return (
         <section className="py-20 px-4 bg-muted border-b border-border">
                 <div className="container mx-auto max-w-5xl overflow-x-auto">
-                    <h2 className="text-3xl font-bold mb-8">Plan comparison</h2>
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold mb-8">Plan comparison</h2>
                     <table className="w-full text-sm border border-border rounded-xl overflow-hidden bg-card">
                         <thead>
                             <tr className="bg-muted/80 border-b border-border">

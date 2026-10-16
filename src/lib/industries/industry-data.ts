@@ -78,7 +78,7 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "Never miss a new review", description: "Get instant SMS or email alerts the moment a new Google, Facebook, or Yelp review arrives - so you can respond before the diner even gets home." },
             { title: "AI replies that sound like you", description: "During the morning rush, let automatic Google replies answer eligible new reviews in a Professional, Friendly, or Concise tone. Review and publish a draft yourself when a guest needs a personal response." },
             { title: "Follow up on low ratings", description: "The Negative Feedback Shield gives unhappy diners a private form to describe the problem and alerts your team. Use that feedback for service recovery while keeping public review requests fair." },
-            { title: "Track nearby competitors", description: "See exactly how your star rating, review volume, and response rate compares to the restaurants around you - and identify where you're winning or falling behind." },
+            { title: "Track nearby competitors", description: "See how your star rating and review volume compare with the restaurants around you, and get an alert when a rival's reviews spike." },
         ],
         useCase: {
             startingPoint: "A restaurant group monitors several review platforms separately, responds inconsistently, and cannot compare locations from one view.",
@@ -168,7 +168,7 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "Build trust before the first call", description: "Proactively grow your 5-star review count so new customers find a shop they feel confident about - before they've even called." },
             { title: "AI replies that sound like a real shop owner", description: "Keep up with feedback while your team works on the next vehicle. Automatically reply to eligible new Google reviews in your chosen tone, or edit an AI draft for a specific customer concern." },
             { title: "Follow up on estimate disputes", description: "When a customer is upset about their bill, the Negative Feedback Shield gives them a private way to explain the problem and alerts your team to follow up." },
-            { title: "See how you compare to the shop down the street", description: "Track up to 10 nearby competitors. See their star rating, review volume, and response rate - and identify exactly what's driving customers to choose them over you." },
+            { title: "See how you compare to the shop down the street", description: "Track the shops you compete with. Compare star rating and review volume over time, and get an alert when a competitor's rating jumps or reviews spike." },
         ],
         useCase: {
             startingPoint: "An independent shop has a smaller public review footprint than nearby chains and handles estimate disputes without a consistent follow-up process.",
@@ -348,7 +348,7 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "AI drafts and automatic Google replies", description: "Automatically reply to eligible new Google reviews after a stay, using your selected tone and star threshold. Keep individual service issues in a manual draft-and-review workflow." },
             { title: "Private resolution for room complaints", description: "The Negative Feedback Shield gives unhappy guests a private channel to report issues before they write a public review. Resolving quickly drives loyalty, not churn." },
             { title: "Automate post-checkout review requests", description: "Send a branded review request via email or SMS automatically at checkout - when guests are most likely to write a positive review." },
-            { title: "Track your competitive set", description: "Monitor the review volume, rating, and response rate of nearby hotels in the same class. Use the comparison to decide where to improve; Google Maps position depends on more than reviews." },
+            { title: "Track your competitive set", description: "Monitor the review volume and rating of nearby hotels in the same class. Use the comparison to decide where to improve; Google Maps position depends on more than reviews." },
         ],
         useCase: {
             startingPoint: "A hotel team responds inconsistently across review channels and lacks a shared process for post-stay requests and room complaints.",
@@ -448,7 +448,7 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "Request a review the moment the job closes", description: "Trigger an SMS or email review request automatically when a job is marked complete - when the homeowner's relief (and your five-star service) is freshest." },
             { title: "AI replies while you're on the next call", description: "Auto-draft professional replies to eligible new Google reviews in your chosen tone. Handle a tricky pricing concern with a draft you review yourself." },
             { title: "Route pricing complaints privately", description: "The Negative Feedback Shield gives unhappy homeowners a private form to explain a billing issue and alerts your office before it becomes a public review." },
-            { title: "Beat nearby HVAC competitors", description: "Track review volume, rating, and response rate against other HVAC companies in your service area - before peak season hits." },
+            { title: "Beat nearby HVAC competitors", description: "Track review volume and rating against other HVAC companies in your service area before peak season hits." },
         ],
         useCase: {
             startingPoint: "An HVAC company completes dozens of installs and repairs monthly but asks for reviews inconsistently and catches pricing complaints only after they go public.",

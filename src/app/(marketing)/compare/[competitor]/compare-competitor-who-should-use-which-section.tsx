@@ -5,7 +5,7 @@ export function CompareCompetitorWhoShouldUseWhichSection({ data }: { data: Comp
     return (
         <section className="py-20 px-4 bg-background border-t border-border">
                 <div className="container mx-auto max-w-5xl">
-                    <h2 className="text-3xl font-bold text-foreground text-center mb-12">Who should use which?</h2>
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground text-center mb-12">Who should use which?</h2>
                     <div className="grid md:grid-cols-2 gap-8">
                         <div className="bg-card border border-border rounded-2xl p-8">
                             <h3 className="text-xl font-bold text-foreground mb-6">Choose {data.name} if you need:</h3>

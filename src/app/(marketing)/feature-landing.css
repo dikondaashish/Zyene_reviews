@@ -3,7 +3,7 @@
 
 .fl-section-head { max-width:720px; margin:0 auto clamp(36px,5vw,64px); text-align:center; }
 .fl-section-head .marketing-eyebrow { margin-bottom:14px; }
-.fl-section-head h2 { font-size:clamp(32px,3.8vw,52px); }
+.fl-section-head h2 { font-size:var(--fs-h2); }
 .fl-section-head > p:last-child { margin-top:14px; color:var(--muted-foreground); font-size:clamp(15px,1.3vw,18px); }
 
 /* Flow diagram */
@@ -41,7 +41,7 @@
 .fl-row-photo img { object-fit:cover; }
 .fl-row-overlay { position:absolute; left:20px; right:20px; bottom:20px; display:grid; gap:10px; justify-items:start; }
 .fl-row-visual { display:grid; place-items:center; min-height:380px; padding:clamp(20px,3vw,36px); border:1px solid var(--border); border-radius:28px; background:radial-gradient(100% 80% at 100% 0%,var(--brand-wash) 0%,transparent 55%),var(--muted); }
-.fl-row-copy h2 { font-size:clamp(28px,3vw,42px); }
+.fl-row-copy h2 { font-size:var(--fs-h3); }
 .fl-row-copy .marketing-eyebrow { margin-bottom:14px; }
 .fl-row-copy > p { margin-top:16px; color:var(--muted-foreground); }
 .fl-row-copy ul { display:grid; gap:10px; margin-top:22px; }
@@ -51,12 +51,12 @@
 /* Facts band */
 .fl-facts { background:var(--surface-dark); color:#fff; padding-block:clamp(36px,5vw,56px); }
 .fl-facts-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:24px; }
-.fl-facts-grid > div { display:flex; flex-direction:column-reverse; gap:6px; padding-left:16px; border-left:2px solid var(--brand-orange); }
-.fl-facts-grid dd { font-size:clamp(26px,3vw,40px); font-weight:600; letter-spacing:-.04em; line-height:1.05; }
+.fl-facts-grid > div { display:flex; flex-direction:column-reverse; gap:6px; padding-top:14px; border-top:1px solid color-mix(in srgb,#fafafa 22%,transparent); }
+.fl-facts-grid dd { font-size:var(--fs-h3); font-weight:600; letter-spacing:-.04em; line-height:1.05; }
 .fl-facts-grid dt { color:var(--marketing-footer-muted); font-size:13px; }
 
 /* Capabilities + related */
-.fl-caps-title { margin-bottom:32px; font-size:clamp(28px,3vw,40px); }
+.fl-caps-title { margin-bottom:32px; font-size:var(--fs-h3); }
 .fl-caps-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
 .fl-caps-grid li { padding:22px; border:1px solid var(--border); border-radius:18px; background:var(--card); }
 .fl-caps-icon { display:grid; width:40px; height:40px; place-items:center; border-radius:12px; background:var(--brand-wash); color:var(--brand-orange-ink); }
@@ -74,7 +74,7 @@
 /* FAQ */
 .fl-faq { background:var(--card); border-block:1px solid var(--border); }
 .fl-faq-layout { display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:clamp(32px,6vw,96px); }
-.fl-faq-layout h2 { font-size:clamp(30px,3.4vw,46px); }
+.fl-faq-layout h2 { font-size:var(--fs-h3); }
 .fl-faq-note { display:flex; gap:10px; margin-top:20px; padding:14px 16px; border-radius:14px; background:var(--muted); color:var(--muted-foreground); font-size:13px; line-height:1.55; }
 .fl-faq-note svg { flex:none; margin-top:2px; }
 .fl-faq-list details { border-bottom:1px solid var(--border); }
@@ -109,7 +109,7 @@
 .features-groups { display:grid; gap:clamp(48px,6vw,80px); }
 .features-group > header { display:grid; grid-template-columns:auto 1fr; gap:4px 16px; align-items:baseline; margin-bottom:24px; padding-bottom:18px; border-bottom:1px solid var(--border); }
 .features-group-index { grid-row:span 2; color:var(--brand-orange-ink); font-size:14px; font-weight:700; letter-spacing:.06em; }
-.features-group h3 { font-size:clamp(24px,2.4vw,32px); font-weight:600; letter-spacing:-.03em; }
+.features-group h3 { font-size:var(--fs-h4); font-weight:600; letter-spacing:-.03em; }
 .features-group header p { color:var(--muted-foreground); }
 .features-group-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; }
 .features-card { display:flex; flex-direction:column; height:100%; padding:22px; border:1px solid var(--border); border-radius:18px; background:var(--card); transition:border-color 200ms,transform 200ms var(--ease-out),box-shadow 200ms; }

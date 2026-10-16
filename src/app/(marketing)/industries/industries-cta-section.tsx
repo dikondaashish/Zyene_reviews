@@ -13,7 +13,7 @@ export function IndustriesCtaSection() {
                             <Star key={s} className="fill-chart-4 text-chart-4 size-7" />
                         ))}
                     </div>
-                    <h2 className="text-4xl font-bold text-foreground mb-4">
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-4">
                         Turn customer moments into a stronger reputation.
                     </h2>
                     <p className="text-xl text-muted-foreground mb-10">

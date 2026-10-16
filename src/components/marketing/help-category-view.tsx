@@ -35,7 +35,7 @@ export function HelpCategoryView({ categoryKey }: { categoryKey: HelpCategory })
                         <div className="flex size-11 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
                             <HelpCategoryIcon category={categoryKey} size={24} />
                         </div>
-                        <h1 className="text-3xl font-bold tracking-tight">{catInfo.label}</h1>
+                        <h1 className="text-[length:var(--fs-display)] font-semibold tracking-tight">{catInfo.label}</h1>
                     </div>
                     <p className="text-lg text-muted-foreground max-w-2xl">{catInfo.description}</p>
                 </div>

@@ -11,7 +11,7 @@ export function IndustriesIndustryPainPointsSection({ data }: { data: IndustryDa
     return (
         <section className="py-20 px-4 bg-muted border-t border-border">
             <div className="container mx-auto max-w-5xl">
-                <h2 className="text-3xl font-bold text-foreground text-center mb-3 tracking-tight">
+                <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground text-center mb-3 tracking-tight">
                     The reputation challenges {data.name.toLowerCase()} face
                 </h2>
                 <p className="text-muted-foreground text-center mb-14 max-w-xl mx-auto">
@@ -27,7 +27,7 @@ export function IndustriesIndustryPainPointsSection({ data }: { data: IndustryDa
                         >
                             {featured.stat}
                         </p>
-                        <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-5 leading-tight tracking-tight">
+                        <h3 className="text-[length:var(--fs-h3)] font-semibold text-foreground mb-5 leading-tight tracking-tight">
                             {featured.title}
                         </h3>
                         <p className="text-base text-muted-foreground leading-relaxed max-w-lg">
@@ -40,8 +40,7 @@ export function IndustriesIndustryPainPointsSection({ data }: { data: IndustryDa
                         {supporting.map((point, i) => (
                             <div
                                 key={i}
-                                className="pl-5 py-4 rounded-r-xl bg-card border border-border hover:border-primary/40 transition-[border-color] duration-[180ms]"
-                                style={{ borderLeft: `3px solid ${accent}` }}
+                                className="px-5 py-4 rounded-xl bg-card border border-border hover:border-primary/40 transition-[border-color] duration-[180ms]"
                             >
                                 <p
                                     className="text-xs font-semibold uppercase tracking-wider mb-2"
@@ -49,7 +48,7 @@ export function IndustriesIndustryPainPointsSection({ data }: { data: IndustryDa
                                 >
                                     {point.stat}
                                 </p>
-                                <h3 className="text-lg font-bold text-foreground mb-2 tracking-tight">
+                                <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
                                     {point.title}
                                 </h3>
                                 <p className="text-sm text-muted-foreground leading-relaxed">

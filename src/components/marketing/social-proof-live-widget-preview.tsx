@@ -16,7 +16,7 @@ export function LiveWidgetPreview() {
         <section className="w-full py-20 px-4 bg-background border-t border-border">
             <div className="container mx-auto max-w-5xl">
                 <div className="text-center mb-10">
-                    <h2 className="text-3xl font-bold text-foreground mb-2">See reviews live on your website</h2>
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-2">See reviews live on your website</h2>
                     <p className="text-muted-foreground text-sm max-w-xl mx-auto">
                         Embed a review carousel or star badge on your site - the same widget your customers&apos; visitors see.
                     </p>

@@ -2,7 +2,7 @@
 .marketing-site, .premium-header {
   --marketing-header-top: 35px;
   --marketing-header-height: 72px;
-  --marketing-header-width: min(1440px, calc(100% - 80px));
+  --marketing-header-width: min(var(--mk-max-wide), calc(100% - 2 * var(--mk-gutter)));
   --marketing-menu-clearance: calc(var(--marketing-header-top) + var(--marketing-header-height) + 20px);
 }
 @media (max-width:767px) {

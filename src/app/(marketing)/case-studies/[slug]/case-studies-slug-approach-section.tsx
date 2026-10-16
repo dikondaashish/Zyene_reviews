@@ -7,7 +7,7 @@ export function CaseStudiesSlugApproachSection({ study }: { study: (typeof CASE_
             <div className="container mx-auto grid max-w-6xl gap-10 px-4 sm:px-8 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
                 <div>
                     <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">02 / The approach</p>
-                    <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">The solution</h2>
+                    <h2 className="text-[length:var(--fs-h2)] mt-3 font-semibold tracking-tight text-foreground">The solution</h2>
                 </div>
                 <div>
                     <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground">{study.company} implemented Zyene Reviews with a simple workflow that fit the team’s existing job-completion process.</p>

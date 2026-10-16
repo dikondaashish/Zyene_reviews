@@ -7,7 +7,7 @@ export function IntegrationsCtaSection() {
     return (
         <section className="py-24 px-4 bg-background border-t border-border">
             <div className="container mx-auto max-w-3xl text-center">
-                <h2 className="text-4xl font-bold text-foreground mb-4">Start with the workflow you already use</h2>
+                <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-4">Start with the workflow you already use</h2>
                 <p className="text-xl text-muted-foreground mb-10">
                     Sync Google, Facebook, or Yelp reviews in one workspace. When a sale, booking, or job is complete, use the REST API or a generic inbound webhook to start a review request.
                 </p>

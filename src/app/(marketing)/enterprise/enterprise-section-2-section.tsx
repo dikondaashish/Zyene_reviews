@@ -11,7 +11,7 @@ export function EnterpriseSection2Section() {
     return (
         <section className="py-20 px-4 bg-muted border-b border-border">
                 <div className="container mx-auto max-w-5xl">
-                    <h2 className="text-3xl font-bold mb-10">Built for scale</h2>
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold mb-10">Built for scale</h2>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {ENTERPRISE_VALUE_PROPS.map((item) => (
                             <article key={item.title} className="bg-card border border-border rounded-xl p-6">

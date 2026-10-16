@@ -60,7 +60,7 @@
 .hero-review-rays { position:absolute; width:5cqw; top:1cqw; right:-6cqw; color:#ffa566; }
 .hero-growth-enter { position:absolute; top:26%; right:-4%; width:21%; z-index:3; transform:rotate(-10deg); }
 .hero-growth-card { display:flex; align-items:center; gap:1.1cqw; border-radius:1.9cqw; padding:1.5cqw 1.4cqw; background:#fffefd; box-shadow:0 14px 35px #50312412; }
-.hero-growth-card strong { display:block; font-size:2.5cqw; font-weight:700; line-height:1.2; letter-spacing:-.045em; }
+.hero-growth-card strong { display:block; font-size:2.5cqw; font-weight:700; line-height:1.2; letter-spacing:-.035em; }
 .hero-growth-card span:not(.hero-growth-bars) { display:block; color:#787477; font-size:1.35cqw; white-space:nowrap; }
 .hero-growth-card small { display:block; color:#878078; font-size:.9cqw; margin-top:.3cqw; }
 .hero-growth-bars { display:flex; align-items:end; gap:.35cqw; height:4.3cqw; }

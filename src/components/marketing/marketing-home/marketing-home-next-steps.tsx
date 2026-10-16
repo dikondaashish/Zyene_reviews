@@ -10,7 +10,7 @@ export function MarketingHomeNextSteps() {
       <div className="marketing-container grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-20">
         <div>
           <p className="marketing-eyebrow">Room to grow. A price that makes sense.</p>
-          <h2 className="mb-5 text-4xl lg:text-5xl">
+          <h2 className="text-[length:var(--fs-h2)] mb-5">
             Big ambitions.
             <br />
             Local-business pricing.
