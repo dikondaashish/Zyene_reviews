@@ -50,7 +50,7 @@ export function QrGlyph({ seed = 7, className = "" }: { seed?: number; className
       focusable="false"
       shapeRendering="crispEdges"
     >
-      <rect x="-1" y="-1" width="23" height="23" fill="#fff" />
+      <rect x="-1" y="-1" width="23" height="23" fill="var(--card)" />
       <path d={glyphPath(seed)} fill="currentColor" />
     </svg>
   );
