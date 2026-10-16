@@ -36,9 +36,20 @@ export function getSentryReplaysOnErrorSampleRate(): number {
     return 1;
 }
 
+/**
+ * Local `next dev` stays out of the shared project: HMR, stale Turbopack manifests
+ * and half-edited files otherwise land next to real production issues.
+ * Set NEXT_PUBLIC_SENTRY_ENABLE_DEV=true to test Sentry wiring locally.
+ */
+export function isSentryEnabled(): boolean {
+    if (process.env.NEXT_PUBLIC_SENTRY_ENABLE_DEV === "true") return true;
+    return process.env.NODE_ENV !== "development";
+}
+
 export function getSentryBaseInitOptions() {
     return {
         dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+        enabled: isSentryEnabled(),
         environment: getSentryEnvironment(),
         tracesSampleRate: getSentryTracesSampleRate(),
         debug: false,

@@ -188,4 +188,32 @@ describe("runCronJob", () => {
       expect.objectContaining({ p_failure_code: "exception" }),
     );
   });
+
+  it("retries a transient claim failure instead of skipping the occurrence", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-16T13:00:00.000Z"));
+    mocks.rpc
+      .mockResolvedValueOnce({
+        data: null,
+        error: { message: "<!doctype html><title>DNS resolution error</title>" },
+      })
+      .mockResolvedValueOnce({
+        data: [{ action: "acquired", lease_token: "lease", attempt_count: 1 }],
+        error: null,
+      })
+      .mockResolvedValueOnce({ data: true, error: null });
+    const handler = vi.fn(async () => new Response("ok"));
+
+    const pending = runCronJob(
+      request("Bearer production-cron-secret"),
+      options,
+      handler,
+    );
+    await vi.runAllTimersAsync();
+    const response = await pending;
+
+    expect(response.status).toBe(200);
+    expect(handler).toHaveBeenCalledOnce();
+    expect(mocks.rpc).toHaveBeenCalledTimes(3);
+  });
 });

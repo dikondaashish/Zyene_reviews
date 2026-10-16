@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { logger } from "@/lib/logger";
 import { authorizeCronRequest } from "@/lib/cron/authorize-cron-request";
+import { callCronRpc, summarizeRpcError } from "@/lib/cron/cron-rpc";
 import {
   cronOccurrenceKey,
   type CronCadence,
@@ -21,8 +22,6 @@ type CronClaim = {
   lease_token: string;
   attempt_count: number;
 };
-
-type RpcResult<T> = { data: T; error: { message?: string } | null };
 
 export type CronJobContext = {
   occurrenceKey: string;
@@ -142,19 +141,21 @@ async function claimCronRun(
   options: CronJobOptions,
   occurrenceKey: string,
 ): Promise<CronClaim> {
-  const result = (await db.rpc(
-    "claim_cron_job_run" as never,
-    {
-      p_job_name: options.name,
-      p_occurrence_key: occurrenceKey,
-      p_lease_seconds: options.leaseSeconds ?? 900,
-      p_max_attempts: options.maxAttempts ?? 3,
-      p_allow_retry: options.retryOnInterruption ?? true,
-    } as never,
-  )) as unknown as RpcResult<CronClaim[] | null>;
+  const result = await callCronRpc<CronClaim[] | null>(() =>
+    db.rpc(
+      "claim_cron_job_run" as never,
+      {
+        p_job_name: options.name,
+        p_occurrence_key: occurrenceKey,
+        p_lease_seconds: options.leaseSeconds ?? 900,
+        p_max_attempts: options.maxAttempts ?? 3,
+        p_allow_retry: options.retryOnInterruption ?? true,
+      } as never,
+    ) as never,
+  );
 
   if (result.error || !result.data?.[0]) {
-    throw new Error(result.error?.message || "Unable to claim cron job run");
+    throw new Error(summarizeRpcError(result.error, "Unable to claim cron job run"));
   }
   return result.data[0];
 }
@@ -167,17 +168,19 @@ async function finishCronRun(
   leaseToken: string,
   failureCode?: string,
 ): Promise<void> {
-  const result = (await db.rpc(
-    functionName as never,
-    {
-      p_job_name: jobName,
-      p_occurrence_key: occurrenceKey,
-      p_lease_token: leaseToken,
-      ...(failureCode ? { p_failure_code: failureCode } : {}),
-    } as never,
-  )) as unknown as RpcResult<boolean | null>;
+  const result = await callCronRpc<boolean | null>(() =>
+    db.rpc(
+      functionName as never,
+      {
+        p_job_name: jobName,
+        p_occurrence_key: occurrenceKey,
+        p_lease_token: leaseToken,
+        ...(failureCode ? { p_failure_code: failureCode } : {}),
+      } as never,
+    ) as never,
+  );
 
   if (result.error || result.data !== true) {
-    throw new Error(result.error?.message || "Unable to finalize cron job run");
+    throw new Error(summarizeRpcError(result.error, "Unable to finalize cron job run"));
   }
 }

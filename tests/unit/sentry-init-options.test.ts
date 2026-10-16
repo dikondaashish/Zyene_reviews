@@ -5,6 +5,7 @@ import {
     getSentryReplaysOnErrorSampleRate,
     getSentryReplaysSessionSampleRate,
     getSentryTracesSampleRate,
+    isSentryEnabled,
 } from "@/lib/monitoring/sentry-init-options";
 
 describe("Sentry init options", () => {
@@ -36,5 +37,23 @@ describe("Sentry init options", () => {
         vi.stubEnv("VERCEL_ENV", "preview");
         vi.stubEnv("SENTRY_REPLAYS_SESSION_SAMPLE_RATE", "");
         expect(getSentryReplaysSessionSampleRate()).toBe(0);
+    });
+
+    it("does not report from local next dev by default", () => {
+        vi.stubEnv("NODE_ENV", "development");
+        vi.stubEnv("NEXT_PUBLIC_SENTRY_ENABLE_DEV", "");
+        expect(isSentryEnabled()).toBe(false);
+    });
+
+    it("reports from local dev when explicitly opted in", () => {
+        vi.stubEnv("NODE_ENV", "development");
+        vi.stubEnv("NEXT_PUBLIC_SENTRY_ENABLE_DEV", "true");
+        expect(isSentryEnabled()).toBe(true);
+    });
+
+    it("reports from production builds", () => {
+        vi.stubEnv("NODE_ENV", "production");
+        vi.stubEnv("NEXT_PUBLIC_SENTRY_ENABLE_DEV", "");
+        expect(isSentryEnabled()).toBe(true);
     });
 });

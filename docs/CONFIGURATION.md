@@ -176,6 +176,10 @@ same organization. Set a dedicated `SENTRY_AUTH_TOKEN` in the `zyene-reviews`
 Vercel project's production environment for source-map uploads; never copy
 TrackMyOPT's DSN or store an auth token in a `NEXT_PUBLIC_` variable.
 
+Local `next dev` (`NODE_ENV=development`) does not report to Sentry, so HMR and
+stale-bundler errors stay out of the production issue list. Set
+`NEXT_PUBLIC_SENTRY_ENABLE_DEV=true` locally to test the Sentry wiring.
+
 ---
 
 ## 6. Future extension
