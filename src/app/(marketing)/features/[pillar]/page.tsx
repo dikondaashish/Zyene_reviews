@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { notFound, permanentRedirect } from "next/navigation";
-import { FeaturePillarPageView } from "@/components/marketing/feature-pillar-page";
+import { FeatureLandingView } from "@/components/marketing/feature-landing/feature-landing-view";
+import { FEATURE_LANDING_CONTENT } from "@/components/marketing/feature-landing/content";
 import {
     FEATURE_PILLAR_ALIASES,
     FEATURE_PILLAR_MAP,
@@ -53,6 +54,7 @@ export default async function FeaturePillarRoutePage({
         permanentRedirect(`/features/${FEATURE_PILLAR_ALIASES[raw]}`);
     }
     const slug = resolveFeaturePillarSlug(raw);
-    if (!slug) notFound();
-    return <FeaturePillarPageView pillar={FEATURE_PILLAR_MAP[slug]} />;
+    const content = slug ? FEATURE_LANDING_CONTENT[slug] : undefined;
+    if (!slug || !content) notFound();
+    return <FeatureLandingView pillar={FEATURE_PILLAR_MAP[slug]} content={content} />;
 }

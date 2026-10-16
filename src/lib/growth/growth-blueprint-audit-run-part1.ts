@@ -132,12 +132,12 @@ if (existsSync(featuresPagePath)) {
             message: "/features should import product-foundation positioning data",
         });
     }
-    if (!featuresSrc.includes("PlatformPillarsSection")) {
+    if (!featuresSrc.includes("FeaturesFeaturePillarsSection")) {
         items.push({
             id: "foundation-pillars-7-10",
             severity: "error",
             area: "foundation",
-            message: "/features missing PlatformPillarsSection for blueprint pillars 7-10",
+            message: "/features missing the grouped feature index (FeaturesFeaturePillarsSection)",
         });
     }
 }

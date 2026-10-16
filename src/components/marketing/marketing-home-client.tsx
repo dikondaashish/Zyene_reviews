@@ -5,6 +5,8 @@ import { MarketingHomeIndustries } from "@/components/marketing/marketing-home/m
 import { MarketingHomeNextSteps } from "@/components/marketing/marketing-home/marketing-home-next-steps";
 import { MarketingHomeClosing } from "@/components/marketing/marketing-home/marketing-home-closing";
 import { MarketingHomeFeatureConstellation } from "@/components/marketing/marketing-home/marketing-home-feature-constellation";
+import { MarketingHomeReviewJourney } from "@/components/marketing/marketing-home/marketing-home-review-journey";
+import { MarketingHomeWorkspace } from "@/components/marketing/marketing-home/marketing-home-workspace";
 import { ProductShowcase } from "@/components/marketing/product-tour/product-showcase";
 import { MarketingScrollReveal } from "@/components/marketing/marketing-scroll-reveal";
 import { HomeLeadWizard } from "@/components/marketing/home-lead-wizard";
@@ -22,12 +24,18 @@ export function MarketingHomeClient() {
       <MarketingScrollReveal className="home-scroll-section" intensity="subtle">
         <MarketingHomeTrustStrip />
       </MarketingScrollReveal>
+      <MarketingScrollReveal className="home-scroll-section" delay={40}>
+        <MarketingHomeReviewJourney />
+      </MarketingScrollReveal>
       <MarketingScrollReveal
         className="home-scroll-section"
         delay={60}
         intensity="prominent"
       >
         <MarketingHomeFeatureConstellation />
+      </MarketingScrollReveal>
+      <MarketingScrollReveal className="home-scroll-section" delay={60}>
+        <MarketingHomeWorkspace />
       </MarketingScrollReveal>
       <MarketingScrollReveal
         className="home-scroll-section"

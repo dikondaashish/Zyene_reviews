@@ -10,6 +10,31 @@ export function MarketingLayoutFooterProductColumn() {
                 </Link>
             </li>
             <li>
+                <Link href="/features/qr-code-reviews" className="hover:text-primary transition-colors">
+                    Review QR Codes
+                </Link>
+            </li>
+            <li>
+                <Link href="/features/nfc-review-stands" className="hover:text-primary transition-colors">
+                    NFC Review Stands
+                </Link>
+            </li>
+            <li>
+                <Link href="/features/ai-replies" className="hover:text-primary transition-colors">
+                    AI Review Replies
+                </Link>
+            </li>
+            <li>
+                <Link href="/features/review-widgets" className="hover:text-primary transition-colors">
+                    Review Widgets
+                </Link>
+            </li>
+            <li>
+                <Link href="/features/ai-visibility" className="hover:text-primary transition-colors">
+                    AI Visibility
+                </Link>
+            </li>
+            <li>
                 <Link href="/pricing" className="hover:text-primary transition-colors">
                     Pricing
                 </Link>

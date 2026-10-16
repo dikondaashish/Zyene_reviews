@@ -14,6 +14,12 @@
 .mega-panel-main { display:grid; grid-template-columns:1fr 320px; padding:28px; gap:32px; }
 .mega-panel-label { font-size:10px; color:var(--muted-foreground); font-weight:600; letter-spacing:.09em; margin:6px 12px 22px; }
 .mega-link-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.mega-feature-groups { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px 20px; }
+.mega-feature-column { display:grid; align-content:start; gap:18px; }
+.mega-feature-group-label { margin:0 10px 6px; color:var(--muted-foreground); font-size:10px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; }
+.mega-feature-link { display:flex; align-items:center; gap:10px; min-height:36px; padding:7px 10px; border-radius:10px; font-size:13px; font-weight:600; transition:background-color 160ms; }
+.mega-feature-link:hover,.mega-feature-link:focus-visible { background:var(--muted); }
+.mega-feature-link svg { flex:none; color:var(--brand-orange-ink); }
 .mega-product-link { display:flex; align-items:start; gap:14px; padding:14px 12px; border-radius:12px; transition:background-color 160ms; }
 .mega-product-link:hover,.mega-industry-link:hover { background:var(--muted); }
 .mega-product-link > svg:first-child { box-sizing:border-box; width:52px; height:52px; padding:13px; border-radius:14px; background:oklch(.965 .003 260); color:oklch(.55 .016 260); flex-shrink:0; stroke-width:1.8; transition:background-color 160ms,color 160ms; }

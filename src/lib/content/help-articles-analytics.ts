@@ -69,9 +69,9 @@ export const an2: HelpArticle = {
 
 export const an3: HelpArticle = {
     slug: "generating-pdf-reports", category: "analytics", title: "Exporting Analytics Reports",
-    excerpt: "Export analytics as CSV and understand which reporting options are available in your workspace.", readMinutes: 2,
+    excerpt: "Export analytics as CSV or download a PDF report for the selected date range.", readMinutes: 2,
     body: [
-        { type: "p", text: "Analytics provides a CSV export for the selected reporting range. PDF and branded reports are not offered by that export control." },
+        { type: "p", text: "Analytics offers a CSV export and a Download PDF Report button for the selected reporting range." },
         { type: "h2", text: "Export a CSV" },
         { type: "ol", items: ["Open Analytics for the business selected in the header.", "Choose the date range.", "Select Export CSV.", "Open the downloaded file in a spreadsheet and preserve its date range and metric labels when sharing."] },
         { type: "h2", text: "Understand the metrics" },

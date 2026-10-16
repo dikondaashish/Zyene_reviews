@@ -132,7 +132,7 @@ export const gs4: HelpArticle = {
         { type: "h2", text: "Review Inbox" },
         { type: "p", text: "Your central inbox shows all reviews from all connected platforms and locations - sorted by recency. From the inbox you can read reviews, use AI reply suggestions, publish responses, mark reviews as reviewed, and flag suspicious reviews." },
         { type: "h2", text: "Competitor Tracking" },
-        { type: "p", text: "The Competitors section shows you the star rating, review count, and response rate of up to 10 competitors you've added. You can see trend lines over time and identify when a competitor is gaining ground." },
+        { type: "p", text: "The Competitors section compares your star rating and review volume with the competitors you've added. It also shows your Google search terms, an AI market positioning brief, recent competitor events, and alerts when a competitor's rating surges or reviews spike." },
         { type: "h2", text: "GBP Keyword Performance" },
         { type: "p", text: "This section shows which Google searches are sending impressions and clicks to your Google Business Profile. Updated weekly from your connected GBP. Use this to understand which keywords are driving your local visibility and where optimization opportunities exist." },
         { type: "h2", text: "Campaigns" },

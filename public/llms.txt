@@ -2,6 +2,40 @@
 
 > AI-powered review management for local businesses - monitor Google reviews, automate requests, route negative feedback privately, and reply with AI.
 
+## What the product does
+
+- Review page: customers scan a QR code or tap an NFC review stand, rate the visit, pick what they liked, and get an AI-drafted review they can edit, copy, and post on Google themselves. Lower ratings go to a private feedback form.
+- QR codes (print or download) and NFC review stands ordered inside the app.
+- Reviews inbox for Google, Facebook, and Yelp with AI reply suggestions (Professional, Friendly, Concise).
+- Automatic replies to new Google reviews by star threshold (3+, 4+, or 5 only) and tone.
+- Review requests by SMS, email, or both; customer list with notes and CSV import/export; campaigns with Post-Visit, Appointment Follow-up, and Re-engagement templates.
+- Smart Insights: key themes from reviews and suggested improvements; broken-link checks on the Google Business Profile.
+- Analytics: new reviews, average rating, response rate, request funnel by channel, PDF and CSV export.
+- Competitors: rating and review volume comparison, Google search terms, AI market positioning brief, threshold alerts, recent competitor events.
+- Google SEO & AEO: Google profile score and audit, prompt tracking across AI assistants such as ChatGPT, Perplexity, and Gemini, share of voice, llms.txt and NAP directory tools.
+- Website review widgets (20 templates), REST API, Zapier-compatible webhooks, Square (early access).
+- Multi-location: one organization, many businesses. Plans: Starter $29.99/mo (1 location), Professional $59.99/mo (3 locations), Enterprise (custom).
+
+## Feature pages
+
+- Review collection: https://www.zyenereviews.com/features/review-collection
+- Review page with AI drafts: https://www.zyenereviews.com/features/review-page
+- Google review QR codes: https://www.zyenereviews.com/features/qr-code-reviews
+- NFC review stands: https://www.zyenereviews.com/features/nfc-review-stands
+- SMS & email review requests: https://www.zyenereviews.com/features/review-requests
+- Review request campaigns: https://www.zyenereviews.com/features/review-campaigns
+- Customer list (CRM): https://www.zyenereviews.com/features/customer-crm
+- Review monitoring inbox: https://www.zyenereviews.com/features/review-monitoring
+- AI review replies: https://www.zyenereviews.com/features/ai-replies
+- Automatic Google review replies: https://www.zyenereviews.com/features/automatic-review-replies
+- Review analytics: https://www.zyenereviews.com/features/analytics
+- Smart Insights: https://www.zyenereviews.com/features/smart-insights
+- Competitor tracking: https://www.zyenereviews.com/features/competitor-tracking
+- Google Business Profile SEO: https://www.zyenereviews.com/features/local-seo
+- AI search visibility (AEO): https://www.zyenereviews.com/features/ai-visibility
+- Website review widgets: https://www.zyenereviews.com/features/review-widgets
+- Multi-location management: https://www.zyenereviews.com/features/multi-location
+
 ## Canonical site
 
 - https://www.zyenereviews.com/

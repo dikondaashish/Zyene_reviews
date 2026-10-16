@@ -25,9 +25,9 @@ export const INTEGRATIONS_B: IntegrationItem[] = [
         status: "live",
         features: [
             "Available to paid accounts",
+            "20 ready-made templates: carousels, grids, badges, stickers, lists and a review wall",
             "Show selected public reviews rated 4 stars or higher",
-            "Embed a review carousel or badge on your website",
-            "Customize the widget’s layout and appearance",
+            "Customize the widget’s layout, filters and colors",
             "Use a standard embed snippet on your site",
         ],
         description:
@@ -41,12 +41,12 @@ export const INTEGRATIONS_B: IntegrationItem[] = [
         badge: "Coming Soon",
         status: "soon",
         features: [
-            "Auto-send review requests after Clover sales",
-            "Native Clover app marketplace integration",
-            "Works with all Clover hardware",
+            "Connect your Clover account",
+            "Send review requests after Clover sales",
+            "Match customers by email or phone from payments",
         ],
         description:
-            "Native Clover POS integration is in development. Join the waitlist to be notified when it launches.",
+            "Clover is in early access with select accounts. Automatic review requests after Clover sales are in development. Join the waitlist to be notified when it launches.",
     },
     {
         name: "Toast POS",
@@ -57,7 +57,7 @@ export const INTEGRATIONS_B: IntegrationItem[] = [
         status: "soon",
         features: [
             "Auto-send review requests after Toast orders",
-            "Syncs customer data from Toast",
+            "Use customer contact details from Toast orders",
             "Ideal for restaurants and quick service",
         ],
         description:

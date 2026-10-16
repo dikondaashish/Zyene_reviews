@@ -9,7 +9,14 @@ import { NAV_INDUSTRIES } from "@/app/(marketing)/marketing-layout-industry-link
 import { getIndustryImage } from "@/lib/industries/industry-imagery";
 
 import { FEATURE } from "@/app/(marketing)/marketing-layout-nav-feature";
+import { MarketingLayoutNavProductGroups, NavPanelFooterLinks } from "@/app/(marketing)/marketing-layout-nav-product-groups";
 import { AnimatedBackground } from "@/components/marketing/animated-background";
+
+const PANEL_LABELS: Record<MarketingNavMenu, string> = {
+  product: "ONE PLATFORM. EVERY PART OF YOUR REPUTATION.",
+  solutions: "BUILT AROUND YOUR BUSINESS",
+  resources: "IDEAS, ANSWERS & A HEAD START",
+};
 
 export function MarketingLayoutNavDropdown({
   label,
@@ -31,8 +38,6 @@ export function MarketingLayoutNavDropdown({
   onClose: () => void;
 }) {
   const feature = FEATURE[menu];
-  const visibleLinks =
-    menu === "product" ? links.filter((link) => !["/features", "/pricing"].includes(link.href)) : links;
   return (
     <div
       className="mega-nav-item"
@@ -74,13 +79,10 @@ export function MarketingLayoutNavDropdown({
         <div className="mega-panel" id={`marketing-menu-${menu}`}>
           <div className="mega-panel-main">
             <div className="mega-panel-links">
-              <p className="mega-panel-label">
-                {menu === "product"
-                  ? "ONE PLATFORM. EVERY PART OF YOUR REPUTATION."
-                  : menu === "solutions"
-                    ? "BUILT AROUND YOUR BUSINESS"
-                    : "IDEAS, ANSWERS & A HEAD START"}
-              </p>
+              <p className="mega-panel-label">{PANEL_LABELS[menu]}</p>
+              {menu === "product" ? (
+                <MarketingLayoutNavProductGroups onNavigate={onClose} />
+              ) : (
               <div className="mega-link-grid">
                 {menu === "solutions"
                   ? NAV_INDUSTRIES.map((industry) => (
@@ -95,7 +97,7 @@ export function MarketingLayoutNavDropdown({
                         <ArrowUpRight size={14} aria-hidden="true" />
                       </Link>
                     ))
-                  : visibleLinks.map((item) => (
+                  : links.map((item) => (
                       <Link key={item.href} href={item.href} className="mega-product-link" onClick={onClose}>
                         <item.icon size={19} aria-hidden="true" />
                         <span>
@@ -106,6 +108,7 @@ export function MarketingLayoutNavDropdown({
                       </Link>
                     ))}
               </div>
+              )}
             </div>
             <Link href={feature.href} className="mega-feature" onClick={onClose}>
               <div>
@@ -121,21 +124,7 @@ export function MarketingLayoutNavDropdown({
           </div>
           <div className="mega-panel-footer">
             <span>
-              {menu === "solutions" ? (
-                <>
-                  <Link href="/industries" onClick={onClose}>
-                    All industries
-                  </Link>
-                  <Link href="/enterprise" onClick={onClose}>
-                    Enterprise
-                  </Link>
-                  <Link href="/compare" onClick={onClose}>
-                    Compare platforms
-                  </Link>
-                </>
-              ) : (
-                "A better reputation starts with a conversation."
-              )}
+              <NavPanelFooterLinks menu={menu} onNavigate={onClose} />
             </span>
             <Link href="/demo" onClick={onClose} data-track="demo" data-track-location="nav">
               Let’s show you around <ArrowRight size={15} aria-hidden="true" />

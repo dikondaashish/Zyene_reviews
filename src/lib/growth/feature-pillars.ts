@@ -1,16 +1,43 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Feature pillar pages - GROWTH_BLUEPRINT §4.2 (/features/*)
+// Feature landing pages - GROWTH_BLUEPRINT §4.2 (/features/*)
+// One page per product feature, grouped by category for the /features index.
+// Entries live in feature-pillars-catalog-*.ts; page bodies live in
+// src/components/marketing/feature-landing/content/.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { COLLECT_FEATURE_PILLARS } from "@/lib/growth/feature-pillars-catalog-collect";
+import { INSIGHT_FEATURE_PILLARS } from "@/lib/growth/feature-pillars-catalog-insight";
+
 export type FeaturePillarSlug =
+    | "review-collection"
+    | "review-page"
+    | "qr-code-reviews"
+    | "nfc-review-stands"
+    | "review-requests"
+    | "review-campaigns"
+    | "customer-crm"
     | "review-monitoring"
     | "ai-replies"
-    | "review-collection"
+    | "automatic-review-replies"
+    | "analytics"
+    | "smart-insights"
     | "competitor-tracking"
     | "local-seo"
-    | "analytics";
+    | "ai-visibility"
+    | "review-widgets"
+    | "multi-location";
 
-/** Legacy slug from early features page - redirect to competitor-tracking */
+export type FeatureCategory = "collect" | "respond" | "understand" | "visibility" | "grow";
+
+export const FEATURE_CATEGORIES: { id: FeatureCategory; label: string; description: string }[] = [
+    { id: "collect", label: "Collect reviews", description: "Make it easy for happy customers to say so." },
+    { id: "respond", label: "Respond", description: "Every review answered, in your voice." },
+    { id: "understand", label: "Understand", description: "See what is working and what to fix next." },
+    { id: "visibility", label: "Get found", description: "Show up on Google and in AI answers." },
+    { id: "grow", label: "Show off & scale", description: "Put reviews to work and run every location." },
+];
+
+/** Legacy slugs from early features pages - permanently redirected. */
 export const FEATURE_PILLAR_ALIASES: Record<string, FeaturePillarSlug> = {
     "competitor-intelligence": "competitor-tracking",
     "feedback-shield": "review-collection",
@@ -18,114 +45,21 @@ export const FEATURE_PILLAR_ALIASES: Record<string, FeaturePillarSlug> = {
 
 export interface FeaturePillarPage {
     slug: FeaturePillarSlug;
+    category: FeatureCategory;
     title: string;
+    /** Short label for menus and cards. */
+    navLabel: string;
     tagline: string;
+    /** Bare title; the root layout appends " | Zyene Reviews". Keep ≤ 44 chars. */
     metaTitle: string;
+    /** ≤ 160 chars. */
     metaDescription: string;
     bullets: string[];
     cta: { label: string; href: string };
     highlight?: boolean;
 }
 
-export const FEATURE_PILLARS: FeaturePillarPage[] = [
-    {
-        slug: "review-monitoring",
-        title: "Review Monitoring & Inbox",
-        tagline: "Keep connected review feedback in one working view",
-        metaTitle: "Review Monitoring & Inbox",
-        metaDescription:
-            "Centralized Google, Facebook, and Yelp review inbox with alerts, sentiment analysis, and filters for local businesses.",
-        bullets: [
-            "Review sync from Google, Facebook, and Yelp",
-            "A working review inbox for your active business location",
-            "Email and SMS alerts when new reviews arrive",
-            "Sentiment analysis to help surface urgent feedback",
-            "Filter by rating, platform, location, or date",
-        ],
-        cta: { label: "See pricing", href: "/pricing" },
-    },
-    {
-        slug: "ai-replies",
-        title: "AI-Powered Review Replies",
-        tagline: "Professional responses in seconds, in your voice",
-        metaTitle: "AI-Powered Review Replies",
-        metaDescription:
-            "Draft replies in your voice or automatically reply to new Google reviews. Choose star ratings and a Professional, Friendly, or Concise tone.",
-        bullets: [
-            "One-click AI reply suggestions for every review",
-            "Professional, Friendly, or Concise reply tones",
-            "Automatic replies to new, unanswered Google reviews",
-            "Choose eligible star ratings for automatic replies",
-            "Review drafts yourself or turn on automatic publishing",
-        ],
-        cta: { label: "See how it works", href: "/how-it-works" },
-    },
-    {
-        slug: "review-collection",
-        title: "Review Collection & Negative Feedback Shield",
-        tagline: "Invite feedback fairly, follow up thoughtfully, and resolve issues sooner.",
-        metaTitle: "Review Collection & Negative Feedback Shield",
-        metaDescription:
-            "Send branded SMS, email, link, and QR review requests with optional reminders and a private feedback path for timely follow-up.",
-        bullets: [
-            "Branded review requests by SMS, email, shareable link, or QR code",
-            "Optional follow-up reminders for customers who have not engaged",
-            "Private feedback and team alerts for timely service recovery",
-            "Rating-dependent public-review and private-feedback paths",
-            "Use the API or a secure webhook to trigger requests from your workflow",
-        ],
-        cta: { label: "See pricing", href: "/pricing" },
-        highlight: true,
-    },
-    {
-        slug: "competitor-tracking",
-        title: "Competitor Intelligence",
-        tagline: "Compare competitor ratings and review activity with your own",
-        metaTitle: "Competitor Tracking",
-        metaDescription:
-            "Track competitor Google ratings, review counts and snapshot changes. Review provider freshness, alerts and AI market briefs on paid plans.",
-        bullets: [
-            "Track competitors for your active business location",
-            "Compare total reviews, average rating and available snapshot changes",
-            "Spot changes in nearby competitors’ review activity",
-            "Use competitor context alongside your own review trends",
-            "Keep local comparison in view as you plan improvements",
-        ],
-        cta: { label: "Start free trial", href: "/signup" },
-    },
-    {
-        slug: "local-seo",
-        title: "Local SEO Dashboard",
-        tagline: "Understand and improve your Google Business Profile",
-        metaTitle: "Local SEO Dashboard",
-        metaDescription:
-            "Review Google Business Profile performance, search-keyword impressions, profile audits and content drafts. Available data depends on Google access.",
-        bullets: [
-            "Google Business Profile keyword performance tracking",
-            "Keyword insights: what customers search to find you",
-            "Profile audits and AI-assisted content drafts for human review",
-            "Search and Maps performance from available Google data",
-            "Actionable recommendations to improve your GBP score",
-        ],
-        cta: { label: "See pricing", href: "/pricing" },
-    },
-    {
-        slug: "analytics",
-        title: "Analytics & Reporting",
-        tagline: "Understand what's working and share results",
-        metaTitle: "Analytics & Reporting",
-        metaDescription:
-            "Review trends, sentiment, engagement funnel, PDF reports, and CSV exports - analytics for local teams on Zyene Reviews from $29.99/mo.",
-        bullets: [
-            "Dashboard overview: ratings, volume, response rate, trends",
-            "Review and request activity trends over time",
-            "Email and SMS request funnel progression",
-            "Export review and request data to CSV",
-            "Use aggregate analytics through the developer API",
-        ],
-        cta: { label: "Explore docs", href: "/docs" },
-    },
-];
+export const FEATURE_PILLARS: FeaturePillarPage[] = [...COLLECT_FEATURE_PILLARS, ...INSIGHT_FEATURE_PILLARS];
 
 export const FEATURE_PILLAR_SLUGS = FEATURE_PILLARS.map((p) => p.slug);
 
@@ -136,4 +70,8 @@ export const FEATURE_PILLAR_MAP: Record<FeaturePillarSlug, FeaturePillarPage> = 
 export function resolveFeaturePillarSlug(segment: string): FeaturePillarSlug | null {
     if (segment in FEATURE_PILLAR_MAP) return segment as FeaturePillarSlug;
     return FEATURE_PILLAR_ALIASES[segment] ?? null;
+}
+
+export function featurePillarsByCategory(category: FeatureCategory): FeaturePillarPage[] {
+    return FEATURE_PILLARS.filter((p) => p.category === category);
 }

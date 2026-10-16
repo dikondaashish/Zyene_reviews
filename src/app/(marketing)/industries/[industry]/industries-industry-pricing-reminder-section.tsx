@@ -18,6 +18,7 @@ const PLANS = [
             "Negative Feedback Shield",
             "Review monitoring",
             "SMS & email campaigns",
+            "Competitor tracking",
         ],
         highlighted: false,
     },
@@ -28,8 +29,8 @@ const PLANS = [
         locations: "Up to 3 locations",
         features: [
             "Everything in Starter",
-            "Competitor tracking",
             "Up to 3 business locations",
+            "Higher request limits per location",
             "Priority support",
         ],
         highlighted: true,

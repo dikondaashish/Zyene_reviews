@@ -1,23 +1,23 @@
 import Image from "next/image";
 import {
   BarChart3,
+  Globe,
   LayoutDashboard,
-  LayoutGrid,
   MessageSquare,
-  Reply,
   Send,
-  Settings,
+  TrendingUp,
+  Users,
 } from "lucide-react";
 import { ZYENE_REVIEWS_LOGO_SRC } from "@/lib/brand/logo";
 
 const SIDEBAR = [
   { icon: LayoutDashboard, label: "Dashboard" },
   { icon: MessageSquare, label: "Reviews" },
-  { icon: Send, label: "Get Reviews" },
-  { icon: Reply, label: "AI Replies" },
+  { icon: Send, label: "Review Requests" },
+  { icon: Users, label: "Customers" },
+  { icon: TrendingUp, label: "Competitors" },
   { icon: BarChart3, label: "Analytics" },
-  { icon: LayoutGrid, label: "Widgets" },
-  { icon: Settings, label: "Settings" },
+  { icon: Globe, label: "Google SEO/AEO" },
 ];
 export function HomeDashboardSidebar() {
   return (

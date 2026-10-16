@@ -1,0 +1,121 @@
+/* Feature page mocks: review page, QR, NFC, requests, campaigns, customers. Prefix: .vz-<page>- */
+.vz-rp-hero { position:relative; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:0; width:100%; max-width:560px; }
+.vz-rp-hero .mk-phone { width:100%; }
+.vz-rp-phone-back { transform:rotate(-4deg) translateX(14px); z-index:0; }
+.vz-rp-phone-front { transform:rotate(3deg) translate(-14px,36px); z-index:1; }
+.vz-rp-biz { font-size:15px; }
+.vz-rp-q { color:var(--muted-foreground); font-size:12.5px; }
+.vz-rp-hint { color:var(--muted-foreground); font-size:11.5px; }
+.vz-rp-tabs { display:flex; flex-wrap:wrap; gap:4px; padding:4px; border-radius:12px; background:var(--muted); }
+.vz-rp-tabs span { padding:5px 10px; border-radius:9px; color:var(--muted-foreground); font-size:11.5px; font-weight:600; }
+.vz-rp-tabs .is-active { background:var(--card); color:var(--foreground); box-shadow:0 1px 3px rgba(0,0,0,.08); }
+.mk-label svg { display:inline; vertical-align:-1px; }
+@media (max-width:600px) { .vz-rp-hero { grid-template-columns:1fr; justify-items:center; } .vz-rp-phone-back { display:none; } .vz-rp-phone-front { transform:none; } }
+
+/* Review collection (.vz-rc-) */
+.vz-rc-hero { position:relative; display:grid; width:100%; max-width:560px; padding-bottom:28px; }
+.vz-rc-hero .mk-stat strong { font-size:20px; }
+.vz-rc-toast { position:absolute; right:-8px; bottom:34px; z-index:1; }
+.vz-rc-hub { width:100%; max-width:480px; justify-items:center; }
+.vz-rc-tiles { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; width:100%; }
+.vz-rc-tile { display:grid; gap:2px; justify-items:start; padding:10px; border:1px solid var(--border); border-radius:12px; background:var(--card); text-align:left; }
+.vz-rc-tile svg { margin-bottom:4px; color:var(--brand-orange-ink); }
+.vz-rc-tile b { font-size:12.5px; }
+.vz-rc-tile small { color:var(--muted-foreground); font-size:11px; line-height:1.35; }
+.vz-rc-arrow { display:grid; width:26px; height:26px; place-items:center; border-radius:999px; background:var(--card); color:var(--muted-foreground); box-shadow:0 1px 3px rgba(0,0,0,.08); }
+.vz-rc-url { display:flex; align-items:center; gap:8px; max-width:100%; padding:10px 16px; border-radius:999px; background:var(--surface-dark); color:#fff; font-size:13px; }
+.vz-rc-url span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.vz-rc-hub .mk-grid-2 { width:100%; }
+.vz-rc-lane { display:grid; gap:2px; justify-items:start; padding:12px; border:1px solid var(--border); border-radius:14px; background:var(--card); text-align:left; }
+.vz-rc-lane b { font-size:13px; }
+.vz-rc-lane small { color:var(--muted-foreground); font-size:11.5px; line-height:1.4; }
+.vz-rc-lane.is-positive { border-color:var(--success-wash); background:var(--success-wash); }
+.vz-rc-lane.is-positive svg { color:var(--success); }
+.vz-rc-lane.is-caution { border-color:var(--brand-wash-border); background:var(--brand-wash); }
+.vz-rc-lane.is-caution svg { color:var(--brand-orange-ink); }
+.vz-rc-auto { width:100%; max-width:460px; }
+.vz-rc-code { overflow:hidden; border-radius:16px; background:var(--surface-dark); color:#fff; box-shadow:0 24px 60px rgba(28,22,18,.18); text-align:left; }
+.vz-rc-code-bar { display:flex; align-items:center; gap:6px; padding:9px 14px; border-bottom:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.7); font-size:11.5px; font-weight:600; }
+.vz-rc-code pre { margin:0; padding:14px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; line-height:1.55; white-space:pre-wrap; overflow-wrap:anywhere; }
+@media (max-width:600px) {
+  .vz-rc-hero { padding-bottom:0; }
+  .vz-rc-toast { position:static; margin-top:-6px; }
+  .vz-rc-hero .mk-row-text small { white-space:normal; }
+  .vz-rc-tiles { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+/* Review QR codes (.vz-qr-) */
+.vz-qr-glyph { display:block; width:100%; height:auto; color:var(--surface-dark); }
+.vz-qr-center { justify-items:center; }
+.vz-qr-hero { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.92fr); align-items:center; gap:0; width:100%; max-width:540px; }
+.vz-qr-poster { display:grid; justify-items:center; gap:9px; padding:22px 18px 16px; border-radius:24px; background:var(--surface-dark); color:#fff; box-shadow:0 30px 70px rgba(28,22,18,.2); text-align:center; transform:rotate(-3deg); }
+.vz-qr-logo { display:grid; width:36px; height:36px; place-items:center; border-radius:10px; background:var(--brand-orange); color:#fff; }
+.vz-qr-name { font-size:17px; letter-spacing:-.01em; }
+.vz-qr-cta { padding:6px 12px; border-radius:999px; background:#fff; color:var(--foreground); font-size:11px; font-weight:650; }
+.vz-qr-frame { width:62%; padding:8px; border-radius:12px; background:#fff; }
+.vz-qr-url { color:rgba(255,255,255,.75); font-size:11px; }
+.vz-qr-powered { color:rgba(255,255,255,.45); font-size:9.5px; font-weight:700; letter-spacing:.06em; }
+.vz-qr-phone { z-index:1; width:100%; margin-left:-22px; transform:rotate(3deg) translateY(28px); }
+.vz-qr-scan { display:flex; align-items:center; gap:5px; min-width:0; padding:5px 9px; border-radius:999px; background:var(--muted); color:var(--muted-foreground); font-size:10.5px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.vz-qr-scan svg { flex:none; }
+.vz-qr-phone-biz { font-size:15px; }
+.vz-qr-q { color:var(--muted-foreground); font-size:12.5px; }
+.vz-qr-card { display:grid; justify-items:center; gap:12px; width:100%; max-width:320px; padding:22px 18px 18px; border-radius:22px; background:var(--surface-dark); color:#fff; box-shadow:0 30px 70px rgba(28,22,18,.2); }
+.vz-qr-kicker { justify-self:start; color:rgba(255,255,255,.55); font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+.vz-qr-card-title { justify-self:start; font-family:Georgia,serif; font-size:21px; font-weight:400; }
+.vz-qr-card-frame { width:52%; padding:10px; border-radius:16px; background:#fff; }
+.vz-qr-linkbar { display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; padding:6px 6px 6px 12px; border-radius:10px; background:rgba(255,255,255,.08); font-size:12px; }
+.vz-qr-linkbar span { min-width:0; overflow:hidden; color:rgba(255,255,255,.8); text-overflow:ellipsis; white-space:nowrap; }
+.vz-qr-linkbar b { padding:5px 10px; border-radius:6px; background:rgba(0,0,0,.3); font-size:11.5px; font-weight:600; }
+.vz-qr-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; width:100%; }
+.vz-qr-actions span { display:flex; align-items:center; justify-content:center; gap:6px; min-height:34px; border-radius:10px; background:rgba(255,255,255,.08); color:rgba(255,255,255,.85); font-size:11.5px; font-weight:600; }
+.vz-qr-actions .is-primary { background:var(--brand-orange); color:#fff; }
+.vz-qr-slug { display:flex; flex-wrap:wrap; align-items:center; gap:4px 8px; padding:9px 12px; border:1px solid var(--border); border-radius:12px; background:var(--background); font-size:13px; }
+.vz-qr-slug span { color:var(--muted-foreground); }
+.vz-qr-warn { display:flex; gap:8px; padding:9px 12px; border:1px solid var(--brand-wash-border); border-radius:12px; background:var(--brand-wash); color:var(--brand-orange-ink); font-size:12px; line-height:1.45; }
+.vz-qr-warn svg { flex:none; margin-top:1px; }
+@media (max-width:600px) {
+  .vz-qr-hero { grid-template-columns:1fr; justify-items:center; gap:16px; }
+  .vz-qr-poster { width:min(100%,260px); transform:none; }
+  .vz-qr-phone { margin-left:0; transform:none; }
+}
+
+/* NFC review stands (.vz-nfc-) */
+.vz-nfc-order { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:16px; align-items:start; }
+.vz-nfc-media { position:relative; aspect-ratio:1; overflow:hidden; border:1px solid var(--border); border-radius:14px; background:var(--muted); }
+.vz-nfc-media img { object-fit:cover; }
+.vz-nfc-muted { color:var(--muted-foreground); font-size:11px; align-self:center; }
+.vz-nfc-title { font-size:16px; letter-spacing:-.01em; }
+.vz-nfc-price { font-size:22px; font-weight:650; letter-spacing:-.02em; }
+.vz-nfc-price small { color:var(--muted-foreground); font-size:11.5px; font-weight:500; }
+.vz-nfc-list { display:grid; gap:6px; margin:0; padding:0; list-style:none; font-size:12px; line-height:1.4; }
+.vz-nfc-list li { display:flex; gap:6px; }
+.vz-nfc-list svg { flex:none; margin-top:2px; color:var(--brand-orange-ink); }
+.vz-nfc-buy { display:flex; align-items:center; gap:8px; }
+.vz-nfc-buy .mk-button { flex:1; min-width:0; font-size:12px; white-space:nowrap; }
+.vz-nfc-stepper { display:inline-flex; align-items:center; gap:10px; padding:8px 12px; border:1px solid var(--border); border-radius:999px; background:var(--card); }
+.vz-nfc-cart { width:100%; max-width:380px; }
+.vz-nfc-sheet { display:grid; gap:10px; padding:18px; border:1px solid var(--border); border-radius:20px; background:var(--card); box-shadow:0 30px 70px rgba(28,22,18,.13); font-size:13px; text-align:left; }
+.vz-nfc-back { display:flex; align-items:center; gap:3px; color:var(--muted-foreground); font-size:11.5px; }
+.vz-nfc-item { display:flex; align-items:center; gap:10px; padding:10px; border:1px solid var(--border); border-radius:12px; background:var(--background); }
+.vz-nfc-item > div { display:grid; flex:1; min-width:0; }
+.vz-nfc-item small { color:var(--muted-foreground); font-size:11px; }
+.vz-nfc-thumb { position:relative; width:44px; height:44px; flex:none; overflow:hidden; border-radius:8px; }
+.vz-nfc-thumb img { object-fit:cover; }
+.vz-nfc-ship { display:flex; align-items:center; gap:10px; padding:9px 12px; border:1px solid var(--border); border-radius:12px; }
+.vz-nfc-ship > div { display:grid; flex:1; }
+.vz-nfc-ship small { color:var(--muted-foreground); font-size:11px; }
+.vz-nfc-ship i { width:14px; height:14px; flex:none; border:2px solid var(--border); border-radius:999px; }
+.vz-nfc-ship.is-selected { border-color:var(--brand-orange); background:var(--brand-wash); }
+.vz-nfc-ship.is-selected i { border:4px solid var(--brand-orange); }
+.vz-nfc-totals { display:grid; gap:5px; margin:0; }
+.vz-nfc-totals div { display:flex; justify-content:space-between; }
+.vz-nfc-totals dt { color:var(--muted-foreground); }
+.vz-nfc-totals dd { margin:0; font-variant-numeric:tabular-nums; }
+.vz-nfc-totals .is-total { padding-top:6px; border-top:1px solid var(--border); font-weight:650; }
+.vz-nfc-totals .is-total dt { color:var(--foreground); }
+.vz-nfc-secure { display:flex; align-items:center; justify-content:center; gap:5px; color:var(--muted-foreground); font-size:11px; }
+@media (max-width:600px) {
+  .vz-nfc-order { grid-template-columns:1fr; }
+  .vz-nfc-media { aspect-ratio:16/10; }
+}
