@@ -11,18 +11,16 @@ export function PricingClientHeroSection({
   onIntervalChange: (value: "month" | "year") => void;
 }) {
   return (
-    <section className="pb-12 pt-12 md:pt-20">
-      <div className="interior-pricing-intro" data-hero-media="none">
+    <section className={styles.hero}>
+      <div className={`marketing-container ${styles.intro}`}>
         <div className={styles.introCopy}>
-          <p className="marketing-eyebrow">Simple plans. Plenty of room to grow.</p>
-          <h1 className="text-[length:var(--fs-display)] mb-5 max-w-2xl">
-            A better reputation.
-            <br />
-            At a sensible price.
+          <p className="marketing-eyebrow">Pricing</p>
+          <h1 className={styles.heroTitle}>
+            <span>A better reputation.</span> <span>At a sensible price.</span>
           </h1>
-          <p className="text-lg text-muted-foreground">Try any paid plan free for 7 days. Cancel anytime.</p>
-          <div className="mt-7"><BillingToggle interval={interval} onChange={onIntervalChange} /></div>
+          <p className={styles.heroLede}>Try Starter or Professional free for 7 days. No contract, cancel anytime.</p>
         </div>
+        <BillingToggle interval={interval} onChange={onIntervalChange} />
       </div>
     </section>
   );

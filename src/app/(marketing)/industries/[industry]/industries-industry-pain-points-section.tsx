@@ -1,60 +1,30 @@
 import type { IndustryData } from "@/lib/industries/industry-data";
-import { industryAccentTint, industryAccentVar } from "@/lib/industries/industry-accent-tokens";
 
+/** The first pain point leads; the rest sit beneath it in a hairline grid. */
 export function IndustriesIndustryPainPointsSection({ data }: { data: IndustryData }) {
-    // Use the first pain point as the featured stat (left), remaining as supporting (right)
-    const featured = data.painPoints[0];
-    const supporting = data.painPoints.slice(1);
-    const accent = industryAccentVar(data.accentColor);
-    const tint = industryAccentTint(data.accentColor);
+    const [featured, ...supporting] = data.painPoints;
 
     return (
-        <section className="py-20 px-4 bg-muted border-t border-border">
-            <div className="container mx-auto max-w-5xl">
-                <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground text-center mb-3 tracking-tight">
-                    The reputation challenges {data.name.toLowerCase()} face
-                </h2>
-                <p className="text-muted-foreground text-center mb-14 max-w-xl mx-auto">
-                    These aren&apos;t generic problems. They&apos;re specific to your industry.
-                </p>
-
-                <div className="grid lg:grid-cols-5 gap-10 items-start">
-                    {/* Featured stat: 3/5 width */}
-                    <div className="lg:col-span-3">
-                        <p
-                            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full mb-4"
-                            style={{ color: accent, background: tint }}
-                        >
-                            {featured.stat}
-                        </p>
-                        <h3 className="text-[length:var(--fs-h3)] font-semibold text-foreground mb-5 leading-tight tracking-tight">
-                            {featured.title}
-                        </h3>
-                        <p className="text-base text-muted-foreground leading-relaxed max-w-lg">
-                            {featured.description}
-                        </p>
-                    </div>
-
-                    {/* Supporting stats: 2/5 width, stacked */}
-                    <div className="lg:col-span-2 flex flex-col gap-6">
-                        {supporting.map((point, i) => (
-                            <div
-                                key={i}
-                                className="px-5 py-4 rounded-xl bg-card border border-border hover:border-primary/40 transition-[border-color] duration-[180ms]"
-                            >
-                                <p
-                                    className="text-xs font-semibold uppercase tracking-wider mb-2"
-                                    style={{ color: accent }}
-                                >
-                                    {point.stat}
-                                </p>
-                                <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
-                                    {point.title}
-                                </h3>
-                                <p className="text-sm text-muted-foreground leading-relaxed">
-                                    {point.description}
-                                </p>
-                            </div>
+        <section className="marketing-section" aria-labelledby="ind-pain-heading">
+            <div className="marketing-container ind-split">
+                <div className="ind-split-head">
+                    <p className="marketing-eyebrow">{data.name}</p>
+                    <h2 id="ind-pain-heading">Where reviews get hard.</h2>
+                    <p className="home-section-lede">The same few moments decide most of what customers write.</p>
+                </div>
+                <div>
+                    <article className="ind-pain-lead">
+                        <p className="ind-label">{featured.stat}</p>
+                        <h3>{featured.title}</h3>
+                        <p>{featured.description}</p>
+                    </article>
+                    <div className="ind-pain-rest">
+                        {supporting.map((point) => (
+                            <article key={point.title}>
+                                <p className="ind-label">{point.stat}</p>
+                                <h3>{point.title}</h3>
+                                <p>{point.description}</p>
+                            </article>
                         ))}
                     </div>
                 </div>

@@ -1,6 +1,25 @@
+.hero {
+  padding-top: clamp(48px, 7vw, 96px);
+  padding-bottom: clamp(32px, 4vw, 56px);
+}
+.heroTitle {
+  max-width: 14ch;
+  font-size: var(--fs-hero);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+}
+.heroTitle span {
+  display: block;
+}
+.heroLede {
+  max-width: 44ch;
+  margin-top: 20px;
+  color: var(--muted-foreground);
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+}
 .intro {
-  width: min(100% - 32px, 1152px);
-  margin-inline: auto;
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -24,18 +43,16 @@
   background: var(--card);
 }
 .popular {
-  border-color: var(--primary);
-  background: color-mix(in srgb, var(--brand-wash) 40%, var(--card));
-  box-shadow: 0 8px 28px color-mix(in srgb, var(--foreground) 5%, transparent);
+  border-color: transparent;
+  box-shadow: var(--shadow-float);
 }
 .badge {
   position: absolute;
   inset: -13px auto auto 28px;
   padding: 4px 12px;
-  border: 1px solid var(--primary);
   border-radius: 999px;
-  background: var(--brand-wash);
-  color: var(--foreground);
+  background: var(--foreground);
+  color: var(--background);
   font-size: 12px;
   font-weight: 600;
   line-height: 18px;
@@ -145,11 +162,11 @@
 }
 .features {
   display: grid;
-  gap: 13px;
+  gap: 14px;
   padding-top: 26px;
   border-top: 1px solid var(--border);
-  color: var(--muted-foreground);
-  font-size: 14px;
+  color: var(--foreground);
+  font-size: 15px;
   line-height: 22px;
 }
 .features li {
@@ -160,7 +177,7 @@
 .features svg {
   flex-shrink: 0;
   margin-top: 3px;
-  color: var(--primary);
+  color: var(--muted-foreground);
 }
 .toggle {
   min-width: 0;
@@ -229,6 +246,126 @@
 .toggleInput:focus-visible {
   outline: none;
 }
+.plans {
+  padding-bottom: var(--section-y);
+}
+.plansNote {
+  max-width: 72ch;
+  margin: 28px auto 0;
+  color: var(--muted-foreground);
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+}
+.plansNote a,
+.footnote a {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.sectionHead {
+  max-width: 720px;
+  margin-bottom: clamp(28px, 3.5vw, 48px);
+}
+.sectionHead h2 {
+  font-size: var(--fs-h2);
+}
+.sectionLede {
+  max-width: 50ch;
+  margin-top: 14px;
+  color: var(--muted-foreground);
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+}
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+.matrixWrap {
+  /* Containing block for the sr-only labels, so they cannot escape the scroll area on phones. */
+  position: relative;
+  overflow-x: auto;
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: var(--shadow-hairline);
+}
+.matrixWrap:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 3px;
+}
+.matrix {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.matrix th,
+.matrix td {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  vertical-align: middle;
+}
+.matrix th:first-child {
+  width: 40%;
+  font-weight: 500;
+  text-align: left;
+}
+.matrix thead th {
+  color: var(--foreground);
+  font-size: 15px;
+  font-weight: 600;
+}
+.matrix thead th small {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  font-weight: 400;
+}
+.matrix tbody:last-child tr:last-child > * {
+  border-bottom: 0;
+}
+.matrix .matrixGroup th {
+  padding-top: 22px;
+  color: var(--muted-foreground);
+  font-size: 13px;
+  font-weight: 500;
+}
+.matrixText {
+  color: var(--muted-foreground);
+  font-size: 13px;
+}
+.matrixYes {
+  display: inline-block;
+  color: var(--foreground);
+}
+.matrixNo {
+  display: inline-block;
+  color: color-mix(in srgb, var(--muted-foreground) 55%, transparent);
+}
+.matrixTotal > * {
+  font-weight: 600;
+}
+.matrixOurs {
+  background: color-mix(in srgb, var(--muted) 60%, transparent);
+}
+.compare th:first-child {
+  width: 32%;
+}
+.compare {
+  min-width: 640px;
+}
+.footnote {
+  max-width: 90ch;
+  margin-top: 16px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 1.7;
+}
 @keyframes price-fade {
   from {
     opacity: 0.7;
@@ -271,6 +408,16 @@
   }
   .cta {
     margin-top: 8px;
+  }
+}
+@media (max-width: 1023px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 767px) {
+  .heroTitle {
+    max-width: none;
   }
 }
 @media (max-width: 374px) {

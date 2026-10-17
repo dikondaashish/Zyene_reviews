@@ -1,53 +1,41 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-
+import { IndustryAutoReplyVisual } from "@/components/marketing/industries/industry-auto-reply-visual";
 import type { IndustryData } from "@/lib/industries/industry-data";
-import { industryAccentTint, industryAccentVar } from "@/lib/industries/industry-accent-tokens";
 
+/** The reply solution gets a product panel; the others read as a quiet list beside it. */
 export function IndustriesIndustryHowZyeneSolvesItSection({ data }: { data: IndustryData }) {
-    const accent = industryAccentVar(data.accentColor);
-    const tint = industryAccentTint(data.accentColor);
+    const leadIndex = Math.max(0, data.solutions.findIndex((s) => /repl/i.test(s.title)));
+    const lead = data.solutions[leadIndex];
+    const rest = data.solutions.filter((_, i) => i !== leadIndex);
 
     return (
-        <section className="marketing-section">
+        <section className="marketing-section" aria-labelledby="ind-solve-heading">
             <div className="marketing-container">
-                <div className="marketing-section-heading">
-                    <h2>Built around your<br />working day.</h2>
-                    <p>
-                        The tools to make reputation management a natural part of running your{" "}
-                        {data.nameSingular.toLowerCase()}.
-                    </p>
+                <div className="home-section-head">
+                    <p className="marketing-eyebrow">How Zyene helps</p>
+                    <h2 id="ind-solve-heading">Built around your working day.</h2>
                 </div>
-
-                <div className="grid gap-x-20 md:grid-cols-2">
-                    {data.solutions.map((solution, index) => (
-                        <article
-                            key={solution.title}
-                            className="border-t border-border py-8 transition-colors duration-[180ms] hover:bg-card/40"
-                        >
-                            <span
-                                className="mb-6 inline-grid place-items-center rounded px-2.5 py-1 text-[11px] font-semibold tracking-[0.08em]"
-                                style={{ color: accent, background: tint }}
-                            >
-                                0{index + 1}
-                            </span>
-                            <h3 className="mb-4 text-2xl font-semibold tracking-tight">
-                                {solution.title}
-                            </h3>
-                            <p className="max-w-lg text-muted-foreground">
-                                {solution.description}
-                            </p>
-                        </article>
-                    ))}
+                <div className="ind-solve">
+                    <article className="ind-solve-lead">
+                        <div>
+                            <h3>{lead.title}</h3>
+                            <p>{lead.description}</p>
+                            <Link href="/features/ai-replies" className="home-text-link">
+                                AI drafts and automatic replies <ArrowRight size={14} aria-hidden="true" />
+                            </Link>
+                        </div>
+                        <IndustryAutoReplyVisual />
+                    </article>
+                    <ul className="ind-solve-list">
+                        {rest.map((solution) => (
+                            <li key={solution.title}>
+                                <h3>{solution.title}</h3>
+                                <p>{solution.description}</p>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
-
-                <Link
-                    href="/features/ai-replies"
-                    className="group inline-flex min-h-11 items-center gap-2 font-semibold text-primary underline underline-offset-4"
-                >
-                    Explore AI drafts and automatic Google replies
-                    <ArrowRight className="size-4 transition-transform duration-[180ms] group-hover:translate-x-0.5" />
-                </Link>
             </div>
         </section>
     );

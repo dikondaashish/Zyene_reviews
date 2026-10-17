@@ -14,27 +14,27 @@ export default async function IndustryPage(
     { params }: { params: Promise<{ industry: string }> }
 ) {
     const { industry: slug } = await params;
-        const data = INDUSTRY_MAP[slug];
-        if (!data) notFound();
+    const data = INDUSTRY_MAP[slug];
+    if (!data) notFound();
 
     return (
-        <>
+        <div className="ind-page">
             <IndustryLocalBusinessJsonLd data={data} slug={slug} />
             <BreadcrumbJsonLd
-                            items={[
-                                { name: "Home", url: "https://www.zyenereviews.com/" },
-                                { name: "Industries", url: "https://www.zyenereviews.com/industries" },
-                                { name: data.name, url: `https://www.zyenereviews.com/industries/${slug}` },
-                            ]}
-                        />
+                items={[
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Industries", url: "https://www.zyenereviews.com/industries" },
+                    { name: data.name, url: `https://www.zyenereviews.com/industries/${slug}` },
+                ]}
+            />
             <IndustriesIndustryHeroSection data={data} slug={slug} />
             <IndustriesIndustryPainPointsSection data={data} />
             <IndustriesIndustryHowZyeneSolvesItSection data={data} />
             {slug === "home-services" ? <IndustriesHomeServicesTradesSection /> : null}
             <IndustriesIndustryUseCaseSection data={data} />
             <IndustryWorkflowSection slug={slug} />
-            <IndustriesIndustryPricingReminderSection data={data} />
+            <IndustriesIndustryPricingReminderSection />
             <IndustriesIndustryFinalCtaSection data={data} />
-        </>
+        </div>
     );
 }
