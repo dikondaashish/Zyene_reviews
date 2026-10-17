@@ -6,17 +6,17 @@ import { IndustriesCtaSection } from "./industries-cta-section";
 
 export default function IndustriesHubPage() {
     return (
-        <>
+        <div className="ind-page">
             <BreadcrumbJsonLd
-                            items={[
-                                { name: "Home", url: "https://www.zyenereviews.com/" },
-                                { name: "Industries", url: "https://www.zyenereviews.com/industries" },
-                            ]}
-                        />
+                items={[
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Industries", url: "https://www.zyenereviews.com/industries" },
+                ]}
+            />
             <IndustriesHeroSection />
             <IndustriesIndustryGridSection />
             <IndustriesSharedBenefitsStripSection />
             <IndustriesCtaSection />
-        </>
+        </div>
     );
 }
