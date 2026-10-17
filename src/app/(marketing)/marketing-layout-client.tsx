@@ -19,8 +19,10 @@ function isGrowthOperationsPath(pathname: string | null): boolean {
 
 export function MarketingLayoutClient({
     children,
+    fontClassName = "",
 }: {
     children: React.ReactNode;
+    fontClassName?: string;
 }) {
     const pathname = usePathname();
     const growthDashboard = isGrowthOperationsPath(pathname);
@@ -28,7 +30,7 @@ export function MarketingLayoutClient({
     const navigation = useMarketingNavigation();
 
     return (
-        <div onClickCapture={growthDashboard ? undefined : navigation.onClickCapture} className={`${growthDashboard ? "" : "marketing-site"}${pathname === "/" ? " marketing-site-home" : ""} flex min-h-dvh min-w-0 flex-col bg-background text-foreground`}>
+        <div onClickCapture={growthDashboard ? undefined : navigation.onClickCapture} className={`${fontClassName} ${growthDashboard ? "" : "marketing-site"}${pathname === "/" ? " marketing-site-home" : ""} flex min-h-dvh min-w-0 flex-col bg-background text-foreground`}>
             <a href="#main-content" className="marketing-skip-link marketing-button sr-only focus:not-sr-only">Skip to content</a>
             {pathname === "/" ? null : <MarketingLayoutHeader key={pathname} pending={navigation.pending} pendingLabel={navigation.label} />}
             {growthDashboard ? null : <MarketingMotion />}

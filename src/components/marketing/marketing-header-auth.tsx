@@ -71,11 +71,11 @@ export function MarketingHeaderAuth({
                     className="block text-sm font-medium text-muted-foreground hover:text-primary py-2.5 px-2"
                     onClick={onNavigate}
                 >
-                    Log In
+                    Log in
                 </Link>
                 <Button className="w-full rounded-md" asChild>
                     <Link href={signupUrl} className="block mt-2 px-2" onClick={onNavigate} data-track="trial" data-track-location="nav">
-                        Start Free Trial <ArrowRight className="ml-2 size-4" />
+                        Start free trial <ArrowRight className="ml-2 size-4" />
                     </Link>
                 </Button>
             </>
@@ -85,11 +85,11 @@ export function MarketingHeaderAuth({
     return (
         <>
             <Link href={loginUrl} className="px-3 py-2 rounded-md hover:bg-accent hover:text-foreground transition-colors">
-                Log In
+                Log in
             </Link>
             <Button className="rounded-md px-5 ml-1" asChild>
                 <Link href={signupUrl} data-track="trial" data-track-location="nav">
-                    Start Free Trial <ArrowRight className="ml-2 size-4" />
+                    Start free trial <ArrowRight className="ml-2 size-4" />
                 </Link>
             </Button>
         </>

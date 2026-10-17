@@ -81,42 +81,29 @@ export const POPULAR_RESOURCES = [
 
 export function PopularResourcesBlock({ className = "" }: { className?: string }) {
     return (
-        <section
-            className={`popular-resources-section w-full border-t border-border/60 py-16 ${className}`}
-            aria-labelledby="popular-resources-heading"
-        >
-            <div className="marketing-container">
-                <div className="mb-8">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-primary">Discover</p>
-                    <h2
-                        id="popular-resources-heading"
-                        className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
-                    >
-                        Popular resources
+        <section className={`popular-resources-section w-full py-16 ${className}`} aria-labelledby="popular-resources-heading">
+            <div className="marketing-container border-t border-border pt-12">
+                <div className="mb-8 max-w-2xl">
+                    <h2 id="popular-resources-heading" className="text-2xl font-semibold text-foreground">
+                        Guides, tools and comparisons
                     </h2>
-                    <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-                        Explore comparison guides, industry solutions, automated features, free tools, and proven reputation playbooks.
+                    <p className="mt-2 text-sm text-muted-foreground">
+                        Playbooks for getting more reviews, free tools, and honest side-by-sides with other platforms.
                     </p>
                 </div>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <ul className="grid gap-x-10 gap-y-1 sm:grid-cols-2 lg:grid-cols-3">
                     {POPULAR_RESOURCES.map((item) => (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className="group flex flex-col justify-between rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/50 hover:shadow-sm"
-                        >
-                            <div>
-                                <h3 className="flex items-center justify-between text-base font-semibold text-foreground transition-colors group-hover:text-primary">
-                                    <span>{item.title}</span>
-                                    <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" aria-hidden="true" />
-                                </h3>
-                                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                                    {item.description}
-                                </p>
-                            </div>
-                        </Link>
+                        <li key={item.href}>
+                            <Link href={item.href} className="group -mx-3 block rounded-lg px-3 py-3 transition-colors hover:bg-card">
+                                <span className="flex items-start justify-between gap-3 text-sm font-medium text-foreground">
+                                    {item.title}
+                                    <ArrowUpRight className="mt-0.5 size-3.5 shrink-0 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+                                </span>
+                                <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{item.description}</span>
+                            </Link>
+                        </li>
                     ))}
-                </div>
+                </ul>
             </div>
         </section>
     );

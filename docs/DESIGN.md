@@ -31,6 +31,7 @@ Use semantic tokens from `src/app/globals.css`. Do not use chart fill colors as 
 ## Typography
 
 - **Syne (`font-display`)**: brand headings, the business name on the dashboard, and selected large editorial moments.
+- **Geist (marketing only)**: every public marketing page, loaded in `src/app/(marketing)/layout.tsx`. `.marketing-site` aliases `--font-inter` to Geist so `font-sans` utilities follow; the signed-in app keeps Inter. Headings use weight 600 with tight tracking (-0.035 to -0.05em). See [MARKETING_PREMIUM_AUDIT_2026-10-17.md](MARKETING_PREMIUM_AUDIT_2026-10-17.md).
 - **Funnel Sans**: app sidebar and its settings flyout, matching the OptiMonk reference. Compact labels are 10 px/16 px, weight 500; expanded labels are 14 px/20 px.
 - **Inter (`font-sans`)**: other navigation, forms, tables, body text, and supporting copy.
 - **Geist Mono**: code examples and user-editable message variables; avoid using code styling for ordinary product explanations.

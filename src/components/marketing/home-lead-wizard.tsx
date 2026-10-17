@@ -17,7 +17,7 @@ export function HomeLeadWizard() {
         <>
             <section className="home-guide-offer" aria-labelledby="home-guide-heading">
                 <div>
-                    <p className="text-sm font-medium text-primary">The local business guide</p>
+                    <p className="text-sm font-medium text-muted-foreground">The local business guide</p>
                     <h2 id="home-guide-heading" className="mt-2 text-2xl font-semibold tracking-tight">
                         A stronger reputation starts with a simple routine.
                     </h2>
@@ -25,7 +25,7 @@ export function HomeLeadWizard() {
                         Practical steps to collect useful feedback, reply with care, and make every customer feel heard.
                     </p>
                 </div>
-                <button type="button" ref={triggerRef} aria-haspopup="dialog" aria-expanded={open} onClick={() => { cancelDelayedOpen(); setOpen(true); }} className="marketing-button shrink-0" data-track="guide" data-track-location="home">
+                <button type="button" ref={triggerRef} aria-haspopup="dialog" aria-expanded={open} onClick={() => { cancelDelayedOpen(); setOpen(true); }} className="marketing-button marketing-button-secondary shrink-0" data-track="guide" data-track-location="home">
                     <BookOpen className="size-4" aria-hidden="true" /> Get the free guide
                 </button>
             </section>
