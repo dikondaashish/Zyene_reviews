@@ -10,14 +10,13 @@ import {
 export const REVIEW_REQUESTS_CONTENT: FeatureLandingContent = {
   slug: "review-requests",
   hero: {
-    eyebrow: "SMS & email review requests",
-    headline: "Ask for the review while the visit is still fresh.",
-    lede: "Pick a saved customer or type a new one, choose text, email or both, and read the exact message before it goes. Send it now or schedule it for later.",
+    kicker: "SMS & email review requests",
+    headline: "Ask while the visit is still fresh.",
+    lede: "Pick a customer, choose text, email or both, and read the exact message before it goes. Send now or schedule it for later.",
     visual: <RequestsHeroVisual />,
     visualLabel: "Example Send Review Request dialog searching saved customers, with the review text arriving on a phone",
   },
   flow: {
-    eyebrow: "How it works",
     title: "One request, start to finish",
     intro: "Open Send Review Request from the Requests page or from a customer’s profile. Here is what happens next.",
     steps: [

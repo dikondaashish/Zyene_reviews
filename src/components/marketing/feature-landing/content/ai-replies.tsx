@@ -10,14 +10,13 @@ import {
 export const AI_REPLIES_CONTENT: FeatureLandingContent = {
   slug: "ai-replies",
   hero: {
-    eyebrow: "AI review replies",
-    headline: "A thoughtful reply to every Google review, in seconds",
-    lede: "Click AI suggest and Zyene drafts a reply from the review itself: the star rating and what the customer wrote. Pick Professional, Friendly or Concise, change any word, then post it to Google.",
+    kicker: "AI review replies",
+    headline: "A thoughtful reply to every review.",
+    lede: "AI drafts a reply from the rating and what the customer wrote. Pick a tone, edit any word, then post it to Google.",
     visual: <AiRepliesHeroVisual />,
     visualLabel: "Example 4-star review with a Friendly AI draft on top of Professional and Concise versions",
   },
   flow: {
-    eyebrow: "How it works",
     title: "From review to posted reply in five steps",
     intro: "AI does the first draft. You decide what goes on Google.",
     steps: [

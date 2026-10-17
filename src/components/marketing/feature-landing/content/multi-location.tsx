@@ -10,14 +10,13 @@ import {
 export const MULTI_LOCATION_CONTENT: FeatureLandingContent = {
   slug: "multi-location",
   hero: {
-    eyebrow: "Multi-location",
-    headline: "Every location in one place, each with its own tools.",
-    lede: "Keep all your businesses under one organization. Switch between them in a click, give each team the right access, and let every location keep its own review page, QR code and settings.",
+    kicker: "Multi-location",
+    headline: "Run every location from one place.",
+    lede: "Switch between businesses in a click, give each team the right access, and keep each location’s review page, QR code and settings.",
     visual: <MultiLocationHeroVisual />,
     visualLabel: "Example businesses list with three dental offices and the business switcher open",
   },
   flow: {
-    eyebrow: "How it works",
     title: "From one location to many without starting over",
     intro: "Your organization holds your plan. Each business inside it is a location with its own reviews, links and team.",
     steps: [

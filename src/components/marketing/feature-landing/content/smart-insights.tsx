@@ -10,14 +10,13 @@ import {
 export const SMART_INSIGHTS_CONTENT: FeatureLandingContent = {
   slug: "smart-insights",
   hero: {
-    eyebrow: "Smart Insights",
-    headline: "Find out what customers keep saying, without reading every review.",
-    lede: "Smart Insights reads your recent reviews and sums them up at the top of your dashboard: a two-line headline, the 3 to 5 themes that come up most, real customer quotes, and 2 or 3 suggestions for what to do next.",
+    kicker: "Smart Insights",
+    headline: "Know what customers keep saying.",
+    lede: "Smart Insights reads recent reviews and sums them up: the top themes, real customer quotes, and two or three things to do next.",
     visual: <SmartInsightsHeroVisual />,
     visualLabel: "Example Smart Insights card with a headline, key themes and customer quotes",
   },
   flow: {
-    eyebrow: "How it works",
     title: "From a pile of reviews to a short list of next steps",
     intro: "There is nothing to set up. Once you have a few reviews with text, the card appears on your dashboard.",
     steps: [

@@ -10,14 +10,13 @@ import {
 export const REVIEW_CAMPAIGNS_CONTENT: FeatureLandingContent = {
   slug: "review-campaigns",
   hero: {
-    eyebrow: "Review request campaigns",
-    headline: "Ask your whole list at once, and let the reminders follow up.",
-    lede: "Choose your customers, start from a template, set a short delay and turn on reminders for day 7 and day 14. Reminders stop on their own once someone clicks the link or completes the request.",
+    kicker: "Review request campaigns",
+    headline: "Ask your whole list at once.",
+    lede: "Pick customers, start from a template, and turn on reminders for day 7 and day 14. Reminders stop once someone clicks or completes.",
     visual: <CampaignsHeroVisual />,
     visualLabel: "Example campaign builder on the Timing step, with a 2-hour delay and day 7 and day 14 reminders",
   },
   flow: {
-    eyebrow: "How it works",
     title: "Four steps from a list to a running campaign",
     intro: "Select customers on the Customers page and continue in the campaign builder, or create a campaign first and add contacts later.",
     steps: [
