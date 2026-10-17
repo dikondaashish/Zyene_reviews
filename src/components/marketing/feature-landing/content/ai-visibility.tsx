@@ -9,14 +9,13 @@ import { AiVisibilityLibraryVisual } from "@/components/marketing/feature-landin
 export const AI_VISIBILITY_CONTENT: FeatureLandingContent = {
   slug: "ai-visibility",
   hero: {
-    eyebrow: "AI search visibility (AEO)",
-    headline: "When customers ask AI where to go, are you in the answer?",
-    lede: "Track the questions people ask AI assistants, like “best coffee shop in Kansas City”, and see whether engines such as ChatGPT, Perplexity and Gemini mention you or a competitor.",
+    kicker: "AI search visibility (AEO)",
+    headline: "Show up when customers ask AI.",
+    lede: "Track the questions people ask ChatGPT, Perplexity and Gemini, and see whether the answers mention you or a competitor.",
     visual: <AiVisibilityHeroVisual />,
     visualLabel: "Example tracked prompt with answers from three AI engines, showing who was mentioned",
   },
   flow: {
-    eyebrow: "How it works",
     title: "From a question to a clear picture of who AI recommends",
     intro: "You choose the questions. Zyene asks the engines, reads the answers and keeps score over time.",
     steps: [

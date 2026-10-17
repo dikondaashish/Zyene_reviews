@@ -10,14 +10,13 @@ import {
 export const REVIEW_PAGE_CONTENT: FeatureLandingContent = {
   slug: "review-page",
   hero: {
-    eyebrow: "Review page & AI drafts",
-    headline: "Your customers know what they loved. We help them say it.",
-    lede: "A branded review page that asks how the visit went, lets customers tap what stood out, and turns their choices into a short review they can edit, copy and post on Google.",
+    kicker: "Review page & AI drafts",
+    headline: "Help happy customers say what they loved.",
+    lede: "A branded page asks how the visit went, lets customers tap what stood out, and drafts a short review they can edit and post.",
     visual: <ReviewPageHeroVisual />,
     visualLabel: "Example review page showing tag selection and an AI-drafted review",
   },
   flow: {
-    eyebrow: "How it works",
     title: "From a scan to a Google review in five taps",
     intro: "Every QR code, NFC stand, text and email you send opens the same page. Here is what your customer sees.",
     steps: [

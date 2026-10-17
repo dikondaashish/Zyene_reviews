@@ -10,14 +10,13 @@ import {
 export const REVIEW_MONITORING_CONTENT: FeatureLandingContent = {
   slug: "review-monitoring",
   hero: {
-    eyebrow: "Review inbox & alerts",
-    headline: "Every new review in one list you can actually work through",
-    lede: "Zyene brings your Google, Facebook and Yelp reviews into one inbox, tells you when a new one arrives, and keeps private feedback in its own tab. Filter, reply, tidy up and export from one place.",
+    kicker: "Review inbox & alerts",
+    headline: "Every review in one inbox.",
+    lede: "Google, Facebook and Yelp reviews in one list, with alerts when new ones arrive and private feedback in its own tab.",
     visual: <MonitoringHeroVisual />,
     visualLabel: "Example review inbox with Google, Facebook and Yelp reviews and a text alert for a 2-star review",
   },
   flow: {
-    eyebrow: "How it works",
     title: "From a new review to a clear inbox",
     intro: "Connect your profiles once. After that, new reviews come to you.",
     steps: [

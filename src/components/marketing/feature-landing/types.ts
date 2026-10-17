@@ -37,15 +37,17 @@ export type Fact = { value: string; label: string };
 export type FeatureLandingContent = {
   slug: FeaturePillarSlug;
   hero: {
-    eyebrow: string;
+    /** SEO phrase shown as a quiet kicker inside the H1. */
+    kicker: string;
+    /** Eight words or fewer where possible. */
     headline: string;
+    /** 25 words or fewer. */
     lede: string;
     /** Product mock shown beside the headline. */
     visual: ReactNode;
     visualLabel: string;
   };
   flow: {
-    eyebrow: string;
     title: string;
     intro: string;
     steps: FlowStep[];

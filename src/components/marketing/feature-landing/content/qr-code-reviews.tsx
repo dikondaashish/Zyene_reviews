@@ -10,14 +10,13 @@ import {
 export const QR_CODE_REVIEWS_CONTENT: FeatureLandingContent = {
   slug: "qr-code-reviews",
   hero: {
-    eyebrow: "Review QR codes",
-    headline: "Print it once. Let every table ask for you.",
-    lede: "Each location gets a QR code and a short link to its review page. Print the ready-made poster or download it, put it where customers wait, and every scan opens your branded page.",
+    kicker: "Review QR codes",
+    headline: "Print it once. Let every table ask.",
+    lede: "Every location gets a QR code and short link. Print the ready-made poster, put it where customers wait, and each scan opens your page.",
     visual: <QrCodeHeroVisual />,
     visualLabel: "Example printed QR poster next to a phone showing the review page it opens",
   },
   flow: {
-    eyebrow: "How it works",
     title: "From your dashboard to the counter",
     intro: "There is nothing to set up beyond your review page. The code is ready the moment your location is.",
     steps: [

@@ -10,14 +10,13 @@ import {
 export const CUSTOMER_CRM_CONTENT: FeatureLandingContent = {
   slug: "customer-crm",
   hero: {
-    eyebrow: "Customer list",
-    headline: "Know who you’ve asked, who finished, and who to ask next.",
-    lede: "Keep each customer’s name, email, phone, notes and tags in one place. Import a CSV, see who has completed a review request, and send requests to the right people.",
+    kicker: "Customer list",
+    headline: "Know who to ask next.",
+    lede: "Names, contact details, notes and tags in one list. Import a CSV, see who finished a request, and ask the right people.",
     visual: <CrmHeroVisual />,
     visualLabel: "Example Customers page with segment tabs, three selected customers and the bulk action bar",
   },
   flow: {
-    eyebrow: "How it works",
     title: "From a spreadsheet to the right people asked",
     intro: "Everything happens on the Customers page and each customer’s profile.",
     steps: [
