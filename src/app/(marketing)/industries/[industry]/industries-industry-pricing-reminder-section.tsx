@@ -135,7 +135,8 @@ export function IndustriesIndustryPricingReminderSection({ data }: { data: Indus
                 </div>
 
                 <p className="text-center text-xs text-muted-foreground mt-6">
-                    7-day free trial on all plans. Card required. Your selected plan bills automatically after the trial unless you cancel.
+                    7-day free trial on all plans. Card required. Your selected plan bills automatically after the trial unless you cancel.{" "}
+                    <Link href="/small-business" className="underline hover:text-foreground">Why small businesses choose Zyene</Link>
                 </p>
             </div>
         </section>

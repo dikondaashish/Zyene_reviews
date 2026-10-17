@@ -67,6 +67,11 @@ export function MarketingLayoutFooterSolutionsColumn() {
     return (
         <MarketingLayoutFooterLinkColumn title="Solutions">
             <li>
+                <Link href="/small-business" className="hover:text-primary transition-colors">
+                    Small Business
+                </Link>
+            </li>
+            <li>
                 <Link href="/industries" className="hover:text-primary transition-colors">
                     By Industry
                 </Link>

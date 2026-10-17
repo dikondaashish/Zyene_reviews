@@ -17,6 +17,7 @@ const LOCAL_PATHS = [
     "/contact",
     "/industries",
     "/partners",
+    "/small-business",
     "/es/industries",
 ];
 
