@@ -18,6 +18,8 @@ export { ProductJsonLd } from "./json-ld-product";
 export { ArticleJsonLd } from "./json-ld-article";
 export { WebPageJsonLd } from "./json-ld-web-page";
 export { FreeToolJsonLd } from "./json-ld-free-tool";
+export { TechArticleJsonLd } from "./json-ld-tech-article";
+export { DocsPageJsonLd } from "./json-ld-docs-page";
 export { IndustryLocalBusinessJsonLd } from "./json-ld-industry-local-business";
 export { PricingPlansJsonLd } from "./json-ld-pricing-plans";
 export { HowToJsonLd } from "./json-ld-howto";

@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
-import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
+import { docsPageMetadata } from "@/lib/seo/docs-page-seo";
+import { DocsPageJsonLd } from "@/components/seo/json-ld";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 
-export const metadata: Metadata = mergeMarketingSocial({
-    title: "Changelog",
-    description: "Zyene Reviews product changelog, new features, improvements, API changes, and bug fixes listed by release date.",
-    alternates: { canonical: "https://www.zyenereviews.com/docs/changelog" },
-    openGraph: { title: "Changelog, Zyene Reviews", description: "New features, improvements, API changes, and bug fixes by release date.", url: "https://www.zyenereviews.com/docs/changelog" },
-    twitter: { card: "summary_large_image", title: "Changelog, Zyene Reviews", description: "New features, API changes, and bug fixes by release date." },
-});
+export const metadata: Metadata = docsPageMetadata("/docs/changelog");
 
 export default function DocsChangelogPage() {
     const toc: TocItem[] = [
@@ -19,6 +14,7 @@ export default function DocsChangelogPage() {
 
     return (
         <div className="flex w-full items-start">
+            <DocsPageJsonLd path="/docs/changelog" />
             <main className="prose-docs min-w-0 flex-1 px-6 py-8 lg:max-w-3xl lg:px-12">
                 <div className="mb-4 flex items-center text-sm text-muted-foreground">
                     Product

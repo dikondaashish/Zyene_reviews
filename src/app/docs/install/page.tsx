@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
-import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
+import { docsPageMetadata } from "@/lib/seo/docs-page-seo";
+import { DocsPageJsonLd } from "@/components/seo/json-ld";
 import { DocCodeBlock } from "@/components/docs/doc-code-block";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 import { BASE_URL } from "@/config/env";
 
-export const metadata: Metadata = mergeMarketingSocial({
-    title: "Use with AI",
-    description: "Integrate Zyene Reviews with AI tools. Use MCP, REST API responses, and structured data in your AI workflows for review management automation.",
-    alternates: { canonical: "https://www.zyenereviews.com/docs/install" },
-    openGraph: { title: "Use with AI, Zyene Reviews Docs", description: "Integrate Zyene Reviews with AI tools, MCP, and automation pipelines.", url: "https://www.zyenereviews.com/docs/install" },
-    twitter: { card: "summary_large_image", title: "Use with AI, Zyene Reviews Docs", description: "Integrate Zyene Reviews with AI tools and automation workflows." },
-});
+export const metadata: Metadata = docsPageMetadata("/docs/install");
 
 export default function DocsInstallWithAiPage() {
     const docsApiUrl = `${BASE_URL}/docs/api`;
@@ -25,6 +20,7 @@ export default function DocsInstallWithAiPage() {
 
     return (
         <div className="flex w-full items-start">
+            <DocsPageJsonLd path="/docs/install" />
             <main className="prose-docs min-w-0 flex-1 px-6 py-8 lg:max-w-3xl lg:px-12">
                 <div className="mb-4 flex items-center text-sm text-muted-foreground">
                     Getting Started
