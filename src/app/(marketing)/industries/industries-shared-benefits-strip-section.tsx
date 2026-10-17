@@ -27,7 +27,7 @@ const BENEFITS = [
 export function IndustriesSharedBenefitsStripSection() {
     return (
         <section className="marketing-section" aria-labelledby="industries-routine-heading">
-            <div className="marketing-container home-how-grid">
+            <div className="marketing-container ind-routine">
                 <div>
                     <p className="marketing-eyebrow">Every industry</p>
                     <h2 id="industries-routine-heading">One routine underneath it all.</h2>
@@ -38,7 +38,7 @@ export function IndustriesSharedBenefitsStripSection() {
                         How it works <ArrowRight size={14} aria-hidden="true" />
                     </Link>
                 </div>
-                <ul className="home-how-steps">
+                <ul className="ind-steps">
                     {BENEFITS.map((item) => (
                         <li key={item.title}>
                             <item.icon size={18} aria-hidden="true" />
