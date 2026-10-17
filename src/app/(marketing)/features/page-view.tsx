@@ -16,7 +16,7 @@ export default function FeaturesPage() {
             />
             <FeaturesHeroSection />
             <div className="marketing-container">
-                <FeatureLandingStage label="Interactive Zyene Reviews workspace with sample data" caption="Fictional business data. Safe to explore." />
+                <FeatureLandingStage label="Interactive Zyene Reviews workspace" />
             </div>
             <FeaturesFeaturePillarsSection />
             <FeaturesIntegrationsBarSection />

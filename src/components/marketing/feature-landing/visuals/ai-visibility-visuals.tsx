@@ -47,7 +47,7 @@ export function AiVisibilityHeroVisual() {
           </div>
         ))}
       </div>
-      <MockCaption>Example answers for a fictional café. Engine coverage depends on provider availability.</MockCaption>
+      <MockCaption>Engine coverage depends on provider availability.</MockCaption>
     </div>
   );
 }
@@ -68,7 +68,7 @@ export function AiVisibilityShareVisual() {
           <MockStat label="Gemini" value="50%" />
         </div>
       </MockWindow>
-      <MockCaption>Example data. Failed or refused answers are not counted against you.</MockCaption>
+      <MockCaption>Failed or refused answers are not counted against you.</MockCaption>
     </div>
   );
 }

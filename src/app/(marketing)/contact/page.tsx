@@ -18,7 +18,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         description:
             "Reach us at support@zyenereviews.com. Mon-Fri, 9am-6pm EST. We typically respond within 24 hours.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

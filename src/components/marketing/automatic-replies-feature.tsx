@@ -16,7 +16,7 @@ export function AutomaticRepliesFeature() {
           <p className="mt-5 text-muted-foreground">Give the next customer a thoughtful response while you take care of the people in front of you. Set your rating threshold and reply tone once, and let Zyene handle eligible new reviews.</p>
           <p className="mt-5 text-sm text-muted-foreground">When enabled, replies are published publicly without individual approval. Existing reviews are excluded. Turn it off anytime; replies already being processed may still finish.</p>
           <p className="mt-5 text-sm text-muted-foreground">Included on Starter, Professional, and Enterprise with an active subscription or trial. Business reply suggestions and automatic Google replies have no monthly quota. AI customer review drafts have a separate plan allowance.</p>
-          <div className="mt-5 flex flex-wrap gap-5 text-sm font-semibold"><Link href="/pricing" className="underline underline-offset-4">Compare plans</Link><Link href="/help/reviews/setting-up-auto-commenter" className="underline underline-offset-4">Read the setup guide</Link><Link href="/#home-product-tour" className="underline underline-offset-4">Try the interactive demo</Link></div>
+          <div className="mt-5 flex flex-wrap gap-5 text-sm font-semibold"><Link href="/pricing" className="underline underline-offset-4">Compare plans</Link><Link href="/help/reviews/setting-up-auto-commenter" className="underline underline-offset-4">Read the setup guide</Link><Link href="/#home-product-tour" className="underline underline-offset-4">Try it on the homepage</Link></div>
         </div>
         <ol className="divide-y divide-border">
           {STEPS.map((step, index) => (

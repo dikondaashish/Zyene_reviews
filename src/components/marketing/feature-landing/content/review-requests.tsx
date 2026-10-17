@@ -14,7 +14,7 @@ export const REVIEW_REQUESTS_CONTENT: FeatureLandingContent = {
     headline: "Ask while the visit is still fresh.",
     lede: "Pick a customer, choose text, email or both, and read the exact message before it goes. Send now or schedule it for later.",
     visual: <RequestsHeroVisual />,
-    visualLabel: "Example Send Review Request dialog searching saved customers, with the review text arriving on a phone",
+    visualLabel: "Send Review Request dialog searching saved customers, with the review text arriving on a phone",
   },
   flow: {
     title: "One request, start to finish",

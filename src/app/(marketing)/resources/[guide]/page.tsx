@@ -28,7 +28,7 @@ export async function generateMetadata(
             title: resource.metaTitle,
             description: resource.metaDescription,
         },
-    });
+    }, { ownShareImage: true });
 }
 
 import PageView from "./page-view";

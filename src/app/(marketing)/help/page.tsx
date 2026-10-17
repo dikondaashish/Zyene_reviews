@@ -15,7 +15,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         title: "Help Center: Review Management Guides",
         description: "Guides and answers for Getting Started, Reviews, Campaigns, Analytics, Billing, and Integrations.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

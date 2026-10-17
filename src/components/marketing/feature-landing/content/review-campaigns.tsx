@@ -14,7 +14,7 @@ export const REVIEW_CAMPAIGNS_CONTENT: FeatureLandingContent = {
     headline: "Ask your whole list at once.",
     lede: "Pick customers, start from a template, and turn on reminders for day 7 and day 14. Reminders stop once someone clicks or completes.",
     visual: <CampaignsHeroVisual />,
-    visualLabel: "Example campaign builder on the Timing step, with a 2-hour delay and day 7 and day 14 reminders",
+    visualLabel: "Campaign builder on the Timing step, with a 2-hour delay and day 7 and day 14 reminders",
   },
   flow: {
     title: "Four steps from a list to a running campaign",

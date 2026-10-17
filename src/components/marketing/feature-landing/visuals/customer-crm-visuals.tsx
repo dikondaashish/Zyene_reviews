@@ -1,5 +1,5 @@
 import { Check, Download, FileSpreadsheet, Send, ShieldCheck, Tag, Upload, UserPlus } from "lucide-react";
-import { MockCaption, MockPill, MockWindow } from "@/components/marketing/feature-landing/visuals/mock-primitives";
+import { MockPill, MockWindow } from "@/components/marketing/feature-landing/visuals/mock-primitives";
 
 const SEGMENTS: [string, number][] = [
   ["All", 248], ["Not completed", 61], ["Completed request", 94], ["Recent", 37], ["No Contact Info", 6], ["Opted Out", 3],
@@ -81,7 +81,6 @@ export function CrmImportVisual() {
           <span className="mk-button">Import Customers</span>
         </div>
       </div>
-      <MockCaption>Example file for a fictional coffee shop.</MockCaption>
     </div>
   );
 }
@@ -119,7 +118,6 @@ export function CrmProfileVisual() {
           ))}
         </ol>
       </div>
-      <MockCaption>Example customer at a fictional coffee shop.</MockCaption>
     </div>
   );
 }

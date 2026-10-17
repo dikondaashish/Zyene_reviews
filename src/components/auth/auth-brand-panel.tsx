@@ -9,7 +9,6 @@ export function AuthBrandPanel() {
                 <p>Google, Facebook and Yelp reviews land in one place, with replies drafted in your voice and ratings you can watch climb.</p>
             </div>
             <AuthReviewScene />
-            <p className="auth-brand-note">Illustration with sample reviews.</p>
         </aside>
     );
 }

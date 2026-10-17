@@ -12,7 +12,9 @@
 
 .premium-header {
   position: sticky;
-  top: 0;
+  /* The top offset scrolls away, so a stuck header is always the bar itself. */
+  top: calc(-1 * var(--marketing-header-top));
+  padding-top: var(--marketing-header-top);
   border-bottom: 1px solid transparent;
   background: transparent;
   transition: background-color 240ms var(--ease-out), border-color 240ms var(--ease-out);

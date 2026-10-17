@@ -31,6 +31,7 @@ const SKIP_BASENAMES = new Set([
   "review-page-background.ts",
   "opengraph-image.tsx",
   "opengraph-image-content.tsx",
+  "og-card.tsx", // Shared OG card renderer (ImageResponse needs literal colours)
   "transactional-email-styles.ts",
   "qr-code-helpers.ts",
   "qr-code-branded-download-canvas-utils.ts",

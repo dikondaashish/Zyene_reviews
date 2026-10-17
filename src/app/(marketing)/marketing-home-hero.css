@@ -2,6 +2,11 @@
 .marketing-site-home {
   --home-shell-top: 16px;
 }
+/* On the homepage the header sits inside the hero card: same top offset as the card. */
+.marketing-site-home,
+.marketing-site-home .premium-header {
+  --marketing-header-top: var(--home-shell-top);
+}
 /* Keep the hero's backdrop behind the header without nesting navigation in its clipping layer. */
 .marketing-site-home > .marketing-content {
   margin-top: calc(-1 * (var(--marketing-header-top) + var(--marketing-header-height)));
@@ -93,10 +98,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border-radius: 999px;
-  padding: 8px 14px;
   margin-bottom: 24px;
-  background: var(--brand-wash);
   color: var(--brand-orange-ink);
   font-size: 11px;
   font-weight: 650;

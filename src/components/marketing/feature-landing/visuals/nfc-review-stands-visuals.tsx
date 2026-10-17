@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Check, ChevronLeft, Lock, Minus, Plus } from "lucide-react";
-import { MockCaption, MockPill, MockWindow } from "@/components/marketing/feature-landing/visuals/mock-primitives";
+import { MockPill, MockWindow } from "@/components/marketing/feature-landing/visuals/mock-primitives";
 
 const FEATURES = [
   "Pre-linked to the Corner Café review page",
@@ -36,7 +36,6 @@ export function NfcStandsHeroVisual() {
           </div>
         </div>
       </MockWindow>
-      <MockCaption>Order screen shown for a fictional café.</MockCaption>
     </div>
   );
 }
@@ -81,7 +80,6 @@ export function NfcStandsCartVisual() {
         <span className="mk-button">Pay $19.96 with Stripe</span>
         <small className="vz-nfc-secure"><Lock size={11} /> Card and address are entered on Stripe’s checkout</small>
       </div>
-      <MockCaption>Example order of three stands.</MockCaption>
     </div>
   );
 }

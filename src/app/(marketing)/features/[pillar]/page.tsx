@@ -41,7 +41,7 @@ export async function generateMetadata({
             title: data.metaTitle,
             description: data.metaDescription,
         },
-    });
+    }, { ownShareImage: true });
 }
 
 export default async function FeaturePillarRoutePage({

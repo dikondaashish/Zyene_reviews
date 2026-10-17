@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Check, Sparkles, Star } from "lucide-react";
-import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 import { at, Words } from "@/components/marketing/marketing-home/home-motion-text";
 
 /* Small, static slices of the real product with fictional sample data. Decorative: the card copy carries
@@ -64,30 +63,7 @@ export function BentoInsightsVisual() {
           <i className={`m-grow-x${negative ? " is-negative" : ""}`} style={{ ...at(0.6 + index * 0.15), width: `${share}%` }} />
         </div>
       ))}
-      <small>Sample rating trend and themes</small>
-    </div>
-  );
-}
-
-const ASSISTANTS = [
-  { name: "ChatGPT", domain: "chatgpt.com", mentioned: true },
-  { name: "Perplexity", domain: "perplexity.ai", mentioned: true },
-  { name: "Gemini", domain: "gemini.google.com", mentioned: false },
-];
-
-export function BentoVisibilityVisual() {
-  return (
-    <div className="bento-visibility" aria-hidden="true">
-      <p className="bento-query m-up" style={at(0.2)}>&ldquo;best coffee shop near Midtown&rdquo;</p>
-      <ul>
-        {ASSISTANTS.map(({ name, domain, mentioned }, index) => (
-          <li key={name} className="m-up" style={at(0.6 + index * 0.35)}>
-            <Image src={getBrandLogoUrl(domain)} alt="" width={20} height={20} unoptimized />
-            <span>{name}</span>
-            <em className={`m-pop${mentioned ? " is-yes" : ""}`} style={at(1 + index * 0.35)}>{mentioned ? "Mentioned" : "Not yet"}</em>
-          </li>
-        ))}
-      </ul>
+      <small>Rating trend and top themes</small>
     </div>
   );
 }

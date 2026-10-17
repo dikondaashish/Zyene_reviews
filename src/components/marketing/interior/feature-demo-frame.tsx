@@ -21,7 +21,7 @@ export function FeatureDemoFrame({ children, label, caption }: FeatureDemoFrameP
                     <div className="tour-tablet-browser" aria-hidden="true">
                         <LockKeyhole size={10} />
                         <span>app.zyenereviews.com</span>
-                        <span className="tour-tablet-live">Interactive sample</span>
+                        <span className="tour-tablet-live">Live preview</span>
                     </div>
                     {children}
                     <div className="tour-tablet-home" aria-hidden="true"><span /></div>

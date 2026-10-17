@@ -36,7 +36,6 @@ export function CompetitorHeroVisual() {
       <div className="vz-ct-float">
         <OverlayCard icon={BellRing} title="Eastgate Auto Care review spike alert" text="Review volume increased by 24 (threshold 20)" tone="caution" />
       </div>
-      <MockCaption>Example data for fictional auto shops.</MockCaption>
     </div>
   );
 }
@@ -80,7 +79,7 @@ export function CompetitorBriefVisual() {
           ))}
         </div>
       </div>
-      <MockCaption>Example brief. Built from public listing data and your search terms.</MockCaption>
+      <MockCaption>Built from public listing data and your search terms.</MockCaption>
     </div>
   );
 }
@@ -107,7 +106,6 @@ export function CompetitorBenchmarkVisual() {
           <span><b>Riverside Motors rating changed</b> · moved by +0.1 to 4.4</span>
         </div>
       </MockWindow>
-      <MockCaption>Example data for fictional auto shops.</MockCaption>
     </div>
   );
 }

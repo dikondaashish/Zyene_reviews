@@ -1,7 +1,5 @@
 import { CalendarClock, Mail, MessageSquare, MousePointerClick, Search, Send, Star } from "lucide-react";
-import {
-  MockBar, MockCaption, MockPhone, MockPill, MockRow, MockWindow,
-} from "@/components/marketing/feature-landing/visuals/mock-primitives";
+import { MockBar, MockPhone, MockPill, MockRow, MockWindow } from "@/components/marketing/feature-landing/visuals/mock-primitives";
 
 const SMS_TEXT =
   "Hi Linda! Thanks for visiting Willow Hair Studio. We’d love your feedback - it only takes 30 seconds: collectratings.com/willow-hair-studio";
@@ -65,7 +63,6 @@ export function RequestsPreviewVisual() {
           <span className="mk-button">Confirm schedule</span>
         </div>
       </MockWindow>
-      <MockCaption>Example preview for a fictional salon. Counts are sample data.</MockCaption>
     </div>
   );
 }
@@ -103,7 +100,6 @@ export function RequestsTrackingVisual() {
           ))}
         </div>
       </div>
-      <MockCaption>Example data for a fictional salon.</MockCaption>
     </div>
   );
 }

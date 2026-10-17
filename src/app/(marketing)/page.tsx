@@ -20,7 +20,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         title: "Zyene Reviews, Review Management for Local Businesses",
         description: "A fair, repeatable review routine for local businesses. From $29.99/mo.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

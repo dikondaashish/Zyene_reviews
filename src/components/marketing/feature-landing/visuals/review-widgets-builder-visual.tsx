@@ -46,7 +46,7 @@ export function ReviewWidgetsBuilderVisual() {
           {"<script src=\"…/widget-embed.js\" data-widget-url=\"…/w/shine-hair-studio\" async></script>"}
         </code>
       </MockWindow>
-      <MockCaption>Example settings. Paste the code once; new synced reviews show up on their own.</MockCaption>
+      <MockCaption>Paste the code once; new synced reviews show up on their own.</MockCaption>
     </div>
   );
 }

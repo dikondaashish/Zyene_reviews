@@ -1,8 +1,6 @@
 import { Check, Coffee, Download, Printer, QrCode, ScanLine, Share2, TriangleAlert } from "lucide-react";
 import { QrGlyph } from "@/components/marketing/feature-landing/visuals/qr-code-glyph";
-import {
-  MockBar, MockCaption, MockPhone, MockPill, MockStars, MockWindow,
-} from "@/components/marketing/feature-landing/visuals/mock-primitives";
+import { MockBar, MockPhone, MockPill, MockStars, MockWindow } from "@/components/marketing/feature-landing/visuals/mock-primitives";
 
 /** The printable table poster, with a phone showing the page a scan opens. */
 export function QrCodeHeroVisual() {
@@ -26,7 +24,6 @@ export function QrCodeHeroVisual() {
           <span className="mk-button">Continue</span>
         </MockPhone>
       </div>
-      <MockCaption>Example poster and review page for a fictional café.</MockCaption>
     </div>
   );
 }
@@ -59,7 +56,6 @@ export function QrCodePortalCardVisual() {
           ))}
         </div>
       </div>
-      <MockCaption>Dashboard card, shown for a fictional dental practice.</MockCaption>
     </div>
   );
 }
@@ -84,7 +80,6 @@ export function QrCodeLinkVisual() {
         <MockBar label="Email" value={32} tone="muted" caption="54" />
         <MockBar label="Link (QR scans + shared links)" value={50} tone="positive" caption="84" />
       </MockWindow>
-      <MockCaption>Example numbers for a fictional auto shop.</MockCaption>
     </div>
   );
 }
