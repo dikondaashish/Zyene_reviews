@@ -21,8 +21,8 @@ function jsonLdBlocks(html: string): Array<Record<string, unknown>> {
 
 describe("/small-business metadata", () => {
     it("targets the primary keyword with a canonical URL and social images", () => {
-        expect(metadata.title).toBe("Review Management Software for Small Business");
-        expect(String(metadata.title)).not.toContain("| Zyene Reviews");
+        // 46 chars + " | Zyene Reviews" would exceed 60, so fitMarketingTitle renders it absolute.
+        expect(metadata.title).toEqual({ absolute: "Review Management Software for Small Business" });
         expect(String(metadata.alternates?.canonical)).toMatch(/\/small-business$/);
         expect(metadata.openGraph?.images).toBeTruthy();
         expect(metadata.twitter).toMatchObject({ card: "summary_large_image" });
