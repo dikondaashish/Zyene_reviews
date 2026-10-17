@@ -14,7 +14,7 @@ export const ANALYTICS_CONTENT: FeatureLandingContent = {
     headline: "See which requests bring in reviews.",
     lede: "New reviews, average rating, response rate and requests sent for the period you pick, plus each request followed to the Google hand-off.",
     visual: <AnalyticsHeroVisual />,
-    visualLabel: "Example analytics screen with four headline numbers and a review volume chart",
+    visualLabel: "Analytics screen with four headline numbers and a review volume chart",
   },
   flow: {
     title: "From synced reviews to a report you can share",
@@ -59,7 +59,7 @@ export const ANALYTICS_CONTENT: FeatureLandingContent = {
         "Click and completion rates for each channel; QR code scans count as Link",
         "Rating distribution, the tags customers picked most, low-rating alerts and private feedback",
       ],
-      media: { kind: "visual", node: <AnalyticsFunnelVisual />, label: "Example review request funnel and channel performance" },
+      media: { kind: "visual", node: <AnalyticsFunnelVisual />, label: "Review request funnel and channel performance" },
     },
     {
       eyebrow: "Google Business Profile",
@@ -70,7 +70,7 @@ export const ANALYTICS_CONTENT: FeatureLandingContent = {
         "Top search keywords with monthly impressions",
         "A discovery vs branded split, estimated from those search terms",
       ],
-      media: { kind: "visual", node: <AnalyticsGoogleVisual />, label: "Example Google listing performance and search keywords" },
+      media: { kind: "visual", node: <AnalyticsGoogleVisual />, label: "Google listing performance and search keywords" },
     },
   ],
   facts: [

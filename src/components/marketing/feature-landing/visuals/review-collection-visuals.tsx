@@ -42,7 +42,6 @@ export function ReviewCollectionHeroVisual() {
       <div className="vz-rc-toast">
         <OverlayCard icon={ShieldCheck} title="Private feedback · 2 stars" text="Sent to your team, not posted anywhere" tone="caution" />
       </div>
-      <MockCaption>Fictional business and example numbers.</MockCaption>
     </div>
   );
 }
@@ -87,7 +86,7 @@ export function ReviewCollectionChannelsVisual() {
           <small>Private feedback to your team</small>
         </div>
       </div>
-      <MockCaption>Default 4-star threshold shown. Fictional business.</MockCaption>
+      <MockCaption>Default 4-star threshold shown.</MockCaption>
     </div>
   );
 }
@@ -121,7 +120,6 @@ export function ReviewCollectionTriggersVisual() {
         meta="POST /api/webhooks/generic"
         trailing={<MockPill tone="positive">Active</MockPill>}
       />
-      <MockCaption>Example request with fictional customer data.</MockCaption>
     </div>
   );
 }

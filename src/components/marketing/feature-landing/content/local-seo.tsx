@@ -14,7 +14,7 @@ export const LOCAL_SEO_CONTENT: FeatureLandingContent = {
     headline: "Fix what your Google profile is missing.",
     lede: "Zyene scores your Business Profile, ranks the fixes that matter, and shows the searches, views, calls and directions it brings in.",
     visual: <LocalSeoHeroVisual />,
-    visualLabel: "Example Google profile score with a list of fixes and a broken link alert",
+    visualLabel: "Google profile score with a list of fixes and a broken link alert",
   },
   flow: {
     title: "From a connected profile to a clear to-do list",

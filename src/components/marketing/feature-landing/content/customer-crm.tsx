@@ -14,7 +14,7 @@ export const CUSTOMER_CRM_CONTENT: FeatureLandingContent = {
     headline: "Know who to ask next.",
     lede: "Names, contact details, notes and tags in one list. Import a CSV, see who finished a request, and ask the right people.",
     visual: <CrmHeroVisual />,
-    visualLabel: "Example Customers page with segment tabs, three selected customers and the bulk action bar",
+    visualLabel: "Customers page with segment tabs, three selected customers and the bulk action bar",
   },
   flow: {
     title: "From a spreadsheet to the right people asked",

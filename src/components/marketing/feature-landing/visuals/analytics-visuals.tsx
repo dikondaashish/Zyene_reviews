@@ -38,7 +38,6 @@ export function AnalyticsHeroVisual() {
           </div>
         </div>
       </MockWindow>
-      <MockCaption>Example data for a fictional dental practice.</MockCaption>
     </div>
   );
 }
@@ -78,7 +77,7 @@ export function AnalyticsFunnelVisual() {
           <div className="vz-an-channel"><Link2 size={14} /><MockBar label="Link" value={61} tone="positive" caption="61% CTR" /></div>
         </div>
       </div>
-      <MockCaption>Example data. QR code scans are counted in Link.</MockCaption>
+      <MockCaption>QR code scans are counted in Link.</MockCaption>
     </div>
   );
 }
@@ -112,7 +111,7 @@ export function AnalyticsGoogleVisual() {
           <MockPill>Branded 28%</MockPill>
         </div>
       </MockWindow>
-      <MockCaption>Example data. Google numbers come from your Business Profile.</MockCaption>
+      <MockCaption>Google numbers come from your Business Profile.</MockCaption>
     </div>
   );
 }

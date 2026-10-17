@@ -18,7 +18,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         title: "Review Management Features & AI Replies",
         description: "Branded requests, AI replies, private feedback, and local insights in one platform.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

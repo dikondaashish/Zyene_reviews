@@ -15,9 +15,6 @@ export function BlogSlugArticleBodySidebarSection({ post }: { post: (typeof BLOG
                     <BlogSlugTableOfContents sections={post.body} faqs={post.faqs} />
                 </aside>
                 <article className="blog-article-main">
-                    <p className="blog-article-lead" data-geo-summary="">
-                        {post.excerpt}
-                    </p>
                     <ContentRenderer sections={post.body} className="blog-article-content" />
 
                     {post.faqs && post.faqs.length > 0 ? <BlogSlugFaqSection faqs={post.faqs} /> : null}
@@ -42,13 +39,12 @@ export function BlogSlugArticleBodySidebarSection({ post }: { post: (typeof BLOG
 
                     <section className="blog-article-cta" data-reveal aria-labelledby="blog-cta-heading">
                         <div>
-                            <p className="blog-article-eyebrow">A practical next step</p>
-                            <h2 id="blog-cta-heading">Ready to make review work easier?</h2>
+                                                        <h2 id="blog-cta-heading">Ready to make review work easier?</h2>
                             <p>Bring requests, replies, and feedback into one calm daily routine.</p>
                         </div>
                         <Button asChild>
                             <Link href={SIGNUP_URL} data-track="trial" data-track-location="blog-cta">
-                                Start Free Trial <ArrowRight className="size-4" aria-hidden="true" />
+                                Start free trial <ArrowRight className="size-4" aria-hidden="true" />
                             </Link>
                         </Button>
                     </section>

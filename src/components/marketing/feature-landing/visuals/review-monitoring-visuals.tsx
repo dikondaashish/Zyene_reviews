@@ -51,7 +51,6 @@ export function MonitoringHeroVisual() {
       <div className="vz-mon-toast">
         <OverlayCard icon={Smartphone} tone="dark" title="New 2★ review for Corner Bakery" text="“Waited twenty minutes for a coffee…”" />
       </div>
-      <MockCaption>Fictional business and reviews, shown as example data.</MockCaption>
     </div>
   );
 }
@@ -110,7 +109,7 @@ export function MonitoringTriageVisual() {
           <span><Check size={12} />Pending</span>
         </div>
       </MockWindow>
-      <MockCaption>Example data. Bulk actions and export work per business.</MockCaption>
+      <MockCaption>Bulk actions and export work per business.</MockCaption>
     </div>
   );
 }

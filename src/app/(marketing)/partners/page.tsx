@@ -17,7 +17,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         title: "Partners",
         description: "Agency referral program, POS integrations, and strategic partnerships.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

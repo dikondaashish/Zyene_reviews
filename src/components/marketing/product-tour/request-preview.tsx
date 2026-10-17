@@ -12,7 +12,7 @@ export function RequestPreview({ channel, message, sent, sending = false }: { ch
     <div className="tour-preview-column">
       <p className="tour-preview-caption">Customer view · interactive preview</p>
       <div className="request-example" data-delivery={sending ? "sending" : sent ? "delivered" : "draft"}>
-        <div className="request-example-top"><span>{opened ? "Review example" : channel === "sms" ? "Messages" : "Inbox"}</span><span>{sent ? "Demo delivered" : "Draft preview"}</span></div>
+        <div className="request-example-top"><span>{opened ? "Review page" : channel === "sms" ? "Messages" : "Inbox"}</span><span>{sent ? "Delivered" : "Draft preview"}</span></div>
         <div className="request-avatar"><Coffee size={24} aria-hidden="true" /></div>
         <strong>Juniper Coffee</strong>
         {opened ? <DemoRatingPreview /> : <RequestMessage channel={channel} message={message} sent={sent} sending={sending} onOpen={() => setOpened(true)} />}

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
-import { BLOG_POST_MAP, BLOG_SLUGS, getBlogImage } from "@/lib/content/blog-data";
+import { BLOG_POST_MAP, BLOG_SLUGS } from "@/lib/content/blog-data";
 
 export function generateStaticParams() {
     return BLOG_SLUGS.map((slug) => ({ slug }));
@@ -12,7 +12,6 @@ export async function generateMetadata(
     const { slug } = await params;
     const post = BLOG_POST_MAP[slug];
     if (!post) return {};
-    const image = getBlogImage(slug);
     return mergeMarketingSocial({
         title: post.metaTitle,
         description: post.metaDescription,
@@ -26,20 +25,13 @@ export async function generateMetadata(
             publishedTime: post.publishedAt,
             modifiedTime: post.dateModified ?? post.publishedAt,
             authors: [post.author.name],
-            images: [{
-                url: "https://www.zyenereviews.com" + image.src,
-                alt: image.alt,
-                width: image.width,
-                height: image.height,
-            }],
         },
         twitter: {
             card: "summary_large_image",
             title: post.metaTitle,
             description: post.metaDescription,
-            images: ["https://www.zyenereviews.com" + image.src],
         },
-    });
+    }, { ownShareImage: true });
 }
 
 import PageView from "./page-view";

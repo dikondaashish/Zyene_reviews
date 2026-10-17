@@ -17,7 +17,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         title: "Illustrative Review Workflows",
         description: "Composite workflow examples for local teams building a better review routine.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

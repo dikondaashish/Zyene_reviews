@@ -1,8 +1,6 @@
-import {
-  Bot, Eye, FileCode2, MapPinned, MessageSquarePlus, PieChart, Quote, Swords, ToggleRight, Wallet,
-} from "lucide-react";
+import { Bot, Eye, FileCode2, MapPinned, MessageSquarePlus, PieChart, Swords, ToggleRight, Wallet } from "lucide-react";
 import type { FeatureLandingContent } from "@/components/marketing/feature-landing/types";
-import { OverlayCard } from "@/components/marketing/feature-landing/visuals/mock-primitives";
+import { AmbientVideo } from "@/components/marketing/ambient-video";
 import { AiVisibilityHeroVisual, AiVisibilityShareVisual } from "@/components/marketing/feature-landing/visuals/ai-visibility-visuals";
 import { AiVisibilityLibraryVisual } from "@/components/marketing/feature-landing/visuals/ai-visibility-library-visual";
 
@@ -13,7 +11,7 @@ export const AI_VISIBILITY_CONTENT: FeatureLandingContent = {
     headline: "Show up when customers ask AI.",
     lede: "Track the questions people ask ChatGPT, Perplexity and Gemini, and see whether the answers mention you or a competitor.",
     visual: <AiVisibilityHeroVisual />,
-    visualLabel: "Example tracked prompt with answers from three AI engines, showing who was mentioned",
+    visualLabel: "Tracked prompt with answers from three AI engines, showing who was mentioned",
   },
   flow: {
     title: "From a question to a clear picture of who AI recommends",
@@ -37,15 +35,15 @@ export const AI_VISIBILITY_CONTENT: FeatureLandingContent = {
         "Open any answer to read exactly what the engine said",
       ],
       media: {
-        kind: "photo",
-        src: "/marketing/home/hero-local-owner.webp",
-        alt: "A smiling café owner checking his phone beside a pastry counter",
-        objectPosition: "center 30%",
-        overlay: (
-          <>
-            <OverlayCard icon={Bot} title="Prompt run finished" text="“best coffee shop in Kansas City” · 3 engines" tone="dark" />
-            <OverlayCard icon={Quote} title="Corner Café was mentioned" text="Named in 2 of 3 answers, cited once" tone="positive" />
-          </>
+        kind: "visual",
+        label: "A customer asks Claude for a top-rated car dealership and gets a ranked list of local businesses with ratings and reviews",
+        node: (
+          <AmbientVideo
+            className="ambient-video"
+            src="/videos/ai-answer-car-dealership-claude.mp4"
+            poster="/videos/ai-answer-car-dealership-claude-poster.jpg"
+            label="A customer asks Claude for a top-rated car dealership and gets a ranked list of local businesses"
+          />
         ),
       },
     },

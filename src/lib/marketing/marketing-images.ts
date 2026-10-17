@@ -7,7 +7,7 @@ export const marketingImages = {
       height: 600,
     },
     featureMonitor: { src: "/marketing/home/storefront-candid-v2.webp", alt: "Customers sitting outside a neighborhood cafe", width: 1024, height: 1024 },
-    featureAutomation: { src: "/marketing/home/customer-avatar-candid-v2.webp", alt: "Illustrative customer portrait", width: 320, height: 320 },
+    featureAutomation: { src: "/marketing/home/customer-avatar-candid-v2.webp", alt: "Smiling customer portrait", width: 320, height: 320 },
     heroReviewAlerts: {
       fiveStar: {
         name: "Emily Carter",
@@ -19,7 +19,7 @@ export const marketingImages = {
       oneStar: {
         name: "Robert Hayes",
         src: "/marketing/home/alert-robert-hayes-candid-v2.webp",
-        alt: "Illustrative feedback portrait",
+        alt: "Customer portrait",
         width: 320,
         height: 320,
       },
@@ -39,13 +39,13 @@ export const marketingImages = {
   birdeyeCompare: {
     reviewAlertPositive: {
       src: "/marketing/home/alert-emily-carter.webp",
-      alt: "Illustrative Zyene Reviews in-app alert for a new 5-star Google review",
+      alt: "Zyene Reviews in-app alert for a new 5-star Google review",
       width: 320,
       height: 120,
     },
     reviewAlertNegative: {
       src: "/marketing/home/alert-robert-hayes-candid-v2.webp",
-      alt: "Illustrative feedback portrait",
+      alt: "Customer portrait",
       width: 320,
       height: 320,
     },

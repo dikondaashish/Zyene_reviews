@@ -14,7 +14,7 @@ export const MULTI_LOCATION_CONTENT: FeatureLandingContent = {
     headline: "Run every location from one place.",
     lede: "Switch between businesses in a click, give each team the right access, and keep each location’s review page, QR code and settings.",
     visual: <MultiLocationHeroVisual />,
-    visualLabel: "Example businesses list with three dental offices and the business switcher open",
+    visualLabel: "Businesses list with three dental offices and the business switcher open",
   },
   flow: {
     title: "From one location to many without starting over",

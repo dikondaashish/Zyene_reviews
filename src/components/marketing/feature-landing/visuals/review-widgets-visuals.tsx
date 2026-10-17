@@ -43,7 +43,6 @@ export function ReviewWidgetsHeroVisual() {
         <span className="vz-wg-g">G</span>
         <div><b>4.9</b><MockStars value={5} size={11} /><small>Excellent</small></div>
       </div>
-      <MockCaption>Example widget on a fictional salon website.</MockCaption>
     </div>
   );
 }

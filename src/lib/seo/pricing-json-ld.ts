@@ -32,7 +32,7 @@ export function buildPricingProductSchema(): Record<string, unknown> {
         "@context": "https://schema.org",
         "@type": "Product",
         name: "Zyene Reviews",
-        image: [`${JSON_LD_BASE_URL}/og/og-default.png`],
+        image: [`${JSON_LD_BASE_URL}/og/zyene-reviews-share.jpg`],
         url: PRICING_URL,
         description:
             "Review management and local SEO platform for local businesses. Plans include review monitoring, AI replies, campaigns, and competitor tracking.",

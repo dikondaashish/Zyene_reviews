@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState, useSyncExternalStore, type KeyboardEvent } from "react";
-import { BarChart3, Coffee, MessageSquare, RotateCcw, Send, ShieldCheck, ChevronDown, Lightbulb } from "lucide-react";
+import { BarChart3, Coffee, MessageSquare, RotateCcw, Send, ChevronDown, Lightbulb } from "lucide-react";
 import { ReviewDemo } from "@/components/marketing/product-tour/review-demo";
 import { RequestDemo } from "@/components/marketing/product-tour/request-demo";
 import { ReportDemo } from "@/components/marketing/product-tour/report-demo";
@@ -49,7 +49,7 @@ function ProductTourSession({ active, setActive, onReset }: {
     <div className="product-tour" data-pointer-motion={pointerMotion} onPointerDownCapture={() => setPointerMotion(true)} onKeyDownCapture={() => setPointerMotion(false)}>
       <aside className="tour-sidebar" aria-label="Demo workspace">
         <div className="tour-wordmark"><ZyeneReviewsLogoMark size={28} /><span>Zyene <b>Reviews</b></span></div>
-        <div className="tour-business"><Coffee size={17} aria-hidden="true" /><span>Juniper Coffee<small>Example workspace</small></span><ChevronDown size={13} aria-hidden="true" /></div>
+        <div className="tour-business"><Coffee size={17} aria-hidden="true" /><span>Juniper Coffee<small>Main Street</small></span><ChevronDown size={13} aria-hidden="true" /></div>
         <span className="tour-nav-label">WORKSPACE</span>
         <div className="tour-tabs" role="tablist" aria-label="Explore Zyene" aria-orientation="vertical">
           {TABS.map(({ key, label, icon: Icon }, index) => <button key={key} type="button" role="tab" id={`${id}-${key}`} aria-selected={active === key} aria-controls={`${id}-${key}-panel`} tabIndex={active === key ? 0 : -1} onClick={() => setActive(key)} onKeyDown={event => onKeyDown(event, index)}><Icon size={17} aria-hidden="true" /><span>{label}</span></button>)}
@@ -60,13 +60,12 @@ function ProductTourSession({ active, setActive, onReset }: {
       <div className="tour-workspace">
       <div className="tour-toolbar">
         <span className="tour-breadcrumb">Workspace <span>/</span> <strong>{TABS.find(tab => tab.key === active)?.label}</strong></span>
-        <button type="button" className="tour-reset" onClick={onReset}><RotateCcw size={14} aria-hidden="true" /><span>Reset demo</span></button>
+        <button type="button" className="tour-reset" onClick={onReset}><RotateCcw size={14} aria-hidden="true" /><span>Start over</span></button>
       </div>
       {TABS.map(({ key }) => <div key={key} className="tour-panel" role="tabpanel" id={`${id}-${key}-panel`} aria-labelledby={`${id}-${key}`} hidden={active !== key} tabIndex={0}>
         {key === "reviews" ? <ReviewDemo /> : key === "requests" ? <RequestDemo /> : <ReportDemo />}
       </div>)}
       </div>
-      <div className="tour-sandbox-note"><ShieldCheck size={15} aria-hidden="true" /><p>Yours to explore. Fictional data, sample replies, no real sends.</p></div>
     </div>
   );
 }

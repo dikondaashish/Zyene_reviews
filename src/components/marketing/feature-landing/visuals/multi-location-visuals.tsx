@@ -45,7 +45,6 @@ export function MultiLocationHeroVisual() {
           <span className="vz-ml-item vz-ml-add"><Plus size={13} />Add a Business</span>
         </div>
       </div>
-      <MockCaption>Example organization with three fictional dental offices.</MockCaption>
     </div>
   );
 }
@@ -73,7 +72,7 @@ export function MultiLocationTeamVisual() {
         ))}
         <span className="mk-button"><Plus size={14} />Invite teammate</span>
       </MockWindow>
-      <MockCaption>Example team. Owners and admins can invite any role; managers invite managers and members.</MockCaption>
+      <MockCaption>Owners and admins can invite any role; managers invite managers and members.</MockCaption>
     </div>
   );
 }
@@ -96,7 +95,6 @@ export function MultiLocationAllowanceVisual() {
         <div className="vz-ml-track"><i style={{ width: "59%" }} /></div>
         <small>Professional: 700 per location × 3 locations, shared across the organization</small>
       </div>
-      <MockCaption>Example usage for a fictional three-location practice.</MockCaption>
     </div>
   );
 }

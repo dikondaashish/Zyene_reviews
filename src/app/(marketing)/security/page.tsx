@@ -18,7 +18,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         title: "Security & Trust",
         description: "Enterprise-grade security practices built for local business data, RLS, encryption, privacy controls, and secure Google OAuth.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

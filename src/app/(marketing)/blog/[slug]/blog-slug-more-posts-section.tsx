@@ -48,7 +48,7 @@ export function BlogSlugMorePostsSection({ slug }: { slug: string }) {
                         <div className="blog-article-subheading"><h2 id="blog-related-heading">Related posts</h2><Link href="/blog">View all <ArrowUpRight className="size-4" aria-hidden="true" /></Link></div>
                         <div className="blog-related-grid">
                             {relatedPosts.map((post) => <Link key={post.slug} href={`/blog/${post.slug}`} className="blog-related-card group">
-                                <div className="blog-related-image">{post.image ? <Image src={post.image.src} alt={post.image.alt} fill sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 20vw" /> : null}</div>
+                                <div className="blog-related-image">{post.image ? <Image src={post.image.src} alt={post.image.alt} fill sizes="(max-width:767px) 100vw, 240px" /> : null}</div>
                                 <div className="blog-related-card-copy"><span>{PILLAR_LABELS[post.pillar]}</span><h3>{post.title}</h3><small>{post.readMinutes} min read</small></div>
                             </Link>)}
                         </div>

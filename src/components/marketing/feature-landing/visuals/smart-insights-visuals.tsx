@@ -41,7 +41,6 @@ export function SmartInsightsHeroVisual() {
         <div className="mk-bubble">“Waited forever on Saturday, but the oat latte was perfect.”</div>
         <div className="mk-bubble">“Great staff. Just need more hands at the weekend.”</div>
       </div>
-      <MockCaption>Example insights for a fictional café.</MockCaption>
     </div>
   );
 }
@@ -78,7 +77,7 @@ export function SmartInsightsSuggestionsVisual() {
           </div>
         ))}
       </div>
-      <MockCaption>Example suggestions. Impact labels are AI estimates, not forecasts.</MockCaption>
+      <MockCaption>Impact labels are AI estimates, not forecasts.</MockCaption>
     </div>
   );
 }
@@ -101,7 +100,6 @@ export function SmartInsightsLinksVisual() {
           <span className="mk-button mk-button-ghost"><Link2 size={14} />Manage links</span>
         </div>
       </div>
-      <MockCaption>Example links for a fictional café.</MockCaption>
     </div>
   );
 }

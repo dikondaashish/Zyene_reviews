@@ -8,12 +8,12 @@ import type { DemoAutoRating } from "@/types/marketing-product-demo";
 export function AutomaticReplyDemo() {
   const id = useId();
   const { settings, result, preview, configure, simulate, toggle } = useAutoReplyDemo();
-  const status = !settings.enabled ? "Automatic replies are off in this demo."
+  const status = !settings.enabled ? "Automatic replies are off."
     : !result ? "Settings ready. Preview a new review to try them."
-      : result.status === "typing" ? "AI is writing a sample reply…"
-        : result.status === "skipped" ? "Skipped · below your rating threshold" : "Published in demo only";
+      : result.status === "typing" ? "AI is writing a reply…"
+        : result.status === "skipped" ? "Skipped · below your rating threshold" : "Published to Google";
   return (
-    <section className="tour-auto" aria-label="Automatic reply demo">
+    <section className="tour-auto" aria-label="Automatic replies">
       <div className="tour-auto-heading">
         <Reply size={20} aria-hidden="true" />
         <div><label htmlFor={`${id}-enabled`}>Try automatic replies</label><p id={`${id}-explanation`}>Choose your settings, then watch a new Google review receive a reply.</p></div>
@@ -24,7 +24,7 @@ export function AutomaticReplyDemo() {
         <fieldset><legend>Reply tone</legend><div className="tour-auto-tones">{(["professional", "friendly", "concise"] as const).map(tone => <button key={tone} type="button" aria-pressed={settings.tone === tone} aria-label={`Use ${tone[0].toUpperCase()}${tone.slice(1)} for automatic replies`} onClick={() => configure({ tone })}>{tone}</button>)}</div></fieldset>
       </div>
       <div className="tour-auto-simulate">
-        <div><label htmlFor={`${id}-rating`}>Sample review rating</label><select id={`${id}-rating`} value={settings.rating} onChange={event => configure({ rating: Number(event.target.value) as DemoAutoRating })}>{[3, 4, 5].map(rating => <option key={rating} value={rating}>{rating} stars</option>)}</select></div>
+        <div><label htmlFor={`${id}-rating`}>New review rating</label><select id={`${id}-rating`} value={settings.rating} onChange={event => configure({ rating: Number(event.target.value) as DemoAutoRating })}>{[3, 4, 5].map(rating => <option key={rating} value={rating}>{rating} stars</option>)}</select></div>
         <button className="tour-auto-preview" type="button" disabled={!settings.enabled || result?.status === "typing"} onClick={event => simulate(settings, event.detail > 0)}><RotateCcw size={13} aria-hidden="true" />Preview a new review</button>
       </div>
       {result && <div className="tour-auto-result" aria-busy={result.status === "typing"}>

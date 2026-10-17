@@ -24,11 +24,11 @@ export function BlogSlugTableOfContents({ sections, faqs = [] }: { sections: Con
                 aria-controls="blog-toc-nav"
                 onClick={() => setIsOpen((open) => !open)}
             >
-                <span>Table of Contents</span>
+                <span>On this page</span>
                 <ChevronDown className="size-5" aria-hidden="true" />
             </button>
-            <h2 className="blog-toc-heading">Table of Contents</h2>
-            <nav id="blog-toc-nav" className="blog-toc-nav" aria-label="Table of Contents">
+            <h2 className="blog-toc-heading">On this page</h2>
+            <nav id="blog-toc-nav" className="blog-toc-nav" aria-label="On this page">
                 {items.map((item) => (
                     <a key={item.href} href={item.href} className="blog-toc-link" onClick={() => setIsOpen(false)}>
                         {item.label}

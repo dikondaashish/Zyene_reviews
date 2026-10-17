@@ -16,7 +16,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         title: "Resources, Free Guides for Local Businesses",
         description: "Free in-depth guides on Google reviews, local SEO, and reputation management for local business owners.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

@@ -15,7 +15,7 @@ export function HomeProductStage() {
           sizes="(max-width: 1240px) 100vw, 1240px"
         />
       </div>
-      <div className="home-stage-window tour-tablet" role="region" aria-label="Interactive Zyene Reviews workspace with sample data">
+      <div className="home-stage-window tour-tablet" role="region" aria-label="Interactive Zyene Reviews workspace">
         <div className="home-stage-chrome" aria-hidden="true">
           <span className="home-stage-lights"><i /><i /><i /></span>
           <span className="home-stage-url"><Lock size={11} />app.zyenereviews.com</span>

@@ -51,7 +51,6 @@ export function MarketingHomePipeline() {
               </li>
             ))}
           </ol>
-          <p className="pipe-note">Example timeline with fictional customer data.</p>
         </InViewPlay>
       </div>
     </section>

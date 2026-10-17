@@ -118,7 +118,6 @@ export function CampaignsResultsVisual() {
           <span className="mk-button">Send Now</span>
         </div>
       </div>
-      <MockCaption>Example data for a fictional auto shop.</MockCaption>
     </div>
   );
 }

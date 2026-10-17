@@ -18,7 +18,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         description:
             "Built by Zyene, Inc. for local businesses that want a fair, consistent review routine.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

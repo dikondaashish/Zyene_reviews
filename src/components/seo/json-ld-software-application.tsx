@@ -15,7 +15,7 @@ export function SoftwareApplicationJsonLd() {
         browserRequirements: "Requires JavaScript. Modern browser recommended.",
         description:
             "Zyene Reviews is a full-stack review management platform for local businesses. Monitor Google, Facebook, and Yelp reviews in one inbox. Respond with AI-generated replies in one click. Collect reviews via SMS, email, links, QR codes, and NFC review stands, with an AI-drafted review customers can edit and post. Collect private feedback for service recovery while keeping public review options available to everyone. Track competitors, improve your Google Business Profile, and see whether AI assistants mention your business.",
-        screenshot: `${JSON_LD_BASE_URL}/og/og-default.png`,
+        screenshot: `${JSON_LD_BASE_URL}/og/zyene-reviews-share.jpg`,
         featureList: [
             "Review monitoring from Google, Facebook, Yelp",
             "AI-powered review reply suggestions in Professional, Friendly, or Concise tones",

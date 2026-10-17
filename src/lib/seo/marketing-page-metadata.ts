@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import { marketingCanonicalUrl } from "@/lib/seo/marketing-site-url";
 
-export const MARKETING_OG_IMAGE = {
-    url: "/og/og-default.png",
+/** Branded fallback card for routes without their own `opengraph-image.tsx`. */
+export const MARKETING_SHARE_IMAGE = {
+    url: "/og/zyene-reviews-share.jpg",
     width: 1200,
     height: 630,
-    alt: "Zyene Reviews - Reputation Management for Local Businesses",
+    alt: "Zyene Reviews: review management software for local businesses",
 } as const;
-
-export const MARKETING_TWITTER_IMAGE = "/og/og-default.png";
 
 export const MARKETING_SITE_NAME = "Zyene Reviews";
 export const MARKETING_TWITTER_HANDLE = "@zyenereviews";
@@ -28,46 +27,32 @@ export function fitMarketingTitle(title: Metadata["title"]): Metadata["title"] {
     return { absolute: title };
 }
 
+const hasImages = (images: unknown) => Boolean(images) && (Array.isArray(images) ? images.length > 0 : true);
+
 /**
- * Ensures marketing pages always ship OG/Twitter images, site name, locale, and
- * Twitter handle. Next.js replaces (not merges) `openGraph`/`twitter` per page,
- * so root-layout values like `siteName` are lost unless re-applied here.
+ * Re-applies site name, locale and the X handle on every marketing page. Next.js replaces
+ * (not merges) `openGraph`/`twitter` per page, so root-layout values are lost otherwise.
+ *
+ * Share images: a page's own images win. Routes with an `opengraph-image.tsx` (built with
+ * `@/lib/seo/og-card`) pass `ownShareImage` so config does not override that file; every other
+ * route gets the branded fallback card. (A page's `openGraph` replaces its parents', so a parent
+ * route's image file is not inherited.)
  */
-export function mergeMarketingSocial(metadata: Metadata): Metadata {
+export function mergeMarketingSocial(metadata: Metadata, { ownShareImage = false }: { ownShareImage?: boolean } = {}): Metadata {
     const og = metadata.openGraph;
-    const ogImages =
-        og && "images" in og && og.images && (Array.isArray(og.images) ? og.images.length > 0 : true)
-            ? og.images
-            : [MARKETING_OG_IMAGE];
-
-    const twitter =
-        metadata.twitter && typeof metadata.twitter === "object"
-            ? {
-                  card: "summary_large_image" as const,
-                  site: MARKETING_TWITTER_HANDLE,
-                  ...metadata.twitter,
-                  images:
-                      "images" in metadata.twitter &&
-                      metadata.twitter.images &&
-                      (Array.isArray(metadata.twitter.images) ? metadata.twitter.images.length > 0 : true)
-                          ? metadata.twitter.images
-                          : [MARKETING_TWITTER_IMAGE],
-              }
-            : {
-                  card: "summary_large_image" as const,
-                  site: MARKETING_TWITTER_HANDLE,
-                  images: [MARKETING_TWITTER_IMAGE],
-              };
-
     const ogSiteDefaults = { siteName: MARKETING_SITE_NAME, locale: "en_US" };
+    const twitterInput = metadata.twitter && typeof metadata.twitter === "object" ? metadata.twitter : {};
+    const ogImages = og && "images" in og && hasImages(og.images) ? og.images : ownShareImage ? undefined : [MARKETING_SHARE_IMAGE];
+    const twitterImages =
+        "images" in twitterInput && hasImages(twitterInput.images)
+            ? { images: twitterInput.images }
+            : ownShareImage ? {} : { images: [MARKETING_SHARE_IMAGE.url] };
 
     return {
         ...metadata,
         title: fitMarketingTitle(metadata.title),
-        openGraph: og
-            ? { ...ogSiteDefaults, ...og, images: ogImages }
-            : { ...ogSiteDefaults, images: [MARKETING_OG_IMAGE] },
-        twitter,
+        openGraph: { ...ogSiteDefaults, ...og, ...(ogImages ? { images: ogImages } : {}) },
+        twitter: { card: "summary_large_image", site: MARKETING_TWITTER_HANDLE, ...twitterInput, ...twitterImages },
     };
 }
 

@@ -43,7 +43,7 @@ export const metadata: Metadata = {
             "Monitor, respond to, and grow your Google reviews with AI. Full reputation management platform starting at $29.99/mo, no annual contracts.",
         images: [
             {
-                url: "/og/og-default.png",
+                url: "/og/zyene-reviews-share.jpg",
                 width: 1200,
                 height: 630,
                 alt: "Zyene Reviews - Reputation Management for Local Businesses",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
         title: "Zyene Reviews, Review Management for Local Businesses",
         description:
             "Monitor, respond to, and grow your Google reviews with AI. Starting at $29.99/mo, no annual contracts.",
-        images: ["/og/og-default.png"],
+        images: ["/og/zyene-reviews-share.jpg"],
         site: "@zyenereviews",
     },
     keywords: [

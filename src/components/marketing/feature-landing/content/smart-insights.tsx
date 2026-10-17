@@ -14,7 +14,7 @@ export const SMART_INSIGHTS_CONTENT: FeatureLandingContent = {
     headline: "Know what customers keep saying.",
     lede: "Smart Insights reads recent reviews and sums them up: the top themes, real customer quotes, and two or three things to do next.",
     visual: <SmartInsightsHeroVisual />,
-    visualLabel: "Example Smart Insights card with a headline, key themes and customer quotes",
+    visualLabel: "Smart Insights card with a headline, key themes and customer quotes",
   },
   flow: {
     title: "From a pile of reviews to a short list of next steps",
@@ -60,7 +60,7 @@ export const SMART_INSIGHTS_CONTENT: FeatureLandingContent = {
         "An estimated impact label written by the AI, like “+0.2 avg stars”",
         "See examples shows the customer quotes behind a suggestion",
       ],
-      media: { kind: "visual", node: <SmartInsightsSuggestionsVisual />, label: "Example suggestion cards tagged with urgency, effort and impact" },
+      media: { kind: "visual", node: <SmartInsightsSuggestionsVisual />, label: "Suggestion cards tagged with urgency, effort and impact" },
     },
     {
       eyebrow: "Google profile check",
@@ -71,7 +71,7 @@ export const SMART_INSIGHTS_CONTENT: FeatureLandingContent = {
         "A link is flagged when it returns an error or does not respond",
         "Manage links takes you to your business information",
       ],
-      media: { kind: "visual", node: <SmartInsightsLinksVisual />, label: "Example Google profile links with one failed check and the broken links tile" },
+      media: { kind: "visual", node: <SmartInsightsLinksVisual />, label: "Google profile links with one failed check and the broken links tile" },
     },
   ],
   facts: [

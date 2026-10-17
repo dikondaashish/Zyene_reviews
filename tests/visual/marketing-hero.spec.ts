@@ -65,7 +65,7 @@ for (const viewport of VIEWPORTS) {
       "Cancel in Billing",
     );
     await expect(page.locator(".hero-dashboard-example")).toContainText(
-      "Sample data",
+      "Juniper Coffee",
     );
     await expect(page.locator(".hero-phone-submit")).toBeVisible();
   });

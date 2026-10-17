@@ -19,7 +19,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         title: "Review Management Pricing: Plans From $29.99",
         description: "Plans starting at $29.99/mo. No annual contracts. 7-day free trial.",
     },
-});
+}, { ownShareImage: true });
 
 import PricingPageView from "./page-view";
 

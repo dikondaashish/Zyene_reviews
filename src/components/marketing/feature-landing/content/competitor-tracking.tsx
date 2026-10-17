@@ -14,7 +14,7 @@ export const COMPETITOR_TRACKING_CONTENT: FeatureLandingContent = {
     headline: "Your Google rating, next to theirs.",
     lede: "Pick competitors from Google. Zyene compares rating and review volume over time and alerts you when a rival’s numbers jump.",
     visual: <CompetitorHeroVisual />,
-    visualLabel: "Example rating comparison of four auto shops with a review spike alert",
+    visualLabel: "Rating comparison of four auto shops with a review spike alert",
   },
   flow: {
     title: "From a business name to a market view",
@@ -59,7 +59,7 @@ export const COMPETITOR_TRACKING_CONTENT: FeatureLandingContent = {
         "Suggested moves, each with a short reason",
         "Your Google search terms with monthly impressions, from your Business Profile",
       ],
-      media: { kind: "visual", node: <CompetitorBriefVisual />, label: "Example AI market positioning brief next to Google search terms" },
+      media: { kind: "visual", node: <CompetitorBriefVisual />, label: "AI market positioning brief next to Google search terms" },
     },
     {
       eyebrow: "Market benchmark",
@@ -70,7 +70,7 @@ export const COMPETITOR_TRACKING_CONTENT: FeatureLandingContent = {
         "A Tracked Competitors table with category, rating, reviews, website and Maps link",
         "Export competitor data as CSV",
       ],
-      media: { kind: "visual", node: <CompetitorBenchmarkVisual />, label: "Example market benchmark with rank and review change per competitor" },
+      media: { kind: "visual", node: <CompetitorBenchmarkVisual />, label: "Market benchmark with rank and review change per competitor" },
     },
   ],
   facts: [

@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { BLOG_POSTS } from "@/lib/content/blog-data";
 import { RESOURCE_GUIDES } from "@/lib/content/resource-data";
 import { headingAnchor } from "@/lib/content/heading-anchor";
-import { buildMarketingMetadata } from "@/lib/seo/marketing-page-metadata";
+import { buildMarketingMetadata, mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { buildPricingProductSchema } from "@/lib/seo/pricing-json-ld";
 import { getAllSitemapEntries } from "@/lib/seo/sitemap";
 import robots from "@/app/robots";
@@ -52,16 +52,23 @@ describe("public SEO integrity", () => {
         expect(entries.find((entry) => entry.url.endsWith("/pricing"))?.lastModified).toBeUndefined();
     });
 
+    it("leaves share images to a route's own opengraph-image when it has one", () => {
+        const metadata = mergeMarketingSocial({ title: "Pricing", openGraph: { title: "Pricing" } }, { ownShareImage: true });
+        expect(metadata.openGraph?.images).toBeUndefined();
+        expect(metadata.openGraph?.siteName).toBe("Zyene Reviews");
+    });
+
     it("retains a canonical when language alternates are supplied", () => {
         const metadata = buildMarketingMetadata({ title: "Reviews", description: "Manage reviews.", path: "/features",
             alternates: { languages: { en: "/features" } } });
         expect(metadata.alternates?.canonical).toMatch(/\/features$/);
-        expect(metadata.openGraph?.images).toBeTruthy();
+        expect(metadata.openGraph?.siteName).toBe("Zyene Reviews");
+        expect(metadata.openGraph?.images).toEqual([expect.objectContaining({ url: "/og/zyene-reviews-share.jpg" })]);
     });
 
     it("publishes an image and priced offers without inventing an Enterprise price", () => {
         const schema = buildPricingProductSchema();
-        expect(schema.image).toEqual([expect.stringContaining("/og/og-default.png")]);
+        expect(schema.image).toEqual([expect.stringContaining("/og/zyene-reviews-share.jpg")]);
         expect(schema.offers).toHaveLength(2);
         for (const offer of schema.offers as Array<{ price: string }>) {
             expect(Number(offer.price)).toBeGreaterThan(0);

@@ -1,11 +1,14 @@
-import { ImageResponse } from "next/og";
-import { OpenGraphImageContent } from "./opengraph-image-content";
+import { OG_CONTENT_TYPE, OG_SIZE, renderOgCard } from "@/lib/seo/og-card";
 
-export const runtime = "edge";
-export const alt = "Zyene Reviews - Reputation Management for Local Businesses";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const size = OG_SIZE;
+export const contentType = OG_CONTENT_TYPE;
+export const alt = "Zyene Reviews: review management software for local businesses";
 
 export default function OgImage() {
-    return new ImageResponse(<OpenGraphImageContent />, { ...size });
+    return renderOgCard({
+        eyebrow: "Review management software for local businesses",
+        title: "More Google reviews. Less busywork.",
+        subtitle: "Review requests, AI replies and insights in one workspace. From $29.99/month.",
+        image: "/marketing/home/cafe-service.webp",
+    });
 }

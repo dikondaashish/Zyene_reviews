@@ -29,7 +29,6 @@ export function LocalSeoHeroVisual() {
       <div className="vz-seo-float">
         <OverlayCard icon={Link2} title="1 broken link" text="Your reservations link returns an error" tone="caution" />
       </div>
-      <MockCaption>Example score for a fictional café.</MockCaption>
     </div>
   );
 }
@@ -64,7 +63,7 @@ export function LocalSeoSearchVisual() {
           ))}
         </div>
       </MockWindow>
-      <MockCaption>Example data. Impressions show how often you appeared, not your rank.</MockCaption>
+      <MockCaption>Impressions show how often you appeared, not your rank.</MockCaption>
     </div>
   );
 }
@@ -94,7 +93,7 @@ export function LocalSeoContentVisual() {
         <p className="vz-seo-post">Fall menu is here: pumpkin spice lattes and apple hand pies, every morning from 7.</p>
         <span className="mk-button mk-button-ghost">Publish to Google</span>
       </div>
-      <MockCaption>Drafts for a fictional café. Nothing is published until you click.</MockCaption>
+      <MockCaption>Nothing is published until you click.</MockCaption>
     </div>
   );
 }
