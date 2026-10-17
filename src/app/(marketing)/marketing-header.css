@@ -23,6 +23,13 @@
   -webkit-backdrop-filter: blur(16px) saturate(150%);
   backdrop-filter: blur(16px) saturate(150%);
 }
+/* While a menu is open the bar turns solid white so it reads as one surface with the panel. */
+.premium-header.is-menu-open {
+  background: var(--card);
+  border-bottom-color: color-mix(in srgb, var(--foreground) 8%, transparent);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
 .premium-header .premium-header-inner {
   width: var(--marketing-header-width);
   min-height: var(--marketing-header-height);
