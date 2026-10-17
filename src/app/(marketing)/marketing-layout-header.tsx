@@ -77,7 +77,7 @@ export function MarketingLayoutHeader({ pending = false, pendingLabel = "Opening
 
   return (
     <header
-      className={`premium-header sticky top-0 z-50 w-full min-w-0${isScrolled ? " is-scrolled" : ""}`}
+      className={`premium-header sticky top-0 z-50 w-full min-w-0${isScrolled ? " is-scrolled" : ""}${openMenu || mobileMenuOpen ? " is-menu-open" : ""}`}
       data-scrolled={isScrolled ? "true" : "false"}
     >
       <div className="premium-header-inner">
