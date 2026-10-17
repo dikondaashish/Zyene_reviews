@@ -7,7 +7,10 @@ import {
 describe("squarePaymentStatusLabel", () => {
     it("maps known statuses", () => {
         expect(squarePaymentStatusLabel("sent")).toBe("Review request sent");
-        expect(squarePaymentStatusLabel("skipped_guard")).toBe("Skipped - frequency cap");
+        expect(squarePaymentStatusLabel("skipped_guard")).toBe(
+            "Skipped - send rule (cap, opt-out or minimum)",
+        );
+        expect(squarePaymentStatusLabel("sending")).toBe("Scheduled - sending after delay");
     });
 
     it("falls back for unknown statuses", () => {

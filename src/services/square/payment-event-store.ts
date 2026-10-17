@@ -14,6 +14,7 @@ export type SquareExistingEvent = {
     status: string;
     customer_email: string | null;
     customer_phone: string | null;
+    customer_name: string | null;
     review_request_id: string | null;
 };
 
@@ -24,7 +25,7 @@ export async function findSquarePaymentEvent(
 ): Promise<SquareExistingEvent | null> {
     const { data } = await admin
         .from("square_payment_events")
-        .select("id, status, customer_email, customer_phone, review_request_id")
+        .select("id, status, customer_email, customer_phone, customer_name, review_request_id")
         .eq("merchant_id", merchantId)
         .eq("payment_id", paymentId)
         .maybeSingle();
@@ -33,7 +34,7 @@ export async function findSquarePaymentEvent(
 
 export async function patchSquarePaymentEvent(
     admin: Admin,
-    event: ParsedSquarePaymentEvent,
+    event: Pick<ParsedSquarePaymentEvent, "merchantId" | "paymentId">,
     patch: Record<string, unknown>,
 ): Promise<void> {
     await admin

@@ -186,6 +186,13 @@ Errors: OAuth denials redirect with error query params; token exchange failures 
 
 **Important errors:** `401` bad signature/token; `400` malformed payload; handlers should be idempotent where events can retry.
 
+**POS / Zapier send timing.** Square `payment.created` / `payment.updated` and `/api/webhooks/generic` (channels `sms`, `email`, `both`) apply the business settings from Settings → Business information → Review Request Settings:
+
+- `review_request_min_amount_cents`: Square payments whose `total_money` (or `amount_money`) is below the minimum are recorded as `skipped_guard` ("Below minimum transaction amount") and never sent. The generic webhook only applies the minimum when the body includes `amount_cents` (integer cents) or `amount` / `total` (dollars); it then returns `200 { success: true, data: { status: "skipped", reason: "below_minimum_amount" } }`. A sale without an amount is never skipped. `0` = no minimum.
+- `review_request_delay_minutes` (default 120, max 10080): when > 0 the send is deferred via the Inngest event `review-request/pos.delayed-send` (`step.sleepUntil`), so nothing goes out at payment time. Square rows stay `sending` while they wait. The generic webhook returns `202 { success: true, data: { status: "scheduled", sendAt, delayMinutes, channel } }` without a `requestId`. Send `delay_minutes: 0` in the body to send immediately (the old synchronous response). `0` in Settings = send immediately.
+- The delayed job re-checks everything when it runs: auto-send toggle and connection (Square), 30-day frequency cap, opt-outs, plan limits. It sends through `sendOutboundReviewRequest`.
+- `channel: "link"` is never delayed or skipped.
+
 ---
 
 ## 6. Cron (`GET /api/cron/*`)
