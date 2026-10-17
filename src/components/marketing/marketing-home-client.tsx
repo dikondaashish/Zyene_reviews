@@ -1,4 +1,5 @@
 import { MarketingHomeHero } from "@/components/marketing/marketing-home/marketing-home-hero";
+import { MarketingHomeIntro } from "@/components/marketing/marketing-home/marketing-home-intro";
 import { MarketingHomeTrustStrip } from "@/components/marketing/marketing-home/marketing-home-trust-strip";
 import { MarketingHomeHowItWorks } from "@/components/marketing/marketing-home/marketing-home-how-it-works";
 import { MarketingHomeBento } from "@/components/marketing/marketing-home/marketing-home-bento";
@@ -13,7 +14,10 @@ import { PopularResourcesBlock } from "@/components/marketing/popular-resources-
 export function MarketingHomeClient() {
   return (
     <div className="marketing-home flex w-full flex-col">
-      <MarketingHomeHero />
+      <div className="home-hero-shell">
+        <MarketingHomeHero />
+      </div>
+      <MarketingHomeIntro />
       <MarketingHomeTrustStrip />
       <MarketingScrollReveal intensity="subtle">
         <MarketingHomeHowItWorks />

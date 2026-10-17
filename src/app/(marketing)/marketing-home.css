@@ -1,4 +1,4 @@
-/* Homepage: hero, product stage, platforms, how it works, shared section parts.
+/* Homepage: intro (under the hero scene), product stage, platforms, how it works, shared section parts.
  * Orange is reserved for primary actions; everything else is ink, muted ink and hairlines. */
 .home-text-link { display:inline-flex; align-items:center; gap:6px; color:var(--foreground); font-size:14px; font-weight:500; text-underline-offset:4px; }
 .home-text-link svg { transition:transform 160ms var(--ease-out); }
@@ -8,16 +8,14 @@
 .marketing-home h2 { font-size:var(--fs-h2); }
 .home-section-lede { max-width:46ch; margin-top:16px; color:var(--muted-foreground); font-size:var(--fs-lead); line-height:1.55; }
 
-/* Hero */
-.home-hero { padding-top:clamp(48px,7vw,96px); }
-.home-hero-grid { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr); gap:clamp(32px,5vw,72px); align-items:end; }
-.marketing-site .home-hero-title { font-size:inherit; letter-spacing:normal; line-height:inherit; }
-.home-hero-kicker { display:block; margin-bottom:22px; color:var(--muted-foreground); font-size:15px; font-weight:500; letter-spacing:-.01em; }
-.home-hero-headline > span { display:block; }
-.home-hero-headline { display:block; font-size:var(--fs-hero); font-weight:600; line-height:1; letter-spacing:-.05em; }
-.home-hero-lede { max-width:40ch; color:var(--muted-foreground); font-size:var(--fs-lead); line-height:1.55; }
-.home-hero-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:28px; }
-.home-hero-terms { margin-top:16px; color:var(--muted-foreground); font-size:13px; line-height:1.5; }
+/* Intro: the short promise under the hero scene */
+.home-intro { width:100%; padding-top:clamp(64px,8vw,112px); }
+.home-intro-grid { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr); gap:clamp(32px,5vw,72px); align-items:end; }
+.home-intro-headline > span { display:block; }
+.marketing-site .home-intro-headline { font-size:var(--fs-hero); font-weight:600; line-height:1; letter-spacing:-.05em; }
+.home-intro-lede { max-width:40ch; color:var(--muted-foreground); font-size:var(--fs-lead); line-height:1.55; }
+.home-intro-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:28px; }
+.home-intro-terms { margin-top:16px; color:var(--muted-foreground); font-size:13px; line-height:1.5; }
 
 /* Product stage: the real tour in a browser window over café photography. */
 .home-stage { position:relative; isolation:isolate; width:min(100% - 2 * var(--mk-gutter), var(--mk-max-wide)); margin-top:clamp(48px,6vw,80px); padding:clamp(14px,4.5vw,64px) clamp(14px,4.5vw,64px) 0; overflow:hidden; border-radius:28px; background:var(--muted); }
@@ -44,10 +42,7 @@
 
 /* Entrance: one short staggered rise on first paint; content is server-rendered and readable without it. */
 @media (prefers-reduced-motion:no-preference) {
-  /* The headline is the LCP element, so it paints immediately; the supporting parts rise in after it. */
-  .home-hero-kicker,.home-hero-aside,.home-stage { animation:home-rise 700ms var(--ease-out) backwards; }
-  .home-hero-aside { animation-delay:120ms; }
-  .home-stage { animation-duration:900ms; animation-delay:220ms; }
+  .home-stage { animation:home-rise 900ms var(--ease-out) 220ms backwards; }
 }
 @keyframes home-rise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
 
@@ -62,8 +57,7 @@
 }
 
 @media (max-width:1023px) {
-  .home-hero-grid { grid-template-columns:1fr; }
-  .home-hero-headline { max-width:none; }
+  .home-intro-grid { grid-template-columns:1fr; }
 }
 @media (max-width:767px) {
   /* On phones the full tour is ~1800px tall; show a cropped, fading preview instead of a wall of UI. */
@@ -71,5 +65,5 @@
   .home-stage .home-stage-window,.home-stage .tour-tablet-screen { border-radius:10px 10px 0 0; }
   .home-stage-lights { display:none; }
   .home-platforms-row { flex-direction:column; align-items:flex-start; }
-  .home-hero-actions .marketing-button { flex:1 1 auto; }
+  .home-intro-actions .marketing-button { flex:1 1 auto; }
 }
