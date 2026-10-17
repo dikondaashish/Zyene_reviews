@@ -10,14 +10,13 @@ import {
 export const AUTOMATIC_REVIEW_REPLIES_CONTENT: FeatureLandingContent = {
   slug: "automatic-review-replies",
   hero: {
-    eyebrow: "Automatic Google replies",
-    headline: "New Google reviews get a reply, even on your busiest day",
-    lede: "Choose which star ratings to answer and the tone to use. When a new Google review fits, Zyene writes a reply and posts it for you. Everything else waits in your inbox, and you can turn it off whenever you like.",
+    kicker: "Automatic Google replies",
+    headline: "Replies that post themselves, even on busy days.",
+    lede: "Choose which star ratings to answer and the tone. Zyene writes and posts the reply. The rest wait in your inbox.",
     visual: <AutoRepliesHeroVisual />,
     visualLabel: "Example of a new 5-star Google review passing the automatic reply checks and getting a posted reply",
   },
   flow: {
-    eyebrow: "How it works",
     title: "Set it once, and new reviews are answered",
     intro: "You pick the rule. Zyene checks every new Google review against it.",
     steps: [

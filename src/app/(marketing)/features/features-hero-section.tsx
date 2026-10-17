@@ -1,15 +1,11 @@
-import { LandingHero } from "@/components/marketing/landing-hero";
+import { FeatureLandingHero } from "@/components/marketing/feature-landing/feature-landing-hero";
 
 export function FeaturesHeroSection() {
     return (
-        <LandingHero
-            eyebrow="The Zyene platform"
-            title="A complete review routine. From the ask to the next action."
-            description="Invite customer feedback with branded requests, keep every review in one place, reply with AI, and use clear signals to improve the next customer experience."
-            variant="directory"
-            media={{ kind: "none" }}
-            primary={{ label: "Start free trial", href: "/signup" }}
-            secondary={{ label: "Explore pricing", href: "/pricing" }}
+        <FeatureLandingHero
+            kicker="Review management features"
+            headline="Everything you need to earn more reviews."
+            lede="Branded requests, one inbox for every review, AI replies, and clear signals on what to fix next. All in one workspace."
         />
     );
 }

@@ -10,14 +10,13 @@ import {
 export const REVIEW_COLLECTION_CONTENT: FeatureLandingContent = {
   slug: "review-collection",
   hero: {
-    eyebrow: "Review collection & Negative Feedback Shield",
+    kicker: "Review collection & Negative Feedback Shield",
     headline: "Ask every customer. Hear the unhappy ones first.",
-    lede: "QR codes, NFC stands, texts, emails and automatic triggers all open one branded review page. Happy customers get help writing a Google review. Lower ratings come to you privately, so you can fix the problem.",
+    lede: "QR codes, NFC stands, texts and emails all open one branded page. Happy customers get help writing a Google review; lower ratings reach you privately.",
     visual: <ReviewCollectionHeroVisual />,
     visualLabel: "Example requests screen with recent activity and a private feedback alert",
   },
   flow: {
-    eyebrow: "How it works",
     title: "Every request ends on the same page",
     intro: "It does not matter how you ask. The customer always lands on your review page for that location.",
     steps: [

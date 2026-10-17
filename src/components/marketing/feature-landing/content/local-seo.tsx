@@ -10,14 +10,13 @@ import {
 export const LOCAL_SEO_CONTENT: FeatureLandingContent = {
   slug: "local-seo",
   hero: {
-    eyebrow: "Google Business Profile SEO",
-    headline: "See what your Google profile is missing, and fix it first.",
-    lede: "Zyene scores your Google Business Profile, puts the fixes that matter at the top, and shows the searches, views, calls and direction requests your profile gets.",
+    kicker: "Google Business Profile SEO",
+    headline: "Fix what your Google profile is missing.",
+    lede: "Zyene scores your Business Profile, ranks the fixes that matter, and shows the searches, views, calls and directions it brings in.",
     visual: <LocalSeoHeroVisual />,
     visualLabel: "Example Google profile score with a list of fixes and a broken link alert",
   },
   flow: {
-    eyebrow: "How it works",
     title: "From a connected profile to a clear to-do list",
     intro: "Everything starts with your Google Business Profile. We read it on each sync and turn it into a short list of things to do.",
     steps: [

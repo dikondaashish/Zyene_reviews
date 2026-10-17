@@ -145,7 +145,8 @@
 
 @media (max-width:600px) {
   .vz-rq-hero, .vz-rq-track, .vz-cmp-results { display:grid; gap:12px; justify-items:center; padding-bottom:0; }
-  .vz-rq-phone, .vz-rq-funnel, .vz-cmp-add { position:static; }
+  .vz-rq-funnel, .vz-cmp-add { position:static; }
+  .vz-rq-phone { position:relative; right:auto; bottom:auto; }
   .vz-rq-phone { width:min(100%,240px); }
   .vz-rq-funnel, .vz-cmp-add { width:100%; }
   .vz-cmp-steps { grid-template-columns:repeat(2,minmax(0,1fr)); }

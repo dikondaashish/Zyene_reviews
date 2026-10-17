@@ -10,14 +10,13 @@ import {
 export const COMPETITOR_TRACKING_CONTENT: FeatureLandingContent = {
   slug: "competitor-tracking",
   hero: {
-    eyebrow: "Competitor tracking",
-    headline: "See how your Google rating stacks up against the shops down the road.",
-    lede: "Pick the competitors you care about from Google. Zyene compares your rating and review volume with theirs over time, shows what moved, and alerts you when a rival’s rating jumps or their reviews spike.",
+    kicker: "Competitor tracking",
+    headline: "Your Google rating, next to theirs.",
+    lede: "Pick competitors from Google. Zyene compares rating and review volume over time and alerts you when a rival’s numbers jump.",
     visual: <CompetitorHeroVisual />,
     visualLabel: "Example rating comparison of four auto shops with a review spike alert",
   },
   flow: {
-    eyebrow: "How it works",
     title: "From a business name to a market view",
     intro: "Owners and admins add competitors once. After that, the competitor check keeps their numbers up to date.",
     steps: [

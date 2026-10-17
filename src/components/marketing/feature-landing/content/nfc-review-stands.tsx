@@ -8,14 +8,13 @@ import { NfcStandsCartVisual, NfcStandsHeroVisual } from "@/components/marketing
 export const NFC_REVIEW_STANDS_CONTENT: FeatureLandingContent = {
   slug: "nfc-review-stands",
   hero: {
-    eyebrow: "NFC review stands",
-    headline: "A tap at the counter opens your review page.",
-    lede: "Order NFC review stands from inside Zyene Reviews for $4.99 each. Customers tap their phone or scan the printed QR code, and your branded review page opens. No app, no typing.",
+    kicker: "NFC review stands",
+    headline: "One tap opens your review page.",
+    lede: "Order NFC stands inside Zyene for $4.99 each. Customers tap their phone or scan the printed QR code. No app, no typing.",
     visual: <NfcStandsHeroVisual />,
     visualLabel: "Example in-app order screen for an NFC review stand",
   },
   flow: {
-    eyebrow: "How it works",
     title: "From the dashboard to the counter",
     intro: "Ordering happens inside the app, and the stands arrive linked to the location you ordered them for.",
     steps: [
