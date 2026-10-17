@@ -198,14 +198,10 @@ test("phone starts neutral and yields to a customer's chosen rating", async ({
   await expect(stars.last()).toHaveCSS("fill", "rgba(0, 0, 0, 0)");
 });
 
-test("intro keeps the short promise and the interactive tour under the hero", async ({ page }) => {
+test("the interactive product tour sits right under the hero", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await expect(page.locator(".home-intro h2")).toHaveText("More Google reviews. Less busywork.");
-  const actions = page.locator(".home-intro-actions");
-  await expect(actions.getByRole("link", { name: "Start free trial" })).toHaveAttribute("href", /\/signup$/);
-  await expect(actions.getByRole("link", { name: "Book a demo" })).toHaveAttribute("href", "/demo");
-  await expect(page.locator(".home-intro-terms")).toContainText("Cancel anytime in Billing");
+  await expect(page.locator(".home-intro h2")).toHaveCount(0);
   await expect(page.locator("#home-product-tour .tour-container[data-ready=true]")).toBeVisible();
 });
 
