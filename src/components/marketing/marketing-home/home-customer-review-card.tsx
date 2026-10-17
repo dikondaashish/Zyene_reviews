@@ -26,13 +26,13 @@ export function HomeCustomerReviewCard({ placement }: { placement: "top" | "bott
               </>
             ) : (
               <>
-                “Super easy to use
+                “Best latte in town.
                 <br />
-                and very effective!”
+                Staff are so friendly!”
               </>
             )}
           </p>
-          <small>{top ? "Example customer review" : "Illustrative product feedback"}</small>
+          <small>{top ? "Google review" : "Facebook review"}</small>
         </div>
       </div>
       {top && (

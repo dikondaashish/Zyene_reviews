@@ -53,7 +53,7 @@ export function HomeReviewPhone() {
             ) : (
               <>
                 <fieldset className="hero-phone-stars">
-                  <legend className="sr-only">Try a rating in this review example</legend>
+                  <legend className="sr-only">Choose a rating</legend>
                   {[1, 2, 3, 4, 5].map((value) => (
                     <label key={value}>
                       <input
@@ -89,7 +89,6 @@ export function HomeReviewPhone() {
                 <p className="hero-phone-minute">It only takes a minute.</p>
               </>
             )}
-            <span className="hero-phone-demo">Interactive example</span>
             {submitted && (
               <button
                 className="hero-phone-reset"

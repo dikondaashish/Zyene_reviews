@@ -14,7 +14,7 @@ export const QR_CODE_REVIEWS_CONTENT: FeatureLandingContent = {
     headline: "Print it once. Let every table ask.",
     lede: "Every location gets a QR code and short link. Print the ready-made poster, put it where customers wait, and each scan opens your page.",
     visual: <QrCodeHeroVisual />,
-    visualLabel: "Example printed QR poster next to a phone showing the review page it opens",
+    visualLabel: "Printed QR poster next to a phone showing the review page it opens",
   },
   flow: {
     title: "From your dashboard to the counter",

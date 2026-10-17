@@ -1,6 +1,6 @@
 import { CircleCheck, CircleMinus, Reply, Star } from "lucide-react";
 import type { PillTone } from "@/components/marketing/feature-landing/visuals/mock-primitives";
-import { MockCaption, MockPill, MockRow, MockStars, MockWindow } from "@/components/marketing/feature-landing/visuals/mock-primitives";
+import { MockPill, MockRow, MockStars, MockWindow } from "@/components/marketing/feature-landing/visuals/mock-primitives";
 
 const CHECKS = ["Google review", "No reply yet", "5★ meets 4 stars and up", "Posted after you turned it on"];
 
@@ -33,7 +33,6 @@ export function AutoRepliesHeroVisual() {
           <MockPill tone="brand">AI auto commenter · Zyene Reviews</MockPill>
         </div>
       </div>
-      <MockCaption>Fictional shop and review. Timing shown is illustrative.</MockCaption>
     </div>
   );
 }
@@ -63,7 +62,6 @@ export function AutoRepliesConfirmVisual() {
           </div>
         </div>
       </div>
-      <MockCaption>The confirmation step, shown with example settings.</MockCaption>
     </div>
   );
 }
@@ -92,7 +90,6 @@ export function AutoRepliesEligibilityVisual() {
           />
         ))}
       </MockWindow>
-      <MockCaption>Example data showing how the rule is applied.</MockCaption>
     </div>
   );
 }

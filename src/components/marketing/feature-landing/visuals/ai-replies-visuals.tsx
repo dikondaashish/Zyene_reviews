@@ -36,7 +36,6 @@ export function AiRepliesHeroVisual() {
           </div>
         </div>
       </div>
-      <MockCaption>Fictional salon and review. Example AI draft.</MockCaption>
     </div>
   );
 }
@@ -75,7 +74,7 @@ export function AiRepliesAttentionVisual() {
           <MockPill tone="caution">Urgency 7</MockPill>
         </div>
       </MockWindow>
-      <MockCaption>Example data. Urgency scores come from AI review analysis.</MockCaption>
+      <MockCaption>Urgency scores come from AI review analysis.</MockCaption>
     </div>
   );
 }
@@ -111,7 +110,7 @@ export function AiRepliesQaVisual() {
           </div>
         </div>
       </div>
-      <MockCaption>Fictional practice. Q&amp;A appears only when Google provides it for your listing.</MockCaption>
+      <MockCaption>Q&amp;A appears only when Google provides it for your listing.</MockCaption>
     </div>
   );
 }

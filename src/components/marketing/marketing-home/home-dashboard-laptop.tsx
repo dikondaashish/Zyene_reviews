@@ -29,7 +29,7 @@ export function HomeDashboardLaptop() {
                     <ChevronDown />
                   </span>
                 </div>
-                <p className="hero-dashboard-example">Example workspace · Sample data</p>
+                <p className="hero-dashboard-example">Juniper Coffee · Main Street</p>
                 <HomeDashboardMetrics />
                 <HomeDashboardRecentReviews />
               </div>

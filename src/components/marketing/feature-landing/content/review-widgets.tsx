@@ -13,7 +13,7 @@ export const REVIEW_WIDGETS_CONTENT: FeatureLandingContent = {
     headline: "Show your best reviews where people book.",
     lede: "Pick one of 20 ready-made widgets, choose which reviews appear, match your brand, and paste one snippet into your site.",
     visual: <ReviewWidgetsHeroVisual />,
-    visualLabel: "Example salon website with an embedded Google review carousel and a floating rating badge",
+    visualLabel: "Salon website with an embedded Google review carousel and a floating rating badge",
   },
   flow: {
     title: "From template to live on your site in five steps",

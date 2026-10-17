@@ -16,7 +16,7 @@ export function ProductShowcase({
 }) {
   const { section, progressBar, active, setActive } = useTourStory(initialTab);
   return (
-    <section ref={section} className="product-tour-section tour-story-section" aria-label="Explore the Zyene Reviews demo">
+    <section ref={section} className="product-tour-section tour-story-section" aria-label="Explore the Zyene Reviews workspace">
       <div className="tour-story-pin">
         <div className="marketing-container tour-story-layout">
           <div className="tour-story-narrative">

@@ -14,7 +14,7 @@ export const AUTOMATIC_REVIEW_REPLIES_CONTENT: FeatureLandingContent = {
     headline: "Replies that post themselves, even on busy days.",
     lede: "Choose which star ratings to answer and the tone. Zyene writes and posts the reply. The rest wait in your inbox.",
     visual: <AutoRepliesHeroVisual />,
-    visualLabel: "Example of a new 5-star Google review passing the automatic reply checks and getting a posted reply",
+    visualLabel: "Of a new 5-star Google review passing the automatic reply checks and getting a posted reply",
   },
   flow: {
     title: "Set it once, and new reviews are answered",

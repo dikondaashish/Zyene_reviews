@@ -29,7 +29,7 @@ export async function generateMetadata(
             title: data.metaTitle,
             description: data.metaDescription,
         },
-    });
+    }, { ownShareImage: true });
 }
 
 import PageView from "./page-view";

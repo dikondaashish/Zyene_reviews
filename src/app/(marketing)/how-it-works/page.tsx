@@ -18,7 +18,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         title: "How Our Review Management Software Works",
         description: "Connect, monitor, collect, and improve in four practical steps.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

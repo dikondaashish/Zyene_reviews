@@ -7,7 +7,7 @@ export const JSON_LD_ORGANIZATION_URL = marketingCanonicalUrl("/");
 
 export const JSON_LD_ORGANIZATION_ID = `${JSON_LD_ORGANIZATION_URL}#organization`;
 
-export const JSON_LD_DEFAULT_OG_IMAGE = `${MARKETING_SITE_ORIGIN}/og/og-default.png`;
+export const JSON_LD_DEFAULT_OG_IMAGE = `${MARKETING_SITE_ORIGIN}/og/zyene-reviews-share.jpg`;
 
 /** Brand / parent company and product site (sameAs). */
 export const JSON_LD_ORGANIZATION_SAME_AS = [

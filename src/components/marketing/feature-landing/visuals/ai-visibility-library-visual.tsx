@@ -1,5 +1,5 @@
 import { Play, Wallet } from "lucide-react";
-import { MockCaption, MockPill, MockWindow } from "@/components/marketing/feature-landing/visuals/mock-primitives";
+import { MockPill, MockWindow } from "@/components/marketing/feature-landing/visuals/mock-primitives";
 
 const PROMPTS: { text: string; intent: string; active: boolean }[] = [
   { text: "best coffee shop in Kansas City", intent: "Discovery", active: true },
@@ -39,7 +39,6 @@ export function AiVisibilityLibraryVisual() {
           </div>
         </div>
       </MockWindow>
-      <MockCaption>Example prompt library for a fictional café.</MockCaption>
     </div>
   );
 }

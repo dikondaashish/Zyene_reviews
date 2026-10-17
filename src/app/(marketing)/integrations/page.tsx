@@ -18,7 +18,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         title: "Review Platform Integrations",
         description: "Sync reviews and trigger review requests through your existing workflow.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

@@ -14,7 +14,7 @@ export const REVIEW_MONITORING_CONTENT: FeatureLandingContent = {
     headline: "Every review in one inbox.",
     lede: "Google, Facebook and Yelp reviews in one list, with alerts when new ones arrive and private feedback in its own tab.",
     visual: <MonitoringHeroVisual />,
-    visualLabel: "Example review inbox with Google, Facebook and Yelp reviews and a text alert for a 2-star review",
+    visualLabel: "Review inbox with Google, Facebook and Yelp reviews and a text alert for a 2-star review",
   },
   flow: {
     title: "From a new review to a clear inbox",

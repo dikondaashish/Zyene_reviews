@@ -75,7 +75,7 @@ export function ReviewPageSettingsVisual() {
           <MockPill tone="dark">4 stars</MockPill>
         </div>
       </MockWindow>
-      <MockCaption>Sample settings. Each location has its own page.</MockCaption>
+      <MockCaption>Each location has its own page.</MockCaption>
     </div>
   );
 }
@@ -96,7 +96,7 @@ export function ReviewPagePrivateVisual() {
         <span className="mk-bubble mk-bubble-brand"><MessageSquareHeart size={14} /> Next coffee is on us. Show this at the counter.</span>
         <span className="mk-button">Send to the team</span>
       </MockPhone>
-      <MockCaption>Example private feedback step with an optional offer.</MockCaption>
+      <MockCaption>Private feedback step with an optional offer.</MockCaption>
     </div>
   );
 }

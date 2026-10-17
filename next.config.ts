@@ -28,6 +28,16 @@ const legacyBlogCoverNames = [
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  // Share cards (src/lib/seo/og-card.tsx) read fonts, the logo and page photos from disk. Dynamic
+  // routes render on demand, so those files must ship with the function.
+  outputFileTracingIncludes: {
+    "/**/opengraph-image*": [
+      "./src/assets/fonts/*",
+      "./public/Main logo.png",
+      "./public/images/blog/**/*.{webp,jpg}",
+      "./public/images/industries/*.webp",
+    ],
+  },
   async redirects() {
     return [
       { source: "/product", destination: "/features", permanent: true },

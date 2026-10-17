@@ -1,43 +1,54 @@
+import Image from "next/image";
 import Link from "next/link";
-import { CalendarDays, Clock, RefreshCw, Slash } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { PILLAR_LABELS } from "@/lib/content/blog-data";
 import type { BlogPost } from "@/lib/content/blog-types";
 import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
 import { formatBlogPublishedDate } from "@/lib/content/format-blog-date";
 
+/**
+ * Editorial article opening: breadcrumb, title, standfirst, byline, then the cover image.
+ * The standfirst doubles as the page's quotable summary for AI answers (data-geo-summary).
+ */
 export function BlogSlugArticleHeaderSection({ post }: { post: BlogPost }) {
     const updatedAt = post.dateModified && post.dateModified > post.publishedAt ? post.dateModified : null;
     return (
         <header className="blog-article-hero">
+            <span className="blog-progress" aria-hidden="true" />
             <div className="blog-article-hero-inner">
-                <div className="blog-article-breadcrumb" aria-label="Article category">
+                <nav className="blog-article-breadcrumb" aria-label="Breadcrumb">
                     <Link href="/blog">Blog</Link>
-                    <Slash className="size-3.5" aria-hidden="true" />
+                    <ChevronRight className="size-3.5" aria-hidden="true" />
                     <span>{PILLAR_LABELS[post.pillar]}</span>
-                </div>
+                </nav>
                 <h1>{post.title}</h1>
+                <p className="blog-article-dek" data-geo-summary="">{post.excerpt}</p>
                 <div className="blog-article-meta">
                     <BlogAuthorByline author={post.author} size="md" showRole={false} className="blog-article-author" />
-                    <span className="blog-article-meta-item">
-                        <CalendarDays className="size-4" aria-hidden="true" />
-                        <time dateTime={post.publishedAt}>{formatBlogPublishedDate(post.publishedAt, "long")}</time>
-                    </span>
+                    <span className="blog-article-meta-sep" aria-hidden="true" />
+                    <time dateTime={post.publishedAt}>{formatBlogPublishedDate(post.publishedAt, "long")}</time>
                     {updatedAt ? (
-                        <span className="blog-article-meta-item">
-                            <RefreshCw className="size-4" aria-hidden="true" />
-                            {post.slug === "how-to-get-a-google-review-link" ? (
-                                <>Last updated: <time dateTime={updatedAt}>October 2026</time></>
-                            ) : (
-                                <>Updated <time dateTime={updatedAt}>{formatBlogPublishedDate(updatedAt, "long")}</time></>
-                            )}
+                        <span>
+                            Updated <time dateTime={updatedAt}>{formatBlogPublishedDate(updatedAt, "long")}</time>
                         </span>
                     ) : null}
-                    <span className="blog-article-meta-item">
-                        <Clock className="size-4" aria-hidden="true" />
-                        {post.readMinutes} min read
-                    </span>
+                    <span>{post.readMinutes} min read</span>
                 </div>
             </div>
+            {post.image ? (
+                <figure className="blog-article-cover">
+                    <div className="blog-article-cover-frame">
+                        <Image
+                            src={post.image.src}
+                            alt={post.image.alt}
+                            fill
+                            priority
+                            sizes="(max-width: 1240px) 100vw, 1160px"
+                        />
+                    </div>
+                    {post.image.caption ? <figcaption>{post.image.caption}</figcaption> : null}
+                </figure>
+            ) : null}
         </header>
     );
 }

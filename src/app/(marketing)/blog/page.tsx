@@ -16,7 +16,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         title: "Blog, Review Management & Local SEO Tips",
         description: "Practical guides on Google reviews, local SEO, and reputation management for local business owners.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

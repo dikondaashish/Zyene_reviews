@@ -2,12 +2,12 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { InViewPlay } from "@/components/marketing/in-view-play";
+import { AmbientVideo } from "@/components/marketing/ambient-video";
 import {
   BentoInsightsVisual,
   BentoReplyVisual,
   BentoRequestVisual,
   BentoStandVisual,
-  BentoVisibilityVisual,
 } from "@/components/marketing/marketing-home/home-bento-visuals";
 
 type Cell = { key: string; title: string; text: string; href: string; link: string; visual: ReactNode };
@@ -48,10 +48,17 @@ const CELLS: Cell[] = [
   {
     key: "visibility",
     title: "Show up in AI answers.",
-    text: "See whether ChatGPT, Perplexity and Gemini recommend you or a competitor.",
+    text: "Customers ask ChatGPT, Claude and Gemini where to go. See if they recommend you.",
     href: "/features/ai-visibility",
     link: "AI visibility",
-    visual: <BentoVisibilityVisual />,
+    visual: (
+      <AmbientVideo
+        className="ambient-video"
+        src="/videos/ai-answer-urgent-care-chatgpt.mp4"
+        poster="/videos/ai-answer-urgent-care-chatgpt-poster.jpg"
+        label="A parent asks ChatGPT for an urgent care open late on Fridays and gets local clinics ranked by reviews"
+      />
+    ),
   },
 ];
 

@@ -20,7 +20,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         title: "Review Management for Local Businesses",
         description: "Branded review requests, AI-assisted replies, private feedback follow-up, and practical reputation insights for local businesses.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

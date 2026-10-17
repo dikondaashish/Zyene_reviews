@@ -14,7 +14,7 @@ export const REVIEW_COLLECTION_CONTENT: FeatureLandingContent = {
     headline: "Ask every customer. Hear the unhappy ones first.",
     lede: "QR codes, NFC stands, texts and emails all open one branded page. Happy customers get help writing a Google review; lower ratings reach you privately.",
     visual: <ReviewCollectionHeroVisual />,
-    visualLabel: "Example requests screen with recent activity and a private feedback alert",
+    visualLabel: "Requests screen with recent activity and a private feedback alert",
   },
   flow: {
     title: "Every request ends on the same page",
@@ -75,7 +75,7 @@ export const REVIEW_COLLECTION_CONTENT: FeatureLandingContent = {
         "Generic webhook that works with “Webhooks by Zapier”",
         "REST API: POST /api/v1/requests/send with an X-API-Key header",
       ],
-      media: { kind: "visual", node: <ReviewCollectionTriggersVisual />, label: "Example API request and connected triggers" },
+      media: { kind: "visual", node: <ReviewCollectionTriggersVisual />, label: "API request and connected triggers" },
     },
   ],
   facts: [

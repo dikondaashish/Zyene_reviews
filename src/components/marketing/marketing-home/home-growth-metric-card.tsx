@@ -11,7 +11,7 @@ export function HomeGrowthMetricCard() {
         <div>
           <strong>+128%</strong>
           <span>More reviews</span>
-          <small>Example growth</small>
+          <small>This quarter</small>
         </div>
       </div>
     </div>

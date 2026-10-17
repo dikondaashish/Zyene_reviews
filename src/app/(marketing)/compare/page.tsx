@@ -18,7 +18,7 @@ export const metadata: Metadata = mergeMarketingSocial({
         title: "Compare Zyene Reviews With Review Platforms, 2026",
         description: "Honest comparisons: Zyene Reviews vs Birdeye, Podium, NiceJob, GatherUp, and Prosperly.",
     },
-});
+}, { ownShareImage: true });
 
 import PageView from "./page-view";
 

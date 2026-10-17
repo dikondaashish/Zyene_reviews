@@ -45,11 +45,10 @@ export function FeatureLandingView({ pillar, content }: { pillar: FeaturePillarP
       {content.demoTab && (
         <section className="marketing-section fl-demo" aria-labelledby="fl-demo-heading">
           <div className="marketing-container">
-            <h2 id="fl-demo-heading" className="fl-section-title">Click around a sample workspace</h2>
+            <h2 id="fl-demo-heading" className="fl-section-title">Click around the workspace</h2>
             <FeatureLandingStage
               label={`${pillar.navLabel} product demonstration`}
               initialTab={content.demoTab}
-              caption="Fictional business data. Safe to explore."
             />
           </div>
         </section>

@@ -14,7 +14,7 @@ export const REVIEW_PAGE_CONTENT: FeatureLandingContent = {
     headline: "Help happy customers say what they loved.",
     lede: "A branded page asks how the visit went, lets customers tap what stood out, and drafts a short review they can edit and post.",
     visual: <ReviewPageHeroVisual />,
-    visualLabel: "Example review page showing tag selection and an AI-drafted review",
+    visualLabel: "Review page showing tag selection and an AI-drafted review",
   },
   flow: {
     title: "From a scan to a Google review in five taps",

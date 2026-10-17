@@ -12,7 +12,7 @@ export const NFC_REVIEW_STANDS_CONTENT: FeatureLandingContent = {
     headline: "One tap opens your review page.",
     lede: "Order NFC stands inside Zyene for $4.99 each. Customers tap their phone or scan the printed QR code. No app, no typing.",
     visual: <NfcStandsHeroVisual />,
-    visualLabel: "Example in-app order screen for an NFC review stand",
+    visualLabel: "In-app order screen for an NFC review stand",
   },
   flow: {
     title: "From the dashboard to the counter",
