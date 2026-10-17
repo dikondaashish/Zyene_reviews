@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
+import { FreeToolJsonLd } from "@/components/seo/json-ld";
 import { ReviewResponseGeneratorClient } from "./review-response-generator-client";
 import { ReviewResponseGeneratorGuide } from "./review-response-generator-guide";
 
@@ -23,6 +24,7 @@ export const metadata: Metadata = mergeMarketingSocial({
 export default function ReviewResponseGeneratorPage() {
     return (
         <>
+            <FreeToolJsonLd name="Free Review Response Generator" description="Paste a customer review and get a professional response draft for Google, Yelp, or Facebook instantly." path="/tools/review-response-generator" />
             <ReviewResponseGeneratorClient />
             <ReviewResponseGeneratorGuide />
         </>

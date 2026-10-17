@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
 export const metadata: Metadata = mergeMarketingSocial({
-    title: "About Us",
+    title: "About Our Review Management Platform",
     description:
         "Zyene Reviews helps local businesses build a review routine: invite feedback, respond with AI assistance, follow up privately, and learn from trends.",
     alternates: { canonical: "https://www.zyenereviews.com/about" },
