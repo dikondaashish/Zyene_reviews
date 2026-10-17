@@ -2,17 +2,17 @@ import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 
 export const metadata: Metadata = mergeMarketingSocial({
-    title: "Help Center",
+    title: "Help Center: Review Management Guides",
     description: "Find guides and answers to common questions about Zyene Reviews. Getting started, reviews, campaigns, analytics, billing, and integrations.",
     alternates: { canonical: "https://www.zyenereviews.com/help" },
     openGraph: {
-        title: "Help Center",
+        title: "Help Center: Review Management Guides",
         description: "Guides and answers for Getting Started, Reviews, Campaigns, Analytics, Billing, and Integrations.",
         url: "https://www.zyenereviews.com/help",
     },
     twitter: {
         card: "summary_large_image",
-        title: "Help Center",
+        title: "Help Center: Review Management Guides",
         description: "Guides and answers for Getting Started, Reviews, Campaigns, Analytics, Billing, and Integrations.",
     },
 });

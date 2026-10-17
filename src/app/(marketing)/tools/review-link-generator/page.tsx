@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
+import { FreeToolJsonLd } from "@/components/seo/json-ld";
 import { ReviewLinkGeneratorClient } from "./review-link-generator-client";
 import { ReviewLinkGeneratorGuide } from "./review-link-generator-guide";
 
@@ -23,6 +24,7 @@ export const metadata: Metadata = mergeMarketingSocial({
 export default function ReviewLinkGeneratorPage() {
     return (
         <>
+            <FreeToolJsonLd name="Free Google Review Link Generator" description="Find your business on Google Maps and generate a direct Google review link to share by text, email, or QR code." path="/tools/review-link-generator" />
             <ReviewLinkGeneratorClient />
             <ReviewLinkGeneratorGuide />
         </>

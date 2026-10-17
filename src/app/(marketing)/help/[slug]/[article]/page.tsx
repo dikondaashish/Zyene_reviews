@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import {
     HELP_ARTICLE_MAP,
     HELP_BY_CATEGORY,
-    HELP_CATEGORIES,
     HELP_CATEGORY_SLUGS,
     isHelpCategory,
     helpArticleNestedPath,
@@ -29,9 +28,8 @@ export async function generateMetadata(
     if (!isHelpCategory(category)) return {};
     const article = HELP_ARTICLE_MAP[articleSlug];
     if (!article || article.category !== category) return {};
-    const catInfo = HELP_CATEGORIES[category];
     const path = helpArticleNestedPath(article);
-    const pageTitle = `${article.title} - ${catInfo.label}`;
+    const pageTitle = article.title;
     const canonicalUrl = `https://www.zyenereviews.com${path}`;
     return mergeMarketingSocial({
         title: pageTitle,
