@@ -11,7 +11,7 @@ export function HomeDashboardRecentReviews() {
   return (
     <>
       <div className="hero-reviews-heading">
-        <h3>Recent Reviews</h3>
+        <strong className="hero-reviews-title">Recent Reviews</strong>
         <a href="#home-product-tour">
           View all <ArrowRight aria-hidden="true" />
         </a>

@@ -10,7 +10,29 @@ export const MARKETING_OG_IMAGE = {
 
 export const MARKETING_TWITTER_IMAGE = "/og/og-default.png";
 
-/** Ensures marketing pages always ship OG/Twitter images (required by on-page SEO rules). */
+export const MARKETING_SITE_NAME = "Zyene Reviews";
+export const MARKETING_TWITTER_HANDLE = "@zyenereviews";
+
+/** Root `title.template` suffix (see `src/app/layout-metadata.ts`). */
+const TITLE_TEMPLATE_SUFFIX = ` | ${MARKETING_SITE_NAME}`;
+const MAX_TITLE_LENGTH = 60;
+
+/**
+ * Keeps the rendered `<title>` within 60 characters. When the page segment plus
+ * the " | Zyene Reviews" template would overflow, the segment is used as an
+ * absolute title so Google does not truncate the keyword-bearing part.
+ */
+export function fitMarketingTitle(title: Metadata["title"]): Metadata["title"] {
+    if (typeof title !== "string") return title;
+    if (title.length + TITLE_TEMPLATE_SUFFIX.length <= MAX_TITLE_LENGTH) return title;
+    return { absolute: title };
+}
+
+/**
+ * Ensures marketing pages always ship OG/Twitter images, site name, locale, and
+ * Twitter handle. Next.js replaces (not merges) `openGraph`/`twitter` per page,
+ * so root-layout values like `siteName` are lost unless re-applied here.
+ */
 export function mergeMarketingSocial(metadata: Metadata): Metadata {
     const og = metadata.openGraph;
     const ogImages =
@@ -22,6 +44,7 @@ export function mergeMarketingSocial(metadata: Metadata): Metadata {
         metadata.twitter && typeof metadata.twitter === "object"
             ? {
                   card: "summary_large_image" as const,
+                  site: MARKETING_TWITTER_HANDLE,
                   ...metadata.twitter,
                   images:
                       "images" in metadata.twitter &&
@@ -32,12 +55,18 @@ export function mergeMarketingSocial(metadata: Metadata): Metadata {
               }
             : {
                   card: "summary_large_image" as const,
+                  site: MARKETING_TWITTER_HANDLE,
                   images: [MARKETING_TWITTER_IMAGE],
               };
 
+    const ogSiteDefaults = { siteName: MARKETING_SITE_NAME, locale: "en_US" };
+
     return {
         ...metadata,
-        openGraph: og ? { ...og, images: ogImages } : { images: [MARKETING_OG_IMAGE] },
+        title: fitMarketingTitle(metadata.title),
+        openGraph: og
+            ? { ...ogSiteDefaults, ...og, images: ogImages }
+            : { ...ogSiteDefaults, images: [MARKETING_OG_IMAGE] },
         twitter,
     };
 }

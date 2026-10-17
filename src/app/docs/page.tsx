@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
-import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
+import { docsPageMetadata } from "@/lib/seo/docs-page-seo";
+import { DocsPageJsonLd } from "@/components/seo/json-ld";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 
-export const metadata: Metadata = mergeMarketingSocial({
-    title: "Developer Documentation",
-    description: "Documentation for Zyene Reviews: connect Google Business Profile, manage reviews, send review requests via API, and embed widgets.",
-    alternates: { canonical: "https://www.zyenereviews.com/docs" },
-    openGraph: { title: "Developer Docs, Zyene Reviews", description: "API reference, integration guides, plugin setup, and quickstart for Zyene Reviews.", url: "https://www.zyenereviews.com/docs" },
-    twitter: { card: "summary_large_image", title: "Developer Docs, Zyene Reviews", description: "API reference, integration guides, quickstart, and plugin setup." },
-});
+export const metadata: Metadata = docsPageMetadata("/docs");
 
 export default function DocsOverviewPage() {
     const tocItems: TocItem[] = [
@@ -22,6 +17,7 @@ export default function DocsOverviewPage() {
 
     return (
         <div className="flex w-full items-start">
+            <DocsPageJsonLd path="/docs" />
             <main className="prose-docs min-w-0 flex-1 px-6 py-8 lg:max-w-3xl lg:px-12">
                 <div className="mb-4 flex items-center text-sm text-muted-foreground">
                     Getting Started

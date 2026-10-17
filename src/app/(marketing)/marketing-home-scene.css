@@ -21,7 +21,7 @@
 .hero-dashboard-sidebar .is-selected { border-radius:.65cqw; background:#ffede6; color:#d84000; }
 .hero-dashboard-main { padding:2.5cqw 2cqw 1.5cqw; min-width:0; }
 .hero-dashboard-heading { display:flex; align-items:center; justify-content:space-between; gap:1cqw; }
-.marketing-site .hero-dashboard-heading h2 { font-size:2.7cqw; font-weight:650; line-height:1.25; letter-spacing:-.035em; }
+.marketing-site .hero-dashboard-title { display:block; font-family:var(--font-inter),sans-serif; text-wrap:balance; font-size:2.7cqw; font-weight:650; line-height:1.25; letter-spacing:-.035em; }
 .hero-dashboard-heading p { font-size:1.45cqw; color:#687386; margin-top:.55cqw; }
 .hero-dashboard-date { display:flex; align-items:center; gap:.65cqw; padding:1cqw; font-size:1.03cqw; white-space:nowrap; border:1px solid #e7eaf0; border-radius:.8cqw; }
 .hero-dashboard-date svg { width:1.3cqw; height:1.3cqw; }
@@ -33,7 +33,7 @@
 .hero-dashboard-metrics span { display:block; color:#687386; font-size:1.3cqw; margin-top:.35cqw; }
 .hero-dashboard-metrics small { display:inline-block; border-radius:1cqw; background:#eaf8ea; color:#308346; font-size:1.12cqw; padding:.25cqw .8cqw; margin-top:.9cqw; }
 .hero-reviews-heading { display:flex; align-items:center; justify-content:space-between; margin-top:2.2cqw; margin-bottom:1.2cqw; padding-right:7cqw; }
-.hero-reviews-heading h3 { font-size:1.6cqw; font-weight:600; }
+.hero-reviews-title { display:block; font-size:1.6cqw; font-weight:600; }
 .hero-reviews-heading a { display:inline-flex; align-items:center; gap:.5cqw; color:#3173df; font-size:1.15cqw; min-height:24px; }
 .hero-reviews-heading svg { width:1.3cqw; height:1.3cqw; }
 .hero-dashboard-reviews { border:1px solid #e9edf1; border-radius:1cqw; overflow:hidden; }
@@ -128,13 +128,13 @@
  .hero-laptop-enter { top:12%; left:2%; width:96%; }
  .hero-dashboard { min-height:54cqw; grid-template-columns:1fr; }
  .hero-dashboard-sidebar { display:none; }
- .marketing-site .hero-dashboard-heading h2 { font-size:4.5cqw; }
+ .marketing-site .hero-dashboard-title { font-size:4.5cqw; }
  .hero-dashboard-heading p { font-size:2.5cqw; }
  .hero-dashboard-date { font-size:2.1cqw; padding:.8cqw; }
  .hero-dashboard-date svg { width:2cqw; height:2cqw; }
  .hero-dashboard-metrics strong { font-size:5cqw; }
  .hero-dashboard-metrics span,.hero-dashboard-metrics small { font-size:2.5cqw; }
- .hero-reviews-heading h3 { font-size:3cqw; }
+ .hero-reviews-title { font-size:3cqw; }
  .hero-reviews-heading a { font-size:2.8cqw; }
  .hero-review-row p { font-size:2.5cqw; }
  .hero-review-row .hero-rating { font-size:3cqw; }

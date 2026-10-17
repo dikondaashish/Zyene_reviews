@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
-import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
+import { docsPageMetadata } from "@/lib/seo/docs-page-seo";
+import { DocsPageJsonLd } from "@/components/seo/json-ld";
 import Link from "next/link";
 import { DocCodeBlock } from "@/components/docs/doc-code-block";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 import { BASE_URL } from "@/config/env";
 
-export const metadata: Metadata = mergeMarketingSocial({
-    title: "Plugins & Embeds",
-    description: "Embed a review carousel, rating badge, or review feed on your website using Zyene Reviews iframe widgets. Copy-paste setup, no coding required.",
-    alternates: { canonical: "https://www.zyenereviews.com/docs/plugins" },
-    openGraph: { title: "Plugins & Embeds, Zyene Reviews Docs", description: "Embed review carousels, rating badges, and review feeds on your website, copy-paste iframe setup.", url: "https://www.zyenereviews.com/docs/plugins" },
-    twitter: { card: "summary_large_image", title: "Plugins & Embeds, Zyene Reviews", description: "Embed review carousels and rating badges on your website, no code required." },
-});
+export const metadata: Metadata = docsPageMetadata("/docs/plugins");
 
 export default function DocsPluginsPage() {
     const embedBase = `${BASE_URL}/w`;
@@ -23,6 +18,7 @@ export default function DocsPluginsPage() {
 
     return (
         <div className="flex w-full items-start">
+            <DocsPageJsonLd path="/docs/plugins" />
             <main className="prose-docs min-w-0 flex-1 px-6 py-8 lg:max-w-3xl lg:px-12">
                 <div className="mb-4 flex items-center text-sm text-muted-foreground">
                     Product

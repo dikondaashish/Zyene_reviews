@@ -20,7 +20,7 @@ export function HomeDashboardLaptop() {
               <div className="hero-dashboard-main">
                 <div className="hero-dashboard-heading">
                   <div>
-                    <h2>Your Reviews</h2>
+                    <strong className="hero-dashboard-title">Your Reviews</strong>
                     <p>See what your customers are saying</p>
                   </div>
                   <span className="hero-dashboard-date">

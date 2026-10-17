@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
-import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
+import { docsPageMetadata } from "@/lib/seo/docs-page-seo";
+import { DocsPageJsonLd } from "@/components/seo/json-ld";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 
-export const metadata: Metadata = mergeMarketingSocial({
-    title: "How Zyene Works",
-    description: "Understand the Zyene Reviews architecture, how review sync pipelines, AI reply generation, feedback routing, and campaign triggers work under the hood.",
-    alternates: { canonical: "https://www.zyenereviews.com/docs/how-it-works" },
-    openGraph: { title: "How Zyene Works, Docs", description: "Review sync pipelines, AI replies, feedback routing, and campaign automation explained.", url: "https://www.zyenereviews.com/docs/how-it-works" },
-    twitter: { card: "summary_large_image", title: "How Zyene Works, Docs", description: "Review sync pipelines, AI replies, feedback routing, and campaign automation." },
-});
+export const metadata: Metadata = docsPageMetadata("/docs/how-it-works");
 
 export default function DocsHowItWorksPage() {
     const toc: TocItem[] = [
@@ -20,6 +15,7 @@ export default function DocsHowItWorksPage() {
 
     return (
         <div className="flex w-full items-start">
+            <DocsPageJsonLd path="/docs/how-it-works" />
             <main className="prose-docs min-w-0 flex-1 px-6 py-8 lg:max-w-3xl lg:px-12">
                 <div className="mb-4 flex items-center text-sm text-muted-foreground">
                     Concepts

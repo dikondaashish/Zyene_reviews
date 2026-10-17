@@ -81,6 +81,7 @@ consumers before retirement. Dated evidence is not proof of current deployment.
 - `docs/security-readonly-verification-2026-09-29.sql` - saved read-only verification queries.
 - `docs/SEO_GROWTH_PLAN_2026-09-29.md` and `docs/SEO_BACKLINK_STRATEGY.md` - owner execution plans.
 - `docs/SEO_REMEDIATION_2026-09-13.md` - dated release and post-deployment checks.
+- `docs/SEO_COMPETITOR_GAP_REPORT_2026-10-16.md` - Birdeye/Podium/NiceJob content gaps and prioritized page plan (help/docs TechArticle schema shipped).
 - `docs/GOOGLE_SEO_AEO_RELEASE_PLAN.md` and `docs/AEO_*COMPLETION*.md` - phase plans and completion evidence.
 - `docs/REVIEWS_WORKSPACE_IMPLEMENTATION_PLAN.md` - draft plan; reconcile against current implementation.
 - `docs/design-handoff-2026-09/` - proposal/acceptance material and route inventory, not approved completion.
