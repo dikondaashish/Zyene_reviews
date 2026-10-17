@@ -42,15 +42,6 @@
 .home-platforms li img { width:24px; height:24px; border-radius:6px; filter:grayscale(1); opacity:.8; transition:filter 240ms var(--ease-out),opacity 240ms; }
 .home-platforms li:hover img { filter:none; opacity:1; }
 
-/* How it works */
-.home-how-grid { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:clamp(40px,7vw,112px); align-items:center; }
-.home-how h2 { max-width:16ch; }
-.home-how-steps { display:grid; margin-top:clamp(28px,3.5vw,44px); border-top:1px solid var(--border); }
-.home-how-steps li { display:grid; grid-template-columns:20px 1fr; gap:18px; padding:24px 0; border-bottom:1px solid var(--border); }
-.home-how-steps li > svg { margin-top:3px; color:var(--brand-orange); }
-.home-how-steps h3 { font-size:18px; font-weight:600; line-height:1.3; }
-.home-how-steps p { max-width:48ch; margin:6px 0 10px; color:var(--muted-foreground); font-size:15px; line-height:1.55; }
-
 /* Entrance: one short staggered rise on first paint; content is server-rendered and readable without it. */
 @media (prefers-reduced-motion:no-preference) {
   /* The headline is the LCP element, so it paints immediately; the supporting parts rise in after it. */
@@ -71,7 +62,7 @@
 }
 
 @media (max-width:1023px) {
-  .home-hero-grid,.home-how-grid { grid-template-columns:1fr; }
+  .home-hero-grid { grid-template-columns:1fr; }
   .home-hero-headline { max-width:none; }
 }
 @media (max-width:767px) {

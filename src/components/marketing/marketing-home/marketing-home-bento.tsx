@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { InViewPlay } from "@/components/marketing/in-view-play";
 import {
   BentoInsightsVisual,
   BentoReplyVisual,
@@ -62,7 +63,7 @@ export function MarketingHomeBento() {
           <p className="marketing-eyebrow">The platform</p>
           <h2 id="home-bento-heading">Everything your reputation needs. Nothing it doesn&apos;t.</h2>
         </div>
-        <div className="home-bento">
+        <InViewPlay className="home-bento" threshold={0.15}>
           {CELLS.map(({ key, title, text, href, link, visual }) => (
             <article key={key} className={`bento-cell bento-cell--${key}`}>
               <div className="bento-copy">
@@ -75,7 +76,7 @@ export function MarketingHomeBento() {
               <div className="bento-visual">{visual}</div>
             </article>
           ))}
-        </div>
+        </InViewPlay>
         <Link href="/features" className="marketing-button marketing-button-secondary home-bento-all">
           Explore all features <ArrowRight size={16} aria-hidden="true" />
         </Link>
