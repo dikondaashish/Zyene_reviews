@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
+import { FreeToolJsonLd } from "@/components/seo/json-ld";
 import { ReputationScoreCheckerClient } from "./reputation-score-checker-client";
 import { ReputationScoreCheckerGuide } from "./reputation-score-checker-guide";
 
@@ -23,6 +24,7 @@ export const metadata: Metadata = mergeMarketingSocial({
 export default function ReputationScoreCheckerPage() {
     return (
         <>
+            <FreeToolJsonLd name="Free Reputation Score Checker" description="Check a business's Google rating, review count, and estimated response rate in one free reputation snapshot." path="/tools/reputation-score-checker" />
             <ReputationScoreCheckerClient />
             <ReputationScoreCheckerGuide />
         </>

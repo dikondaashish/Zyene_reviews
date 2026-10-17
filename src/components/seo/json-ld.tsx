@@ -17,6 +17,7 @@ export { BreadcrumbJsonLd } from "./json-ld-breadcrumb";
 export { ProductJsonLd } from "./json-ld-product";
 export { ArticleJsonLd } from "./json-ld-article";
 export { WebPageJsonLd } from "./json-ld-web-page";
+export { FreeToolJsonLd } from "./json-ld-free-tool";
 export { IndustryLocalBusinessJsonLd } from "./json-ld-industry-local-business";
 export { PricingPlansJsonLd } from "./json-ld-pricing-plans";
 export { HowToJsonLd } from "./json-ld-howto";
