@@ -5,6 +5,7 @@ import type { Plan } from "@/services/stripe/plans";
 import { TestimonialGrid } from "@/components/marketing/social-proof";
 import { PricingClientHeroSection } from "./pricing-client-hero-section";
 import { PricingClientPlansSection } from "./pricing-client-plans-section";
+import { PricingClientPlanMatrixSection } from "./pricing-client-plan-matrix-section";
 import { PricingClientLocationScaleSection } from "./pricing-client-location-scale-section";
 import { PricingClientComparisonSection } from "./pricing-client-comparison-section";
 import { PricingClientFaqSection } from "./pricing-client-faq-section";
@@ -33,9 +34,10 @@ export function PricingPageClient({
     const pro = interval === "month" ? proMonthly : proYearly;
 
     return (
-        <div className="flex flex-col w-full">
+        <div className="flex w-full flex-col">
             <PricingClientHeroSection interval={interval} onIntervalChange={setInterval} />
             <PricingClientPlansSection starter={starter} pro={pro} enterprise={enterprise} signupUrl={signupUrl} />
+            <PricingClientPlanMatrixSection />
             <PricingClientLocationScaleSection />
             <PricingClientComparisonSection />
             <TestimonialGrid

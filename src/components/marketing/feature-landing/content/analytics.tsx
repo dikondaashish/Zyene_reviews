@@ -10,14 +10,13 @@ import {
 export const ANALYTICS_CONTENT: FeatureLandingContent = {
   slug: "analytics",
   hero: {
-    eyebrow: "Analytics & reports",
-    headline: "See how many reviews came in, and which requests brought them.",
-    lede: "Analytics shows new reviews, average rating, response rate and requests sent for the period you pick. Then it follows every review request from send to the Google hand-off, so you know which channel works.",
+    kicker: "Analytics & reports",
+    headline: "See which requests bring in reviews.",
+    lede: "New reviews, average rating, response rate and requests sent for the period you pick, plus each request followed to the Google hand-off.",
     visual: <AnalyticsHeroVisual />,
     visualLabel: "Example analytics screen with four headline numbers and a review volume chart",
   },
   flow: {
-    eyebrow: "How it works",
     title: "From synced reviews to a report you can share",
     intro: "Analytics reads the reviews you sync and the requests you send. There is nothing to set up beyond connecting your platforms.",
     steps: [

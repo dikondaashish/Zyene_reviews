@@ -9,14 +9,13 @@ import { ReviewWidgetsBuilderVisual } from "@/components/marketing/feature-landi
 export const REVIEW_WIDGETS_CONTENT: FeatureLandingContent = {
   slug: "review-widgets",
   hero: {
-    eyebrow: "Review widgets",
-    headline: "Put your best Google reviews where people decide to book.",
-    lede: "Pick one of 20 ready-made widgets, choose which reviews it shows, match it to your brand, and paste one snippet into your website.",
+    kicker: "Review widgets",
+    headline: "Show your best reviews where people book.",
+    lede: "Pick one of 20 ready-made widgets, choose which reviews appear, match your brand, and paste one snippet into your site.",
     visual: <ReviewWidgetsHeroVisual />,
     visualLabel: "Example salon website with an embedded Google review carousel and a floating rating badge",
   },
   flow: {
-    eyebrow: "How it works",
     title: "From template to live on your site in five steps",
     intro: "Open Integrations → Website Elements, start from a template and change as much or as little as you like.",
     steps: [

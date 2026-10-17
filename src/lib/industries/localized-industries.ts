@@ -26,9 +26,9 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         metaTitle: "Gestión de reseñas para restaurantes",
         metaDescription:
             "Automatiza solicitudes de reseñas en Google, responde con IA y protege tu reputación. Hecho para restaurantes independientes y cadenas locales.",
-        heroTitle: "Más reseñas de 5 estrellas para tu restaurante",
+        heroTitle: "Mesas llenas. Reseñas recientes.",
         heroSubtitle:
-            "Envía solicitudes por SMS después de cada visita, responde reseñas en minutos y evita que una mala experiencia dañe tu rating en Google.",
+            "Pide una reseña después de cada visita, responde en Google automáticamente y da a los comensales insatisfechos una vía privada para hablar contigo.",
         bullets: [
             "Solicitudes automáticas tras el pago o la reserva",
             "Respuestas con IA en español e inglés",
@@ -43,9 +43,9 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         metaTitle: "Software de reseñas para clínicas dentales",
         metaDescription:
             "Clínicas dentales: reseñas de Google, respuestas con IA y escudo de feedback negativo con enfoque en privacidad. Desde $29.99/mes.",
-        heroTitle: "Reputación online para clínicas dentales",
+        heroTitle: "La clínica en la que los pacientes confían primero.",
         heroSubtitle:
-            "Borradores que tu equipo debe revisar para proteger la privacidad, solicitudes post-cita y respuestas profesionales sin pasar horas en Google.",
+            "Pide reseñas después de cada cita, aprueba respuestas cuidadosas y atiende en privado las dudas de facturación o espera.",
         bullets: [
             "Escudo de feedback negativo privado",
             "Seguimiento de competidores cercanos",
@@ -60,9 +60,9 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         metaTitle: "Reseñas para servicios del hogar",
         metaDescription:
             "Fontanería, HVAC y electricidad: convierte trabajos terminados en reseñas de Google con solicitudes SMS y respuestas con IA.",
-        heroTitle: "Más trabajos gracias a mejores reseñas",
+        heroTitle: "Gana el trabajo antes de tocar la puerta.",
         heroSubtitle:
-            "Tus técnicos terminan el trabajo; Zyene envía el enlace de reseña por SMS. Tú respondes desde el panel.",
+            "Pide la reseña al cerrar el trabajo, responde desde la camioneta y atiende en privado las dudas sobre precios.",
         bullets: [
             "SMS post-servicio con un toque",
             "IA para respuestas a reseñas mixtas",
@@ -77,9 +77,9 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         metaTitle: "Gestión de reseñas para salones",
         metaDescription:
             "Salones y spas: pide reseñas tras cada cita, responde con IA y muestra tus mejores comentarios en tu sitio web.",
-        heroTitle: "Llena tu agenda con reseñas reales",
+        heroTitle: "Cada buena cita, a la vista de todos.",
         heroSubtitle:
-            "Las clientas felices dejan reseñas en segundos; las insatisfechas hablan contigo en privado primero.",
+            "Pide una reseña después de cada visita, responde con la voz de tu salón y entérate en privado cuando un corte o color no salió bien.",
         bullets: [
             "Recordatorios SMS post-visita",
             "Respuestas con tu tono de marca",
@@ -94,9 +94,9 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         metaTitle: "Reseñas para talleres y auto repair",
         metaDescription:
             "Convierte órdenes de trabajo completadas en reseñas de Google. Ideal para talleres independientes.",
-        heroTitle: "Confianza en Google para tu taller",
+        heroTitle: "El taller al que confían su auto.",
         heroSubtitle:
-            "Después de cada reparación, pide una reseña automáticamente y responde con IA cuando lleguen comentarios nuevos.",
+            "Pide una reseña en cada entrega, responde mientras el taller sigue ocupado y aclara en privado las dudas sobre presupuestos.",
         bullets: [
             "Integración con flujos de caja / Zapier",
             "Alertas de reseñas negativas",
@@ -111,9 +111,9 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         metaTitle: "Reseñas para consultorios y clínicas",
         metaDescription:
             "Consultorios médicos: gestión de reputación con privacidad, solicitudes éticas de reseñas y respuestas con tono clínico.",
-        heroTitle: "Reputación médica sin comprometer la privacidad",
+        heroTitle: "Reseñas constantes. Respuestas cuidadosas.",
         heroSubtitle:
-            "Solicitudes éticas, respuestas alineadas con normativa y visibilidad en búsquedas locales.",
+            "Pide reseñas después de cada consulta, revisa los borradores de IA antes de publicarlos y envía las quejas por espera a recepción.",
         bullets: [
             "Respuestas con tono clínico",
             "Multi-ubicación para grupos pequeños",
@@ -128,9 +128,9 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         metaTitle: "Reseñas para hoteles y hospedaje",
         metaDescription:
             "Hoteles: mejora tu puntuación en Google con solicitudes post-estancia, respuestas con IA y panel multi-propiedad.",
-        heroTitle: "Mejor rating para tu propiedad",
+        heroTitle: "Una recepción para tu reputación.",
         heroSubtitle:
-            "Automatiza solicitudes después del checkout y responde reseñas desde un solo panel por ubicación.",
+            "Pide reseñas en el checkout, responde en Google con tu tono y entérate de problemas en la habitación cuando aún puedes resolverlos.",
         bullets: [
             "SMS post-checkout",
             "Panel multi-propiedad",
@@ -145,9 +145,9 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         metaTitle: "Reseñas para gimnasios y estudios fitness",
         metaDescription:
             "Gimnasios y estudios fitness: pide reseñas a nuevos miembros, responde con IA y compite con grandes cadenas locales.",
-        heroTitle: "Destaca frente a las grandes cadenas",
+        heroTitle: "Llega a enero con reseñas recientes.",
         heroSubtitle:
-            "Cada nuevo miembro recibe un SMS para dejar reseña; tú mantienes 4.8+ estrellas en Google.",
+            "Reúne reseñas todo el año, responde con la voz de tu gimnasio y atiende en privado las dudas de cancelación o cobro.",
         bullets: [
             "Automatización post-primera clase",
             "Seguimiento de competidores",

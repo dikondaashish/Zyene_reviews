@@ -1,17 +1,19 @@
-import { LandingHero } from "@/components/marketing/landing-hero";
 import Link from "next/link";
+import { IndustryHero } from "@/components/marketing/industries/industry-hero";
+import { SIGNUP_URL } from "@/config/env";
 
 export function IndustriesHeroSection() {
     return (
-        <LandingHero
-            eyebrow="Made for local business"
-            title="A clearer review routine for your industry."
-            description="Invite feedback fairly, respond with care, follow up on private concerns, and learn from the trends that shape your reputation."
-            image={{ src: "/images/industries/window-installation.webp", alt: "A tradesperson fitting a window frame with a cordless drill" }}
-            primary={{ label: "Find your industry", href: "#industry-grid" }}
-            secondary={{ label: "Explore pricing", href: "/pricing" }}
+        <IndustryHero
+            kicker="Review management by industry"
+            headline="Built for the way your business runs."
+            lede="Restaurants, clinics, shops and trades earn reviews in different moments. Find yours and see the routine."
+            primary={{ label: "Start free trial", href: SIGNUP_URL, track: "trial" }}
+            secondary={{ label: "Find your industry", href: "#industry-grid" }}
+            terms="7-day free trial, card required. Plans from $29.99/month. Cancel anytime in Billing."
+            image={{ src: "/images/industries/restaurant-guests.webp", alt: "Guests sharing a meal and conversation at a restaurant" }}
         >
-            <Link href="/es/industries" className="underline underline-offset-4">Ver soluciones en español</Link>
-        </LandingHero>
+            <Link href="/es/industries">Ver soluciones en español</Link>
+        </IndustryHero>
     );
 }
