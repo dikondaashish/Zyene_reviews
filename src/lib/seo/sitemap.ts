@@ -27,6 +27,7 @@ export function getCoreSitemap(): MetadataRoute.Sitemap {
     return [
         { url: `${BASE_URL}/`, changeFrequency: "weekly", priority: 1.0 },
         { url: `${BASE_URL}/pricing`, changeFrequency: "weekly", priority: 0.95 },
+        { url: `${BASE_URL}/small-business`, changeFrequency: "monthly", priority: 0.85 },
         { url: `${BASE_URL}/agencies`, changeFrequency: "monthly", priority: 0.75 },
         { url: `${BASE_URL}/about`, changeFrequency: "monthly", priority: 0.6 },
         { url: `${BASE_URL}/contact`, changeFrequency: "monthly", priority: 0.6 },

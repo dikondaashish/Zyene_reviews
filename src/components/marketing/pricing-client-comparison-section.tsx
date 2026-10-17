@@ -77,6 +77,10 @@ export function PricingClientComparisonSection() {
                         Birdeye pricing breakdown
                     </Link>
                     {" · "}
+                    <Link href="/small-business" className="underline hover:text-foreground">
+                        Review management for small business
+                    </Link>
+                    {" · "}
                     <Link href="/compare" className="underline hover:text-foreground">
                         All comparisons
                     </Link>

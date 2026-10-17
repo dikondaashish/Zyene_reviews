@@ -83,10 +83,10 @@ export function buildGrowthPageInventory(): GrowthPageEntry[] {
         entry({ path: "/forgot-password", label: "Forgot password", phase: 0, priority: " - ", pageType: "auth", inSitemap: false, indexed: false }),
         entry({ path: "/reset-password", label: "Reset password", phase: 0, priority: "P0", pageType: "auth", inSitemap: false, indexed: false }),
         entry({ path: "/onboarding", label: "Onboarding", phase: 2, priority: "P0", pageType: "app", inSitemap: false, indexed: false }),
-
         // ── Phase 2 conversion ──
         entry({ path: "/pricing", label: "Pricing", phase: 2, priority: "P0", pageType: "conversion" }),
         entry({ path: "/features", label: "Features", phase: 2, priority: "P0", pageType: "conversion" }),
+        entry({ path: "/small-business", label: "Small business", phase: 2, priority: "P0", pageType: "conversion" }),
         ...FEATURE_PILLAR_SLUGS.map((slug) =>
             entry({
                 path: `/features/${slug}`,

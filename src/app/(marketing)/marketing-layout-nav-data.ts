@@ -10,6 +10,7 @@ import {
     HelpCircle,
     Award,
     Handshake,
+    Store,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { FEATURE_PILLARS } from "@/lib/growth/feature-pillars";
@@ -38,6 +39,7 @@ export const PRODUCT_LINKS: MarketingNavLink[] = [
 ];
 
 export const SOLUTIONS_LINKS: MarketingNavLink[] = [
+    { href: "/small-business", label: "Small Business", icon: Store, desc: "Review management for single-location businesses" },
     { href: "/industries", label: "By Industry", icon: Building2, desc: "Restaurants, dental, auto repair, and more" },
     { href: "/compare", label: "Compare Tools", icon: Scale, desc: "Compare Zyene Reviews with leading review platforms" },
     { href: "/enterprise", label: "Enterprise", icon: Building2, desc: "Multi-location review workflows and white-label options" },

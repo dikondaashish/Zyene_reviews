@@ -24,6 +24,7 @@ export const MARKETING_ROUTE_PREFIXES = [
     "/case-studies",
     "/partners",
     "/agencies",
+    "/small-business",
     "/demo",
     "/enterprise",
     "/es",
