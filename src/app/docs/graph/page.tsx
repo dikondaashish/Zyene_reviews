@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
-import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
+import { docsPageMetadata } from "@/lib/seo/docs-page-seo";
+import { DocsPageJsonLd } from "@/components/seo/json-ld";
 import { DocCopyPageButton } from "@/components/docs/doc-copy-page-button";
 import { DocToc, type TocItem } from "@/components/docs/doc-toc";
 
-export const metadata: Metadata = mergeMarketingSocial({
-    title: "Review Graph",
-    description: "Learn about the Zyene Reviews review graph model, how reviews, ratings, sources, and sentiment connect across Google, Yelp, and Facebook.",
-    alternates: { canonical: "https://www.zyenereviews.com/docs/graph" },
-    openGraph: { title: "Review Graph, Zyene Reviews Docs", description: "How reviews, ratings, sources, and sentiment data connect in the Zyene graph model.", url: "https://www.zyenereviews.com/docs/graph" },
-    twitter: { card: "summary_large_image", title: "Review Graph, Zyene Reviews Docs", description: "How reviews, ratings, sources, and sentiment data connect in Zyene." },
-});
+export const metadata: Metadata = docsPageMetadata("/docs/graph");
 
 export default function DocsReviewGraphPage() {
     const toc: TocItem[] = [
@@ -19,6 +14,7 @@ export default function DocsReviewGraphPage() {
 
     return (
         <div className="flex w-full items-start">
+            <DocsPageJsonLd path="/docs/graph" />
             <main className="prose-docs min-w-0 flex-1 px-6 py-8 lg:max-w-3xl lg:px-12">
                 <div className="mb-4 flex items-center text-sm text-muted-foreground">
                     Concepts

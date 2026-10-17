@@ -9,7 +9,7 @@ import {
     type HelpArticle,
 } from "@/lib/content/help-data";
 import { ContentRenderer } from "@/components/marketing/content-renderer";
-import { BreadcrumbJsonLd, FAQPageJsonLd } from "@/components/seo/json-ld";
+import { FAQPageJsonLd, TechArticleJsonLd } from "@/components/seo/json-ld";
 import { extractFaqItemsFromHelpBody } from "@/lib/seo/help-faq-from-body";
 import { HelpCategoryIcon } from "@/components/marketing/help-category-icon";
 
@@ -33,8 +33,16 @@ export function HelpArticleView({
     return (
         <>
             {faqItems.length > 0 ? <FAQPageJsonLd faqs={faqItems} /> : null}
-            <BreadcrumbJsonLd
-                items={[
+            <TechArticleJsonLd
+                article={{
+                    url: canonicalUrl,
+                    headline: article.title,
+                    description: article.excerpt,
+                    section: catInfo.label,
+                    isPartOf: { name: "Zyene Reviews Help Center", url: "https://www.zyenereviews.com/help" },
+                    readMinutes: article.readMinutes,
+                }}
+                breadcrumbs={[
                     { name: "Home", url: "https://www.zyenereviews.com/" },
                     { name: "Help Center", url: "https://www.zyenereviews.com/help" },
                     { name: catInfo.label, url: `https://www.zyenereviews.com${categoryPath}` },
