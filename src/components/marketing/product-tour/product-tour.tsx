@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type KeyboardEvent } from "react";
+import { useId, useState, useSyncExternalStore, type KeyboardEvent } from "react";
 import { BarChart3, Coffee, MessageSquare, RotateCcw, Send, ShieldCheck, ChevronDown, Lightbulb } from "lucide-react";
 import { ReviewDemo } from "@/components/marketing/product-tour/review-demo";
 import { RequestDemo } from "@/components/marketing/product-tour/request-demo";
@@ -15,6 +15,10 @@ const TABS = [
 ] as const;
 export type ProductTourTab = (typeof TABS)[number]["key"];
 
+const subscribeToClientReady = () => () => {};
+const clientReadySnapshot = () => true;
+const serverReadySnapshot = () => false;
+
 export function ProductTour({ initialTab = "reviews", activeTab, onTabChange }: {
   initialTab?: ProductTourTab; activeTab?: ProductTourTab; onTabChange?: (tab: ProductTourTab) => void;
 }) {
@@ -22,7 +26,9 @@ export function ProductTour({ initialTab = "reviews", activeTab, onTabChange }: 
   const [localTab, setLocalTab] = useState(initialTab);
   const setActive = (tab: ProductTourTab) => { setLocalTab(tab); onTabChange?.(tab); };
   function reset() { setVersion(value => value + 1); setActive(initialTab); }
-  return <div className="tour-container"><ProductTourSession key={version} active={activeTab ?? localTab} setActive={setActive} onReset={reset} /></div>;
+  /* data-ready marks hydration so browser tests (and scripts) know the demo is interactive. */
+  const ready = useSyncExternalStore(subscribeToClientReady, clientReadySnapshot, serverReadySnapshot);
+  return <div className="tour-container" data-ready={ready}><ProductTourSession key={version} active={activeTab ?? localTab} setActive={setActive} onReset={reset} /></div>;
 }
 
 function ProductTourSession({ active, setActive, onReset }: {
