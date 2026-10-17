@@ -9,7 +9,7 @@ test("appointment booking opens the calendar overlay from desktop and mobile nav
   await page.goto("/", { waitUntil: "networkidle" });
 
   const desktopNav = page.getByRole("navigation", { name: "Main navigation" });
-  await desktopNav.getByRole("button", { name: "Book an appointment" }).click();
+  await desktopNav.getByRole("button", { name: "Book a demo" }).click();
   const bookingDialog = page.getByRole("dialog", { name: "Book a Zyene Reviews demo" });
   await expect(bookingDialog).toBeVisible();
   await expect(bookingDialog.getByTitle("Schedule a Zyene Reviews demo on Cal.com")).toHaveAttribute("src", /cal\.com\/zyenereviews\/15min/);
@@ -22,6 +22,6 @@ test("appointment booking opens the calendar overlay from desktop and mobile nav
   await menuButton.click();
   const mobileNav = page.locator("#marketing-mobile-nav");
   await expect(mobileNav).toBeVisible();
-  await mobileNav.getByRole("button", { name: "Book an appointment" }).click();
+  await mobileNav.getByRole("button", { name: "Book a demo" }).click();
   await expect(bookingDialog).toBeVisible();
 });

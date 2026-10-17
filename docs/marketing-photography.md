@@ -13,6 +13,10 @@ The restaurant, café, and home-services replacements are photographs sourced fr
 | `public/images/industries/restaurant-guests.webp` | ELEVATE | [Group of People Sitting on Dining Table](https://www.pexels.com/photo/group-of-people-sitting-on-dining-table-1267321/) |
 | `public/images/industries/window-installation.webp` | Ksenia Chernaya | [Handyman Installing Window Frame with Drill in House](https://www.pexels.com/photo/handyman-installing-window-frame-with-drill-in-house-5691544/) |
 
+## Generated imagery
+
+`public/marketing/home/hero-cafe-backdrop.webp` (2000 x 848, 62 KB) is a generated image (Google `gemini-3-pro-image`, 2026-10-17) used only as the soft backdrop behind the homepage product window. It shows no identifiable people, text or brands. Prompt summary: a wide, shallow-depth-of-field café interior in warm late-afternoon light, a calm out-of-focus center for the product window, no text, logos, screens or faces in focus.
+
 ## License and treatment
 
 All four source pages identify the photographs as free to use under the [Pexels license](https://www.pexels.com/license/), which permits website and marketing use and modification. It does not permit implying endorsement by the people or brands pictured. These photographs are used as contextual imagery; testimonial author portraits remain initials.

@@ -1,8 +1,32 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
+
+const PLATFORMS = [
+  { name: "Google Business Profile", domain: "google.com" },
+  { name: "Facebook", domain: "facebook.com" },
+  { name: "Yelp", domain: "yelp.com" },
+  { name: "Square", domain: "squareup.com" },
+];
 
 export function MarketingHomeTrustStrip() {
-    return (
-        <section className="w-full py-12" aria-label="Supported review platforms"><div className="marketing-container flex flex-col items-center justify-between gap-8 border-b border-border pb-12 md:flex-row"><p className="max-w-56 text-center text-sm text-muted-foreground md:text-left">All the places they talk about you.<br />All together.</p><div className="flex items-center gap-10 text-2xl font-semibold tracking-tight"><span>Google</span><span>Facebook</span><span>Yelp</span></div><Link href="/integrations" className="inline-flex items-center gap-3 text-sm font-medium">Explore integrations<ArrowUpRight size={16} aria-hidden="true" /></Link></div></section>
-    );
+  return (
+    <section className="home-platforms" aria-labelledby="home-platforms-heading">
+      <div className="marketing-container home-platforms-row">
+        <h2 id="home-platforms-heading">Connects to the places your customers already talk about you</h2>
+        <ul>
+          {PLATFORMS.map(({ name, domain }) => (
+            <li key={domain}>
+              <Image src={getBrandLogoUrl(domain)} alt="" width={28} height={28} unoptimized />
+              <span>{name}</span>
+            </li>
+          ))}
+        </ul>
+        <Link href="/integrations" className="home-text-link">
+          All integrations <ArrowRight size={14} aria-hidden="true" />
+        </Link>
+      </div>
+    </section>
+  );
 }

@@ -474,7 +474,7 @@
 }
 
 /* The offer is opt-in; the portal remains keyboard-contained above the page. */
-.home-guide-offer { display:flex; align-items:center; justify-content:space-between; gap:32px; max-width:1200px; margin:0 auto; padding:64px 28px; border-top:1px solid var(--border); }
+.home-guide-offer { display:flex; align-items:center; justify-content:space-between; gap:32px; width:min(100% - 2 * var(--mk-gutter), var(--mk-max)); margin:0 auto 24px; padding:40px 0 48px; border-top:1px solid var(--border); }
 .home-lead-wizard-dialog { position:fixed; top:50%; left:50%; translate:-50% -50%; z-index:91; width:min(840px,calc(100% - 32px)); outline:none; }
 .home-lead-wizard-close { width:44px; height:44px; }
 .home-lead-wizard :focus-visible { outline:2px solid var(--brand-orange); outline-offset:4px; }
