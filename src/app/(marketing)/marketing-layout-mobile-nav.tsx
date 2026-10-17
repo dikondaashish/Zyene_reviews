@@ -13,7 +13,7 @@ export function MarketingLayoutMobileNav({ loginUrl, signupUrl, onNavigate, onBo
     onBookAppointment: () => void;
 }) {
     return (
-        <nav id="marketing-mobile-nav" aria-label="Main navigation" className="lg:hidden max-h-[calc(100dvh-76px)] overflow-y-auto border-t border-border bg-background px-5 pb-6">
+        <nav id="marketing-mobile-nav" aria-label="Main navigation" className="lg:hidden max-h-[calc(100dvh-76px)] overflow-y-auto border-t border-border bg-card px-5 pb-6">
             {[
                 { title: "Platform", links: PRODUCT_LINKS },
                 { title: "Industries & teams", links: [...NAV_INDUSTRIES.map(item => ({ label: item.name, href: `/industries/${item.slug}` })), ...SOLUTIONS_LINKS] },
