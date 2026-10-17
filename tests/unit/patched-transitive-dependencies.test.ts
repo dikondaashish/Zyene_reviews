@@ -12,7 +12,7 @@ it("locks every affected package to a patched version and installs the patched r
     const lock = yaml.parse(readFileSync("pnpm-lock.yaml", "utf8"));
     const patched: Record<string, string[]> = {
         axios: ["1.20.0"], "fast-uri": ["3.1.8"], "ip-address": ["10.7.2"],
-        "brace-expansion": ["1.1.21", "5.0.12"], next: ["16.3.8"],
+        "brace-expansion": ["1.1.21", "5.0.12"], next: ["16.4.2"],
         dompurify: ["3.4.16"], "@grpc/grpc-js": ["1.14.5"],
     };
     for (const [name, allowed] of Object.entries(patched)) {
@@ -23,7 +23,7 @@ it("locks every affected package to a patched version and installs the patched r
     }
     const twilioRequire = createRequire(require.resolve("twilio/package.json"));
     expect((twilioRequire("axios/package.json") as { version: string }).version).toBe("1.20.0");
-    expect((require("next/package.json") as { version: string }).version).toBe("16.3.8");
+    expect((require("next/package.json") as { version: string }).version).toBe("16.4.2");
     const manifest = JSON.parse(readFileSync("package.json", "utf8")) as {
         pnpm: { overrides: Record<string, string> };
     };
