@@ -4,7 +4,7 @@ test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.addInitScript(() => localStorage.setItem("cookie-consent", "declined"));
   await page.goto("/#home-product-tour");
-  await expect(page.locator(".tour-story-section[data-ready=true]")).toBeVisible();
+  await expect(page.locator("#home-product-tour .tour-container[data-ready=true]")).toBeVisible();
 });
 
 test("automatically types and publishes an eligible new sample review", async ({ page }) => {

@@ -4,7 +4,7 @@ test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.addInitScript(() => localStorage.setItem("cookie-consent", "declined"));
   await page.goto("/#home-product-tour");
-  await expect(page.locator(".tour-story-section[data-ready=true]")).toBeVisible();
+  await expect(page.locator("#home-product-tour .tour-container[data-ready=true]")).toBeVisible();
 });
 
 test("types a tone draft, preserves edits, publishes and resets", async ({ page }) => {
@@ -55,30 +55,3 @@ test("fits narrow screens with usable controls", async ({ page }) => {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
-
-test("device tabs and the left story stay in sync", async ({ page }) => {
-  const demo = page.locator("#home-product-tour");
-  await demo.getByRole("tab", { name: "Review requests" }).click();
-  await expect(demo.locator(".tour-story-copy h3")).toHaveText("A small ask. A lasting impression.");
-  await demo.getByRole("tab", { name: "Reporting" }).click();
-  await expect(demo.locator(".tour-story-copy h3")).toHaveText("Less guesswork. More perspective.");
-  await demo.getByRole("button", { name: "01 Replies", exact: true }).click();
-  await expect(demo.getByRole("tab", { name: "Reviews & replies" })).toHaveAttribute("aria-selected", "true");
-});
-
-test("scrolling advances the pinned story and works in reverse", async ({ page }) => {
-  const section = page.locator(".tour-story-section");
-  const scrollToChapter = async (progress: number) => {
-    await section.evaluate((element, fraction) => {
-      const top = element.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top: top + (element.clientHeight - window.innerHeight) * fraction, behavior: "instant" });
-    }, progress);
-  };
-  await scrollToChapter(.52);
-  await expect(section.getByRole("tab", { name: "Review requests" })).toHaveAttribute("aria-selected", "true");
-  await expect(section.locator(".tour-story-copy h3")).toHaveText("A small ask. A lasting impression.");
-  await scrollToChapter(.92);
-  await expect(section.getByRole("tab", { name: "Reporting" })).toHaveAttribute("aria-selected", "true");
-  await scrollToChapter(.05);
-  await expect(section.getByRole("tab", { name: "Reviews & replies" })).toHaveAttribute("aria-selected", "true");
-});
