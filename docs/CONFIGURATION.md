@@ -74,6 +74,7 @@ Missing **required** vars accessed via `required()` throw at use/import time wit
 | `TWILIO_MESSAGING_SERVICE_SID` | Preferred SMS/RCS sender pool; supports SMS fallback |
 | `TWILIO_PHONE_NUMBER` | Legacy SMS sender fallback |
 | `RESEND_API_KEY`, `RESEND_FROM` | Product email |
+| `SUPPORT_CHAT_LEAD_INBOX` | Optional. Inbox for website chat leads (default `zyene.inc@gmail.com`) |
 | `RESEND_WEBHOOK_SECRET` | Delivery events |
 | `RESEND_COLLECTRATINGS_API_KEY` / `FROM` | Review-request From domain |
 

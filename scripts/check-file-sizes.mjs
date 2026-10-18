@@ -104,7 +104,6 @@ const BASELINE = {
     max: 220,
     why: "TODO: split shared prop types by domain",
   },
-  "src/domains/ai/adapters/vertex-adapter.ts": { max: 217, why: "TODO: split" },
   "src/services/clover/process-payment-event.ts": {
     max: 215,
     why: "TODO: split",
