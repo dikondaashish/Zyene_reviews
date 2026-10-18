@@ -33,7 +33,7 @@ export function SupportChatHeader({ onClose, onRequestHuman, onReset }: HeaderPr
     return (
         <header className="support-chat-header">
             <span className="support-chat-header__avatar">
-                <Image src={SUPPORT_AGENT_AVATAR} alt="" width={40} height={40} />
+                <Image src={SUPPORT_AGENT_AVATAR} alt="" width={32} height={32} />
                 <span className="support-chat-header__status" aria-hidden="true" />
             </span>
             <div className="support-chat-header__titles">
@@ -49,7 +49,7 @@ export function SupportChatHeader({ onClose, onRequestHuman, onReset }: HeaderPr
                     aria-expanded={menuOpen}
                     onClick={() => setMenuOpen((open) => !open)}
                 >
-                    <MoreHorizontal size={20} aria-hidden="true" />
+                    <MoreHorizontal size={18} aria-hidden="true" />
                 </button>
                 {menuOpen ? (
                     <div className="support-chat-menu" role="menu">
@@ -59,7 +59,7 @@ export function SupportChatHeader({ onClose, onRequestHuman, onReset }: HeaderPr
                     </div>
                 ) : null}
                 <button type="button" className="support-chat-icon-button" aria-label="Close chat" onClick={onClose}>
-                    <X size={20} aria-hidden="true" />
+                    <X size={18} aria-hidden="true" />
                 </button>
             </div>
         </header>

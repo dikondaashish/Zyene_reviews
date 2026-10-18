@@ -61,7 +61,7 @@ export const SupportChatComposer = forwardRef<HTMLTextAreaElement, ComposerProps
                 className="support-chat-composer__input"
                 placeholder={disabled && disabledHint ? disabledHint : "Ask a question..."}
                 aria-label="Ask a question"
-                rows={2}
+                rows={1}
                 maxLength={MAX_USER_MESSAGE_CHARS}
                 value={draft}
                 disabled={disabled}
@@ -74,7 +74,7 @@ export const SupportChatComposer = forwardRef<HTMLTextAreaElement, ComposerProps
                 ) : null}
                 <SupportChatEmojiPicker disabled={disabled} onPick={(emoji) => setDraft((value) => `${value}${emoji}`.slice(0, MAX_USER_MESSAGE_CHARS))} />
                 <button type="submit" className="support-chat-send" aria-label="Send message" disabled={!canSend}>
-                    <ArrowUp size={20} strokeWidth={2.25} aria-hidden="true" />
+                    <ArrowUp size={16} strokeWidth={2.25} aria-hidden="true" />
                 </button>
             </div>
         </form>
