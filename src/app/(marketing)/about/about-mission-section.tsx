@@ -3,7 +3,7 @@ import { Building2, Mail, Shield, Users } from "lucide-react";
 export function AboutMissionSection() {
     return (
         <>
-                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-4">About Zyene Reviews</h2>
+                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-4">Who we are</h2>
                     <p className="text-lg text-muted-foreground mb-12 leading-relaxed">
                         Zyene Reviews is a product of{" "}
                         <strong>
@@ -26,7 +26,7 @@ export function AboutMissionSection() {
                                 <Building2 className="size-6" />
                             </div>
                             <div>
-                                <h2 className="font-semibold text-foreground mb-1">Our Mission</h2>
+                                <h3 className="font-semibold text-foreground mb-1">Our Mission</h3>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
                                     To make online reputation management accessible and simple for every local business,
                                     regardless of size or technical ability.
@@ -39,7 +39,7 @@ export function AboutMissionSection() {
                                 <Users className="size-6" />
                             </div>
                             <div>
-                                <h2 className="font-semibold text-foreground mb-1">Who We Serve</h2>
+                                <h3 className="font-semibold text-foreground mb-1">Who We Serve</h3>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
                                     Restaurants, dental offices, auto shops, salons, and other local businesses
                                     that rely on customer reviews to attract and retain customers.
@@ -52,7 +52,7 @@ export function AboutMissionSection() {
                                 <Shield className="size-6" />
                             </div>
                             <div>
-                                <h2 className="font-semibold text-foreground mb-1">Our Values</h2>
+                                <h3 className="font-semibold text-foreground mb-1">Our Values</h3>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
                                     We build tools for authentic customer feedback, thoughtful responses, and prompt service recovery.
                                 </p>
@@ -64,7 +64,7 @@ export function AboutMissionSection() {
                                 <Mail className="size-6" />
                             </div>
                             <div>
-                                <h2 className="font-semibold text-foreground mb-1">Get in Touch</h2>
+                                <h3 className="font-semibold text-foreground mb-1">Get in Touch</h3>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
                                     Questions? Feedback? We&apos;d love to hear from you.<br />
                                     Email us at{" "}

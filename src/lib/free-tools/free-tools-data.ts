@@ -23,15 +23,15 @@ export const FREE_TOOLS: FreeToolDefinition[] = [
         slug: "reputation-score-checker",
         title: "Reputation Score Checker",
         description:
-            "See your public Google rating, review count, and a quick response-rate estimate - then get the full report by email.",
+            "See your public Google rating and review count in one snapshot, then email yourself a copy.",
         icon: "chart",
         leadSource: "tool_reputation_score",
     },
     {
         slug: "review-response-generator",
-        title: "Review Response Generator",
+        title: "Review Response Templates",
         description:
-            "Paste any review and get a professional AI draft reply. Enter your email to unlock 5 more templates.",
+            "Pick a star rating, get a ready-to-edit reply template. Enter your email to unlock 5 more templates.",
         icon: "message",
         leadSource: "tool_review_response",
     },

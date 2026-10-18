@@ -5,7 +5,7 @@ export const negativeFeedbackShieldPost: BlogPostSource = {
     slug: "negative-feedback-shield",
     title: "Negative Feedback Shield: How It Works for Local Businesses",
     excerpt:
-        "How Zyene Reviews’ Negative Feedback Shield helps you capture private feedback early, respond faster, and configure a rating-based feedback path for your team.",
+        "How Zyene Reviews’ Negative Feedback Shield adds an optional private channel to your review page while every customer keeps the same public review link.",
     pillar: "reputation-management",
     pillarLabel: "Reputation Management",
     publishedAt: "2026-05-24",
@@ -13,12 +13,12 @@ export const negativeFeedbackShieldPost: BlogPostSource = {
     author: { name: "Karthik", role: "Founder" },
     metaTitle: "Negative Feedback Shield Explained",
     metaDescription:
-        "Negative Feedback Shield: capture private feedback early, respond fast, and configure a rating-based feedback path for service recovery.",
+        "Negative Feedback Shield: an optional private feedback channel next to the public review link every customer gets. How it works for service recovery.",
     keywords: [
         "negative feedback shield",
         "private customer feedback",
         "rating-based feedback workflow",
-        "respond to complaints before escalation",
+        "optional private customer feedback channel",
         "zyene reviews shield",
     ],
     relatedSlugs: [
@@ -39,17 +39,17 @@ export const negativeFeedbackShieldPost: BlogPostSource = {
         {
             question: "What is Negative Feedback Shield in Zyene Reviews?",
             answer:
-                "It is an optional step on your branded review request page (collectratings.com). After a customer rates their experience, lower scores can open a private feedback form so your team can respond quickly, while ratings that meet your configured threshold continue to the assisted public-review path. It is included on paid Zyene Reviews plans.",
+                "It is an optional private channel on your branded review request page (collectratings.com). Every customer gets the same page and can post a public review. Customers who want to reach your team directly can also send private feedback, and your team is alerted. It is included on paid Zyene Reviews plans.",
         },
         {
-            question: "How does Negative Feedback Shield route feedback?",
+            question: "Does Shield keep low-rated customers from posting publicly?",
             answer:
-                "Shield is a configurable rating-based workflow. A rating that meets your threshold continues to the assisted public-review path; a lower rating opens private feedback for your team. Configure and use the flow under your business's documented review and service-recovery process.",
+                "No. Every rating sees the public review option. A lower rating also shows the private feedback form, alongside a link to post on Google, so the customer chooses. Zyene does not block, hide, or steer customers away from public reviews.",
         },
         {
             question: "When does a customer see the private feedback form?",
             answer:
-                "When they select a rating below the threshold you configure (many businesses default to four stars for the assisted public-review path). That step prioritizes a direct message to your team so you can respond before issues escalate. The next step is determined by your page settings and configured workflow.",
+                "The private form appears when a customer selects a rating below the threshold you configure, and it always sits next to the link to post publicly. Higher ratings go to the assisted draft step, which also ends with the public review link. The threshold changes which helper the customer sees first, not whether they can post.",
         },
         {
             question: "What does the public-review path measure?",
@@ -68,33 +68,34 @@ export const negativeFeedbackShieldPost: BlogPostSource = {
             text: "Negative Feedback Shield helps local businesses capture private feedback early and respond faster when a visit did not go well. It is a configurable, rating-based service-recovery workflow.",
         },
         { type: "p", text: "This guide explains the product workflow in plain English. It is for owners comparing Shield to a basic “please review us on Google” text blast or a manual complaint inbox." },
-        { type: "warning", text: "Use this workflow with real customers. Do not offer incentives tied to a rating or review text, and configure timing, messaging, and routing under your business's documented review process." },
+        { type: "warning", text: "Use this workflow with real customers. Do not offer incentives tied to a rating or review text, configure timing and messaging under your business's documented review process, and keep the public review option visible for every rating." },
         { type: "h2", text: "What Negative Feedback Shield Does" },
         {
             type: "summary",
-            text: "Shield sits inside review collection on Zyene Reviews. You send SMS, email, or QR requests to a branded page; customers rate their experience; your team gets a faster path to private comments when something went wrong.",
+            text: "Shield sits inside review collection on Zyene Reviews. You send SMS, email, or QR requests to a branded page. Every customer can post a public review, and customers who want to reach you directly can also leave private comments.",
         },
         { type: "ul", items: [
             "Collects a self-reported star rating on your business’s review page",
-            "Offers an assisted public review path when the customer’s rating meets your configured threshold (tags, AI draft, Google posting guidance)",
-            "Opens a private feedback form when the rating is below your threshold so you can respond quickly",
+            "Gives every customer the public review link, whatever rating they choose",
+            "Offers an assisted draft (tags, editable AI suggestion, Google posting guidance) for higher ratings",
+            "Shows an optional private feedback form next to the public link for lower ratings",
             "Records private submissions in Zyene Reviews alongside normal review monitoring alerts",
-            "Works with campaigns, QR codes, and automation triggers (e.g., POS or Zapier) on paid plans",
+            "Works with campaigns, QR codes, an inbound webhook (for example a Zapier step), the API, and Square in early access on paid plans",
         ]},
         { type: "h2", text: "Step-by-Step Workflow" },
         {
             type: "summary",
-            text: "Five steps from the customer’s tap to owner action. Thresholds are configurable in your dashboard. The goal is faster issue resolution.",
+            text: "Five steps from the customer’s tap to owner action. Thresholds are configurable in your dashboard. Every step keeps the public review option available.",
         },
-        { type: "warning", text: "Workflow note: Shield captures private feedback before issues escalate and gives your business a chance to respond quickly. Keep the customer-facing copy, timing, and routing aligned with your documented process." },
+        { type: "warning", text: "Workflow note: Shield is an extra way for customers to reach you, not a filter. Keep the public review link visible for every rating, and keep customer-facing copy and timing aligned with your documented process." },
         { type: "ol", items: [
             "Customer receives your review request (SMS, email, or QR) and opens your branded collectratings.com page.",
             "Customer selects a star rating for their experience after opening the campaign's branded page.",
-            "If the rating meets your threshold (commonly 4-5 stars): they can continue toward the assisted public review flow - optional tags, AI-assisted draft, then guidance to post on Google if they choose.",
-            "If the rating is below your threshold (commonly 1-3 stars): they see a private feedback form first (apology message, comment box, optional contact fields) so your team can respond before the issue escalates.",
+            "If the rating meets your threshold: they can use optional tags and an editable AI suggestion, then post their own review on Google if they choose.",
+            "If the rating is below your threshold: they see an optional private feedback form (comment box, optional contact fields) next to a link to post on Google. They can do either or both.",
             "You are notified through Zyene Reviews (private feedback record plus your normal review monitoring). Resolve the issue and use your normal follow-up process when appropriate.",
         ]},
-        { type: "quote", text: "Workflow diagram (conceptual example)\n\nReview request sent\n    ↓\nCustomer rates their experience (1-5 stars)\n    ↓\n┌────────────────────────────┬─────────────────────────────┐\n│ Meets your threshold       │ Below your threshold        │\n│ Assisted public review path│ Private feedback + alert    │\n│ (optional Google handoff)  │ (respond quickly in-app)    │\n└────────────────────────────┴─────────────────────────────┘\n\nExample product flow only. A Google handoff does not confirm a published review." },
+        { type: "quote", text: "Workflow diagram (conceptual example)\n\nReview request sent\n    ↓\nCustomer rates their experience (1-5 stars)\n    ↓\n┌────────────────────────────┬─────────────────────────────┐\n│ Meets your threshold       │ Below your threshold        │\n│ Assisted draft + Google    │ Private form + Google link  │\n│ review link                │ (customer chooses)          │\n└────────────────────────────┴─────────────────────────────┘\n\nExample product flow only. A Google handoff does not confirm a published review." },
         { type: "h2", text: "What You See in Zyene Reviews" },
         {
             type: "summary",
@@ -104,12 +105,12 @@ export const negativeFeedbackShieldPost: BlogPostSource = {
         { type: "h2", text: "How This Differs From Basic Review Requests" },
         {
             type: "summary",
-            text: "A plain Google review link sends everyone to the same destination with no structured private channel. Shield adds early private capture and faster owner response when ratings are low.",
+            text: "A plain Google review link sends everyone to the same destination with no structured private channel. Shield keeps that same public link for everyone and adds an optional private channel to reach the owner.",
         },
         { type: "ul", items: [
             "Basic SMS review request: one public link; you may only hear about problems after a post goes live.",
             "Manual complaint handling: reactive - often after damage is visible on Google or social.",
-            "Negative Feedback Shield: private feedback capture when scores are low and an assisted public-review path when scores meet your threshold - built for organized service recovery.",
+            "Negative Feedback Shield: the same public link for everyone, plus an optional private form and owner alert, built for organized service recovery.",
         ]},
         { type: "h2", text: "Comparison Table" },
         {
@@ -121,7 +122,7 @@ export const negativeFeedbackShieldPost: BlogPostSource = {
             rows: [
                 ["Basic SMS review request", "Anyone with a link", "Usually only via public Google post", "You learn after a public post", "Simple volume plays"],
                 ["Manual complaint handling", "Customers who reach out", "Email, phone, or front desk - unstructured", "Inbox or manager memory", "Very small teams"],
-                ["Zyene Negative Feedback Shield", "Customers in your campaign", "Private form to respond quickly (configurable threshold)", "Alert + private feedback queue", "Owners who want faster issue resolution"],
+                ["Zyene Negative Feedback Shield", "Customers in your campaign", "Public link plus an optional private form", "Alert + private feedback queue", "Owners who want faster issue resolution"],
             ],
         }},
         { type: "h2", text: "Honest Limits (What Shield Is Not)" },

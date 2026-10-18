@@ -32,8 +32,8 @@ export const SECURITY_SECTIONS = [
     },
     {
         icon: ShieldCheck,
-        title: "Configurable feedback workflows",
-        body: "Negative Feedback Shield records lower-rating feedback privately so your team can respond quickly. Businesses configure the customer journey for their own review and service-recovery process.",
+        title: "Private feedback stays private",
+        body: "When a customer chooses to send feedback through the optional private form (Negative Feedback Shield), it is stored with your other business data and is visible only to your team. It sits alongside the public review link every customer gets, not in place of it.",
     },
     {
         icon: KeyRound,

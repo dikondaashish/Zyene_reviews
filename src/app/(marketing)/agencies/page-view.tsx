@@ -4,21 +4,23 @@ import { AgenciesSection2Section } from "./agencies-section-2-section";
 import { AgenciesSection3Section } from "./agencies-section-3-section";
 import { AgenciesSection4Section } from "./agencies-section-4-section";
 import { AgenciesSection5Section } from "./agencies-section-5-section";
+import { AgenciesSection6Section } from "./agencies-section-6-section";
 
 export default function AgenciesPage() {
     return (
         <>
             <BreadcrumbJsonLd
-                            items={[
-                                { name: "Home", url: "https://www.zyenereviews.com/" },
-                                { name: "Agencies", url: "https://www.zyenereviews.com/agencies" },
-                            ]}
-                        />
+                items={[
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Agencies", url: "https://www.zyenereviews.com/agencies" },
+                ]}
+            />
             <AgenciesHeroSection />
             <AgenciesSection2Section />
             <AgenciesSection3Section />
             <AgenciesSection4Section />
             <AgenciesSection5Section />
+            <AgenciesSection6Section />
         </>
     );
 }

@@ -1,0 +1,16 @@
+/* Legal page typography (privacy, terms, data retention).
+ * @tailwindcss/typography is not installed, so `prose` utilities do nothing.
+ * Lives in the components layer and uses :where() so per-element utility
+ * classes still win. Anything inside `.not-prose` (cards, tables) is skipped. */
+@layer components {
+  .legal-prose { color:var(--muted-foreground); line-height:1.75; }
+  .legal-prose :where(h2:not(.not-prose *)) { color:var(--foreground); font-size:1.5rem; font-weight:600; line-height:1.3; margin:2.5rem 0 1rem; }
+  .legal-prose :where(h3:not(.not-prose *)) { color:var(--foreground); font-size:1.125rem; font-weight:600; line-height:1.4; margin:1.75rem 0 0.75rem; }
+  .legal-prose :where(p:not(.not-prose *)) { margin:0 0 1.25rem; }
+  .legal-prose :where(ul:not(.not-prose *)) { list-style:disc; padding-left:1.5rem; margin:0 0 1.5rem; }
+  .legal-prose :where(ol:not(.not-prose *)) { list-style:decimal; padding-left:1.5rem; margin:0 0 1.5rem; }
+  .legal-prose :where(li:not(.not-prose *)) { margin-bottom:0.5rem; }
+  .legal-prose :where(strong) { color:var(--foreground); font-weight:600; }
+  .legal-prose :where(a) { color:var(--foreground); font-weight:500; text-decoration:underline; text-decoration-color:var(--primary); text-underline-offset:3px; }
+  .legal-prose :where(a:hover) { text-decoration-thickness:2px; }
+}

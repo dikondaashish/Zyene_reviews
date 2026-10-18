@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Clock, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, Clock } from "lucide-react";
 import { SIGNUP_URL } from "@/config/env";
 import {
     HELP_BY_CATEGORY,
@@ -9,9 +8,10 @@ import {
     type HelpArticle,
 } from "@/lib/content/help-data";
 import { ContentRenderer } from "@/components/marketing/content-renderer";
+import { LandingHero } from "@/components/marketing/landing-hero";
+import { MarketingClosingBand } from "@/components/marketing/marketing-closing-band";
 import { FAQPageJsonLd, TechArticleJsonLd } from "@/components/seo/json-ld";
 import { extractFaqItemsFromHelpBody } from "@/lib/seo/help-faq-from-body";
-import { HelpCategoryIcon } from "@/components/marketing/help-category-icon";
 
 export function HelpArticleView({
     article,
@@ -50,101 +50,65 @@ export function HelpArticleView({
                 ]}
             />
 
-            <header className="pt-16 pb-10 px-4 bg-muted border-b border-border">
-                <div className="container mx-auto max-w-4xl">
-                    <nav className="flex items-center gap-2 text-xs text-muted-foreground mb-6 flex-wrap">
-                        <Link href="/help" className="hover:text-primary transition-colors">
-                            Help Center
-                        </Link>
-                        <ChevronRight className="size-3.5" />
-                        <Link href={categoryPath} className="hover:text-primary transition-colors">
-                            {catInfo.label}
-                        </Link>
-                        <ChevronRight className="size-3.5" />
-                        <span className="text-muted-foreground truncate max-w-[200px]">
-                            {article.title}
-                        </span>
-                    </nav>
+            <LandingHero eyebrow={catInfo.label} title={article.title} description={article.excerpt} variant="reading" media={{ kind: "none" }}>
+                <nav className="mi-read-meta" aria-label="Breadcrumb">
+                    <Link href="/help">Help Center</Link>
+                    <Link href={categoryPath}>{catInfo.label}</Link>
+                    <span className="inline-flex items-center gap-1.5">
+                        <Clock size={14} aria-hidden="true" /> {article.readMinutes} min read
+                    </span>
+                </nav>
+            </LandingHero>
 
-                    <div className="flex items-center gap-2 mb-4">
-                        <HelpCategoryIcon category={article.category} className="text-primary" size={20} />
-                        <span className="text-sm font-semibold text-muted-foreground">{catInfo.label}</span>
-                    </div>
-                    <h1 className="text-[length:var(--fs-display)] font-semibold tracking-tight text-foreground mb-3">
-                        {article.title}
-                    </h1>
-                    <p className="text-lg text-muted-foreground mb-6">{article.excerpt}</p>
-                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                        <Clock className="size-4" />
-                        {article.readMinutes} min read
-                    </div>
-                </div>
-            </header>
-
-            <div className="py-12 px-4 bg-background">
-                <div className="container mx-auto max-w-5xl">
-                    <div className="grid lg:grid-cols-[1fr_280px] gap-12 items-start">
-                        <article>
-                            <ContentRenderer sections={article.body} />
-                            <div className="mt-12 bg-muted border border-border rounded-2xl p-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-bold text-foreground mb-1">Still have questions?</p>
-                                    <p className="text-sm text-muted-foreground">
-                                        Our support team is available Mon-Fri, 9am-6pm EST.
-                                    </p>
-                                </div>
-                                <Button variant="outline" size="sm" className="gap-2 rounded-lg" asChild>
-                                    <a href="mailto:support@zyenereviews.com" className="shrink-0">
-                                        Email Support <ArrowRight className="size-3.5" />
-                                    </a>
-                                </Button>
+            <section className="marketing-section mi-section-tight">
+                <div className="marketing-container mi-read" data-aside="end">
+                    <article className="mi-read-main">
+                        <ContentRenderer sections={article.body} />
+                        <div className="mi-panel">
+                            <h2>Still have questions?</h2>
+                            <p>Our support team is available Mon-Fri, 9am-6pm EST.</p>
+                            <div className="mi-panel-foot">
+                                <Link href="/contact" className="home-text-link">
+                                    Contact support <ArrowRight size={14} aria-hidden="true" />
+                                </Link>
                             </div>
-                        </article>
+                        </div>
+                    </article>
 
-                        <aside className="hidden lg:block space-y-6 sticky top-24">
-                            <div className="bg-card border border-border rounded-2xl p-6">
-                                <p className="text-sm font-bold text-foreground mb-1">New to Zyene?</p>
-                                <p className="text-xs text-muted-foreground mb-4">
-                                    Start with a 7-day free trial. Full access to all features.
-                                </p>
-                                <Button size="sm" className="w-full gap-2" asChild>
-                                    <Link href={SIGNUP_URL} data-track="trial" data-track-location="help-sidebar">
-                                        Start Free Trial <ArrowRight className="size-3.5" />
-                                    </Link>
-                                </Button>
-                            </div>
-
-                            {relatedArticles.length > 0 && (
-                                <div className="bg-card border border-border rounded-2xl p-6">
-                                    <p className="text-sm font-bold text-foreground mb-4">In this category</p>
-                                    <div className="space-y-3">
-                                        {relatedArticles.map((a) => (
-                                            <Link
-                                                key={a.slug}
-                                                href={helpArticleNestedPath(a)}
-                                                className="block text-xs font-medium leading-snug text-muted-foreground hover:text-primary transition-colors"
-                                            >
-                                                {a.title}
-                                            </Link>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </aside>
-                    </div>
-                </div>
-            </div>
-
-            <section className="py-12 px-4 bg-muted border-t border-border">
-                <div className="container mx-auto max-w-4xl">
-                    <Link
-                        href={categoryPath}
-                        className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-                    >
-                        ← Back to {catInfo.label}
-                    </Link>
+                    <aside className="mi-read-aside">
+                        {relatedArticles.length > 0 && (
+                            <nav aria-labelledby="help-related-heading">
+                                <h2 id="help-related-heading">In this category</h2>
+                                <ul className="mi-read-links">
+                                    {relatedArticles.map((a) => (
+                                        <li key={a.slug}>
+                                            <Link href={helpArticleNestedPath(a)}>{a.title}</Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </nav>
+                        )}
+                        <div>
+                            <h2>New to Zyene?</h2>
+                            <p>Start with a 7-day free trial.</p>
+                            <Link href={SIGNUP_URL} className="home-text-link" data-track="trial" data-track-location="help-sidebar">
+                                Start 7-day free trial <ArrowRight size={14} aria-hidden="true" />
+                            </Link>
+                        </div>
+                        <Link href={categoryPath} className="home-text-link">
+                            Back to {catInfo.label}
+                        </Link>
+                    </aside>
                 </div>
             </section>
+
+            <MarketingClosingBand
+                title="Put this guide to work in Zyene"
+                text="Start a 7-day free trial, or talk to our support team if anything in your setup is unclear."
+                secondary={{ label: "Contact support", href: "/contact" }}
+                trackLocation="help-article-final"
+                headingId="help-article-final-heading"
+            />
         </>
     );
 }

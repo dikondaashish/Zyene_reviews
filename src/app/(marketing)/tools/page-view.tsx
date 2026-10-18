@@ -1,11 +1,18 @@
 import Link from "next/link";
 import { ArrowRight, Link2, BarChart3, MessageSquare } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { FREE_TOOLS } from "@/lib/free-tools/free-tools-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
-import { SIGNUP_URL } from "@/config/env";
 import { LandingHero } from "@/components/marketing/landing-hero";
+import { MarketingClosingBand } from "@/components/marketing/marketing-closing-band";
+
 const ICONS = { link: Link2, chart: BarChart3, message: MessageSquare };
+
+const TOOL_NOTES = [
+    { icon: Link2, title: "Google Review Link Generator", text: "Looks up your Google Place ID to create a direct URL that opens the Google Maps review box for customers without manual searching." },
+    { icon: BarChart3, title: "Reputation Score Checker", text: "Retrieves your current public Google star rating and total review count in a fast diagnostic snapshot." },
+    { icon: MessageSquare, title: "Review Response Templates", text: "Provides customizable, rating-specific reply templates to help you structure professional responses to customer reviews." },
+] as const;
+
 export default function FreeToolsHubPage() {
     return (
         <>
@@ -17,67 +24,67 @@ export default function FreeToolsHubPage() {
             />
             <LandingHero image={{ src: "/marketing/home/cafe-conversation.webp", alt: "A barista talking with a customer at work" }} eyebrow="Free tools for local business" title="A useful next step. On us." description="Create a Google review link, check your reputation, or find the words for your next reply. No signup needed to try." />
 
-            <section className="py-20 px-4">
-                <div className="container mx-auto max-w-5xl grid grid-cols-1 gap-5">
-                    {FREE_TOOLS.map((tool) => {
-                        const Icon = ICONS[tool.icon];
-                        return (
-                            <Link
-                                key={tool.slug}
-                                href={`/tools/${tool.slug}`}
-                                className="group bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-primary transition-colors grid grid-cols-1 gap-3 sm:grid-cols-[56px_1fr_auto] sm:items-center"
-                            >
-                                <Icon className="text-primary size-7" aria-hidden="true" />
-                                <div><h2 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
-                                    {tool.title}
-                                </h2>
-                                <p className="text-sm text-muted-foreground flex-1">{tool.description}</p></div>
-                                <span className="text-sm font-semibold text-primary inline-flex items-center gap-1">
-                                    Use tool <ArrowRight className="size-4" />
-                                </span>
-                            </Link>
-                        );
-                    })}
+            <section className="marketing-section" aria-labelledby="tools-list-heading">
+                <div className="marketing-container">
+                    <div className="mi-head">
+                        <p className="marketing-eyebrow">Free tools</p>
+                        <h2 id="tools-list-heading">Pick a tool and try it now.</h2>
+                    </div>
+                    <ul className="mi-cards">
+                        {FREE_TOOLS.map((tool) => {
+                            const Icon = ICONS[tool.icon];
+                            return (
+                                <li key={tool.slug} className="flex">
+                                    <Link href={`/tools/${tool.slug}`} className="mi-card w-full">
+                                        <Icon size={20} aria-hidden="true" />
+                                        <h3>{tool.title}</h3>
+                                        <p>{tool.description}</p>
+                                        <span className="home-text-link">
+                                            Use tool <ArrowRight size={14} aria-hidden="true" />
+                                        </span>
+                                    </Link>
+                                </li>
+                            );
+                        })}
+                    </ul>
                 </div>
             </section>
-            <section className="py-12 px-4 border-b border-border bg-muted/20">
-                <div className="container mx-auto max-w-3xl space-y-6">
-                    <div>
-                        <h2 className="text-2xl font-bold text-foreground mb-3">Free review tools for local businesses</h2>
-                        <p className="text-muted-foreground leading-relaxed">
+
+            <section className="marketing-section mi-section-tight" aria-labelledby="tools-about-heading">
+                <div className="marketing-container mi-split">
+                    <div className="mi-head">
+                        <p className="marketing-eyebrow">What each tool does</p>
+                        <h2 id="tools-about-heading">Free review tools for local businesses</h2>
+                        <p>
                             These free utilities help local businesses handle essential reputation tasks without creating an account: creating a direct Google review link, checking public rating metrics, and drafting professional responses.
                         </p>
                     </div>
-                    <div className="space-y-3 rounded-xl border border-border bg-card p-5">
-                        <h3 className="font-semibold text-foreground text-base">What each tool does:</h3>
-                        <ul className="space-y-2.5 text-sm text-muted-foreground">
-                            <li>
-                                <strong className="text-foreground">Google Review Link Generator:</strong> Looks up your Google Place ID to create a direct URL that opens the Google Maps review box for customers without manual searching.
-                            </li>
-                            <li>
-                                <strong className="text-foreground">Reputation Score Checker:</strong> Retrieves your current public Google star rating and total review count in a fast diagnostic snapshot.
-                            </li>
-                            <li>
-                                <strong className="text-foreground">Review Response Generator:</strong> Provides customizable, rating-specific reply templates to help you structure professional responses to customer reviews.
-                            </li>
+                    <div>
+                        <ul className="mi-list">
+                            {TOOL_NOTES.map(({ icon: Icon, title, text }) => (
+                                <li key={title}>
+                                    <Icon size={18} aria-hidden="true" />
+                                    <div>
+                                        <h3>{title}</h3>
+                                        <p>{text}</p>
+                                    </div>
+                                </li>
+                            ))}
                         </ul>
+                        <p className="mi-table-note">
+                            When you are ready to automate review collection after customer visits, monitor incoming feedback across platforms in one inbox, and use AI reply workflows, Zyene Reviews provides connected plans starting at $29.99/mo with a 7-day free trial.
+                        </p>
                     </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                        When you are ready to automate review collection after customer visits, monitor incoming feedback across platforms in one inbox, and use AI reply workflows, Zyene Reviews provides connected plans starting at $29.99/mo with a 7-day free trial.
-                    </p>
                 </div>
             </section>
-            <section className="py-16 px-4 bg-muted/30 border-t border-border">
-                <div className="container mx-auto max-w-3xl text-center">
-                    <h2 className="text-2xl font-bold mb-3">Want automation behind these tools?</h2>
-                    <p className="text-muted-foreground mb-6">
-                        Zyene Reviews sends review requests, drafts AI replies, automatically replies to eligible new Google reviews, and tracks competitors - from $29.99/mo with a 7-day free trial.
-                    </p>
-                    <Button asChild size="lg" className="rounded-full">
-                        <Link href={SIGNUP_URL} data-track="trial" data-track-location="tools">Start free trial</Link>
-                    </Button>
-                </div>
-            </section>
+
+            <MarketingClosingBand
+                title="Want automation behind these tools?"
+                text="Zyene Reviews sends review requests, drafts AI replies, automatically replies to eligible new Google reviews, and tracks competitors - from $29.99/mo with a 7-day free trial."
+                image={{ src: "/images/industries/dental-candid-v2.webp", alt: "Dental team preparing instruments beside an empty treatment chair" }}
+                trackLocation="tools"
+                headingId="tools-final-heading"
+            />
         </>
     );
 }

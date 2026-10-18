@@ -1,48 +1,47 @@
-
-
 import Link from "next/link";
-import { Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, Check } from "lucide-react";
 import { AGENCY_PRICING_TIERS } from "@/lib/enterprise/agency-pricing-data";
-import { PARTNER_CONTACT_EMAIL } from "@/lib/campaign-content/partnerships-data";
 
 export function AgenciesSection3Section() {
     return (
-        <section className="py-20 px-4 bg-background border-b border-border">
-                <div className="container mx-auto max-w-5xl">
-                    <h2 className="text-[length:var(--fs-h2)] font-semibold mb-8">Agency pricing tiers</h2>
-                    <p className="text-muted-foreground mb-10 max-w-2xl">
+        <section className="marketing-section" aria-labelledby="agencies-pricing-heading">
+            <div className="marketing-container">
+                <div className="mi-head">
+                    <p className="marketing-eyebrow">Pricing</p>
+                    <h2 id="agencies-pricing-heading">Agency pricing tiers</h2>
+                    <p>
                         Choose pricing that grows with your client roster. Configure automatic Google replies for each eligible client business with its own tone and star threshold. Our partnerships team can help scope your rollout.
                     </p>
-                    <Link href="/features/ai-replies" className="mb-6 inline-flex min-h-11 items-center font-semibold text-primary underline underline-offset-4">See automatic Google replies →</Link>
-                    <div className="grid md:grid-cols-3 gap-6">
-                        {AGENCY_PRICING_TIERS.map((tier) => (
-                            <article
-                                key={tier.id}
-                                className="bg-card border border-border rounded-2xl p-6 flex flex-col"
-                            >
-                                <h3 className="text-xl font-bold">{tier.name}</h3>
-                                <p className="text-sm text-primary font-medium mt-1">{tier.clientRange}</p>
-                                <p className="text-sm text-muted-foreground mt-3 mb-4">{tier.priceLabel}</p>
-                                <ul className="space-y-2 flex-1 mb-6">
-                                    {tier.highlights.map((h) => (
-                                        <li key={h} className="flex gap-2 text-sm text-muted-foreground">
-                                            <Check className="text-primary shrink-0 size-4" />
-                                            {h}
-                                        </li>
-                                    ))}
-                                </ul>
-                                <Button variant="outline" className="w-full" asChild>
-                                    <a
-                                    href={`mailto:${PARTNER_CONTACT_EMAIL}?subject=${encodeURIComponent(tier.cta)}`}
-                                >
-                                        {tier.cta}
-                                    </a>
-                                </Button>
-                            </article>
-                        ))}
-                    </div>
+                    <Link href="/features/ai-replies" className="home-text-link">
+                        See automatic Google replies <ArrowRight size={14} aria-hidden="true" />
+                    </Link>
                 </div>
-            </section>
+                <ul className="mi-cards" data-cols="3">
+                    {AGENCY_PRICING_TIERS.map((tier) => (
+                        <li key={tier.id} className="mi-card agencies-tier">
+                            <h3>{tier.name}</h3>
+                            <span className="mi-card-meta">{tier.clientRange}</span>
+                            <p>{tier.priceLabel}</p>
+                            <ul className="mi-checks">
+                                {tier.highlights.map((highlight) => (
+                                    <li key={highlight}>
+                                        <Check size={16} aria-hidden="true" />
+                                        {highlight}
+                                    </li>
+                                ))}
+                            </ul>
+                            <Link
+                                href="/demo"
+                                className="marketing-button marketing-button-secondary"
+                                data-track="demo"
+                                data-track-location={`agencies-${tier.id}`}
+                            >
+                                {tier.cta}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </section>
     );
 }

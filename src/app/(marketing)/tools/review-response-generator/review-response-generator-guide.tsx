@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { Copy, Star, Store } from "lucide-react";
+import { ToolGuide, type ToolGuideContent } from "@/app/(marketing)/tools/tool-guide";
 import { FAQPageJsonLd, type FaqItem } from "@/components/seo/json-ld";
 
 const FAQS: FaqItem[] = [
@@ -24,85 +25,43 @@ const FAQS: FaqItem[] = [
     },
 ];
 
+const CONTENT: ToolGuideContent = {
+    slug: "review-response-generator",
+    about: {
+        title: "About the Review Response Templates tool",
+        paragraphs: [
+            <>The Review Response Templates tool is a free utility that picks a structured, professional reply template based on your business name and the customer&apos;s star rating (from 1 to 5 stars). It is designed for local business owners, office managers, customer support teams, and agency staff who want a proven response framework without starting from a blank page for every Google review.</>,
+            "A clear, well-phrased reply shows prospective customers on Google Maps that you are responsive and take service quality seriously.",
+        ],
+    },
+    steps: {
+        title: "How to get a reply template in 3 steps",
+        items: [
+            { icon: Store, label: "Enter business name", text: "Type your business name as you want it to appear in the greeting." },
+            { icon: Star, label: "Select star rating", text: "Choose the rating of the review you received (1, 2, 3, 4, or 5 stars)." },
+            { icon: Copy, label: "Personalize and copy", text: <>Click &quot;Get reply template&quot;, customize the editable template with specific details from the customer&apos;s visit, and copy the text to post on Google.</> },
+        ],
+    },
+    tips: {
+        title: "Practical tips and editing example",
+        paragraphs: [
+            <>For a 2-star review citing a long wait, start with the matching template and insert personal specifics: <em>&quot;Hi Marcus, thank you for sharing this feedback. We apologize for the wait time during your Friday afternoon visit. Our kitchen fell behind our usual standard. We have reviewed staffing for that shift. Please contact us at support@example.com so we can make this right.&quot;</em></>,
+            "Aim for roughly 50 to 150 words per public response. Avoid debating facts or negotiating financial settlements in public comments; instead, direct sensitive discussions to a private phone number or email address.",
+        ],
+    },
+    faqs: FAQS,
+    related: [
+        { href: "/resources/negative-review-templates", label: "20+ Negative Review Response Templates (Google Reviews)", note: "Ready-to-use scripts for service, billing, and delay complaints." },
+        { href: "/blog/how-to-respond-to-a-1-star-review", label: "How to Respond to a 1-Star Review (5 Real Templates)", note: "A practical 5-step framework for handling negative customer feedback." },
+        { href: "/blog/ai-reply-mistakes-to-avoid", label: "5 AI Reply Mistakes to Avoid When Responding to Reviews", note: "Guidelines for editing and personalizing automated review drafts." },
+    ],
+};
+
 export function ReviewResponseGeneratorGuide() {
     return (
-        <section className="border-t border-border bg-muted/10 py-16 px-4">
+        <>
             <FAQPageJsonLd faqs={FAQS} />
-            <div className="container mx-auto max-w-3xl space-y-12">
-                <div className="space-y-4">
-                    <h2 className="text-2xl font-bold text-foreground">About the Review Response Generator</h2>
-                    <p className="text-muted-foreground leading-relaxed">
-                        The Review Response Generator is a free utility that creates structured, professional reply drafts tailored to your business name and the customer&apos;s star rating (from 1 to 5 stars). It is designed for local business owners, office managers, customer support teams, and agency staff who want a proven response framework without starting from a blank page for every Google review.
-                    </p>
-                    <p className="text-muted-foreground leading-relaxed">
-                        A clear, well-phrased reply shows prospective customers on Google Maps that you are responsive and take service quality seriously.
-                    </p>
-                </div>
-
-                <div className="space-y-4">
-                    <h2 className="text-xl font-bold text-foreground">How to generate a response draft in 4 steps</h2>
-                    <ol className="list-decimal space-y-3 pl-5 text-muted-foreground">
-                        <li>
-                            <strong className="text-foreground">Enter business name:</strong> Type your business name as you want it to appear in the greeting.
-                        </li>
-                        <li>
-                            <strong className="text-foreground">Select star rating:</strong> Choose the rating of the review you received (1, 2, 3, 4, or 5 stars).
-                        </li>
-                        <li>
-                            <strong className="text-foreground">Optional review text:</strong> Paste the customer&apos;s comment into the text box for easy reference while editing.
-                        </li>
-                        <li>
-                            <strong className="text-foreground">Generate and personalize:</strong> Click &quot;Generate response&quot;, customize the editable draft with specific details from the customer&apos;s visit, and copy the text to post on Google.
-                        </li>
-                    </ol>
-                </div>
-
-                <div className="space-y-4">
-                    <h2 className="text-xl font-bold text-foreground">Practical tips and editing example</h2>
-                    <p className="text-muted-foreground leading-relaxed">
-                        For a 2-star review citing a long wait, start with the generator&apos;s template and insert personal specifics: <em className="text-foreground">&quot;Hi Marcus, thank you for sharing this feedback. We apologize for the wait time during your Friday afternoon visit—our kitchen fell behind our usual standard. We have reviewed staffing for that shift. Please contact us at support@example.com so we can make this right.&quot;</em>
-                    </p>
-                    <p className="text-muted-foreground leading-relaxed">
-                        Aim for roughly 50 to 150 words per public response. Avoid debating facts or negotiating financial settlements in public comments; instead, direct sensitive discussions to a private phone number or email address.
-                    </p>
-                </div>
-
-                <div className="space-y-4">
-                    <h2 className="text-xl font-bold text-foreground">Frequently asked questions</h2>
-                    <div className="divide-y divide-border rounded-xl border border-border bg-card">
-                        {FAQS.map((faq) => (
-                            <div key={faq.question} className="p-5 space-y-2">
-                                <h3 className="font-semibold text-foreground text-base">{faq.question}</h3>
-                                <p className="text-sm text-muted-foreground leading-relaxed">{faq.answer}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="rounded-xl border border-border bg-card p-6 space-y-3">
-                    <h2 className="text-lg font-bold text-foreground">Related guides &amp; resources</h2>
-                    <ul className="space-y-2 text-sm">
-                        <li>
-                            <Link href="/resources/negative-review-templates" className="text-primary underline underline-offset-4 hover:text-primary/80">
-                                20+ Negative Review Response Templates (Google Reviews)
-                            </Link>
-                            <span className="text-muted-foreground"> — Ready-to-use scripts for service, billing, and delay complaints.</span>
-                        </li>
-                        <li>
-                            <Link href="/blog/how-to-respond-to-a-1-star-review" className="text-primary underline underline-offset-4 hover:text-primary/80">
-                                How to Respond to a 1-Star Review (5 Real Templates)
-                            </Link>
-                            <span className="text-muted-foreground"> — A practical 5-step framework for handling negative customer feedback.</span>
-                        </li>
-                        <li>
-                            <Link href="/blog/ai-reply-mistakes-to-avoid" className="text-primary underline underline-offset-4 hover:text-primary/80">
-                                5 AI Reply Mistakes to Avoid When Responding to Reviews
-                            </Link>
-                            <span className="text-muted-foreground"> — Guidelines for editing and personalizing automated review drafts.</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+            <ToolGuide content={CONTENT} />
+        </>
     );
 }

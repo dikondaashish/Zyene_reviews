@@ -61,8 +61,8 @@ export const REVIEW_PAGE_CONTENT: FeatureLandingContent = {
     },
     {
       eyebrow: "Service recovery",
-      title: "Hear about a bad day before it goes public",
-      text: "When a rating falls below your threshold, the customer sees a private form instead of the draft step. Your team gets the message and can make it right.",
+      title: "Hear about a bad day directly",
+      text: "When a rating falls below your threshold, the customer sees an optional private form alongside the link to post on Google. Your team gets the message and can make it right.",
       points: ["Ask for email or phone as hidden, optional or required", "Show an optional apology offer", "Private feedback lands in its own tab in Reviews"],
       media: { kind: "visual", node: <ReviewPagePrivateVisual />, label: "Private feedback form shown after a low rating" },
     },

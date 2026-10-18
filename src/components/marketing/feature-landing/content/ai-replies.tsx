@@ -98,7 +98,7 @@ export const AI_REPLIES_CONTENT: FeatureLandingContent = {
     { question: "Can I use AI replies for Facebook and Yelp reviews?", answer: "Not from Zyene. Replies you post from Zyene go to Google. Facebook and Yelp reviews appear in your inbox for monitoring, and you reply to them on those sites." },
     { question: "Is there a limit on AI replies?", answer: "AI replies to your reviews are included on paid plans and trials, with no monthly quota. They are counted separately from AI customer review drafts, which have a monthly allowance. A fair-use limit of 100 AI drafts per business per day applies." },
     { question: "Which tones can I choose?", answer: "Professional, Friendly and Concise. Professional is polished and courteous, Friendly is warm and conversational, and Concise keeps it to two or three sentences." },
-    { question: "Is there a free review response generator?", answer: "Yes. Our free tool at zyenereviews.com/tools/review-response-generator drafts a reply to any review you paste in. Inside Zyene, drafts also use your business details and post to Google in one click." },
+    { question: "Is there a free review response tool?", answer: "Yes. Our free tool at zyenereviews.com/tools/review-response-generator gives you ready-to-edit reply templates by star rating. Inside Zyene, AI drafts read the actual review, use your business details and post to Google in one click." },
   ],
   related: ["automatic-review-replies", "review-monitoring", "smart-insights"],
 };

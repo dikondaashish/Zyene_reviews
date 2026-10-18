@@ -38,7 +38,7 @@ export function FeatureLandingHero({ kicker, headline, lede, crumbs, visual, vis
           <p className="fl-hero-lede">{lede}</p>
           <div className="fl-hero-actions">
             <Link href={SIGNUP_URL} className="marketing-button" data-track="trial" data-track-location="hero">
-              Start free trial <ArrowRight size={16} aria-hidden="true" />
+              Start 7-day free trial <ArrowRight size={16} aria-hidden="true" />
             </Link>
             <Link href="/demo" className="marketing-button marketing-button-secondary" data-track="demo" data-track-location="hero">
               Book a demo

@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { Copy, Mail, MapPin, Search } from "lucide-react";
+import { ToolGuide, type ToolGuideContent } from "@/app/(marketing)/tools/tool-guide";
 import { FAQPageJsonLd, type FaqItem } from "@/components/seo/json-ld";
 
 const FAQS: FaqItem[] = [
@@ -24,85 +25,44 @@ const FAQS: FaqItem[] = [
     },
 ];
 
+const CONTENT: ToolGuideContent = {
+    slug: "review-link-generator",
+    about: {
+        title: "About the Google Review Link Generator",
+        paragraphs: [
+            "The Google Review Link Generator is a free utility that looks up your official Google Place ID using Google Places data and formats a direct review submission URL. It is designed for local business owners, healthcare practices, contractors, retail operators, and service professionals who need a reliable link to share with customers via text message, email invoices, or printed QR codes.",
+            "Instead of asking customers to open Google Maps, search for your business name, and locate the review button, a direct URL opens the rating dialog in one click on both desktop and mobile browsers.",
+        ],
+    },
+    steps: {
+        title: "How to use this tool in 4 steps",
+        items: [
+            { icon: Search, label: "Search for your business", text: "Enter your business name and city in the search bar above." },
+            { icon: MapPin, label: "Select your listing", text: "Choose your verified location from the Google autocomplete suggestions to load its Place ID." },
+            { icon: Mail, label: "Optional email backup", text: "Enter your email address if you want a copy of your link sent directly to your inbox." },
+            { icon: Copy, label: "Copy and distribute", text: <>Click &quot;Get my review link&quot; and copy the URL into your customer outreach templates or QR code generator.</> },
+        ],
+    },
+    tips: {
+        title: "Practical tips and print example",
+        paragraphs: [
+            <>A typical post-service follow-up message can be short and direct: <em>&quot;Hi John, thanks for visiting Apex Auto today. If you have a minute, please share your experience on Google: [Your Link]&quot;</em>.</>,
+            "If you convert your review URL into a printed QR code for invoices, appointment cards, or counter displays, print it at a minimum of 1 x 1 inch (25 x 25 mm). Maintain high contrast and a clear blank border around the code so smartphone cameras can scan it without focusing delays.",
+        ],
+    },
+    faqs: FAQS,
+    related: [
+        { href: "/blog/how-to-get-a-google-review-link", label: "How to Get a Google Review Link (Step-by-Step Guide)", note: "Manual Place ID lookup and link testing methods." },
+        { href: "/resources/review-request-templates", label: "Free Review Request Template Pack (SMS + Email)", note: "Ready-to-use message scripts for local businesses." },
+        { href: "/blog/how-to-get-50-google-reviews-in-30-days", label: "How to Get 50 Google Reviews in 30 Days", note: "Timing and customer outreach strategies." },
+    ],
+};
+
 export function ReviewLinkGeneratorGuide() {
     return (
-        <section className="border-t border-border bg-muted/10 py-16 px-4">
+        <>
             <FAQPageJsonLd faqs={FAQS} />
-            <div className="container mx-auto max-w-3xl space-y-12">
-                <div className="space-y-4">
-                    <h2 className="text-2xl font-bold text-foreground">About the Google Review Link Generator</h2>
-                    <p className="text-muted-foreground leading-relaxed">
-                        The Google Review Link Generator is a free utility that looks up your official Google Place ID using Google Places data and formats a direct review submission URL. It is designed for local business owners, healthcare practices, contractors, retail operators, and service professionals who need a reliable link to share with customers via text message, email invoices, or printed QR codes.
-                    </p>
-                    <p className="text-muted-foreground leading-relaxed">
-                        Instead of asking customers to open Google Maps, search for your business name, and locate the review button, a direct URL opens the rating dialog in one click on both desktop and mobile browsers.
-                    </p>
-                </div>
-
-                <div className="space-y-4">
-                    <h2 className="text-xl font-bold text-foreground">How to use this tool in 4 steps</h2>
-                    <ol className="list-decimal space-y-3 pl-5 text-muted-foreground">
-                        <li>
-                            <strong className="text-foreground">Search for your business:</strong> Enter your business name and city in the search bar above.
-                        </li>
-                        <li>
-                            <strong className="text-foreground">Select your listing:</strong> Choose your verified location from the Google autocomplete suggestions to load its Place ID.
-                        </li>
-                        <li>
-                            <strong className="text-foreground">Optional email backup:</strong> Enter your email address if you want a copy of your link sent directly to your inbox.
-                        </li>
-                        <li>
-                            <strong className="text-foreground">Copy and distribute:</strong> Click &quot;Get my review link&quot; and copy the URL into your customer outreach templates or QR code generator.
-                        </li>
-                    </ol>
-                </div>
-
-                <div className="space-y-4">
-                    <h2 className="text-xl font-bold text-foreground">Practical tips and print example</h2>
-                    <p className="text-muted-foreground leading-relaxed">
-                        A typical post-service follow-up message can be short and direct: <em className="text-foreground">&quot;Hi John, thanks for visiting Apex Auto today. If you have a minute, please share your experience on Google: [Your Link]&quot;</em>.
-                    </p>
-                    <p className="text-muted-foreground leading-relaxed">
-                        If you convert your review URL into a printed QR code for invoices, appointment cards, or counter displays, print it at a minimum of 1 x 1 inch (25 x 25 mm). Maintain high contrast and a clear blank border around the code so smartphone cameras can scan it without focusing delays.
-                    </p>
-                </div>
-
-                <div className="space-y-4">
-                    <h2 className="text-xl font-bold text-foreground">Frequently asked questions</h2>
-                    <div className="divide-y divide-border rounded-xl border border-border bg-card">
-                        {FAQS.map((faq) => (
-                            <div key={faq.question} className="p-5 space-y-2">
-                                <h3 className="font-semibold text-foreground text-base">{faq.question}</h3>
-                                <p className="text-sm text-muted-foreground leading-relaxed">{faq.answer}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="rounded-xl border border-border bg-card p-6 space-y-3">
-                    <h2 className="text-lg font-bold text-foreground">Related guides &amp; resources</h2>
-                    <ul className="space-y-2 text-sm">
-                        <li>
-                            <Link href="/blog/how-to-get-a-google-review-link" className="text-primary underline underline-offset-4 hover:text-primary/80">
-                                How to Get a Google Review Link (Step-by-Step Guide)
-                            </Link>
-                            <span className="text-muted-foreground"> — Manual Place ID lookup and link testing methods.</span>
-                        </li>
-                        <li>
-                            <Link href="/resources/review-request-templates" className="text-primary underline underline-offset-4 hover:text-primary/80">
-                                Free Review Request Template Pack (SMS + Email)
-                            </Link>
-                            <span className="text-muted-foreground"> — Ready-to-use message scripts for local businesses.</span>
-                        </li>
-                        <li>
-                            <Link href="/blog/how-to-get-50-google-reviews-in-30-days" className="text-primary underline underline-offset-4 hover:text-primary/80">
-                                How to Get 50 Google Reviews in 30 Days
-                            </Link>
-                            <span className="text-muted-foreground"> — Timing and customer outreach strategies.</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+            <ToolGuide content={CONTENT} />
+        </>
     );
 }

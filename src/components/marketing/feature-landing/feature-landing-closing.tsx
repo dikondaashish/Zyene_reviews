@@ -16,7 +16,7 @@ export function FeatureLandingClosing({ title, text = "Try Zyene free for 7 days
           </div>
           <div className="home-final-actions">
             <Link href={SIGNUP_URL} className="marketing-button home-final-primary" data-track="trial" data-track-location={location}>
-              Start free trial <ArrowRight size={16} aria-hidden="true" />
+              Start 7-day free trial <ArrowRight size={16} aria-hidden="true" />
             </Link>
             <Link href="/pricing" className="marketing-button home-final-secondary">
               See pricing

@@ -3,6 +3,13 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/**
+ * Records a free-tool lead in `marketing_subscribers`.
+ *
+ * New emails are inserted as subscribed. Existing rows are left untouched
+ * (`ignoreDuplicates`), so someone who previously unsubscribed is never
+ * silently re-subscribed by using a free tool.
+ */
 export async function captureToolLead(params: {
     email: string;
     source: string;
@@ -22,9 +29,8 @@ export async function captureToolLead(params: {
             utm_medium: params.source,
             utm_campaign: "phase7_tools",
             subscribed_at: new Date().toISOString(),
-            unsubscribed_at: null,
         },
-        { onConflict: "email" }
+        { onConflict: "email", ignoreDuplicates: true }
     );
 
     if (error) {

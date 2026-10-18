@@ -1,26 +1,15 @@
-import type { CompetitorData } from "@/lib/comparisons/competitor-data";
+import type { CompetitorEntry } from "@/lib/comparisons/competitor-data";
 
-/** Public Prosperly positioning and plan details checked September 7, 2026. */
-export const prosperlyComparison: CompetitorData = {
+/** Prosperly page copy; prices and sourced differences live in competitor-facts-published.ts. */
+export const prosperlyComparison: CompetitorEntry = {
     slug: "prosperly",
     name: "Prosperly",
-    price: "$119",
-    priceNote:
-        "Prosperly lists Core at $119/mo and Ultimate at $179/mo, plus onboarding. Pricing and package terms can change.",
-    contractRequired: false,
-    billingTerms:
-        "Prosperly publishes monthly plan prices; review its plans page for current onboarding and contract terms.",
-    pricingSource: {
-        label: "Prosperly plans",
-        href: "https://prosperly.com/plans/",
-        checkedOn: "September 7, 2026",
-    },
-    keyAngle: "Broad local-business review operations vs a law- and insurance-focused workflow",
+    keyAngle: "A law- and insurance-focused review workflow vs review tools for any local business.",
     heroSub:
-        "Compare Zyene Reviews with Prosperly: pricing, review requests, AI reply tools, private feedback, local SEO, and the workflows each product is built for.",
+        "Prosperly is positioned for law firms and insurance agencies, with referrals and an account manager. Zyene Reviews serves local businesses in any industry.",
     metaTitle: "Zyene Reviews vs Prosperly: 2026 Comparison",
     metaDescription:
-        "Compare Zyene Reviews and Prosperly on pricing, review requests, AI replies, private feedback, local SEO, widgets, API access, and ideal fit.",
+        "Compare Zyene Reviews and Prosperly on pricing and setup fees, review requests, AI replies, referrals, surveys, widgets, API access and ideal fit.",
     targetKeywords: [
         "zyene reviews vs prosperly",
         "prosperly alternative",
@@ -28,87 +17,72 @@ export const prosperlyComparison: CompetitorData = {
         "law firm review management software",
         "insurance review management software",
     ],
-    winsForCompetitor: [
-        "Purpose-built positioning for law firms and insurance agencies",
-        "Published review-request and automatic email follow-up workflow",
-        "A customer-referral program listed on its plans page",
-        "Ultimate lists AI review suggestions, custom feedback surveys, and advanced reporting",
-        "Ultimate lists onboarding and an account manager",
-    ],
-    winsForZyene: [
-        "Review inbox sync across Google, Facebook, and Yelp",
-        "Published Starter price of $29.99/mo versus Prosperly Core at $119/mo plus onboarding",
-        "AI reply suggestions on paid plans",
-        "Competitor tracking and Google Business Profile insights for local teams",
-        "Embeddable review widgets and REST API access on paid plans",
-        "Built for local businesses across industries, not one vertical",
-    ],
+    openingSummary:
+        "Prosperly charges $119 or $179 a month per Google location, plus a one-time $299 setup fee, and is positioned for law firms and insurance agencies. It includes a referral program, and its Ultimate plan adds surveys and an account manager. Zyene Reviews starts at $29.99 a month, syncs Google, Facebook and Yelp, and includes AI replies, competitor tracking, widgets and API access.",
+    pickCompetitorInstead:
+        "Pick Prosperly if you run a law firm or insurance agency and want its referral program, Ultimate surveys and a dedicated account manager.",
     quickTable: [
-        { feature: "Published monthly plan pricing", zyene: "Starter: $29.99/mo", competitor: "Core: $119/mo + onboarding" },
-        { feature: "Published higher plan", zyene: "Professional: $59.99/mo", competitor: "Ultimate: $179/mo + onboarding" },
+        { feature: "Published monthly pricing", zyene: "Starter: $29.99/mo", competitor: "Core: $119/mo per location" },
+        { feature: "Published higher plan", zyene: "Professional: $59.99/mo", competitor: "Ultimate: $179/mo per location" },
+        { feature: "One-time setup fee", zyene: "Self-serve signup", competitor: "$299 setup and onboarding" },
         { feature: "Primary positioning", zyene: "Local businesses across industries", competitor: "Law firms & insurance agencies" },
-        { feature: "Review monitoring", zyene: "Google, Facebook & Yelp sync", competitor: "Google review-focused workflow" },
-        { feature: "AI reply suggestions", zyene: "Paid plans", competitor: "Listed on Ultimate" },
-        { feature: "Customer-referral workflow", zyene: "Not marketed as a dedicated module", competitor: "Listed on published plans" },
-        { feature: "Competitor tracking", zyene: "Included on paid plans", competitor: "Not listed on published plans" },
-        { feature: "Widgets & API", zyene: "Available on paid plans", competitor: "Not listed on published plans" },
-    ],
-    featureBreakdown: [
-        { feature: "Review inbox and sync", zyene: "Google, Facebook & Yelp", competitor: "Google review-focused workflow" },
-        { feature: "Review requests", zyene: "SMS and email campaigns with plan limits", competitor: "Automated requests listed" },
-        { feature: "Follow-up emails", zyene: "Campaign workflow", competitor: "Automatic follow-ups listed" },
-        { feature: "AI review reply suggestions", zyene: "Available on paid plans", competitor: "Listed on Ultimate" },
-        { feature: "Private feedback", zyene: "Private feedback path and team alerts", competitor: "Private feedback tools listed" },
-        { feature: "Customer-referral workflow", zyene: "Not marketed as a dedicated module", competitor: "Customer-referral program listed" },
-        { feature: "Custom feedback surveys", zyene: "Not a dedicated survey product", competitor: "Listed on Ultimate" },
-        { feature: "Competitor tracking", zyene: "Included on paid plans", competitor: "Not listed on published plans" },
-        { feature: "Local SEO and GBP insights", zyene: "GBP keyword performance dashboard", competitor: "Not listed on published plans" },
-        { feature: "Embeddable review widgets", zyene: "Available on paid plans", competitor: "Not listed on published plans" },
-        { feature: "REST API", zyene: "Available on paid plans", competitor: "Not listed on published plans" },
-        { feature: "Onboarding and account management", zyene: "Self-serve plans", competitor: "Listed on Ultimate" },
-        { feature: "Published starting price", zyene: "$29.99/mo", competitor: "$119/mo + onboarding" },
-        { feature: "Free trial", zyene: "7 days", competitor: "Review current plan terms" },
+        { feature: "Review sources", zyene: "Google, Facebook & Yelp sync", competitor: "Priced per Google location" },
+        { feature: "AI reply suggestions", zyene: "Starter and up", competitor: "Listed on Ultimate" },
+        { feature: "Customer-referral program", zyene: "Not offered", competitor: "Included on Core" },
+        { feature: "Competitor tracking", zyene: "Starter and up", competitor: "Not listed on plans page" },
+        { feature: "Widgets & API", zyene: "Starter and up", competitor: "Not listed on plans page" },
     ],
     whoShouldUseCompetitor: [
         "A law firm or insurance agency that wants a vertically positioned review workflow",
-        "A team that wants automatic follow-up emails and a customer-referral program in its process",
-        "A buyer who needs custom feedback surveys and advanced reporting from Prosperly Ultimate",
-        "A team that values the listed onboarding and account-management experience",
+        "A team that wants a customer-referral program built into its review process",
+        "A buyer who needs custom feedback surveys and a dedicated account manager (Ultimate)",
     ],
     whoShouldUseZyene: [
-        "A local business in any industry that needs reviews across Google, Facebook, and Yelp",
-        "A team that wants AI-assisted replies, a private feedback path, and local review operations in one place",
+        "A local business in any industry that needs reviews across Google, Facebook and Yelp",
         "A buyer who needs competitor tracking or Google Business Profile keyword insights",
-        "A business that needs paid-plan review widgets or REST API access",
-        "An owner-operator looking for published pricing from $29.99/mo",
+        "A business that needs review widgets or REST API access",
+        "An owner-operator looking for published pricing from $29.99/mo and self-serve signup",
     ],
-    openingSummary:
-        "Pick Zyene Reviews if you need affordable review operations across Google, Facebook, and Yelp: campaign tools, AI reply suggestions, private feedback, competitor tracking, Google Business Profile insights, widgets, and API access. Pick Prosperly if your law or insurance practice values its vertical-focused review workflow, listed referral program, and Ultimate-tier surveys, onboarding, and account management. Prosperly’s published Core price starts at $119/mo plus onboarding; verify current terms on its plan page.",
+    visual: {
+        key: "review-inbox",
+        title: "Google, Facebook and Yelp in one inbox",
+        caption: "Zyene's review inbox with platform badges, a Needs reply filter and a separate tab for private feedback. Prosperly's plans are priced per Google location.",
+    },
+    switching: {
+        intro: "Moving is mostly about contacts and referral habits.",
+        steps: [
+            "Export clients who agreed to hear from you and import the CSV into Zyene.",
+            "Connect Google Business Profile, plus Facebook and Yelp if clients review you there.",
+            "Decide how you will run referrals, since Zyene has no referral module.",
+            "Prosperly lists month-to-month plans with no cancellation fee; stop its requests before Zyene's begin.",
+        ],
+    },
+    relatedPillars: ["review-monitoring", "local-seo", "review-widgets"],
     faqs: [
         {
             question: "How does Zyene Reviews pricing compare with Prosperly?",
             answer:
-                "Zyene Reviews publishes Starter at $29.99/mo. Prosperly’s plans page listed Core at $119/mo and Ultimate at $179/mo, plus onboarding, when checked on September 7, 2026. Prices, onboarding fees, and contract terms can change, so confirm current details with each vendor before buying.",
+                "Zyene Reviews Starter is $29.99/month. Prosperly’s plans page listed Core at $119/month and Ultimate at $179/month per Google business location, plus a one-time $299 setup and onboarding fee, when we checked on October 17, 2026. Confirm current terms with each vendor before buying.",
         },
         {
             question: "Does Zyene Reviews include a customer-referral program?",
             answer:
-                "Zyene Reviews does not market a dedicated customer-referral module. Prosperly lists a customer-referral program on its plans page. If referral tracking is central to your workflow, assess that capability directly before choosing a platform.",
+                "No. Prosperly lists a customer-referral program on Core. If referral tracking is central to your practice, weigh that before choosing.",
         },
         {
-            question: "Can both products help teams handle negative customer feedback?",
+            question: "Can both products handle negative customer feedback?",
             answer:
-                "Zyene Reviews provides a private feedback path and team alerts. Prosperly lists private feedback tools on its plans page. This comparison does not claim either workflow restricts public reviews; businesses should follow each review platform’s policies when designing outreach and service-recovery processes.",
+                "Zyene Reviews offers an optional private feedback form and team alerts, while every customer still gets the same public review link. Prosperly lists its own feedback tools. Follow each review platform’s policies when you design outreach.",
         },
         {
             question: "Does Zyene Reviews include custom feedback surveys?",
             answer:
-                "Zyene Reviews is not marketed as a dedicated survey product. Prosperly lists custom feedback surveys on its Ultimate plan. Choose based on whether structured surveys are a core requirement alongside review management.",
+                "No. Prosperly lists custom feedback surveys on its Ultimate plan. Zyene Reviews has a private feedback form, not a survey builder.",
         },
         {
-            question: "Which product is a better fit for a local business?",
+            question: "Which product fits a local business?",
             answer:
-                "Zyene Reviews is built for local businesses across industries that need review sync across Google, Facebook, and Yelp, AI reply tools, local competitor tracking, Google Business Profile insights, widgets, and API access. Prosperly is a stronger fit to evaluate when your business is a law firm or insurance agency and its vertical workflow is a priority.",
+                "Zyene Reviews is built for local businesses across industries that need Google, Facebook and Yelp reviews, AI reply tools, competitor tracking, Google Business Profile insights, widgets and API access. Prosperly is worth evaluating if you run a law firm or insurance agency.",
         },
     ],
     accentColor: "orange",

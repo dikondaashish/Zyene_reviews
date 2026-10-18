@@ -1,7 +1,22 @@
 import { Check, X } from "lucide-react";
 
+/** One comparison cell: an ink check, a muted cross, or plain text. Labels stay readable to screen readers. */
 export function CellValue({ value }: { value: boolean | string }) {
-    if (value === true) return <Check className="text-primary mx-auto size-5" />;
-    if (value === false) return <X className="text-muted-foreground/30 mx-auto size-5" />;
-    return <span className="text-xs text-muted-foreground text-center block leading-tight">{value}</span>;
+    if (value === true) {
+        return (
+            <span className="inline-flex text-foreground">
+                <Check className="size-5" aria-hidden="true" />
+                <span className="sr-only">Included</span>
+            </span>
+        );
+    }
+    if (value === false) {
+        return (
+            <span className="inline-flex text-muted-foreground">
+                <X className="size-5" aria-hidden="true" />
+                <span className="sr-only">Not included</span>
+            </span>
+        );
+    }
+    return <span className="block leading-snug">{value}</span>;
 }

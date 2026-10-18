@@ -1,48 +1,41 @@
-import { getEnterprisePlan } from "@/services/stripe/plans";
-
+import type { Plan } from "@/services/stripe/plans";
 import Link from "next/link";
-import { Check, Users, CalendarDays, FileText } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, Check } from "lucide-react";
 
-export function EnterpriseSection5Section({ enterprisePlan }: { enterprisePlan: NonNullable<ReturnType<typeof getEnterprisePlan>> }) {
+export function EnterpriseSection5Section({ enterprisePlan }: { enterprisePlan: Plan }) {
     return (
-        <section className="py-20 px-4 bg-background">
-                <div className="container mx-auto max-w-5xl grid lg:grid-cols-2 gap-10 items-start">
-                    <div>
-                        <h2 className="text-[length:var(--fs-h2)] font-semibold mb-4 flex items-center gap-2">
-                            <Users className="text-primary size-8" />
-                            What&apos;s included
-                        </h2>
-                        <ul className="space-y-3">
-                            {enterprisePlan.features.map((f) => (
-                                <li key={f} className="flex gap-2 text-sm">
-                                    <Check className="text-primary shrink-0 size-4" />
-                                    {f}
-                                </li>
-                            ))}
-                        </ul>
+        <section className="marketing-section" aria-labelledby="enterprise-included-heading">
+            <div className="marketing-container mi-split">
+                <div>
+                    <div className="mi-head">
+                        <p className="marketing-eyebrow">What&apos;s included</p>
+                        <h2 id="enterprise-included-heading">What an Enterprise plan includes.</h2>
                     </div>
-                    <div className="bg-card border border-border rounded-2xl p-8">
-                        <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
-                            <FileText className="text-primary size-5" />
-                            Plan your rollout
-                        </h3>
-                        <p className="text-sm text-muted-foreground mb-4">
-                            Discuss your locations, team access, integrations, and reporting needs with our team.
-                        </p>
-                        <p className="text-sm text-muted-foreground mb-6">
-                            We will confirm the available features, implementation scope, and pricing before you commit.
-                        </p>
-                        <Button className="w-full gap-2" asChild>
-                            <Link href="/demo" data-track="demo" data-track-location="enterprise">
-                                <CalendarDays className="size-4" /> Book an enterprise demo
-                            </Link>
-                        </Button>
-                        <Link href="/security" className="block mt-4 text-sm text-primary hover:underline text-center">
-                            Security &amp; trust center →
+                    <ul className="mi-checks">
+                        {enterprisePlan.features.map((feature) => (
+                            <li key={feature}>
+                                <Check size={16} aria-hidden="true" />
+                                {feature}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className="mi-panel">
+                    <h3>Plan your rollout</h3>
+                    <p>Discuss your locations, team access, integrations, and reporting needs with our team.</p>
+                    <p>We will confirm the available features, implementation scope, and pricing before you commit.</p>
+                    <div className="marketing-actions">
+                        <Link href="/demo" className="marketing-button" data-track="demo" data-track-location="enterprise">
+                            Book a demo <ArrowRight size={16} aria-hidden="true" />
+                        </Link>
+                    </div>
+                    <div className="mi-panel-foot">
+                        <Link href="/security" className="home-text-link">
+                            Security and trust center <ArrowRight size={14} aria-hidden="true" />
                         </Link>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
     );
 }

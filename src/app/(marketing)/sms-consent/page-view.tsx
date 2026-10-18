@@ -5,7 +5,7 @@ import { SMS_CONSENT_COPY } from "@/lib/twilio/sms-consent-copy";
 
 export default function SmsConsentPage() {
     return (
-        <main className="min-h-screen bg-background py-20 text-foreground">
+        <div className="min-h-screen bg-background py-20 text-foreground">
             <div className="container mx-auto max-w-4xl px-4 sm:px-8">
                 <header className="mb-12 max-w-3xl">
                     <div className="mb-5 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-primary">
@@ -61,6 +61,6 @@ export default function SmsConsentPage() {
                     </aside>
                 </div>
             </div>
-        </main>
+        </div>
     );
 }

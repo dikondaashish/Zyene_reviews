@@ -47,8 +47,8 @@ export const ENTERPRISE_SLA_BULLETS = [
 
 export const ENTERPRISE_COMPARISON_ROWS = [
     { feature: "Locations", starter: "1", professional: "3", enterprise: "Unlimited" },
-    { feature: "White-label widgets", starter: " - ", professional: " - ", enterprise: "Available by plan" },
-    { feature: "Security review", starter: " - ", professional: " - ", enterprise: "Discuss with sales" },
+    { feature: "White-label widgets", starter: "Not included", professional: "Not included", enterprise: "Available by plan" },
+    { feature: "Security review", starter: "Not included", professional: "Not included", enterprise: "Discuss with sales" },
     { feature: "Rollout planning", starter: "Self-serve", professional: "Self-serve", enterprise: "Discuss with sales" },
     { feature: "Support options", starter: "Standard", professional: "Priority", enterprise: "Discuss with sales" },
     { feature: "API & webhooks", starter: "Available", professional: "Available", enterprise: "Plan with sales" },

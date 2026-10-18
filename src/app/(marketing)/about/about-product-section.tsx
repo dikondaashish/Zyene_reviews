@@ -35,13 +35,13 @@ export function AboutProductSection() {
                         </ul>
                         <div className="flex flex-wrap gap-4">
                             <Link
-                                href="/#features"
+                                href="/features"
                                 className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:brightness-90 transition-colors"
                             >
                                 See all features <ArrowRight className="size-4" />
                             </Link>
                             <Link
-                                href="/#pricing"
+                                href="/pricing"
                                 className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
                             >
                                 View pricing <ArrowRight className="size-4" />

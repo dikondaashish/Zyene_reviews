@@ -22,7 +22,7 @@ export function ContactForm() {
     const [loading, setLoading] = useState(false);
     const [done, setDone] = useState(false);
     const [error, setError] = useState("");
-    const [subject, setSubject] = useState<string>("");
+    const [subject, setSubject] = useState<string>(SUBJECTS[0].value);
 
     async function submit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -50,7 +50,7 @@ export function ContactForm() {
             }
             setDone(true);
             form.reset();
-            setSubject("");
+            setSubject(SUBJECTS[0].value);
         } catch {
             setError("Network error - try again");
         } finally {
@@ -144,10 +144,10 @@ export function ContactForm() {
                 />
             </div>
 
-            {error ? <p className="text-sm text-destructive">{error}</p> : null}
+            {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
 
-            <Button type="submit" disabled={loading || !subject} className="w-full sm:w-auto rounded-md px-8 py-6 font-medium">
-                {loading ? <Loader2 className="animate-spin size-4" /> : "Send message"}
+            <Button type="submit" disabled={loading} aria-busy={loading} className="w-full sm:w-auto rounded-md px-8 py-6 font-medium">
+                {loading ? <><Loader2 aria-hidden="true" className="animate-spin size-4" /><span className="sr-only">Sending message</span></> : "Send message"}
             </Button>
         </form>
     );

@@ -22,18 +22,18 @@ export default async function CaseStudyPage(
     return (
         <>
             <BreadcrumbJsonLd
-                            items={[
-                                { name: "Home", url: "https://www.zyenereviews.com/" },
-                                { name: "Example Workflows", url: "https://www.zyenereviews.com/case-studies" },
-                                { name: study.company, url: `https://www.zyenereviews.com/case-studies/${slug}` },
-                            ]}
-                        />
+                items={[
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Example Workflows", url: "https://www.zyenereviews.com/case-studies" },
+                    { name: study.company, url: `https://www.zyenereviews.com/case-studies/${slug}` },
+                ]}
+            />
             <CaseStudiesSlugHeaderSection study={study} />
             <CaseStudiesSlugChallengeSection study={study} />
             <CaseStudiesSlugApproachSection study={study} />
             <CaseStudiesSlugResultsSection study={study} />
-            <CaseStudiesSlugRelatedSection study={study} />
-            <CaseStudiesSlugCtaSection related={related} />
+            <CaseStudiesSlugRelatedSection study={study} related={related} />
+            <CaseStudiesSlugCtaSection study={study} />
         </>
     );
 }

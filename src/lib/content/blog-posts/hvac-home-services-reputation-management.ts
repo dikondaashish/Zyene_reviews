@@ -271,7 +271,7 @@ export const hvacHomeServicesReputationManagementPost: BlogPostSource = {
         },
         {
             type: "p",
-            text: "Zyene Reviews helps home service businesses automate this entire workflow: trigger personalized review requests via SMS or email after every completed job, route unhappy customers to a private feedback channel before they post publicly, monitor new reviews across Google and other platforms in real time, and respond quickly with AI-assisted reply drafts that you review before publishing.",
+            text: "Zyene Reviews helps home service businesses automate this entire workflow: trigger personalized review requests via SMS or email after every completed job, offer every customer an optional private feedback channel alongside the public review link, monitor new reviews across Google and other platforms in real time, and respond quickly with AI-assisted reply drafts that you review before publishing.",
         },
         {
             type: "cta",

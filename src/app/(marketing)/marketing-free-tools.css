@@ -1,0 +1,26 @@
+/* Free tool pages (/tools/*): copy and context left, the tool in white panels right (FreeToolShell). */
+.tool-shell { padding-top:clamp(32px,4vw,56px); }
+.tool-shell-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); grid-template-areas:"copy tool" "why tool"; grid-template-rows:auto 1fr; gap:0 clamp(32px,5vw,72px); align-items:start; }
+.tool-shell-copy { grid-area:copy; }
+.tool-shell-why { grid-area:why; }
+.tool-shell-tool { grid-area:tool; }
+.tool-shell-back { margin-bottom:28px; }
+.tool-shell-copy h1 { max-width:16ch; }
+.tool-shell-lede { max-width:46ch; margin-top:18px; color:var(--muted-foreground); font-size:var(--fs-lead); line-height:1.55; }
+.tool-shell-why { display:grid; gap:12px; max-width:56ch; margin-top:32px; padding-top:28px; border-top:1px solid var(--border); }
+.marketing-site .tool-shell-why h2 { font-size:var(--fs-h4); letter-spacing:-.025em; }
+.tool-shell-why p { color:var(--muted-foreground); font-size:15px; line-height:1.6; }
+.tool-shell-tool { position:sticky; top:112px; display:grid; gap:16px; min-width:0; }
+.tool-form { display:grid; gap:18px; }
+.tool-form :is(input,select,textarea) { background:var(--background); }
+.tool-result { display:grid; gap:8px; padding:16px; border-radius:14px; background:var(--background); box-shadow:var(--shadow-hairline); color:var(--foreground); font-size:14px; }
+.tool-stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.tool-stat { display:grid; justify-items:center; gap:4px; padding:16px; border-radius:14px; background:var(--background); text-align:center; }
+.tool-stat p:last-child { color:var(--muted-foreground); font-size:12px; }
+.tool-stat-star { color:#f5b301; }
+.tool-stats-name { grid-column:1 / -1; color:var(--muted-foreground); font-size:14px; text-align:center; }
+@media (max-width:1023px) {
+  .tool-shell-grid { grid-template-columns:minmax(0,1fr); grid-template-areas:"copy" "tool" "why"; grid-template-rows:none; gap:28px; }
+  .tool-shell-tool { position:static; }
+  .tool-shell-why { margin-top:12px; }
+}

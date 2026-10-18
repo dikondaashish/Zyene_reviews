@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, FileText } from "lucide-react";
 import {
     HELP_BY_CATEGORY,
     HELP_CATEGORIES,
@@ -10,53 +10,46 @@ import { HelpCategoryIcon } from "@/components/marketing/help-category-icon";
 
 export function HelpArticleListingsByCategorySection() {
     return (
-        <section id="help-topics" className="py-20 px-4 bg-background">
-                <div className="container mx-auto max-w-5xl space-y-16">
+        <section id="help-topics" className="marketing-section" aria-labelledby="help-topics-heading">
+            <div className="marketing-container">
+                <div className="mi-head">
+                    <p className="marketing-eyebrow">Help topics</p>
+                    <h2 id="help-topics-heading">Browse every topic.</h2>
+                </div>
+                <div className="help-topics">
                     {CATEGORY_ORDER.map((categoryKey) => {
                         const catInfo = HELP_CATEGORIES[categoryKey];
                         const articles = HELP_BY_CATEGORY[categoryKey] ?? [];
                         return (
-                            <div key={categoryKey}>
-                                {/* Category header */}
-                                <Link
-                                    href={`/help/${categoryKey}`}
-                                    className="flex items-center gap-3 mb-6 group w-fit"
-                                >
-                                    <div className="p-2.5 bg-primary/10 text-primary rounded-lg border border-primary/20 text-xl leading-none">
-                                        <HelpCategoryIcon category={categoryKey} size={22} />
-                                    </div>
-                                    <div>
-                                        <h2 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
-                                            {catInfo.label}
-                                        </h2>
-                                        <p className="text-sm text-muted-foreground">{catInfo.description}</p>
-                                    </div>
-                                </Link>
-
-                                {/* Article list */}
-                                <div className="grid sm:grid-cols-2 gap-3">
-                                    {articles.map((article) => (
-                                        <Link
-                                            key={article.slug}
-                                            href={helpArticleNestedPath(article)}
-                                            className="group flex items-start justify-between gap-3 p-4 rounded-xl border border-border bg-card hover:border-primary/40 hover:shadow-sm transition-all"
-                                        >
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors leading-snug mb-1">
-                                                    {article.title}
-                                                </p>
-                                                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
-                                                    {article.excerpt}
-                                                </p>
-                                            </div>
-                                            <ArrowRight className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0 mt-0.5 size-4" />
-                                        </Link>
-                                    ))}
+                            <div key={categoryKey} className="mi-split">
+                                <div className="mi-head help-topic-head">
+                                    <HelpCategoryIcon category={categoryKey} size={22} />
+                                    <h3>{catInfo.label}</h3>
+                                    <p>{catInfo.description}</p>
+                                    <Link href={`/help/${categoryKey}`} className="home-text-link">
+                                        All {catInfo.label} guides <ArrowRight size={14} aria-hidden="true" />
+                                    </Link>
                                 </div>
+                                <ul className="mi-list">
+                                    {articles.map((article) => (
+                                        <li key={article.slug}>
+                                            <FileText size={18} aria-hidden="true" />
+                                            <div>
+                                                <p className="mi-list-title">
+                                                    <Link href={helpArticleNestedPath(article)} className="help-topic-link">
+                                                        {article.title}
+                                                    </Link>
+                                                </p>
+                                                <p className="line-clamp-2">{article.excerpt}</p>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
                         );
                     })}
                 </div>
-            </section>
+            </div>
+        </section>
     );
 }

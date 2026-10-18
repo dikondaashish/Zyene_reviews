@@ -32,7 +32,7 @@ export const HOME_FAQS = [
     {
         question: "How does private feedback work?",
         answer:
-            "The branded review flow uses a configured rating threshold. Lower ratings enter a private feedback form for your team; ratings at or above the threshold continue toward a public review. Private feedback does not remove an existing Google review. Check the intended request workflow against the platform’s policies.",
+            "Every customer gets the same review link and can post a public review. Zyene also offers an optional private form so a customer can reach your team directly. When a customer picks a lower rating, the page shows that private form alongside a link to post on Google, so nobody is blocked from or steered away from a public review. Private feedback does not remove an existing Google review.",
     },
     {
         question: "Can I cancel anytime?",

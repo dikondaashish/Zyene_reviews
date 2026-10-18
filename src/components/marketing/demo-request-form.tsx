@@ -14,7 +14,8 @@ export function DemoRequestForm() {
         if (loading) return;
         setLoading(true);
         setError("");
-        const fd = new FormData(e.currentTarget);
+        const form = e.currentTarget;
+        const fd = new FormData(form);
         try {
             const res = await fetch("/api/marketing/demo-request", {
                 method: "POST",
@@ -33,7 +34,7 @@ export function DemoRequestForm() {
                 return;
             }
             setDone(true);
-            e.currentTarget.reset();
+            form.reset();
         } catch {
             setError("Network error - try again");
         } finally {
@@ -75,9 +76,9 @@ export function DemoRequestForm() {
                 What are you looking to solve? <span className="text-muted-foreground font-normal">(optional)</span>
                 <textarea name="message" rows={4} className="w-full rounded-lg border border-border px-4 py-3 text-sm bg-background font-normal" />
             </label>
-            {error && <p className="text-sm text-destructive">{error}</p>}
-            <Button type="submit" disabled={loading} className="w-full">
-                {loading ? <Loader2 className="animate-spin size-4" /> : "Request a demo"}
+            {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+            <Button type="submit" disabled={loading} aria-busy={loading} className="w-full">
+                {loading ? <><Loader2 aria-hidden="true" className="animate-spin size-4" /><span className="sr-only">Sending request</span></> : "Request a demo"}
             </Button>
         </form>
     );

@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import type { Plan } from "@/services/stripe/plans";
-import { TestimonialGrid } from "@/components/marketing/social-proof";
 import { PricingClientHeroSection } from "./pricing-client-hero-section";
 import { PricingClientPlansSection } from "./pricing-client-plans-section";
+import { PricingClientPlanMatrixSection } from "./pricing-client-plan-matrix-section";
 import { PricingClientLocationScaleSection } from "./pricing-client-location-scale-section";
 import { PricingClientComparisonSection } from "./pricing-client-comparison-section";
+import { PricingClientTrustRow } from "./pricing-client-trust-row";
 import { PricingClientFaqSection } from "./pricing-client-faq-section";
 import { PricingClientFinalCtaSection } from "./pricing-client-final-cta-section";
 
@@ -36,13 +37,10 @@ export function PricingPageClient({
         <div className="flex flex-col w-full">
             <PricingClientHeroSection interval={interval} onIntervalChange={setInterval} />
             <PricingClientPlansSection starter={starter} pro={pro} enterprise={enterprise} signupUrl={signupUrl} />
-            <PricingClientLocationScaleSection />
+            <PricingClientPlanMatrixSection />
+            <PricingClientLocationScaleSection pro={pro} />
             <PricingClientComparisonSection />
-            <TestimonialGrid
-                limit={3}
-                title="Explore example workflows"
-                subtitle="See how review collection and replies can fit a local business. These are examples, not customer testimonials or guaranteed outcomes."
-            />
+            <PricingClientTrustRow />
             <PricingClientFaqSection />
             <PricingClientFinalCtaSection signupUrl={signupUrl} />
         </div>

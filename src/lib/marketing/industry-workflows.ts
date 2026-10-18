@@ -19,6 +19,6 @@ export const INDUSTRY_WORKFLOWS: Record<string, { title: string; example: string
     example: "Example: the front desk sends an approved message after a completed appointment using the client's agreed channel. Zyene does not connect to salon-booking software directly; a webhook or your team triggers the request.",
     steps: ["Confirm the appointment was completed and check contact preferences before sending.", "Invite honest feedback without requesting a rating or rewarding a review.", "Keep appointment details and private client information out of a public reply.", "Use reviewed AI drafts for concerns needing individual attention; use automatic Google replies only within your chosen settings."],
     measure: "Track request delivery and opt-outs, then assign a realistic response target. Record repeat appointments separately instead of attributing them automatically to reviews.",
-    links: [{ label: "Review request templates", href: "/resources/review-request-templates" }, { label: "AI business reply controls", href: "/features/ai-replies" }, { label: "Review and request analytics", href: "/features/analytics" }],
+    links: [{ label: "Review request templates", href: "/resources/review-request-templates" }, { label: "Automatic reply settings", href: "/features/automatic-review-replies" }, { label: "Review and request analytics", href: "/features/analytics" }],
   },
 };

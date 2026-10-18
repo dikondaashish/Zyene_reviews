@@ -1,23 +1,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Social Proof Data - Phase 5
-// Platform stats use env overrides; update when real aggregates are available.
+// Social Proof Data
+// Platform stats come only from env overrides set from real aggregates. Nothing
+// renders when they are unset; there are no illustrative fallbacks.
 // ─────────────────────────────────────────────────────────────────────────────
-
-export interface CustomerLogo {
-    name: string;
-    industry: string;
-    /** Display initials when logo image not licensed */
-    initials: string;
-    colorClass: string;
-}
-
-/**
- * A featured workflow example card. Cards link to an illustrative case study;
- * there are no customer quotes, names, or ratings until real ones are approved.
- */
-export interface TestimonialCard {
-    caseStudySlug: string;
-}
 
 export interface ThirdPartyTrustLink {
     name: string;
@@ -26,45 +11,34 @@ export interface ThirdPartyTrustLink {
     status: "live" | "coming_soon";
 }
 
-function parseStat(value: string | undefined, fallback: number): number {
-    if (!value) return fallback;
-    const n = parseInt(value.replace(/[^0-9]/g, ""), 10);
-    return Number.isFinite(n) ? n : fallback;
+export interface PlatformStats {
+    reviewCountFormatted: string | null;
+    businessCountFormatted: string | null;
+    starRating: string | null;
 }
 
-export function getPlatformStats() {
-    const reviewCount = parseStat(process.env.NEXT_PUBLIC_TRUST_REVIEW_COUNT, 12400);
-    const businessCount = parseStat(process.env.NEXT_PUBLIC_TRUST_BUSINESS_COUNT, 250);
+function parseStat(value: string | undefined): number | null {
+    if (!value) return null;
+    const n = parseInt(value.replace(/[^0-9]/g, ""), 10);
+    return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+function formatCount(count: number): string {
+    return count >= 1000 ? `${Math.floor(count / 100) / 10}k+`.replace(".0k", "k") : `${count}+`;
+}
+
+/** Real platform aggregates from env, or null when none are configured. */
+export function getPlatformStats(): PlatformStats | null {
+    const reviewCount = parseStat(process.env.NEXT_PUBLIC_TRUST_REVIEW_COUNT);
+    const businessCount = parseStat(process.env.NEXT_PUBLIC_TRUST_BUSINESS_COUNT);
+    const starRating = process.env.NEXT_PUBLIC_TRUST_STAR_RATING?.trim() || null;
+    if (reviewCount === null && businessCount === null && starRating === null) return null;
     return {
-        reviewCount,
-        reviewCountFormatted: reviewCount >= 1000
-            ? `${Math.floor(reviewCount / 100) / 10}k+`.replace(".0k", "k")
-            : `${reviewCount}+`,
-        businessCount,
-        businessCountFormatted: `${businessCount}+`,
-        starRating: process.env.NEXT_PUBLIC_TRUST_STAR_RATING ?? "4.9",
+        reviewCountFormatted: reviewCount === null ? null : formatCount(reviewCount),
+        businessCountFormatted: businessCount === null ? null : `${businessCount}+`,
+        starRating,
     };
 }
-
-/** Representative local businesses - swap for licensed logos when available */
-export const CUSTOMER_LOGOS: CustomerLogo[] = [
-    { name: "Sunrise Dental", industry: "Dental", initials: "SD", colorClass: "bg-chart-1" },
-    { name: "Wolfpack BBQ", industry: "Restaurant", initials: "WB", colorClass: "bg-primary" },
-    { name: "Apex HVAC", industry: "Home Services", initials: "AH", colorClass: "bg-chart-2" },
-    { name: "Bella's Salon", industry: "Salon", initials: "BS", colorClass: "bg-chart-5" },
-    { name: "Precision Auto", industry: "Auto Repair", initials: "PA", colorClass: "bg-sync-action" },
-    { name: "Harbor Legal", industry: "Legal", initials: "HL", colorClass: "bg-muted-foreground" },
-    { name: "Green Leaf Cafe", industry: "Cafe", initials: "GL", colorClass: "bg-chart-2" },
-    { name: "Summit Fitness", industry: "Fitness", initials: "SF", colorClass: "bg-sync-action" },
-];
-
-export const FEATURED_TESTIMONIALS: TestimonialCard[] = [
-    { caseStudySlug: "sunrise-dental-austin" },
-    { caseStudySlug: "wolfpack-bbq-charlotte" },
-    { caseStudySlug: "apex-hvac-denver" },
-    { caseStudySlug: "bellas-salon-portland" },
-    { caseStudySlug: "precision-auto-works-phoenix" },
-];
 
 export const THIRD_PARTY_TRUST: ThirdPartyTrustLink[] = [
     {
@@ -92,21 +66,3 @@ export const THIRD_PARTY_TRUST: ThirdPartyTrustLink[] = [
         status: "coming_soon",
     },
 ];
-
-/** Industry-specific trust counts for industry landing pages */
-export const INDUSTRY_TRUST_COUNTS: Record<string, number> = {
-    restaurants: 84,
-    dental: 62,
-    "auto-repair": 47,
-    salons: 38,
-    "home-services": 71,
-    medical: 29,
-    hotels: 22,
-    fitness: 31,
-};
-
-export function getIndustryTrustLabel(industrySlug: string, industryNamePlural: string): string {
-    const count = INDUSTRY_TRUST_COUNTS[industrySlug];
-    if (!count) return `Local ${industryNamePlural.toLowerCase()} trust Zyene`;
-    return `${count}+ ${industryNamePlural.toLowerCase()} on Zyene`;
-}

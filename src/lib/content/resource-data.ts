@@ -55,7 +55,7 @@ const guide1: ResourceGuide = {
         { label: "Free review request templates", href: "/resources/review-request-templates" },
         { label: "Compare review platforms", href: "/compare" },
         { label: "Zyene Reviews pricing", href: "/pricing" },
-        { label: "Start free trial", href: SIGNUP_URL },
+        { label: "Start 7-day free trial", href: SIGNUP_URL },
     ],
     faqs: [
         { question: "Can I remove a negative Google review?", answer: "You cannot remove a genuine review yourself. Flag reviews that violate Google policies (spam, fake, offensive content) via the ⋮ menu on the review. If Google removes it, great; if not, respond professionally and keep collecting recent honest reviews to balance your profile." },
@@ -161,7 +161,7 @@ const guide1: ResourceGuide = {
             "Real-time review alerts across Google, Facebook, and Yelp",
             "Automated review request delivery via SMS and email",
             "AI reply suggestions for faster, more consistent responses",
-            "Negative Feedback Shield for private complaint routing",
+            "Negative Feedback Shield: an optional private channel alongside the public review link",
             "Competitor tracking to monitor nearby businesses",
             "GBP keyword performance dashboard",
             "Pricing without annual contracts",
@@ -181,7 +181,7 @@ const guide1: ResourceGuide = {
             ctaLabel: "Start your 7-day free trial of Zyene Reviews",
             ctaHref: SIGNUP_URL,
             ctaTrackLocation: "google-reviews-guide",
-            ctaButtonText: "Start Free Trial",
+            ctaButtonText: "Start 7-day free trial",
         },
     ],
 };
@@ -207,7 +207,7 @@ const guide2: ResourceGuide = {
         { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
         { label: "Complete Google Reviews guide", href: "/resources/google-reviews-guide" },
         { label: "Zyene Reviews pricing", href: "/pricing" },
-        { label: "Start free trial", href: SIGNUP_URL },
+        { label: "Start 7-day free trial", href: SIGNUP_URL },
     ],
     faqs: [
         { question: "How long should a negative review response be?", answer: "Aim for under 150 words. Long replies can read as defensive. Include the customer's name, one specific detail from their review, and a direct way to continue the conversation privately (email or phone)." },
@@ -319,7 +319,7 @@ const guide3: ResourceGuide = {
         { label: "Review request templates", href: "/resources/review-request-templates" },
         { label: "Automated text and email requests", href: "/features/review-collection" }, { label: "Google Business Profile insights", href: "/features/local-seo" },
         { label: "Compare review platforms", href: "/compare" },
-        { label: "Start free trial", href: SIGNUP_URL },
+        { label: "Start 7-day free trial", href: SIGNUP_URL },
     ],
     faqs: [
         { question: "What is local SEO for a small business?", answer: "Local SEO is optimizing your online presence so you show up when nearby customers search on Google Maps and local results. It combines your Google Business Profile, consistent business listings, reviews, location-focused website pages, and local trust signals." },

@@ -1,7 +1,8 @@
 import type { IndustryData } from "@/lib/industries/industry-data";
+import type { IndustryPageContent } from "@/lib/industries/industry-page-content";
 
 /** Illustrative routine in three columns. Not a case study, and labelled as such. */
-export function IndustriesIndustryUseCaseSection({ data }: { data: IndustryData }) {
+export function IndustriesIndustryUseCaseSection({ data, content }: { data: IndustryData; content: IndustryPageContent }) {
     const steps = [
         { title: "Starting point", copy: data.useCase.startingPoint },
         { title: "A better routine", copy: data.useCase.workflow },
@@ -13,7 +14,7 @@ export function IndustriesIndustryUseCaseSection({ data }: { data: IndustryData 
             <div className="marketing-container">
                 <div className="home-section-head">
                     <p className="marketing-eyebrow">An illustrative workflow</p>
-                    <h2 id="ind-usecase-heading">What a better week looks like.</h2>
+                    <h2 id="ind-usecase-heading">{content.headings.useCase}</h2>
                 </div>
                 <ol className="ind-columns">
                     {steps.map((step) => (

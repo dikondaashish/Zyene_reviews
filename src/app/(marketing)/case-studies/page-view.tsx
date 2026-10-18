@@ -7,11 +7,11 @@ export default function CaseStudiesHubPage() {
     return (
         <>
             <BreadcrumbJsonLd
-                            items={[
-                                { name: "Home", url: "https://www.zyenereviews.com/" },
-                                { name: "Example Workflows", url: "https://www.zyenereviews.com/case-studies" },
-                            ]}
-                        />
+                items={[
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Example Workflows", url: "https://www.zyenereviews.com/case-studies" },
+                ]}
+            />
             <CaseStudiesHeroSection />
             <CaseStudiesGridSection />
             <CaseStudiesCtaSection />

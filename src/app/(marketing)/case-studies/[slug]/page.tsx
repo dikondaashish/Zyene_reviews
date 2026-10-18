@@ -18,6 +18,8 @@ export async function generateMetadata(
         title,
         description,
         alternates: { canonical: `https://www.zyenereviews.com/case-studies/${slug}` },
+        // Illustrative composites, not real customers: keep them out of search results.
+        robots: { index: false, follow: true },
         keywords: study.keywords,
         openGraph: {
             title,

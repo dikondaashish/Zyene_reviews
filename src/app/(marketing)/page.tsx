@@ -4,7 +4,7 @@ import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 export const metadata: Metadata = mergeMarketingSocial({
     title: "Review Management for Local Businesses",
     description:
-        "Send branded review requests, manage Google, Facebook, and Yelp feedback, reply with AI, and use Negative Feedback Shield for private follow-up. From $29.99/mo.",
+        "Branded review requests, Google, Facebook, and Yelp feedback, AI replies, and private feedback when customers want to reach you directly. From $29.99/mo.",
     alternates: {
         canonical: "https://www.zyenereviews.com/",
     },

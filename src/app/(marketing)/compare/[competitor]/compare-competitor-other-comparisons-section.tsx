@@ -1,50 +1,40 @@
 import type { CompetitorData } from "@/lib/comparisons/competitor-data";
-import type { ReactNode } from "react";
 import Link from "next/link";
-import { COMPETITOR_MAP, COMPETITOR_SLUGS } from "@/lib/comparisons/competitor-data";
+import { COMPETITORS } from "@/lib/comparisons/competitor-data";
+import { FEATURE_PILLAR_MAP } from "@/lib/growth/feature-pillars";
 
-export function CompareCompetitorOtherComparisonsSection({ data, slug }: { data: CompetitorData; slug: string }) {
+/** Related features, deep-dive guides and the other comparisons. */
+export function CompareCompetitorOtherComparisonsSection({ data }: { data: CompetitorData }) {
     return (
-        <section className="py-12 px-4 bg-muted border-t border-border">
-                <div className="container mx-auto max-w-4xl">
-                    <p className="text-sm font-semibold text-muted-foreground text-center mb-6">Other comparisons</p>
-                    <div className="flex flex-wrap justify-center gap-3">
-                        {COMPETITOR_SLUGS.reduce<ReactNode[]>((acc, s) => {
-                            if (s === slug) return acc;
-                            const comp = COMPETITOR_MAP[s];
-                            acc.push(
-                                <Link
-                                    key={s}
-                                    href={`/compare/${s}`}
-                                    className="text-sm font-medium text-muted-foreground hover:text-primary border border-border rounded-lg px-4 py-2 hover:border-primary/50 transition-all bg-card"
-                                >
-                                    Zyene Reviews vs {comp.name} →
-                                </Link>
-                            );
-                            return acc;
-                        }, [])}
+        <section className="marketing-section mi-section-tight" aria-label="Related pages">
+            <div className="marketing-container">
+                <nav aria-label={`Zyene features relevant to ${data.name} users`} className="cmp-nav">
+                    <p className="cmp-nav-label">Features to look at first</p>
+                    <div className="mi-chips">
+                        {data.relatedPillars.map((slug) => (
+                            <Link key={slug} href={`/features/${slug}`}>{FEATURE_PILLAR_MAP[slug].navLabel}</Link>
+                        ))}
                     </div>
-                    {slug === "birdeye" ? (
-                        <div className="mt-10 border-t border-border pt-8 text-center">
-                            <p className="text-sm font-semibold text-muted-foreground mb-4">Related Birdeye guides</p>
-                            <div className="flex flex-wrap justify-center gap-3">
-                                <Link
-                                    href="/blog/birdeye-pricing-breakdown-2026"
-                                    className="text-sm text-foreground underline underline-offset-4 hover:text-primary"
-                                >
-                                    Birdeye pricing breakdown & quote analysis
-                                </Link>
-                                <span className="text-muted-foreground">•</span>
-                                <Link
-                                    href="/blog/birdeye-alternatives-for-local-businesses"
-                                    className="text-sm text-foreground underline underline-offset-4 hover:text-primary"
-                                >
-                                    Birdeye alternatives compared
-                                </Link>
-                            </div>
+                </nav>
+                {data.guides && data.guides.length > 0 ? (
+                    <nav aria-label={`${data.name} guides`} className="cmp-nav">
+                        <p className="cmp-nav-label">Related {data.name} guides</p>
+                        <div className="mi-chips">
+                            {data.guides.map((guide) => (
+                                <Link key={guide.href} href={guide.href}>{guide.label}</Link>
+                            ))}
                         </div>
-                    ) : null}
-                </div>
-            </section>
+                    </nav>
+                ) : null}
+                <nav aria-label="Other comparisons" className="cmp-nav">
+                    <p className="cmp-nav-label">Other comparisons</p>
+                    <div className="mi-chips">
+                        {COMPETITORS.filter((c) => c.slug !== data.slug).map((c) => (
+                            <Link key={c.slug} href={`/compare/${c.slug}`}>Zyene Reviews vs {c.name}</Link>
+                        ))}
+                    </div>
+                </nav>
+            </div>
+        </section>
     );
 }

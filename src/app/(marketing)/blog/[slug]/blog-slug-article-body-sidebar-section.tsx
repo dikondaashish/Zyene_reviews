@@ -44,7 +44,7 @@ export function BlogSlugArticleBodySidebarSection({ post }: { post: (typeof BLOG
                         </div>
                         <Button asChild>
                             <Link href={SIGNUP_URL} data-track="trial" data-track-location="blog-cta">
-                                Start free trial <ArrowRight className="size-4" aria-hidden="true" />
+                                Start 7-day free trial <ArrowRight className="size-4" aria-hidden="true" />
                             </Link>
                         </Button>
                     </section>

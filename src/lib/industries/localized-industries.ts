@@ -30,7 +30,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         heroSubtitle:
             "Pide una reseña después de cada visita, responde en Google automáticamente y da a los comensales insatisfechos una vía privada para hablar contigo.",
         bullets: [
-            "Solicitudes automáticas tras el pago o la reserva",
+            "Solicitudes vía webhook (p. ej. Zapier) o API",
             "Respuestas con IA en español e inglés",
             "Panel para varias ubicaciones",
         ],
@@ -98,7 +98,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         heroSubtitle:
             "Pide una reseña en cada entrega, responde mientras el taller sigue ocupado y aclara en privado las dudas sobre presupuestos.",
         bullets: [
-            "Integración con flujos de caja / Zapier",
+            "Webhook compatible con Zapier",
             "Alertas de reseñas negativas",
             "Análisis de competencia local",
         ],
@@ -113,7 +113,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
             "Consultorios médicos: gestión de reputación con privacidad, solicitudes éticas de reseñas y respuestas con tono clínico.",
         heroTitle: "Reseñas constantes. Respuestas cuidadosas.",
         heroSubtitle:
-            "Pide reseñas después de cada consulta, revisa los borradores de IA antes de publicarlos y envía las quejas por espera a recepción.",
+            "Pide reseñas después de cada consulta, revisa los borradores de IA antes de publicarlos y ofrece a los pacientes un canal privado opcional para hablar con recepción.",
         bullets: [
             "Respuestas con tono clínico",
             "Multi-ubicación para grupos pequeños",
@@ -149,7 +149,7 @@ export const LOCALIZED_INDUSTRY_PAGES: LocalizedIndustryPage[] = [
         heroSubtitle:
             "Reúne reseñas todo el año, responde con la voz de tu gimnasio y atiende en privado las dudas de cancelación o cobro.",
         bullets: [
-            "Automatización post-primera clase",
+            "Solicitudes post-clase vía webhook o API",
             "Seguimiento de competidores",
             "Widgets para tu landing",
         ],

@@ -1,38 +1,37 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import {
-    ENTERPRISE_COMPARISON_ROWS,
-    ENTERPRISE_SLA_BULLETS,
-    ENTERPRISE_VALUE_PROPS,
-    ENTERPRISE_SALES_EMAIL,
-} from "@/lib/enterprise/enterprise-data";
+import { ENTERPRISE_COMPARISON_ROWS } from "@/lib/enterprise/enterprise-data";
 
 export function EnterpriseSection4Section() {
     return (
-        <section className="py-20 px-4 bg-muted border-b border-border">
-                <div className="container mx-auto max-w-5xl overflow-x-auto">
-                    <h2 className="text-[length:var(--fs-h2)] font-semibold mb-8">Plan comparison</h2>
-                    <table className="w-full text-sm border border-border rounded-xl overflow-hidden bg-card">
+        <section className="marketing-section" aria-labelledby="enterprise-plans-heading">
+            <div className="marketing-container">
+                <div className="mi-head">
+                    <p className="marketing-eyebrow">Plan comparison</p>
+                    <h2 id="enterprise-plans-heading">How Enterprise differs from self-serve plans.</h2>
+                </div>
+                <div className="mi-table-wrap">
+                    <table className="mi-table">
+                        <caption className="sr-only">Starter, Professional and Enterprise plan comparison</caption>
                         <thead>
-                            <tr className="bg-muted/80 border-b border-border">
-                                <th className="text-left p-4 font-semibold">Feature</th>
-                                <th className="p-4 font-semibold">Starter</th>
-                                <th className="p-4 font-semibold">Professional</th>
-                                <th className="p-4 font-semibold text-primary">Enterprise</th>
+                            <tr>
+                                <th scope="col">Feature</th>
+                                <th scope="col">Starter</th>
+                                <th scope="col">Professional</th>
+                                <th scope="col">Enterprise</th>
                             </tr>
                         </thead>
                         <tbody>
                             {ENTERPRISE_COMPARISON_ROWS.map((row) => (
-                                <tr key={row.feature} className="border-b border-border last:border-0">
-                                    <td className="p-4 font-medium">{row.feature}</td>
-                                    <td className="p-4 text-muted-foreground">{row.starter}</td>
-                                    <td className="p-4 text-muted-foreground">{row.professional}</td>
-                                    <td className="p-4 text-foreground font-medium">{row.enterprise}</td>
+                                <tr key={row.feature}>
+                                    <th scope="row">{row.feature}</th>
+                                    <td>{row.starter}</td>
+                                    <td>{row.professional}</td>
+                                    <td className="text-foreground font-medium">{row.enterprise}</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
-            </section>
+            </div>
+        </section>
     );
 }

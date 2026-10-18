@@ -1,35 +1,13 @@
 import type { CompetitorData } from "@/lib/comparisons/competitor-data";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { SIGNUP_URL } from "@/config/env";
-import { ArrowRight } from "lucide-react";
+import { MarketingClosingBand } from "@/components/marketing/marketing-closing-band";
 
 export function CompareCompetitorFinalCtaSection({ data }: { data: CompetitorData }) {
     return (
-        <section className="py-24 px-4 bg-background border-t border-border">
-                <div className="container mx-auto max-w-3xl text-center">
-                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-4">
-                        Try Zyene Reviews free for 7 days
-                    </h2>
-                    <p className="text-xl text-muted-foreground mb-10">
-                        No annual contract. Card required. Your selected plan bills automatically after the trial unless you cancel.<br />
-                        Cancel before day 7 - pay nothing.
-                    </p>
-                    <Button size="lg" className="px-12 py-7 text-[1.05rem] font-semibold rounded-xl" asChild>
-                        <Link href={SIGNUP_URL} data-track="trial" data-track-location="competitor-cta">
-                            Start Your Free Trial <ArrowRight className="ml-2 size-5" />
-                        </Link>
-                    </Button>
-                    <p className="mt-5 text-sm text-muted-foreground">
-                        Already using {data.name}?{" "}
-                        <a
-                            href={`mailto:hello@zyenereviews.com?subject=${encodeURIComponent(`Switching from ${data.name}`)}`}
-                            className="underline hover:text-foreground"
-                        >
-                            Talk to us about migration →
-                        </a>
-                    </p>
-                </div>
-            </section>
+        <MarketingClosingBand
+            title="Try Zyene Reviews free for 7 days"
+            text={`No annual contract. Card required. Your selected plan bills automatically after the trial unless you cancel. Cancel before day 7 and pay nothing. Already using ${data.name}? We can help you plan the move.`}
+            image={{ src: "/marketing/home/cafe-conversation.webp", alt: "A barista talking with a customer at work" }}
+            trackLocation="competitor-cta"
+        />
     );
 }

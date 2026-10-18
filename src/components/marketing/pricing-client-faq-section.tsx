@@ -14,7 +14,7 @@ export function PricingClientFaqSection() {
                     <h2 id="pricing-faq-heading">Questions about plans.</h2>
                     <p className="home-section-lede">Everything you need to know before signing up.</p>
                     <Link href="/contact" className="home-text-link">
-                        Talk to a real person <ArrowRight size={14} aria-hidden="true" />
+                        Contact us <ArrowRight size={14} aria-hidden="true" />
                     </Link>
                 </div>
                 <div className="home-faq-list">

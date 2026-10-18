@@ -6,6 +6,8 @@ export const metadata: Metadata = mergeMarketingSocial({
     description:
         "Explore illustrative review-management workflows for dental, restaurant, salon, HVAC, and auto teams. Composite examples are educational.",
     alternates: { canonical: "https://www.zyenereviews.com/case-studies" },
+    // Illustrative composites, not real customers: keep them out of search results.
+    robots: { index: false, follow: true },
     openGraph: {
         title: "Illustrative Review Workflows",
         description: "Composite workflow examples for local teams building a better review routine.",

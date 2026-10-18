@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { FreeToolShell } from "@/components/marketing/free-tools/free-tool-shell";
 import { PlaceSearchInput, type PlaceSuggestion } from "@/components/marketing/free-tools/place-search-input";
-import { Loader2, Star } from "lucide-react";
+import { FreeToolEmailDisclosure } from "@/components/marketing/free-tools/free-tool-email-disclosure";
+import { FreeToolLoadingLabel } from "@/components/marketing/free-tools/free-tool-loading-label";
+import { FreeToolResultCta } from "@/components/marketing/free-tools/free-tool-result-cta";
+import { trackToolUsed } from "@/lib/free-tools/track-tool-used";
+import { Star } from "lucide-react";
 
 type Preview = {
     name: string;
@@ -43,10 +46,7 @@ export function ReputationScoreCheckerClient() {
             }
             setPreview(json.preview);
             setFullSent(Boolean(json.emailSent));
-            if (typeof window !== "undefined") {
-                (window as unknown as { dataLayer?: unknown[] }).dataLayer = (window as unknown as { dataLayer?: unknown[] }).dataLayer || [];
-                (window as unknown as { dataLayer?: unknown[] }).dataLayer!.push({ event: "tool_used", tool_name: "reputation-score-checker" });
-            }
+            trackToolUsed("reputation-score-checker");
             if (json.emailWarning) setError(json.emailWarning);
         } catch {
             setError("Network error");
@@ -56,81 +56,74 @@ export function ReputationScoreCheckerClient() {
     }
 
     return (
-        <div className="min-h-screen bg-background">
-            <section className="pt-16 pb-12 px-4 border-b border-border">
-                <div className="container mx-auto max-w-2xl">
-                    <Link href="/tools" className="text-sm text-primary hover:underline">← All free tools</Link>
-                    <h1 className="text-[length:var(--fs-display)] font-semibold mt-4 mb-3">Reputation Score Checker</h1>
-                    <p className="text-muted-foreground">
-                        See your public Google rating and review count instantly. Optionally email yourself the same snapshot.
-                    </p>
-                </div>
-            </section>
-            <section className="py-10 px-4 bg-muted/20 border-b border-border">
-                <div className="container mx-auto max-w-2xl space-y-4">
-                    <h2 className="text-xl font-bold text-foreground">What your reputation score shows</h2>
-                    <p className="text-muted-foreground leading-relaxed">
+        <FreeToolShell
+            title="Reputation Score Checker"
+            lede="See your public Google rating and review count instantly. Optionally email yourself the same snapshot."
+            whyTitle="What your reputation score shows"
+            why={<>
+                <p>
                         Your Google rating and review count are often the first signals new customers see in local
                         search. This checker shows those public Google metrics. It cannot measure response coverage
                         without access to your connected review data.
                     </p>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p>
                         Improving your score usually means collecting more recent reviews and responding consistently.
                         Zyene Reviews automates both with alerts, AI replies, and review request campaigns from $29.99/mo.
                     </p>
-                </div>
-            </section>
-            <section className="py-12 px-4">
-                <div className="container mx-auto max-w-2xl space-y-6">
-                    <div className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-4">
-                        <PlaceSearchInput onSelect={(p) => { setPlace(p); setPreview(null); setFullSent(false); setError(""); }} />
-                        <Button type="button" onClick={() => run(true)} disabled={loading || !place} className="w-full" data-track="tool" data-track-location="reputation-score-checker">
-                            {loading ? <Loader2 className="animate-spin size-4" /> : "Check reputation"}
-                        </Button>
+            </>}
+        >
+<div className="mi-panel tool-form">
+                        <label htmlFor="reputation-business" className="text-sm font-medium block">Your business</label>
+                        <PlaceSearchInput id="reputation-business" onSelect={(p) => { setPlace(p); setPreview(null); setFullSent(false); setError(""); }} />
+                        <button type="button" onClick={() => run(true)} disabled={loading || !place} aria-busy={loading} className="marketing-button w-full disabled:pointer-events-none disabled:opacity-60" data-track="tool" data-track-location="reputation-score-checker">
+                            {loading ? <FreeToolLoadingLabel text="Checking reputation" /> : "Check reputation"}
+                        </button>
                     </div>
                     {preview && (
-                        <div className="bg-card border border-border rounded-2xl p-6 grid gap-4 sm:grid-cols-3">
-                            <div className="text-center p-4 rounded-xl bg-muted/40">
-                                <Star className="text-chart-4 mx-auto mb-2 size-6" />
-                                <p className="text-2xl font-bold">{preview.totalReviews ? preview.averageRating.toFixed(1) : "—"}</p>
+                        <div className="mi-panel tool-stats">
+                            <div className="tool-stat">
+                                <Star aria-hidden="true" className="tool-stat-star size-5" />
+                                <p className="mi-card-value">{preview.totalReviews ? preview.averageRating.toFixed(1) : "—"}</p>
                                 <p className="text-xs text-muted-foreground">Avg rating</p>
                             </div>
-                            <div className="text-center p-4 rounded-xl bg-muted/40">
-                                <p className="text-2xl font-bold">{preview.totalReviews}</p>
+                            <div className="tool-stat">
+                                <p className="mi-card-value">{preview.totalReviews}</p>
                                 <p className="text-xs text-muted-foreground">Reviews</p>
                             </div>
-                            <div className="text-center p-4 rounded-xl bg-muted/40">
-                                <p className="text-2xl font-bold">Unavailable</p>
-                                <p className="text-xs text-muted-foreground">Response coverage requires connected reviews</p>
-                            </div>
-                            <p className="sm:col-span-3 text-sm text-muted-foreground text-center">{preview.name}</p>
+                            <p className="tool-stats-name">{preview.name}</p>
                         </div>
                     )}
                     {preview && !fullSent && (
                         <form
-                            className="bg-card border border-border rounded-2xl p-6 space-y-4"
+                            className="mi-panel tool-form"
                             onSubmit={(e) => { e.preventDefault(); run(false); }}
                         >
-                            <p className="text-sm font-medium">Email a copy of this snapshot</p>
+                            <label htmlFor="reputation-email" className="text-sm font-medium block">Email a copy of this snapshot</label>
                             <input
+                                id="reputation-email"
                                 type="email"
-                                aria-label="Email address"
                                 autoComplete="email"
+                                aria-describedby="reputation-email-disclosure"
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full h-11 rounded-lg border border-border px-4 text-sm"
                                 placeholder="you@business.com"
                             />
-                            <Button type="submit" disabled={loading} className="w-full" data-track="tool" data-track-location="reputation-score-checker">
-                                Email snapshot
-                            </Button>
+                            <FreeToolEmailDisclosure id="reputation-email-disclosure" />
+                            <button type="submit" disabled={loading} aria-busy={loading} className="marketing-button marketing-button-secondary w-full disabled:pointer-events-none disabled:opacity-60" data-track="tool" data-track-location="reputation-score-checker">
+                                {loading ? <FreeToolLoadingLabel text="Sending snapshot" /> : "Email snapshot"}
+                            </button>
                         </form>
                     )}
-                    {fullSent && <p className="text-sm text-success text-center">Snapshot accepted for email delivery. Check your inbox.</p>}
-                    {error && <p className="text-sm text-destructive text-center">{error}</p>}
-                </div>
-            </section>
-        </div>
+                    {fullSent && <p role="status" className="text-sm text-success text-center">Snapshot accepted for email delivery. Check your inbox.</p>}
+                    {error && <p role="alert" className="text-sm text-destructive text-center">{error}</p>}
+                    {preview && (
+                        <FreeToolResultCta
+                            toolSlug="reputation-score-checker"
+                            message="Grow your rating with automated review requests, alerts, and reply drafts in Zyene Reviews."
+                        />
+                    )}
+        </FreeToolShell>
     );
 }

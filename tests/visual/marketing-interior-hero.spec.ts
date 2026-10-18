@@ -5,13 +5,13 @@ const LANDING_HERO_PAGES = [
   { path: "/industries/restaurants", variant: "story", media: "photo" },
   { path: "/features/ai-replies", variant: "product", media: "product" },
   { path: "/features", variant: "directory", media: "none" },
-  { path: "/how-it-works", variant: "product", media: "none" },
-  { path: "/compare", variant: "directory", media: "none" },
+  { path: "/how-it-works", variant: "product", media: "product" },
+  { path: "/compare", variant: "product", media: "product" },
   { path: "/contact", variant: "conversion", media: "none" },
-  { path: "/demo", variant: "conversion", media: "none" },
+  { path: "/demo", variant: "conversion", media: "product" },
   { path: "/security", variant: "reading", media: "none" },
   { path: "/blog", variant: "directory", media: "none" },
-  { path: "/resources", variant: "directory", media: "none" },
+  { path: "/resources", variant: "product", media: "product" },
 ] as const;
 
 test.beforeEach(async ({ page }) => {

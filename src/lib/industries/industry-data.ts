@@ -55,7 +55,7 @@ export const INDUSTRIES: IndustryData[] = [
         accentColor: "brand",
         metaTitle: "Restaurant Review Management",
         metaDescription:
-            "Zyene Reviews helps restaurants get more Google reviews, respond faster with AI, and protect reputation with the Negative Feedback Shield. From $29.99/mo.",
+            "Zyene Reviews helps restaurants get more Google reviews, respond faster with AI, and offer diners a private feedback channel. From $29.99/mo.",
         targetKeywords: ["restaurant review management", "google reviews for restaurants", "restaurant reputation management", "how to get more restaurant reviews"],
         painPoints: [
             {
@@ -77,7 +77,7 @@ export const INDUSTRIES: IndustryData[] = [
         solutions: [
             { title: "Never miss a new review", description: "Get instant SMS or email alerts the moment a new Google, Facebook, or Yelp review arrives, so you can respond before the diner even gets home." },
             { title: "AI replies that sound like you", description: "During the morning rush, let automatic Google replies answer eligible new reviews in a Professional, Friendly, or Concise tone. Review and publish a draft yourself when a guest needs a personal response." },
-            { title: "Follow up on low ratings", description: "The Negative Feedback Shield gives unhappy diners a private form to describe the problem and alerts your team. Use that feedback for service recovery while keeping public review requests fair." },
+            { title: "Follow up on low ratings", description: "The Negative Feedback Shield gives unhappy diners a private form to describe the problem and alerts your team. Every diner still gets the same public review link." },
             { title: "Track nearby competitors", description: "See how your star rating and review volume compare with the restaurants around you, and get an alert when a rival's reviews spike." },
         ],
         useCase: {
@@ -85,7 +85,7 @@ export const INDUSTRIES: IndustryData[] = [
             workflow: "Connect each location, centralize review alerts, create a response workflow, and offer every customer a consistent way to share feedback.",
             measures: "Track request delivery, genuine review volume, rating distribution, response coverage, and response time by location. Results depend on customer volume and experience.",
         },
-        ctaJoinCopy: "Join other restaurant owners on Zyene",
+        ctaJoinCopy: "Get started with Zyene for your restaurant",
         imagePath: "/images/industries/restaurant-guests.webp",
     },
 
@@ -96,7 +96,7 @@ export const INDUSTRIES: IndustryData[] = [
         nameSingular: "Dental Practice",
         ownerTitle: "dental practice",
         heroHeadline: "Review Management Built for Dental Practices",
-        heroSub: "Dental practices use Zyene Reviews to attract new patients, respond to reviews professionally, and protect their reputation with the Negative Feedback Shield.",
+        heroSub: "Dental practices use Zyene Reviews to attract new patients, respond to reviews professionally, and give patients an optional private way to reach the practice.",
         accentColor: "chart1",
         metaTitle: "Dental Practice Review Management",
         metaDescription:
@@ -120,17 +120,17 @@ export const INDUSTRIES: IndustryData[] = [
             },
         ],
         solutions: [
-            { title: "Grow your review count automatically", description: "Send automated review requests via SMS or email after each appointment, timed to arrive when patient satisfaction is highest, like 2 hours after checkout." },
+            { title: "Ask every patient after their visit", description: "Send review requests by SMS or email after appointments, triggered via a webhook from your booking or practice software (for example a Zapier step) or the API." },
             { title: "Professional replies with team review", description: "Draft professional responses for your team to review. Keep public replies general and avoid patient details. Automatic Google replies are optional; use individual review when a response needs privacy-sensitive judgment." },
             { title: "Handle billing and wait-time complaints", description: "The Negative Feedback Shield gives patients a private feedback path for billing or wait-time concerns, so your team can review the issue and follow up." },
-            { title: "Monitor every platform in one inbox", description: "Track your reviews across Google, Healthgrades context, and Facebook from one dashboard. Identify which of your associates receives the best patient feedback." },
+            { title: "Monitor connected platforms in one inbox", description: "Track reviews from your connected platforms, such as Google and Facebook, in one dashboard so nothing waits for a reply." },
         ],
         useCase: {
             startingPoint: "A dental group has uneven review coverage across locations and no shared process for requests, replies, or billing-related feedback.",
             workflow: "Connect both locations, send requests to consented customers after visits, route feedback to the responsible team, and review AI-assisted drafts before publishing.",
             measures: "Track consented request delivery, new review volume, response time, unresolved feedback, and location-level trends. Do not attribute ranking changes to reviews alone.",
         },
-        ctaJoinCopy: "Join other dental practices on Zyene",
+        ctaJoinCopy: "Get started with Zyene for your dental practice",
         imagePath: "/images/industries/dental-candid-v2.webp",
     },
 
@@ -156,7 +156,7 @@ export const INDUSTRIES: IndustryData[] = [
             {
                 stat: "Estimate disputes",
                 title: "Estimate surprises turn into 1-star reviews",
-                description: "Customers may raise unexpected charges or changed estimates in auto repair feedback. Without a private resolution path, unhappy customers go straight to Google.",
+                description: "Customers may raise unexpected charges or changed estimates in auto repair feedback. Without a direct line to the shop, owners often hear about these concerns late, with no chance to make it right.",
             },
             {
                 stat: "Repeat business",
@@ -175,7 +175,7 @@ export const INDUSTRIES: IndustryData[] = [
             workflow: "Send the same honest review request after completed repairs, centralize alerts, respond to feedback, and monitor public competitor rating and volume changes.",
             measures: "Track delivery, response coverage, review volume, rating distribution, and issue-resolution time. Local position must be measured separately and is not a promised outcome.",
         },
-        ctaJoinCopy: "Join other auto repair shops on Zyene",
+        ctaJoinCopy: "Get started with Zyene for your auto repair shop",
         imagePath: "/images/industries/auto-repair-candid-v2.webp",
     },
 
@@ -186,7 +186,7 @@ export const INDUSTRIES: IndustryData[] = [
         nameSingular: "Salon or Spa",
         ownerTitle: "salon owner",
         heroHeadline: "Review Management Built for Salons & Spas",
-        heroSub: "Salon and spa owners use Zyene Reviews to grow their 5-star review count, respond to clients professionally, and shield their reputation from bad experiences.",
+        heroSub: "Salon and spa owners use Zyene Reviews to grow their 5-star review count, respond to clients professionally, and give clients an optional private way to reach the owner.",
         accentColor: "chart4",
         metaTitle: "Salon & Spa Review Management",
         metaDescription:
@@ -210,7 +210,7 @@ export const INDUSTRIES: IndustryData[] = [
             },
         ],
         solutions: [
-            { title: "Automated requests after every appointment", description: "Send a branded review request via SMS or email automatically after each appointment, when the client is freshly satisfied and still glowing from the service." },
+            { title: "Requests after every appointment", description: "Send a branded review request by SMS or email after appointments, triggered via a webhook from your booking software (for example a Zapier step) or the API." },
             { title: "AI replies that sound personal, not generic", description: "Keep your salon’s voice in the conversation. Choose a tone and star threshold for automatic Google replies, while handling appointment concerns with a draft you review yourself." },
             { title: "Follow up on disappointed clients", description: "When a client isn't happy with their cut or color, the Negative Feedback Shield gives them a private way to explain what went wrong and alerts your team." },
             { title: "Stay ahead of nearby salons", description: "The competitor tracker monitors nearby salons and spas. Know when a competitor is getting more reviews than you, and respond before it affects your bookings." },
@@ -220,7 +220,7 @@ export const INDUSTRIES: IndustryData[] = [
             workflow: "Send consented follow-ups after appointments, centralize new-review alerts, and give staff a clear process for editing and approving reply drafts.",
             measures: "Track request delivery, new review volume, response time, rebooking, and feedback resolution. Booking or rating lift must be measured from the salon's own data.",
         },
-        ctaJoinCopy: "Join other salon and spa owners on Zyene",
+        ctaJoinCopy: "Get started with Zyene for your salon or spa",
         imagePath: "/images/industries/salons-candid-v2.webp",
     },
 
@@ -235,7 +235,7 @@ export const INDUSTRIES: IndustryData[] = [
         accentColor: "chart2",
         metaTitle: "Home Services Review Management",
         metaDescription:
-            "Plumbers, HVAC, and electricians win more jobs with review automation, AI replies, and private negative feedback routing. From $29.99/mo.",
+            "Plumbers, HVAC, and electricians win more jobs with review requests, AI replies, and an optional private feedback channel. From $29.99/mo.",
         targetKeywords: ["plumber reviews", "HVAC reputation management", "home services google reviews", "electrician review management", "contractor reputation management"],
         painPoints: [
             {
@@ -251,21 +251,21 @@ export const INDUSTRIES: IndustryData[] = [
             {
                 stat: "Pricing disputes",
                 title: "Price surprises are your biggest review risk",
-                description: "Customers may raise unexpected charges, scope changes and billing issues in home services feedback. Without a private resolution path, upset homeowners post publicly.",
+                description: "Customers may raise unexpected charges, scope changes and billing issues in home services feedback. Without a direct line to the office, owners often hear about these concerns late.",
             },
         ],
         solutions: [
-            { title: "Request reviews the moment the job is done", description: "Trigger a review request automatically when a job is marked complete, via SMS or email, when the homeowner's satisfaction is highest." },
+            { title: "Request reviews when the job is done", description: "Send an SMS or email review request after a completed job via a webhook from your booking or job software (for example a Zapier step) or the API." },
             { title: "AI replies that sound like a real professional", description: "Let automatic Google replies handle eligible new reviews while you are on the next job. Set a tone and star threshold for each business, and review complex service concerns yourself." },
             { title: "Follow up on pricing disputes", description: "The Negative Feedback Shield gives unhappy homeowners a private way to explain a pricing problem and alerts your team to follow up." },
-            { title: "Win seasonal search ranking battles", description: "Track competitor review volume and freshness across your service area. Stay ahead before peak season hits by proactively collecting reviews during quieter months." },
+            { title: "Get ready before peak season", description: "Track competitor review volume and freshness across your service area. Stay ahead before peak season hits by proactively collecting reviews during quieter months." },
         ],
         useCase: {
-            startingPoint: "A home-services team completes many jobs but asks for reviews inconsistently and notices pricing complaints only after they become public.",
-            workflow: "Connect the job-completion workflow, send consented follow-ups, centralize feedback, and compare public review trends with nearby providers before peak season.",
+            startingPoint: "A home-services team completes many jobs but asks for reviews inconsistently and has no consistent way to hear pricing concerns directly.",
+            workflow: "Connect job software through a webhook or the API, send consented follow-ups, centralize feedback, and compare public review trends with nearby providers before peak season.",
             measures: "Track request delivery, review volume, rating distribution, response time, and resolved service issues. Maps position depends on relevance, distance, and broader prominence signals.",
         },
-        ctaJoinCopy: "Join other home services professionals on Zyene",
+        ctaJoinCopy: "Get started with Zyene for your home services business",
         imagePath: "/images/industries/window-installation.webp",
     },
 
@@ -291,7 +291,7 @@ export const INDUSTRIES: IndustryData[] = [
             {
                 stat: "Wait times",
                 title: "Wait time complaints are your biggest review risk",
-                description: "Across all medical specialties, wait time and front-desk experience are the top reasons patients leave negative reviews, not clinical outcomes. These complaints are preventable with private resolution.",
+                description: "Wait times and front-desk experience are common themes in patient feedback, often more than clinical outcomes. Many can be addressed when patients have an easy way to reach the practice.",
             },
             {
                 stat: "Multiple platforms",
@@ -302,15 +302,15 @@ export const INDUSTRIES: IndustryData[] = [
         solutions: [
             { title: "Automate review requests after each visit", description: "Send a review request via email or SMS after each appointment, timed to arrive when patient satisfaction is highest and the visit is still fresh." },
             { title: "Professional, empathetic AI replies", description: "Draft empathetic responses and review them before publishing. Keep patient-specific information out of public replies. Automatic Google replies are optional and do not replace your practice’s review process." },
-            { title: "Privately resolve front-desk and wait-time complaints", description: "The Negative Feedback Shield routes upset patients to a private feedback form. Most wait-time and billing complaints can be resolved before they become public 1-star reviews." },
-            { title: "Monitor all platforms from one dashboard", description: "Track your Google, Facebook, and other review platforms from one inbox. Set up instant alerts so your team can respond within hours, not days." },
+            { title: "Hear front-desk and wait-time concerns directly", description: "Every patient gets the same public review link. The Negative Feedback Shield adds an optional private form so patients can also reach your team directly about wait times or billing." },
+            { title: "Monitor all platforms from one dashboard", description: "Track your Google, Facebook, and Yelp reviews from one inbox. Set up instant alerts so your team can respond within hours, not days." },
         ],
         useCase: {
             startingPoint: "A medical group has inconsistent location-level review monitoring and no reliable handoff for wait-time or front-desk feedback.",
             workflow: "Use consented post-visit requests, centralize alerts, route operational feedback internally, and require staff review of privacy-aware reply drafts.",
             measures: "Track request delivery, response coverage, time to resolution, and location trends without exposing patient information or promising appointment growth.",
         },
-        ctaJoinCopy: "Join other medical practices on Zyene",
+        ctaJoinCopy: "Get started with Zyene for your medical practice",
         imagePath: "/images/industries/medical-candid-v2.webp",
     },
 
@@ -325,7 +325,7 @@ export const INDUSTRIES: IndustryData[] = [
         accentColor: "chart5",
         metaTitle: "Hotel Review Management",
         metaDescription:
-            "Hotels respond faster, collect post-stay reviews, and protect ratings with AI replies and the Negative Feedback Shield. From $29.99/mo.",
+            "Hotels respond faster with AI replies, collect post-stay reviews, and offer guests a private feedback channel. From $29.99/mo.",
         targetKeywords: ["hotel review management", "hospitality reviews", "hotel reputation management", "hotel google reviews", "hotel response management"],
         painPoints: [
             {
@@ -341,13 +341,13 @@ export const INDUSTRIES: IndustryData[] = [
             {
                 stat: "Room complaints",
                 title: "Room quality complaints are your biggest review risk",
-                description: "Hotel feedback may cover noise, cleanliness and the check-in experience. Without a private resolution path, guests go straight to Google and TripAdvisor.",
+                description: "Hotel feedback may cover noise, cleanliness and the check-in experience. Without a direct line to the front desk, managers often hear about these issues late.",
             },
         ],
         solutions: [
             { title: "AI drafts and automatic Google replies", description: "Automatically reply to eligible new Google reviews after a stay, using your selected tone and star threshold. Keep individual service issues in a manual draft-and-review workflow." },
-            { title: "Private resolution for room complaints", description: "The Negative Feedback Shield gives unhappy guests a private channel to report issues before they write a public review. Resolving quickly drives loyalty, not churn." },
-            { title: "Automate post-checkout review requests", description: "Send a branded review request via email or SMS automatically at checkout, when guests are most likely to write a positive review." },
+            { title: "A private channel for room issues", description: "Every guest gets the same public review link. The Negative Feedback Shield also gives guests an optional private channel to report an issue so your team can follow up quickly." },
+            { title: "Post-checkout review requests", description: "Send a branded review request by email or SMS after checkout via a webhook from your booking or property software (for example a Zapier step) or the API." },
             { title: "Track your competitive set", description: "Monitor the review volume and rating of nearby hotels in the same class. Use the comparison to decide where to improve; Google Maps position depends on more than reviews." },
         ],
         useCase: {
@@ -355,7 +355,7 @@ export const INDUSTRIES: IndustryData[] = [
             workflow: "Centralize alerts, send consented post-checkout follow-ups, assign complaints, and review AI-assisted responses before they are published.",
             measures: "Track response coverage, response time, genuine review volume, issue resolution, and direct bookings in separate systems. No booking lift is assumed.",
         },
-        ctaJoinCopy: "Join other hotels and hospitality businesses on Zyene",
+        ctaJoinCopy: "Get started with Zyene for your hotel",
         imagePath: "/images/industries/hotels-candid-v2.webp",
     },
 
@@ -381,7 +381,7 @@ export const INDUSTRIES: IndustryData[] = [
             {
                 stat: "Cancellation reviews",
                 title: "Cancellation friction leads to angry 1-star reviews",
-                description: "Gym feedback may cover cancellation processes and membership billing disputes. Without a private resolution path, these complaints go straight to Google.",
+                description: "Gym feedback may cover cancellation processes and membership billing disputes. Without a direct line to the studio, owners often hear about these concerns late.",
             },
             {
                 stat: "Equipment & cleanliness",
@@ -390,17 +390,17 @@ export const INDUSTRIES: IndustryData[] = [
             },
         ],
         solutions: [
-            { title: "Build review momentum before January", description: "Proactively collect reviews during quieter months so you enter January with a fresh, high-volume review profile that beats competitors in Google Maps results." },
+            { title: "Build review momentum before January", description: "Proactively collect reviews during quieter months so you enter January with recent reviews for new members to read." },
             { title: "AI replies that sound like a real community", description: "Choose a Friendly, Professional, or Concise tone for automatic replies to eligible new Google reviews. Give membership concerns personal attention with drafts your team reviews." },
-            { title: "Privately resolve cancellation and billing disputes", description: "The Negative Feedback Shield routes cancellation complaints and billing disputes to a private channel where you can fix the issue before it becomes a 1-star review." },
+            { title: "Hear cancellation and billing concerns directly", description: "Every member gets the same public review link. The Negative Feedback Shield adds an optional private channel for cancellation or billing concerns so you can follow up." },
             { title: "Track competitor gyms in your area", description: "See how nearby gyms compare on review volume and rating. Know when a competitor is gaining on you and stay ahead with a proactive review collection strategy." },
         ],
         useCase: {
             startingPoint: "A fitness studio competes with a larger franchise and has no consistent process for first-visit feedback, replies, or cancellation issues.",
-            workflow: "Send the same honest follow-up after eligible visits, centralize alerts, route billing concerns, and monitor public competitor review trends.",
+            workflow: "Send the same honest follow-up after eligible visits, centralize alerts, offer a private channel for billing concerns, and monitor public competitor review trends.",
             measures: "Track request delivery, response coverage, genuine review volume, cancellations resolved, and local position independently. No ranking or retention result is promised.",
         },
-        ctaJoinCopy: "Join other gym and fitness studio owners on Zyene",
+        ctaJoinCopy: "Get started with Zyene for your gym or studio",
         imagePath: "/images/industries/fitness-candid-v2.webp",
     },
 
@@ -415,7 +415,7 @@ export const INDUSTRIES: IndustryData[] = [
         accentColor: "chart1",
         metaTitle: "HVAC Reputation Management & Review Software",
         metaDescription:
-            "HVAC review management: automate post-job review requests, AI-drafted Google replies, and private routing of pricing complaints. From $29.99/mo.",
+            "HVAC review management: automate post-job review requests, AI-drafted Google replies, and a private feedback option. From $29.99/mo.",
         targetKeywords: [
             "hvac reputation management",
             "hvac review management",
@@ -435,7 +435,7 @@ export const INDUSTRIES: IndustryData[] = [
                 stat: "Pricing disputes",
                 title: "Quote changes turn into 1-star reviews",
                 description:
-                    "HVAC feedback may cover scope changes and unexpected charges. Without a private resolution path, upset homeowners post publicly.",
+                    "HVAC feedback may cover scope changes and unexpected charges. Without a direct line to the office, owners often hear about these concerns late.",
             },
             {
                 stat: "Techs in the field",
@@ -445,17 +445,17 @@ export const INDUSTRIES: IndustryData[] = [
             },
         ],
         solutions: [
-            { title: "Request a review the moment the job closes", description: "Trigger an SMS or email review request automatically when a job is marked complete, when the homeowner's relief (and your five-star service) is freshest." },
+            { title: "Request a review when the job closes", description: "Send an SMS or email review request after each completed job via a webhook from your booking or job software (for example a Zapier step) or the API." },
             { title: "AI replies while you're on the next call", description: "Auto-draft professional replies to eligible new Google reviews in your chosen tone. Handle a tricky pricing concern with a draft you review yourself." },
-            { title: "Route pricing complaints privately", description: "The Negative Feedback Shield gives unhappy homeowners a private form to explain a billing issue and alerts your office before it becomes a public review." },
+            { title: "A private channel for pricing concerns", description: "Every homeowner gets the same public review link. The Negative Feedback Shield adds an optional private form to explain a billing issue and alerts your office." },
             { title: "Beat nearby HVAC competitors", description: "Track review volume and rating against other HVAC companies in your service area before peak season hits." },
         ],
         useCase: {
-            startingPoint: "An HVAC company completes dozens of installs and repairs monthly but asks for reviews inconsistently and catches pricing complaints only after they go public.",
-            workflow: "Connect the job-completion workflow, send consented follow-ups, centralize new-review alerts, and compare review trends with nearby HVAC providers before peak season.",
+            startingPoint: "An HVAC company completes dozens of installs and repairs monthly but asks for reviews inconsistently and has no consistent way to hear pricing concerns directly.",
+            workflow: "Connect job software through a webhook or the API, send consented follow-ups, centralize new-review alerts, and compare review trends with nearby HVAC providers before peak season.",
             measures: "Track request delivery, review volume, rating distribution, response time, and resolved billing issues. Maps position depends on relevance, distance, and prominence, not reviews alone.",
         },
-        ctaJoinCopy: "Join other HVAC companies on Zyene",
+        ctaJoinCopy: "Get started with Zyene for your HVAC company",
         imagePath: "/images/industries/hvac-candid-v2.webp",
     },
 
@@ -466,7 +466,7 @@ export const INDUSTRIES: IndustryData[] = [
         nameSingular: "Plumbing Company",
         ownerTitle: "plumbing business owner",
         heroHeadline: "Review & Reputation Management for Plumbers",
-        heroSub: "Plumbers use Zyene Reviews to turn every completed job into a Google review, respond with AI, and keep pricing surprises off public review pages.",
+        heroSub: "Plumbers use Zyene Reviews to turn every completed job into a Google review, respond with AI, and give customers a private way to raise pricing concerns.",
         accentColor: "chart2",
         metaTitle: "Plumber Review & Reputation Management Software",
         metaDescription:
@@ -490,7 +490,7 @@ export const INDUSTRIES: IndustryData[] = [
                 stat: "Price surprises",
                 title: "Estimate changes are your biggest review risk",
                 description:
-                    "Plumbing feedback may cover unexpected charges and changed quotes. Without a private resolution path, upset customers post on Google.",
+                    "Plumbing feedback may cover unexpected charges and changed quotes. Without a direct line to the office, owners often hear about these concerns late.",
             },
             {
                 stat: "Hands-on work",
@@ -500,17 +500,17 @@ export const INDUSTRIES: IndustryData[] = [
             },
         ],
         solutions: [
-            { title: "Automate post-job review requests", description: "Send a branded SMS or email review request automatically after each completed job. No office admin work required." },
+            { title: "Post-job review requests", description: "Send a branded SMS or email review request after each completed job via a webhook from your booking or job software (for example a Zapier step) or the API." },
             { title: "AI replies in your shop's voice", description: "Auto-draft replies to eligible new Google reviews in a Professional, Friendly, or Concise tone. Edit a draft personally when a customer needs individual attention." },
-            { title: "Resolve billing complaints before they go public", description: "The Negative Feedback Shield routes price disputes to a private form and alerts your office so you can make it right first." },
+            { title: "Hear billing concerns directly", description: "Every customer gets the same public review link. The Negative Feedback Shield adds an optional private form for price disputes and alerts your office so you can follow up." },
             { title: "Track other plumbers in your area", description: "Monitor competitor review volume and rating across your service area to stay the obvious choice when homeowners search." },
         ],
         useCase: {
-            startingPoint: "A plumbing company finishes many jobs weekly but rarely asks for reviews and learns about billing complaints only from public 1-star posts.",
-            workflow: "Send the same honest request after completed jobs, centralize alerts, respond with AI-assisted drafts, and route billing issues to a private feedback form.",
+            startingPoint: "A plumbing company finishes many jobs weekly but rarely asks for reviews and has no consistent way to hear billing concerns directly.",
+            workflow: "Send the same honest request after completed jobs, centralize alerts, respond with AI-assisted drafts, and offer an optional private feedback form for billing issues.",
             measures: "Track request delivery, review volume, rating distribution, response coverage, and resolved issues. Ranking is not a promised outcome.",
         },
-        ctaJoinCopy: "Join other plumbing companies on Zyene",
+        ctaJoinCopy: "Get started with Zyene for your plumbing company",
         imagePath: "/images/industries/plumbing-candid-v2.webp",
     },
 
@@ -521,11 +521,11 @@ export const INDUSTRIES: IndustryData[] = [
         nameSingular: "Electrician",
         ownerTitle: "electrical business owner",
         heroHeadline: "Review & Reputation Management for Electricians",
-        heroSub: "Electricians use Zyene Reviews to automate review requests after each job, respond with AI, and stay the top-rated choice for local electrical work.",
+        heroSub: "Electricians use Zyene Reviews to automate review requests after each job, respond with AI, and keep a steady stream of recent reviews.",
         accentColor: "chart4",
         metaTitle: "Electrician Review & Reputation Management",
         metaDescription:
-            "Electrician reputation management: automate Google review requests after each job, AI-drafted replies, and private routing of unhappy customers. From $29.99/mo.",
+            "Electrician reputation management: automate Google review requests after each job, AI-drafted replies, and an optional private feedback channel. From $29.99/mo.",
         targetKeywords: [
             "electrician reputation management",
             "electrical reputation management",
@@ -545,7 +545,7 @@ export const INDUSTRIES: IndustryData[] = [
                 stat: "Quote disputes",
                 title: "Scope changes become public complaints",
                 description:
-                    "Hidden-condition discoveries change the price mid-job. Without a private resolution path, a frustrated customer leaves a 1-star review.",
+                    "Hidden-condition discoveries change the price mid-job. Without a direct line to the office, owners often hear about the frustration late.",
             },
             {
                 stat: "Solo & small crews",
@@ -555,17 +555,17 @@ export const INDUSTRIES: IndustryData[] = [
             },
         ],
         solutions: [
-            { title: "Every finished job earns a review", description: "Trigger an SMS or email request automatically when the job is closed. Panels, rewires, and installs all feed your Google profile." },
+            { title: "Ask after every finished job", description: "Send an SMS or email request after each closed job via a webhook from your booking or job software (for example a Zapier step) or the API." },
             { title: "AI replies while you're on site", description: "Auto-draft replies to eligible new Google reviews in your chosen tone. Handle a tricky concern yourself from a pre-written draft." },
-            { title: "Resolve unhappy customers privately", description: "The Negative Feedback Shield gives an unhappy customer a private channel and alerts you before a public review hits." },
-            { title: "Out-rank competing electricians", description: "Track review volume and rating against other electricians in your service area so you stay the obvious, trusted choice." },
+            { title: "A private channel for unhappy customers", description: "Every customer gets the same public review link. The Negative Feedback Shield adds an optional private channel and alerts you so you can follow up." },
+            { title: "Know where you stand locally", description: "Track review volume and rating against other electricians in your service area so you stay the obvious, trusted choice." },
         ],
         useCase: {
             startingPoint: "An electrical contractor does high-quality work but has far fewer Google reviews than nearby competitors and no consistent reply process.",
-            workflow: "Send the same honest request after eligible jobs, centralize alerts, respond with AI-assisted drafts, and route unhappy customers privately.",
+            workflow: "Send the same honest request after eligible jobs, centralize alerts, respond with AI-assisted drafts, and offer an optional private feedback channel.",
             measures: "Track request delivery, review volume, response coverage, and rating distribution. Local position depends on factors beyond reviews.",
         },
-        ctaJoinCopy: "Join other electricians on Zyene",
+        ctaJoinCopy: "Get started with Zyene for your electrical business",
         imagePath: "/images/industries/electricians-candid-v2.webp",
     },
 ];

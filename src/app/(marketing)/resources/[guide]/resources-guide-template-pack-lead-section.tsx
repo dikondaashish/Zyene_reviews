@@ -1,6 +1,6 @@
 import { NewsletterSignup } from "@/components/marketing/newsletter-signup";
 import type { ResourceGuide } from "@/lib/content/resource-data";
-import { Download, ListChecks } from "lucide-react";
+import { Check, Download, ListChecks } from "lucide-react";
 
 const REVIEW_COMPLIANCE_ITEMS = [
     "No discounts, gifts, or incentives for positive reviews.",
@@ -59,39 +59,39 @@ export function ResourcesGuideTemplatePackLeadSection({ resource }: { resource: 
     return (
         <section
             id="resource-lead-capture"
-            className="py-10 px-4 border-b border-border bg-gradient-to-b from-primary/5 to-background"
+            className="marketing-section mi-section-tight"
             aria-labelledby="resource-lead-capture-heading"
         >
-            <div className="container mx-auto max-w-3xl text-center">
-                <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary mb-4">
-                    <Icon className="size-3.5" aria-hidden />
-                    {resource.resourceLabel ?? copy.badge}
+            <div className="marketing-container">
+                <div className="mi-panel mi-lead">
+                    <div>
+                        <p className="mi-pill">
+                            <Icon size={14} aria-hidden="true" />
+                            {resource.resourceLabel ?? copy.badge}
+                        </p>
+                        <h2 id="resource-lead-capture-heading">{copy.heading}</h2>
+                        <p className="mi-lead-note">{copy.description}</p>
+                        <NewsletterSignup
+                            source={copy.source}
+                            submitLabel={copy.submitLabel}
+                            subscribedLabel="On the list"
+                            successMessage={copy.successMessage}
+                            idleFooter=""
+                            className="mi-lead-form"
+                        />
+                    </div>
+                    <div>
+                        <ul className="mi-checks">
+                            {copy.compliance.map((item) => (
+                                <li key={item}>
+                                    <Check size={16} aria-hidden="true" />
+                                    {item}
+                                </li>
+                            ))}
+                        </ul>
+                        <p className="mi-lead-note">{copy.footerNote}</p>
+                    </div>
                 </div>
-                <h2 id="resource-lead-capture-heading" className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-                    {copy.heading}
-                </h2>
-                <p className="text-muted-foreground text-sm sm:text-base mb-6">{copy.description}</p>
-
-                <NewsletterSignup
-                    source={copy.source}
-                    submitLabel={copy.submitLabel}
-                    subscribedLabel="On the list"
-                    successMessage={copy.successMessage}
-                    idleFooter=""
-                    className="mx-auto"
-                />
-
-                <ul className="mt-6 text-left max-w-lg mx-auto space-y-2 text-xs text-muted-foreground">
-                    {copy.compliance.map((item) => (
-                        <li key={item} className="flex gap-2">
-                            <span className="text-primary shrink-0" aria-hidden>
-                                •
-                            </span>
-                            <span>{item}</span>
-                        </li>
-                    ))}
-                </ul>
-                <p className="text-xs text-muted-foreground mt-4 max-w-lg mx-auto">{copy.footerNote}</p>
             </div>
         </section>
     );
