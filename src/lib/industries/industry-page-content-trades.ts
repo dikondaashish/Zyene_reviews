@@ -65,7 +65,7 @@ export const TRADES_PAGE_CONTENT: Record<string, IndustryPageContent> = {
         lead: {
             title: "Job closed, request sent",
             description: "When a tech marks the job complete, your job software sends a webhook and Zyene texts the homeowner a review request. No one has to remember on the drive to the next call.",
-            visual: { kind: "job-webhook", business: "Summit Heating & Air", job: "AC tune-up · Job #4821", customer: "Maria G." },
+            visual: { kind: "job-webhook", business: "Summit Heating & Air", job: "AC tune-up · Job 4821", customer: "Maria G." },
             visualLabel: "A completed HVAC job sending a webhook that triggers an SMS review request",
             link: TRIGGER_LINK,
             replacesSolution: 0,
@@ -90,7 +90,7 @@ export const TRADES_PAGE_CONTENT: Record<string, IndustryPageContent> = {
         lead: {
             title: "A request the moment the job closes",
             description: "Mark the job done in your job software and a webhook tells Zyene to text the customer. The request names your company and links straight to your review page.",
-            visual: { kind: "job-webhook", business: "Clearflow Plumbing", job: "Water heater replaced · Job #2219", customer: "Derek P." },
+            visual: { kind: "job-webhook", business: "Clearflow Plumbing", job: "Water heater replaced · Job 2219", customer: "Derek P." },
             visualLabel: "A completed plumbing job sending a webhook that triggers an SMS review request",
             link: TRIGGER_LINK,
             replacesSolution: 0,
@@ -114,7 +114,7 @@ export const TRADES_PAGE_CONTENT: Record<string, IndustryPageContent> = {
         lead: {
             title: "Requests that start on job completion",
             description: "When a panel upgrade or rewire is closed out, a webhook from your job software triggers the review request. Your electricians stay on the work.",
-            visual: { kind: "job-webhook", business: "Brightline Electric", job: "Panel upgrade · Job #1307", customer: "Alicia M." },
+            visual: { kind: "job-webhook", business: "Brightline Electric", job: "Panel upgrade · Job 1307", customer: "Alicia M." },
             visualLabel: "A completed electrical job sending a webhook that triggers an SMS review request",
             link: TRIGGER_LINK,
             replacesSolution: 0,
