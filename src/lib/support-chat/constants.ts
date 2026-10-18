@@ -1,7 +1,12 @@
 /** Shared by the marketing chat widget and its API routes. */
 
 export const SUPPORT_AGENT_NAME = "Charlie";
-export const SUPPORT_AGENT_AVATAR = "/brand/mascot/zyene-mascot-master-v1.png";
+/**
+ * Stock headshot under the free Unsplash License (commercial use, no attribution required):
+ * https://unsplash.com/photos/a-woman-with-long-blonde-hair-wearing-a-black-shirt-VzusBjHlKM8. Avatar only; the greeting
+ * still says Charlie is an AI agent. Swap for a consenting teammate's photo when one is available.
+ */
+export const SUPPORT_AGENT_AVATAR = "/brand/support/charlie-avatar.jpg";
 
 export const SUPPORT_CHAT_GREETING = [
     `Hi, I'm ${SUPPORT_AGENT_NAME}, an AI agent that can answer your questions about Zyene Reviews. You can also ask for a human.`,
