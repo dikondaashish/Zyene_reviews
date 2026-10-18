@@ -36,7 +36,7 @@ export function ResetPasswordForm() {
                     {sessionReady ? "Update password" : "Verifying link…"}
                 </AuthSubmit>
             </form>
-            <p className="auth-switch">Remember your password? <Link href="/login" className="auth-text-link">Log in</Link></p>
+            <p className="auth-switch">Remember your password?<Link href="/login" className="auth-text-link">Log in</Link></p>
         </div>
     );
 }

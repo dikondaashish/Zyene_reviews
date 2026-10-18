@@ -97,7 +97,7 @@ export function GoogleIdentityButton({
     if (!clientId) {
         return (
             <p className="auth-google-unavailable" role="status">
-                Google sign-in is unavailable. Continue with email below.
+                Google sign-in is unavailable right now.
             </p>
         );
     }
@@ -126,7 +126,7 @@ export function GoogleIdentityButton({
             {(!isReady || isSubmitting || loadFailed) && (
                 <div className="auth-google-placeholder" role="status">
                     {!loadFailed && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
-                    {loadFailed ? "Google unavailable. Use email below." : isSubmitting ? "Completing sign-in…" : "Loading Google sign-in…"}
+                    {loadFailed ? "Google sign-in is unavailable right now." : isSubmitting ? "Completing sign-in…" : "Loading Google sign-in…"}
                 </div>
             )}
         </div>

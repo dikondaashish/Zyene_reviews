@@ -1,14 +1,19 @@
 "use client";
 
+import Link from "next/link";
 import type { InputHTMLAttributes, ReactNode } from "react";
-import { AlertCircle, ArrowRight, Eye, EyeOff, Loader2, Lock, type LucideIcon } from "lucide-react";
+import { AlertCircle, ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
 
 export function AuthHeading({ title, children }: { title: string; children: ReactNode }) {
     return <header className="auth-form-heading"><h1>{title}</h1><p>{children}</p></header>;
 }
 
 export function AuthDivider() {
-    return <div className="auth-divider">or continue with email</div>;
+    return <div className="auth-divider">or</div>;
+}
+
+export function AuthBackToLogin() {
+    return <Link href="/login" className="auth-back"><ArrowLeft size={15} aria-hidden="true" /> Back to log in</Link>;
 }
 
 export function AuthError({ message }: { message?: string | null }) {
@@ -26,23 +31,15 @@ interface AuthSubmitProps {
 export function AuthSubmit({ loading, children, pending, disabled = false }: AuthSubmitProps) {
     return (
         <button type="submit" className="auth-submit" disabled={loading || disabled}>
-            {loading ? <Loader2 size={17} className="animate-spin" aria-hidden="true" /> : null}
-            {loading ? pending : children}
-            {!loading && <ArrowRight size={17} aria-hidden="true" />}
+            {loading ? <><Loader2 size={17} className="animate-spin" aria-hidden="true" />{pending}</> : children}
         </button>
     );
 }
 
-type AuthInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "className"> & { icon: LucideIcon };
+type AuthInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "className">;
 
-/** Text input with a leading icon; the icon is decorative, the field keeps its own label. */
-export function AuthInput({ icon: Icon, ...inputProps }: AuthInputProps) {
-    return (
-        <div className="auth-input-wrap">
-            <Icon className="auth-input-icon" size={17} aria-hidden="true" />
-            <input {...inputProps} className="auth-input" />
-        </div>
-    );
+export function AuthInput(inputProps: AuthInputProps) {
+    return <input {...inputProps} className="auth-input" />;
 }
 
 type PasswordFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "className"> & {
@@ -53,12 +50,11 @@ type PasswordFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "
 export function AuthPasswordField({ visible, onToggle, ...inputProps }: PasswordFieldProps) {
     return (
         <div className="auth-input-wrap auth-password">
-            <Lock className="auth-input-icon" size={17} aria-hidden="true" />
             <input {...inputProps} className="auth-input" type={visible ? "text" : "password"} />
             <button type="button" className="auth-password-toggle" onClick={onToggle}
                 aria-label={visible ? "Hide password" : "Show password"} aria-pressed={visible}
                 aria-controls={inputProps.id} disabled={inputProps.disabled}>
-                {visible ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+                {visible ? <EyeOff size={17} aria-hidden="true" /> : <Eye size={17} aria-hidden="true" />}
             </button>
         </div>
     );

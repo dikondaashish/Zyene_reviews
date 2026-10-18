@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties } from "react";
 import { Star } from "lucide-react";
 import { FacebookBrandIcon } from "@/components/integrations/facebook-brand-icon";
 import { GoogleCardGoogleIcon } from "@/components/integrations/google-card-google-icon";
@@ -8,13 +8,17 @@ export type ScenePlatform = "google" | "facebook" | "yelp";
 
 const PLATFORM_LABEL: Record<ScenePlatform, string> = { google: "Google", facebook: "Facebook", yelp: "Yelp" };
 
-/** Five stars that pop in one after another, starting at `delay` seconds. */
-export function SceneStars({ delay = 0, size = 12 }: { delay?: number; size?: number }) {
+/** Sets the entrance delay (seconds) that the flow's `fx-*` classes read. */
+export const d = (seconds: number) => ({ "--d": `${seconds}s` }) as CSSProperties;
+
+/** Five stars; `pop` makes them land one after another, starting at `delay` seconds. */
+export function SceneStars({ count = 5, delay = 0, size = 12, pop = false }: { count?: number; delay?: number; size?: number; pop?: boolean }) {
     return (
         <span className="scene-stars">
             {[0, 1, 2, 3, 4].map((i) => (
                 <Star key={i} size={size} fill="currentColor" strokeWidth={0}
-                    style={{ "--scene-delay": `${delay + i * 0.08}s` } as CSSProperties} />
+                    className={`${i < count ? "" : "scene-star-off"} ${pop ? "fx-star" : ""}`}
+                    style={pop ? d(delay + i * 0.07) : undefined} />
             ))}
         </span>
     );
@@ -31,30 +35,7 @@ export function PlatformMark({ platform }: { platform: ScenePlatform }) {
     );
 }
 
-interface SceneReviewCardProps {
-    platform: ScenePlatform;
-    initials: string;
-    name: string;
-    delay: number;
-    className: string;
-    /** Optional sentiment chip, e.g. "Positive". */
-    tag?: string;
-    children: ReactNode;
-}
-
-/** A review arriving: the outer element floats, the inner card handles the entrance. */
-export function SceneReviewCard({ platform, initials, name, delay, className, tag, children }: SceneReviewCardProps) {
-    return (
-        <div className={`scene-float ${className}`}>
-            <div className={`scene-card scene-review scene-review--${platform} scene-enter`} style={{ "--scene-delay": `${delay}s` } as CSSProperties}>
-                <div className="scene-card-head">
-                    <span className="scene-avatar">{initials}</span>
-                    <span className="scene-card-who"><strong>{name}</strong><PlatformMark platform={platform} /></span>
-                    <SceneStars delay={delay + 0.35} />
-                </div>
-                <p>{children}</p>
-                {tag && <span className="scene-tag" style={{ "--scene-delay": `${delay + 0.9}s` } as CSSProperties}>{tag}</span>}
-            </div>
-        </div>
-    );
+/** Initials avatar tinted by the review's platform. */
+export function SceneAvatar({ initials, platform }: { initials: string; platform?: ScenePlatform }) {
+    return <span className={`scene-avatar ${platform ? `scene-tint--${platform}` : ""}`}>{initials}</span>;
 }
