@@ -10,17 +10,19 @@ interface ComposerProps {
     email: string;
     showEmail: boolean;
     disabled: boolean;
+    /** Natalie is replying: typing ahead is fine, sending waits. */
+    busy?: boolean;
     disabledHint?: string;
     onEmailChange: (email: string) => void;
     onSend: (text: string) => void;
 }
 
 export const SupportChatComposer = forwardRef<HTMLTextAreaElement, ComposerProps>(function SupportChatComposer(
-    { email, showEmail, disabled, disabledHint, onEmailChange, onSend },
+    { email, showEmail, disabled, busy = false, disabledHint, onEmailChange, onSend },
     textareaRef,
 ) {
     const [draft, setDraft] = useState("");
-    const canSend = !disabled && draft.trim().length > 0;
+    const canSend = !disabled && !busy && draft.trim().length > 0;
 
     const submit = () => {
         if (!canSend) return;

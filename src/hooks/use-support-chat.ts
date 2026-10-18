@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { LEAD_GATE_AFTER_QUESTIONS, type SupportChatIntent } from "@/lib/support-chat/constants";
@@ -14,6 +14,13 @@ import {
 
 export type LeadReason = "question_limit" | "human_request";
 
+/** A person notices the message before they start typing... */
+const TYPING_DOTS_DELAY_MS = 600;
+/** ...and never answers instantly, even when the model does. */
+const MIN_REPLY_DELAY_MS = 1_400;
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const FALLBACK_REPLY = "Sorry, I couldn't reach the team's assistant. Please try again, or email contact@zyenereviews.com.";
 
 function message(role: StoredChatMessage["role"], content: string): StoredChatMessage {
@@ -24,7 +31,12 @@ export function useSupportChat() {
     const pathname = usePathname();
     // Only used by the client-only chat panel, so storage is safe to read during the first render.
     const [state, setState] = useState<SupportChatState>(loadChatState);
+    /** Typing dots visible. */
     const [pending, setPending] = useState(false);
+    /** A question is in flight or its answer is still typing out; blocks the next send. */
+    const [busy, setBusy] = useState(false);
+    const [typingId, setTypingId] = useState<string | null>(null);
+    const deferredLead = useRef<LeadReason | null>(null);
     const [leadReason, setLeadReason] = useState<LeadReason | null>(() =>
         !state.leadSubmitted && state.questionsAsked >= LEAD_GATE_AFTER_QUESTIONS ? "question_limit" : null);
 
@@ -36,15 +48,17 @@ export function useSupportChat() {
 
     const send = useCallback(async (text: string) => {
         const question = text.trim();
-        if (!question || pending || gated) return;
+        if (!question || busy || gated) return;
         const userMessage = message("user", question);
         const thread = [...state.messages, userMessage];
         const asked = state.questionsAsked + 1;
         setState((prev) => ({ ...prev, messages: thread, questionsAsked: asked }));
-        setPending(true);
+        setBusy(true);
+        const dotsTimer = window.setTimeout(() => setPending(true), TYPING_DOTS_DELAY_MS);
 
         let reply = FALLBACK_REPLY;
         let intent: SupportChatIntent = "answer";
+        const minDelay = wait(MIN_REPLY_DELAY_MS);
         try {
             const res = await fetch("/api/marketing/chat", {
                 method: "POST",
@@ -62,12 +76,25 @@ export function useSupportChat() {
             // Network failure: the fallback reply explains what to do next.
         }
 
-        setState((prev) => ({ ...prev, messages: [...prev.messages, message("assistant", reply)] }));
+        await minDelay;
+        window.clearTimeout(dotsTimer);
+
+        // The contact form waits until this answer has finished typing out.
+        deferredLead.current = state.leadSubmitted
+            ? null
+            : intent === "handoff" ? "human_request" : asked >= LEAD_GATE_AFTER_QUESTIONS ? "question_limit" : null;
+        const answer = message("assistant", reply);
         setPending(false);
-        if (state.leadSubmitted) return;
-        if (intent === "handoff") setLeadReason("human_request");
-        else if (asked >= LEAD_GATE_AFTER_QUESTIONS) setLeadReason("question_limit");
-    }, [gated, pathname, pending, state]);
+        setTypingId(answer.id);
+        setState((prev) => ({ ...prev, messages: [...prev.messages, answer] }));
+    }, [busy, gated, pathname, state]);
+
+    const finishTyping = useCallback(() => {
+        setTypingId(null);
+        setBusy(false);
+        if (deferredLead.current) setLeadReason(deferredLead.current);
+        deferredLead.current = null;
+    }, []);
 
     const requestHuman = useCallback(() => {
         if (state.leadSubmitted) {
@@ -94,6 +121,9 @@ export function useSupportChat() {
     const dismissLead = useCallback(() => setLeadReason(null), []);
 
     const reset = useCallback(() => {
+        setTypingId(null);
+        setBusy(false);
+        deferredLead.current = null;
         setState((prev) => ({ ...emptyChatState(), questionsAsked: prev.questionsAsked, leadSubmitted: prev.leadSubmitted, email: prev.email }));
     }, []);
 
@@ -105,6 +135,9 @@ export function useSupportChat() {
         email: state.email,
         leadSubmitted: state.leadSubmitted,
         pending,
+        busy,
+        typingId,
+        finishTyping,
         gated,
         leadReason,
         pagePath: pathname ?? undefined,
