@@ -1,136 +1,54 @@
-import { ContentRenderer } from "@/components/marketing/content-renderer";
-import { MarketingFaqSection } from "@/components/marketing/marketing-faq-section";
-import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/content/resource-data";
 import Link from "next/link";
-import { ArrowRight, Clock, List } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ContentRenderer } from "@/components/marketing/content-renderer";
+import { MarketingGeoSummary } from "@/components/marketing/marketing-geo-summary";
+import { RESOURCE_MAP, RESOURCE_GUIDES } from "@/lib/content/resource-data";
 import { SIGNUP_URL } from "@/config/env";
+import { ResourcesGuideSidebar } from "./resources-guide-sidebar";
 
 export function ResourcesGuideContentSidebarSection({ resource, otherGuides }: { resource: (typeof RESOURCE_MAP)[string]; otherGuides: typeof RESOURCE_GUIDES }) {
+    const internalLinks = resource.internalLinks ?? [];
     return (
-        <div className="py-12 px-4 bg-background">
-                <div className="container mx-auto max-w-5xl">
-                    <div className="grid lg:grid-cols-[1fr_280px] gap-12 items-start">
+        <section className="marketing-section mi-section-tight">
+            <div className="marketing-container mi-read">
+                <ResourcesGuideSidebar resource={resource} otherGuides={otherGuides} />
 
-                        {/* Guide content */}
-                        <article>
-                            {/* Table of Contents */}
-                            {resource.tableOfContents.length > 0 && (
-                                <div className="mb-10 bg-muted border border-border rounded-2xl p-6">
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <List className="text-primary size-4" />
-                                        <span className="text-sm font-bold text-foreground">Table of Contents</span>
-                                    </div>
-                                    <ol className="space-y-2">
-                                        {resource.tableOfContents.map((item, i) => (
-                                            <li key={item.anchor} className="flex items-start gap-2.5">
-                                                <span className="text-xs font-bold text-primary mt-0.5">{String(i + 1).padStart(2, "0")}.</span>
-                                                <a href={`#${item.anchor}`} className="text-sm text-muted-foreground hover:text-primary transition-colors">{item.label}</a>
-                                            </li>
-                                        ))}
-                                    </ol>
-                                </div>
-                            )}
+                <article className="mi-read-main">
+                    {resource.openingSummary ? <MarketingGeoSummary>{resource.openingSummary}</MarketingGeoSummary> : null}
 
-                            {resource.slug === "review-request-templates" ? (
-                                <p className="mb-8 text-sm text-muted-foreground">
-                                    Want the full pack in your inbox?{" "}
-                                    <a href="#resource-lead-capture" className="font-medium text-primary hover:underline">
-                                        Get the 20 templates by email
-                                    </a>
-                                    — browse a sample of the templates below.
-                                </p>
-                            ) : null}
+                    {resource.slug === "review-request-templates" ? (
+                        <p className="text-muted-foreground">
+                            Want the full pack in your inbox?{" "}
+                            <a href="#resource-lead-capture" className="mi-inline-link">
+                                Get the 20 templates by email
+                            </a>
+                            — browse a sample of the templates below.
+                        </p>
+                    ) : null}
 
-                            <ContentRenderer sections={resource.body} />
+                    <ContentRenderer sections={resource.body} />
 
-                            {resource.internalLinks && resource.internalLinks.length > 0 ? (
-                                <nav
-                                    className="mt-10 rounded-2xl border border-border bg-muted/40 p-6"
-                                    aria-label="Related links"
-                                >
-                                    <p className="text-sm font-bold text-foreground mb-3">Related</p>
-                                    <ul className="flex flex-wrap gap-2">
-                                        {resource.internalLinks.map((link) => (
-                                            <li key={link.href}>
-                                                <Link
-                                                    href={link.href === "/signup" ? SIGNUP_URL : link.href}
-                                                    className="inline-flex rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground hover:border-primary/50 hover:text-primary transition-colors"
-                                                    {...(link.href === "/signup" ? { "data-track": "trial", "data-track-location": "guide-related" } : {})}
-                                                >
-                                                    {link.label}
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </nav>
-                            ) : null}
-
-                            {resource.faqs && resource.faqs.length > 0 ? (
-                                <div className="mt-12">
-                                    <MarketingFaqSection
-                                        faqs={resource.faqs}
-                                        headingId="resource-guide-faq-heading"
-                                    />
-                                </div>
-                            ) : null}
-
-                            {/* Guide footer CTA */}
-                            <div className="mt-12 bg-primary/5 border border-primary/20 rounded-2xl p-8">
-                                <h3 className="text-xl font-bold text-foreground mb-2">Put this guide into practice with Zyene</h3>
-                                <p className="text-muted-foreground mb-5">Automate review collection, AI replies, and reputation protection. 7-day free trial, card required; your selected plan bills automatically after the trial unless you cancel.</p>
-                                <Button className="gap-2" asChild>
-                                    <Link href={SIGNUP_URL} data-track="trial" data-track-location="guide-footer">
-                                        Start Free Trial <ArrowRight className="size-4" />
-                                    </Link>
-                                </Button>
-                            </div>
-                        </article>
-
-                        {/* Sidebar */}
-                        <aside className="hidden lg:block space-y-6 sticky top-24">
-                            {resource.slug === "review-request-templates" ? (
-                                <div className="bg-primary/5 border border-primary/25 rounded-2xl p-6">
-                                    <p className="text-sm font-bold text-foreground mb-2">Full swipe file</p>
-                                    <p className="text-xs text-muted-foreground mb-4">
-                                        Email the complete pack - practical templates for customer feedback outreach.
-                                    </p>
-                                    <Button size="sm" variant="outline" className="w-full" asChild>
-                                        <a href="#resource-lead-capture">
-                                            Get the 20 templates
-                                        </a>
-                                    </Button>
-                                </div>
-                            ) : null}
-                            <div className="bg-card border border-border rounded-2xl p-6">
-                                <p className="text-sm font-bold text-foreground mb-2">Try Zyene free</p>
-                                <p className="text-xs text-muted-foreground mb-4">Pair the guide with SMS/email requests, AI reply tools and competitor review snapshots. Starter: $29.99/month. Card required for an eligible trial; automatic billing unless cancelled.</p>
-                                <Button size="sm" className="w-full gap-2" asChild>
-                                    <Link href={SIGNUP_URL} data-track="trial" data-track-location="guide-sidebar">
-                                        Start Free Trial <ArrowRight className="size-3.5" />
-                                    </Link>
-                                </Button>
-                            </div>
-
-                            {otherGuides.length > 0 && (
-                                <div className="bg-card border border-border rounded-2xl p-6">
-                                    <p className="text-sm font-bold text-foreground mb-4">Other guides</p>
-                                    <div className="space-y-4">
-                                        {otherGuides.map((g) => (
-                                            <Link key={g.slug} href={`/resources/${g.slug}`} className="group block">
-                                                <p className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors leading-snug mb-1">{g.title}</p>
-                                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                                    <Clock className="size-3" />
-                                                    {g.readMinutes} min
-                                                </div>
+                    {internalLinks.length > 0 ? (
+                        <nav className="mi-read-related" aria-labelledby="resource-related-heading">
+                            <h2 id="resource-related-heading">Related</h2>
+                            <ul className="mi-chips">
+                                {internalLinks.map((link) => {
+                                    const isSignup = link.href === "/signup" || link.href === SIGNUP_URL;
+                                    return (
+                                        <li key={link.href}>
+                                            <Link
+                                                href={link.href === "/signup" ? SIGNUP_URL : link.href}
+                                                {...(isSignup ? { "data-track": "trial", "data-track-location": "guide-related" } : {})}
+                                            >
+                                                {link.label}
                                             </Link>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </aside>
-                    </div>
-                </div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </nav>
+                    ) : null}
+                </article>
             </div>
+        </section>
     );
 }

@@ -1,0 +1,199 @@
+/* Interior page sections: enterprise, agencies, partners, small business, demo, compare, how it works,
+ * resources, help, tools and case studies. Same language as the homepage and feature pages:
+ * paper canvas, white cards with a hairline shadow, ink headings at 600, orange only on actions. */
+
+/* Section heading: eyebrow, h2 and lede on the left. */
+.mi-head { max-width:720px; margin-bottom:clamp(28px,3.5vw,44px); }
+.mi-head h2 { max-width:24ch; font-size:var(--fs-h2); }
+.mi-head > p:not(.marketing-eyebrow),.mi-lede { max-width:56ch; margin-top:16px; color:var(--muted-foreground); font-size:var(--fs-lead); line-height:1.55; }
+.mi-head .home-text-link { margin-top:20px; }
+.mi-section-tight { padding-top:0; }
+
+/* Split: sticky heading on the left, content on the right (like the feature "how it works"). */
+.mi-split { display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:clamp(36px,6vw,96px); align-items:start; }
+.mi-split > .mi-head { position:sticky; top:112px; margin-bottom:0; }
+.mi-split > .mi-head h2 { max-width:16ch; }
+
+/* Cards: white on paper, icon top-left, optional text link at the foot. */
+.mi-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.mi-cards[data-cols="2"] { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.mi-cards[data-cols="4"] { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.mi-card { display:flex; flex-direction:column; gap:8px; min-width:0; padding:clamp(22px,2.4vw,30px); border-radius:22px; background:var(--card); box-shadow:var(--shadow-hairline); }
+.mi-card > svg { flex:none; margin-bottom:16px; color:var(--foreground); }
+.mi-card h3 { font-size:18px; font-weight:600; line-height:1.3; }
+.mi-card p { color:var(--muted-foreground); font-size:15px; line-height:1.55; }
+.mi-card .home-text-link { margin-top:auto; padding-top:12px; }
+.mi-card .mi-card-meta,.mi-card-meta { color:var(--muted-foreground); font-size:13px; font-weight:500; }
+.mi-card .mi-card-value,.mi-card-value { color:var(--foreground); font-size:22px; font-weight:600; letter-spacing:-.03em; line-height:1.2; }
+a.mi-card { transition:box-shadow 200ms var(--ease-out),transform 200ms var(--ease-out); }
+a.mi-card:hover { box-shadow:var(--shadow-float); transform:translateY(-2px); }
+a.mi-card:hover .home-text-link { text-decoration:underline; }
+
+/* Hairline list: icon or marker, title, text (homepage steps). */
+.mi-list { border-top:1px solid var(--border); }
+.mi-list > li { display:grid; grid-template-columns:20px minmax(0,1fr); gap:18px; padding:24px 0; border-bottom:1px solid var(--border); }
+.mi-list > li > svg { margin-top:3px; color:var(--foreground); }
+.mi-list h3 { font-size:18px; font-weight:600; line-height:1.3; }
+.mi-list p { max-width:58ch; margin-top:6px; color:var(--muted-foreground); font-size:15px; line-height:1.55; }
+.mi-list p.mi-list-title { max-width:none; margin-top:0; color:var(--foreground); font-size:17px; font-weight:500; line-height:1.45; }
+.mi-list-pick { margin-top:10px !important; color:var(--foreground) !important; }
+
+/* Check list. */
+.mi-checks { display:grid; gap:14px; }
+.mi-checks[data-cols="2"] { grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 32px; }
+.mi-checks li { display:flex; gap:12px; color:var(--foreground); font-size:15px; line-height:1.55; }
+.mi-checks li > svg { flex:none; margin-top:3px; color:var(--success); }
+
+/* Panel: a white surface for forms, calendars and pricing asides. */
+.mi-panel { min-width:0; padding:clamp(24px,3vw,40px); border-radius:24px; background:var(--card); box-shadow:var(--shadow-hairline); }
+.mi-panel h2,.mi-panel h3 { font-size:var(--fs-h4); font-weight:600; letter-spacing:-.025em; line-height:1.25; }
+.mi-panel > p { margin-top:10px; color:var(--muted-foreground); font-size:15px; line-height:1.55; }
+.mi-panel .marketing-actions { margin-top:24px; }
+.mi-panel-foot { display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:24px; padding-top:20px; border-top:1px solid var(--border); }
+
+/* Product visual panel (pillar mocks) used as a hero media. */
+.mi-visual { display:grid; place-items:center; min-width:0; min-height:440px; padding:clamp(20px,3vw,40px); overflow:hidden; border-radius:28px; background:#ece9e3; }
+
+/* Status pill. */
+.mi-pill { display:inline-flex; align-items:center; width:max-content; padding:3px 10px; border-radius:999px; background:var(--card); box-shadow:var(--shadow-hairline); color:var(--muted-foreground); font-size:12px; font-weight:600; line-height:1.5; }
+
+/* Key takeaway (GEO summary). */
+.mi-takeaway { max-width:72ch; padding:20px 24px; border-radius:18px; background:var(--card); box-shadow:var(--shadow-hairline); color:var(--foreground); font-size:16px; line-height:1.6; }
+.mi-takeaway-label { display:block; margin-bottom:6px; color:var(--muted-foreground); font-size:13px; font-weight:600; }
+
+/* Link chips (related pages). */
+.mi-chips { display:flex; flex-wrap:wrap; gap:8px; }
+.mi-chips a { display:inline-flex; align-items:center; min-height:40px; padding:8px 16px; border-radius:999px; background:var(--card); box-shadow:var(--shadow-hairline); color:var(--foreground); font-size:14px; font-weight:500; transition:box-shadow 180ms; }
+.mi-chips a:hover { box-shadow:0 0 0 1px color-mix(in srgb,var(--foreground) 16%,transparent),0 2px 6px color-mix(in srgb,var(--foreground) 8%,transparent); }
+
+/* Tables: white card, hairline rows, no vertical rules. */
+.mi-table-wrap { max-width:100%; overflow-x:auto; border-radius:20px; background:var(--card); box-shadow:var(--shadow-hairline); }
+.mi-table { width:100%; border-collapse:collapse; font-size:15px; }
+.mi-table caption { padding:0; }
+.mi-table :is(th,td) { padding:14px 18px; border-bottom:1px solid var(--border); text-align:left; vertical-align:top; }
+.mi-table tbody tr:last-child :is(th,td) { border-bottom:0; }
+.mi-table thead th { color:var(--muted-foreground); font-size:13px; font-weight:600; white-space:nowrap; }
+.mi-table tbody th { color:var(--foreground); font-weight:500; }
+.mi-table td { color:var(--muted-foreground); }
+.mi-table a { text-decoration:underline; text-underline-offset:3px; }
+.mi-table-note { max-width:72ch; margin-top:14px; color:var(--muted-foreground); font-size:13px; line-height:1.55; }
+.mi-table-note a { color:var(--foreground); text-decoration:underline; text-underline-offset:3px; }
+
+/* Inline text links in prose (underline in ink, never orange text). */
+.mi-inline-link { color:var(--foreground); text-decoration:underline; text-decoration-color:color-mix(in srgb,var(--foreground) 35%,transparent); text-underline-offset:4px; }
+.mi-inline-link:hover { text-decoration-color:currentColor; }
+
+@media (max-width:1023px) {
+  .mi-split { grid-template-columns:minmax(0,1fr); gap:28px; }
+  .mi-split > .mi-head { position:static; }
+  .mi-cards,.mi-cards[data-cols="4"] { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .mi-visual { min-height:0; }
+}
+@media (max-width:767px) {
+  .mi-cards,.mi-cards[data-cols="2"],.mi-cards[data-cols="4"],.mi-checks[data-cols="2"] { grid-template-columns:minmax(0,1fr); }
+  .mi-visual { padding:16px; border-radius:22px; }
+  .mi-table :is(th,td) { padding:12px 14px; }
+  .mi-table :is(thead th:first-child,tbody th) { position:sticky; left:0; z-index:1; background:var(--card); box-shadow:1px 0 0 var(--border); }
+  .mi-takeaway { padding:18px 20px; }
+}
+
+/* ── Resources, help and tools: reading column, quiet sidebar, lead panel ── */
+.mi-read { display:grid; grid-template-columns:220px minmax(0,70ch); justify-content:center; gap:clamp(40px,6vw,88px); align-items:start; }
+.mi-read[data-aside="end"] { grid-template-columns:minmax(0,70ch) 240px; }
+.mi-read-main { min-width:0; }
+.mi-read-main > * + * { margin-top:32px; }
+.mi-read-aside { position:sticky; top:112px; display:grid; gap:32px; min-width:0; padding-left:18px; border-left:1px solid var(--border); }
+.marketing-site .mi-read-aside h2 { margin-bottom:12px; font-size:13px; font-weight:600; letter-spacing:0; line-height:1.4; }
+.mi-read-aside p { color:var(--muted-foreground); font-size:14px; line-height:1.5; }
+.mi-read-aside p + .home-text-link { margin-top:10px; }
+.mi-read-links { display:flex; flex-direction:column; gap:12px; }
+.mi-read-links a { color:var(--muted-foreground); font-size:14px; line-height:1.4; transition:color 160ms; }
+.mi-read-links a:hover { color:var(--foreground); }
+.mi-read-meta { display:flex; flex-wrap:wrap; align-items:center; gap:6px 16px; color:var(--muted-foreground); font-size:14px; }
+.mi-read-meta svg { flex:none; }
+.mi-read-meta a { color:var(--foreground); text-decoration:underline; text-decoration-color:color-mix(in srgb,var(--foreground) 35%,transparent); text-underline-offset:4px; }
+.marketing-site .mi-read-related h2 { margin-bottom:14px; font-size:20px; }
+.mi-read-related { padding-top:28px; border-top:1px solid var(--border); }
+.mi-photo-card { padding:0; overflow:hidden; }
+.mi-photo-card .resource-photo { margin:0; border-radius:0; }
+.mi-photo-card-body { display:flex; flex:1; flex-direction:column; gap:8px; padding:clamp(22px,2.4vw,30px); }
+.mi-lead { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:clamp(28px,4vw,56px); align-items:start; }
+.mi-lead .mi-pill { gap:6px; margin-bottom:16px; }
+.mi-lead-form { margin-top:24px; }
+.mi-lead-form form { margin-inline:0; }
+.mi-lead-form p { text-align:left; }
+.mi-lead-note { margin-top:16px; color:var(--muted-foreground); font-size:13px; line-height:1.55; }
+.help-search nav a > svg { color:var(--foreground); }
+.help-topics { display:grid; gap:clamp(48px,6vw,80px); }
+.help-topic-head > svg { margin-bottom:16px; color:var(--foreground); }
+.marketing-site .help-topic-head h3 { font-size:var(--fs-h4); font-weight:600; letter-spacing:-.025em; line-height:1.25; }
+.help-topic-link:hover { text-decoration:underline; text-underline-offset:4px; }
+@media (max-width:1023px) {
+  .mi-read,.mi-read[data-aside="end"],.mi-lead { grid-template-columns:minmax(0,1fr); }
+  .mi-read-aside { position:static; }
+  .mi-read-aside[data-toc="false"] { display:none; }
+}
+
+/* Agencies, partners, small business and demo pages. */
+.mi-head > .mi-pill { margin-bottom:14px; }
+.mi-link-row { display:flex; flex-wrap:wrap; gap:10px 24px; margin-top:20px; }
+.mi-head .mi-link-row .home-text-link,.mi-link-row .home-text-link { margin-top:0; }
+.agencies-tier .mi-checks { margin:12px 0 24px; }
+.agencies-tier > .marketing-button { margin-top:auto; }
+.agencies-waitlist,.demo-panel-body { margin-top:24px; }
+.small-business-industries-title { margin-bottom:16px; font-size:var(--fs-h4); }
+.demo-panels { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; align-items:start; }
+.demo-panel-note { color:var(--muted-foreground); font-size:15px; line-height:1.55; }
+@media (max-width:1023px) { .demo-panels { grid-template-columns:minmax(0,1fr); } }
+
+/* How it works, case studies and the compare hub. */
+.hiw-step + .hiw-step { padding-top:0; }
+.hiw-step-body { display:grid; gap:28px; min-width:0; }
+.hiw-step-body .story-visual { aspect-ratio:16/10; }
+.cs-note-title { margin-bottom:4px; font-weight:600; }
+.landing-hero-extra .mi-takeaway { font-size:14px; }
+.cs-statement { max-width:52ch; color:var(--foreground); font-size:var(--fs-lead); line-height:1.6; }
+.cs-metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:8px; }
+.cs-related-links,.cmp-hub-quick { margin-top:20px; }
+.cmp-hub-aside { margin-top:20px; }
+.cmp-hub-takeaway { margin-bottom:24px; }
+.cmp-hub-matrix { min-width:760px; table-layout:fixed; }
+.cmp-hub-matrix :is(th,td) { font-size:14px; line-height:1.5; }
+.cmp-hub-matrix :is(thead th,tbody th):first-child { position:sticky; left:0; z-index:1; width:190px; background:var(--card); box-shadow:inset -1px 0 0 var(--border); }
+.cmp-hub-matrix thead th.cmp-hub-zyene { color:var(--foreground); }
+.cmp-hub-matrix .cmp-hub-zyene { background:color-mix(in srgb,var(--brand-wash) 55%,var(--card)); color:var(--foreground); }
+@media (max-width:767px) {
+  .cmp-hub-matrix { min-width:720px; }
+  .cmp-hub-matrix :is(thead th,tbody th):first-child { width:140px; }
+}
+
+/* Compare competitor pages (/compare/[competitor]). */
+.mi-table .mi-col-zyene { background:color-mix(in srgb,var(--brand-wash) 55%,var(--card)); color:var(--foreground); }
+.mi-table thead th.mi-col-zyene { color:var(--foreground); }
+.mi-table td.mi-center,.mi-table th.mi-center { text-align:center; }
+.mi-table-sub { display:block; margin-top:2px; color:var(--muted-foreground); font-size:12px; font-weight:400; }
+.cmp-glance h2 { margin-bottom:8px; }
+.cmp-glance dl > div { display:flex; align-items:baseline; justify-content:space-between; gap:20px; padding-block:16px; border-bottom:1px solid var(--border); }
+.cmp-glance dt { color:var(--foreground); font-size:15px; }
+.cmp-glance dd { color:var(--foreground); font-size:22px; font-weight:600; letter-spacing:-.03em; text-align:right; }
+.cmp-glance dd small { color:var(--muted-foreground); font-size:14px; font-weight:400; letter-spacing:0; }
+.cmp-glance-note { margin-top:12px; color:var(--muted-foreground); font-size:14px; line-height:1.55; }
+.cmp-glance-note + .cmp-glance-note { margin-top:6px; }
+.cmp-glance-note a { color:var(--foreground); text-decoration:underline; text-underline-offset:3px; }
+.cmp-summary { display:grid; gap:16px; justify-items:start; }
+.cmp-diff { border-top:1px solid var(--border); }
+.cmp-diff > li { display:grid; grid-template-columns:minmax(0,.6fr) minmax(0,1fr) minmax(0,1fr); gap:clamp(16px,3vw,40px); padding-block:28px; border-bottom:1px solid var(--border); }
+.cmp-diff h3 { font-size:18px; font-weight:600; line-height:1.3; }
+.cmp-diff-label { color:var(--muted-foreground); font-size:13px; font-weight:600; }
+.cmp-diff-text { margin-top:6px; color:var(--foreground); font-size:15px; line-height:1.6; }
+.cmp-diff-source { display:inline-block; margin-top:8px; color:var(--muted-foreground); font-size:12.5px; text-decoration:underline; text-underline-offset:3px; }
+.cmp-diff-source:hover { color:var(--foreground); }
+.cmp-visual-grid { align-items:center; }
+.cmp-visual-grid > .mi-head { position:static; }
+.cmp-visual-note { margin-top:14px !important; font-size:13px !important; }
+.cmp-step-index { color:var(--muted-foreground); font-size:14px; font-variant-numeric:tabular-nums; line-height:1.7; }
+.cmp-nav + .cmp-nav { margin-top:32px; }
+.cmp-nav-label { margin-bottom:12px; color:var(--muted-foreground); font-size:14px; font-weight:500; }
+@media (max-width:767px) {
+  .cmp-diff > li { grid-template-columns:minmax(0,1fr); gap:14px; padding-block:22px; }
+}

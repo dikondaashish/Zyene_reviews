@@ -8,11 +8,11 @@ export default function HowItWorksPage() {
     return (
         <>
             <BreadcrumbJsonLd
-                            items={[
-                                { name: "Home", url: "https://www.zyenereviews.com/" },
-                                { name: "How It Works", url: "https://www.zyenereviews.com/how-it-works" },
-                            ]}
-                        />
+                items={[
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "How It Works", url: "https://www.zyenereviews.com/how-it-works" },
+                ]}
+            />
             <HowItWorksHeroSection />
             <HowItWorksStepsSection />
             <HowItWorksProofPointsSection />

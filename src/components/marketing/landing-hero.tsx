@@ -22,6 +22,14 @@ interface LandingHeroProps {
     children?: ReactNode;
 }
 
+const resolveHref = (href: string) => (href === "/signup" ? SIGNUP_URL : href);
+
+function trackProps(href: string) {
+    if (href === "/signup") return { "data-track": "trial", "data-track-location": "hero" };
+    if (href === "/demo") return { "data-track": "demo", "data-track-location": "hero" };
+    return {};
+}
+
 function resolveHeroMedia(media: HeroMedia | undefined, visual: ReactNode, image: LandingHeroProps["image"]): HeroMedia {
     if (media) return media;
     if (visual) return { kind: "product", node: visual, label: "Interactive product demonstration" };
@@ -54,14 +62,14 @@ export function LandingHero({ eyebrow, title, description, variant, media, image
                     {(primary || secondary) && (
                         <div className="marketing-actions">
                             {primary && (
-                                <Link className="marketing-button" href={primary.href === "/signup" ? SIGNUP_URL : primary.href} {...(primary.href === "/signup" ? { "data-track": "trial", "data-track-location": "hero" } : primary.href === "/demo" ? { "data-track": "demo", "data-track-location": "hero" } : {})}>
+                                <Link className="marketing-button" href={resolveHref(primary.href)} {...trackProps(primary.href)}>
                                     {primary.label} <ArrowRight aria-hidden="true" className="size-4" />
                                 </Link>
                             )}
-                            {secondary && <Link className="marketing-button marketing-button-secondary" href={secondary.href} {...(secondary.href === "/demo" ? { "data-track": "demo", "data-track-location": "hero" } : {})}>{secondary.label}</Link>}
+                            {secondary && <Link className="marketing-button marketing-button-secondary" href={resolveHref(secondary.href)} {...trackProps(secondary.href)}>{secondary.label}</Link>}
                         </div>
                     )}
-                    {primary?.href === "/signup" && <TrialTerms />}
+                    {(primary?.href === "/signup" || secondary?.href === "/signup") && <TrialTerms />}
                     {children && <div className="landing-hero-extra">{children}</div>}
                 </div>
                 {hasMedia && <HeroMediaView media={resolvedMedia} />}

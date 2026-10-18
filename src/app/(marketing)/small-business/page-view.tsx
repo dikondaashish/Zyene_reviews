@@ -11,6 +11,7 @@ import { SmallBusinessFeaturesSection } from "./small-business-features-section"
 import { SmallBusinessPricingSection } from "./small-business-pricing-section";
 import { SmallBusinessSetupSection } from "./small-business-setup-section";
 import { SmallBusinessFaqSection } from "./small-business-faq-section";
+import { SmallBusinessIndustriesSection } from "./small-business-industries-section";
 import { SmallBusinessFinalCtaSection } from "./small-business-final-cta-section";
 
 export default function SmallBusinessPage() {
@@ -29,6 +30,7 @@ export default function SmallBusinessPage() {
             <SmallBusinessPricingSection />
             <SmallBusinessSetupSection />
             <SmallBusinessFaqSection />
+            <SmallBusinessIndustriesSection />
             <SmallBusinessFinalCtaSection />
         </>
     );

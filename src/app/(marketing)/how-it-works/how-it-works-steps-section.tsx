@@ -5,39 +5,52 @@ import { RequestDemo } from "@/components/marketing/product-tour/request-demo";
 import { ReportDemo } from "@/components/marketing/product-tour/report-demo";
 import { STEPS } from "@/app/(marketing)/how-it-works/how-it-works-data";
 
+function StepVisual({ index }: { index: number }) {
+  if (index === 0) {
+    return (
+      <div className="story-visual" data-reveal>
+        <Image
+          src="/marketing/home/cafe-conversation.webp"
+          alt="A barista and customer talking across a café counter"
+          fill
+          sizes="(max-width: 1023px) 100vw, 55vw"
+        />
+      </div>
+    );
+  }
+  return (
+    <div className="workflow-product product-tour" data-reveal>
+      {index === 1 ? <ReviewDemo /> : index === 2 ? <RequestDemo /> : <ReportDemo />}
+    </div>
+  );
+}
+
 export function HowItWorksStepsSection() {
   return (
     <>
       {STEPS.map((step, index) => (
-        <section key={step.step} id={`step-${step.step}`} className={`marketing-section ${index % 2 ? "bg-muted" : ""}`}>
-          <div className={`marketing-container story-row ${index % 2 ? "story-row-reverse" : ""}`}>
-            <div className={index === 0 ? "story-visual" : "workflow-product product-tour"} data-reveal>
-              {index === 0 ? (
-                <Image
-                  src="/marketing/home/cafe-conversation.webp"
-                  alt="A barista and customer talking across a café counter"
-                  fill
-                  sizes="(max-width: 767px) 100vw, 45vw"
-                />
-              ) : index === 1 ? (
-                <ReviewDemo />
-              ) : index === 2 ? (
-                <RequestDemo />
-              ) : (
-                <ReportDemo />
-              )}
-            </div>
-            <div className="feature-detail-copy">
+        <section
+          key={step.step}
+          id={`step-${step.step}`}
+          className="marketing-section hiw-step"
+          aria-labelledby={`step-${step.step}-heading`}
+        >
+          <div className="marketing-container mi-split">
+            <div className="mi-head">
               <p className="marketing-eyebrow">
-                {step.step} / {step.title}
+                <span className="sr-only">Step {index + 1}: </span>
+                {step.title}
               </p>
-              <h2>{step.headline}</h2>
-              <p className="mt-6 text-muted-foreground">{step.description}</p>
-              <ul className="feature-detail-list">
+              <h2 id={`step-${step.step}-heading`}>{step.headline}</h2>
+              <p>{step.description}</p>
+            </div>
+            <div className="hiw-step-body">
+              <StepVisual index={index} />
+              <ul className="mi-list">
                 {step.bullets.map((bullet) => (
                   <li key={bullet}>
-                    <Check size={17} aria-hidden="true" />
-                    <span>{bullet}</span>
+                    <Check size={18} aria-hidden="true" />
+                    <p className="mi-list-title">{bullet}</p>
                   </li>
                 ))}
               </ul>

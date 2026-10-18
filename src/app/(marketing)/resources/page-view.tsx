@@ -1,15 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, Clock } from "lucide-react";
 import { resourceImage } from "@/components/marketing/resource-imagery";
 import { LandingHero } from "@/components/marketing/landing-hero";
-import Link from "next/link";
-import { ArrowRight, BookOpen, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SIGNUP_URL } from "@/config/env";
+import { MarketingClosingBand } from "@/components/marketing/marketing-closing-band";
+import { CampaignsTemplatesVisual } from "@/components/marketing/feature-landing/visuals/review-campaigns-visuals";
 import { RESOURCE_GUIDES } from "@/lib/content/resource-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
-
-
-
 
 export default function ResourcesHubPage() {
     return (
@@ -21,69 +18,67 @@ export default function ResourcesHubPage() {
                 ]}
             />
 
-            {/* ── Hero ── */}
-            <LandingHero eyebrow="The resource library" title="Small steps. A stronger local presence." description="Go deeper with practical guides to Google reviews, local SEO, and customer feedback. Free to read, ready to use." variant="directory" media={{ kind: "none" }} />
+            <LandingHero
+                eyebrow="The resource library"
+                title="Small steps. A stronger local presence."
+                description="Go deeper with practical guides to Google reviews, local SEO, and customer feedback. Free to read, ready to use."
+                media={{ kind: "product", label: "Review request templates in Zyene", node: <div className="mi-visual"><CampaignsTemplatesVisual /></div> }}
+            />
 
-            {/* ── Guide Grid ── */}
-            <section className="px-4 pb-20 pt-4 bg-background md:pt-8">
-                <div className="container mx-auto max-w-5xl">
-                    <div className="grid md:grid-cols-2 gap-8">
+            <section className="marketing-section" aria-labelledby="resources-guides-heading">
+                <div className="marketing-container">
+                    <div className="mi-head">
+                        <p className="marketing-eyebrow">Free guides</p>
+                        <h2 id="resources-guides-heading">Guides you can put to work this week.</h2>
+                    </div>
+                    <ul className="mi-cards" data-cols="2">
                         {RESOURCE_GUIDES.map((guide) => {
                             const image = resourceImage(guide.slug);
                             return (
-                                <Link key={guide.slug} href={`/resources/${guide.slug}`} className="group flex flex-col pb-8">
-                                    <div className="resource-photo"><Image src={image.src} alt={image.alt} fill sizes="(max-width: 767px) 100vw, 45vw" /></div>
-                                <h2 className="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors leading-snug">
-                                    {guide.title}
-                                </h2>
-                                <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-5">
-                                    {guide.excerpt}
-                                </p>
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                        <Clock className="size-3.5" />
-                                        {guide.readMinutes} min read
-                                    </div>
-                                    <span className="text-primary text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-[gap]">
-                                        Read guide <ArrowRight className="size-3.5" />
-                                    </span>
-                                </div>
-                                </Link>
+                                <li key={guide.slug} className="flex">
+                                    <Link href={`/resources/${guide.slug}`} className="mi-card mi-photo-card w-full">
+                                        <div className="resource-photo">
+                                            <Image src={image.src} alt={image.alt} fill sizes="(max-width: 767px) 100vw, 45vw" />
+                                        </div>
+                                        <div className="mi-photo-card-body">
+                                            <span className="mi-card-meta inline-flex items-center gap-1.5">
+                                                <Clock size={14} aria-hidden="true" /> {guide.readMinutes} min read
+                                            </span>
+                                            <h3>{guide.title}</h3>
+                                            <p>{guide.excerpt}</p>
+                                            <span className="home-text-link">
+                                                Read guide <ArrowRight size={14} aria-hidden="true" />
+                                            </span>
+                                        </div>
+                                    </Link>
+                                </li>
                             );
                         })}
-                    </div>
+                    </ul>
                 </div>
             </section>
 
-            {/* ── Blog CTA ── */}
-            <section className="py-16 px-4 bg-muted border-t border-border">
-                <div className="container mx-auto max-w-5xl">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-card border border-border rounded-3xl p-8">
-                        <div>
-                            <h2 className="text-2xl font-bold text-foreground mb-1">Looking for shorter reads?</h2>
-                            <p className="text-muted-foreground">Visit our blog for practical posts on Google reviews, local SEO, and reputation management.</p>
-                        </div>
-                        <Button variant="outline" className="gap-2 rounded-xl" asChild>
-                            <Link href="/blog" className="shrink-0">
-                                <BookOpen className="size-4" /> Browse the Blog
+            <section className="marketing-section mi-section-tight" aria-labelledby="resources-blog-heading">
+                <div className="marketing-container">
+                    <div className="mi-panel">
+                        <h2 id="resources-blog-heading">Looking for shorter reads?</h2>
+                        <p>Visit our blog for practical posts on Google reviews, local SEO, and reputation management.</p>
+                        <div className="mi-panel-foot">
+                            <Link href="/blog" className="home-text-link">
+                                Browse the blog <ArrowRight size={14} aria-hidden="true" />
                             </Link>
-                        </Button>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* ── Product CTA ── */}
-            <section className="py-20 px-4 bg-background border-t border-border">
-                <div className="container mx-auto max-w-3xl text-center">
-                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground mb-3">Ready to put this into practice?</h2>
-                    <p className="text-muted-foreground mb-8">Zyene Reviews automates review collection, AI replies, competitor tracking, and more. 7-day free trial, card required; your selected plan bills automatically after the trial unless you cancel.</p>
-                    <Button size="lg" className="gap-2 rounded-xl" asChild>
-                        <Link href={SIGNUP_URL} data-track="trial" data-track-location="resources-cta">
-                            Start Free Trial <ArrowRight className="size-4" />
-                        </Link>
-                    </Button>
-                </div>
-            </section>
+            <MarketingClosingBand
+                title="Ready to put this into practice?"
+                text="Zyene Reviews automates review collection, AI replies, competitor tracking, and more. 7-day free trial, card required; your selected plan bills automatically after the trial unless you cancel."
+                image={{ src: "/marketing/home/storefront-candid-v2.webp", alt: "Customers at outdoor tables in front of a small local café" }}
+                trackLocation="resources-cta"
+                headingId="resources-final-heading"
+            />
         </>
     );
 }

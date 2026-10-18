@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { FreeToolShell } from "@/components/marketing/free-tools/free-tool-shell";
 import { CopyResultButton } from "@/components/marketing/free-tools/copy-result-button";
 import { FreeToolEmailDisclosure } from "@/components/marketing/free-tools/free-tool-email-disclosure";
 import { FreeToolLoadingLabel } from "@/components/marketing/free-tools/free-tool-loading-label";
@@ -64,32 +64,22 @@ export function ReviewResponseGeneratorClient() {
     }
 
     return (
-        <div className="min-h-screen bg-background">
-            <section className="pt-16 pb-12 px-4 border-b border-border">
-                <div className="container mx-auto max-w-2xl">
-                    <Link href="/tools" className="text-sm text-primary hover:underline">← All free tools</Link>
-                    <h1 className="text-[length:var(--fs-display)] font-semibold mt-4 mb-3">Review Response Templates</h1>
-                    <p className="text-muted-foreground">
-                        Pick a star rating, get a ready-to-edit reply template. Edit it for the customer’s specific feedback, then copy it. Email is optional.
-                    </p>
-                </div>
-            </section>
-            <section className="py-10 px-4 bg-muted/20 border-b border-border">
-                <div className="container mx-auto max-w-2xl space-y-4">
-                    <h2 className="text-xl font-bold text-foreground">Respond professionally to every review</h2>
-                    <p className="text-muted-foreground leading-relaxed">
+        <FreeToolShell
+            title="Review Response Templates"
+            lede="Pick a star rating, get a ready-to-edit reply template. Edit it for the customer’s specific feedback, then copy it. Email is optional."
+            whyTitle="Respond professionally to every review"
+            why={<>
+                <p>
                         Replying to Google reviews shows customers how you handle feedback. Google does not publish
                         response rate as a separate ranking factor. This free tool picks a reusable template by star rating. It does not read or analyze the review itself.
                     </p>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p>
                         To draft replies or automatically publish responses to eligible new Google reviews, use{" "}
-                        <Link href="/features/ai-replies" className="font-semibold underline underline-offset-4">Zyene’s AI drafts and automatic Google replies</Link> on eligible paid plans with a 7-day free trial.
+                        <Link href="/features/ai-replies" className="mi-inline-link">Zyene’s AI drafts and automatic Google replies</Link> on eligible paid plans with a 7-day free trial.
                     </p>
-                </div>
-            </section>
-            <section className="py-12 px-4">
-                <div className="container mx-auto max-w-2xl space-y-6">
-                    <div className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-4">
+            </>}
+        >
+<div className="mi-panel tool-form">
                         <div>
                             <label htmlFor="response-business-name" className="text-sm font-medium mb-2 block">Business name (optional)</label>
                             <input id="response-business-name" value={businessName} onChange={(e) => setBusinessName(e.target.value)} placeholder="Your business name" autoComplete="organization" className={fieldClass} />
@@ -102,25 +92,25 @@ export function ReviewResponseGeneratorClient() {
                                 ))}
                             </select>
                         </div>
-                        <Button type="button" onClick={generate} disabled={loading} aria-busy={loading} className="w-full" data-track="tool" data-track-location={TOOL}>
+                        <button type="button" onClick={generate} disabled={loading} aria-busy={loading} className="marketing-button w-full disabled:pointer-events-none disabled:opacity-60" data-track="tool" data-track-location={TOOL}>
                             {loading ? <FreeToolLoadingLabel text="Getting your template" /> : "Get reply template"}
-                        </Button>
+                        </button>
                     </div>
                     {response && (
-                        <div className="bg-card border border-border rounded-2xl p-6">
+                        <div className="mi-panel tool-form">
                             <label htmlFor="editable-reply" className="text-sm font-medium mb-2 block">Edit your template reply</label>
                             <textarea id="editable-reply" value={response} onChange={(e) => setResponse(e.target.value)} rows={6} className="w-full rounded-lg border border-border bg-background p-3 text-sm" />
                             <CopyResultButton text={response} />
                         </div>
                     )}
                     {response && !bonusSent && (
-                        <form onSubmit={sendBonus} className="bg-card border border-border rounded-2xl p-6 space-y-4">
+                        <form onSubmit={sendBonus} className="mi-panel tool-form">
                             <label htmlFor="response-bonus-email" className="text-sm font-medium block">Get 5 more templates by email</label>
                             <input id="response-bonus-email" type="email" autoComplete="email" required aria-describedby="response-bonus-disclosure" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@business.com" className={fieldClass} />
                             <FreeToolEmailDisclosure id="response-bonus-disclosure" />
-                            <Button type="submit" disabled={loading} aria-busy={loading} className="w-full" data-track="tool" data-track-location={TOOL}>
+                            <button type="submit" disabled={loading} aria-busy={loading} className="marketing-button marketing-button-secondary w-full disabled:pointer-events-none disabled:opacity-60" data-track="tool" data-track-location={TOOL}>
                                 {loading ? <FreeToolLoadingLabel text="Sending templates" /> : "Email bonus templates"}
-                            </Button>
+                            </button>
                         </form>
                     )}
                     {bonusSent && <p role="status" className="text-sm text-success text-center">Bonus templates accepted for email delivery.</p>}
@@ -128,8 +118,6 @@ export function ReviewResponseGeneratorClient() {
                     {response && (
                         <FreeToolResultCta toolSlug={TOOL} message="Want a reply drafted for each new review? Zyene Reviews drafts them for you on paid plans." />
                     )}
-                </div>
-            </section>
-        </div>
+        </FreeToolShell>
     );
 }

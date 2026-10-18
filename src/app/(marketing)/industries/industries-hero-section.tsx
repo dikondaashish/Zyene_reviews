@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { IndustryHero } from "@/components/marketing/industries/industry-hero";
 import { SIGNUP_URL } from "@/config/env";
 
@@ -12,8 +11,6 @@ export function IndustriesHeroSection() {
             secondary={{ label: "Find your industry", href: "#industry-grid" }}
             terms="7-day free trial, card required. Plans from $29.99/month. Cancel anytime in Billing."
             image={{ src: "/images/industries/restaurant-guests.webp", alt: "Guests sharing a meal and conversation at a restaurant" }}
-        >
-            <Link href="/es/industries">Ver soluciones en español</Link>
-        </IndustryHero>
+        />
     );
 }

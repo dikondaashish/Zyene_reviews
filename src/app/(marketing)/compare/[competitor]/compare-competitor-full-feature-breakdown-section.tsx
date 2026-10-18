@@ -3,42 +3,47 @@ import { FeatureCellValue } from "./compare-competitor-feature-cell";
 import Link from "next/link";
 
 export function CompareCompetitorFullFeatureBreakdownSection({ data }: { data: CompetitorData }) {
+    if (!data.featureBreakdown?.length) return null;
     return (
-        <section className="py-20 px-4 bg-muted border-t border-border">
-                <div className="container mx-auto max-w-4xl">
-                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground text-center mb-3">Feature-by-feature breakdown</h2>
-                    <p className="text-muted-foreground text-center mb-10">Every feature, side by side. No marketing speak.</p>
-                    <div className="overflow-x-auto rounded-xl border border-border bg-card">
-                        <table className="w-full text-sm border-collapse">
-                            <thead>
-                                <tr className="bg-muted">
-                                    <th className="px-6 py-4 font-semibold text-muted-foreground border-b border-r border-border text-left">Feature</th>
-                                    <th className="px-6 py-4 font-bold text-primary border-b border-r border-border bg-primary/10 text-center">Zyene Reviews</th>
-                                    <th className="px-6 py-4 font-semibold text-muted-foreground border-b border-border text-center">{data.name}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data.featureBreakdown.map((row, i) => (
-                                    <tr key={i} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
-                                        <td className="px-6 py-3.5 font-medium text-foreground border-r border-border">
-                                            {row.feature}
-                                            {row.note && <span className="ml-2 text-[11px] text-muted-foreground/60 font-normal">({row.note})</span>}
-                                        </td>
-                                        <td className="px-6 py-3.5 border-r border-border bg-primary/5 text-center">
-                                            {typeof row.zyene === "string" ? <span className="text-sm text-foreground">{row.zyene}</span> : <FeatureCellValue value={row.zyene} />}
-                                        </td>
-                                        <td className="px-6 py-3.5 text-center">
-                                            {typeof row.competitor === "string" ? <span className="text-sm text-muted-foreground">{row.competitor}</span> : <FeatureCellValue value={row.competitor} />}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    <p className="text-center text-xs text-muted-foreground mt-4">
-                        {data.priceNote} Zyene Reviews pricing as of 2026. See <Link href="/pricing" className="underline hover:text-foreground">our pricing page</Link> for current rates.
-                    </p>
+        <section className="marketing-section" aria-labelledby="compare-breakdown-heading">
+            <div className="marketing-container">
+                <div className="mi-head">
+                    <p className="marketing-eyebrow">In detail</p>
+                    <h2 id="compare-breakdown-heading">Feature-by-feature breakdown</h2>
+                    <p>Every feature, side by side. No marketing speak.</p>
                 </div>
-            </section>
+                <div className="mi-table-wrap">
+                    <table className="mi-table">
+                        <caption className="sr-only">Feature-by-feature breakdown of Zyene Reviews and {data.name}</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Feature</th>
+                                <th scope="col" className="mi-col-zyene mi-center">Zyene Reviews</th>
+                                <th scope="col" className="mi-center">{data.name}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.featureBreakdown.map((row) => (
+                                <tr key={row.feature}>
+                                    <th scope="row">
+                                        {row.feature}
+                                        {row.note && <span className="mi-table-sub">{row.note}</span>}
+                                    </th>
+                                    <td className="mi-col-zyene mi-center">
+                                        {typeof row.zyene === "string" ? row.zyene : <FeatureCellValue value={row.zyene} />}
+                                    </td>
+                                    <td className="mi-center">
+                                        {typeof row.competitor === "string" ? row.competitor : <FeatureCellValue value={row.competitor} />}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                <p className="mi-table-note">
+                    {data.priceNote} Zyene Reviews pricing as of 2026. See <Link href="/pricing">our pricing page</Link> for current rates.
+                </p>
+            </div>
+        </section>
     );
 }

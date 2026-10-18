@@ -4,47 +4,35 @@ import { COMPETITORS } from "@/lib/comparisons/competitor-data";
 
 export function CompareCardsSection() {
     return (
-        <section className="py-20 px-4 bg-muted border-t border-border">
-                <div className="container mx-auto max-w-5xl">
-                    <h2 className="text-[length:var(--fs-h2)] font-semibold text-foreground text-center mb-3">Pick a comparison</h2>
-                    <p className="text-muted-foreground text-center mb-12">
-                        Each page has a full feature-by-feature breakdown, honest analysis, and pricing comparison.
-                    </p>
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-                        {COMPETITORS.map((comp) => (
-                            <div
-                                key={comp.slug}
-                                className="group bg-card border border-border rounded-2xl p-7 hover:border-primary/50 hover:shadow-lg transition-all flex flex-col"
-                            >
-                                <Link href={`/compare/${comp.slug}`} className="flex flex-col flex-1">
-                                    <div className="flex items-center justify-between mb-3">
-                                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
-                                            vs {comp.name}
-                                        </h3>
-                                        <ArrowRight className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all size-4" />
-                                    </div>
-                                    <p className="text-xs text-muted-foreground mb-1">{comp.name} pricing</p>
-                                    <p className="text-xl font-semibold text-foreground break-words mb-1">{comp.price}</p>
-                                    {comp.priceNote ? (
-                                        <p className="text-xs text-muted-foreground break-words mb-4">{comp.priceNote}</p>
-                                    ) : null}
-                                    <p className="text-sm text-muted-foreground leading-relaxed flex-1">{comp.keyAngle}</p>
-                                    <div className="mt-4 pt-4 border-t border-border">
-                                        <span className="text-xs font-semibold text-primary">Read full comparison →</span>
-                                    </div>
-                                </Link>
-                                {comp.slug === "birdeye" ? (
-                                    <Link
-                                        href="/blog/birdeye-pricing-breakdown-2026"
-                                        className="mt-3 text-xs font-medium text-primary hover:underline"
-                                    >
-                                        Birdeye pricing deep dive (2026) →
-                                    </Link>
-                                ) : null}
-                            </div>
-                        ))}
-                    </div>
+        <section className="marketing-section" aria-labelledby="compare-cards-heading">
+            <div className="marketing-container">
+                <div className="mi-head">
+                    <p className="marketing-eyebrow">Comparisons</p>
+                    <h2 id="compare-cards-heading">Pick a comparison</h2>
+                    <p>Each page has a full feature-by-feature breakdown, honest analysis, and pricing comparison.</p>
                 </div>
-            </section>
+                <ul className="mi-cards" data-cols="3">
+                    {COMPETITORS.map((comp) => (
+                        <li key={comp.slug} className="flex">
+                            <Link href={`/compare/${comp.slug}`} className="mi-card w-full">
+                                <h3>vs {comp.name}</h3>
+                                <p className="mi-card-meta">{comp.name} pricing</p>
+                                <p className="mi-card-value">{comp.price}</p>
+                                {comp.priceNote ? <p className="mi-card-meta">{comp.priceNote}</p> : null}
+                                <p>{comp.keyAngle}</p>
+                                <span className="home-text-link">
+                                    Read full comparison <ArrowRight size={14} aria-hidden="true" />
+                                </span>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+                <p className="cmp-hub-aside">
+                    <Link href="/blog/birdeye-pricing-breakdown-2026" className="home-text-link">
+                        Birdeye pricing deep dive (2026) <ArrowRight size={14} aria-hidden="true" />
+                    </Link>
+                </p>
+            </div>
+        </section>
     );
 }

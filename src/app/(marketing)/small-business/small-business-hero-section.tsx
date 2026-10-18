@@ -8,7 +8,7 @@ export function SmallBusinessHeroSection() {
             title="Review management software for small business"
             description={SMALL_BUSINESS_ANSWER}
             image={{ src: "/marketing/home/storefront-candid-v2.webp", alt: "Customers at outdoor tables in front of a small local café" }}
-            primary={{ label: "Start free trial", href: "/signup" }}
+            primary={{ label: "Start 7-day free trial", href: "/signup" }}
             secondary={{ label: "See pricing", href: "/pricing" }}
         />
     );

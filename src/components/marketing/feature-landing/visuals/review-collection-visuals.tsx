@@ -83,10 +83,10 @@ export function ReviewCollectionChannelsVisual() {
         <div className="vz-rc-lane is-caution">
           <ShieldCheck size={15} />
           <b>1–3 stars</b>
-          <small>Private feedback to your team</small>
+          <small>Optional private note to your team, plus the link to Google</small>
         </div>
       </div>
-      <MockCaption>Default 4-star threshold shown.</MockCaption>
+      <MockCaption>Every rating keeps the link to Google. Default 4-star threshold shown.</MockCaption>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 import { FreeToolJsonLd } from "@/components/seo/json-ld";
 import { ReputationScoreCheckerClient } from "./reputation-score-checker-client";
+import { MarketingClosingBand } from "@/components/marketing/marketing-closing-band";
 import { ReputationScoreCheckerGuide } from "./reputation-score-checker-guide";
 
 export const metadata: Metadata = mergeMarketingSocial({
@@ -27,6 +28,12 @@ export default function ReputationScoreCheckerPage() {
             <FreeToolJsonLd name="Free Reputation Score Checker" description="Check a business's public Google rating and review count in one free reputation snapshot." path="/tools/reputation-score-checker" />
             <ReputationScoreCheckerClient />
             <ReputationScoreCheckerGuide />
+            <MarketingClosingBand
+                title="Keep your rating moving in the right direction"
+                text="Zyene Reviews helps you request reviews from genuine customers after service visits and monitors incoming feedback across Google and other platforms in one inbox."
+                trackLocation="reputation-score-checker-final"
+                headingId="reputation-score-checker-final-heading"
+            />
         </>
     );
 }

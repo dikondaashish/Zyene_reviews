@@ -1,19 +1,20 @@
-
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export function AgenciesSection5Section() {
     return (
-        <section className="py-16 px-4 bg-background">
-                <div className="container mx-auto max-w-3xl text-center">
-                    <p className="text-muted-foreground mb-6">
-                        Also exploring POS, Zapier, and association partnerships? See the full{" "}
-                        <Link href="/partners" className="text-primary underline">partners page</Link>.
-                    </p>
-                    <Button variant="outline" asChild>
-                        <Link href="/enterprise">Enterprise for 16+ locations</Link>
-                    </Button>
+        <section className="marketing-section mi-section-tight" aria-label="More ways to work with Zyene">
+            <div className="marketing-container">
+                <p className="mi-lede">Also exploring POS, Zapier, and association partnerships?</p>
+                <div className="mi-link-row">
+                    <Link href="/partners" className="home-text-link">
+                        See the full partners page <ArrowRight size={14} aria-hidden="true" />
+                    </Link>
+                    <Link href="/enterprise" className="home-text-link">
+                        Enterprise for 16+ locations <ArrowRight size={14} aria-hidden="true" />
+                    </Link>
                 </div>
-            </section>
+            </div>
+        </section>
     );
 }

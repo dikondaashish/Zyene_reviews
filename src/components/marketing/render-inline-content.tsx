@@ -23,7 +23,7 @@ export function renderInlineContent(text?: string): React.ReactNode {
             <Link
                 key={`${href}-${match.index}`}
                 href={href}
-                className="text-primary font-medium underline underline-offset-4 hover:text-primary/80 transition-colors"
+                className="font-medium"
                 {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             >
                 {label}

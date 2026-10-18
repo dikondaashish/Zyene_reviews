@@ -33,7 +33,7 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
         { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
         { label: "Compare review platforms", href: "/compare" },
         { label: "Zyene Reviews pricing", href: "/pricing" },
-        { label: "Start free trial", href: SIGNUP_URL },
+        { label: "Start 7-day free trial", href: SIGNUP_URL },
     ],
     faqs: [
         {

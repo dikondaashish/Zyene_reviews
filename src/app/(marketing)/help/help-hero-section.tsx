@@ -30,6 +30,7 @@ export function HelpHeroSection() {
                     />
                 ),
             }}
-            primary={{ label: "Email support", href: "mailto:support@zyenereviews.com" }} />
+            primary={{ label: "Contact support", href: "/contact" }}
+        />
     );
 }

@@ -12,13 +12,13 @@ const INCLUDED = [
 ];
 
 /** Same shape as the homepage pricing teaser: the daily price leads, monthly billing supports it. */
-export function IndustriesIndustryPricingReminderSection() {
+export function IndustriesIndustryPricingReminderSection({ heading }: { heading: string }) {
     return (
         <section className="marketing-section home-pricing" aria-labelledby="ind-pricing-heading">
             <div className="marketing-container home-pricing-grid">
                 <div>
                     <p className="marketing-eyebrow">Pricing</p>
-                    <h2 id="ind-pricing-heading">One price. Every tool on this page.</h2>
+                    <h2 id="ind-pricing-heading">{heading}</h2>
                     <p className="home-section-lede">
                         Starter covers one location. Professional covers up to three, and Enterprise is built around you.
                         No annual contract.

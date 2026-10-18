@@ -43,7 +43,7 @@ export function MarketingHomeFinalCta() {
             <p>Make it easy for them. Try Zyene free for 7 days and let the routine run itself.</p>
             <div className="home-final-actions">
               <Link href={SIGNUP_URL} className="marketing-button home-final-primary" data-track="trial" data-track-location="closing">
-                Start free trial <ArrowRight size={16} aria-hidden="true" />
+                Start 7-day free trial <ArrowRight size={16} aria-hidden="true" />
               </Link>
               <Link href="/demo" className="marketing-button home-final-secondary" data-track="demo" data-track-location="closing">
                 Book a demo

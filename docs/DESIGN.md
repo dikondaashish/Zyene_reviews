@@ -61,6 +61,8 @@ On compact layouts, preserve the same capabilities. Organization switching remai
 
 Use existing Radix/shadcn primitives for dialogs, selects, menus and toggles. Keep vendored primitives unchanged; compose product components around them.
 
+Marketing interior pages (enterprise, agencies, partners, small business, demo, compare, how it works, resources, help, tools, case studies) share one section vocabulary in `src/app/(marketing)/marketing-interior-sections.css`: `.mi-head` (eyebrow, h2, lede), `.mi-split` (sticky heading beside content), `.mi-cards`/`.mi-card`, `.mi-list` (hairline steps), `.mi-checks`, `.mi-panel`, `.mi-visual` (pillar mock panel), `.mi-chips`, `.mi-table-wrap`/`.mi-table` (first column sticky on phones) and `MarketingGeoSummary` for key takeaways. Heroes use `LandingHero`; every page closes with `MarketingClosingBand`, whose defaults are the two site-wide CTAs, "Start 7-day free trial" and "Book a demo". Long-form bodies from `ContentRenderer` are styled by `.mk-prose` (`marketing-prose.css`), and free tools sit in `FreeToolShell` (`marketing-free-tools.css`). Do not use shadcn section layout (`py-20 bg-muted container`), `font-bold` headings or orange text links on these pages.
+
 - Controls: comfortable targets, explicit labels, visible keyboard focus, and clear disabled/busy states.
 - Corners: approximately 8 px for product controls, 12–16 px for panels, rounded pills only for compact statuses or deliberate marketing CTAs.
 - Elevation: solid cards, thin borders, and restrained shadows. Reserve translucency for chrome layered over scrolling content.

@@ -1,4 +1,5 @@
 import { FeatureLandingClosing } from "@/components/marketing/feature-landing/feature-landing-closing";
+import { FeatureLandingCrossLinks } from "@/components/marketing/feature-landing/feature-landing-cross-links";
 import { FeatureLandingFlow } from "@/components/marketing/feature-landing/feature-landing-flow";
 import { FeatureLandingHero } from "@/components/marketing/feature-landing/feature-landing-hero";
 import { FeatureLandingRows } from "@/components/marketing/feature-landing/feature-landing-rows";
@@ -57,6 +58,7 @@ export function FeatureLandingView({ pillar, content }: { pillar: FeaturePillarP
       <FeatureLandingBento capabilities={content.capabilities} facts={content.facts} />
       <FeatureLandingFaq faqs={content.faqs} note={content.note} />
       <FeatureLandingRelated related={content.related} />
+      <FeatureLandingCrossLinks slug={pillar.slug} />
       <FeatureLandingClosing title={pillar.tagline} location="feature-cta" />
     </div>
   );

@@ -3,10 +3,12 @@ import { BreadcrumbJsonLd, FAQPageJsonLd, WebPageJsonLd } from "@/components/seo
 import { notFound } from "next/navigation";
 import { COMPETITOR_MAP } from "@/lib/comparisons/competitor-data";
 import { CompareCompetitorHeroSection } from "./compare-competitor-hero-section";
+import { CompareCompetitorDifferencesSection } from "./compare-competitor-differences-section";
+import { CompareCompetitorVisualSection } from "./compare-competitor-visual-section";
 import { CompareCompetitorQuickComparisonTableSection } from "./compare-competitor-quick-comparison-table-section";
-import { CompareCompetitorWhereEachWinsSection } from "./compare-competitor-where-each-wins-section";
 import { CompareCompetitorFullFeatureBreakdownSection } from "./compare-competitor-full-feature-breakdown-section";
 import { CompareCompetitorWhoShouldUseWhichSection } from "./compare-competitor-who-should-use-which-section";
+import { CompareCompetitorSwitchingSection } from "./compare-competitor-switching-section";
 import { CompareCompetitorOtherComparisonsSection } from "./compare-competitor-other-comparisons-section";
 import { CompareCompetitorFinalCtaSection } from "./compare-competitor-final-cta-section";
 
@@ -21,28 +23,25 @@ export default async function CompetitorPage(
 
     return (
         <>
-            <WebPageJsonLd
-                name={data.metaTitle}
-                description={data.metaDescription}
-                url={pageUrl}
-            />
-            {data.faqs && data.faqs.length > 0 ? <FAQPageJsonLd faqs={data.faqs} /> : null}
+            <WebPageJsonLd name={data.metaTitle} description={data.metaDescription} url={pageUrl} />
+            {/* Same array feeds the visible FAQ below, so schema and page text always match. */}
+            <FAQPageJsonLd faqs={data.faqs} />
             <BreadcrumbJsonLd
-                            items={[
-                                { name: "Home", url: "https://www.zyenereviews.com/" },
-                                { name: "Compare", url: "https://www.zyenereviews.com/compare" },
-                                { name: `Zyene Reviews vs ${data.name}`, url: `https://www.zyenereviews.com/compare/${slug}` },
-                            ]}
-                        />
+                items={[
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Compare", url: "https://www.zyenereviews.com/compare" },
+                    { name: `Zyene Reviews vs ${data.name}`, url: pageUrl },
+                ]}
+            />
             <CompareCompetitorHeroSection data={data} />
+            <CompareCompetitorDifferencesSection data={data} />
+            <CompareCompetitorVisualSection data={data} />
             <CompareCompetitorQuickComparisonTableSection data={data} />
-            <CompareCompetitorWhereEachWinsSection data={data} />
             <CompareCompetitorFullFeatureBreakdownSection data={data} />
             <CompareCompetitorWhoShouldUseWhichSection data={data} />
-            <CompareCompetitorOtherComparisonsSection data={data} slug={slug} />
-            {data.faqs && data.faqs.length > 0 ? (
-                <MarketingFaqSection faqs={data.faqs} headingId={`compare-${slug}-faq-heading`} />
-            ) : null}
+            <CompareCompetitorSwitchingSection data={data} />
+            <MarketingFaqSection faqs={data.faqs} headingId={`compare-${slug}-faq-heading`} title={`Questions about ${data.name} vs Zyene Reviews`} />
+            <CompareCompetitorOtherComparisonsSection data={data} />
             <CompareCompetitorFinalCtaSection data={data} />
         </>
     );

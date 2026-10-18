@@ -1,43 +1,50 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { LandingHero } from "@/components/marketing/landing-hero";
 import { MarketingGeoSummary } from "@/components/marketing/marketing-geo-summary";
 import type { CompetitorData } from "@/lib/comparisons/competitor-data";
 
-export function CompareCompetitorHeroSection({ data }: { data: CompetitorData }) {
-    const competitorBillingTerms = data.billingTerms ?? (
-        data.contractRequired
-            ? `${data.name} requires an annual contract.`
-            : `${data.name} offers a monthly option.`
+function PricingGlance({ data }: { data: CompetitorData }) {
+    return (
+        <div className="mi-panel cmp-glance">
+            <h2>Pricing at a glance</h2>
+            <dl>
+                <div><dt>Zyene Reviews</dt><dd>$29.99<small> /mo</small></dd></div>
+                <div><dt>{data.name}</dt><dd>{data.price}</dd></div>
+            </dl>
+            <p className="cmp-glance-note">Zyene Reviews: no annual commitment required. {data.name}: {data.billingTerms}.</p>
+            <p className="cmp-glance-note">{data.priceNote}</p>
+            <p className="cmp-glance-note">
+                Pricing source: <a href={data.pricingSource.href} target="_blank" rel="noopener noreferrer">{data.pricingSource.label}</a> (checked {data.pricingSource.checkedOn}).
+            </p>
+        </div>
     );
+}
 
+export function CompareCompetitorHeroSection({ data }: { data: CompetitorData }) {
     return (
         <>
             <LandingHero
                 eyebrow="Compare your options"
                 title={`Zyene Reviews vs ${data.name}`}
                 description={data.heroSub}
-                primary={{ label: "Try Zyene free for 7 days", href: "/signup" }}
-                secondary={{ label: "Explore Zyene pricing", href: "/pricing" }}
+                variant="conversion"
+                media={{ kind: "product", label: `Zyene Reviews and ${data.name} pricing at a glance`, node: <PricingGlance data={data} /> }}
+                primary={{ label: "Start 7-day free trial", href: "/signup" }}
+                secondary={{ label: "Book a demo", href: "/demo" }}
             >
-                <Link href="/compare" className="underline underline-offset-4">All comparisons</Link>
+                <Link href="/compare" className="home-text-link">
+                    All comparisons <ArrowRight size={14} aria-hidden="true" />
+                </Link>
             </LandingHero>
-            <section className="marketing-container grid grid-cols-1 gap-8 py-12 md:grid-cols-2 md:gap-16">
-                <div>
-                    <h2 className="mb-5 text-2xl">Pricing at a glance</h2>
-                    <dl className="divide-y divide-border">
-                        <div className="flex items-baseline justify-between gap-5 py-4"><dt>Zyene Reviews</dt><dd className="text-xl font-semibold">$29.99<span className="text-sm font-normal text-muted-foreground"> /mo</span></dd></div>
-                        <div className="flex items-baseline justify-between gap-5 py-4"><dt>{data.name}</dt><dd className="text-xl font-semibold">{data.price}</dd></div>
-                    </dl>
-                    <p className="mt-3 text-sm text-muted-foreground">Zyene Reviews: no annual commitment required. {competitorBillingTerms}</p>
-                    {data.pricingSource ? (
-                        <p className="mt-2 text-xs text-muted-foreground">
-                            Pricing source: <a href={data.pricingSource.href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-foreground">{data.pricingSource.label}</a> (checked {data.pricingSource.checkedOn}).
-                        </p>
-                    ) : null}
-                </div>
-                <div>
-                    {data.openingSummary && <MarketingGeoSummary>{data.openingSummary}</MarketingGeoSummary>}
-                    {data.deepDiveLink && <Link href={data.deepDiveLink.href} className="mt-4 inline-block text-sm font-semibold text-primary underline underline-offset-4">{data.deepDiveLink.label}</Link>}
+            <section className="marketing-section mi-section-tight" aria-label="Key takeaway">
+                <div className="marketing-container cmp-summary">
+                    <MarketingGeoSummary>{data.openingSummary}</MarketingGeoSummary>
+                    {data.guides?.[0] && (
+                        <Link href={data.guides[0].href} className="home-text-link">
+                            {data.guides[0].label} <ArrowRight size={14} aria-hidden="true" />
+                        </Link>
+                    )}
                 </div>
             </section>
         </>

@@ -258,7 +258,7 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "Request reviews when the job is done", description: "Send an SMS or email review request after a completed job via a webhook from your booking or job software (for example a Zapier step) or the API." },
             { title: "AI replies that sound like a real professional", description: "Let automatic Google replies handle eligible new reviews while you are on the next job. Set a tone and star threshold for each business, and review complex service concerns yourself." },
             { title: "Follow up on pricing disputes", description: "The Negative Feedback Shield gives unhappy homeowners a private way to explain a pricing problem and alerts your team to follow up." },
-            { title: "Win seasonal search ranking battles", description: "Track competitor review volume and freshness across your service area. Stay ahead before peak season hits by proactively collecting reviews during quieter months." },
+            { title: "Get ready before peak season", description: "Track competitor review volume and freshness across your service area. Stay ahead before peak season hits by proactively collecting reviews during quieter months." },
         ],
         useCase: {
             startingPoint: "A home-services team completes many jobs but asks for reviews inconsistently and has no consistent way to hear pricing concerns directly.",
@@ -303,7 +303,7 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "Automate review requests after each visit", description: "Send a review request via email or SMS after each appointment, timed to arrive when patient satisfaction is highest and the visit is still fresh." },
             { title: "Professional, empathetic AI replies", description: "Draft empathetic responses and review them before publishing. Keep patient-specific information out of public replies. Automatic Google replies are optional and do not replace your practice’s review process." },
             { title: "Hear front-desk and wait-time concerns directly", description: "Every patient gets the same public review link. The Negative Feedback Shield adds an optional private form so patients can also reach your team directly about wait times or billing." },
-            { title: "Monitor all platforms from one dashboard", description: "Track your Google, Facebook, and other review platforms from one inbox. Set up instant alerts so your team can respond within hours, not days." },
+            { title: "Monitor all platforms from one dashboard", description: "Track your Google, Facebook, and Yelp reviews from one inbox. Set up instant alerts so your team can respond within hours, not days." },
         ],
         useCase: {
             startingPoint: "A medical group has inconsistent location-level review monitoring and no reliable handoff for wait-time or front-desk feedback.",
@@ -390,7 +390,7 @@ export const INDUSTRIES: IndustryData[] = [
             },
         ],
         solutions: [
-            { title: "Build review momentum before January", description: "Proactively collect reviews during quieter months so you enter January with a fresh, high-volume review profile that beats competitors in Google Maps results." },
+            { title: "Build review momentum before January", description: "Proactively collect reviews during quieter months so you enter January with recent reviews for new members to read." },
             { title: "AI replies that sound like a real community", description: "Choose a Friendly, Professional, or Concise tone for automatic replies to eligible new Google reviews. Give membership concerns personal attention with drafts your team reviews." },
             { title: "Hear cancellation and billing concerns directly", description: "Every member gets the same public review link. The Negative Feedback Shield adds an optional private channel for cancellation or billing concerns so you can follow up." },
             { title: "Track competitor gyms in your area", description: "See how nearby gyms compare on review volume and rating. Know when a competitor is gaining on you and stay ahead with a proactive review collection strategy." },
@@ -521,7 +521,7 @@ export const INDUSTRIES: IndustryData[] = [
         nameSingular: "Electrician",
         ownerTitle: "electrical business owner",
         heroHeadline: "Review & Reputation Management for Electricians",
-        heroSub: "Electricians use Zyene Reviews to automate review requests after each job, respond with AI, and stay the top-rated choice for local electrical work.",
+        heroSub: "Electricians use Zyene Reviews to automate review requests after each job, respond with AI, and keep a steady stream of recent reviews.",
         accentColor: "chart4",
         metaTitle: "Electrician Review & Reputation Management",
         metaDescription:
@@ -558,7 +558,7 @@ export const INDUSTRIES: IndustryData[] = [
             { title: "Ask after every finished job", description: "Send an SMS or email request after each closed job via a webhook from your booking or job software (for example a Zapier step) or the API." },
             { title: "AI replies while you're on site", description: "Auto-draft replies to eligible new Google reviews in your chosen tone. Handle a tricky concern yourself from a pre-written draft." },
             { title: "A private channel for unhappy customers", description: "Every customer gets the same public review link. The Negative Feedback Shield adds an optional private channel and alerts you so you can follow up." },
-            { title: "Out-rank competing electricians", description: "Track review volume and rating against other electricians in your service area so you stay the obvious, trusted choice." },
+            { title: "Know where you stand locally", description: "Track review volume and rating against other electricians in your service area so you stay the obvious, trusted choice." },
         ],
         useCase: {
             startingPoint: "An electrical contractor does high-quality work but has far fewer Google reviews than nearby competitors and no consistent reply process.",

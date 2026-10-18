@@ -5,58 +5,39 @@ import { IndustryIcon } from "@/lib/industries/industry-icons";
 
 export function CaseStudiesGridSection() {
     return (
-        <section className="py-20 px-4 bg-background">
-                <div className="container mx-auto max-w-5xl">
-                    <div className="grid md:grid-cols-2 gap-8">
-                        {CASE_STUDIES.map((study) => (
-                            <article
-                                key={study.slug}
-                                className="bg-card border border-border rounded-2xl p-8 flex flex-col hover:border-primary/30 transition-colors"
-                            >
-                                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-                                    Illustrative example
-                                </p>
-                                <div className="flex items-start gap-4 mb-4">
-                                    <div className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
-                                        <IndustryIcon slug={study.industrySlug} size={26} />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                                            {study.industry} · illustrative scenario
-                                        </p>
-                                        <h2 className="text-xl font-bold text-foreground mt-1">{study.company}</h2>
-                                        <p className="text-xs text-muted-foreground mt-0.5">{study.size}</p>
-                                    </div>
-                                </div>
-                                <h3 className="text-lg font-semibold text-foreground mb-3 leading-snug">
-                                    {study.headline}
-                                </h3>
-                                <p className="text-sm text-muted-foreground mb-6 flex-1 leading-relaxed">
-                                    {study.excerpt}
-                                </p>
-                                {study.metrics.length > 0 && <div className="grid grid-cols-2 gap-3 mb-6">
-                                    {study.metrics.slice(0, 2).map((m) => (
-                                        <div key={m.label} className="bg-muted rounded-lg p-3 border border-border">
-                                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
-                                                {m.label}
-                                            </p>
-                                            <p className="text-sm font-bold text-foreground">
-                                                {m.before} → {m.after}
-                                            </p>
-                                            <p className="text-xs text-primary font-semibold mt-0.5">{m.change}</p>
-                                        </div>
-                                    ))}
-                                </div>}
-                                <Link
-                                    href={`/case-studies/${study.slug}`}
-                                    className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:brightness-90"
-                                >
-                                    Explore workflow <ArrowRight className="size-4" />
-                                </Link>
-                            </article>
-                        ))}
-                    </div>
+        <section className="marketing-section" aria-labelledby="case-studies-grid-heading">
+            <div className="marketing-container">
+                <div className="mi-head">
+                    <p className="marketing-eyebrow">Illustrative examples</p>
+                    <h2 id="case-studies-grid-heading">Pick a workflow to explore.</h2>
                 </div>
-            </section>
+                <ul className="mi-cards">
+                    {CASE_STUDIES.map((study) => (
+                        <li key={study.slug} className="flex">
+                            <Link href={`/case-studies/${study.slug}`} className="mi-card w-full">
+                                <IndustryIcon slug={study.industrySlug} size={20} />
+                                <p className="mi-card-meta">{study.industry} · illustrative scenario</p>
+                                <h3>{study.headline}</h3>
+                                <p>{study.excerpt}</p>
+                                {study.metrics.length > 0 && (
+                                    <dl className="cs-metrics">
+                                        {study.metrics.slice(0, 2).map((m) => (
+                                            <div key={m.label}>
+                                                <dt className="mi-card-meta">{m.label}</dt>
+                                                <dd className="mi-card-value">{m.before} → {m.after}</dd>
+                                                <dd className="mi-card-meta">{m.change}</dd>
+                                            </div>
+                                        ))}
+                                    </dl>
+                                )}
+                                <span className="home-text-link">
+                                    Explore workflow <ArrowRight size={14} aria-hidden="true" />
+                                </span>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </section>
     );
 }

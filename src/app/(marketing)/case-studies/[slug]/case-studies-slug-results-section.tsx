@@ -1,15 +1,31 @@
+import { MessageSquareReply, Send, ShieldCheck } from "lucide-react";
 import type { CaseStudy } from "@/lib/social-proof/case-study-data";
 
+const MEASURES = [
+    { icon: Send, label: "Requests sent, delivered, and completed" },
+    { icon: MessageSquareReply, label: "Reviews with a published business reply" },
+    { icon: ShieldCheck, label: "Recent feedback themes and resolved concerns" },
+];
+
 export function CaseStudiesSlugResultsSection({ study }: { study: CaseStudy }) {
-    return <section id="results" className="marketing-section scroll-mt-24 border-b border-border">
-        <div className="marketing-container space-y-6">
-            <p className="marketing-eyebrow">03 / Check your own results</p>
-            <h2 className="text-[length:var(--fs-h2)] font-semibold">Measure the routine, then improve it</h2>
-            <p className="max-w-2xl text-muted-foreground">For your {study.industry.toLowerCase()} business, compare the same date range before and after changing the workflow. These are measures to track, not promised results.</p>
-            <ul className="grid gap-4 md:grid-cols-3">
-                {["Requests sent, delivered, and completed", "Reviews with a published business reply", "Recent feedback themes and resolved concerns"].map(label => <li key={label} className="rounded-xl border border-border p-5">{label}</li>)}
-            </ul>
-            <p className="text-sm text-muted-foreground">Request completion includes private feedback or a Google handoff. A click does not confirm that Google published a review.</p>
-        </div>
-    </section>;
+    return (
+        <section id="results" className="marketing-section scroll-mt-24" aria-labelledby="case-study-results-heading">
+            <div className="marketing-container">
+                <div className="mi-head">
+                    <p className="marketing-eyebrow">Check your own results</p>
+                    <h2 id="case-study-results-heading">Measure the routine, then improve it</h2>
+                    <p>For your {study.industry.toLowerCase()} business, compare the same date range before and after changing the workflow. These are measures to track, not promised results.</p>
+                </div>
+                <ul className="mi-cards">
+                    {MEASURES.map(({ icon: Icon, label }) => (
+                        <li key={label} className="mi-card">
+                            <Icon size={20} aria-hidden="true" />
+                            <h3>{label}</h3>
+                        </li>
+                    ))}
+                </ul>
+                <p className="mi-table-note">Request completion includes private feedback or a Google handoff. A click does not confirm that Google published a review.</p>
+            </div>
+        </section>
+    );
 }

@@ -1,46 +1,26 @@
-import Image from "next/image";
-import { resourceImage } from "@/components/marketing/resource-imagery";
-import { MarketingGeoSummary } from "@/components/marketing/marketing-geo-summary";
-import { RESOURCE_MAP } from "@/lib/content/resource-data";
 import Link from "next/link";
-import { Clock, ChevronRight } from "lucide-react";
+import { Clock } from "lucide-react";
+import { resourceImage } from "@/components/marketing/resource-imagery";
+import { LandingHero } from "@/components/marketing/landing-hero";
+import { RESOURCE_MAP } from "@/lib/content/resource-data";
 
 export function ResourcesGuideGuideHeaderSection({ resource }: { resource: (typeof RESOURCE_MAP)[string] }) {
     const image = resourceImage(resource.slug);
+    const updated = new Date(resource.lastUpdated + "T12:00:00").toLocaleDateString("en-US", { month: "long", year: "numeric" });
     return (
-        <header className="pt-16 pb-12 px-4 bg-background border-b border-border">
-                <div className="container mx-auto max-w-4xl">
-                    {/* Breadcrumb */}
-                    <nav className="flex items-center gap-2 text-xs text-muted-foreground mb-6">
-                        <Link href="/resources" className="hover:text-primary transition-colors">Resources</Link>
-                        <ChevronRight className="size-3.5" />
-                        <span className="text-foreground font-medium truncate max-w-xs">{resource.title}</span>
-                    </nav>
-
-                    <div className="inline-flex items-center gap-1.5 text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full mb-5">
-                        {resource.resourceLabel ?? "Free Guide"}
-                    </div>
-                    <h1 className="text-[length:var(--fs-display)] font-semibold tracking-tight text-foreground mb-4 leading-[1.1]">
-                        {resource.title}
-                    </h1>
-                    <p className="text-xl text-muted-foreground mb-5 leading-relaxed">
-                        {resource.subtitle}
-                    </p>
-                    <div className="resource-photo my-8"><Image src={image.src} alt={image.alt} fill priority sizes="(max-width: 767px) 100vw, 896px" /></div>
-                    {resource.openingSummary ? (
-                        <div className="mb-7 max-w-3xl">
-                            <MarketingGeoSummary>{resource.openingSummary}</MarketingGeoSummary>
-                        </div>
-                    ) : null}
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground border-t border-border pt-5">
-                        <div className="flex items-center gap-1.5">
-                            <Clock className="size-3.5" />
-                            {resource.readMinutes} min read
-                        </div>
-                        <span>·</span>
-                        <span>Last updated: {new Date(resource.lastUpdated + "T12:00:00").toLocaleDateString("en-US", { month: "long", year: "numeric" })}</span>
-                    </div>
-                </div>
-            </header>
+        <LandingHero
+            eyebrow={resource.resourceLabel ?? "Free guide"}
+            title={resource.title}
+            description={resource.subtitle}
+            image={image}
+        >
+            <p className="mi-read-meta">
+                <Link href="/resources">All resources</Link>
+                <span className="inline-flex items-center gap-1.5">
+                    <Clock size={14} aria-hidden="true" /> {resource.readMinutes} min read
+                </span>
+                <span>Last updated: {updated}</span>
+            </p>
+        </LandingHero>
     );
 }
