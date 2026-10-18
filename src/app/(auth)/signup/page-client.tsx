@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
+import { AuthFormSkeleton } from "@/components/auth/auth-form-skeleton";
 import { SignupForm } from "./signup-form";
 
 interface SignupPageProps {
@@ -10,13 +10,7 @@ interface SignupPageProps {
 
 export default function SignupPage({ googleClientId }: SignupPageProps) {
     return (
-        <Suspense
-            fallback={
-                <div className="flex justify-center py-12">
-                    <Loader2 className="animate-spin text-primary size-6" />
-                </div>
-            }
-        >
+        <Suspense fallback={<AuthFormSkeleton fields={3} />}>
             <SignupForm googleClientId={googleClientId} />
         </Suspense>
     );

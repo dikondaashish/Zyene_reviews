@@ -4,29 +4,25 @@ import { ArrowUpRight } from "lucide-react";
 import { ZyeneReviewsLogoLink } from "@/components/brand/zyene-reviews-logo-link";
 import { MARKETING_SITE_ORIGIN } from "@/lib/seo/marketing-site-url";
 import { AuthBrandPanel } from "@/components/auth/auth-brand-panel";
-import { SceneStars } from "@/components/auth/auth-scene-parts";
 import { PrivacyChoicesButton } from "@/components/privacy/privacy-choices-button";
 import "@/components/auth/auth-shell.css";
 import "@/components/auth/auth-form.css";
 
+/** Form column on the left (logo, form, legal), brand panel on the right from 1024px up. */
 export function AuthShell({ children }: { children: ReactNode }) {
     return (
         <div className="auth-shell" data-app-palette>
             <a href="#auth-content" className="auth-skip">Skip to form</a>
-            <header className="auth-header">
-                <ZyeneReviewsLogoLink href={MARKETING_SITE_ORIGIN} size={36} priority />
-                <Link href={`${MARKETING_SITE_ORIGIN}/help`} className="auth-help">
-                    Need help? <ArrowUpRight size={15} aria-hidden="true" />
-                </Link>
-            </header>
             <div className="auth-layout">
-                <AuthBrandPanel />
-                <div className="auth-main-column">
+                <div className="auth-form-column">
+                    <header className="auth-header">
+                        <ZyeneReviewsLogoLink href={MARKETING_SITE_ORIGIN} size={32} priority />
+                        <Link href={`${MARKETING_SITE_ORIGIN}/help`} className="auth-help">
+                            Need help? <ArrowUpRight size={14} aria-hidden="true" />
+                        </Link>
+                    </header>
                     <main id="auth-content" className="auth-main" tabIndex={-1}>
-                        <div className="auth-form-container auth-card">
-                            <p className="auth-kicker"><SceneStars delay={0.2} size={13} /> Reviews, replies and ratings in one place</p>
-                            {children}
-                        </div>
+                        <div className="auth-form-container">{children}</div>
                     </main>
                     <footer className="auth-footer">
                         <span>© {new Date().getFullYear()} Zyene, Inc.</span>
@@ -37,6 +33,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
                         </nav>
                     </footer>
                 </div>
+                <AuthBrandPanel />
             </div>
         </div>
     );

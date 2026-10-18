@@ -1,14 +1,13 @@
-import { AuthReviewScene } from "@/components/auth/auth-review-scene";
+import { AuthFlowShowcase } from "@/components/auth/auth-flow-showcase";
+import "@/components/auth/auth-scene.css";
 
 export function AuthBrandPanel() {
     return (
-        <aside className="auth-brand" aria-label="A look inside Zyene Reviews">
-            <div className="auth-brand-copy">
-                <p className="auth-eyebrow"><span /> YOUR REVIEW INBOX, LIVE</p>
-                <h2>Every review heard.<br /><em>Every reply on brand.</em></h2>
-                <p>Google, Facebook and Yelp reviews land in one place, with replies drafted in your voice and ratings you can watch climb.</p>
+        <aside className="auth-brand" aria-label="How Zyene Reviews works">
+            <div className="auth-brand-panel">
+                <h2 className="auth-brand-title">Every review heard.<br /><span>Every reply on brand.</span></h2>
+                <AuthFlowShowcase />
             </div>
-            <AuthReviewScene />
         </aside>
     );
 }

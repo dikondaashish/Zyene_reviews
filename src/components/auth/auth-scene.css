@@ -1,20 +1,15 @@
 /*
- * Auth brand panel: an ink "stage" lit by warm aurora light, with paper review
- * cards on top. The stage stays dark in both themes, so the variables below
- * swap which token plays "ink" and "paper" in dark mode.
- *
- * Every element's resting style is its final state, so the reduced-motion rule
- * in auth-form.css (animation: none) shows a complete, static scene. Motion is
- * transform/opacity plus a few tiny clip/stroke reveals.
+ * Auth brand panel: an ink "stage" that plays a short tour of the product
+ * (auth-flow.css). The stage stays dark in both themes, so the variables
+ * below swap which token plays "ink" and "paper" in dark mode.
  */
-@property --auth-tenth { syntax: "<integer>"; inherits: false; initial-value: 8; }
-
 .auth-shell {
   --stage: var(--foreground);
   --stage-fg: var(--background);
   --paper: var(--card);
   --paper-ink: var(--foreground);
   --paper-muted: color-mix(in srgb, var(--paper-ink) 62%, var(--paper));
+  --paper-line: color-mix(in srgb, var(--paper-ink) 10%, var(--paper));
   --scene-star: var(--chart-4);
   --scene-mint: var(--chart-2);
 }
@@ -25,227 +20,49 @@
   --paper-ink: var(--card);
 }
 
-/* Aurora: three soft light pools that drift slowly behind everything. */
-.auth-brand::before, .auth-brand::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: scene-aurora 16s ease-in-out infinite alternate;
-}
-.auth-brand::before {
-  width: 75%; aspect-ratio: 1; top: -22%; left: -18%;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--primary) 55%, transparent), transparent);
-}
-.auth-brand::after {
-  width: 70%; aspect-ratio: 1; bottom: -26%; right: -20%;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--chart-4) 38%, transparent), transparent);
-  animation-duration: 19s;
-  animation-direction: alternate-reverse;
-}
-
-.auth-scene {
-  --scene-ease: var(--motion-ease-enter);
+.auth-brand-panel {
   position: relative;
-  container-type: size;
-  /* Takes the panel's leftover height (never more than 460px). */
-  flex: 1 1 0;
-  min-height: 0;
-  max-height: 460px;
-  font-size: 12px;
-  color: var(--paper-ink);
+  isolation: isolate;
   overflow: clip;
-  overflow-clip-margin: 24px;
-}
-.auth-scene::before {
-  content: "";
-  position: absolute;
-  width: 55%; aspect-ratio: 1; top: 18%; right: -6%;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--chart-5) 28%, transparent), transparent);
-  animation: scene-aurora 13s ease-in-out infinite alternate-reverse;
-}
-.scene-float { position: absolute; animation: scene-float 7s ease-in-out infinite; }
-.scene-float--rating { left: 0; top: 15%; width: 43%; animation-duration: 8s; }
-.scene-float--google { right: 0; top: 3%; width: 53%; animation-delay: -2s; }
-.scene-float--yelp { right: 2%; top: 37%; width: 50%; animation-duration: 9s; animation-delay: -4s; }
-.scene-float--reply { right: 1%; top: 68%; width: 52%; animation-duration: 8s; animation-delay: -1s; }
-.scene-float--facebook { left: 2%; bottom: 3%; width: 40%; animation-duration: 10s; animation-delay: -6s; }
-.scene-enter { animation: scene-in 700ms var(--scene-ease) var(--scene-delay, 0s) both; }
-
-.scene-card {
-  position: relative;
-  background: var(--paper);
-  border-radius: 14px;
-  padding: 12px 14px;
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--paper) 40%, transparent) inset, 0 22px 44px -20px color-mix(in srgb, var(--stage) 80%, transparent);
-}
-.scene-card > p { margin: 8px 0 0; line-height: 1.45; color: var(--paper-muted); }
-.scene-review { --platform: var(--primary); overflow: clip; }
-.scene-review::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: var(--platform); }
-.scene-review--google { --platform: var(--brand-google); }
-.scene-review--facebook { --platform: var(--brand-facebook); }
-.scene-review--yelp { --platform: var(--brand-yelp); }
-.scene-card-head { display: flex; align-items: center; gap: 8px; }
-.scene-avatar {
-  display: grid; place-items: center; flex-shrink: 0;
-  width: 28px; height: 28px; border-radius: 50%;
-  background: color-mix(in srgb, var(--platform, var(--primary)) 16%, var(--paper));
-  color: color-mix(in srgb, var(--platform, var(--primary)) 75%, var(--paper-ink));
-  font-size: 10px; font-weight: 700;
-}
-.scene-card-who { display: grid; gap: 2px; min-width: 0; }
-.scene-card-who strong { font-size: 12px; font-weight: 600; }
-.scene-platform { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; color: var(--paper-muted); }
-.scene-platform svg { width: 11px; height: 11px; flex-shrink: 0; }
-.scene-yelp-icon { color: var(--brand-yelp); }
-.scene-stars { display: inline-flex; gap: 1px; margin-left: auto; color: var(--scene-star); }
-.scene-stars svg { animation: scene-star-pop 420ms var(--motion-ease-momentum) var(--scene-delay, 0s) both; }
-.scene-tag {
-  display: inline-flex; align-items: center; gap: 5px; margin-top: 8px;
-  padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 650;
-  background: color-mix(in srgb, var(--scene-mint) 18%, var(--paper));
-  color: color-mix(in srgb, var(--scene-mint) 45%, var(--paper-ink));
-  animation: scene-pop 420ms var(--motion-ease-momentum) var(--scene-delay, 0s) both;
-}
-.scene-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--scene-mint); }
-
-.scene-rating { padding: 16px; display: grid; gap: 6px; }
-.scene-label { font-size: 10.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--paper-muted); }
-.scene-rating-row { display: flex; align-items: center; gap: 10px; }
-.scene-rating-value {
-  --auth-tenth: 8;
-  font-size: 40px; line-height: 1; font-weight: 700; letter-spacing: -.04em; font-variant-numeric: tabular-nums;
-  background: linear-gradient(120deg, var(--primary), var(--chart-4));
-  background-clip: text; -webkit-background-clip: text; color: transparent;
-  counter-reset: tenth var(--auth-tenth);
-  animation: scene-count 1.6s var(--motion-ease-damped) .35s both;
-}
-.scene-rating-value::after { content: counter(tenth); }
-.scene-rating-stars { position: relative; display: inline-grid; }
-.scene-rating-track, .scene-rating-fill { grid-area: 1 / 1; display: inline-flex; gap: 2px; }
-.scene-rating-track { color: color-mix(in srgb, var(--paper-ink) 14%, transparent); }
-.scene-rating-fill { color: var(--scene-star); clip-path: inset(0 4% 0 0); animation: scene-fill 1.6s var(--motion-ease-damped) .35s both; }
-.scene-spark-line { width: 100%; height: 44px; overflow: visible; }
-.scene-spark-area { fill: color-mix(in srgb, var(--chart-4) 22%, transparent); animation: scene-fade 900ms ease-out 1.3s both; }
-.scene-spark-stroke { fill: none; stroke: url(#scene-trend-stroke); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; animation: scene-draw 1.8s var(--motion-ease-damped) .4s both; }
-.scene-trend {
-  justify-self: start; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px;
-  padding: 3px 8px; border-radius: 99px; font-size: 11px; font-weight: 650;
-  background: color-mix(in srgb, var(--scene-mint) 16%, var(--paper));
-  color: color-mix(in srgb, var(--scene-mint) 45%, var(--paper-ink));
-}
-
-.scene-reply {
-  position: relative;
-  padding: 12px 14px;
-  border-radius: 16px 16px 4px 16px;
-  color: var(--primary-foreground);
-  background: linear-gradient(135deg, var(--brand-orange-active), var(--primary) 55%, var(--brand-orange-light));
-  box-shadow: 0 22px 44px -18px color-mix(in srgb, var(--primary) 70%, transparent);
-}
-.scene-reply-label { display: flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 650; letter-spacing: .01em; opacity: .9; }
-.scene-reply-text { margin: 6px 0 8px; line-height: 1.45; font-weight: 500; }
-.scene-reply-text span { display: inline-block; white-space: pre; animation: scene-reply-word 10s linear calc(2.3s + var(--word) * 90ms) infinite both; }
-.scene-typing { position: absolute; left: 14px; top: 36px; display: flex; gap: 4px; opacity: 0; animation: scene-reply-dots 10s linear 2.3s infinite both; }
-.scene-typing i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: scene-bounce 900ms ease-in-out infinite; }
-.scene-typing i:nth-child(2) { animation-delay: 150ms; }
-.scene-typing i:nth-child(3) { animation-delay: 300ms; }
-.scene-posted {
-  display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 99px;
-  font-size: 10.5px; font-weight: 650; background: var(--paper); color: var(--paper-ink);
-  animation: scene-reply-posted 10s linear 2.3s infinite both;
-}
-.scene-posted svg { color: color-mix(in srgb, var(--scene-mint) 60%, var(--paper-ink)); }
-
-.scene-toast {
-  position: absolute; left: 0; top: 0; z-index: 2;
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 12px 6px 10px; border-radius: 99px;
-  background: color-mix(in srgb, var(--stage-fg) 12%, var(--stage));
-  border: 1px solid color-mix(in srgb, var(--stage-fg) 18%, transparent);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: clamp(32px, 3.4vw, 52px);
+  border-radius: 20px;
   color: var(--stage-fg);
-  font-size: 11px; font-weight: 550;
-  animation: scene-toast 12s var(--scene-ease) 2.6s infinite both;
+  background:
+    radial-gradient(60% 50% at 0% 100%, color-mix(in srgb, var(--primary) 30%, transparent), transparent),
+    radial-gradient(45% 40% at 100% 0%, color-mix(in srgb, var(--chart-4) 10%, transparent), transparent),
+    var(--stage);
 }
-.scene-toast > svg { flex-shrink: 0; }
-.scene-toast--request > svg { color: var(--scene-mint); }
-.scene-toast--review > svg { color: var(--scene-star); }
-/* Resting state hides the second toast so reduced motion shows just one. */
-.scene-toast--review { opacity: 0; animation-delay: 8.6s; }
-.scene-toast .scene-platform { color: inherit; }
-.scene-toast em { font-style: normal; opacity: .6; }
-.scene-spark { position: absolute; bottom: 0; opacity: 0; animation: scene-rise 7s ease-out var(--scene-delay, 0s) infinite; }
-.scene-spark--amber { color: var(--chart-4); }
-.scene-spark--mint { color: var(--chart-2); }
-.scene-spark--orange { color: var(--primary); }
-.scene-spark--blue { color: var(--chart-5); }
+.auth-brand-title {
+  flex-shrink: 0;
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+.auth-brand-title span { color: color-mix(in srgb, var(--stage-fg) 52%, transparent); }
+@media (min-width: 1280px) { .auth-brand-title { font-size: 40px; } }
+@media (max-height: 760px) { .auth-brand-title { font-size: 28px; } }
 
-@container (max-width: 470px) {
-  .auth-scene { font-size: 11px; }
-  .scene-float--google, .scene-float--yelp, .scene-float--reply { width: 56%; }
-  .scene-float--yelp { right: 0; }
-  .scene-float--reply { right: 2%; }
-  .scene-float--facebook { display: none; }
-  .scene-rating-value { font-size: 32px; }
-  .scene-float--rating { width: 44%; }
-  .scene-rating { padding: 12px; }
-  .scene-trend { font-size: 10px; }
-  .scene-toast em { display: none; }
+/* Shared scene primitives. */
+.scene-avatar {
+  --tint: var(--primary);
+  display: grid; place-items: center; flex-shrink: 0;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: color-mix(in srgb, var(--tint) 14%, var(--paper));
+  color: color-mix(in srgb, var(--tint) 75%, var(--paper-ink));
+  font-size: 11px; font-weight: 700;
 }
-@container (max-height: 380px) {
-  .scene-float--rating { top: 16%; }
-  .scene-float--google { top: 0; }
-  .scene-float--yelp { top: 34%; right: 0; }
-  .scene-float--reply { top: auto; bottom: 0; right: 8%; }
-  .scene-float--facebook { display: none; }
-  .scene-card { padding-block: 10px; }
-  .scene-card > p { margin-top: 6px; }
-  .scene-tag { display: none; }
-}
-
-/* Very short windows: keep the rating and two reviews, drop the reply. */
-@container (max-height: 290px) {
-  .scene-float--reply { display: none; }
-  .scene-float--rating { top: 22%; }
-  .scene-float--yelp { top: auto; bottom: 0; }
-}
-@container (max-height: 200px) {
-  .scene-float--yelp, .scene-spark { display: none; }
-}
-
-@keyframes scene-in { from { opacity: 0; transform: translateY(16px) scale(.96); } }
-@keyframes scene-pop { from { opacity: 0; transform: scale(.6); } }
-@keyframes scene-float { 50% { transform: translateY(-7px); } }
-@keyframes scene-aurora { to { transform: translate(10%, 8%) scale(1.15); } }
-@keyframes scene-star-pop { from { opacity: 0; transform: scale(.2) rotate(-40deg); } 60% { opacity: 1; transform: scale(1.3); } }
-@keyframes scene-count { from { --auth-tenth: 1; } }
-@keyframes scene-fill { from { clip-path: inset(0 100% 0 0); } }
-@keyframes scene-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-@keyframes scene-fade { from { opacity: 0; } }
-@keyframes scene-bounce { 50% { transform: translateY(-4px); opacity: .5; } }
-@keyframes scene-reply-dots { 0%, 13% { opacity: 1; } 15%, 100% { opacity: 0; } }
-@keyframes scene-reply-word {
-  0%, 14% { opacity: 0; transform: translateY(3px); }
-  17%, 88% { opacity: 1; transform: none; }
-  95%, 100% { opacity: 0; transform: none; }
-}
-@keyframes scene-reply-posted {
-  0%, 33% { opacity: 0; transform: scale(.6); }
-  37% { opacity: 1; transform: scale(1.08); }
-  40%, 90% { opacity: 1; transform: scale(1); }
-  97%, 100% { opacity: 0; transform: scale(1); }
-}
-/* 12s cycle shared by both toasts, offset by 6s, so exactly one shows at a time. */
-@keyframes scene-toast {
-  0% { opacity: 0; transform: translateY(-10px) scale(.96); }
-  4%, 42% { opacity: 1; transform: none; }
-  48%, 100% { opacity: 0; transform: translateY(-6px); }
-}
-@keyframes scene-rise {
-  0% { opacity: 0; transform: translateY(0) rotate(0); }
-  15% { opacity: .85; }
-  70% { opacity: 0; transform: translateY(-260px) rotate(120deg); }
-  100% { opacity: 0; transform: translateY(-260px) rotate(120deg); }
-}
+.scene-tint--google { --tint: var(--brand-google); }
+.scene-tint--facebook { --tint: var(--brand-facebook); }
+.scene-tint--yelp { --tint: var(--brand-yelp); }
+.scene-platform { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--paper-muted); }
+.scene-platform svg { width: 12px; height: 12px; flex-shrink: 0; }
+.scene-yelp-icon { color: var(--brand-yelp); }
+.scene-stars { display: inline-flex; gap: 1px; flex-shrink: 0; color: var(--scene-star); }
+.scene-star-off { color: color-mix(in srgb, var(--paper-ink) 14%, var(--paper)); }
