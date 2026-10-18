@@ -12,6 +12,7 @@ import { MarketingLayoutFooter } from "@/app/(marketing)/marketing-layout-footer
 import { useMarketingNavigation } from "@/hooks/use-marketing-navigation";
 import { getInteriorHeroTheme } from "@/lib/marketing/interior-hero-theme";
 import { MarketingExitIntentPopup } from "@/components/marketing/marketing-exit-intent-popup";
+import { SupportChatWidget } from "@/components/marketing/support-chat/support-chat-widget";
 
 function isGrowthOperationsPath(pathname: string | null): boolean {
   return pathname === "/growth" || (pathname?.startsWith("/growth/") ?? false);
@@ -53,6 +54,7 @@ export function MarketingLayoutClient({
             </main>
             {growthDashboard ? null : <MarketingLayoutFooter />}
             {growthDashboard ? null : <MarketingExitIntentPopup />}
+            {growthDashboard ? null : <SupportChatWidget />}
         </div>
     );
 }
