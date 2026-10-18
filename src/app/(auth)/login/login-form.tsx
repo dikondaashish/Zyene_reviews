@@ -17,7 +17,7 @@ export function LoginForm({ googleClientId }: { googleClientId: string }) {
             <form onSubmit={onSubmit} className="auth-fields" aria-busy={isLoading}>
                 <AuthError message={formError} />
                 <div className="auth-field">
-                    <label htmlFor="email">Email</label>
+                    <label htmlFor="email">Email address</label>
                     <AuthInput id="email" name="email" placeholder="you@business.com" type="email"
                         autoCapitalize="none" autoComplete="email" autoCorrect="off" spellCheck={false} required disabled={isLoading} />
                 </div>

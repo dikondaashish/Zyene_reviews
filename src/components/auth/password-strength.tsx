@@ -10,7 +10,7 @@ const SUGGESTIONS = [
 
 /** Minimum-length hint until the user types, then a live checklist of suggestions. */
 export function PasswordStrengthIndicator({ id, password }: { id: string; password: string }) {
-    if (!password) return <p id={id} className="auth-hint">Use 6 or more characters. Longer and unique is safer.</p>;
+    if (!password) return <p id={id} className="auth-hint auth-hint--idle">Use 6 or more characters. Longer and unique is safer.</p>;
     return (
         <ul id={id} className="auth-hint flex flex-wrap gap-x-4 gap-y-1" aria-label="Password suggestions">
             {SUGGESTIONS.map(({ label, check }) => (

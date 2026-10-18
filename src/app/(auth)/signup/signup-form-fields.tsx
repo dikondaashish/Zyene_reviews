@@ -18,7 +18,7 @@ export function SignupFormFields(props: ReturnType<typeof useSignupForm>) {
                     disabled={isLoading} autoComplete="name" />
             </div>
             <div className="auth-field">
-                <label htmlFor="email">Work email</label>
+                <label htmlFor="email">Email address</label>
                 <AuthInput id="email" name="email" type="email" placeholder="you@business.com"
                     value={email} onChange={(e) => setEmail(e.target.value)} required disabled={isLoading}
                     autoComplete="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} />

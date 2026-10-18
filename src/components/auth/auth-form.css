@@ -1,24 +1,23 @@
 /*
- * Auth forms. Rhythm: 32px between heading, sign-in methods and footer
- * links; 20px between fields; 8px between a label and its control.
- * Controls are 44px tall everywhere so the stack reads as one system.
+ * Auth forms. Spacing comes from the --auth-* variables set on .auth-shell
+ * (auth-shell.css): roomy by default, tightened in steps on short windows
+ * so every auth page fits without page scroll. Controls share one height.
  */
-.auth-form-stack { display: grid; gap: 24px; animation: auth-rise 280ms var(--motion-ease-enter) both; }
+.auth-form-stack { display: grid; gap: var(--auth-stack-gap); animation: auth-rise 280ms var(--motion-ease-enter) both; }
 @keyframes auth-rise { from { opacity: 0; transform: translateY(6px); } }
-.auth-form-heading { margin-bottom: 8px; }
-.auth-form-heading h1 { margin: 0; font-size: 28px; line-height: 1.2; font-weight: 650; letter-spacing: -.025em; text-wrap: balance; }
-.auth-form-heading p { margin-top: 10px; font-size: 15px; line-height: 1.55; color: var(--muted-foreground); text-wrap: pretty; }
-@media (min-width: 640px) { .auth-form-heading h1 { font-size: 30px; } }
+.auth-form-heading { margin-bottom: var(--auth-head-gap); }
+.auth-form-heading h1 { margin: 0; font-size: var(--auth-h1); line-height: 1.2; font-weight: 650; letter-spacing: -.025em; text-wrap: balance; }
+.auth-form-heading p { margin-top: var(--auth-label-gap); font-size: var(--auth-sub); line-height: 1.5; color: var(--muted-foreground); text-wrap: pretty; }
 
-.auth-fields { display: grid; gap: 20px; }
-.auth-field { display: grid; gap: 8px; }
-.auth-field label, .auth-label { font-size: 14px; font-weight: 550; color: var(--foreground); }
+.auth-fields { display: grid; gap: var(--auth-fields-gap); }
+.auth-field { display: grid; gap: var(--auth-label-gap); }
+.auth-field label, .auth-label { font-size: var(--auth-label); font-weight: 550; color: var(--foreground); }
 .auth-label-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .auth-label-row .auth-text-link { font-weight: 500; color: var(--muted-foreground); text-decoration-color: transparent; }
 
 .auth-input {
   width: 100%;
-  height: 44px;
+  height: var(--auth-control);
   padding: 0 14px;
   border: 1px solid var(--input);
   border-radius: 10px;
@@ -29,7 +28,6 @@
   box-shadow: 0 1px 2px color-mix(in srgb, var(--foreground) 5%, transparent);
   transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
 }
-@media (pointer: fine) { .auth-input { font-size: 15px; } }
 .auth-input::placeholder { color: color-mix(in srgb, var(--muted-foreground) 75%, var(--card)); }
 .auth-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent); }
 .auth-input:disabled { opacity: .6; cursor: not-allowed; }
@@ -44,7 +42,7 @@
 .auth-input-wrap { position: relative; }
 .auth-password .auth-input { padding-right: 48px; }
 .auth-password-toggle {
-  display: grid; place-items: center; width: 36px; height: 36px;
+  display: grid; place-items: center; width: calc(var(--auth-control) - 8px); height: calc(var(--auth-control) - 8px);
   position: absolute; right: 4px; top: 4px;
   color: var(--muted-foreground); border-radius: 7px; cursor: pointer;
   transition: color 150ms ease-out, background-color 150ms ease-out;
@@ -53,9 +51,9 @@
 
 .auth-submit {
   width: 100%;
-  min-height: 44px;
-  margin-top: 4px;
-  padding: 10px 18px;
+  min-height: var(--auth-control);
+  margin-top: 2px;
+  padding: 8px 18px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -78,24 +76,24 @@
   text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--foreground) 25%, transparent);
   text-underline-offset: 3px; transition: color 150ms ease-out, text-decoration-color 150ms ease-out;
 }
-.auth-divider { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--muted-foreground); }
+.auth-divider { display: flex; align-items: center; gap: 16px; font-size: 13px; line-height: 16px; color: var(--muted-foreground); }
 .auth-divider::before, .auth-divider::after { content: ""; height: 1px; flex: 1; background: var(--border); }
-.auth-switch { margin-top: 8px; font-size: 14px; color: var(--muted-foreground); text-align: center; line-height: 1.6; }
+.auth-switch { margin-top: var(--auth-head-gap); font-size: 14px; color: var(--muted-foreground); text-align: center; line-height: 1.6; }
 .auth-switch a { font-size: inherit; margin-left: 4px; }
 .auth-back {
-  justify-self: center; margin-top: 8px;
+  justify-self: center;
   display: inline-flex; align-items: center; gap: 6px; min-height: 40px;
   font-size: 14px; font-weight: 500; color: var(--muted-foreground);
   transition: color 150ms ease-out;
 }
 .auth-hint { font-size: 13px; line-height: 1.55; color: var(--muted-foreground); }
-.auth-note { padding: 12px 14px; border-radius: 10px; background: var(--muted); font-size: 13px; line-height: 1.55; color: var(--muted-foreground); }
-.auth-legal { font-size: 12.5px; line-height: 1.6; color: var(--muted-foreground); text-align: center; text-wrap: pretty; }
+.auth-note { padding: var(--auth-note-pad) 14px; border-radius: 10px; background: var(--muted); font-size: 13px; line-height: 1.55; color: var(--muted-foreground); }
+.auth-legal { font-size: var(--auth-small); line-height: 1.5; color: var(--muted-foreground); text-align: center; text-wrap: pretty; }
 .auth-legal a { color: var(--foreground); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--foreground) 25%, transparent); text-underline-offset: 3px; }
 
 .auth-optional { border: 1px solid var(--border); border-radius: 10px; }
 .auth-optional summary {
-  min-height: 44px; padding: 0 14px; display: flex; align-items: center; gap: 8px;
+  min-height: var(--auth-control); padding: 0 14px; display: flex; align-items: center; gap: 8px;
   cursor: pointer; font-size: 14px; font-weight: 500; list-style: none;
 }
 .auth-optional summary::-webkit-details-marker { display: none; }
@@ -115,7 +113,7 @@
   color: var(--foreground); font-size: 13.5px; line-height: 1.5;
 }
 .auth-error svg { flex-shrink: 0; margin-top: 2px; color: var(--destructive); }
-.auth-status-icon { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 12px; background: color-mix(in srgb, var(--primary) 10%, var(--card)); color: var(--primary-text); }
+.auth-status-icon { width: var(--auth-icon); height: var(--auth-icon); display: grid; place-items: center; border-radius: 12px; background: color-mix(in srgb, var(--primary) 10%, var(--card)); color: var(--primary-text); }
 .auth-status-icon--success { background: color-mix(in srgb, var(--success) 12%, var(--card)); color: var(--success); }
 .auth-status-icon--warning { background: color-mix(in srgb, var(--destructive) 10%, var(--card)); color: var(--destructive); }
 .auth-status-email { overflow-wrap: anywhere; color: var(--foreground); font-weight: 600; }
@@ -123,16 +121,19 @@
 .auth-steps li::marker { color: var(--foreground); font-weight: 600; }
 
 /* Google renders its own 40px button in an iframe; reserve the space so nothing jumps. */
-.auth-sso { display: grid; gap: 10px; }
-.auth-google { position: relative; width: 100%; min-height: 44px; display: flex; justify-content: center; }
-.auth-google-button { width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+.auth-google { position: relative; width: 100%; min-height: max(40px, var(--auth-control)); display: flex; justify-content: center; }
+.auth-google-button { width: 100%; min-height: max(40px, var(--auth-control)); display: flex; align-items: center; justify-content: center; }
 .auth-google-placeholder {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px;
   border: 1px solid var(--input); background: var(--card); color: var(--muted-foreground);
   border-radius: 10px; font-size: 14px; pointer-events: none;
 }
-.auth-google-unavailable { border: 1px dashed var(--input); background: var(--canvas); padding: 12px; border-radius: 10px; text-align: center; color: var(--muted-foreground); font-size: 13px; line-height: 1.5; }
-.auth-google-note { text-align: center; font-size: 12.5px; line-height: 1.5; color: var(--muted-foreground); }
+.auth-google-unavailable {
+  min-height: var(--auth-control); display: grid; place-items: center; padding: 6px 12px; border: 1px dashed var(--input); border-radius: 10px;
+  background: var(--card); text-align: center; color: var(--muted-foreground); font-size: 13px; line-height: 1.4;
+}
+/* The idle password hint repeats the placeholder; short windows drop it. */
+@media (max-height: 860px) { .auth-hint--idle { display: none; } }
 
 .auth-skeleton { display: grid; gap: 24px; }
 .auth-skeleton span { display: block; border-radius: 8px; background: var(--muted); animation: auth-pulse 1.4s ease-in-out infinite; }

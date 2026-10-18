@@ -21,10 +21,7 @@ export function SignupForm({ googleClientId }: { googleClientId: string }) {
                     ? "Sign up with the email your team invited. Your workspace is ready for you."
                     : "7-day trial on eligible new plans. Card required; your plan bills automatically unless you cancel in Billing."}
             </AuthHeading>
-            <div className="auth-sso">
-                <GoogleIdentityButton clientId={googleClientId} intent="signup" inviteToken={inviteToken} nextPath="/dashboard" />
-                <p className="auth-google-note">You’ll connect your Google Business Profile after sign-up.</p>
-            </div>
+            <GoogleIdentityButton clientId={googleClientId} intent="signup" inviteToken={inviteToken} nextPath="/dashboard" />
             <AuthDivider />
             <SignupFormFields {...signup} />
             <p className="auth-legal">By creating an account, you agree to our{" "}
