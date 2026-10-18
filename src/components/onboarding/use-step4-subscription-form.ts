@@ -9,7 +9,7 @@ import { PLANS, type Plan } from "@/services/stripe/plans";
 export function useStep4SubscriptionForm(organizationId: string, externalIsLoading: boolean, onNext: () => void) {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
-    const [interval, setInterval] = useState<"month" | "year">("month");
+    const [interval, setInterval] = useState<"month" | "year">("year");
     const [checkoutOffersTrial, setCheckoutOffersTrial] = useState<boolean | null>(null);
 
     useEffect(() => {

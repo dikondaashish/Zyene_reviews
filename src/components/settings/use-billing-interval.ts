@@ -5,7 +5,7 @@ import type { Plan } from "@/services/stripe/plans";
 
 export function useBillingInterval(currentPlan: Plan | null) {
     const [interval, setInterval] = useState<"month" | "year">(() =>
-        currentPlan?.interval === "year" ? "year" : "month"
+        currentPlan?.interval === "month" ? "month" : "year"
     );
 
     useEffect(() => {

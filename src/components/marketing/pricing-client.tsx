@@ -28,7 +28,7 @@ export function PricingPageClient({
     enterprise: Plan;
     signupUrl: string;
 }) {
-    const [interval, setInterval] = useState<"month" | "year">("month");
+    const [interval, setInterval] = useState<"month" | "year">("year");
 
     const starter = interval === "month" ? starterMonthly : starterYearly;
     const pro = interval === "month" ? proMonthly : proYearly;

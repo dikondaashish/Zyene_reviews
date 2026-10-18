@@ -7,7 +7,7 @@ import { parseBillingCheckoutResponse } from "@/lib/billing/parse-checkout-respo
 import { PLANS } from "@/services/stripe/plans";
 
 export function useUpgradeModal(onClose: () => void) {
-    const [interval, setInterval] = useState<"month" | "year">("month");
+    const [interval, setInterval] = useState<"month" | "year">("year");
     const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
     const displayPlans = PLANS.filter((p) => p.interval === interval && p.id !== "enterprise");
