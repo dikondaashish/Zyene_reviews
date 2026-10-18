@@ -1,9 +1,11 @@
+export type IntegrationIcon = "api" | "webhook" | "widget";
+
 export type IntegrationItem = {
     name: string;
-    color: string;
-    letter: string;
-    /** Root domain to fetch a real logo for via Google's favicon service. Omit for Zyene's own features (e.g. "REST API"). */
+    /** Root domain of a third-party brand; resolves to a local vector logo. Omit for Zyene's own features. */
     domain?: string;
+    /** Glyph for Zyene's own features (no third-party brand mark). */
+    icon?: IntegrationIcon;
     badge: string | null;
     status: "live" | "soon";
     features: string[];

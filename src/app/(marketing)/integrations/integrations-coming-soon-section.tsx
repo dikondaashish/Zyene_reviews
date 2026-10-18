@@ -1,7 +1,6 @@
 import { ArrowRight, Clock } from "lucide-react";
-import Image from "next/image";
 import { COMING_INTEGRATIONS } from "./integrations-data";
-import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
+import { IntegrationLogoTile } from "./integrations-logo-tile";
 
 export function IntegrationsComingSoonSection() {
     return (
@@ -11,25 +10,9 @@ export function IntegrationsComingSoonSection() {
                 <p className="text-muted-foreground text-center mb-12">More integrations are on the roadmap. Join the waitlist.</p>
                 <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
                     {COMING_INTEGRATIONS.map((int) => (
-                        <div key={int.name} className="bg-card border border-border rounded-2xl p-7 opacity-80">
+                        <div key={int.name} className="bg-card border border-border rounded-2xl p-7">
                             <div className="flex items-center gap-4 mb-4">
-                                {int.domain ? (
-                                    <Image
-                                        src={getBrandLogoUrl(int.domain)}
-                                        alt={`${int.name} logo`}
-                                        width={48}
-                                        height={48}
-                                        className="rounded-xl shrink-0 opacity-60 size-12 object-contain"
-                                        unoptimized
-                                    />
-                                ) : (
-                                    <div
-                                        className="rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0 opacity-60 size-12"
-                                        style={{ backgroundColor: int.color }}
-                                    >
-                                        {int.letter}
-                                    </div>
-                                )}
+                                <IntegrationLogoTile item={int} />
                                 <div>
                                     <h3 className="font-bold text-foreground text-lg leading-tight">{int.name}</h3>
                                     <span className="inline-block mt-1 bg-muted text-muted-foreground text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-border">

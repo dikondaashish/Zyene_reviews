@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { SIGNUP_URL } from "@/config/env";
 
 interface MarketingClosingBandProps {
@@ -13,7 +13,7 @@ interface MarketingClosingBandProps {
   primaryHref?: string;
   /** Defaults to "Book a demo". */
   secondary?: { label: string; href: string };
-  /** A photo, or any other right-hand content (for example a list of next links). */
+  /** A photo, or any other right-hand content (for example a list of next links). Without either, a trial-facts panel fills the space. */
   image?: { src: string; alt: string };
   aside?: ReactNode;
   trackLocation: string;
@@ -34,27 +34,47 @@ export function MarketingClosingBand({
   trackLocation,
   headingId = "ind-final-heading",
 }: MarketingClosingBandProps) {
-  const solo = !image && !aside;
   return (
     <section className="home-final" aria-labelledby={headingId}>
       <div className="marketing-container">
-        <div className={`home-final-band${solo ? " fl-final-band" : ""}`}>
+        <div className="home-final-band">
           <div className="home-final-copy">
             <h2 id={headingId}>{title}</h2>
             <p>{text}</p>
-            {!solo && <ClosingActions primaryLabel={primaryLabel} primaryHref={primaryHref} secondary={secondary} trackLocation={trackLocation} />}
+            <ClosingActions primaryLabel={primaryLabel} primaryHref={primaryHref} secondary={secondary} trackLocation={trackLocation} />
           </div>
-          {solo && <ClosingActions primaryLabel={primaryLabel} primaryHref={primaryHref} secondary={secondary} trackLocation={trackLocation} />}
           {image ? (
             <div className="home-final-photo">
               <Image src={image.src} alt={image.alt} fill sizes="(max-width: 1023px) 100vw, 520px" />
             </div>
           ) : (
-            aside
+            aside ?? <ClosingHighlights />
           )}
         </div>
       </div>
     </section>
+  );
+}
+
+const HIGHLIGHTS = [
+  { title: "7-day free trial", text: "Start free, decide later" },
+  { title: "From $29.99 a month", text: "Cancel anytime" },
+  { title: "Every review in one place", text: "Google, Facebook and Yelp" },
+];
+
+function ClosingHighlights() {
+  return (
+    <ul className="home-final-aside" aria-label="What you get">
+      {HIGHLIGHTS.map(({ title, text }) => (
+        <li key={title}>
+          <span className="home-final-aside-check" aria-hidden="true"><Check size={16} strokeWidth={3} /></span>
+          <span>
+            <strong>{title}</strong>
+            <small>{text}</small>
+          </span>
+        </li>
+      ))}
+    </ul>
   );
 }
 

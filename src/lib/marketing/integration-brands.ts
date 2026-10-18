@@ -5,7 +5,7 @@ export interface IntegrationBrandChip {
     letter: string;
     /** CSS `background-color` value (design token). Used as fallback when no logo domain is set. */
     color: string;
-    /** Root domain to fetch a real logo for via Google's favicon service. Omit for non-brand entries (e.g. "REST API"). */
+    /** Root domain to fetch a real logo for for the logo. Omit for non-brand entries (e.g. "REST API"). */
     domain?: string;
 }
 
@@ -18,7 +18,21 @@ export const INTEGRATION_BRAND_CHIPS: IntegrationBrandChip[] = [
     { name: "REST API", color: "var(--brand-api-neutral)", letter: "</>" },
 ];
 
-/** Builds a high-res logo URL for a brand domain via Google's favicon service. */
+/** Crisp vector marks served from /public/integrations/logos, keyed by root domain. */
+const LOCAL_BRAND_LOGOS: Record<string, string> = {
+    "google.com": "google",
+    "facebook.com": "facebook",
+    "yelp.com": "yelp",
+    "zapier.com": "zapier",
+    "squareup.com": "square",
+    "square.com": "square",
+    "clover.com": "clover",
+    "toasttab.com": "toast",
+};
+
+/** Logo URL for a brand domain: a local SVG when we ship one, else Google's favicon service. */
 export function getBrandLogoUrl(domain: string): string {
+    const local = LOCAL_BRAND_LOGOS[domain];
+    if (local) return `/integrations/logos/${local}.svg`;
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=256`;
 }

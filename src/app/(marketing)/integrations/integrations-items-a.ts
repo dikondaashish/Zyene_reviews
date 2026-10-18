@@ -3,8 +3,6 @@ import type { IntegrationItem } from "./integrations-types";
 export const INTEGRATIONS_A: IntegrationItem[] = [
     {
         name: "Google Business Profile",
-        color: "var(--brand-google)",
-        letter: "G",
         domain: "google.com",
         badge: "Sync & publish",
         status: "live",
@@ -19,8 +17,6 @@ export const INTEGRATIONS_A: IntegrationItem[] = [
     },
     {
         name: "Facebook Reviews",
-        color: "var(--brand-facebook)",
-        letter: "f",
         domain: "facebook.com",
         badge: "Sync",
         status: "live",
@@ -35,8 +31,6 @@ export const INTEGRATIONS_A: IntegrationItem[] = [
     },
     {
         name: "Yelp",
-        color: "var(--brand-yelp)",
-        letter: "Y",
         domain: "yelp.com",
         badge: "Sync",
         status: "live",
@@ -51,8 +45,7 @@ export const INTEGRATIONS_A: IntegrationItem[] = [
     },
     {
         name: "Generic inbound webhook",
-        color: "var(--brand-api-neutral)",
-        letter: "↗",
+        icon: "webhook",
         badge: "Zapier-compatible",
         status: "live",
         features: [
@@ -67,8 +60,6 @@ export const INTEGRATIONS_A: IntegrationItem[] = [
     },
     {
         name: "Square",
-        color: "var(--brand-square)",
-        letter: "S",
         domain: "squareup.com",
         badge: "Early access",
         status: "live",

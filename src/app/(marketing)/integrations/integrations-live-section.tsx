@@ -1,7 +1,6 @@
 import { Check } from "lucide-react";
-import Image from "next/image";
 import { LIVE_INTEGRATIONS } from "./integrations-data";
-import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
+import { IntegrationLogoTile } from "./integrations-logo-tile";
 
 export function IntegrationsLiveSection() {
     return (
@@ -13,23 +12,7 @@ export function IntegrationsLiveSection() {
                     {LIVE_INTEGRATIONS.map((int) => (
                         <div key={int.name} className="bg-card border border-border rounded-2xl p-7 flex flex-col hover:shadow-md transition-shadow group">
                             <div className="flex items-center gap-4 mb-4">
-                                {int.domain ? (
-                                    <Image
-                                        src={getBrandLogoUrl(int.domain)}
-                                        alt={`${int.name} logo`}
-                                        width={48}
-                                        height={48}
-                                        className="rounded-xl shrink-0 size-12 object-contain"
-                                        unoptimized
-                                    />
-                                ) : (
-                                    <div
-                                        className="rounded-xl flex items-center justify-center text-white font-bold text-base shrink-0 size-12"
-                                        style={{ backgroundColor: int.color }}
-                                    >
-                                        {int.letter}
-                                    </div>
-                                )}
+                                <IntegrationLogoTile item={int} />
                                 <div>
                                     <h3 className="font-bold text-foreground text-lg leading-tight">{int.name}</h3>
                                     <span className="inline-block mt-1 bg-primary/10 text-primary text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-primary/20">

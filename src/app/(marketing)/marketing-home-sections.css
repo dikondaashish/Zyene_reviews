@@ -102,6 +102,12 @@
 .marketing-button.home-final-secondary:hover { background:rgb(255 255 255 / .1); box-shadow:none; }
 .home-final-photo { position:relative; min-height:300px; overflow:hidden; border-radius:18px; }
 .home-final-photo img { object-fit:cover; }
+.home-final-aside { align-self:center; display:grid; gap:4px; margin:0; padding:10px; list-style:none; border-radius:22px; background:#fff; color:#23262a; box-shadow:0 24px 48px -24px rgb(35 38 42 / .45); }
+.home-final-aside li { display:flex; align-items:center; gap:16px; padding:16px 18px; border-radius:14px; }
+.home-final-aside li + li { border-top:1px solid rgb(35 38 42 / .08); border-radius:0; }
+.home-final-aside-check { display:grid; flex:none; place-items:center; width:34px; height:34px; border-radius:999px; background:var(--brand-orange); color:#fff; }
+.home-final-aside strong { display:block; font-size:18px; font-weight:700; letter-spacing:-.01em; line-height:1.25; }
+.home-final-aside small { display:block; margin-top:2px; color:rgb(35 38 42 / .68); font-size:14px; font-weight:500; }
 
 @media (max-width:1023px) {
   .home-bento { grid-template-columns:repeat(2,minmax(0,1fr)); }

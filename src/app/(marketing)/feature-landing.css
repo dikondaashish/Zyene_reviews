@@ -92,10 +92,6 @@
 .fl-related-link:hover .home-text-link { text-decoration:underline; }
 .fl-related-link:hover .home-text-link svg { transform:translateX(2px); }
 
-/* Closing band without a photo: copy left, actions right. */
-.fl-final-band { grid-template-columns:minmax(0,1fr) auto; align-items:end; }
-.fl-final-band .home-final-actions { margin-top:0; }
-
 @media (prefers-reduced-motion:no-preference) {
   .fl-hero-visual,.fl-hub .fl-stage { animation:home-rise 800ms var(--ease-out) 120ms backwards; }
 }
@@ -107,7 +103,6 @@
   .fl-bento-cell { grid-column:span 1; }
   .fl-bento-cell:first-child,.fl-bento-cell:nth-child(6),.fl-bento-cell.fl-bento-facts { grid-column:span 2; }
   .fl-bento:not(.fl-bento--facts) > .fl-bento-cell:nth-child(6) { grid-column:span 2; }
-  .fl-final-band .home-final-actions { margin-top:8px; }
 }
 @media (max-width:900px) {
   .fl-row { grid-template-columns:1fr; }

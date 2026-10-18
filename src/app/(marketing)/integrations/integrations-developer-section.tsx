@@ -30,13 +30,16 @@ export function IntegrationsDeveloperSection() {
                                 </li>
                             ))}
                         </ul>
-                        <div className="flex gap-4">
-                            <Button className="gap-2" asChild>
+                        <div className="flex flex-wrap gap-3">
+                            <Button className="h-11 gap-2 px-5" asChild>
                                 <Link href="/docs/api">
                                     <Globe className="size-4" /> Read API Docs
                                 </Link>
                             </Button>
-                            <Button variant="outline" className="gap-2 border-[color:var(--marketing-footer-muted)] text-[color:var(--marketing-footer-fg)] hover:bg-white/10" asChild>
+                            <Button
+                                className="h-11 gap-2 border-white bg-white px-5 text-[color:var(--marketing-footer-bg)] hover:bg-white/85 hover:shadow-lg"
+                                asChild
+                            >
                                 <Link href={SIGNUP_URL} data-track="trial" data-track-location="integrations-dev">
                                     <KeyRound className="size-4" /> Create an API key
                                 </Link>

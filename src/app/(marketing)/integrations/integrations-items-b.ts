@@ -3,8 +3,7 @@ import type { IntegrationItem } from "./integrations-types";
 export const INTEGRATIONS_B: IntegrationItem[] = [
     {
         name: "REST API",
-        color: "var(--brand-api-neutral)",
-        letter: "</>",
+        icon: "api",
         badge: "Available",
         status: "live",
         features: [
@@ -19,8 +18,7 @@ export const INTEGRATIONS_B: IntegrationItem[] = [
     },
     {
         name: "Website Review Widget",
-        color: "var(--brand-hubspot)",
-        letter: "W",
+        icon: "widget",
         badge: "Paid accounts",
         status: "live",
         features: [
@@ -35,8 +33,6 @@ export const INTEGRATIONS_B: IntegrationItem[] = [
     },
     {
         name: "Clover POS",
-        color: "var(--brand-clover)",
-        letter: "C",
         domain: "clover.com",
         badge: "Coming Soon",
         status: "soon",
@@ -50,8 +46,6 @@ export const INTEGRATIONS_B: IntegrationItem[] = [
     },
     {
         name: "Toast POS",
-        color: "var(--brand-toast)",
-        letter: "T",
         domain: "toasttab.com",
         badge: "Coming Soon",
         status: "soon",
