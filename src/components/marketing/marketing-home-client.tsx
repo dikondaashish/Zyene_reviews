@@ -17,11 +17,11 @@ export function MarketingHomeClient() {
       <div className="home-hero-shell">
         <MarketingHomeHero />
       </div>
-      <MarketingHomeIntro />
       <MarketingHomeTrustStrip />
       <MarketingScrollReveal intensity="subtle">
         <MarketingHomeHowItWorks />
       </MarketingScrollReveal>
+      <MarketingHomeIntro />
       <MarketingScrollReveal intensity="subtle">
         <MarketingHomeBento />
       </MarketingScrollReveal>

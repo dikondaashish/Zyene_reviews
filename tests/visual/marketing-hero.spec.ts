@@ -198,10 +198,14 @@ test("phone starts neutral and yields to a customer's chosen rating", async ({
   await expect(stars.last()).toHaveCSS("fill", "rgba(0, 0, 0, 0)");
 });
 
-test("the interactive product tour sits right under the hero", async ({ page }) => {
+test("the interactive product tour follows How it works under its own heading", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await expect(page.locator(".home-intro h2")).toHaveCount(0);
+  await expect(page.locator(".home-intro h2")).toHaveText("Click around a real workspace.");
+  const how = await page.locator(".home-how").boundingBox();
+  const tour = await page.locator(".home-intro").boundingBox();
+  expect(tour!.y).toBeGreaterThan(how!.y);
+  await page.locator("#home-product-tour").scrollIntoViewIfNeeded();
   await expect(page.locator("#home-product-tour .tour-container[data-ready=true]")).toBeVisible();
 });
 
