@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { CASE_STUDY_MAP } from "@/lib/social-proof/case-study-data";
+import { SIGNUP_URL } from "@/config/env";
 
 export function CaseStudiesSlugRelatedSection({ study }: { study: (typeof CASE_STUDY_MAP)[string] }) {
     return (
@@ -12,7 +13,7 @@ export function CaseStudiesSlugRelatedSection({ study }: { study: (typeof CASE_S
                     <p className="mt-4 max-w-lg text-lg text-muted-foreground">Start a 7-day free trial to explore the workflow at your own pace, with no annual contract.</p>
                 </div>
                 <div className="flex flex-col items-start gap-4 md:items-end">
-                    <Link href="https://auth.zyenereviews.com/signup" className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 font-semibold text-primary-foreground transition-transform hover:brightness-95 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-track="trial" data-track-location="case-study-slug">
+                    <Link href={SIGNUP_URL} className="inline-flex items-center gap-2 rounded-md bg-[var(--cta)] px-5 py-3 font-semibold text-primary-foreground transition-transform hover:brightness-95 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-track="trial" data-track-location="case-study-slug">
                         Start your free trial <ArrowRight className="size-4" aria-hidden="true" />
                     </Link>
                     <Link href={`/industries/${study.industrySlug}`} className="text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">

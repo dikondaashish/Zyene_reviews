@@ -23,11 +23,11 @@ export function CompareCardsSection() {
                                         </h3>
                                         <ArrowRight className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all size-4" />
                                     </div>
-                                    <div className="text-3xl font-black text-destructive mb-1">
-                                        {comp.price}
-                                        <span className="text-base font-normal text-muted-foreground">/mo</span>
-                                    </div>
-                                    <p className="text-xs text-muted-foreground mb-4">{comp.name} starting price</p>
+                                    <p className="text-xs text-muted-foreground mb-1">{comp.name} pricing</p>
+                                    <p className="text-xl font-semibold text-foreground break-words mb-1">{comp.price}</p>
+                                    {comp.priceNote ? (
+                                        <p className="text-xs text-muted-foreground break-words mb-4">{comp.priceNote}</p>
+                                    ) : null}
                                     <p className="text-sm text-muted-foreground leading-relaxed flex-1">{comp.keyAngle}</p>
                                     <div className="mt-4 pt-4 border-t border-border">
                                         <span className="text-xs font-semibold text-primary">Read full comparison →</span>

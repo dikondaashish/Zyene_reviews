@@ -1,19 +1,5 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import {
-    ArrowRight,
-    Building2,
-    Check,
-    Shield,
-    Users,
-    FileText,
-} from "lucide-react";
-import {
-    ENTERPRISE_COMPARISON_ROWS,
-    ENTERPRISE_SLA_BULLETS,
-    ENTERPRISE_VALUE_PROPS,
-    ENTERPRISE_SALES_EMAIL,
-} from "@/lib/enterprise/enterprise-data";
+import { Check, Shield } from "lucide-react";
+import { ENTERPRISE_SLA_BULLETS } from "@/lib/enterprise/enterprise-data";
 
 export function EnterpriseSection3Section() {
     return (

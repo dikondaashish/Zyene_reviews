@@ -20,7 +20,7 @@ export function PricingClientPlanCard({
   const description = enterprise
     ? "For teams with custom needs"
     : isPopular
-      ? "For growing businesses and teams"
+      ? `For 2 to ${plan.limits.maxLocations} locations and growing teams`
       : "For your first business location";
   return (
     <article aria-labelledby={`${plan.id}-name`} className={`${styles.card} ${isPopular ? styles.popular : ""}`}>
@@ -36,7 +36,7 @@ export function PricingClientPlanCard({
         data-track={enterprise ? "demo" : "trial"}
         data-track-location="pricing"
       >
-        {enterprise ? "Talk to sales" : "Start 7-day free trial"}
+        {enterprise ? "Book a demo" : "Start 7-day free trial"}
         <ArrowRight className="size-4" aria-hidden="true" />
       </Link>
       <ul className={styles.features}>

@@ -28,7 +28,7 @@ export function CompareCompetitorHeroSection({ data }: { data: CompetitorData })
                         <div className="flex items-baseline justify-between gap-5 py-4"><dt>Zyene Reviews</dt><dd className="text-xl font-semibold">$29.99<span className="text-sm font-normal text-muted-foreground"> /mo</span></dd></div>
                         <div className="flex items-baseline justify-between gap-5 py-4"><dt>{data.name}</dt><dd className="text-xl font-semibold">{data.price}</dd></div>
                     </dl>
-                    <p className="mt-3 text-sm text-muted-foreground">Zyene has no annual contract. {competitorBillingTerms}</p>
+                    <p className="mt-3 text-sm text-muted-foreground">Zyene Reviews: no annual commitment required. {competitorBillingTerms}</p>
                     {data.pricingSource ? (
                         <p className="mt-2 text-xs text-muted-foreground">
                             Pricing source: <a href={data.pricingSource.href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-foreground">{data.pricingSource.label}</a> (checked {data.pricingSource.checkedOn}).

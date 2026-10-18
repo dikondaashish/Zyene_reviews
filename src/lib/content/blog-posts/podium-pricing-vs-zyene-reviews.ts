@@ -19,11 +19,11 @@ export const podiumPricingVsZyeneReviewsPost: BlogPostSource = {
     { label: "AI drafts and automatic Google replies", href: "/features/ai-replies" },
   ],
   faqs: [
-    { question: "What does Podium cost monthly?", answer: "Podium does not publish prices; third-party sources report about $399 per month and up. Obtain a written quote from Podium for your specific locations and messaging needs. Pricing last reviewed: October 2026." },
+    { question: "What does Podium cost monthly?", answer: "Podium does not publish prices. Third-party sources and user reports put it at about $399 per month and up as of October 2026. These figures are not from Podium, so confirm with its sales team. Obtain a written quote from Podium for your specific locations and messaging needs. Pricing last reviewed: October 2026." },
     { question: "Does Podium require an annual contract?", answer: "The public pricing page does not establish your offer's terms. Confirm minimum term, billing frequency, renewal, notice and cancellation conditions in the written agreement." },
   ],
   body: [
-    { type: "summary", text: "Podium does not publish prices; third-party sources report about $399 per month and up. Zyene publishes review-focused monthly and annual plans. Compare your actual offer with the products, message volume and location count you need. Pricing last reviewed: October 2026." },
+    { type: "summary", text: "Podium does not publish prices. Third-party sources and user reports put it at about $399 per month and up as of October 2026. These figures are not from Podium, so confirm with its sales team. Zyene publishes review-focused monthly and annual plans. Compare your actual offer with the products, message volume and location count you need. Pricing last reviewed: October 2026." },
     { type: "h2", text: "What you are buying matters as much as the price" },
     { type: "p", text: "Podium describes reviews alongside an inbox, phones, website chat, payments, automations and AI lead-conversion products. Ask which are included in your offer. A business using several communication workflows may prefer this broader scope." },
     { type: "p", text: "Zyene focuses on connected reviews, requests, AI business replies, customer feedback, competitor ratings and GBP insights. Starter includes 500 SMS and 500 email review requests per month for one location. Those requests are different from a general-purpose phone or two-way sales messaging plan." },

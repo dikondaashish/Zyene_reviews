@@ -10,7 +10,7 @@ export function CaseStudiesSlugApproachSection({ study }: { study: (typeof CASE_
                     <h2 className="text-[length:var(--fs-h2)] mt-3 font-semibold tracking-tight text-foreground">The solution</h2>
                 </div>
                 <div>
-                    <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground">{study.company} implemented Zyene Reviews with a simple workflow that fit the team’s existing job-completion process.</p>
+                    <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground">In this example, the {study.industry.toLowerCase()} team sets up Zyene Reviews with a simple workflow that fits its existing job-completion process.</p>
                     <ul className="mt-8 grid gap-0 divide-y divide-border border-y border-border sm:grid-cols-2 sm:divide-x sm:divide-y-0 sm:border-y-0 sm:border-l">
                         {study.solutionFeatures.map((feature) => (
                             <li key={feature} className="flex items-start gap-3 border-border py-4 text-base leading-relaxed text-foreground sm:px-5 sm:py-5">

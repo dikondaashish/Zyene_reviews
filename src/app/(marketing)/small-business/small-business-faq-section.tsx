@@ -6,7 +6,7 @@ export function SmallBusinessFaqSection() {
         <section className="py-20 px-4 bg-background border-b border-border">
             <div className="container mx-auto max-w-3xl">
                 <h2 className="text-[length:var(--fs-h2)] font-semibold mb-8 text-center">Small business review management FAQ</h2>
-                <div className="bg-card rounded-xl border border-border px-8">
+                <div className="home-faq-list">
                     {SMALL_BUSINESS_FAQS.map((faq) => (
                         <PricingClientFaqItem key={faq.question} question={faq.question} answer={faq.answer} />
                     ))}

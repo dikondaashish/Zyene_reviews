@@ -12,9 +12,11 @@ export type PlaceSuggestion = {
 export function PlaceSearchInput({
     onSelect,
     placeholder = "Search your business on Google Maps…",
+    id,
 }: {
     onSelect: (place: PlaceSuggestion | null) => void;
     placeholder?: string;
+    id?: string;
 }) {
     const [query, setQuery] = useState("");
     const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
@@ -53,8 +55,10 @@ export function PlaceSearchInput({
     return (
         <div className="relative">
             <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
+                <MapPin aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
                 <input
+                    id={id}
+                    autoComplete="off"
                     value={query}
                     onChange={(e) => {
                         setQuery(e.target.value);
@@ -65,7 +69,7 @@ export function PlaceSearchInput({
                     className="w-full h-11 pl-10 pr-10 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
                 />
                 {loading && (
-                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-muted-foreground size-4" />
+                    <Loader2 aria-hidden="true" className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-muted-foreground size-4" />
                 )}
             </div>
             {suggestions.length > 0 && (

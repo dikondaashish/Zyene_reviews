@@ -5,7 +5,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PlaceSearchInput, type PlaceSuggestion } from "@/components/marketing/free-tools/place-search-input";
 import { CopyResultButton } from "@/components/marketing/free-tools/copy-result-button";
-import { Loader2 } from "lucide-react";
+import { FreeToolEmailDisclosure } from "@/components/marketing/free-tools/free-tool-email-disclosure";
+import { FreeToolLoadingLabel } from "@/components/marketing/free-tools/free-tool-loading-label";
+import { FreeToolResultCta } from "@/components/marketing/free-tools/free-tool-result-cta";
+import { trackToolUsed } from "@/lib/free-tools/track-tool-used";
 
 export function ReviewLinkGeneratorClient() {
     const [place, setPlace] = useState<PlaceSuggestion | null>(null);
@@ -34,10 +37,7 @@ export function ReviewLinkGeneratorClient() {
                 return;
             }
             setResult({ reviewLink: json.reviewLink, businessName: json.businessName, emailSent: json.emailSent });
-            if (typeof window !== "undefined") {
-                (window as unknown as { dataLayer?: unknown[] }).dataLayer = (window as unknown as { dataLayer?: unknown[] }).dataLayer || [];
-                (window as unknown as { dataLayer?: unknown[] }).dataLayer!.push({ event: "tool_used", tool_name: "review-link-generator" });
-            }
+            trackToolUsed("review-link-generator");
             if (json.emailWarning) setError(json.emailWarning);
         } catch {
             setError("Network error");
@@ -74,22 +74,24 @@ export function ReviewLinkGeneratorClient() {
                 <div className="container mx-auto max-w-2xl">
                     <form onSubmit={submit} className="space-y-6 bg-card border border-border rounded-2xl p-6 md:p-8">
                         <div>
-                            <label className="text-sm font-medium mb-2 block">Your business</label>
-                            <PlaceSearchInput onSelect={setPlace} />
+                            <label htmlFor="review-link-business" className="text-sm font-medium mb-2 block">Your business</label>
+                            <PlaceSearchInput id="review-link-business" onSelect={setPlace} />
                         </div>
                         <div>
-                            <label className="text-sm font-medium mb-2 block">Email me a copy (optional)</label>
+                            <label htmlFor="review-link-email" className="text-sm font-medium mb-2 block">Email me a copy (optional)</label>
                             <input
+                                id="review-link-email"
                                 type="email"
-                                aria-label="Email address"
                                 autoComplete="email"
+                                aria-describedby="review-link-email-disclosure"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full h-11 rounded-lg border border-border px-4 text-sm"
                                 placeholder="you@business.com"
                             />
+                            <div className="mt-2"><FreeToolEmailDisclosure id="review-link-email-disclosure" /></div>
                         </div>
-                        {error && <p className="text-sm text-destructive">{error}</p>}
+                        {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
                         {result && (
                             <div className="rounded-lg bg-primary/5 border border-primary/20 p-4 text-sm">
                                 <p className="font-medium text-foreground mb-2">
@@ -101,10 +103,18 @@ export function ReviewLinkGeneratorClient() {
                                 <CopyResultButton text={result.reviewLink} />
                             </div>
                         )}
-                        <Button type="submit" disabled={loading} className="w-full" data-track="tool" data-track-location="review-link-generator">
-                            {loading ? <Loader2 className="animate-spin size-4" /> : "Get my review link"}
+                        <Button type="submit" disabled={loading} aria-busy={loading} className="w-full" data-track="tool" data-track-location="review-link-generator">
+                            {loading ? <FreeToolLoadingLabel text="Finding your review link" /> : "Get my review link"}
                         </Button>
                     </form>
+                    {result && (
+                        <div className="mt-6">
+                            <FreeToolResultCta
+                                toolSlug="review-link-generator"
+                                message="Send this link automatically by SMS and email after every visit with Zyene Reviews."
+                            />
+                        </div>
+                    )}
                 </div>
             </section>
         </div>

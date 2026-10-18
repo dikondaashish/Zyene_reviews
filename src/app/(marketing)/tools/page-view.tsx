@@ -58,7 +58,7 @@ export default function FreeToolsHubPage() {
                                 <strong className="text-foreground">Reputation Score Checker:</strong> Retrieves your current public Google star rating and total review count in a fast diagnostic snapshot.
                             </li>
                             <li>
-                                <strong className="text-foreground">Review Response Generator:</strong> Provides customizable, rating-specific reply templates to help you structure professional responses to customer reviews.
+                                <strong className="text-foreground">Review Response Templates:</strong> Provides customizable, rating-specific reply templates to help you structure professional responses to customer reviews.
                             </li>
                         </ul>
                     </div>

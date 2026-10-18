@@ -14,7 +14,7 @@ export function CaseStudiesGridSection() {
                                 className="bg-card border border-border rounded-2xl p-8 flex flex-col hover:border-primary/30 transition-colors"
                             >
                                 <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-                                    Representative example
+                                    Illustrative example
                                 </p>
                                 <div className="flex items-start gap-4 mb-4">
                                     <div className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
@@ -34,7 +34,7 @@ export function CaseStudiesGridSection() {
                                 <p className="text-sm text-muted-foreground mb-6 flex-1 leading-relaxed">
                                     {study.excerpt}
                                 </p>
-                                <div className="grid grid-cols-2 gap-3 mb-6">
+                                {study.metrics.length > 0 && <div className="grid grid-cols-2 gap-3 mb-6">
                                     {study.metrics.slice(0, 2).map((m) => (
                                         <div key={m.label} className="bg-muted rounded-lg p-3 border border-border">
                                             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
@@ -46,7 +46,7 @@ export function CaseStudiesGridSection() {
                                             <p className="text-xs text-primary font-semibold mt-0.5">{m.change}</p>
                                         </div>
                                     ))}
-                                </div>
+                                </div>}
                                 <Link
                                     href={`/case-studies/${study.slug}`}
                                     className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:brightness-90"

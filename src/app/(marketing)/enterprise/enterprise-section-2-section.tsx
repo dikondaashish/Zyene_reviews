@@ -1,11 +1,4 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import {
-    ENTERPRISE_COMPARISON_ROWS,
-    ENTERPRISE_SLA_BULLETS,
-    ENTERPRISE_VALUE_PROPS,
-    ENTERPRISE_SALES_EMAIL,
-} from "@/lib/enterprise/enterprise-data";
+import { ENTERPRISE_VALUE_PROPS } from "@/lib/enterprise/enterprise-data";
 
 export function EnterpriseSection2Section() {
     return (

@@ -60,14 +60,12 @@
 .hero-review-rays { position:absolute; width:5cqw; top:1cqw; right:-6cqw; color:#ffa566; }
 .hero-growth-enter { position:absolute; top:26%; right:-4%; width:21%; z-index:3; transform:rotate(-10deg); }
 .hero-growth-card { display:flex; align-items:center; gap:1.1cqw; border-radius:1.9cqw; padding:1.5cqw 1.4cqw; background:#fffefd; box-shadow:0 14px 35px #50312412; }
-.hero-growth-card strong { display:block; font-size:2.5cqw; font-weight:700; line-height:1.2; letter-spacing:-.035em; }
-.hero-growth-card span:not(.hero-growth-bars) { display:block; color:#787477; font-size:1.35cqw; white-space:nowrap; }
+.hero-growth-card strong { display:block; font-size:1.55cqw; font-weight:600; line-height:1.25; letter-spacing:-.02em; white-space:nowrap; }
+.hero-growth-card span:not(.hero-growth-icon) { display:block; color:#787477; font-size:1.25cqw; white-space:nowrap; margin-top:.2cqw; }
 .hero-growth-card small { display:block; color:#878078; font-size:.9cqw; margin-top:.3cqw; }
-.hero-growth-bars { display:flex; align-items:end; gap:.35cqw; height:4.3cqw; }
-.hero-growth-bars i { width:.8cqw; height:35%; background:#67b872; border-radius:4px; }
-.hero-growth-bars i:nth-child(2) { height:56%; }
-.hero-growth-bars i:nth-child(3) { height:78%; }
-.hero-growth-bars i:nth-child(4) { height:100%; }
+.hero-growth-icon { display:flex; align-items:center; justify-content:center; flex-shrink:0; width:3.6cqw; height:3.6cqw; border-radius:50%; background:#e6f3e7; color:#3f8a4a; }
+.hero-growth-icon svg { width:1.9cqw; height:1.9cqw; }
+.hero-example-chip { display:inline-flex; align-items:center; margin-left:8px; padding:2px 8px; border:1px solid #e7ddd5; border-radius:999px; background:#fbf8f5; color:#7b6b61; font-size:11px; font-weight:500; line-height:1.4; letter-spacing:0; vertical-align:middle; white-space:nowrap; }
 .hero-phone-enter { position:absolute; width:23.5%; top:43%; right:0; z-index:5; }
 .hero-phone { position:relative; aspect-ratio:.49; padding:1.6cqw .9cqw; background:#fffefd; border:.55cqw solid #171a19; border-radius:3.1cqw; box-shadow:inset 0 0 0 2px #a9aaa3,0 1px 0 2px #55584f,0 15px 24px #30201424; transform:rotate(5deg); }
 .hero-phone::before,.hero-phone::after { content:""; position:absolute; z-index:1; width:.35cqw; background:#454942; border-radius:3px 0 0 3px; pointer-events:none; }

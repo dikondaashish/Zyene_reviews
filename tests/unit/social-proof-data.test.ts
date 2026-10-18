@@ -1,17 +1,26 @@
-import { describe, expect, it } from "vitest";
-import { FEATURED_TESTIMONIALS } from "@/lib/social-proof/social-proof-data";
-import { CASE_STUDY_MAP } from "@/lib/social-proof/case-study-data";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { getPlatformStats } from "@/lib/social-proof/social-proof-data";
 
-describe("featured workflow cards", () => {
-    it("link only to existing case studies", () => {
-        for (const card of FEATURED_TESTIMONIALS) {
-            expect(CASE_STUDY_MAP[card.caseStudySlug], card.caseStudySlug).toBeDefined();
-        }
+describe("getPlatformStats", () => {
+    afterEach(() => {
+        vi.unstubAllEnvs();
     });
 
-    it("carry no customer quotes, names, or ratings", () => {
-        for (const card of FEATURED_TESTIMONIALS) {
-            expect(Object.keys(card)).toEqual(["caseStudySlug"]);
-        }
+    it("returns null instead of illustrative numbers when no aggregates are configured", () => {
+        vi.stubEnv("NEXT_PUBLIC_TRUST_REVIEW_COUNT", "");
+        vi.stubEnv("NEXT_PUBLIC_TRUST_BUSINESS_COUNT", "");
+        vi.stubEnv("NEXT_PUBLIC_TRUST_STAR_RATING", "");
+        expect(getPlatformStats()).toBeNull();
+    });
+
+    it("formats only the aggregates that are configured", () => {
+        vi.stubEnv("NEXT_PUBLIC_TRUST_REVIEW_COUNT", "3,250");
+        vi.stubEnv("NEXT_PUBLIC_TRUST_BUSINESS_COUNT", "");
+        vi.stubEnv("NEXT_PUBLIC_TRUST_STAR_RATING", "");
+        expect(getPlatformStats()).toEqual({
+            reviewCountFormatted: "3.2k+",
+            businessCountFormatted: null,
+            starRating: null,
+        });
     });
 });

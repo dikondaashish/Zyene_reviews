@@ -7,7 +7,7 @@ const FAQS: FaqItem[] = [
         answer: "This free tool retrieves two public metrics from Google Places for your listing: your cumulative average star rating (out of 5.0) and your total published Google review count.",
     },
     {
-        question: "Why is response coverage marked as unavailable?",
+        question: "Why does the checker not show response coverage?",
         answer: "Google's public Places API displays ratings and review counts, but does not disclose whether an owner response has been published for each review. Tracking response coverage requires connecting your Google Business Profile to a dedicated review inbox.",
     },
     {

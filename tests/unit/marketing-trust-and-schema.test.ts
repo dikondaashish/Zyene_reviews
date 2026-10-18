@@ -42,7 +42,7 @@ describe("case studies illustrative compliance", () => {
       const markup = renderToStaticMarkup(createElement(CaseStudiesSlugHeaderSection, { study }));
 
       // First screen visible disclaimer line
-      expect(markup).toContain("Illustrative example based on typical results. Not a real customer.");
+      expect(markup).toContain("Illustrative example. Not a real customer, and results are not typical or guaranteed.");
 
       // H1 contains "illustrative"
       expect(markup).toMatch(/<h1[^>]*>[\s\S]*?illustrative[\s\S]*?<\/h1>/i);

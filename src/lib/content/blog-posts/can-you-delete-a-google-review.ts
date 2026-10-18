@@ -281,7 +281,7 @@ export const canYouDeleteAGoogleReviewPost: BlogPostSource = {
         },
         {
             type: "p",
-            text: "Zyene Reviews helps local businesses collect customer feedback through automated SMS and email follow-ups, route lower ratings to a private resolution channel, and monitor new reviews across Google, Facebook, and industry directories in real time.",
+            text: "Zyene Reviews helps local businesses collect customer feedback through automated SMS and email follow-ups, offer an optional private resolution channel alongside the public review link, and monitor new reviews across Google, Facebook, and industry directories in real time.",
         },
         {
             type: "cta",

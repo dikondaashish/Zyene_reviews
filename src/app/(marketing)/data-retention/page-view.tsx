@@ -1,8 +1,5 @@
 import Link from "next/link";
-import { Shield, Database, Lock, Clock } from "lucide-react";
-
-import type { Metadata } from "next";
-
+import { Shield, Database, Clock } from "lucide-react";
 
 export default function DataRetentionPage() {
     return (
@@ -24,7 +21,7 @@ export default function DataRetentionPage() {
                         <p className="text-muted-foreground text-lg">Last Updated: March 2026</p>
                     </div>
 
-                    <div className="prose max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-li:text-muted-foreground">
+                    <div className="legal-prose">
                         <p>
                             At Zyene Reviews, we prioritize your privacy and data security. This Data Retention Policy outlines how long we store your data, when we delete it, and how you can request deletion. We adhere to GDPR and CCPA compliance standards.
                         </p>

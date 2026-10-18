@@ -90,15 +90,16 @@ export function NewsletterSignup({
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={placeholder}
                     disabled={status === "loading" || status === "success"}
-                    className="flex-1 h-11 rounded-lg border border-border bg-background px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-60"
+                    className="flex-1 h-11 rounded-lg border border-border bg-background px-4 text-sm focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
                 />
                 <Button
                     type="submit"
                     disabled={status === "loading" || status === "success"}
+                    aria-busy={status === "loading"}
                     className="h-11 px-6 rounded-lg shrink-0"
                 >
                     {status === "loading" ? (
-                        <Loader2 className="animate-spin size-4" />
+                        <><Loader2 aria-hidden="true" className="animate-spin size-4" /><span className="sr-only">Subscribing</span></>
                     ) : status === "success" ? (
                         subscribedLabel
                     ) : (
@@ -106,13 +107,16 @@ export function NewsletterSignup({
                     )}
                 </Button>
             </form>
-            {message && (
-                <p
-                    className={`text-xs mt-3 text-center ${status === "error" ? "text-destructive" : "text-primary"}`}
-                >
-                    {message}
-                </p>
-            )}
+            <div aria-live="polite" aria-atomic="true">
+                {message && (
+                    <p
+                        role={status === "error" ? "alert" : undefined}
+                        className={`text-xs mt-3 text-center ${status === "error" ? "text-destructive" : "text-success"}`}
+                    >
+                        {message}
+                    </p>
+                )}
+            </div>
             {status !== "success" && idleFooter ? (
                 <p className="text-xs text-muted-foreground mt-3 text-center">{idleFooter}</p>
             ) : null}

@@ -19,7 +19,7 @@ export function CaseStudiesSlugHeaderSection({ study }: { study: (typeof CASE_ST
 
                 <div className="mb-10 max-w-3xl border-y border-border py-4 text-sm leading-relaxed text-muted-foreground" role="note">
                     <p className="font-semibold text-foreground">
-                        Illustrative example based on typical results. Not a real customer.
+                        Illustrative example. Not a real customer, and results are not typical or guaranteed.
                     </p>
                     <p className="mt-1">
                         {CASE_STUDY_COMPOSITE_DISCLAIMER.replace(" - ", ": ")}
@@ -40,7 +40,7 @@ export function CaseStudiesSlugHeaderSection({ study }: { study: (typeof CASE_ST
                             Illustrative workflow: {study.excerpt}
                         </p>
                         <div className="mt-8 flex flex-wrap gap-3">
-                            <Link href="#results" className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 font-semibold text-primary-foreground transition-transform hover:brightness-95 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                            <Link href="#results" className="inline-flex items-center gap-2 rounded-md bg-[var(--cta)] px-5 py-3 font-semibold text-primary-foreground transition-transform hover:brightness-95 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                                 See the workflow <ArrowDown className="size-4" aria-hidden="true" />
                             </Link>
                             <Link href="/case-studies" className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-5 py-3 font-semibold text-foreground transition-colors hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">

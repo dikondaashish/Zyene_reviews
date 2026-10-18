@@ -24,7 +24,7 @@ export const trueCostOfBadOnlineReputationPost: BlogPostSource = {
         { question: "How much does a bad online reputation cost a local business?", answer: "It varies by traffic and ticket size, but the article walks through lost acquisition, lost repeat visits, higher ad reliance, and compounding damage from unanswered negatives - using published third-party stats, not Zyene Reviews customer benchmarks." },
         { question: "Does a half-star rating gap really change revenue?", answer: "Industry research cited here - including ReviewTrackers and Harvard work on ratings and revenue - shows meaningful swings in whether consumers choose you. Run the worksheet table with your own GBP impressions and average ticket." },
         { question: "Can one bad review be offset?", answer: "Consumer research often cited suggests many positive reviews are needed to neutralize the impact of a harsh negative. Respond quickly and keep collecting fresh positives so the bad review ages down the feed." },
-        { question: "How does Negative Feedback Shield reduce reputation cost?", answer: "Shield routes low ratings to private feedback on your Zyene Reviews review page so your team can organize service recovery. Outcomes depend on the service issue, the response, and the customer." },
+        { question: "How does Negative Feedback Shield reduce reputation cost?", answer: "Shield adds an optional private feedback form to your Zyene Reviews review page, next to the public review link every customer gets, so customers who want to reach you directly can, and your team can organize service recovery. Outcomes depend on the service issue, the response, and the customer." },
         { question: "Is reputation management software worth $30 per month?", answer: "If preventing one lost customer per month exceeds Starter on Zyene Reviews at $29.99, the math works. The article compares annual tool cost to illustrative revenue lines you fill in - not guaranteed ROI figures." },
     ],
     body: [
@@ -41,10 +41,10 @@ export const trueCostOfBadOnlineReputationPost: BlogPostSource = {
         { type: "h2", text: "Cost #2: Lost Repeat Customers" },
         {
             type: "summary",
-            text: "One unresolved bad visit can erase years of loyalty revenue. Shield and private outreach recover guests who would otherwise churn and vent publicly - worth more than a single transaction.",
+            text: "One unresolved bad visit can erase years of loyalty revenue. Hearing about the problem directly and following up can help keep a customer, which is worth more than a single transaction.",
         },
         { type: "p", text: "When a customer has a bad experience and you don't address it, you lose not just their next visit but all future visits. For a restaurant, a loyal customer who visits twice a month at $40/visit is worth $960/year. Lose 10 of those customers and you've lost $9,600 in annual recurring revenue." },
-        { type: "p", text: "The Negative Feedback Shield addresses this directly: by routing unhappy customers to a private resolution channel, you retain customers who would otherwise leave and write a 1-star review. Every complaint privately resolved is a customer saved." },
+        { type: "p", text: "The Negative Feedback Shield gives customers an optional private way to tell you what went wrong, alongside the same public review link everyone gets. It does not stop anyone from posting a review. What it can do is let you hear about a problem sooner and follow up, which sometimes keeps a customer who would otherwise leave." },
         { type: "h2", text: "Cost #3: Higher Cost Per Acquisition" },
         {
             type: "summary",
@@ -83,6 +83,6 @@ export const trueCostOfBadOnlineReputationPost: BlogPostSource = {
         { type: "p", text: "Compare the subscription cost with observed time savings and service improvements. Starter at $29.99 per month totals $359.88 over twelve months before applicable taxes. No number of recovered customers, prevented negative reviews, or financial return is guaranteed." },
         { type: "p", text: "If you use an enterprise stack, compare your actual quoted cost and required products with review-focused alternatives before renewing." },
         { type: "p", text: "The better question isn't 'can we afford reputation management?' - it's 'what is our active reputation risk today, and what's it costing us?'" },
-        { type: "cta", ctaLabel: "Protect your revenue with Zyene Reviews' Negative Feedback Shield →", ctaHref: "/features" },
+        { type: "cta", ctaLabel: "See how Zyene Reviews handles private feedback →", ctaHref: "/features" },
     ],
 };

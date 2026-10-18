@@ -86,8 +86,8 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
             text: "Do not offer discounts tied to a rating or review text, and do not dictate review text. Keep outreach honest and aligned with your documented process.",
         },
         {
-            name: "Respond to reviews and route unhappy customers privately",
-            text: "Reply to new Google reviews promptly. Use private feedback (e.g., Zyene Reviews Negative Feedback Shield) to organize service recovery when issues arise.",
+            name: "Respond to reviews and offer a private way to reach you",
+            text: "Reply to new Google reviews promptly. Use private feedback (e.g., Zyene Reviews Negative Feedback Shield) as an optional channel for service recovery, alongside the same public review link every customer gets.",
         },
         {
             name: "Automate at scale when manual copy-paste stops working",

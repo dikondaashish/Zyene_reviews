@@ -1,10 +1,9 @@
-import { getEnterprisePlan } from "@/services/stripe/plans";
-
+import type { Plan } from "@/services/stripe/plans";
 import Link from "next/link";
 import { Check, Users, CalendarDays, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export function EnterpriseSection5Section({ enterprisePlan }: { enterprisePlan: NonNullable<ReturnType<typeof getEnterprisePlan>> }) {
+export function EnterpriseSection5Section({ enterprisePlan }: { enterprisePlan: Plan }) {
     return (
         <section className="py-20 px-4 bg-background">
                 <div className="container mx-auto max-w-5xl grid lg:grid-cols-2 gap-10 items-start">

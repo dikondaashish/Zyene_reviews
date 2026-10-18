@@ -14,7 +14,7 @@ export const howToRespondToA1StarReviewPost: BlogPostSource = {
     keywords: ["how to respond to a 1 star review", "respond to negative review", "bad google review response", "1 star review template", "negative review response"],
     relatedSlugs: ["ai-reply-mistakes-to-avoid", "why-google-reviews-matter-in-2026"],
     internalLinks: [
-        { label: "AI review response generator tool", href: "/tools/review-response-generator" },
+        { label: "Free review response templates", href: "/tools/review-response-generator" },
         { label: "See how Zyene Reviews' AI replies work", href: "/features/ai-replies" },
         { label: "20+ negative review response templates", href: "/resources/negative-review-templates" },
         { label: "5 AI review reply mistakes to avoid", href: "/blog/ai-reply-mistakes-to-avoid" },

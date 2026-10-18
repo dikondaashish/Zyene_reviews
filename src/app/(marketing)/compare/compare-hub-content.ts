@@ -12,7 +12,7 @@ export const COMPARE_HUB_BUYER_GUIDES: { title: string; body: string; pick?: str
     },
     {
         title: "Growing multi-location business",
-        body: "You need consistent monitoring across sites, but may not have enterprise IT. Compare per-location fees, contract terms, and whether AI replies and private feedback routing are included on standard tiers.",
+        body: "You need consistent monitoring across sites, but may not have enterprise IT. Compare per-location fees, contract terms, and whether AI replies and private feedback options are included on standard tiers.",
         pick: "Zyene Reviews for review-first ops; Birdeye or Podium if you also standardize messaging or payments everywhere.",
     },
     {
@@ -23,7 +23,7 @@ export const COMPARE_HUB_BUYER_GUIDES: { title: string; body: string; pick?: str
     {
         title: "Review-focused buyer",
         body: "Your KPI is Google rating, response rate, and review velocity - not inbox payments. Prioritize monitoring, AI-assisted replies, review requests, and optional private feedback capture.",
-        pick: "Zyene Reviews; read /blog/negative-feedback-shield for an explanation of the Shield workflow.",
+        pick: "Zyene Reviews; our Negative Feedback Shield guide on the blog explains how the optional private feedback channel works.",
     },
     {
         title: "Messaging / payment-focused buyer",
@@ -58,7 +58,7 @@ export const COMPARE_HUB_FAQS: FaqItem[] = [
     {
         question: "Is Zyene Reviews cheaper than Birdeye or Podium?",
         answer:
-            "Zyene Reviews publishes plans from $29.99/mo month-to-month. Birdeye and Podium are commonly quoted well above that, often on annual contracts - but pricing can vary by package, contract terms, and location count; confirm with each vendor. See /blog/birdeye-pricing-breakdown-2026 for a Birdeye line-item checklist, not a guaranteed quote.",
+            "Zyene Reviews publishes plans from $29.99/mo month-to-month. Birdeye and Podium publish custom quotes; check their sites for current pricing. Our Birdeye pricing breakdown on the blog offers a line-item checklist for comparing quotes, not a guaranteed price.",
     },
     {
         question: "Does Zyene replace Podium?",
@@ -73,7 +73,7 @@ export const COMPARE_HUB_FAQS: FaqItem[] = [
     {
         question: "Which tool is best if I only care about Google reviews?",
         answer:
-            "Zyene Reviews centers on Google (plus Facebook and Yelp monitoring), AI-assisted replies, review campaigns, and a private feedback path for service recovery. Compare feature-level detail on /compare/birdeye, /compare/podium, /compare/nicejob, /compare/gatherup, and /compare/prosperly before you switch.",
+            "Zyene Reviews centers on Google (plus Facebook and Yelp monitoring), AI-assisted replies, review campaigns, and a private feedback path for service recovery. Compare feature-level detail on our individual comparison pages for Birdeye, Podium, NiceJob, GatherUp, and Prosperly before you switch.",
     },
     {
         question: "Is Prosperly a good fit for law firms and insurance agencies?",

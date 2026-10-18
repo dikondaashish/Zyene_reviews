@@ -99,7 +99,8 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 24px;
-  color: var(--brand-orange-ink);
+  /* Small uppercase text: body ink for contrast; the star icon keeps the brand orange. */
+  color: var(--foreground);
   font-size: 11px;
   font-weight: 650;
   letter-spacing: 0.065em;

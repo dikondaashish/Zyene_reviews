@@ -8,10 +8,10 @@ import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 const STAGES = [
   { title: "Visit ends", meta: "Square checkout, 2:14 pm", icon: <ShoppingBag size={18} /> },
   { title: "Request sent", meta: "Text to Jordan, 2:16 pm", icon: <Send size={18} /> },
-  { title: "Review drafted", meta: "5 stars on your review page", icon: <Star size={18} /> },
+  { title: "Draft suggested", meta: "Jordan edits it on your review page", icon: <Star size={18} /> },
   {
     title: "Posted on Google",
-    meta: "Jordan's review is live",
+    meta: "Jordan posts the review",
     icon: <Image src={getBrandLogoUrl("google.com")} alt="" width={18} height={18} unoptimized />,
   },
   { title: "Reply published", meta: "Friendly tone, automatically", icon: <Sparkles size={18} /> },
@@ -29,8 +29,8 @@ export function MarketingHomePipeline() {
           </div>
           <div>
             <p className="home-section-lede">
-              Connect Square or send a webhook when a job is done. Zyene times the request, drafts the review and
-              answers it, while you run your business.
+              Connect Square or send a webhook when a job is done. Zyene times the request and suggests a draft the
+              customer can edit, then they post their own review and Zyene helps you reply.
             </p>
             <Link href="/integrations" className="home-text-link">
               See integrations <ArrowRight size={14} aria-hidden="true" />

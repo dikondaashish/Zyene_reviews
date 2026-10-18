@@ -23,16 +23,19 @@
 @import "./marketing-interior-hero.css";
 @import "./blog.css";
 @import "./blog-post-article.css";
+@import "./marketing-legal.css";
 /* Public marketing is light-only, matched to optimonk.com: warm paper canvas,
  * white cards, slate ink, cool-grey borders and orange #ed5a29 (pressed #d14212).
  * Hover darkens to #dd4513 rather than the reference's lighter #f17e58, which
  * would drop white text to 2.7:1; #f17e58 stays as the on-dark accent. Orange
- * text uses the brand #ed5a29 (owner decision, 2026-10-16). */
+ * text uses the brand #ed5a29 (owner decision, 2026-10-16).
+ * Filled CTAs use --cta #d14212 (white text 4.7:1, AA) with darker hover
+ * #b8380e and pressed #a3300b; #ed5a29 with white text is only 3.4:1. */
 .marketing-site {
  --background:#f7f5f1; --foreground:#23262a; --card:#ffffff; --card-foreground:#23262a;
  --popover:#ffffff; --popover-foreground:#23262a; --muted:#f2f0eb; --muted-foreground:#505763;
  --secondary:#f1f2f4; --secondary-foreground:#23262a; --accent:#f1f2f4; --accent-foreground:#23262a;
- --primary:#ed5a29; --cta:var(--primary); --primary-foreground:#ffffff; --cta-foreground:#ffffff; --border:#e3e5e8; --input:#d5d8dd; --ring:#ed5a29;
+ --primary:#ed5a29; --cta:#d14212; --cta-hover:#b8380e; --cta-active:#a3300b; --primary-foreground:#ffffff; --cta-foreground:#ffffff; --border:#e3e5e8; --input:#d5d8dd; --ring:#ed5a29;
  --success:#166534; --success-foreground:#ffffff; --success-wash:#dcfce7; --success-bright:#2cc896; --warning:#fbbf24; --warning-foreground:#854d0e;
  --destructive:#cc0000; --destructive-foreground:#ffffff;
  --canvas:#f2f0eb; --brand-wash:#feefea; --brand-wash-border:#f8cdbb; --brand-orange:#ed5a29;
@@ -70,9 +73,10 @@
 .marketing-container { width:min(100% - 2 * var(--mk-gutter),var(--mk-max)); margin-inline:auto; }
 .marketing-eyebrow { color:var(--muted-foreground); font-size:14px; font-weight:500; letter-spacing:-.005em; margin-bottom:14px; }
 .marketing-actions { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:28px; }
-.marketing-button { display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:44px; padding:10px 20px; border:1px solid transparent; border-radius:999px; background:var(--primary); color:var(--primary-foreground); font-size:14px; font-weight:600; line-height:1.4; transition:background-color 180ms,transform 180ms var(--ease-out),box-shadow 180ms; }
-.marketing-button:hover { background:var(--brand-orange-hover); box-shadow:0 5px 16px color-mix(in srgb, var(--brand-orange) 14%, transparent); }
-.marketing-button:active { background:var(--brand-orange-active); transform:scale(.97); }
+.marketing-button { display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:44px; padding:10px 20px; border:1px solid transparent; border-radius:999px; background:var(--cta); color:var(--primary-foreground); font-size:14px; font-weight:600; line-height:1.4; transition:background-color 180ms,transform 180ms var(--ease-out),box-shadow 180ms; }
+.marketing-button:hover { background:var(--cta-hover); box-shadow:0 5px 16px color-mix(in srgb, var(--brand-orange) 14%, transparent); }
+.marketing-button:active { background:var(--cta-active); transform:scale(.97); }
+.marketing-site [data-slot="button"][data-variant="default"] { --primary:var(--cta); }
 .marketing-button svg { transition:transform 180ms var(--ease-out); }
 .marketing-button:hover svg { transform:translateX(3px); }
 .marketing-button-secondary { background:var(--card); border-color:transparent; color:var(--foreground); box-shadow:var(--shadow-hairline); }

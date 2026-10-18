@@ -161,7 +161,7 @@ const guide1: ResourceGuide = {
             "Real-time review alerts across Google, Facebook, and Yelp",
             "Automated review request delivery via SMS and email",
             "AI reply suggestions for faster, more consistent responses",
-            "Negative Feedback Shield for private complaint routing",
+            "Negative Feedback Shield: an optional private channel alongside the public review link",
             "Competitor tracking to monitor nearby businesses",
             "GBP keyword performance dashboard",
             "Pricing without annual contracts",

@@ -39,12 +39,12 @@ export function AgencyWaitlistForm() {
     }
 
     if (done) {
-        return <p className="text-sm text-success">You&apos;re on the waitlist, we&apos;ll email you when the agency dashboard opens.</p>;
+        return <p role="status" className="text-sm text-success">You&apos;re on the waitlist, we&apos;ll email you when the agency dashboard opens.</p>;
     }
 
     return (
-        <form onSubmit={submit} className="flex flex-col items-end sm:flex-row gap-3">
-            <label className="flex flex-1 flex-col gap-1 text-xs font-medium text-foreground">
+        <form onSubmit={submit} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+            <label className="flex w-full flex-col gap-1 text-xs font-medium text-foreground sm:w-auto sm:flex-1">
                 Work email
                 <input
                     name="email"
@@ -52,31 +52,31 @@ export function AgencyWaitlistForm() {
                     autoComplete="email"
                     required
                     placeholder="you@agency.com"
-                    className="h-11 rounded-lg border border-border px-4 text-sm font-normal"
+                    className="h-11 w-full rounded-lg border border-border px-4 text-sm font-normal"
                 />
             </label>
-            <label className="flex flex-1 flex-col gap-1 text-xs font-medium text-foreground">
+            <label className="flex w-full flex-col gap-1 text-xs font-medium text-foreground sm:w-auto sm:flex-1">
                 Agency name
                 <input
                     name="agencyName"
                     autoComplete="organization"
                     placeholder="Acme Agency"
-                    className="h-11 rounded-lg border border-border px-4 text-sm font-normal"
+                    className="h-11 w-full rounded-lg border border-border px-4 text-sm font-normal"
                 />
             </label>
-            <label className="flex flex-col gap-1 text-xs font-medium text-foreground">
+            <label className="flex w-full flex-col gap-1 text-xs font-medium text-foreground sm:w-auto">
                 Clients
                 <input
                     name="clientCount"
                     inputMode="numeric"
                     placeholder="25"
-                    className="w-28 h-11 rounded-lg border border-border px-4 text-sm font-normal"
+                    className="h-11 w-full rounded-lg sm:w-28 border border-border px-4 text-sm font-normal"
                 />
             </label>
-            <Button type="submit" disabled={loading} className="shrink-0">
-                {loading ? <Loader2 className="animate-spin size-4" /> : "Join waitlist"}
+            <Button type="submit" disabled={loading} aria-busy={loading} className="h-11 w-full shrink-0 sm:w-auto">
+                {loading ? <><Loader2 aria-hidden="true" className="animate-spin size-4" /><span className="sr-only">Joining waitlist</span></> : "Join waitlist"}
             </Button>
-            {error && <p className="text-sm text-destructive sm:col-span-3">{error}</p>}
+            {error && <p role="alert" className="w-full text-sm text-destructive">{error}</p>}
         </form>
     );
 }

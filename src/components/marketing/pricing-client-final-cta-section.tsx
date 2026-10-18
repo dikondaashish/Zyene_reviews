@@ -13,7 +13,7 @@ export function PricingClientFinalCtaSection({ signupUrl }: PricingClientFinalCt
             text="Start your 7-day free trial. Card required. Your plan bills after the trial unless you cancel, so cancel before it ends and you pay nothing."
             primaryLabel="Start free trial"
             primaryHref={signupUrl}
-            secondary={{ label: "Talk to us", href: "mailto:sales@zyenereviews.com?subject=Pricing%20Question" }}
+            secondary={{ label: "Book a demo", href: "/demo" }}
             image={{ src: "/images/industries/hotels-candid-v2.webp", alt: "Hotel receptionist welcoming a guest with luggage at the front desk" }}
             trackLocation="pricing"
         />

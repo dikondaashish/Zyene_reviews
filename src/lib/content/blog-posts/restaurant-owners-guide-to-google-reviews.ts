@@ -23,7 +23,7 @@ export const restaurantOwnersGuideToGoogleReviewsPost: BlogPostSource = {
         { question: "How do restaurants get more Google reviews?", answer: "Ask at payment with a QR code, follow up by SMS one to two hours after dine-in, email catering clients, and use loyalty lists. Timing beats a generic please-review sign that guests ignore." },
         { question: "What should restaurants say in negative review responses?", answer: "Name the dish or service issue without arguing, apologize for the visit, and invite them back through a manager contact. Keep it short - other diners are watching your tone." },
         { question: "Does review count matter more than star rating for restaurants?", answer: "Often yes. A 4.5 with hundreds of reviews usually wins clicks over a 4.8 with twenty because volume signals consistent experience. Keep new reviews arriving every month." },
-        { question: "How does Negative Feedback Shield help restaurants?", answer: "Zyene Reviews routes low ratings on your branded collectratings.com page to private feedback first, so your team can respond to cold food or service issues quickly." },
+        { question: "How does Negative Feedback Shield help restaurants?", answer: "Your branded review page gives every guest the same Google link, plus an optional private form so your team can hear about cold food or service issues quickly and follow up." },
         { question: "Can Zyene Reviews manage reviews for multiple restaurant locations?", answer: "Professional plans support multiple locations with per-location analytics and team seats. Focus extra collection effort on the lowest-rated unit until it catches up to the brand average." },
     ],
     body: [

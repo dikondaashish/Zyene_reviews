@@ -2,6 +2,7 @@
 
 import { BillingToggle } from "@/components/marketing/pricing-client-billing-toggle";
 import styles from "@/components/marketing/pricing.module.css";
+import { TRIAL_SUMMARY } from "@/lib/marketing/trial-copy";
 
 export function PricingClientHeroSection({
   interval,
@@ -19,6 +20,7 @@ export function PricingClientHeroSection({
             <span>A better reputation.</span> <span>At a sensible price.</span>
           </h1>
           <p className={styles.heroLede}>Try Starter or Professional free for 7 days. No contract, cancel anytime.</p>
+          <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-muted-foreground">{TRIAL_SUMMARY}</p>
         </div>
         <BillingToggle interval={interval} onChange={onIntervalChange} />
       </div>

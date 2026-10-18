@@ -39,8 +39,8 @@ export const POPULAR_RESOURCES = [
     },
     {
         href: "/tools/review-response-generator",
-        title: "Free Review Response Generator",
-        description: "Instant AI tool to generate professional responses to any customer review.",
+        title: "Free Review Response Templates",
+        description: "Pick a star rating, get a ready-to-edit reply template.",
     },
     {
         href: "/resources/review-request-templates",
