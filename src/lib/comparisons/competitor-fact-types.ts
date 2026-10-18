@@ -15,6 +15,8 @@ export interface SourcedDifference {
 export interface CompetitorFactSheet {
   name: string;
   price: string;
+  /** Third-party estimate for vendors that sell by quote. Never a vendor list price; always label it as reported. */
+  reportedPrice?: string;
   pricingNote: string;
   aiReplies: string;
   competitorTracking: string;

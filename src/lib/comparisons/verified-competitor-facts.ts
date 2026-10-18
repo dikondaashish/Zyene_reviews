@@ -26,7 +26,7 @@ export const COMPETITOR_FACT_SHEETS: Record<string, CompetitorFactSheet> = {
 export const STARTER_REQUEST_ALLOWANCE = ZYENE_FACTS.starterAllowance;
 
 export const VERIFIED_COMPARISON_ROWS = [
-  { feature: "Starting monthly price", zyene: "$29.99/month", birdeye: BIRDEYE_FACTS.price, podium: PODIUM_FACTS.price, nicejob: NICEJOB_FACTS.price },
+  { feature: "Starting monthly price", zyene: "$29.99/month", birdeye: BIRDEYE_FACTS.reportedPrice ?? BIRDEYE_FACTS.price, podium: PODIUM_FACTS.reportedPrice ?? PODIUM_FACTS.price, nicejob: NICEJOB_FACTS.price },
   { feature: "Billing terms", zyene: "Monthly or annual", birdeye: BIRDEYE_FACTS.terms, podium: PODIUM_FACTS.terms, nicejob: NICEJOB_FACTS.terms },
   { feature: "Trial", zyene: "Eligible 7-day trial; card required", birdeye: BIRDEYE_FACTS.trial, podium: PODIUM_FACTS.trial, nicejob: NICEJOB_FACTS.trial },
   { feature: "Business reply automation", zyene: "AI drafts + optional automatic Google replies", birdeye: BIRDEYE_FACTS.aiReplies, podium: PODIUM_FACTS.aiReplies, nicejob: NICEJOB_FACTS.aiReplies },

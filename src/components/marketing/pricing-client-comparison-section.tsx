@@ -7,8 +7,8 @@ import { COMPARISON_ROWS } from "./pricing-client-constants";
 
 const COLUMNS = [
     { name: "Zyene", price: "$29.99/mo" },
-    { name: "Birdeye", price: "Custom quote" },
-    { name: "Podium", price: "Custom quote" },
+    { name: "Birdeye", price: "Quote only*" },
+    { name: "Podium", price: "Quote only*" },
     { name: "NiceJob", price: "Starter $75/mo" },
 ];
 
@@ -50,7 +50,7 @@ export function PricingClientComparisonSection() {
                     </table>
                 </div>
                 <p className={styles.footnote}>
-                    Public sources checked October 11, 2026: <a href="https://birdeye.com/pricing/" className="underline">Birdeye</a>, <a href="https://www.podium.com/pricing" className="underline">Podium</a>, and <a href="https://get.nicejob.com/pricing" className="underline">NiceJob</a>. Confirm current quotes, plans and platform coverage.{" "}
+                    Public sources checked October 11, 2026: <a href="https://birdeye.com/pricing/" className="underline">Birdeye</a>, <a href="https://www.podium.com/pricing" className="underline">Podium</a>, and <a href="https://get.nicejob.com/pricing" className="underline">NiceJob</a>. *Birdeye and Podium do not publish prices. The figures shown come from third-party reports, not the vendors, and real quotes vary by locations and products. Confirm current quotes, plans and platform coverage.{" "}
                     <Link href="/compare/birdeye" className="underline hover:text-foreground">
                         Zyene Reviews vs Birdeye
                     </Link>

@@ -5,6 +5,7 @@ const CHECKED_ON = "October 17, 2026";
 
 export const BIRDEYE_FACTS: CompetitorFactSheet = {
   name: "Birdeye", price: "Custom quote",
+  reportedPrice: "Not published. Third parties report roughly $299 to $449 per location a month",
   pricingNote: "No list price. The pricing page asks for a business email and location count.",
   aiReplies: "AI reply agent; posts on its own or holds for approval",
   competitorTracking: "Competitor benchmarking listed as a product",
@@ -49,6 +50,7 @@ export const BIRDEYE_FACTS: CompetitorFactSheet = {
 
 export const PODIUM_FACTS: CompetitorFactSheet = {
   name: "Podium", price: "Custom quote",
+  reportedPrice: "Not published. Third parties report about $399 a month and up",
   pricingNote: "No plan prices published. Podium asks you to talk to sales.",
   aiReplies: "AI Employee is an add-on; review-reply scope not published",
   competitorTracking: "Not listed on the pricing page",
