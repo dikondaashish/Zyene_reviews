@@ -224,7 +224,7 @@ Unauthenticated or lightly rate-limited:
 |------|---------|
 | `/api/marketing/contact` | Contact form |
 | `/api/marketing/demo-request` | Demo inbound |
-| `/api/marketing/chat` | Website chat (Charlie): Gemini answers scoped to Zyene Reviews; prompt-injection screen + per-IP/session Upstash limits |
+| `/api/marketing/chat` | Website chat (Natalie): Gemini answers scoped to Zyene Reviews; prompt-injection screen + per-IP/session Upstash limits |
 | `/api/marketing/chat/lead` | Website chat lead capture (name, email, phone, business type + transcript) emailed via Resend; honeypot + 3/h per IP |
 | `/api/marketing/newsletter/subscribe`, `unsubscribe` | Newsletter |
 | `/api/marketing/agency-waitlist` | Agency waitlist |
