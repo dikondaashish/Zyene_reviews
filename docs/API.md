@@ -175,6 +175,7 @@ Errors: OAuth denials redirect with error query params; token exchange failures 
 | Method | Path | Auth / verification |
 |--------|------|---------------------|
 | `POST` | `/api/webhooks/stripe` | Stripe signature (`STRIPE_WEBHOOK_SECRET`) |
+| `POST` | `/api/webhooks/slack` | Slack signing secret v0 (`SLACK_SIGNING_SECRET`), 5-min replay window; website chat live takeover |
 | `POST` | `/api/webhooks/resend` | Svix (`RESEND_WEBHOOK_SECRET`) |
 | `POST` | `/api/webhooks/twilio` | Twilio signature |
 | `POST` | `/api/webhooks/google/pubsub` | `?token=` = `GOOGLE_PUBSUB_VERIFICATION_TOKEN` |
@@ -203,6 +204,7 @@ Errors: OAuth denials redirect with error query params; token exchange failures 
 |------|------|
 | `/api/cron/daily-digest` | Daily heartbeat / digest related |
 | `/api/cron/weekly-digest` | Weekly email digest |
+| `/api/cron/support-chat-report` | Weekly website-chat report (unanswered + 👎 questions, leads, feedback) to `SUPPORT_CHAT_REPORT_INBOX`; purges transcripts older than 180 days |
 | `/api/cron/sync-reviews` | Review sync kick |
 | `/api/cron/follow-up` | Follow-up reminders |
 | `/api/cron/google-performance` | GBP metrics pull |
@@ -224,8 +226,13 @@ Unauthenticated or lightly rate-limited:
 |------|---------|
 | `/api/marketing/contact` | Contact form |
 | `/api/marketing/demo-request` | Demo inbound |
-| `/api/marketing/chat` | Website chat (Natalie): Gemini answers scoped to Zyene Reviews; prompt-injection screen + per-IP/session Upstash limits |
-| `/api/marketing/chat/lead` | Website chat lead capture (name, email, phone, business type + transcript) emailed via Resend; honeypot + 3/h per IP |
+| `/api/marketing/chat` | Website chat (Natalie). Streams NDJSON (`delta`… then `meta` / `human` / `replace` / `error`; see `src/lib/support-chat/stream-protocol.ts`). Answers grounded in site content (in-memory BM25 over help, blog, features, compare, industries); injection screen, sentence-level output guard, per-IP/session limits. Pauses while a team member is live in Slack |
+| `/api/marketing/chat/lead` | Website chat lead capture (name, email, phone, business type + transcript): Resend email, `support_chat_leads` row, Slack thread; BotID + honeypot + 3/h per IP |
+| `/api/marketing/chat/reputation` | `POST {sessionId, placeId}` → Google rating, review count and top nearby same-category competitors (Places API); 4/10 min per IP |
+| `/api/marketing/chat/demo-slots` | `GET ?tz=` → open Cal.com slots for the demo event (public Cal.com v2 API) |
+| `/api/marketing/chat/demo-book` | `POST {sessionId, start, timeZone, name, email}` → books via Cal.com, saves lead, opens Slack thread; BotID + 3/h per IP |
+| `/api/marketing/chat/feedback` | `POST {sessionId, messageId, rating: 1 \| -1}` → 👍/👎 on a stored reply (own conversation only) |
+| `/api/marketing/chat/agent-messages` | `GET ?sessionId&since` → team (Slack) replies since a time, for reconnect catch-up |
 | `/api/marketing/newsletter/subscribe`, `unsubscribe` | Newsletter |
 | `/api/marketing/agency-waitlist` | Agency waitlist |
 | `/api/marketing/book-lead` | Overview-guide lead capture (returns download URL) |

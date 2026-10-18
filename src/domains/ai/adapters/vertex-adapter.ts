@@ -1,27 +1,12 @@
 import { logger } from "@/lib/logger";
-import { GoogleGenAI, type Schema } from "@google/genai";
-
-const projectId = process.env.GCP_PROJECT_ID || "zyene-reviews";
-const location = process.env.GCP_REGION || "global";
-const apiKey = process.env.GOOGLE_VERTEX_API_KEY;
-
-/** Default: Gemini 3.1 Flash-Lite (fast, cost-efficient). Override with GOOGLE_AI_PRIMARY_MODEL. */
-const DEFAULT_PRIMARY_MODEL = process.env.GOOGLE_AI_PRIMARY_MODEL || "gemini-3.1-flash-lite";
-/** Default: Gemini 3.5 Flash (quality fallback). Override with GOOGLE_AI_FALLBACK_MODEL. */
-const DEFAULT_FALLBACK_MODEL = process.env.GOOGLE_AI_FALLBACK_MODEL || "gemini-3.5-flash";
-
-/**
- * Initialize the GoogleGenAI client.
- * Priority: 
- * 1. API Key (Express Mode for Vertex AI)
- * 2. Service Account (Standard Vertex AI Mode via ADC)
- */
-const apiKeyClient = apiKey ? new GoogleGenAI({ apiKey }) : null;
-const vertexClient = new GoogleGenAI({
-    vertexai: true,
-    project: projectId,
-    location: location
-});
+import type { Schema } from "@google/genai";
+import {
+    apiKeyClient,
+    DEFAULT_FALLBACK_MODEL,
+    DEFAULT_PRIMARY_MODEL,
+    isBlockedApiKeyError,
+    vertexClient,
+} from "@/domains/ai/adapters/vertex-clients";
 
 export interface VertexGenerationOptions {
     requireJson?: boolean;
@@ -132,11 +117,6 @@ function readResponseText(response: { candidates?: Array<{ content?: { parts?: A
     }
     if (typeof response.text === "string" && response.text.trim()) return response.text.trim();
     return "";
-}
-
-function isBlockedApiKeyError(error: unknown): boolean {
-    const msg = error instanceof Error ? error.message : String(error);
-    return msg.includes("API_KEY_SERVICE_BLOCKED") || msg.includes("generativelanguage.googleapis.com");
 }
 
 async function callModelWithClientFallback(model: string, prompt: string, config: Record<string, unknown>) {

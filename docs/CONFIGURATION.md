@@ -50,7 +50,7 @@ Missing **required** vars accessed via `required()` throw at use/import time wit
 |----------|---------|
 | `GOOGLE_CLIENT_ID` / `SECRET` | OAuth |
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Client-side Google bits if needed |
-| `GOOGLE_MAPS_API_KEY` | Places / free tools |
+| `GOOGLE_MAPS_API_KEY` | Places / free tools / website chat rating check (needs Places API (New): Autocomplete, Place Details, Nearby Search) |
 | `GOOGLE_PUBSUB_TOPIC_NAME` | Review notifications topic |
 | `GOOGLE_PUBSUB_VERIFICATION_TOKEN` | Push URL `?token=` |
 | `GOOGLE_GBP_WEBHOOK_SECRET` | Legacy GBP webhook |
@@ -75,6 +75,8 @@ Missing **required** vars accessed via `required()` throw at use/import time wit
 | `TWILIO_PHONE_NUMBER` | Legacy SMS sender fallback |
 | `RESEND_API_KEY`, `RESEND_FROM` | Product email |
 | `SUPPORT_CHAT_LEAD_INBOX` | Optional. Inbox for website chat leads (default `zyene.inc@gmail.com`) |
+| `SUPPORT_CHAT_REPORT_INBOX` | Optional. Weekly website-chat report recipient (defaults to the lead inbox) |
+| `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `SLACK_SUPPORT_CHANNEL_ID` | Optional. Website chat live takeover; all three required, otherwise off. Setup: [SUPPORT_CHAT_SLACK_SETUP.md](./SUPPORT_CHAT_SLACK_SETUP.md) |
 | `RESEND_WEBHOOK_SECRET` | Delivery events |
 | `RESEND_COLLECTRATINGS_API_KEY` / `FROM` | Review-request From domain |
 

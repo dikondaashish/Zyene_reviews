@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import "@/components/marketing/support-chat/support-chat-extras.css";
+
+import { useCallback, useEffect, useRef } from "react";
 
 import { SupportChatComposer } from "@/components/marketing/support-chat/support-chat-composer";
 import { SupportChatHeader } from "@/components/marketing/support-chat/support-chat-header";
 import { SupportChatLeadForm } from "@/components/marketing/support-chat/support-chat-lead-form";
 import { SupportChatMessages } from "@/components/marketing/support-chat/support-chat-messages";
 import { useSupportChat } from "@/hooks/use-support-chat";
+import type { SupportChatActionKey } from "@/lib/support-chat/actions";
 
 export default function SupportChatPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
     const chat = useSupportChat();
@@ -25,6 +28,13 @@ export default function SupportChatPanel({ open, onClose }: { open: boolean; onC
         };
     }, [open, onClose]);
 
+    const { openWidget, requestHuman } = chat;
+    const onAction = useCallback((key: SupportChatActionKey) => {
+        if (key === "book_demo") openWidget("demo");
+        else if (key === "check_reputation") openWidget("reputation");
+        else if (key === "talk_to_human") requestHuman();
+    }, [openWidget, requestHuman]);
+
     const leadForm = chat.leadReason && !chat.leadSubmitted ? (
         <SupportChatLeadForm
             key={chat.leadReason}
@@ -32,7 +42,7 @@ export default function SupportChatPanel({ open, onClose }: { open: boolean; onC
             sessionId={chat.sessionId}
             defaultEmail={chat.email}
             pagePath={chat.pagePath}
-            transcript={chat.messages}
+            transcript={chat.messages.filter((m) => !m.widget && m.content)}
             onSubmitted={chat.completeLead}
             onDismiss={chat.dismissLead}
         />
@@ -47,15 +57,8 @@ export default function SupportChatPanel({ open, onClose }: { open: boolean; onC
             aria-labelledby="support-chat-title"
             hidden={!open}
         >
-            <SupportChatHeader onClose={onClose} onRequestHuman={chat.requestHuman} onReset={chat.reset} />
-            <SupportChatMessages
-                messages={chat.messages}
-                pending={chat.pending}
-                typingId={chat.typingId}
-                onTypingDone={chat.finishTyping}
-                onStarter={chat.send}
-                footer={leadForm}
-            />
+            <SupportChatHeader onClose={onClose} onRequestHuman={chat.requestHuman} onReset={chat.reset} liveAgent={chat.liveAgent} />
+            <SupportChatMessages chat={chat} onAction={onAction} footer={leadForm} />
             <SupportChatComposer
                 ref={inputRef}
                 email={chat.email}

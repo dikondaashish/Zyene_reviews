@@ -1,11 +1,24 @@
 import { safeLocalStorageGet, safeLocalStorageSet } from "@/lib/safe-storage";
+import type { SupportChatActionKey, SupportChatWidget } from "@/lib/support-chat/actions";
 import type { SupportChatMessage } from "@/lib/support-chat/constants";
+import type { ReputationCheckResult } from "@/lib/support-chat/tools/reputation-check";
 
 const STORAGE_KEY = "zyene-support-chat-v1";
 const TEASER_KEY = "zyene-support-chat-teaser-dismissed";
 
 export interface StoredChatMessage extends SupportChatMessage {
     createdAt: number;
+    /** Database id of an assistant reply, for 👍/👎. */
+    serverId?: string;
+    suggestions?: string[];
+    actions?: SupportChatActionKey[];
+    feedback?: 1 | -1;
+    /** Team member's first name on a live (Slack) reply. */
+    agentName?: string;
+    /** Interactive card rendered in place of a bubble. */
+    widget?: SupportChatWidget;
+    /** Saved outcome so a finished card still renders after a reload. */
+    widgetResult?: { reputation?: ReputationCheckResult; bookedAt?: string };
 }
 
 export interface SupportChatState {
@@ -15,6 +28,8 @@ export interface SupportChatState {
     questionsAsked: number;
     leadSubmitted: boolean;
     email: string;
+    /** First name from the contact form or a demo booking, for "welcome back". */
+    leadName: string;
 }
 
 export function newSessionId(): string {
@@ -24,7 +39,7 @@ export function newSessionId(): string {
 }
 
 export function emptyChatState(): SupportChatState {
-    return { sessionId: newSessionId(), messages: [], questionsAsked: 0, leadSubmitted: false, email: "" };
+    return { sessionId: newSessionId(), messages: [], questionsAsked: 0, leadSubmitted: false, email: "", leadName: "" };
 }
 
 export function loadChatState(): SupportChatState {
@@ -37,11 +52,12 @@ export function loadChatState(): SupportChatState {
             sessionId: parsed.sessionId,
             messages: parsed.messages.filter(
                 (m): m is StoredChatMessage =>
-                    !!m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string",
+                    !!m && (m.role === "user" || m.role === "assistant" || m.role === "agent") && typeof m.content === "string",
             ).slice(-40),
             questionsAsked: Number(parsed.questionsAsked) || 0,
             leadSubmitted: parsed.leadSubmitted === true,
             email: typeof parsed.email === "string" ? parsed.email : "",
+            leadName: typeof parsed.leadName === "string" ? parsed.leadName.slice(0, 60) : "",
         };
     } catch {
         return emptyChatState();

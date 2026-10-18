@@ -97,10 +97,12 @@ const nextConfig: NextConfig = {
 };
 
 import { withSentryConfig } from "@sentry/nextjs";
+// Vercel BotID: invisible bot check on the website chat's lead and demo-booking forms.
+import { withBotId } from "botid/next/config";
 
 const isDeploy = Boolean(process.env.CI || process.env.VERCEL);
 
-export default withSentryConfig(nextConfig, {
+export default withSentryConfig(withBotId(nextConfig), {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options
 

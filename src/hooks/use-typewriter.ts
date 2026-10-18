@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 
-/** Short replies type at a natural pace; long ones speed up so none takes much over 3.5s. */
-const MAX_DURATION_MS = 3_500;
-const SLOWEST_MS_PER_CHAR = 22;
-const FASTEST_MS_PER_CHAR = 6;
+/** Natural typing pace; speeds up when the reveal falls far behind the incoming stream. */
+const BASE_MS_PER_CHAR = 20;
+const FASTEST_MS_PER_CHAR = 5;
+/** Characters of backlog at which the reveal starts catching up. */
+const CATCH_UP_BACKLOG = 120;
 
 function prefersReducedMotion(): boolean {
     try {
@@ -27,36 +28,57 @@ export function trimIncompleteMarkdown(partial: string): string {
     return text;
 }
 
-/** Reveals `text` character by character while `active`; calls `onDone` once at the end. */
-export function useTypewriter(text: string, active: boolean, onDone?: () => void): { visible: string; typing: boolean } {
+/**
+ * Reveals `text` character by character while `active`. The text may keep growing
+ * (a streaming reply); `onDone` fires once `complete` is true and everything is shown.
+ * Timer-based rather than requestAnimationFrame so a background tab catches up
+ * instead of freezing a half-typed reply.
+ */
+export function useTypewriter(
+    text: string,
+    active: boolean,
+    complete: boolean,
+    onDone?: () => void,
+): { visible: string; typing: boolean } {
     const [shown, setShown] = useState(active ? 0 : text.length);
-    const doneRef = useRef(onDone);
+    const latest = useRef({ text, complete, onDone });
+    const shownRef = useRef(shown);
 
     useEffect(() => {
-        doneRef.current = onDone;
-    }, [onDone]);
+        latest.current = { text, complete, onDone };
+    }, [text, complete, onDone]);
 
     useEffect(() => {
         if (!active) return;
-        // Reduced motion: the first frame shows the whole reply.
-        const msPerChar = prefersReducedMotion()
-            ? 0
-            : Math.min(SLOWEST_MS_PER_CHAR, Math.max(FASTEST_MS_PER_CHAR, MAX_DURATION_MS / Math.max(text.length, 1)));
-        // Timers rather than requestAnimationFrame: rAF stops in background tabs, which would
-        // freeze a half-typed reply. Progress is time-based, so a throttled tab just catches up.
-        const start = performance.now();
+        const instant = prefersReducedMotion();
+        let last = performance.now();
+        let carry = 0;
         let timer = 0;
         const tick = () => {
-            const elapsed = performance.now() - start;
-            const next = msPerChar === 0 ? text.length : Math.min(text.length, Math.floor(elapsed / msPerChar) + 1);
-            setShown(next);
-            if (next < text.length) timer = window.setTimeout(tick, 16);
-            else doneRef.current?.();
+            const now = performance.now();
+            const { text: target, complete: done } = latest.current;
+            const backlog = target.length - shownRef.current;
+            const msPerChar = backlog > CATCH_UP_BACKLOG ? FASTEST_MS_PER_CHAR : BASE_MS_PER_CHAR;
+            carry += now - last;
+            last = now;
+            const step = instant ? backlog : Math.min(backlog, Math.floor(carry / msPerChar));
+            if (step > 0) {
+                carry -= step * msPerChar;
+                shownRef.current += step;
+                setShown(shownRef.current);
+            } else if (backlog <= 0) {
+                carry = 0; // Waiting on the network; don't bank time for a later burst.
+            }
+            if (done && shownRef.current >= target.length) {
+                latest.current.onDone?.();
+                return;
+            }
+            timer = window.setTimeout(tick, 16);
         };
         timer = window.setTimeout(tick, 0);
         return () => window.clearTimeout(timer);
-    }, [active, text]);
+    }, [active]);
 
-    const typing = active && shown < text.length;
+    const typing = active && (shown < text.length || !complete);
     return { visible: typing ? trimIncompleteMarkdown(text.slice(0, shown)) : text, typing };
 }

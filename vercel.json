@@ -17,6 +17,10 @@
       "schedule": "0 14 * * 1"
     },
     {
+      "path": "/api/cron/support-chat-report",
+      "schedule": "0 15 * * 1"
+    },
+    {
       "path": "/api/cron/aeo-yearly-credit-reset",
       "schedule": "0 6 * * *"
     },
