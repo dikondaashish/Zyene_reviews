@@ -13,6 +13,15 @@ import {
     TEMPLATE_PACK_SOURCE,
 } from "@/lib/marketing/template-pack-events";
 import { EXIT_INTENT_SOURCE, isExitIntentEventName } from "@/lib/marketing/exit-intent-events";
+import { isLeadWizardEventName, LEAD_WIZARD_SOURCE } from "@/lib/marketing/lead-wizard-events";
+
+/** Allowlisted event families. `fixedPath` families only fire from one page; the rest from any marketing path. */
+const EVENT_FAMILIES = [
+    { matches: isTemplatePackEventName, defaultPath: TEMPLATE_PACK_PAGE_PATH, defaultSource: TEMPLATE_PACK_SOURCE, fixedPath: true },
+    { matches: isLocalSeoChecklistEventName, defaultPath: LOCAL_SEO_CHECKLIST_PAGE_PATH, defaultSource: LOCAL_SEO_CHECKLIST_SOURCE, fixedPath: true },
+    { matches: isExitIntentEventName, defaultPath: "/", defaultSource: EXIT_INTENT_SOURCE, fixedPath: false },
+    { matches: isLeadWizardEventName, defaultPath: "/", defaultSource: LEAD_WIZARD_SOURCE, fixedPath: false },
+] as const;
 
 const trackSchema = z.object({
     event_name: z.string().min(1).max(80),
@@ -39,35 +48,15 @@ export async function POST(request: Request) {
 
     const { event_name, page_path, source, utm_source, utm_medium, utm_campaign, metadata } = parsed.data;
 
-    const isTemplatePack = isTemplatePackEventName(event_name);
-    const isLocalSeo = isLocalSeoChecklistEventName(event_name);
-    const isExitIntent = isExitIntentEventName(event_name);
-
-    if (!isTemplatePack && !isLocalSeo && !isExitIntent) {
+    const family = EVENT_FAMILIES.find((candidate) => candidate.matches(event_name));
+    if (!family) {
         return NextResponse.json({ error: "Unknown event" }, { status: 400 });
     }
-
-    if (isTemplatePack && page_path && page_path !== TEMPLATE_PACK_PAGE_PATH) {
+    if (page_path && (family.fixedPath ? page_path !== family.defaultPath : !page_path.startsWith("/"))) {
         return NextResponse.json({ error: "Invalid page path" }, { status: 400 });
     }
-
-    if (isLocalSeo && page_path && page_path !== LOCAL_SEO_CHECKLIST_PAGE_PATH) {
-        return NextResponse.json({ error: "Invalid page path" }, { status: 400 });
-    }
-    if (isExitIntent && page_path && !page_path.startsWith("/")) {
-        return NextResponse.json({ error: "Invalid page path" }, { status: 400 });
-    }
-
-    const resolvedPagePath = isExitIntent
-        ? (page_path ?? "/")
-        : isLocalSeo
-            ? (page_path ?? LOCAL_SEO_CHECKLIST_PAGE_PATH)
-            : (page_path ?? TEMPLATE_PACK_PAGE_PATH);
-    const resolvedSource = isExitIntent
-        ? (source ?? EXIT_INTENT_SOURCE)
-        : isLocalSeo
-            ? (source ?? LOCAL_SEO_CHECKLIST_SOURCE)
-            : (source ?? TEMPLATE_PACK_SOURCE);
+    const resolvedPagePath = page_path ?? family.defaultPath;
+    const resolvedSource = source ?? family.defaultSource;
 
     try {
         await recordMarketingEvent({
