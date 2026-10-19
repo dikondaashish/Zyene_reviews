@@ -1,6 +1,6 @@
 import type { OutboundChannel } from "@/lib/review-requests/send-outbound";
 
-export function pickWebhookString(...values: unknown[]): string | null {
+function pickWebhookString(...values: unknown[]): string | null {
     for (const v of values) {
         if (typeof v === "string") {
             const t = v.trim();
@@ -10,7 +10,7 @@ export function pickWebhookString(...values: unknown[]): string | null {
     return null;
 }
 
-export function normalizeWebhookChannel(
+function normalizeWebhookChannel(
     raw: string | null,
     hasPhone: boolean,
     hasEmail: boolean,
