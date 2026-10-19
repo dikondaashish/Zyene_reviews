@@ -51,6 +51,11 @@ export function browserSendsGpc(): boolean {
     return nav.globalPrivacyControl === true || readJurisdiction().gpcHeader;
 }
 
+/** Pass the browser-only GPC signal to same-origin APIs that create subscriptions. */
+export function privacyRequestHeaders(): Record<string, string> {
+    return browserSendsGpc() ? { "x-zyene-gpc": "1" } : {};
+}
+
 function writeRecord(record: ConsentRecord): void {
     document.cookie = buildConsentCookie(record, window.location.hostname, window.location.protocol === "https:");
 }
@@ -96,8 +101,19 @@ export function savePrivacyChoice(prefs: ConsentPreferences): void {
         if (!prefs[category]) expireCookies(COOKIES_BY_CATEGORY[category]);
     }
     window.dispatchEvent(new Event(CHANGE_EVENT));
+    const after = getPrivacyState();
+    if (before.granted.marketing !== after.granted.marketing) {
+        void fetch("/api/privacy/meta-consent", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: privacyRequestHeaders(),
+            keepalive: true,
+        }).catch(() => {
+            // The local choice takes effect immediately; server sync is best effort.
+        });
+    }
     // Third-party scripts cannot be unloaded in place; a reload is the only reliable stop.
-    if (isWithdrawal(before.granted, getPrivacyState().granted)) window.location.reload();
+    if (isWithdrawal(before.granted, after.granted)) window.location.reload();
 }
 
 export function openPrivacySettings(): void {

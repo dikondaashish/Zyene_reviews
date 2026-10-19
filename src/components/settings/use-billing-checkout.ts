@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { parseBillingCheckoutResponse } from "@/lib/billing/parse-checkout-response";
+import { privacyRequestHeaders } from "@/lib/privacy/privacy-store";
 
 export function useBillingCheckout(canManageBilling: boolean, noBillingPermissionMessage: string) {
     const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
@@ -18,7 +19,7 @@ export function useBillingCheckout(canManageBilling: boolean, noBillingPermissio
                 const res = await fetch("/api/billing/checkout", {
                     method: "POST",
                     credentials: "include",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json", ...privacyRequestHeaders() },
                     body: JSON.stringify({ priceId, source: "billing" }),
                 });
                 const json = await res.json();

@@ -3,10 +3,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { WebhookAdminClient } from "@/services/stripe/webhook-types";
 
 const m = vi.hoisted(() => ({ retrieve: vi.fn(), customer: vi.fn(), email: vi.fn(), reset: vi.fn(), plan: vi.fn(),
-    onboarding: vi.fn(), trial: vi.fn(), referral: vi.fn() }));
+    onboarding: vi.fn(), trial: vi.fn(), referral: vi.fn(), metaConversion: vi.fn(), shouldTrackMeta: vi.fn() }));
 vi.mock("@/services/stripe/client", () => ({ stripe: {
     subscriptions: { retrieve: m.retrieve }, customers: { retrieve: m.customer },
 } }));
+vi.mock("@/services/stripe/meta-paid-subscription-event", () => ({
+    sendMetaPaidSubscriptionEvent: m.metaConversion,
+    shouldTrackFirstPaidSubscription: m.shouldTrackMeta,
+}));
 vi.mock("@/services/stripe/plans", () => ({
     getPlanByPriceId: m.plan,
     FREE_LIMITS: { maxLocations: 1, teamMembers: 1, smartRepliesPerMonth: 0,
@@ -28,7 +32,8 @@ function event(object: Record<string, unknown>): Stripe.Event {
     return { data: { object } } as unknown as Stripe.Event;
 }
 function subscription(status = "active", customer = "cus_a", id = "sub_a"): Stripe.Subscription {
-    return { id, customer, status, items: { data: [{ price: { id: "price_known" }, current_period_end: 1900000000 }] } } as unknown as Stripe.Subscription;
+    return { id, customer, status, metadata: {}, trial_end: null,
+        items: { data: [{ price: { id: "price_known" }, current_period_end: 1900000000 }] } } as unknown as Stripe.Subscription;
 }
 function db(row: unknown = { id: "org_a", stripe_customer_id: "cus_a", stripe_subscription_id: null, plan: "starter_monthly" }) {
     const rpc = vi.fn().mockResolvedValue({ data: "org_a", error: null });
@@ -48,6 +53,7 @@ beforeEach(() => {
         emailRequestsPerMonth: 20, smsRequestsPerMonth: 30, linkRequestsPerMonth: 40,
     } });
     m.customer.mockResolvedValue({ deleted: true });
+    m.shouldTrackMeta.mockReturnValue(true);
 });
 
 describe("Stripe billing projection boundaries", () => {
@@ -92,6 +98,20 @@ describe("Stripe billing projection boundaries", () => {
         await handleInvoicePaymentSucceeded(event({ id: "in_old", billing_reason: "subscription_cycle", customer: "cus_a",
             parent: { subscription_details: { subscription: "sub_old" } } }), client);
         expect(filters).toMatchObject({ stripe_customer_id: "cus_a", stripe_subscription_id: "sub_old" });
+        expect(m.reset).not.toHaveBeenCalled();
+    });
+    it("sends the paid conversion only after Stripe confirms a paid first invoice", async () => {
+        const { client } = db({ id: "org_a", plan: "starter_monthly" });
+        m.retrieve.mockResolvedValue(subscription());
+        await handleInvoicePaymentSucceeded(event({ id: "in_paid", billing_reason: "subscription_create",
+            customer: "cus_a", status: "paid", amount_paid: 2900, status_transitions: { paid_at: 1_800_000_000 },
+            parent: { subscription_details: { subscription: "sub_a" } }, lines: { data: [] } }), client);
+        expect(m.shouldTrackMeta).toHaveBeenCalledWith(expect.objectContaining({
+            invoiceStatus: "paid", amountPaid: 2900, billingReason: "subscription_create",
+        }));
+        expect(m.metaConversion).toHaveBeenCalledWith(expect.objectContaining({
+            invoiceId: "in_paid", eventTime: 1_800_000_000, metadata: {},
+        }));
         expect(m.reset).not.toHaveBeenCalled();
     });
     it("rejects checkout metadata for a different customer's organization", async () => {

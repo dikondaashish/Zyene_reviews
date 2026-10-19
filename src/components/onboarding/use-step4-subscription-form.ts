@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { getCheckoutTrialEligibilityForOrganization } from "@/app/actions/billing-trial";
 import { savePlanSelection } from "@/app/actions/onboarding";
 import { PLANS, type Plan } from "@/services/stripe/plans";
+import { privacyRequestHeaders } from "@/lib/privacy/privacy-store";
 
 export function useStep4SubscriptionForm(organizationId: string, externalIsLoading: boolean, onNext: () => void) {
     const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +36,7 @@ export function useStep4SubscriptionForm(organizationId: string, externalIsLoadi
             const res = await fetch("/api/billing/checkout", {
                 method: "POST",
                 credentials: "include",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", ...privacyRequestHeaders() },
                 body: JSON.stringify({ planId: plan.id, source: "onboarding" }),
             });
             const data = await res.json().catch(() => ({}));

@@ -61,6 +61,24 @@ describe("resolvePrivacyState", () => {
         });
     });
 
+    it("re-prompts v2 choices without re-enabling marketing in the US", () => {
+        const oldChoice = { ...record({ functional: true, analytics: false, marketing: false }, "US"), version: 2 };
+        expect(resolvePrivacyState({ record: oldChoice, jurisdiction: "US", gpc: false })).toMatchObject({
+            decided: true,
+            showBanner: true,
+            granted: { functional: true, analytics: false, marketing: false },
+        });
+    });
+
+    it("keeps stale opt-in-region choices denied until the visitor chooses again", () => {
+        const oldChoice = { ...record(ALLOW_ALL), version: 2 };
+        expect(resolvePrivacyState({ record: oldChoice, jurisdiction: "UK", gpc: false })).toMatchObject({
+            decided: false,
+            showBanner: true,
+            granted: DENY_ALL,
+        });
+    });
+
     it("GPC vetoes marketing even after Accept all, and never touches other categories", () => {
         const s = resolvePrivacyState({ record: record(ALLOW_ALL), jurisdiction: "EU_EEA", gpc: true });
         expect(s.granted).toEqual({ functional: true, analytics: true, marketing: false });
