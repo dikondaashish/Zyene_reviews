@@ -4,6 +4,7 @@
 
 /* Flow player */
 .flow-player { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(32px,6vw,96px); align-items:center; }
+.flow-copy .home-section-head { margin-bottom:clamp(24px,3vw,40px); }
 .flow-steps { border-top:1px solid var(--border); }
 .flow-steps li { position:relative; border-bottom:1px solid var(--border); }
 .flow-steps button { display:flex; align-items:center; gap:14px; width:100%; min-height:72px; padding:20px 0; color:var(--muted-foreground); font-size:clamp(18px,1.6vw,21px); font-weight:600; letter-spacing:-.02em; text-align:left; cursor:pointer; transition:color 200ms var(--ease-out); }

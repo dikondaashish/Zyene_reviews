@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight, MessageSquareText, Pause, PenLine, Play, Send } from "lucide-react";
 import { useInView } from "@/hooks/use-in-view";
@@ -35,7 +35,7 @@ const STEPS = [
  * next step starts, so pausing (the button, or scrolling away) pauses everything in sync. With
  * reduced motion nothing animates and the steps are plain buttons.
  */
-export function HomeFlowPlayer() {
+export function HomeFlowPlayer({ head }: { head?: ReactNode }) {
   const [ref, inView] = useInView<HTMLDivElement>(0.35);
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -47,29 +47,32 @@ export function HomeFlowPlayer() {
       className="flow-player"
       data-playing={inView && !paused ? "true" : "false"}
     >
-      <ol className="flow-steps">
-        {STEPS.map(({ icon: Icon, title, text, href }, index) => (
-          <li key={title} className={index === active ? "is-active" : undefined}>
-            <button type="button" aria-current={index === active ? "step" : undefined} onClick={() => setActive(index)}>
-              <Icon size={18} aria-hidden="true" />
-              <span>{title}</span>
-            </button>
-            <div className="flow-step-body">
-              <div>
-                <p>{text}</p>
-                <Link href={href} className="home-text-link" tabIndex={index === active ? 0 : -1}>
-                  Learn more<span className="sr-only">: {title}</span> <ArrowRight size={14} aria-hidden="true" />
-                </Link>
+      <div className="flow-copy">
+        {head}
+        <ol className="flow-steps">
+          {STEPS.map(({ icon: Icon, title, text, href }, index) => (
+            <li key={title} className={index === active ? "is-active" : undefined}>
+              <button type="button" aria-current={index === active ? "step" : undefined} onClick={() => setActive(index)}>
+                <Icon size={18} aria-hidden="true" />
+                <span>{title}</span>
+              </button>
+              <div className="flow-step-body">
+                <div>
+                  <p>{text}</p>
+                  <Link href={href} className="home-text-link" tabIndex={index === active ? 0 : -1}>
+                    Learn more<span className="sr-only">: {title}</span> <ArrowRight size={14} aria-hidden="true" />
+                  </Link>
+                </div>
               </div>
-            </div>
-            <span className="flow-progress" aria-hidden="true">
-              {index === active && (
-                <span key={active} className="flow-progress-fill" onAnimationEnd={() => setActive((active + 1) % STEPS.length)} />
-              )}
-            </span>
-          </li>
-        ))}
-      </ol>
+              <span className="flow-progress" aria-hidden="true">
+                {index === active && (
+                  <span key={active} className="flow-progress-fill" onAnimationEnd={() => setActive((active + 1) % STEPS.length)} />
+                )}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
       <div className="flow-stage">
         <div className="flow-phone" aria-hidden="true">
           <div className="flow-screen">
