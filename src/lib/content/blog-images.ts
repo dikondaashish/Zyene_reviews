@@ -168,6 +168,13 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         height: 600,
         caption: "Countertop acrylic QR stands capture feedback at checkout while customer delight is highest.",
     },
+    "how-to-embed-google-reviews-on-website": {
+        src: "/images/blog/embed_google_reviews.jpg",
+        alt: "MacBook Pro displaying a modern website with an embedded five-star Google customer review carousel widget",
+        width: 1200,
+        height: 675,
+        caption: "Live review carousels build immediate buyer trust directly on high-conversion landing pages.",
+    },
 };
 
 export function getBlogImage(slug: string): ContentImage {

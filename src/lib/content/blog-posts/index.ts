@@ -27,6 +27,7 @@ import { whyAreMyGoogleReviewsNotShowingUpPost } from "./why-are-my-google-revie
 import { howToAskCustomersForReviewsSmsEmailTemplatesPost } from "./how-to-ask-customers-for-reviews-sms-email-templates";
 import { howToGetHvacLeadsFromGoogleMapsPost } from "./how-to-get-hvac-leads-from-google-maps";
 import { howToCreateAGoogleReviewQrCodePost } from "./how-to-create-a-google-review-qr-code";
+import { howToEmbedGoogleReviewsOnWebsitePost } from "./how-to-embed-google-reviews-on-website";
 
 export const BLOG_POST_SOURCES: BlogPostSource[] = [
     howToGet50GoogleReviewsIn30DaysPost,
@@ -52,4 +53,5 @@ export const BLOG_POST_SOURCES: BlogPostSource[] = [
     howToAskCustomersForReviewsSmsEmailTemplatesPost,
     howToGetHvacLeadsFromGoogleMapsPost,
     howToCreateAGoogleReviewQrCodePost,
+    howToEmbedGoogleReviewsOnWebsitePost,
 ];
