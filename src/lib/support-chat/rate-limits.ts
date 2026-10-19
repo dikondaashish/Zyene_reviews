@@ -30,3 +30,17 @@ export const supportChatLeadRateLimit = new Ratelimit({
     limiter: Ratelimit.slidingWindow(3, "1 h"),
     prefix: "@upstash/ratelimit/support-chat-lead",
 });
+
+/** Reputation checks cost two Places API calls each. */
+export const supportChatToolRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(4, "10 m"),
+    prefix: "@upstash/ratelimit/support-chat-tool",
+});
+
+/** Cheap reads (demo slots, feedback, agent message catch-up). */
+export const supportChatReadRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(40, "10 m"),
+    prefix: "@upstash/ratelimit/support-chat-read",
+});

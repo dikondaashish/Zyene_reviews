@@ -184,6 +184,7 @@ Pending team invites (email, role, token, expiry) — see audit/schema fix migra
 | `square_connections`, `square_payment_events` | Square sandbox |
 | `clover_connections`, `clover_payment_events` | Clover sandbox |
 | `business_milestones` | Gamified milestones |
+| `support_chat_conversations`, `support_chat_messages`, `support_chat_leads` | Website chat (Natalie): anonymous transcripts keyed by a random browser session id, 👍/👎, `answered` flag for the weekly gaps report, leads, Slack thread + takeover state. Service-role only (restrictive deny for anon/authenticated); no IP stored; purged after 180 days |
 
 ---
 

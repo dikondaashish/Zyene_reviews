@@ -2,32 +2,33 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 
-import { SupportChatAgentBubble } from "@/components/marketing/support-chat/support-chat-agent-bubble";
-import { formatRelativeTime, type StoredChatMessage } from "@/lib/support-chat/client-storage";
-import { SUPPORT_AGENT_NAME, SUPPORT_CHAT_GREETING, SUPPORT_CHAT_STARTERS } from "@/lib/support-chat/constants";
+import { AgentMeta, SupportChatThreadItem } from "@/components/marketing/support-chat/support-chat-thread-item";
+import type { SupportChatController } from "@/hooks/use-support-chat";
+import type { SupportChatActionKey } from "@/lib/support-chat/actions";
+import { SUPPORT_AGENT_NAME, SUPPORT_CHAT_GREETING } from "@/lib/support-chat/constants";
+import { getPageChatContext } from "@/lib/support-chat/page-context";
 
 interface MessagesProps {
-    messages: StoredChatMessage[];
-    pending: boolean;
-    /** The reply currently typing out, if any. */
-    typingId: string | null;
-    onTypingDone: () => void;
-    onStarter: (text: string) => void;
+    chat: SupportChatController;
+    onAction: (key: SupportChatActionKey) => void;
     /** Rendered after the thread, e.g. the contact-details card. */
     footer?: ReactNode;
 }
 
-function AgentMeta({ at }: { at?: number }) {
-    return (
-        <p className="support-chat-meta">
-            {SUPPORT_AGENT_NAME} · AI Agent · {at ? formatRelativeTime(at) : "Just now"}
-        </p>
-    );
+/** Opening lines: a returning visitor is greeted by name; everyone else gets the page-aware opener. */
+function greetingLines(chat: SupportChatController): string[] {
+    const page = getPageChatContext(chat.pagePath);
+    if (chat.leadName && chat.messages.length > 0) {
+        return [`Hi ${chat.leadName}, welcome back! 👋 I'm ${SUPPORT_AGENT_NAME}, Zyene's AI agent.`, "Pick up where we left off, or ask me something new."];
+    }
+    return [SUPPORT_CHAT_GREETING[0], page.opener];
 }
 
-export function SupportChatMessages({ messages, pending, typingId, onTypingDone, onStarter, footer }: MessagesProps) {
+export function SupportChatMessages({ chat, onAction, footer }: MessagesProps) {
     const threadRef = useRef<HTMLDivElement>(null);
     const endRef = useRef<HTMLDivElement>(null);
+    const { messages, pending } = chat;
+    const starters = getPageChatContext(chat.pagePath).starters;
 
     useEffect(() => {
         endRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
@@ -38,16 +39,18 @@ export function SupportChatMessages({ messages, pending, typingId, onTypingDone,
         const thread = threadRef.current;
         if (!thread) return;
         const observer = new MutationObserver(() => {
-            if (thread.scrollHeight - thread.scrollTop - thread.clientHeight < 120) thread.scrollTop = thread.scrollHeight;
+            if (thread.scrollHeight - thread.scrollTop - thread.clientHeight < 140) thread.scrollTop = thread.scrollHeight;
         });
         observer.observe(thread, { childList: true, subtree: true, characterData: true });
         return () => observer.disconnect();
     }, []);
 
+    const lastReplyIndex = messages.findLastIndex((m) => m.role !== "user" && !m.widget);
+
     return (
         <div ref={threadRef} className="support-chat-thread" aria-live="polite" aria-relevant="additions">
             <div className="support-chat-group">
-                {SUPPORT_CHAT_GREETING.map((line) => (
+                {greetingLines(chat).map((line) => (
                     <div key={line} className="support-chat-bubble support-chat-bubble--agent"><p>{line}</p></div>
                 ))}
                 <AgentMeta at={messages[0]?.createdAt} />
@@ -55,24 +58,24 @@ export function SupportChatMessages({ messages, pending, typingId, onTypingDone,
 
             {messages.length === 0 ? (
                 <div className="support-chat-starters" aria-label="Suggested questions">
-                    {SUPPORT_CHAT_STARTERS.map((starter) => (
-                        <button key={starter} type="button" onClick={() => onStarter(starter)}>{starter}</button>
+                    {starters.map((starter) => (
+                        <button key={starter} type="button" onClick={() => chat.send(starter)}>{starter}</button>
                     ))}
                 </div>
             ) : null}
 
             {messages.map((message, index) => {
-                const isAgent = message.role === "assistant";
-                const nextIsAgent = messages[index + 1]?.role === "assistant";
+                const next = messages[index + 1];
+                const sameSpeakerNext = next && next.role === message.role && !next.widget && next.agentName === message.agentName;
                 return (
-                    <div key={message.id} className={`support-chat-group${isAgent ? "" : " support-chat-group--user"}`}>
-                        {isAgent ? (
-                            <SupportChatAgentBubble text={message.content} animate={message.id === typingId} onDone={onTypingDone} />
-                        ) : (
-                            <div className="support-chat-bubble support-chat-bubble--user"><p>{message.content}</p></div>
-                        )}
-                        {isAgent && !nextIsAgent ? <AgentMeta at={message.createdAt} /> : null}
-                    </div>
+                    <SupportChatThreadItem
+                        key={message.id}
+                        message={message}
+                        chat={chat}
+                        latest={index === lastReplyIndex && index >= messages.length - 2}
+                        showMeta={!sameSpeakerNext}
+                        onAction={onAction}
+                    />
                 );
             })}
 

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { ChevronDown, X } from "lucide-react";
 
-import { SUPPORT_AGENT_AVATAR, SUPPORT_AGENT_NAME, SUPPORT_CHAT_TEASER } from "@/lib/support-chat/constants";
+import { SUPPORT_AGENT_AVATAR, SUPPORT_AGENT_NAME } from "@/lib/support-chat/constants";
 
 function ChatGlyph() {
     return (
@@ -14,14 +14,14 @@ function ChatGlyph() {
     );
 }
 
-export function SupportChatTeaser({ onOpen, onDismiss }: { onOpen: () => void; onDismiss: () => void }) {
+export function SupportChatTeaser({ text, onOpen, onDismiss }: { text: string; onOpen: () => void; onDismiss: () => void }) {
     return (
         <div className="support-chat-teaser" role="status">
             <button type="button" className="support-chat-teaser__body" onClick={onOpen}>
                 <span className="support-chat-teaser__avatar">
                     <Image src={SUPPORT_AGENT_AVATAR} alt={`${SUPPORT_AGENT_NAME} avatar`} width={36} height={36} />
                 </span>
-                <span className="support-chat-teaser__text">{SUPPORT_CHAT_TEASER}</span>
+                <span className="support-chat-teaser__text">{text}</span>
             </button>
             <button type="button" className="support-chat-teaser__close" aria-label="Dismiss chat message" onClick={onDismiss}>
                 <X size={14} aria-hidden="true" />

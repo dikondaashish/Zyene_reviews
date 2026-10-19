@@ -30,7 +30,7 @@ function transcriptHtml(lead: SupportChatLead): string {
     if (lead.transcript.length === 0) return "";
     const turns = lead.transcript
         .map((message) => {
-            const speaker = message.role === "user" ? escapeHtml(lead.name) : SUPPORT_AGENT_NAME;
+            const speaker = message.role === "user" ? escapeHtml(lead.name) : message.role === "agent" ? "Team" : SUPPORT_AGENT_NAME;
             const body = escapeHtml(message.content).replace(/\n/g, "<br>");
             return `<p style="margin:0 0 12px;"><strong>${speaker}:</strong> ${body}</p>`;
         })

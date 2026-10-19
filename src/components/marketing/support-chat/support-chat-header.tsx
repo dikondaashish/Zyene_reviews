@@ -10,9 +10,11 @@ interface HeaderProps {
     onClose: () => void;
     onRequestHuman: () => void;
     onReset: () => void;
+    /** Team member currently answering live, if any. */
+    liveAgent?: string | null;
 }
 
-export function SupportChatHeader({ onClose, onRequestHuman, onReset }: HeaderProps) {
+export function SupportChatHeader({ onClose, onRequestHuman, onReset, liveAgent }: HeaderProps) {
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -38,7 +40,7 @@ export function SupportChatHeader({ onClose, onRequestHuman, onReset }: HeaderPr
             </span>
             <div className="support-chat-header__titles">
                 <h2 id="support-chat-title">{SUPPORT_AGENT_NAME}</h2>
-                <p>The team can also help</p>
+                <p>{liveAgent ? `${liveAgent} from the team joined` : "The team can also help"}</p>
             </div>
             <div className="support-chat-header__actions" ref={menuRef}>
                 <button

@@ -44,7 +44,7 @@ export const BUSINESS_TYPES = [
     "Other",
 ] as const;
 
-export type SupportChatRole = "user" | "assistant";
+export type SupportChatRole = "user" | "assistant" | "agent";
 
 export type SupportChatIntent = "answer" | "handoff" | "off_topic";
 
