@@ -6,9 +6,9 @@ import { AmbientVideo } from "@/components/marketing/ambient-video";
 import {
   BentoInsightsVisual,
   BentoReplyVisual,
-  BentoRequestVisual,
   BentoStandVisual,
 } from "@/components/marketing/marketing-home/home-bento-visuals";
+import { BentoRequestVisual } from "@/components/marketing/marketing-home/home-bento-request-visual";
 
 type Cell = { key: string; title: string; text: string; href: string; link: string; visual: ReactNode };
 

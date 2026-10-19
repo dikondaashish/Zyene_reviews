@@ -27,22 +27,6 @@ export function BentoReplyVisual() {
   );
 }
 
-export function BentoRequestVisual() {
-  return (
-    <div className="bento-request" aria-hidden="true">
-      <div className="bento-segment"><span className="is-active">Text</span><span>Email</span></div>
-      <div className="bento-bubble-wrap">
-        <span className="m-typing bento-typing" style={at(0.3)}><i /><i /><i /></span>
-        <p className="bento-bubble m-up" style={at(1.3)}>
-          Hi Jordan, thanks for visiting Juniper Coffee today. Mind sharing how it went? It takes 30 seconds.
-          <span>collectratings.com/r/juniper</span>
-        </p>
-      </div>
-      <small className="m-up" style={at(1.9)}>Reminder on day 7 if there&apos;s no reply</small>
-    </div>
-  );
-}
-
 const THEMES = [
   { label: "Friendly staff", share: 92 },
   { label: "Coffee quality", share: 74 },

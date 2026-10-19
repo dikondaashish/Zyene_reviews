@@ -27,9 +27,17 @@
 .bento-status { color:var(--success); }
 
 .bento-request { display:grid; gap:12px; }
+.bento-request-panel { display:grid; gap:12px; }
 .bento-segment { display:inline-flex; justify-self:start; padding:3px; border-radius:999px; background:var(--muted); font-size:12px; font-weight:500; }
-.bento-segment span { padding:4px 12px; border-radius:999px; color:var(--muted-foreground); }
+.bento-segment button { padding:4px 12px; border:0; border-radius:999px; background:none; color:var(--muted-foreground); font:inherit; cursor:pointer; transition:color 150ms,background-color 150ms; }
+.bento-segment button:hover { color:var(--foreground); }
+.bento-segment button:focus-visible { outline:2px solid var(--ring); outline-offset:2px; }
 .bento-segment .is-active { background:var(--card); color:var(--foreground); box-shadow:var(--shadow-hairline); }
+.bento-email { display:grid; gap:4px; max-width:92%; padding:12px 14px; border:1px solid var(--border); border-radius:14px; background:var(--card); line-height:1.5; }
+.bento-email small { color:var(--muted-foreground); font-size:11px; }
+.bento-email strong { font-size:14px; font-weight:600; }
+.bento-email p { margin:4px 0 8px; }
+.bento-email-cta { justify-self:start; padding:6px 14px; border-radius:999px; background:var(--brand-orange); color:#fff; font-size:12px; font-weight:600; }
 .bento-bubble { max-width:92%; padding:12px 14px; border-radius:18px 18px 18px 6px; background:#ecebe7; line-height:1.5; }
 .bento-bubble span { display:block; margin-top:6px; color:#2a64d6; text-decoration:underline; text-underline-offset:2px; }
 .bento-request small,.bento-themes small { color:var(--muted-foreground); font-size:11px; }
