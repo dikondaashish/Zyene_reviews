@@ -54,6 +54,11 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // AVIF first (sharper at the same weight), WebP as the fallback. Photos default to quality 90
+    // through the loader below; see src/lib/images/image-loader.ts.
+    formats: ["image/avif", "image/webp"],
+    qualities: [75, 90],
+    loaderFile: "./src/lib/images/image-loader.ts",
     remotePatterns: [
       {
         protocol: "https",

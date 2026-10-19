@@ -24,7 +24,7 @@ export function MarketingHomeIndustries() {
             <li key={slug}>
               <Link href={`/industries/${slug}`}>
                 <span className="home-industry-photo">
-                  <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 767px) 72vw, 300px" />
+                  <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 767px) 110vw, 450px" />
                 </span>
                 <span className="home-industry-label">
                   {name}
