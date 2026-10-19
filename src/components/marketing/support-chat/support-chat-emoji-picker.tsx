@@ -28,7 +28,7 @@ export function SupportChatEmojiPicker({ onPick, disabled }: { onPick: (emoji: s
                 disabled={disabled}
                 onClick={() => setOpen((value) => !value)}
             >
-                <Smile size={22} aria-hidden="true" />
+                <Smile size={18} aria-hidden="true" />
             </button>
             {open ? (
                 <div className="support-chat-emoji__grid" role="listbox" aria-label="Emoji">

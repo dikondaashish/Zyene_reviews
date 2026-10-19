@@ -48,12 +48,20 @@ export default function SupportChatPanel({ open, onClose }: { open: boolean; onC
             hidden={!open}
         >
             <SupportChatHeader onClose={onClose} onRequestHuman={chat.requestHuman} onReset={chat.reset} />
-            <SupportChatMessages messages={chat.messages} pending={chat.pending} onStarter={chat.send} footer={leadForm} />
+            <SupportChatMessages
+                messages={chat.messages}
+                pending={chat.pending}
+                typingId={chat.typingId}
+                onTypingDone={chat.finishTyping}
+                onStarter={chat.send}
+                footer={leadForm}
+            />
             <SupportChatComposer
                 ref={inputRef}
                 email={chat.email}
                 showEmail={!chat.leadSubmitted && !chat.gated}
                 disabled={chat.gated}
+                busy={chat.busy}
                 disabledHint="Share your details above to keep chatting"
                 onEmailChange={chat.setEmail}
                 onSend={chat.send}

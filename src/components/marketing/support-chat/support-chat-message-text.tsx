@@ -28,8 +28,10 @@ function renderInline(text: string, keyPrefix: string): ReactNode[] {
     return nodes;
 }
 
-export function SupportChatMessageText({ text }: { text: string }) {
+/** `trailing` (e.g. a typing caret) is placed inline at the end of the last block. */
+export function SupportChatMessageText({ text, trailing }: { text: string; trailing?: ReactNode }) {
     const blocks = text.split(/\n{2,}/);
+    const lastBlock = blocks.length - 1;
     return (
         <>
             {blocks.map((block, blockIndex) => {
@@ -39,7 +41,10 @@ export function SupportChatMessageText({ text }: { text: string }) {
                     return (
                         <ul key={blockIndex}>
                             {lines.map((line, i) => (
-                                <li key={i}>{renderInline(line.replace(/^\s*[-•*]\s+/, ""), `${blockIndex}-${i}`)}</li>
+                                <li key={i}>
+                                    {renderInline(line.replace(/^\s*[-•*]\s+/, ""), `${blockIndex}-${i}`)}
+                                    {blockIndex === lastBlock && i === lines.length - 1 ? trailing : null}
+                                </li>
                             ))}
                         </ul>
                     );
@@ -52,6 +57,7 @@ export function SupportChatMessageText({ text }: { text: string }) {
                                 {renderInline(line, `${blockIndex}-${i}`)}
                             </Fragment>
                         ))}
+                        {blockIndex === lastBlock ? trailing : null}
                     </p>
                 );
             })}
