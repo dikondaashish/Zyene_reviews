@@ -127,7 +127,8 @@
 }
 .home-lead-wizard-option:hover { border-color: color-mix(in srgb, var(--brand-orange) 45%, var(--border)); }
 .home-lead-wizard-option:active { transform: scale(0.985); }
-.home-lead-wizard-option input { position: absolute; opacity: 0; pointer-events: none; }
+/* The real radio covers the whole card, so every tap and click lands on it directly. */
+.home-lead-wizard-option input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .home-lead-wizard-option:has(input:focus-visible) { outline: 2px solid var(--brand-orange); outline-offset: 2px; }
 .home-lead-wizard-option:has(input:checked) {
   border-color: var(--brand-orange);
