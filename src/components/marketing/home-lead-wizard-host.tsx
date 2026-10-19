@@ -3,14 +3,17 @@
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useHomeLeadWizardTriggers } from "@/components/marketing/use-home-lead-wizard-triggers";
+import { useHomeLeadWizardTriggers, type TriggerContext } from "@/components/marketing/use-home-lead-wizard-triggers";
+import { getBrowserUser } from "@/lib/auth/stale-session";
+import { createClient } from "@/lib/db/supabase/client";
 import { deserializeUtm, UTM_COOKIE_NAME, parseUtmFromSearchParams, hasUtmParams } from "@/lib/growth/utm";
 import { LEAD_WIZARD_OPEN_EVENT } from "@/lib/marketing/lead-wizard-bus";
-import { preselectAnswers } from "@/lib/marketing/lead-wizard-personalization";
-import { markShownThisSession, rememberDismissed } from "@/lib/marketing/lead-wizard-storage";
-import type { LeadWizardTrigger } from "@/lib/marketing/lead-wizard-targeting";
+import { readSessionJourney } from "@/lib/marketing/lead-wizard-journey";
+import type { LeadWizardGoal, LeadWizardIndustry } from "@/lib/marketing/lead-wizard-personalization";
+import { buildLeadWizardSession, type LeadWizardSession } from "@/lib/marketing/lead-wizard-session";
+import { markShownThisSession, readLeadWizardMemory, rememberAutoView, rememberDismissed } from "@/lib/marketing/lead-wizard-storage";
 import { claimPopupSlot, releasePopupSlot } from "@/lib/marketing/marketing-popup-slot";
-import { trackLeadWizard, type LeadWizardSession } from "@/lib/marketing/track-lead-wizard-client";
+import { trackLeadWizard } from "@/lib/marketing/track-lead-wizard-client";
 
 const GuideDialog = dynamic(
     () => import("@/components/marketing/home-lead-wizard-dialog").then((module) => module.HomeLeadWizardDialog),
@@ -24,6 +27,8 @@ function readUtm() {
     return row ? deserializeUtm(decodeURIComponent(row.split("=").slice(1).join("="))) : null;
 }
 
+export type LeadWizardCloseDetails = { step: string; industry?: LeadWizardIndustry; goal?: LeadWizardGoal };
+
 /** Mounted once in the marketing layout: owns the smart triggers and the single wizard instance. */
 export function HomeLeadWizardHost() {
     const pathname = usePathname() ?? "/";
@@ -31,40 +36,51 @@ export function HomeLeadWizardHost() {
     const [session, setSession] = useState<LeadWizardSession | null>(null);
     const returnFocusRef = useRef<HTMLElement | null>(null);
     const convertedRef = useRef(false);
+    const signedInRef = useRef(false);
+
+    useEffect(() => {
+        void getBrowserUser(createClient())
+            .then((user) => {
+                signedInRef.current = Boolean(user);
+            })
+            .catch(() => undefined);
+    }, []);
 
     const show = useCallback(
-        (trigger: LeadWizardTrigger) => {
+        ({ trigger, score, journeyPages }: TriggerContext) => {
             const manual = trigger === "manual" || trigger === "qa";
             if (!claimPopupSlot("lead_wizard", { force: manual })) return;
             returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
             convertedRef.current = false;
-            const next: LeadWizardSession = { trigger, pagePath: pathname, ...preselectAnswers({ pathname, utm: readUtm() }) };
+            const next = buildLeadWizardSession({ trigger, score, journeyPages, pagePath: pathname, utm: readUtm(), memory: readLeadWizardMemory() });
             markShownThisSession();
+            if (!manual) rememberAutoView();
             setSession(next);
             setOpen(true);
             trackLeadWizard("lead_wizard_view", next, {
-                preselected_industry: next.industry ?? "",
-                preselected_goal: next.goal ?? "",
+                preselected_industry: next.suggested.industry ?? next.industry ?? "",
+                preselected_goal: next.suggested.goal ?? next.goal ?? "",
+                pages_this_session: String(journeyPages.length),
             });
         },
         [pathname],
     );
 
-    useHomeLeadWizardTriggers(pathname, show);
+    useHomeLeadWizardTriggers(pathname, signedInRef, show);
 
     useEffect(() => {
-        const onOpen = () => show("manual");
+        const onOpen = () => show({ trigger: "manual", score: 0, journeyPages: readSessionJourney().pages });
         window.addEventListener(LEAD_WIZARD_OPEN_EVENT, onOpen);
         return () => window.removeEventListener(LEAD_WIZARD_OPEN_EVENT, onOpen);
     }, [show]);
 
     const close = useCallback(
-        (step: string) => {
+        (details: LeadWizardCloseDetails) => {
             setOpen(false);
             releasePopupSlot("lead_wizard");
             if (convertedRef.current || !session) return;
-            rememberDismissed();
-            trackLeadWizard("lead_wizard_close", session, { step });
+            rememberDismissed(details);
+            trackLeadWizard("lead_wizard_close", session, { step: details.step });
         },
         [session],
     );

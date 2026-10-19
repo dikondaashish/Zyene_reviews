@@ -8,8 +8,8 @@ import {
     LEAD_WIZARD_INDUSTRIES,
     type LeadWizardGoal,
     type LeadWizardIndustry,
+    type WizardCopy,
 } from "@/lib/marketing/lead-wizard-personalization";
-import type { LeadWizardTrigger } from "@/lib/marketing/lead-wizard-targeting";
 
 type OptionGroupProps<T extends string> = {
     legend: string;
@@ -50,7 +50,7 @@ function OptionGroup<T extends string>({ legend, name, options, value, suggested
 }
 
 type Props = {
-    trigger: LeadWizardTrigger;
+    copy: WizardCopy;
     industry?: LeadWizardIndustry;
     goal?: LeadWizardGoal;
     suggested: { industry?: LeadWizardIndustry; goal?: LeadWizardGoal };
@@ -59,10 +59,9 @@ type Props = {
     onNext: () => void;
 };
 
-export function HomeLeadWizardQuestionStep({ trigger, industry, goal, suggested, onIndustryChange, onGoalChange, onNext }: Props) {
+export function HomeLeadWizardQuestionStep({ copy, industry, goal, suggested, onIndustryChange, onGoalChange, onNext }: Props) {
     const id = useId();
     const ready = Boolean(industry && goal);
-    const leaving = trigger === "exit_intent";
     return (
         <form
             className="home-lead-wizard-step"
@@ -71,9 +70,9 @@ export function HomeLeadWizardQuestionStep({ trigger, industry, goal, suggested,
                 if (ready) onNext();
             }}
         >
-            <p className="home-lead-wizard-kicker">{leaving ? "Before you go" : "Free guide · 2 quick questions"}</p>
+            <p className="home-lead-wizard-kicker">{copy.kicker}</p>
             <DialogPrimitive.Title className="home-lead-wizard-title">
-                {leaving ? "Take a review playbook with you." : "Get a review playbook built for your business."}
+                {copy.title}
             </DialogPrimitive.Title>
             <DialogPrimitive.Description className="home-lead-wizard-description">
                 Pick two answers and watch your guide adapt. Free, no signup.

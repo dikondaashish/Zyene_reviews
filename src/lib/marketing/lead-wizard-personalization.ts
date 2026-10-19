@@ -44,20 +44,39 @@ function firstMatch<T extends string>(haystacks: string[], table: [T, string[]][
 
 export type PreselectContext = {
     pathname: string;
+    journeyPages?: string[];
     utm?: { utm_campaign?: string; utm_content?: string; utm_term?: string } | null;
 };
 
-/** Industry and feature pages (then UTM campaign words) preselect answers so the guide starts personalized. */
+/**
+ * Preselect answers from the current page, then the pages read earlier this session (most
+ * recent first), then UTM campaign words, so the guide starts personalized.
+ */
 export function preselectAnswers(context: PreselectContext): { industry?: LeadWizardIndustry; goal?: LeadWizardGoal } {
     const utmTexts = [context.utm?.utm_campaign, context.utm?.utm_content, context.utm?.utm_term].filter(
         (value): value is string => Boolean(value),
     );
-    const industryPath = context.pathname.startsWith("/industries/") ? [context.pathname] : [];
-    const featurePath = context.pathname.startsWith("/features/") ? [context.pathname] : [];
+    const pages = [context.pathname, ...[...(context.journeyPages ?? [])].reverse()];
     return {
-        industry: firstMatch([...industryPath, ...utmTexts], INDUSTRY_KEYWORDS),
-        goal: firstMatch([...featurePath, ...utmTexts], GOAL_KEYWORDS),
+        industry: firstMatch([...pages.filter((p) => p.startsWith("/industries/")), ...utmTexts], INDUSTRY_KEYWORDS),
+        goal: firstMatch([...pages.filter((p) => p.startsWith("/features/")), ...utmTexts], GOAL_KEYWORDS),
     };
+}
+
+export type WizardCopy = { kicker: string; title: string };
+
+/** Opening copy that matches why and where the wizard opened. */
+export function openingCopy(context: { trigger: string; resumed: boolean; journeyPages: string[]; industry?: LeadWizardIndustry }): WizardCopy {
+    if (context.resumed) return { kicker: "Welcome back", title: "Your playbook is one step away." };
+    if (context.trigger === "exit_intent" || context.trigger === "mobile_exit") {
+        return { kicker: "Before you go", title: "Take a review playbook with you." };
+    }
+    if (context.journeyPages.some((p) => p.startsWith("/pricing") || p.startsWith("/compare"))) {
+        return { kicker: "Comparing options?", title: "See what a good review routine looks like first." };
+    }
+    const audience = LEAD_WIZARD_INDUSTRIES.find((i) => i.id === context.industry)?.noun;
+    if (audience) return { kicker: `Free guide for ${audience.toLowerCase()}`, title: `A review playbook built for ${audience.toLowerCase()}.` };
+    return { kicker: "Free guide · 2 quick questions", title: "Get a review playbook built for your business." };
 }
 
 export type GuidePreview = { title: string; audience: string; bullets: [string, string, string] };

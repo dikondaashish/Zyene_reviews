@@ -3,13 +3,14 @@ import { z } from "zod";
 import { logger } from "@/lib/logger";
 import { clientIpFrom, publicFormRateLimit } from "@/lib/auth/rate-limit";
 import { captureBookLead } from "@/lib/marketing/book-lead";
+import { LEAD_WIZARD_TRIGGERS } from "@/lib/marketing/lead-wizard-intent";
 import { LEAD_WIZARD_GOAL_IDS, LEAD_WIZARD_INDUSTRY_IDS } from "@/lib/marketing/lead-wizard-personalization";
 
 const bookLeadSchema = z.object({
     email: z.string().trim().email("A valid email is required").max(320),
     industry: z.enum(LEAD_WIZARD_INDUSTRY_IDS).optional(),
     goal: z.enum(LEAD_WIZARD_GOAL_IDS).optional(),
-    trigger: z.enum(["exit_intent", "scroll_depth", "engaged_time", "inactivity", "manual", "qa"]).optional(),
+    trigger: z.enum(LEAD_WIZARD_TRIGGERS).optional(),
     pagePath: z.string().trim().max(200).startsWith("/").optional(),
 });
 

@@ -11,6 +11,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 type Props = {
     email: string;
     preview: GuidePreview;
+    resumed: boolean;
     isLoading: boolean;
     serverError: string;
     onEmailChange: (value: string) => void;
@@ -18,7 +19,7 @@ type Props = {
     onBack: () => void;
 };
 
-export function HomeLeadWizardEmailStep({ email, preview, isLoading, serverError, onEmailChange, onSubmit, onBack }: Props) {
+export function HomeLeadWizardEmailStep({ email, preview, resumed, isLoading, serverError, onEmailChange, onSubmit, onBack }: Props) {
     const id = useId();
     const inputRef = useRef<HTMLInputElement>(null);
     const [touched, setTouched] = useState(false);
@@ -41,7 +42,7 @@ export function HomeLeadWizardEmailStep({ email, preview, isLoading, serverError
                 else inputRef.current?.focus();
             }}
         >
-            <p className="home-lead-wizard-kicker">Your guide is ready</p>
+            <p className="home-lead-wizard-kicker">{resumed ? "Welcome back · we saved your answers" : "Your guide is ready"}</p>
             <DialogPrimitive.Title className="home-lead-wizard-title">Where should we send your {preview.title}?</DialogPrimitive.Title>
             <DialogPrimitive.Description className="home-lead-wizard-description">
                 You&apos;ll get the PDF instantly on the next screen, plus a copy in your inbox.

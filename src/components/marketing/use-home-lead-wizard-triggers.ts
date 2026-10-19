@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
+import { decideTrigger, intentScore, type LeadWizardTrigger, type LeavingSignal } from "@/lib/marketing/lead-wizard-intent";
+import { addSessionEngagement, readSessionJourney, trackPageView } from "@/lib/marketing/lead-wizard-journey";
+import { detectDevice, watchLeadWizardSignals, type SignalSnapshot } from "@/lib/marketing/lead-wizard-signals";
 import { readLeadWizardMemory, wasShownThisSession } from "@/lib/marketing/lead-wizard-storage";
-import {
-    evaluateGate,
-    evaluateTrigger,
-    isExitIntentEvent,
-    scrollRatio,
-    type LeadWizardTrigger,
-} from "@/lib/marketing/lead-wizard-targeting";
+import { evaluateGate } from "@/lib/marketing/lead-wizard-targeting";
 import { canClaimPopupSlot, popupSlotOwner } from "@/lib/marketing/marketing-popup-slot";
 
-const TICK_MS = 1_000;
-const ACTIVITY_EVENTS = ["pointerdown", "touchstart", "keydown", "wheel"] as const;
+export type TriggerContext = { trigger: LeadWizardTrigger; score: number; journeyPages: string[] };
 
-export function readLeadWizardGate(pathname: string, search: string) {
+function isQaRun(search: string) {
+    return new URLSearchParams(search).get("qa") === "wizard-triggers";
+}
+
+export function readLeadWizardGate(pathname: string, search: string, signedIn = false) {
     return evaluateGate({
         now: Date.now(),
         pathname,
@@ -22,6 +22,8 @@ export function readLeadWizardGate(pathname: string, search: string) {
         memory: readLeadWizardMemory(),
         shownThisSession: wasShownThisSession(),
         popupSlotTaken: !canClaimPopupSlot(popupSlotOwner(), "lead_wizard"),
+        signedIn,
+        automated: navigator.webdriver === true && !isQaRun(search),
         chatOpen: document.querySelector(".support-chat-root[data-open]") !== null,
         cookieBannerOpen: document.getElementById("cookie-banner-title") !== null,
         otherOverlayOpen: document.querySelector('[role="dialog"][data-state="open"], [role="alertdialog"][data-state="open"]') !== null,
@@ -29,7 +31,7 @@ export function readLeadWizardGate(pathname: string, search: string) {
 }
 
 function autoTriggersEnabled(search: string): boolean {
-    return process.env.NODE_ENV === "production" || new URLSearchParams(search).get("qa") === "wizard-triggers";
+    return process.env.NODE_ENV === "production" || isQaRun(search);
 }
 
 /** The exit-intent offer yields to the lead wizard on pages where the wizard can still show. */
@@ -41,11 +43,15 @@ export function leadWizardOwnsExitIntent(pathname: string): boolean {
 }
 
 /**
- * Watches exit intent, scroll depth, engaged time and (on mobile) inactivity, then calls
- * `onTrigger` once when a trigger fires and the gate allows it. `?qa=wizard` opens it
- * straight away; `?qa=wizard-triggers` runs the real triggers outside production.
+ * Scores the visit (this page + session journey + return visits) every second and opens the
+ * wizard at a natural pause once intent is high, or on a leaving signal. `?qa=wizard` opens
+ * it straight away; `?qa=wizard-triggers` runs the real logic outside production.
  */
-export function useHomeLeadWizardTriggers(pathname: string, onTrigger: (trigger: LeadWizardTrigger) => void) {
+export function useHomeLeadWizardTriggers(
+    pathname: string,
+    signedInRef: RefObject<boolean>,
+    onTrigger: (context: TriggerContext) => void,
+) {
     const onTriggerRef = useRef(onTrigger);
     useEffect(() => {
         onTriggerRef.current = onTrigger;
@@ -53,70 +59,49 @@ export function useHomeLeadWizardTriggers(pathname: string, onTrigger: (trigger:
 
     useEffect(() => {
         const search = window.location.search;
-        const qa = new URLSearchParams(search).get("qa");
-        if (qa === "wizard") {
-            const timer = window.setTimeout(() => onTriggerRef.current("qa"), 0);
+        const { journey, previousVisits } = trackPageView(pathname);
+        if (new URLSearchParams(search).get("qa") === "wizard") {
+            const timer = window.setTimeout(() => onTriggerRef.current({ trigger: "qa", score: 0, journeyPages: journey.pages }), 0);
             return () => window.clearTimeout(timer);
         }
         if (!autoTriggersEnabled(search)) return;
-        const initial = readLeadWizardGate(pathname, search);
+        const initial = readLeadWizardGate(pathname, search, signedInRef.current);
         if (!initial.allowed && !initial.retry) return;
 
-        const device = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches ? "mobile" : "desktop";
-        const start = performance.now();
-        let lastTick = start;
-        let lastActivity = start;
-        let engagedMs = 0;
-        let maxScroll = 0;
+        const device = detectDevice();
         let done = false;
 
-        function check(exitIntent: boolean) {
+        function consider(snapshot: SignalSnapshot, leaving: LeavingSignal) {
             if (done) return;
-            const now = performance.now();
-            if (document.visibilityState === "visible") engagedMs += Math.min(now - lastTick, TICK_MS * 1.5);
-            lastTick = now;
-            const trigger = evaluateTrigger({
-                device,
-                elapsedMs: now - start,
-                engagedMs,
-                maxScrollRatio: maxScroll,
-                idleMs: now - lastActivity,
-                exitIntent,
-            });
-            if (!trigger) return;
-            const gate = readLeadWizardGate(pathname, search);
+            const stored = readSessionJourney();
+            const score = intentScore({
+                engagedMs: snapshot.engagedMs,
+                sessionEngagedMs: stored.engagedMs + snapshot.engagedMs,
+                maxScrollRatio: snapshot.maxScrollRatio,
+                sessionPages: stored.pages,
+                previousVisits,
+            }).total;
+            const trigger = decideTrigger({ device, score, leaving, ...snapshot });            if (!trigger) return;
+            const gate = readLeadWizardGate(pathname, search, signedInRef.current);
             if (!gate.allowed) {
-                if (!gate.retry) stop();
+                if (!gate.retry) finish();
                 return;
             }
-            stop();
-            onTriggerRef.current(trigger);
+            finish();
+            onTriggerRef.current({ trigger, score, journeyPages: stored.pages });
         }
 
-        const onScroll = () => {
-            const root = document.documentElement;
-            maxScroll = Math.max(maxScroll, scrollRatio(window.scrollY, window.innerHeight, root.scrollHeight));
-            lastActivity = performance.now();
-        };
-        const onActivity = () => {
-            lastActivity = performance.now();
-        };
-        const onMouseOut = (event: MouseEvent) => {
-            if (device === "desktop" && isExitIntentEvent(event)) check(true);
-        };
-        const interval = window.setInterval(() => check(false), TICK_MS);
-
-        window.addEventListener("scroll", onScroll, { passive: true });
-        ACTIVITY_EVENTS.forEach((name) => window.addEventListener(name, onActivity, { passive: true }));
-        document.addEventListener("mouseout", onMouseOut);
-
-        function stop() {
+        const watcher = watchLeadWizardSignals(device, {
+            onTick: (snapshot) => consider(snapshot, null),
+            onLeaving: (signal, snapshot) => consider(snapshot, signal),
+        });
+        let saved = false;
+        function finish() {
             done = true;
-            window.clearInterval(interval);
-            window.removeEventListener("scroll", onScroll);
-            ACTIVITY_EVENTS.forEach((name) => window.removeEventListener(name, onActivity));
-            document.removeEventListener("mouseout", onMouseOut);
+            watcher.stop();
+            if (!saved) addSessionEngagement(watcher.engagedMs());
+            saved = true;
         }
-        return stop;
-    }, [pathname]);
+        return finish;
+    }, [pathname, signedInRef]);
 }

@@ -10,18 +10,19 @@ import { HomeLeadWizardSuccess } from "@/components/marketing/home-lead-wizard-s
 import { HomeLeadWizardPreviewChip, HomeLeadWizardVisual } from "@/components/marketing/home-lead-wizard-visual";
 import { useHomeLeadWizardSubmit } from "@/components/marketing/use-home-lead-wizard-submit";
 import { guidePreview, type LeadWizardGoal, type LeadWizardIndustry } from "@/lib/marketing/lead-wizard-personalization";
+import type { LeadWizardCloseDetails } from "@/components/marketing/home-lead-wizard-host";
 import { trackLeadWizard, type LeadWizardSession } from "@/lib/marketing/track-lead-wizard-client";
 
 type Props = {
     open: boolean;
     session: LeadWizardSession;
-    onClose: (step: string) => void;
+    onClose: (details: LeadWizardCloseDetails) => void;
     onConverted: () => void;
     onCloseFocus: () => void;
 };
 
 export function HomeLeadWizardDialog({ open, session, onClose, onConverted, onCloseFocus }: Props) {
-    const [step, setStep] = useState<1 | 2>(1);
+    const [step, setStep] = useState<1 | 2>(session.startStep);
     const [industry, setIndustry] = useState<LeadWizardIndustry | undefined>(session.industry);
     const [goal, setGoal] = useState<LeadWizardGoal | undefined>(session.goal);
     const [email, setEmail] = useState("");
@@ -36,7 +37,7 @@ export function HomeLeadWizardDialog({ open, session, onClose, onConverted, onCl
     }
 
     return (
-        <DialogPrimitive.Root open={open} onOpenChange={(next) => (next ? undefined : onClose(stepName))}>
+        <DialogPrimitive.Root open={open} onOpenChange={(next) => (next ? undefined : onClose({ step: stepName, industry, goal }))}>
             <DialogPrimitive.Portal>
                 <DialogPrimitive.Overlay className="home-lead-wizard-backdrop" />
                 <DialogPrimitive.Content
@@ -63,14 +64,14 @@ export function HomeLeadWizardDialog({ open, session, onClose, onConverted, onCl
                                 emailSent={emailSent}
                                 title={preview.title}
                                 goal={goal}
-                                onClose={() => onClose("success")}
+                                onClose={() => onClose({ step: "success" })}
                             />
                         ) : step === 1 ? (
                             <HomeLeadWizardQuestionStep
-                                trigger={session.trigger}
+                                copy={session.copy}
                                 industry={industry}
                                 goal={goal}
-                                suggested={{ industry: session.industry, goal: session.goal }}
+                                suggested={session.suggested}
                                 onIndustryChange={setIndustry}
                                 onGoalChange={setGoal}
                                 onNext={goToEmail}
@@ -79,6 +80,7 @@ export function HomeLeadWizardDialog({ open, session, onClose, onConverted, onCl
                             <HomeLeadWizardEmailStep
                                 email={email}
                                 preview={preview}
+                                resumed={session.resumed}
                                 isLoading={status === "loading"}
                                 serverError={status === "error" ? message : ""}
                                 onEmailChange={setEmail}
