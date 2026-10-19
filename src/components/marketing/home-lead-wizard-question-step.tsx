@@ -1,106 +1,105 @@
 "use client";
 
-import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useId } from "react";
+import { ArrowRight, Check } from "lucide-react";
+import { Dialog as DialogPrimitive } from "radix-ui";
+import {
+    LEAD_WIZARD_GOALS,
+    LEAD_WIZARD_INDUSTRIES,
+    type LeadWizardGoal,
+    type LeadWizardIndustry,
+} from "@/lib/marketing/lead-wizard-personalization";
+import type { LeadWizardTrigger } from "@/lib/marketing/lead-wizard-targeting";
 
-import { ArrowRight, BookOpen, Check } from "lucide-react";
-
-const INDUSTRIES = [
-  "Restaurant or cafe",
-  "Healthcare",
-  "Home services",
-  "Other local business",
-];
-const GOALS = [
-  "Get more reviews",
-  "Reply faster",
-  "Protect my rating",
-  "Build one workflow",
-];
-
-type OptionGroupProps = {
-  label: string;
-  options: string[];
-  value: string;
-  onChange: (value: string) => void;
+type OptionGroupProps<T extends string> = {
+    legend: string;
+    name: string;
+    options: readonly { id: T; label: string }[];
+    value?: T;
+    suggested?: T;
+    onChange: (value: T) => void;
 };
 
-function OptionGroup({ label, options, value, onChange }: OptionGroupProps) {
-  return (
-    <fieldset>
-      <legend>{label}</legend>
-      <div className="home-lead-wizard-options">
-        {options.map((option) => {
-          const selected = value === option;
-          return (
-            <button
-              key={option}
-              type="button"
-              aria-pressed={selected}
-              className={selected ? "is-selected" : ""}
-              onClick={() => onChange(option)}
-            >
-              <span>{option}</span>
-              <span className="home-lead-wizard-option-mark" aria-hidden="true">
-                {selected ? <Check size={14} /> : null}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </fieldset>
-  );
+/** Native radios styled as cards: arrow keys, Space, and screen readers work out of the box. */
+function OptionGroup<T extends string>({ legend, name, options, value, suggested, onChange }: OptionGroupProps<T>) {
+    return (
+        <fieldset className="home-lead-wizard-group">
+            <legend>{legend}</legend>
+            <div className="home-lead-wizard-options">
+                {options.map((option) => (
+                    <label key={option.id} className="home-lead-wizard-option">
+                        <input
+                            type="radio"
+                            name={name}
+                            value={option.id}
+                            checked={value === option.id}
+                            onChange={() => onChange(option.id)}
+                        />
+                        <span className="home-lead-wizard-option-text">
+                            {option.label}
+                            {suggested === option.id ? <span className="home-lead-wizard-option-hint">Suggested</span> : null}
+                        </span>
+                        <span className="home-lead-wizard-option-mark" aria-hidden="true">
+                            <Check size={13} strokeWidth={3} />
+                        </span>
+                    </label>
+                ))}
+            </div>
+        </fieldset>
+    );
 }
 
-type HomeLeadWizardQuestionStepProps = {
-  industry: string;
-  goal: string;
-  onIndustryChange: (value: string) => void;
-  onGoalChange: (value: string) => void;
-  onNext: () => void;
+type Props = {
+    trigger: LeadWizardTrigger;
+    industry?: LeadWizardIndustry;
+    goal?: LeadWizardGoal;
+    suggested: { industry?: LeadWizardIndustry; goal?: LeadWizardGoal };
+    onIndustryChange: (value: LeadWizardIndustry) => void;
+    onGoalChange: (value: LeadWizardGoal) => void;
+    onNext: () => void;
 };
 
-export function HomeLeadWizardQuestionStep({
-  industry,
-  goal,
-  onIndustryChange,
-  onGoalChange,
-  onNext,
-}: HomeLeadWizardQuestionStepProps) {
-  return (
-    <div className="home-lead-wizard-step" key="step-one">
-      <p className="home-lead-wizard-kicker">
-        <BookOpen size={15} aria-hidden="true" /> Free guide for local
-        businesses
-      </p>
-      <DialogTitle asChild>
-        <h2>Turn customer feedback into regional growth.</h2>
-      </DialogTitle>
-      <DialogDescription asChild>
-        <p className="home-lead-wizard-description">
-          Answer two quick questions and we’ll point you to the most useful
-          starting points.
-        </p>
-      </DialogDescription>
-      <OptionGroup
-        label="What kind of business do you run?"
-        options={INDUSTRIES}
-        value={industry}
-        onChange={onIndustryChange}
-      />
-      <OptionGroup
-        label="What would help most right now?"
-        options={GOALS}
-        value={goal}
-        onChange={onGoalChange}
-      />
-      <button
-        type="button"
-        className="home-lead-wizard-primary"
-        disabled={!industry || !goal}
-        onClick={onNext}
-      >
-        Next step <ArrowRight size={17} aria-hidden="true" />
-      </button>
-    </div>
-  );
+export function HomeLeadWizardQuestionStep({ trigger, industry, goal, suggested, onIndustryChange, onGoalChange, onNext }: Props) {
+    const id = useId();
+    const ready = Boolean(industry && goal);
+    const leaving = trigger === "exit_intent";
+    return (
+        <form
+            className="home-lead-wizard-step"
+            onSubmit={(event) => {
+                event.preventDefault();
+                if (ready) onNext();
+            }}
+        >
+            <p className="home-lead-wizard-kicker">{leaving ? "Before you go" : "Free guide · 2 quick questions"}</p>
+            <DialogPrimitive.Title className="home-lead-wizard-title">
+                {leaving ? "Take a review playbook with you." : "Get a review playbook built for your business."}
+            </DialogPrimitive.Title>
+            <DialogPrimitive.Description className="home-lead-wizard-description">
+                Pick two answers and watch your guide adapt. Free, no signup.
+            </DialogPrimitive.Description>
+            <OptionGroup
+                legend="What kind of business do you run?"
+                name={`${id}-industry`}
+                options={LEAD_WIZARD_INDUSTRIES}
+                value={industry}
+                suggested={suggested.industry}
+                onChange={onIndustryChange}
+            />
+            <OptionGroup
+                legend="What would help most right now?"
+                name={`${id}-goal`}
+                options={LEAD_WIZARD_GOALS}
+                value={goal}
+                suggested={suggested.goal}
+                onChange={onGoalChange}
+            />
+            <button type="submit" className="home-lead-wizard-primary" aria-disabled={!ready} aria-describedby={`${id}-hint`}>
+                Continue <ArrowRight size={17} aria-hidden="true" />
+            </button>
+            <p id={`${id}-hint`} className="home-lead-wizard-hint" aria-live="polite">
+                {ready ? "Next: tell us where to send it." : "Choose one answer in each group to continue."}
+            </p>
+        </form>
+    );
 }

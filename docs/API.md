@@ -235,8 +235,8 @@ Unauthenticated or lightly rate-limited:
 | `/api/marketing/chat/agent-messages` | `GET ?sessionId&since` → team (Slack) replies since a time, for reconnect catch-up |
 | `/api/marketing/newsletter/subscribe`, `unsubscribe` | Newsletter |
 | `/api/marketing/agency-waitlist` | Agency waitlist |
-| `/api/marketing/book-lead` | Overview-guide lead capture (returns download URL) |
-| `/api/marketing/events/track` | Funnel events |
+| `/api/marketing/book-lead` | Free-guide lead wizard capture: `email`, optional `industry`/`goal` ids, `trigger`, `pagePath` (returns download URL) |
+| `/api/marketing/events/track` | Allowlisted funnel events (template pack, local SEO checklist, exit intent, `lead_wizard_*`) |
 | `/api/marketing/tools/*` | Free tools (places search, reputation score, review link, review response) |
 | `/api/track/review`, `/api/track/review-open` | Open/click tracking pixels/redirects |
 | `/api/indexnow` | IndexNow ping helper |
