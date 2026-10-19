@@ -6,6 +6,7 @@ import { finalizeOnboardingStripeCheckout } from "@/app/actions/onboarding";
 import { getGoogleOAuthCallbackOutcome } from "./google-oauth-callback";
 import type { GoogleOAuthAuthorization } from "@/types/components";
 import { trackSignupEvent } from "@/lib/analytics/signup-events";
+import { trackMetaStartTrial } from "@/lib/analytics/meta-trial-events";
 
 type UseOnboardingUrlEffectsArgs = {
     setCurrentStep: (step: number) => void;
@@ -68,6 +69,8 @@ export function useOnboardingUrlEffects({
             finalizeOnboardingStripeCheckout({ sessionId })
                 .then((r) => {
                     if (r.success) {
+                        // Only a server-verified Stripe trial carries an event id.
+                        if (r.trialEventId) trackMetaStartTrial(r.trialEventId);
                         toast.success("Subscription started!");
                         setCurrentStep(5);
                     } else {
