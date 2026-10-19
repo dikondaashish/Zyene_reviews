@@ -50,7 +50,7 @@ Missing **required** vars accessed via `required()` throw at use/import time wit
 |----------|---------|
 | `GOOGLE_CLIENT_ID` / `SECRET` | OAuth |
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Client-side Google bits if needed |
-| `GOOGLE_MAPS_API_KEY` | Places / free tools / website chat rating check (needs Places API (New): Autocomplete, Place Details, Nearby Search) |
+| `GOOGLE_MAPS_API_KEY` | Places / free tools / website chat rating check (needs Places API (New): Autocomplete, Place Details, Nearby Search, Text Search) |
 | `GOOGLE_PUBSUB_TOPIC_NAME` | Review notifications topic |
 | `GOOGLE_PUBSUB_VERIFICATION_TOKEN` | Push URL `?token=` |
 | `GOOGLE_GBP_WEBHOOK_SECRET` | Legacy GBP webhook |
