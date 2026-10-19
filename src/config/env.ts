@@ -21,23 +21,21 @@ function optional(name: string, fallback: string): string {
 }
 
 // --- Public (exposed to browser) ---
+// Read with literal `process.env.NEXT_PUBLIC_*` so Next.js inlines them into client
+// bundles; a dynamic `process.env[name]` lookup is empty in the browser.
 
 export const NEXT_PUBLIC_SUPABASE_URL =
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 export const NEXT_PUBLIC_SUPABASE_ANON_KEY =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
-export const NEXT_PUBLIC_ROOT_DOMAIN = optional(
-    "NEXT_PUBLIC_ROOT_DOMAIN",
-    "localhost:3000"
-);
+export const NEXT_PUBLIC_ROOT_DOMAIN =
+    process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
 export const NEXT_PUBLIC_APP_URL = getAppSiteOrigin(
     NEXT_PUBLIC_ROOT_DOMAIN,
     process.env.NEXT_PUBLIC_APP_URL
 );
-export const NEXT_PUBLIC_APP_NAME = optional(
-    "NEXT_PUBLIC_APP_NAME",
-    "Zyene Reviews"
-);
+export const NEXT_PUBLIC_APP_NAME =
+    process.env.NEXT_PUBLIC_APP_NAME || "Zyene Reviews";
 
 // --- Derived helpers ---
 
@@ -65,10 +63,8 @@ export const LOGIN_URL = getMarketingAuthUrl("login");
 export const SIGNUP_URL = getMarketingAuthUrl("signup");
 
 /** Public review-request pages only (business slugs). Not the marketing site. */
-export const REVIEW_CAPTURE_DOMAIN = optional(
-    "NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN",
-    "www.collectratings.com"
-);
+export const REVIEW_CAPTURE_DOMAIN =
+    process.env.NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN || "www.collectratings.com";
 
 export function getReviewCaptureOrigin(): string {
     const host = REVIEW_CAPTURE_DOMAIN.replace(/^https?:\/\//, "").replace(/\/$/, "");
