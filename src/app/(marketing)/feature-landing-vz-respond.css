@@ -15,10 +15,8 @@
 .vz-mon-item-head b { font-size:13px; }
 .vz-mon-item small { color:var(--muted-foreground); font-size:11px; }
 .vz-mon-item p { margin:2px 0 0; color:var(--foreground); font-size:12px; line-height:1.45; }
-.vz-mon-src { display:grid; width:26px; height:26px; flex:none; place-items:center; border-radius:8px; color:#fff; font-size:13px; font-weight:800; }
-.vz-mon-src-google { background:#4285f4; }
-.vz-mon-src-facebook { background:#1877f2; font-family:Georgia,serif; }
-.vz-mon-src-yelp { background:#d32323; }
+.vz-mon-src { display:grid; width:28px; height:28px; flex:none; place-items:center; border:1px solid var(--border); border-radius:8px; background:#fff; }
+.vz-mon-src img { width:18px; height:18px; object-fit:contain; }
 .vz-mon-check { display:grid; width:16px; height:16px; flex:none; margin-top:5px; place-items:center; border:1.5px solid var(--border); border-radius:4px; background:var(--card); color:#fff; }
 .vz-mon-check.is-on { border-color:var(--brand-orange); background:var(--brand-orange); }
 .vz-mon-toast { position:absolute; right:-6px; bottom:44px; max-width:min(300px,86%); }

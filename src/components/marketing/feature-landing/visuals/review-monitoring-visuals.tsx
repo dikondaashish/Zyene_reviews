@@ -1,15 +1,27 @@
+import Image from "next/image";
 import { Check, Download, EyeOff, Globe, LockKeyhole, Search, Smartphone } from "lucide-react";
+import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 import {
   MockCaption, MockPill, MockStars, MockWindow, OverlayCard,
 } from "@/components/marketing/feature-landing/visuals/mock-primitives";
 
 type Platform = "google" | "facebook" | "yelp";
 
-const SOURCE: Record<Platform, { letter: string; name: string }> = {
-  google: { letter: "G", name: "Google" },
-  facebook: { letter: "f", name: "Facebook" },
-  yelp: { letter: "Y", name: "Yelp" },
+const SOURCE: Record<Platform, { domain: string; name: string }> = {
+  google: { domain: "google.com", name: "Google" },
+  facebook: { domain: "facebook.com", name: "Facebook" },
+  yelp: { domain: "yelp.com", name: "Yelp" },
 };
+
+/** The platform's real logo on a white tile; the name is always printed beside it. */
+function SourceLogo({ platform }: { platform: Platform }) {
+  const { domain, name } = SOURCE[platform];
+  return (
+    <span className="vz-mon-src">
+      <Image src={getBrandLogoUrl(domain)} alt="" width={18} height={18} loading="eager" unoptimized aria-hidden="true" title={name} />
+    </span>
+  );
+}
 
 function InboxItem({ platform, name, rating, when, text, selected }: {
   platform: Platform; name: string; rating: number; when: string; text: string; selected?: boolean;
@@ -17,7 +29,7 @@ function InboxItem({ platform, name, rating, when, text, selected }: {
   return (
     <div className={`vz-mon-item${selected === undefined ? "" : " has-check"}`}>
       {selected !== undefined && <span className={`vz-mon-check${selected ? " is-on" : ""}`}>{selected && <Check size={11} />}</span>}
-      <span className={`vz-mon-src vz-mon-src-${platform}`}>{SOURCE[platform].letter}</span>
+      <SourceLogo platform={platform} />
       <div className="vz-mon-item-body">
         <div className="vz-mon-item-head">
           <b>{name}</b>
@@ -69,7 +81,7 @@ export function MonitoringPlatformsVisual() {
         {PLATFORMS.map(({ platform, status, lines }) => (
           <div key={platform} className="vz-mon-conn">
             <div className="vz-mon-conn-head">
-              <span className={`vz-mon-src vz-mon-src-${platform}`}>{SOURCE[platform].letter}</span>
+              <SourceLogo platform={platform} />
               <b>{SOURCE[platform].name}</b>
               <MockPill tone={platform === "google" ? "positive" : "neutral"}>{status}</MockPill>
             </div>
