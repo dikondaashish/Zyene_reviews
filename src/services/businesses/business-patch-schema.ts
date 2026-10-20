@@ -6,6 +6,7 @@
  */
 import { z } from "zod";
 
+import { MAX_REVIEW_REQUEST_DELAY_MINUTES } from "@/lib/review-requests/pos-send-timing";
 import { DEFAULT_REVIEW_PAGE_BACKGROUND_HEX } from "@/lib/utils/review-page-background";
 
 export const DEFAULT_REVIEW_PAGE_BG = DEFAULT_REVIEW_PAGE_BACKGROUND_HEX;
@@ -75,6 +76,12 @@ export const businessPatchSchema = z
         auto_reply_enabled: z.boolean().optional(),
         auto_reply_min_rating: z.union([z.literal(3), z.literal(4), z.literal(5)]).optional(),
         auto_reply_tone: z.enum(["professional", "friendly", "concise"]).optional(),
+        /** Review request settings (POS / Zapier timing, frequency cap, channels) */
+        review_request_delay_minutes: z.number().int().min(0).max(MAX_REVIEW_REQUEST_DELAY_MINUTES).optional(),
+        review_request_min_amount_cents: z.number().int().min(0).max(100_000_000).optional(),
+        review_request_frequency_cap_days: z.number().int().min(1).max(365).optional(),
+        review_request_sms_enabled: z.boolean().optional(),
+        review_request_email_enabled: z.boolean().optional(),
     })
     .strict();
 

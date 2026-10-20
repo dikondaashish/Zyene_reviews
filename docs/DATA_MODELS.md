@@ -118,11 +118,11 @@ Typical fields: business link, rating, free-text, category, status, customer con
 | Field | Notes |
 |-------|-------|
 | `business_id` | |
-| `name`, `status` | active/paused/completed |
+| `name`, `status` | draft / active / paused / completed / archived; `processing` is legacy (sends keep campaigns `active` so follow-ups run; `20261020120000`) |
 | `trigger_type` | manual / scheduled / pos_payment (POS may be locked in UI) |
 | `channel` | sms / email / both |
 | Templates | SMS + email subject/body |
-| Counters | sent/opened/clicked/reviews received |
+| Counters | `total_sent` / `total_opened` / `total_clicked` / `total_completed`, recomputed from `review_requests` by trigger `review_requests_campaign_stats` (`20261020121000`); `total_reviews_received` is unused |
 
 ### `review_requests`
 
@@ -133,7 +133,7 @@ Typical fields: business link, rating, free-text, category, status, customer con
 | `trigger_source` | manual, campaign, zapier, pos_* , … |
 | `channel`, `status` | queued → sent → delivered → opened → clicked → review_left / failed |
 | `review_link`, timestamps, `error_message` | |
-| `scheduled_for` | for delayed sends |
+| `scheduled_for` | for delayed sends; a row is only claimed for sending once `scheduled_for <= now()` |
 
 ### `customers`
 

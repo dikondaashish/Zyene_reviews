@@ -14,7 +14,7 @@ import { processCampaignContact } from "@/services/inngest/functions/process-cam
 const job = { campaignId: "10000000-0000-4000-8000-000000000001", businessId: "10000000-0000-4000-8000-000000000002",
     userId: "10000000-0000-4000-8000-000000000003", contact: { email: "synthetic@example.test" } };
 const campaign = { channel: "email", delay_minutes: 60, follow_up_enabled: true, sms_template: null, email_template: null,
-    businesses: { organization_id: "org-a", name: "Synthetic business", sender_name: null, review_request_frequency_cap_days: 30 } };
+    businesses: { organization_id: "org-a", name: "Synthetic business", slug: "synthetic-business", sender_name: null, review_request_frequency_cap_days: 30 } };
 type Context = { event: { id: string; data: unknown }; step: {
     run: <T>(name: string, callback: () => Promise<T>) => Promise<T>; sleep: typeof mocks.sleep;
 } };
@@ -89,5 +89,26 @@ describe("campaign worker provider boundary", () => {
         expect(mocks.eq).toHaveBeenCalledWith("business_id", job.businessId);
         expect(mocks.eq).toHaveBeenCalledWith("campaign_id", job.campaignId);
         expect(mocks.bump).toHaveBeenCalledTimes(1);
+    });
+    it("sends a signed per-request link with each channel's own template and subject", async () => {
+        mocks.load.mockResolvedValue({ ...campaign, channel: "both", sms_template: "SMS {review_link}",
+            email_subject: "Thanks, {customer_name}", email_template: "<p>Email {review_link}</p>" });
+        mocks.send.mockResolvedValue({ emailSent: true, smsSent: true, error: null, reviewLink: "https://capture.test/x?ref=request-a" });
+        const update = vi.fn(() => query); const query: Record<string, unknown> = {};
+        Object.assign(query, { insert: () => query, select: () => query, update, eq: () => query,
+            single: async () => ({ data: { id: "request-a" }, error: null }),
+            then: (resolve: (value: unknown) => unknown) => Promise.resolve({ error: null }).then(resolve) });
+        mocks.admin.mockReturnValue({ from: () => query });
+        await execute(context({ ...job, contact: { email: "synthetic@example.test", phone: "+15555550100" } }));
+        expect(mocks.send).toHaveBeenCalledWith(expect.objectContaining({
+            requestId: "request-a", businessSlug: "synthetic-business", smsTemplate: "SMS {review_link}",
+            emailTemplate: "<p>Email {review_link}</p>", emailSubject: "Thanks, {customer_name}",
+        }));
+        expect(update).toHaveBeenCalledWith(expect.objectContaining({ status: "sent", review_link: "https://capture.test/x?ref=request-a" }));
+    });
+    it("fails the send without a provider call when the business has no review page slug", async () => {
+        mocks.load.mockResolvedValue({ ...campaign, businesses: { ...campaign.businesses, slug: null } });
+        expect((await execute(context())).status).toBe("completed_with_error");
+        expect(mocks.send).not.toHaveBeenCalled();
     });
 });

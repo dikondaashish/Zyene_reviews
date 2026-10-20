@@ -49,7 +49,8 @@ export async function handleCampaignSend(request: Request, campaignId: string) {
             return apiError("Forbidden", { status: 403 });
         }
 
-        if (campaign.status !== "active") {
+        // "processing" is legacy: older sends left campaigns there; treat it as active.
+        if (campaign.status !== "active" && campaign.status !== "processing") {
             return apiError("Campaign is not active. Activate it first.", { status: 400 });
         }
 
@@ -86,9 +87,12 @@ export async function handleCampaignSend(request: Request, campaignId: string) {
         try {
             await inngest.send(eventsToEnqueue);
 
-            const { error } = await admin.from("campaigns").update({ status: "processing" })
-                .eq("id", campaignId).eq("business_id", campaign.business_id);
-            if (error) throw error;
+            // Keep the campaign "active": the follow-up cron and drip sender only run active campaigns.
+            if (campaign.status === "processing") {
+                const { error } = await admin.from("campaigns").update({ status: "active" })
+                    .eq("id", campaignId).eq("business_id", campaign.business_id);
+                if (error) throw error;
+            }
         } catch (e) {
             logger.error({ err: e }, "Failed to enqueue campaign events:");
             return apiError("Failed to queue campaign", { status: 500 });

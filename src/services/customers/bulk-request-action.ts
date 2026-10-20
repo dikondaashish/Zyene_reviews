@@ -15,14 +15,22 @@ type CustomerRow = {
     phone: string | null;
     is_opted_out: boolean | null;
     total_requests_sent: number | null;
+    last_request_sent_at: string | null;
 };
 
 type BusinessRow = {
     id: string;
     name: string;
     slug: string;
+    review_request_frequency_cap_days: number | null;
     organizations: { id: string; plan: string | null };
 };
+
+/** Same rule as the single-send and campaign paths: no repeat request inside the cap window. */
+function sentWithinFrequencyCap(lastSentAt: string | null, capDays: number, now: number): boolean {
+    if (!lastSentAt || capDays <= 0) return false;
+    return now - new Date(lastSentAt).getTime() < capDays * 86_400_000;
+}
 
 export async function runBulkReviewRequestAction(
     supabase: SupabaseClient,
@@ -49,15 +57,19 @@ export async function runBulkReviewRequestAction(
         return { status: 400 as const, body: { error: "No valid customers found" } };
     }
 
-    const eligibleCustomers = (customersToRequest as CustomerRow[]).filter((c) => !c.is_opted_out && !isTestContact(c) && c.phone);
+    const biz = business as unknown as BusinessRow;
+    const frequencyCapDays = biz.review_request_frequency_cap_days ?? 30;
+    const now = Date.now();
+    const eligibleCustomers = (customersToRequest as CustomerRow[]).filter((c) =>
+        !c.is_opted_out && !isTestContact(c) && c.phone &&
+        !sentWithinFrequencyCap(c.last_request_sent_at, frequencyCapDays, now));
     if (eligibleCustomers.length === 0) {
         return {
             status: 400 as const,
-            body: { error: "No eligible contacts: check opt-outs, test tags and phone numbers" },
+            body: { error: "No eligible contacts: check opt-outs, test tags, phone numbers and the frequency cap" },
         };
     }
 
-    const biz = business as unknown as BusinessRow;
     const { allowed, remaining } = await checkLimit(biz.organizations.id, "sms_requests");
     if (!allowed) {
         return { status: 403 as const, body: { error: "Monthly limit reached" } };

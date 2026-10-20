@@ -7,11 +7,13 @@ import { prepareScheduledSendRow } from "./process-scheduled-one-prep";
 import { sendPreparedScheduledRow } from "./process-scheduled-one-send";
 
 export async function processOneScheduled(admin: SupabaseClient, row: DueRow): Promise<"sent" | "failed" | "skipped"> {
+    // Only claim rows that are due: never send before `scheduled_for`, whichever trigger fired.
     const { data: claimed, error: claimErr } = await admin
         .from("review_requests")
         .update({ status: "processing" })
         .eq("id", row.id)
         .eq("status", "queued")
+        .or(`scheduled_for.is.null,scheduled_for.lte.${new Date().toISOString()}`)
         .select("id, business_id, customer_name, customer_phone, customer_email, channel")
         .maybeSingle();
 

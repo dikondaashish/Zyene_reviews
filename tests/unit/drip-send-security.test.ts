@@ -10,11 +10,11 @@ import type { createAdminClient } from "@/lib/db/supabase/admin";
 
 const campaign = { id: "campaign-a", business_id: "business-a", status: "active", follow_up_enabled: true,
     follow_up_template: null, drip_step3_template: null, drip_channel_alternate: true, channel: "email",
-    businesses: { id: "business-a", organization_id: "org-a", name: "Business A", sender_name: null } };
+    businesses: { id: "business-a", organization_id: "org-a", name: "Business A", slug: "business-a", sender_name: null } };
 const request = { id: "request-a", business_id: "business-a", campaign_id: "campaign-a", customer_name: "Customer",
     customer_email: "synthetic@example.test", customer_phone: "+15555550100", drip_status: "active", drip_steps_sent: 1,
     review_left: false, clicked_at: null, completed_at: null, last_drip_channel: "email", sent_at: null, step2_sent_at: null };
-let liveCampaign = { ...campaign };
+let liveCampaign: DripCampaignRow = { ...campaign };
 let liveRequest = { ...request };
 let databaseError: Error | null = null;
 function admin() {
@@ -43,6 +43,17 @@ describe("drip tenant binding and send-time allowance", () => {
         expect(mocks.send).toHaveBeenCalledTimes(1);
         expect(mocks.eq).toHaveBeenCalledWith("business_id", "business-a");
         expect(mocks.eq).toHaveBeenCalledWith("campaign_id", "campaign-a");
+    });
+    it("signs the follow-up link with the original request id so a click stops the sequence", async () => {
+        liveCampaign = { ...campaign, follow_up_template: "Reminder {review_link}" };
+        await sendDripStep(args());
+        expect(mocks.send).toHaveBeenCalledWith(expect.objectContaining({ requestId: "request-a", businessSlug: "business-a",
+            smsTemplate: "Reminder {review_link}", emailTemplate: "Reminder {review_link}", isFollowUp: true }));
+    });
+    it("skips the follow-up when the business has no review page slug", async () => {
+        liveCampaign = { ...campaign, businesses: { ...campaign.businesses, slug: null } };
+        await sendDripStep(args());
+        expect(mocks.send).not.toHaveBeenCalled(); expect(mocks.reserve).not.toHaveBeenCalled();
     });
     it("denies a zero/free SMS allowance before provider calls", async () => {
         mocks.reserve.mockResolvedValue(false);

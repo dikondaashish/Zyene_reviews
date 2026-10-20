@@ -8,8 +8,8 @@ export type DripCampaignRow = {
     drip_channel_alternate: boolean | null;
     channel: string;
     businesses:
-        | { id: string; organization_id: string; name: string; sender_name?: string | null }
-        | { id: string; organization_id: string; name: string; sender_name?: string | null }[]
+        | { id: string; organization_id: string; name: string; slug?: string | null; sender_name?: string | null }
+        | { id: string; organization_id: string; name: string; slug?: string | null; sender_name?: string | null }[]
         | null;
 };
 

@@ -58,13 +58,17 @@ export const processCampaignContact = inngest.createFunction(
             if (liveCampaign.channel !== campaign.channel || !(await reserveChannelUsage(liveCampaign.businesses.organization_id, contactMethods, claimId))) {
                 return { sendStatus: "skipped" as const, errorMessage: "Campaign channel or allowance changed" };
             }
+            if (!liveCampaign.businesses.slug) return { sendStatus: "failed" as const, errorMessage: "Business has no review page slug" };
             const result = await sendReviewRequest({
-                businessId: job.businessId, businessName: liveCampaign.businesses.name,
-                senderName: liveCampaign.businesses.sender_name, customerName: job.contact.name || "Customer",
-                contactMethods, customerEmail: job.contact.email, customerPhone: job.contact.phone,
-                template: liveCampaign.sms_template || liveCampaign.email_template || undefined,
+                requestId: requestRecord.id, businessId: job.businessId, businessSlug: liveCampaign.businesses.slug,
+                businessName: liveCampaign.businesses.name, senderName: liveCampaign.businesses.sender_name,
+                customerName: job.contact.name || "Customer", contactMethods,
+                customerEmail: job.contact.email, customerPhone: job.contact.phone,
+                smsTemplate: liveCampaign.sms_template || undefined, emailTemplate: liveCampaign.email_template || undefined,
+                emailSubject: liveCampaign.email_subject || undefined,
             });
-            return { sendStatus: result.emailSent || result.smsSent ? "sent" as const : "failed" as const, errorMessage: result.error };
+            return { sendStatus: result.emailSent || result.smsSent ? "sent" as const : "failed" as const,
+                errorMessage: result.error, reviewLink: result.reviewLink };
         });
         await step.run("update-initial-database", async () => {
             // Settle this signed job's already-attempted delivery even if actor access was revoked meanwhile.
@@ -72,6 +76,7 @@ export const processCampaignContact = inngest.createFunction(
             const { error } = await admin.from("review_requests").update({
                 status: sendResult.sendStatus, error_message: sendResult.errorMessage,
                 sent_at: sent ? new Date().toISOString() : null,
+                ...("reviewLink" in sendResult && sendResult.reviewLink ? { review_link: sendResult.reviewLink } : {}),
                 ...(sent && campaign.follow_up_enabled ? {
                     drip_status: "active" as const, drip_steps_sent: 1,
                     last_drip_channel: primaryChannelFromMethods(contactMethods),

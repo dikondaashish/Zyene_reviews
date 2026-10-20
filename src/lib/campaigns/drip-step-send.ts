@@ -33,6 +33,10 @@ export async function sendDripStep(args: {
         logger.warn({ requestId: req.id, step }, "[drip] skip: no contact for channel");
         return;
     }
+    if (!business.slug) {
+        logger.warn({ requestId: req.id, step }, "[drip] skip: business has no review page slug");
+        return;
+    }
 
     try {
         const permission = await campaignContactPermission(admin, {
@@ -43,15 +47,19 @@ export async function sendDripStep(args: {
         // New cron occurrences consume allowance even if a prior delivery could not be recorded.
         if (!(await reserveChannelUsage(business.organization_id, [channel], `drip:${req.id}:step:${step}:job:${deliveryId}`))) return;
         const template = step === 3 ? live.campaign.drip_step3_template || live.campaign.follow_up_template : live.campaign.follow_up_template;
+        // Same request id as step 1, so a click on any step stops the sequence.
         const result = await sendReviewRequest({
+            requestId: req.id,
             businessId: business.id,
+            businessSlug: business.slug,
             businessName: business.name,
             senderName: business.sender_name ?? null,
             customerName: request.customer_name || "Customer",
             contactMethods: [channel],
             customerEmail: request.customer_email,
             customerPhone: request.customer_phone,
-            template: template || undefined,
+            smsTemplate: template || undefined,
+            emailTemplate: template || undefined,
             isFollowUp: true,
         });
 
