@@ -1,3 +1,4 @@
+-- apply-plan: already-applied — applied to production 2026-10-21 via the Supabase MCP (recorded as version 20261021174042), before this PR merged.
 -- Readable invoice-copy enrollment addresses: <business-slug>-<4-char code>@<inbound domain>
 -- (e.g. willow-hair-studio-k7m2). Existing 16-40 char hex tokens stay valid and keep working.
 ALTER TABLE public.business_inbound_addresses
