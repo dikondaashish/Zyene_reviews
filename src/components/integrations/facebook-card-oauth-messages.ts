@@ -4,4 +4,5 @@ export const FACEBOOK_OAUTH_ERROR_MESSAGES: Record<string, string> = {
     token_failed: "Failed to connect to Facebook. Please try again.",
     missing_params: "Connection failed. Please try again.",
     invalid_state: "Invalid connection state. Please try again.",
+    unavailable: "Facebook connection is temporarily unavailable. Contact support.",
 };

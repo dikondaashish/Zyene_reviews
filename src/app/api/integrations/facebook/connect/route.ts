@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import { createClient } from "@/lib/db/supabase/server";
+import { getAppIntegrationsUrl } from "@/config/env";
 import { getAppId, getAppSecret } from "@/services/facebook/client";
 import { createFacebookOAuthState, FACEBOOK_STATE_COOKIE, facebookCookieOptions } from
     "@/services/facebook/oauth-state";
@@ -36,11 +37,8 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    if (!process.env.FACEBOOK_APP_ID) {
-        return NextResponse.json(
-            { error: "Facebook integration is temporarily unavailable." },
-            { status: 503 }
-        );
+    if (!process.env.FACEBOOK_APP_ID || !process.env.FACEBOOK_APP_SECRET) {
+        return NextResponse.redirect(`${getAppIntegrationsUrl()}?fb_error=unavailable`);
     }
 
     const appId = getAppId();
