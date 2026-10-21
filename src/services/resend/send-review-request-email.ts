@@ -6,18 +6,27 @@ import { buildFromLine, sendEmail } from "./send-email";
 
 const DEFAULT_COLLECT_FROM = "CollectRatings <hello@send.collectratings.com>";
 
+/** "Willow Hair Studio" → "willow-hair-studio" (falls back to "hello"). */
+export function mailboxLocalPart(businessName?: string | null): string {
+    const local = (businessName || "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+        .replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 64).replace(/-+$/, "");
+    return local || "hello";
+}
+
 /**
- * We deliver on the business's behalf, so the display name is the business
- * (then the sender) on the verified CollectRatings mailbox.
- * e.g. "Willow Hair Studio <hello@send.collectratings.com>"
+ * We deliver on the business's behalf, so the sender reads as the business:
+ * "Sam at Willow Hair Studio <willow-hair-studio@send.collectratings.com>", or just
+ * the business name when no sender is set. The domain comes from RESEND_COLLECTRATINGS_FROM.
  */
 export function collectratingsFromLine(businessName?: string | null, senderName?: string | null): string {
     const fallback = process.env.RESEND_COLLECTRATINGS_FROM?.trim() || DEFAULT_COLLECT_FROM;
-    const display = (businessName || "").trim() || (senderName || "").trim();
-    const mailbox = fallback.match(/<([^>]+)>/)?.[1];
-    if (!display || !mailbox) return fallback;
-    // No quotes/angle brackets/newlines so the header cannot break.
-    return `${display.replace(/["<>\r\n]/g, "").slice(0, 78)} <${mailbox}>`;
+    const clean = (value?: string | null) => (value || "").replace(/["<>\r\n]/g, "").trim();
+    const biz = clean(businessName);
+    const sender = clean(senderName);
+    const domain = fallback.match(/<[^@>]+@([^>]+)>/)?.[1];
+    if (!biz || !domain) return fallback;
+    const display = (sender ? `${sender} at ${biz}` : biz).slice(0, 78);
+    return `${display} <${mailboxLocalPart(biz)}@${domain}>`;
 }
 
 type SendReviewRequestEmailProps = {
@@ -37,8 +46,9 @@ type SendReviewRequestEmailProps = {
 };
 
 /**
- * Review-request mail only. Uses the CollectRatings Resend account so From
- * (`send.collectratings.com`) matches the capture-link domain (`collectratings.com`).
+ * Mail to a business's customers, sent on the business's behalf: review requests
+ * and the private-feedback recovery letter. Uses the CollectRatings Resend account so
+ * From (`send.collectratings.com`) matches the capture-link domain (`collectratings.com`).
  * All other product mail stays on `sendEmail` / `RESEND_API_KEY`.
  */
 export async function sendReviewRequestEmail({

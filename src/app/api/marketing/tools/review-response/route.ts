@@ -53,6 +53,7 @@ async function handleValidatedRequest(request: Request) {
 
     try {
         const delivery = await sendEmail({
+            stream: "marketing",
             to: email.toLowerCase(),
             subject: "5 more review response templates",
             html: reviewResponseBonusEmailHtml(primary, bonusHtml),

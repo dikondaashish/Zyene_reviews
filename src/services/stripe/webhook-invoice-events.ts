@@ -43,6 +43,7 @@ export async function handleInvoicePaymentFailed(
     try {
         if (invoice.customer_email) {
             await sendEmail({
+                stream: "billing",
                 to: invoice.customer_email,
                 subject: "Payment Failed - Action Required",
                 html: paymentFailedEmail({
@@ -85,6 +86,7 @@ export async function handleInvoicePaymentSucceeded(
     try {
         if (invoice.customer_email) {
             await sendEmail({
+                stream: "billing",
                 to: invoice.customer_email,
                 subject: "Payment Successful - Zyene Reviews",
                 html: paymentSuccessEmail({

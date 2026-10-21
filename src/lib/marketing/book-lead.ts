@@ -66,7 +66,7 @@ export async function captureBookLead(input: BookLeadInput): Promise<BookLeadRes
                 const mail = bookLeadEmail({
                     downloadUrl: marketingCanonicalUrl(BOOK_DOWNLOAD_PATH),
                 });
-                const delivery = await sendEmail({ to: email, subject: mail.subject, html: mail.html });
+                const delivery = await sendEmail({ stream: "marketing", to: email, subject: mail.subject, html: mail.html });
                 emailSent = delivery.sent === true;
             } catch (err) {
                 logger.error({ err }, "[book-lead] delivery email failed");

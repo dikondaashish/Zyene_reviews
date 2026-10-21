@@ -58,6 +58,7 @@ export async function handleContactPost(request: Request) {
 
     try {
         await sendEmail({
+            stream: "forms",
             to: CONTACT_INBOX,
             subject: `[Contact] ${subject} - ${name}`,
             html: formNotificationEmail("New contact form submission", { Name: name, Email: email, Subject: subject }, message, "Submitted via zyenereviews.com/contact"),
@@ -65,6 +66,7 @@ export async function handleContactPost(request: Request) {
         });
 
         await sendEmail({
+            stream: "forms",
             to: email,
             subject: "We received your message - Zyene Reviews",
             html: formReceiptEmail("contact", name, subject),

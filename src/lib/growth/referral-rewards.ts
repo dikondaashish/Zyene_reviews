@@ -43,7 +43,7 @@ export async function processReferralConversionReward(refereeOrganizationId: str
             .select("email, full_name").eq("id", claim.referrerUserId).maybeSingle();
         if (userError) throw userError;
         if (referrerUser?.email) {
-            await sendEmail({ to: referrerUser.email, subject: "You earned a free month - referral reward",
+            await sendEmail({ stream: "marketing", to: referrerUser.email, subject: "You earned a free month - referral reward",
                 html: referralRewardEmailHtml(referrerUser.full_name || "there"),
                 idempotencyKey: `${claim.idempotencyKey}:email` });
         }

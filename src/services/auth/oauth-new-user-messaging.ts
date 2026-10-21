@@ -19,6 +19,7 @@ export async function sendOAuthNewUserMessages(params: {
     );
 
     sendEmail({
+        stream: "account",
         to: email,
         subject: "Welcome to Zyene Reviews - connect Google to get started",
         html: welcomeEmail({ userName: fullName || "there", loginUrl }),

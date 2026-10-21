@@ -126,7 +126,7 @@ async function sendOne(
         const result = await dispatchDashboardReviewChannels(admin, {
             requestId: requestRecord.id, businessId: biz.id, channel: "sms", phoneNorm: customer.phone, emailNorm: null,
             displayName: customer.first_name || "there", businessName: biz.name, senderName: undefined, businessEmail: undefined,
-            reviewLink, subject: reviewRequestSubject(biz.name),
+            reviewLink, subject: reviewRequestSubject(biz.name, false, customer.first_name),
         });
 
         if (result.sendStatus === "deferred" && result.deferUntil) {

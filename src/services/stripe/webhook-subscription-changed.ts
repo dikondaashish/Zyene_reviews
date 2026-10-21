@@ -91,6 +91,7 @@ export async function handleSubscriptionDeleted(
                 : "the end of your billing period";
 
             await sendEmail({
+                stream: "billing",
                 to: customer.email,
                 subject: "Subscription Canceled - We're sorry to see you go",
                 html: subscriptionCanceledEmail({

@@ -16,7 +16,7 @@ export async function sendPreparedScheduledRow(
     const senderName = (b.sender_name || "").trim() || undefined;
     const businessEmail =
         typeof b.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email.trim()) ? b.email.trim() : undefined;
-    const subject = reviewRequestSubject(businessName);
+    const subject = reviewRequestSubject(businessName, false, displayName);
 
     const dispatched = await dispatchDashboardReviewChannels(admin, {
             requestId,

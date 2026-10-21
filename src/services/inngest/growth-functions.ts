@@ -57,7 +57,7 @@ export const trialNurtureWorker = inngest.createFunction(
                     stepKey: nurtureStep.key,
                     unsubscribeUrl: preferences.unsubscribeUrl,
                 });
-                await sendEmail({ to: email, subject, html, unsubscribeUrl: preferences.unsubscribeUrl });
+                await sendEmail({ stream: "marketing", to: email, subject, html, unsubscribeUrl: preferences.unsubscribeUrl });
             });
         }
 
@@ -96,7 +96,7 @@ export const onboardingDripWorker = inngest.createFunction(
                     stepKey: dripStep.key,
                     unsubscribeUrl: preferences.unsubscribeUrl,
                 });
-                await sendEmail({ to: email, subject, html, unsubscribeUrl: preferences.unsubscribeUrl });
+                await sendEmail({ stream: "marketing", to: email, subject, html, unsubscribeUrl: preferences.unsubscribeUrl });
             });
         }
 
@@ -135,7 +135,7 @@ export const marketingNurtureWorker = inngest.createFunction(
                     stepKey: nurtureStep.key,
                     unsubscribeUrl,
                 });
-                await sendEmail({ to: email, subject, html,
+                await sendEmail({ stream: "marketing", to: email, subject, html,
                     unsubscribeUrl: `${marketingCanonicalUrl("/api/marketing/newsletter/unsubscribe")}?id=${subscriber.id}`,
                 });
             });
@@ -160,7 +160,7 @@ export const winbackWorker = inngest.createFunction(
             const preferences = await activeGrowthEmailPreferences("winback", email, organizationId);
             if (!preferences) return;
             const { subject, html } = winbackFollowUpEmail({ userName, rejoinUrl, unsubscribeUrl: preferences.unsubscribeUrl });
-            await sendEmail({ to: email, subject, html, unsubscribeUrl: preferences.unsubscribeUrl });
+            await sendEmail({ stream: "marketing", to: email, subject, html, unsubscribeUrl: preferences.unsubscribeUrl });
         });
 
         await step.run("complete-sequence", async () => {

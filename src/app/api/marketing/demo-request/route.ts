@@ -62,12 +62,14 @@ export async function POST(request: Request) {
 
     try {
         await sendEmail({
+            stream: "forms",
             to: salesInbox,
             subject: `[Demo request] ${company} - ${name}`,
             html: formNotificationEmail("Demo / enterprise inquiry", { Name: name, Email: email, Company: company, Locations: locations }, message, "Submitted via zyenereviews.com/demo"),
             replyTo: email,
         });
         await sendEmail({
+            stream: "forms",
             to: email,
             subject: "We received your demo request - Zyene Reviews",
             html: formReceiptEmail("demo", parsed.data.name || "there"),

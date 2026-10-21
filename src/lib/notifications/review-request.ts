@@ -71,7 +71,7 @@ export async function sendReviewRequest(admin: SupabaseClient, options: SendRevi
             frequencyCap: step === 1 ? "apply" : "skip",
             sms: { body: smsBody },
             emailMessage: {
-                subject: customSubject || reviewRequestSubject(businessName, isFollowUp),
+                subject: customSubject || reviewRequestSubject(businessName, isFollowUp, customerName),
                 html: reviewRequestEmail(templateProps),
                 text: reviewRequestEmailPlainText(templateProps),
             },
