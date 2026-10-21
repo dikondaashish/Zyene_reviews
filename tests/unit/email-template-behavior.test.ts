@@ -20,7 +20,12 @@ describe("email content and fallback behavior", () => {
         expect(text.length).toBeGreaterThan(30);
         expect(text).not.toContain("@media");
         expect(text).not.toContain("<!--[if mso]");
-        if (preview.id !== "aeo-report-white-label") {
+        // Review requests go out as the business, so they carry no Zyene branding.
+        const unbranded = preview.id === "aeo-report-white-label" || /^(review-request|campaign-)/.test(preview.id);
+        if (unbranded) {
+            expect(preview.html).not.toContain(EMAIL_BRAND.logo);
+            if (preview.id !== "aeo-report-white-label") expect(preview.html).not.toContain(EMAIL_BRAND.address);
+        } else {
             expect(preview.html).toContain(`src="${EMAIL_BRAND.logo}"`);
             expect(preview.html).toContain(EMAIL_BRAND.address);
             expect(preview.html).toContain(EMAIL_BRAND.company);
@@ -37,14 +42,20 @@ describe("email content and fallback behavior", () => {
         expect(reviewRequestEmailPlainText(props)).toContain("A personal note from A & B.");
     });
 
-    it("brands complete custom HTML documents while retaining their content and styles", () => {
+    it("sends complete custom HTML documents as the business, without Zyene branding", () => {
         const html = reviewRequestEmail({ ...request, template: '<html><head><style>.merchant-note{font-weight:700}</style></head><body><p class="merchant-note">Hi {customer_name}</p></body></html>' });
         expect(html.match(/<html /g)).toHaveLength(1);
         expect(html).toContain('.merchant-note{font-weight:700}');
         expect(html).toContain('Hi Alex');
-        expect(html).toContain(EMAIL_BRAND.logo);
-        expect(html).toContain(EMAIL_BRAND.address);
-        expect(reviewRequestEmailPlainText(request)).toContain(EMAIL_BRAND.address);
+        expect(html).not.toContain(EMAIL_BRAND.logo);
+        expect(html).not.toContain(EMAIL_BRAND.address);
+        expect(reviewRequestEmailPlainText(request)).not.toContain(EMAIL_BRAND.address);
+    });
+
+    it("shows the review link as a plain visible link, not a button", () => {
+        const html = reviewRequestEmail(request);
+        expect(html).toContain('>https://collectratings.com/r/example?request=synthetic&amp;source=email</a>');
+        expect(html).not.toContain("email-cta");
     });
 
     it("preserves a merchant's own company details in custom text rather than truncating the message", () => {

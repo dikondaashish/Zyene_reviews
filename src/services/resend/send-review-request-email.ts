@@ -6,8 +6,18 @@ import { buildFromLine, sendEmail } from "./send-email";
 
 const DEFAULT_COLLECT_FROM = "CollectRatings <hello@send.collectratings.com>";
 
-function getCollectratingsFrom(): string {
-    return process.env.RESEND_COLLECTRATINGS_FROM?.trim() || DEFAULT_COLLECT_FROM;
+/**
+ * We deliver on the business's behalf, so the display name is the business
+ * (then the sender) on the verified CollectRatings mailbox.
+ * e.g. "Willow Hair Studio <hello@send.collectratings.com>"
+ */
+export function collectratingsFromLine(businessName?: string | null, senderName?: string | null): string {
+    const fallback = process.env.RESEND_COLLECTRATINGS_FROM?.trim() || DEFAULT_COLLECT_FROM;
+    const display = (businessName || "").trim() || (senderName || "").trim();
+    const mailbox = fallback.match(/<([^>]+)>/)?.[1];
+    if (!display || !mailbox) return fallback;
+    // No quotes/angle brackets/newlines so the header cannot break.
+    return `${display.replace(/["<>\r\n]/g, "").slice(0, 78)} <${mailbox}>`;
 }
 
 type SendReviewRequestEmailProps = {
@@ -17,10 +27,7 @@ type SendReviewRequestEmailProps = {
     text?: string;
     /** Business mailbox so replies go to the merchant, not CollectRatings. */
     replyTo?: string | null;
-    /**
-     * Only used when `RESEND_COLLECTRATINGS_API_KEY` is unset (legacy Zyene From).
-     * Prefer CollectRatings From once the second Resend account is configured.
-     */
+    /** From display name: business first, then sender (both accounts). */
     fallbackSenderName?: string | null;
     fallbackBusinessName?: string | null;
     /** Signed per-request unsubscribe URL (adds List-Unsubscribe + one-click headers). */
@@ -79,7 +86,7 @@ export async function sendReviewRequestEmail({
 
     try {
         const { data, error } = await resendCollectratings.emails.send({
-            from: getCollectratingsFrom(),
+            from: collectratingsFromLine(fallbackBusinessName, fallbackSenderName),
             to,
             subject,
             html,

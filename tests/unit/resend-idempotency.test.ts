@@ -56,6 +56,13 @@ describe("Resend provider-side replay protection", () => {
         expect(body.reply_to).toEqual(["merchant@example.test"]);
         expect(body.text).toBe("Share your experience");
     });
+    it("sends review requests from the business name on the CollectRatings mailbox", async () => {
+        vi.stubEnv("RESEND_COLLECTRATINGS_API_KEY", "re_synthetic_collect_only");
+        await sendReviewRequestEmail({ to: "fixture@example.test", subject: "Feedback", html: "<p>Hi</p>",
+            fallbackBusinessName: 'The "Budget" <Wheels>', fallbackSenderName: "Sam" });
+        const body = JSON.parse(String(fetchMock.mock.calls[0][1].body));
+        expect(body.from).toBe("The Budget Wheels <hello@send.collectratings.com>");
+    });
     it("delivers generated plain text with action URLs through the real SDK", async () => {
         await sendEmail({ to: "fixture@example.test", subject: "Fixture",
             html: '<p>Hello</p><p><a href="https://example.test/dashboard?a=1&amp;b=2">Open dashboard</a></p>' });
