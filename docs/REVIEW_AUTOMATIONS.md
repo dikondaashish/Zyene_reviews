@@ -209,4 +209,6 @@ On 2026-10-21 these returned: 21 businesses with email `false`, 0 active reminde
 - **Viewer edit error:** a viewer editing business settings got a 500 instead of a 403.
 - **Local links:** review links built on localhost used `/<slug>` instead of `/r/<slug>`. Production links are unchanged.
 
-**Not run at runtime:** real SMS (no Twilio test credentials), posting a reply to a real Google review (no test Google location), and inbound mail through a real Resend receiving domain (needs setup, section 7). These paths are covered by unit tests only.
+**Not run at runtime:** real SMS (no Twilio test credentials) and posting a reply to a real Google review (no test Google location). These paths are covered by unit tests only.
+
+**Inbound email, production (2026-10-21):** an invoice copy from the allowed sender `support@zyene.com` (Zoho), To `delivered@resend.dev`, Cc the Zyene business address, went through `inbound.zyenereviews.com`. The first try was ignored ("No customer recipient found") because the webhook payload omits off-domain recipients, which is fixed by the header lookup. The retest (event `31971c49…`) was recorded `enrolled`, with 1 candidate and 1 pending row in the paused test campaign `DRIP_PHASE1_TEST_WITH_STEP3`, so nothing sends.
