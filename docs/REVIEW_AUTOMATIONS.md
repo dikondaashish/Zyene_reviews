@@ -133,6 +133,16 @@ Apply in order (all additive, idempotent, no data deleted):
 2. `20261021100000_review_reply_rules.sql`: rules, templates, approvers, drafts (rules are off for everyone).
 3. `20261021110000_enrollment_imports.sql`
 4. `20261021120000_inbound_email_enrollment.sql`
+5. `20261021130000_revoke_anon_review_request_ledgers.sql`: removes logged-out read access from the message ledger and unsubscribes (RLS already returned no rows).
+
+**Applied to production on 2026-10-21** (all five, in order). Verified afterwards:
+- all 10 new tables have RLS
+- clients cannot write the ledger, drafts, imports or inbound tables; `anon` cannot read any of them
+- the stats triggers are in place, and the refresh function is not client-callable
+- all 22 businesses have email on (default `TRUE`)
+- campaign counters match the request rows
+- no queued sends or active reminders were affected
+- Supabase security advisors flag nothing new
 
 **Deploy the code in the same window.** The new code reads the new columns and tables. The old code ignores them, so applying migrations first is safe.
 

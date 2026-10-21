@@ -123,4 +123,6 @@ SELECT test.assert_true((SELECT count(*) FROM public.review_reply_drafts) = 1, '
 RESET ROLE;
 SET ROLE anon;
 SELECT test.expect_denied($cmd$SELECT * FROM public.review_reply_drafts$cmd$);
+SELECT test.expect_denied($cmd$SELECT * FROM public.review_request_messages$cmd$);
+SELECT test.expect_denied($cmd$SELECT * FROM public.review_request_email_unsubscribes$cmd$);
 RESET ROLE;

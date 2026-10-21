@@ -14,6 +14,7 @@ const migrations = [
     "20261021100000_review_reply_rules.sql",
     "20261021110000_enrollment_imports.sql",
     "20261021120000_inbound_email_enrollment.sql",
+    "20261021130000_revoke_anon_review_request_ledgers.sql",
 ];
 
 function docker(args, input) {
