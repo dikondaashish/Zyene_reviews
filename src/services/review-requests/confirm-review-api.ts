@@ -1,5 +1,4 @@
 import { z } from "zod";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
@@ -22,9 +21,7 @@ export async function handleConfirmReview(request: Request, requestId: string) {
         const parsed = bodySchema.safeParse(await request.json());
         if (!parsed.success) throw new ApiRouteError("Invalid payload", { status: 400 });
         const { supabase, user } = await requireUser();
-
-        // Untyped until database.types.ts is regenerated with the review confirmation columns.
-        const admin: SupabaseClient = createAdminClient();
+        const admin = createAdminClient();
         const { data: row, error } = await admin.from("review_requests")
             .select("id, business_id, review_confirmed_at, review_confirmation_source")
             .eq("id", requestId).maybeSingle();

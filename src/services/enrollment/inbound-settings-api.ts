@@ -65,7 +65,7 @@ export async function handlePutInboundSettings(request: Request) {
         if (enabled && (!campaignId || allowedSenders.length === 0)) {
             throw new ApiRouteError("Choose a campaign and add at least one allowed sender before turning this on", { status: 400 });
         }
-        const admin: SupabaseClient = createAdminClient();
+        const admin = createAdminClient();
         if (campaignId) {
             const { data: campaign } = await admin.from("campaigns").select("id").eq("id", campaignId).eq("business_id", businessId).maybeSingle();
             if (!campaign) throw new ApiRouteError("Campaign not found", { status: 400 });

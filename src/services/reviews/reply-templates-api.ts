@@ -32,7 +32,7 @@ export async function handleCreateReplyTemplate(request: Request) {
         const parsed = createSchema.safeParse(await request.json());
         if (!parsed.success) throw new ApiRouteError("Template needs a name and a reply of at least 3 characters", { status: 400 });
         await authorize(parsed.data.businessId);
-        const admin: SupabaseClient = createAdminClient();
+        const admin = createAdminClient();
         const { data, error } = await admin.from("review_reply_templates")
             .insert({ business_id: parsed.data.businessId, name: parsed.data.name, body: parsed.data.body })
             .select("id, name, body").single();
@@ -54,7 +54,7 @@ export async function handleUpdateReplyTemplate(request: Request, id: string) {
     try {
         const parsed = templateSchema.safeParse(await request.json());
         if (!parsed.success) throw new ApiRouteError("Template needs a name and a reply of at least 3 characters", { status: 400 });
-        const admin: SupabaseClient = createAdminClient();
+        const admin = createAdminClient();
         const businessId = await loadTemplateBusiness(admin, id);
         await authorize(businessId);
         const { data, error } = await admin.from("review_reply_templates")
@@ -69,7 +69,7 @@ export async function handleUpdateReplyTemplate(request: Request, id: string) {
 
 export async function handleDeleteReplyTemplate(id: string) {
     try {
-        const admin: SupabaseClient = createAdminClient();
+        const admin = createAdminClient();
         const businessId = await loadTemplateBusiness(admin, id);
         await authorize(businessId);
         // Rules using it fall back to "approval" (FK sets template_id to NULL).

@@ -57,7 +57,7 @@ export async function handleResendInbound(request: Request) {
     const token = recipients.map((r) => parseAddress(r)?.email).filter(Boolean)
         .map((e) => inboundToken(e as string, inboundDomain)).find(Boolean) ?? null;
 
-    const admin: SupabaseClient = createAdminClient();
+    const admin = createAdminClient();
     const sender = parseAddress(from);
     // Claim the event first: Resend retries and duplicate deliveries are processed once.
     const { error: claimError } = await admin.from("inbound_email_events")

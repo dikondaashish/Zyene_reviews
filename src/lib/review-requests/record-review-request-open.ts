@@ -1,4 +1,3 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { terminateReviewRequestDrip } from "@/lib/campaigns/terminate-drip";
@@ -18,8 +17,7 @@ export async function recordReviewRequestOpenForRef(args: {
 }): Promise<{ ok: true } | { ok: false; reason: string }> {
     const { businessId, requestId } = args;
     const nowIso = new Date().toISOString();
-    // Untyped until database.types.ts is regenerated with campaigns.stop_on_click.
-    const supabase: SupabaseClient = createAdminClient();
+    const supabase = createAdminClient();
 
     const { data: existing, error: lookupError } = await supabase
         .from("review_requests")

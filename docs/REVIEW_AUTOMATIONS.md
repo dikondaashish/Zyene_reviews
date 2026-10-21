@@ -119,7 +119,6 @@ Automations page → "Enroll customers from invoice emails".
 | `TWILIO_STATUS_CALLBACK_URL` (optional) | Delivery callbacks | Defaults to `${NEXT_PUBLIC_APP_URL}/api/webhooks/twilio/status` on https. Set it explicitly if the public URL differs, because the Twilio signature is checked against it |
 | Resend webhook on the CollectRatings account | Delivery / bounce events for review-request email | Review-request email is sent from the CollectRatings Resend account; its webhook must also point at `/api/webhooks/resend`, signed with `RESEND_WEBHOOK_SECRET` |
 | Vercel crons | Scheduled-send backstop and enrollment | `vercel.json` adds `scheduled-review-requests` (every 5 min) and `enrollment-imports` (every 15 min). Needs a Vercel plan that allows sub-daily crons. The follow-up reminder cron already runs every 15 min on cron-job.org |
-| Regenerate `src/lib/db/supabase/database.types.ts` | Typing | After applying the migrations, run `supabase gen types`. New code uses the untyped client for new columns until then |
 
 ## 8. Production migration runbook
 
@@ -143,6 +142,8 @@ Apply in order (all additive, idempotent, no data deleted):
 - campaign counters match the request rows
 - no queued sends or active reminders were affected
 - Supabase security advisors flag nothing new
+
+`database.types.ts` was regenerated from the live schema afterwards (no tables, columns or functions removed; 40 tables added that had never been captured). The new code now uses the typed client.
 
 **Deploy the code in the same window.** The new code reads the new columns and tables. The old code ignores them, so applying migrations first is safe.
 

@@ -1,4 +1,3 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { inngest } from "@/services/inngest/client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
@@ -50,7 +49,7 @@ export const processCampaignContact = inngest.createFunction(
             if (error || !data) throw error ?? new Error("Failed to create campaign request");
             if (job.importRowId) {
                 // Link the import row to its request so the import report shows the real outcome.
-                await (admin as unknown as SupabaseClient).from("enrollment_import_rows").update({ review_request_id: data.id })
+                await admin.from("enrollment_import_rows").update({ review_request_id: data.id })
                     .eq("id", job.importRowId).eq("business_id", job.businessId);
             }
             return data;

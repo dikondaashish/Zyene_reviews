@@ -1,5 +1,4 @@
 import { z } from "zod";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
@@ -35,7 +34,7 @@ function fail(error: unknown, fallback: string) {
 async function authorizedCampaign(campaignId: string, write: boolean) {
     if (!z.uuid().safeParse(campaignId).success) throw new ApiRouteError("Campaign not found", { status: 404 });
     const { supabase, user } = await requireUser();
-    const admin: SupabaseClient = createAdminClient();
+    const admin = createAdminClient();
     const { data: campaign } = await admin.from("campaigns").select("id, business_id, channel, status").eq("id", campaignId).maybeSingle();
     if (!campaign || !(await userCanAccessBusiness(supabase, user.id, campaign.business_id, write))) {
         throw new ApiRouteError("Campaign not found", { status: 404 });

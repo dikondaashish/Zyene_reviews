@@ -69,7 +69,7 @@ export async function handlePutReplyRules(request: Request) {
         if (!(await canManageBusinessIntegration(supabase, user.id, businessId))) {
             throw new ApiRouteError("Only owners, admins and managers can change reply rules", { status: 403 });
         }
-        const admin: SupabaseClient = createAdminClient();
+        const admin = createAdminClient();
         const { data: business } = await admin.from("businesses")
             .select("reply_rules_enabled, organizations(plan, plan_status)").eq("id", businessId).maybeSingle();
         const org = (Array.isArray(business?.organizations) ? business?.organizations[0] : business?.organizations) as { plan?: string; plan_status?: string } | null;

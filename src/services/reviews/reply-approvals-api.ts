@@ -32,7 +32,7 @@ export async function handleListReplyApprovals(request: Request) {
         if (!businessId.success) throw new ApiRouteError("Invalid business", { status: 400 });
         const { supabase, user } = await requireUser();
         if (!(await userCanAccessBusiness(supabase, user.id, businessId.data))) throw new ApiRouteError("Forbidden", { status: 403 });
-        const admin: SupabaseClient = createAdminClient();
+        const admin = createAdminClient();
         const { data, error } = await admin.from("review_reply_drafts")
             .select("id, review_id, rating, draft_text, source, status, error, created_at, reviews(author_name, rating, text, review_date)")
             .eq("business_id", businessId.data).in("status", ["pending", "failed"]).order("created_at", { ascending: false }).limit(50);
@@ -52,7 +52,7 @@ export async function handleDecideReplyApproval(request: Request, draftId: strin
         const parsed = decideSchema.safeParse(await request.json());
         if (!parsed.success) throw new ApiRouteError("Invalid payload", { status: 400 });
         const { supabase, user } = await requireUser();
-        const admin: SupabaseClient = createAdminClient();
+        const admin = createAdminClient();
         const { data: draft } = await admin.from("review_reply_drafts")
             .select("id, business_id, review_id, draft_text, status").eq("id", draftId).maybeSingle();
         // Same 404 for missing and other-tenant drafts.

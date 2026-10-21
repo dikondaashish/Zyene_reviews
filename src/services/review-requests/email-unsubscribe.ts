@@ -1,5 +1,4 @@
 import { z } from "zod";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { normalizeCustomerEmail } from "@/lib/customers/identity";
 import { verifyUnsubscribe } from "@/lib/review-requests/unsubscribe-token";
@@ -28,7 +27,7 @@ export async function resolveUnsubscribeTarget(ref: unknown, sig: unknown): Prom
 }
 
 export async function applyUnsubscribe(target: UnsubscribeTarget, source: "link" | "one_click"): Promise<void> {
-    const admin: SupabaseClient = createAdminClient();
+    const admin = createAdminClient();
     const { error } = await admin.from("review_request_email_unsubscribes")
         .upsert({ business_id: target.businessId, email: target.email, source }, { onConflict: "business_id,email", ignoreDuplicates: true });
     if (error) throw error;
