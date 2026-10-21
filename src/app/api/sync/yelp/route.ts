@@ -1,10 +1,14 @@
+import { z } from "zod";
 import { logger } from "@/lib/logger";
 import { syncYelpReviewsForPlatform } from "@/services/yelp/sync-service";
 import { syncRateLimit } from "@/lib/auth/rate-limit";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import { ApiRouteError, isHandledApiClientError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
-import type { SyncMemberOrganizationData } from "@/types/api-routes";
+
+const syncBodySchema = z.object({ businessId: z.string().uuid().optional() });
 
 export async function POST(request: Request) {
     try {
@@ -19,30 +23,23 @@ export async function POST(request: Request) {
             });
         }
 
-        // 1. Get Yelp Platform ID
-        const { data: memberData, error: membError } = await supabase
-            .from("organization_members")
-            .select(`
-                organization_id,
-                organizations (
-                    businesses (
-                        id,
-                        review_platforms!inner(id, platform)
-                    )
-                )
-            `)
-            .eq("user_id", user.id)
-            .single();
-
-        if (membError || !memberData) {
+        // 1. Resolve the business: explicit body value, else the business selected in the header
+        const parsed = syncBodySchema.safeParse(await request.json().catch(() => ({})));
+        if (!parsed.success) {
+            throw new ApiRouteError("Invalid businessId", { status: 400, code: "INVALID_BUSINESS_ID" });
+        }
+        const businessId = parsed.data.businessId ?? (await getActiveBusinessId()).businessId;
+        if (!businessId || !(await canManageBusinessIntegration(supabase, user.id, businessId))) {
             throw new ApiRouteError("Business not found", { status: 404, code: "BUSINESS_NOT_FOUND" });
         }
 
-        const memberTyped = memberData as SyncMemberOrganizationData;
-        const business = memberTyped.organizations?.businesses?.[0];
-        if (!business) throw new ApiRouteError("Business record missing", { status: 404, code: "BUSINESS_NOT_FOUND" });
-
-        const platform = business.review_platforms?.find((reviewPlatform) => reviewPlatform.platform === "yelp");
+        // 2. Get Yelp Platform ID
+        const { data: platform } = await supabase
+            .from("review_platforms")
+            .select("id")
+            .eq("business_id", businessId)
+            .eq("platform", "yelp")
+            .maybeSingle();
         if (!platform) {
             throw new ApiRouteError("Yelp platform not connected", {
                 status: 404,
@@ -50,7 +47,7 @@ export async function POST(request: Request) {
             });
         }
 
-        // 2. Call Sync Service
+        // 3. Call Sync Service
         const result = await syncYelpReviewsForPlatform(platform.id);
 
         return apiOk(result);

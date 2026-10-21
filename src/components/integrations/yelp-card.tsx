@@ -13,6 +13,7 @@ export function YelpIntegrationCard(props: YelpCardProps) {
         return (
             <YelpIntegrationCardConnected
                 platform={s.platform}
+                businessId={s.businessId}
                 mounted={s.mounted}
                 yelpSyncedCount={s.yelpSyncedCount}
                 isSyncing={s.isSyncing}

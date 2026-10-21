@@ -4,7 +4,6 @@ import { Star, CheckCircle2, RefreshCw, Clock, AlertTriangle } from "lucide-reac
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
-import { toast } from "sonner";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -18,9 +17,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import type { IntegrationPlatformSummary } from "@/types/components";
 import { YelpCardIcon } from "./yelp-card-icon";
+import { postYelpReviewSync } from "./yelp-card-sync-api";
 
 interface YelpIntegrationCardConnectedProps {
     platform: IntegrationPlatformSummary;
+    businessId: string;
     mounted: boolean;
     yelpSyncedCount: number;
     isSyncing: boolean;
@@ -31,6 +32,7 @@ interface YelpIntegrationCardConnectedProps {
 
 export function YelpIntegrationCardConnected({
     platform,
+    businessId,
     mounted,
     yelpSyncedCount,
     isSyncing,
@@ -92,24 +94,9 @@ export function YelpIntegrationCardConnected({
                     className="h-7 text-xs"
                     onClick={async () => {
                         setIsSyncing(true);
-                        try {
-                            const res = await fetch("/api/cron/sync-reviews");
-                            const data = await res.json().catch(() => ({}));
-
-                            if (!res.ok) {
-                                const msg = data.error || "Sync failed";
-                                const details = data.details;
-                                toast.error(msg, { description: details });
-                                return;
-                            }
-
-                            toast.success("Sync triggered");
-                            router.refresh();
-                        } catch {
-                            toast.error("Sync failed");
-                        } finally {
-                            setIsSyncing(false);
-                        }
+                        const { ok } = await postYelpReviewSync(businessId);
+                        if (ok) router.refresh();
+                        setIsSyncing(false);
                     }}
                     disabled={isSyncing}
                 >
