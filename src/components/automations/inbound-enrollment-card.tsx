@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import type { InboundSettings } from "@/services/enrollment/inbound-settings-api";
 
-/** Invoice-copy enrollment: CC/BCC a unique address on invoices to enroll the customer. */
+/** Invoice-copy enrollment: BCC a unique address on invoices to enroll the customer. */
 export function InboundEnrollmentCard({
     businessId, initial, campaigns, canManage,
 }: {
@@ -21,6 +21,16 @@ export function InboundEnrollmentCard({
     const [senders, setSenders] = useState(initial.allowedSenders.join("\n"));
     const [pending, startTransition] = useTransition();
     const disabled = !canManage || pending;
+
+    const copyAddress = async () => {
+        if (!initial.address) return;
+        try {
+            await navigator.clipboard.writeText(initial.address);
+            toast.success("Address copied");
+        } catch {
+            toast.error("Could not copy. Select the address and copy it instead.");
+        }
+    };
 
     const save = () => startTransition(async () => {
         const response = await fetch("/api/settings/inbound-enrollment", {
@@ -43,7 +53,7 @@ export function InboundEnrollmentCard({
                 <div>
                     <h2 className="ui-section-title">Enroll customers from invoice emails</h2>
                     <p className="text-sm text-muted-foreground max-w-2xl">
-                        CC or BCC your enrollment address on invoices or receipts. The customer is added to the chosen campaign (a few per day).
+                        Add your enrollment address as BCC on invoices or receipts. The customer is added to the chosen campaign (a few per day).
                         Only mail from your allowed senders counts; your team, your business and your own domain are never enrolled. We keep
                         only the addresses, never the invoice.
                     </p>
@@ -55,7 +65,18 @@ export function InboundEnrollmentCard({
                     Not available yet: inbound email isn&apos;t set up on this account. Your settings are saved, but no email can arrive until it is.
                 </p>
             )}
-            {initial.address && <p className="text-sm">Your address: <code className="rounded bg-muted px-1">{initial.address}</code></p>}
+            {initial.address && (
+                <div className="space-y-1">
+                    <div className="flex flex-wrap items-center gap-2 text-sm">
+                        <span>Your address:</span>
+                        <code className="break-all rounded bg-muted px-1">{initial.address}</code>
+                        <Button type="button" variant="outline" size="sm" onClick={copyAddress}>Copy</Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                        Paste it once into your invoicing tool&apos;s BCC setting. BCC keeps it hidden from your customers.
+                    </p>
+                </div>
+            )}
             <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1">
                     <Label htmlFor="inbound-campaign">Campaign</Label>
@@ -68,8 +89,11 @@ export function InboundEnrollmentCard({
                 <div className="space-y-1">
                     <Label htmlFor="inbound-senders">Allowed senders</Label>
                     <Textarea id="inbound-senders" rows={3} value={senders} disabled={disabled} onChange={(e) => setSenders(e.target.value)}
-                        placeholder={"billing@yourshop.com\n@yourinvoicing.com"} />
-                    <p className="text-xs text-muted-foreground">One per line: an exact address, or @domain for a whole domain.</p>
+                        placeholder={"you@gmail.com\nbilling@yourshop.com"} />
+                    <p className="text-xs text-muted-foreground">
+                        One per line: an exact address (Gmail and Outlook are fine), or @yourdomain.com for your own domain.
+                        Invoicing tools send from their own address, so add that too (for example QuickBooks&apos; sender).
+                    </p>
                 </div>
             </div>
             {canManage && <Button onClick={save} disabled={pending}>Save</Button>}

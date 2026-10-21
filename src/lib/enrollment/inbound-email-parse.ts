@@ -49,10 +49,12 @@ export function domainOf(email: string): string {
     return email.split("@")[1]?.toLowerCase() ?? "";
 }
 
-/** The business token from an address like reviews-<token>@<inboundDomain>. */
-export function inboundToken(email: string, inboundDomain: string): string | null {
-    const match = /^reviews-([a-z0-9]{16,40})@(.+)$/i.exec(email.trim());
-    return match && match[2].toLowerCase() === inboundDomain.toLowerCase() ? match[1].toLowerCase() : null;
+export { inboundToken } from "@/lib/enrollment/inbound-address";
+
+/** "@gmail.com"-style entries would let anyone on that provider through; require the exact address. */
+export function isPublicProviderEntry(entry: string): boolean {
+    const e = entry.trim().toLowerCase();
+    return e.startsWith("@") && PUBLIC_EMAIL_DOMAINS.has(e.slice(1));
 }
 
 /** Allowed senders are exact emails or "@domain" entries (exact domain, no subdomains). */
@@ -70,10 +72,11 @@ export function normalizeAllowedSenders(entries: string[]): string[] {
 }
 
 export function pickCustomerRecipients(recipients: string[], context: {
-    inboundDomain: string; senderEmail: string; allowedSenders: string[]; excludedEmails: string[];
+    inboundDomain: string | string[]; senderEmail: string; allowedSenders: string[]; excludedEmails: string[];
 }): ParsedAddress[] {
     const sender = context.senderEmail.toLowerCase();
     const excluded = new Set(context.excludedEmails.map((e) => e.toLowerCase()));
+    const ownDomains = (Array.isArray(context.inboundDomain) ? context.inboundDomain : [context.inboundDomain]).map((d) => d.toLowerCase());
     const allowedDomains = context.allowedSenders.filter((e) => e.startsWith("@")).map((e) => e.slice(1).toLowerCase());
     const seen = new Set<string>();
     const result: ParsedAddress[] = [];
@@ -82,7 +85,7 @@ export function pickCustomerRecipients(recipients: string[], context: {
         if (!parsed || seen.has(parsed.email)) continue;
         seen.add(parsed.email);
         const domain = domainOf(parsed.email);
-        if (domain === context.inboundDomain.toLowerCase()) continue; // our inbound address
+        if (ownDomains.includes(domain)) continue; // our inbound address
         if (parsed.email === sender) continue;
         if (domain === domainOf(sender) && !PUBLIC_EMAIL_DOMAINS.has(domain)) continue; // sender's colleagues
         if (excluded.has(parsed.email) || senderAllowed(parsed.email, context.allowedSenders) || allowedDomains.includes(domain)) continue; // staff
