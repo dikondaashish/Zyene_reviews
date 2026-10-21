@@ -19,6 +19,27 @@ export function parseAddress(raw: string | null | undefined): ParsedAddress | nu
     return { email, name: name ? name.slice(0, 200) : null };
 }
 
+/** Split an RFC 5322 address-list header ("A <a@x>, \"B, Jr\" <b@y>") into single addresses. */
+export function splitAddressList(header: string | null | undefined): string[] {
+    const parts: string[] = [];
+    let current = "";
+    let quoted = false;
+    let angle = false;
+    for (const ch of header ?? "") {
+        if (ch === "\"") quoted = !quoted;
+        else if (!quoted && ch === "<") angle = true;
+        else if (!quoted && ch === ">") angle = false;
+        if ((ch === "," || ch === ";") && !quoted && !angle) {
+            if (current.trim()) parts.push(current.trim());
+            current = "";
+        } else {
+            current += ch;
+        }
+    }
+    if (current.trim()) parts.push(current.trim());
+    return parts;
+}
+
 export function domainOf(email: string): string {
     return email.split("@")[1]?.toLowerCase() ?? "";
 }

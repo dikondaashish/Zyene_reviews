@@ -6,7 +6,7 @@ vi.mock("@/lib/db/supabase/admin", () => ({ createAdminClient: mocks.admin }));
 vi.mock("@/lib/logger", () => ({ logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn() } }));
 import { summarizeImportRows, validateImportRows } from "@/lib/enrollment/validate-import-rows";
 import { runEnrollmentImports } from "@/services/enrollment/run-enrollment-imports";
-import { inboundToken, pickCustomerRecipients, senderAllowed } from "@/lib/enrollment/inbound-email-parse";
+import { inboundToken, pickCustomerRecipients, senderAllowed, splitAddressList } from "@/lib/enrollment/inbound-email-parse";
 import { handleResendInbound } from "@/services/webhooks/resend-inbound";
 import { createFakeDb, type FakeDb } from "./helpers/fake-supabase";
 
@@ -99,6 +99,8 @@ describe("invoice-copy email enrollment", () => {
         vi.resetAllMocks();
         vi.stubEnv("RESEND_INBOUND_WEBHOOK_SECRET", SECRET);
         vi.stubEnv("INBOUND_EMAIL_DOMAIN", "in.collectratings.test");
+        vi.stubEnv("RESEND_API_KEY", "");
+        vi.unstubAllGlobals();
         db = createFakeDb({
             inbound_email_events: [], enrollment_imports: [], enrollment_import_rows: [],
             business_inbound_addresses: [{ business_id: BIZ, address_token: TOKEN, enabled: true, campaign_id: CAMPAIGN,
@@ -143,5 +145,32 @@ describe("invoice-copy email enrollment", () => {
         await handleResendInbound(signed(event("e4", "billing@shop.test", ["pat@customer.test", `reviews-${TOKEN}@in.collectratings.test`])));
         expect(db.tables.enrollment_import_rows).toHaveLength(1);
         expect(db.tables.inbound_email_events.find((e) => e.provider_event_id === "e4")).toMatchObject({ status: "ignored" });
+    });
+
+    it("splits address-list headers without breaking quoted names", () => {
+        expect(splitAddressList("\"Lee, Pat\" <pat@customer.test>, sam@customer.test; <x@y.test>"))
+            .toEqual(["\"Lee, Pat\" <pat@customer.test>", "sam@customer.test", "<x@y.test>"]);
+        expect(splitAddressList(undefined)).toEqual([]);
+    });
+
+    it("reads the customer from the original To/Cc headers when the payload lists only our address", async () => {
+        vi.stubEnv("RESEND_API_KEY", "re_test");
+        const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+            headers: { to: "\"Pat Lee\" <pat@customer.test>", cc: `<reviews-${TOKEN}@in.collectratings.test>` },
+        })));
+        vi.stubGlobal("fetch", fetchMock);
+        const inbound = `reviews-${TOKEN}@in.collectratings.test`;
+        expect((await handleResendInbound(signed(event("e5", "billing@shop.test", [inbound], [inbound])))).status).toBe(200);
+        expect(fetchMock).toHaveBeenCalledWith("https://api.resend.com/emails/receiving/e5", expect.anything());
+        expect(db.tables.enrollment_import_rows).toEqual([expect.objectContaining({ email: "pat@customer.test", customer_name: "Pat Lee" })]);
+        expect(db.tables.inbound_email_events[0]).toMatchObject({ status: "enrolled", enrolled: 1 });
+    });
+
+    it("releases the event for retry when the header lookup fails", async () => {
+        vi.stubEnv("RESEND_API_KEY", "re_test");
+        vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("nope", { status: 503 })));
+        const inbound = `reviews-${TOKEN}@in.collectratings.test`;
+        expect((await handleResendInbound(signed(event("e6", "billing@shop.test", [inbound])))).status).toBe(500);
+        expect(db.tables.inbound_email_events).toEqual([]);
     });
 });

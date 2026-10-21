@@ -6,6 +6,7 @@ import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inboundToken, parseAddress, pickCustomerRecipients, senderAllowed } from "@/lib/enrollment/inbound-email-parse";
 import { enqueueInboundContacts, excludedStaffEmails } from "@/services/enrollment/inbound-enrollment";
+import { fetchReceivedRecipients } from "@/services/webhooks/resend-received-recipients";
 
 /**
  * Resend inbound ("email.received") webhook for invoice-copy enrollment. Svix-verified with
@@ -76,12 +77,14 @@ export async function handleResendInbound(request: Request) {
         return finish(admin, eventId, { ...base, status: "rejected", reason: "Sender is not on the allowed list" });
     }
 
-    const candidates = pickCustomerRecipients(recipients, {
-        inboundDomain, senderEmail: sender.email, allowedSenders: config.allowed_senders ?? [],
-        excludedEmails: await excludedStaffEmails(admin, config.business_id),
-    });
-    if (!candidates.length) return finish(admin, eventId, { ...base, status: "ignored", reason: "No customer recipient found" });
     try {
+        // The payload only lists our own domain's recipients; the customer is in the original headers.
+        const headerRecipients = (await fetchReceivedRecipients(eventId)) ?? [];
+        const candidates = pickCustomerRecipients([...recipients, ...headerRecipients], {
+            inboundDomain, senderEmail: sender.email, allowedSenders: config.allowed_senders ?? [],
+            excludedEmails: await excludedStaffEmails(admin, config.business_id),
+        });
+        if (!candidates.length) return finish(admin, eventId, { ...base, status: "ignored", reason: "No customer recipient found" });
         const enrolled = await enqueueInboundContacts(admin, {
             businessId: config.business_id, campaignId: config.campaign_id, ownerId: config.updated_by, contacts: candidates,
         });
@@ -90,7 +93,7 @@ export async function handleResendInbound(request: Request) {
             reason: enrolled > 0 ? null : "Already enrolled or campaign unavailable",
         });
     } catch (error) {
-        logger.error({ err: error, eventId }, "[resend-inbound] enrollment failed");
+        logger.error({ err: error, eventId }, "[resend-inbound] processing failed");
         // Allow Resend to retry: release the claim.
         await admin.from("inbound_email_events").delete().eq("provider_event_id", eventId);
         return NextResponse.json({ error: "Enrollment failed" }, { status: 500 });
