@@ -3,7 +3,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { smsLabel } from "@/lib/security/sms-label";
 import { dashboardRequestSms } from "@/lib/review-requests/dashboard-request-message";
-import { recoveryEmailTemplate } from "@/services/resend/templates/recovery-email";
+import { recoveryEmailPlainText, recoveryEmailTemplate } from "@/services/resend/templates/recovery-email";
+import { EMAIL_BRAND } from "@/lib/email/email-brand";
 
 describe("review request output encoding", () => {
     it("keeps customer and business labels on one SMS line without URL injection", () => {
@@ -27,6 +28,17 @@ describe("review request output encoding", () => {
         expect(html).not.toContain("<img src=x");
         expect(html).toContain("&lt;script&gt;");
         expect(html).toContain("&lt;img src=x onerror=alert(1)&gt;");
+    });
+
+    it("writes the recovery letter as the business, without Zyene branding", () => {
+        const props = { businessName: "Willow Hair Studio", customerName: "Linda Smith", senderName: "Sam" };
+        const html = recoveryEmailTemplate(props);
+        expect(html).not.toContain(EMAIL_BRAND.logo);
+        expect(html).not.toContain(EMAIL_BRAND.address);
+        expect(html).not.toContain("Zyene");
+        expect(recoveryEmailPlainText(props)).toContain("Hi Linda,");
+        expect(recoveryEmailPlainText(props)).toContain("Sam, Willow Hair Studio");
+        expect(recoveryEmailPlainText({ businessName: "Willow Hair Studio" })).toContain("The Willow Hair Studio team");
     });
 
     it("uses the safe label at every customer-name SMS interpolation", () => {
