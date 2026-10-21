@@ -10,9 +10,11 @@ import {
 
 const connectQuerySchema = z.object({ businessId: z.string().uuid() });
 
-// `pages_show_list` is required for /me/accounts to return the user's Pages.
+// `pages_show_list` is required for /me/accounts to return the user's Pages;
+// `business_management` for Pages the user reaches through a business portfolio.
 const FACEBOOK_SCOPES = [
     "pages_show_list",
+    "business_management",
     "pages_read_engagement",
     "pages_manage_metadata",
     "pages_read_user_content",
