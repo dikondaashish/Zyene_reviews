@@ -4,8 +4,8 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { clientIpFrom, publicFormRateLimit } from "@/lib/auth/rate-limit";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
 import { categorizePrivateFeedback } from "@/domains/ai/services/ai-analysis-service";
-import { sendEmail } from "@/services/resend/send-email";
-import { recoveryEmailTemplate } from "@/services/resend/templates/recovery-email";
+import { sendReviewRequestEmail } from "@/services/resend/send-review-request-email";
+import { recoveryEmailPlainText, recoveryEmailTemplate } from "@/services/resend/templates/recovery-email";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 import { verifyReviewTracking } from "@/lib/review-requests/tracking-token";
 import {
@@ -57,7 +57,7 @@ export async function handlePrivateFeedbackPost(request: Request) {
 
         const { data: reviewRequest, error: requestErr } = await supabase
             .from("review_requests")
-            .select("id, business_id, customer_name, businesses(name)")
+            .select("id, business_id, customer_name, businesses(name, email, sender_name)")
             .eq("id", review_request_id)
             .eq("business_id", business_id)
             .maybeSingle();
@@ -65,8 +65,10 @@ export async function handlePrivateFeedbackPost(request: Request) {
         if (requestErr || !reviewRequest) {
             return NextResponse.json({ error: "Invalid review request" }, { status: 404 });
         }
-        const businessData = reviewRequest.businesses as { name?: string } | null;
+        const businessData = reviewRequest.businesses as { name?: string; email?: string | null; sender_name?: string | null } | null;
         const businessName = businessData?.name;
+        const businessEmail = businessData?.email?.trim();
+        const senderName = businessData?.sender_name?.trim() || undefined;
         const customerName = reviewRequest.customer_name;
 
         const { data: bizPlanRow } = await supabase
@@ -155,13 +157,17 @@ export async function handlePrivateFeedbackPost(request: Request) {
         }).catch((err) => logger.error({ err: err }, "Failed to send private feedback alert:"));
 
         if (customer_email && businessName) {
-            sendEmail({
+            // Sent as the business (CollectRatings sender) so the customer's reply reaches the business.
+            const letter = { businessName, customerName: customerName || undefined, senderName };
+            sendReviewRequestEmail({
                 to: customer_email,
                 subject: `We're sorry about your experience at ${businessName.replace(/[\r\n]/g, " ")}`,
-                html: recoveryEmailTemplate({
-                    businessName,
-                    customerName: customerName || undefined,
-                }),
+                html: recoveryEmailTemplate(letter),
+                text: recoveryEmailPlainText(letter),
+                replyTo: businessEmail && EMAIL_RE.test(businessEmail) ? businessEmail : null,
+                fallbackBusinessName: businessName,
+                fallbackSenderName: senderName,
+                idempotencyKey: `private-feedback/${feedback.id}`,
             }).catch((err) => logger.error({ err: err }, "Failed to send automated recovery email:"));
         }
 

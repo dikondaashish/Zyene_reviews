@@ -79,7 +79,7 @@ export async function runSupportChatWeeklyReport(): Promise<{ sent: boolean; gap
     ]);
     const purged = await purgeOldConversations();
     const { subject, html } = supportChatReportEmail({ conversations, leads, feedback, gaps });
-    const result = await sendEmail({ to: reportInbox(), subject, html });
+    const result = await sendEmail({ stream: "forms", to: reportInbox(), subject, html });
     if (!result.sent) logger.error({ error: result.error }, "[support-chat] weekly report email failed");
     return { sent: result.sent, gaps: gaps.length, purged };
 }

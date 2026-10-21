@@ -27,7 +27,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ businessName, timezone: business.timezone || "UTC",
             sms: dashboardRequestSms(name, businessName, reviewLink),
             email: reviewRequestEmailPlainText({ customerName: name, businessName, reviewLink, senderName: business.sender_name || undefined }),
-            subject: reviewRequestSubject(businessName), remainingSms: sms.max === -1 ? null : sms.remaining,
+            subject: reviewRequestSubject(businessName, false, name), remainingSms: sms.max === -1 ? null : sms.remaining,
             remainingEmail: email.max === -1 ? null : email.remaining });
     } catch {
         return NextResponse.json({ error: "Could not prepare the preview. Try again." }, { status: 503 });

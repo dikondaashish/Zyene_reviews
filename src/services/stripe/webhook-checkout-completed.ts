@@ -143,6 +143,7 @@ export async function handleCheckoutSessionCompleted(
             const planName = plan?.name || "Starter";
 
             await sendEmail({
+                stream: "billing",
                 to: customerEmail,
                 idempotencyKey: `stripe-checkout:${session.id}`,
                 subject: isTrial

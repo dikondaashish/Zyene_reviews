@@ -2,6 +2,7 @@ import { emailHtmlToText } from "@/lib/email/html-to-text";
 import { EMAIL_BRAND } from "@/lib/email/email-brand";
 import { logger } from "@/lib/logger";
 import { resend } from "@/services/resend/client";
+import { streamFrom, type EmailStream } from "@/services/resend/email-streams";
 
 interface SendEmailProps {
     to: string | string[];
@@ -12,9 +13,11 @@ interface SendEmailProps {
     /**
      * Override the sender per-message. Must use a domain verified in Resend.
      * Example: `Wolfpack BBQ <notifications@zyenereviews.com>`.
-     * If omitted, falls back to RESEND_FROM env / default brand sender.
+     * If omitted, the `stream` sender is used.
      */
     from?: string;
+    /** Which Zyene sender to use when `from` is omitted. Default: notifications. */
+    stream?: EmailStream;
     /** Shown as Reply-To so the message reads as from the business, not bulk marketing. */
     replyTo?: string | string[];
     /** Custom MIME headers (e.g. Importance, Auto-Submitted). */
@@ -31,9 +34,7 @@ interface SendEmailProps {
  * Set `RESEND_FROM` to e.g. `Zyene Reviews <notifications@yourdomain.com>`.
  */
 function getDefaultFrom(): string {
-    const configured = process.env.RESEND_FROM?.trim();
-    if (configured) return configured;
-    return "Zyene Reviews <notifications@zyenereviews.com>";
+    return streamFrom("notifications");
 }
 
 /**
@@ -67,16 +68,19 @@ export function buildFromLine(input: { senderName?: string | null; businessName?
     return `${safeName} <${mailbox}>`;
 }
 
-export async function sendEmail({ to, subject, html, text, from, replyTo, headers, unsubscribeUrl, attachments, idempotencyKey }: SendEmailProps) {
+export async function sendEmail({ to, subject, html, text, from, stream, replyTo, headers, unsubscribeUrl, attachments, idempotencyKey }: SendEmailProps) {
     const apiKey = process.env.RESEND_API_KEY?.trim();
     if (!apiKey) {
         logger.error("Resend API Key missing");
         return { sent: false, error: "RESEND_API_KEY is not set on the server" };
     }
 
+    const sender = (from && from.trim()) || streamFrom(stream);
+    // Marketing comes from a person, so replies go back to that person; the rest to support.
+    const personalReply = stream === "marketing" ? sender.match(/<([^>]+)>/)?.[1] : undefined;
     const replyList =
         replyTo === undefined
-            ? [EMAIL_BRAND.support]
+            ? [personalReply || EMAIL_BRAND.support]
             : (Array.isArray(replyTo) ? replyTo : [replyTo]).filter((a) => typeof a === "string" && a.trim().length > 0);
     const replyToPayload = replyList.length > 0 ? { replyTo: replyList } : {};
 
@@ -88,7 +92,7 @@ export async function sendEmail({ to, subject, html, text, from, replyTo, header
 
     try {
         const { data, error } = await resend.emails.send({
-            from: (from && from.trim()) || getDefaultFrom(),
+            from: sender,
             to,
             subject,
             html,

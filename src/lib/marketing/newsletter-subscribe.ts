@@ -139,7 +139,7 @@ export async function processNewsletterSubscribe(
                 source === TEMPLATE_PACK_SOURCE
                     ? reviewRequestTemplatePackEmail({ unsubscribeUrl })
                     : newsletterWelcomeEmail({ email, unsubscribeUrl });
-            await sendEmail({ to: email, subject: mail.subject, html: mail.html,
+            await sendEmail({ stream: "marketing", to: email, subject: mail.subject, html: mail.html,
                 ...(subscriber?.id ? { unsubscribeUrl: `${marketingCanonicalUrl("/api/marketing/newsletter/unsubscribe")}?id=${subscriber.id}` } : {}),
             });
         } catch (err) {

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inboundToken, parseAddress, pickCustomerRecipients, senderAllowed } from "@/lib/enrollment/inbound-email-parse";
+import { inboundDomains } from "@/lib/enrollment/inbound-address";
 import { enqueueInboundContacts, excludedStaffEmails } from "@/services/enrollment/inbound-enrollment";
 import { fetchReceivedRecipients } from "@/services/webhooks/resend-received-recipients";
 
@@ -46,8 +47,9 @@ async function finish(admin: SupabaseClient, eventId: string, patch: Record<stri
 export async function handleResendInbound(request: Request) {
     const raw = await request.text();
     if (!verify(raw, request)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    const inboundDomain = process.env.INBOUND_EMAIL_DOMAIN?.trim().toLowerCase();
-    if (!inboundDomain) return NextResponse.json({ error: "Inbound enrollment is not configured" }, { status: 503 });
+    // Current domain plus any older ones, so addresses already pasted into invoicing tools keep working.
+    const inboundDomain = inboundDomains();
+    if (!inboundDomain.length) return NextResponse.json({ error: "Inbound enrollment is not configured" }, { status: 503 });
 
     let parsedJson: unknown;
     try { parsedJson = JSON.parse(raw); } catch { return NextResponse.json({ error: "Invalid JSON" }, { status: 400 }); }

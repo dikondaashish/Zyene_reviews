@@ -33,6 +33,7 @@ export async function handlePlaceTool(request: Request, kind: "review-link" | "r
                 const lead = await captureToolLead({ email, source: kind === "review-link" ? "tool_review_link" : "tool_reputation_score" });
                 if (lead.ok) {
                     const delivery = await sendEmail({
+                        stream: "marketing",
                         to: email,
                         subject: kind === "review-link" ? `Your Google review link for ${metrics.name}` : `Reputation snapshot: ${metrics.name}`,
                         html: kind === "review-link" ? reviewLinkEmailHtml(metrics.name, metrics.reviewLink) : reputationScoreEmailHtml(metrics),

@@ -50,6 +50,7 @@ export async function POST(request: Request) {
 
     try {
         await sendEmail({
+            stream: "forms",
             to: PARTNER_CONTACT_EMAIL,
             subject: `[Agency dashboard waitlist] ${agencyName || email}`,
             html: formNotificationEmail("Agency dashboard waitlist signup", { Email: email, Agency: agencyName || "Not provided", Clients: clientCount || "Not provided" }),

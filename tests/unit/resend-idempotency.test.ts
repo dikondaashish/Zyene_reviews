@@ -56,12 +56,29 @@ describe("Resend provider-side replay protection", () => {
         expect(body.reply_to).toEqual(["merchant@example.test"]);
         expect(body.text).toBe("Share your experience");
     });
-    it("sends review requests from the business name on the CollectRatings mailbox", async () => {
+    it("sends review requests as the person at the business on a per-business CollectRatings address", async () => {
         vi.stubEnv("RESEND_COLLECTRATINGS_API_KEY", "re_synthetic_collect_only");
         await sendReviewRequestEmail({ to: "fixture@example.test", subject: "Feedback", html: "<p>Hi</p>",
             fallbackBusinessName: 'The "Budget" <Wheels>', fallbackSenderName: "Sam" });
         const body = JSON.parse(String(fetchMock.mock.calls[0][1].body));
-        expect(body.from).toBe("The Budget Wheels <hello@send.collectratings.com>");
+        expect(body.from).toBe("Sam at The Budget Wheels <the-budget-wheels@send.collectratings.com>");
+    });
+    it("uses the business name alone when no sender is set", async () => {
+        vi.stubEnv("RESEND_COLLECTRATINGS_API_KEY", "re_synthetic_collect_only");
+        await sendReviewRequestEmail({ to: "fixture@example.test", subject: "Feedback", html: "<p>Hi</p>",
+            fallbackBusinessName: "Café Olé & Co." });
+        expect(JSON.parse(String(fetchMock.mock.calls[0][1].body)).from).toBe("Café Olé & Co. <cafe-ole-and-co@send.collectratings.com>");
+    });
+    it("sends each Zyene stream from its own address, with marketing replies going to the person", async () => {
+        await sendEmail({ to: "fixture@example.test", subject: "Fixture", html: "<p>Fixture</p>", stream: "billing" });
+        await sendEmail({ to: "fixture@example.test", subject: "Fixture", html: "<p>Fixture</p>", stream: "marketing" });
+        await sendEmail({ to: "fixture@example.test", subject: "Fixture", html: "<p>Fixture</p>", stream: "forms" });
+        const [billing, marketing, forms] = fetchMock.mock.calls.map((call) => JSON.parse(String(call[1].body)));
+        expect(billing.from).toBe("Zyene Reviews Billing <billing@zyenereviews.com>");
+        expect(billing.reply_to).toEqual(["support@zyenereviews.com"]);
+        expect(marketing.from).toBe("Ashish from Zyene <ashish@zyenereviews.com>");
+        expect(marketing.reply_to).toEqual(["ashish@zyenereviews.com"]);
+        expect(forms.from).toBe("Zyene Forms <forms@zyenereviews.com>");
     });
     it("delivers generated plain text with action URLs through the real SDK", async () => {
         await sendEmail({ to: "fixture@example.test", subject: "Fixture",

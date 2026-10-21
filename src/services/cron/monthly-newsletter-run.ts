@@ -93,6 +93,7 @@ async function deliverMonthlyNewsletter(
     unsubscribeUrl,
   });
   const result = await sendEmail({
+    stream: "marketing",
     to: subscriber.email,
     subject,
     html,

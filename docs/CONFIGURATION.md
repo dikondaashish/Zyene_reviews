@@ -73,7 +73,8 @@ Missing **required** vars accessed via `required()` throw at use/import time wit
 | `TWILIO_ACCOUNT_SID`, `AUTH_TOKEN` | SMS credentials |
 | `TWILIO_MESSAGING_SERVICE_SID` | Preferred SMS/RCS sender pool; supports SMS fallback |
 | `TWILIO_PHONE_NUMBER` | Legacy SMS sender fallback |
-| `RESEND_API_KEY`, `RESEND_FROM` | Product email |
+| `RESEND_API_KEY`, `RESEND_FROM` | Product email; `RESEND_FROM` is the notifications sender |
+| `RESEND_ACCOUNT_FROM`, `RESEND_BILLING_FROM`, `RESEND_MARKETING_FROM`, `RESEND_FORMS_FROM` | Optional per-stream senders (see `src/services/resend/email-streams.ts`); defaults `account@`, `billing@`, `ashish@`, `forms@zyenereviews.com` |
 | `SUPPORT_CHAT_LEAD_INBOX` | Optional. Inbox for website chat leads (default `zyene.inc@gmail.com`) |
 | `SUPPORT_CHAT_REPORT_INBOX` | Optional. Weekly website-chat report recipient (defaults to the lead inbox) |
 | `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `SLACK_SUPPORT_CHANNEL_ID` | Optional. Website chat live takeover; all three required, otherwise off. Setup: [SUPPORT_CHAT_SLACK_SETUP.md](./SUPPORT_CHAT_SLACK_SETUP.md) |

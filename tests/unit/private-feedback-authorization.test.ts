@@ -7,7 +7,7 @@ vi.mock("@/lib/auth/rate-limit", () => ({
 vi.mock("@/lib/db/supabase/admin", () => ({ createAdminClient: mocks.createAdminClient }));
 vi.mock("@/lib/notifications/review-alert", () => ({ sendReviewAlert: vi.fn() }));
 vi.mock("@/domains/ai/services/ai-analysis-service", () => ({ categorizePrivateFeedback: vi.fn() }));
-vi.mock("@/services/resend/send-email", () => ({ sendEmail: vi.fn() }));
+vi.mock("@/services/resend/send-review-request-email", () => ({ sendReviewRequestEmail: vi.fn() }));
 
 import { handlePrivateFeedbackPost } from "@/services/reviews/private-feedback-api";
 import { signReviewTracking } from "@/lib/review-requests/tracking-token";

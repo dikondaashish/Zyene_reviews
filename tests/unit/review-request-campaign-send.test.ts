@@ -51,9 +51,9 @@ describe("campaign / drip review request sender", () => {
         expect(dispatched()).toMatchObject({ step: 3, frequencyCap: "skip" });
     });
 
-    it("falls back to the default subject when the campaign has none", async () => {
+    it("falls back to the default subject, led by the customer's first name, when the campaign has none", async () => {
         await sendReviewRequest(admin, { ...base, contactMethods: ["email"], isFollowUp: true });
-        expect(dispatched().emailMessage.subject).toBe("Following up on your visit to Acme Dental");
+        expect(dispatched().emailMessage.subject).toBe("Sam, following up on your visit to Acme Dental");
     });
 
     it("strips HTML from a shared template for SMS instead of skipping the text", async () => {

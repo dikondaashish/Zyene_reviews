@@ -48,7 +48,7 @@ export async function executeImmediateSendReviewRequest(prepared: SendRequestPre
         typeof bizRow.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bizRow.email.trim())
             ? bizRow.email.trim()
             : undefined;
-    const subject = reviewRequestSubject(businessName);
+    const subject = reviewRequestSubject(businessName, false, displayName);
 
     const dispatched = await dispatchDashboardReviewChannels(admindClient, {
             requestId,

@@ -74,7 +74,7 @@ export async function sendOutboundReviewRequest(
     const senderName = (b.sender_name || "").trim() || undefined;
     const businessEmail =
         typeof b.email === "string" && isValidEmail(b.email.trim()) ? b.email.trim() : undefined;
-    const subject = reviewRequestSubject(businessName);
+    const subject = reviewRequestSubject(businessName, false, displayName);
 
     const dispatched = await dispatchOutboundReviewChannels(admin, {
         requestId,

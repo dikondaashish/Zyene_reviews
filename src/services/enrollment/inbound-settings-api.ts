@@ -1,4 +1,3 @@
-import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
@@ -8,7 +7,8 @@ import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integra
 import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
-import { normalizeAllowedSenders } from "@/lib/enrollment/inbound-email-parse";
+import { isPublicProviderEntry, normalizeAllowedSenders } from "@/lib/enrollment/inbound-email-parse";
+import { formatInboundAddress, newAddressToken } from "@/lib/enrollment/inbound-address";
 
 export type InboundSettings = {
     configured: boolean; address: string | null; enabled: boolean; campaignId: string | null; allowedSenders: string[];
@@ -34,7 +34,7 @@ export async function loadInboundSettings(admin: SupabaseClient, businessId: str
     return {
         // Without an inbound domain + webhook secret the address cannot receive mail: say so, don't fake it.
         configured: Boolean(domain && process.env.RESEND_INBOUND_WEBHOOK_SECRET),
-        address: data && domain ? `reviews-${data.address_token}@${domain}` : null,
+        address: data && domain ? formatInboundAddress(data.address_token as string, domain) : null,
         enabled: Boolean(data?.enabled), campaignId: (data?.campaign_id as string | null) ?? null,
         allowedSenders: (data?.allowed_senders as string[] | undefined) ?? [],
     };
@@ -61,6 +61,10 @@ export async function handlePutInboundSettings(request: Request) {
         if (!(await canManageBusinessIntegration(supabase, user.id, businessId))) {
             throw new ApiRouteError("Only owners, admins and managers can change email enrollment", { status: 403 });
         }
+        const publicEntry = parsed.data.allowedSenders.find(isPublicProviderEntry);
+        if (publicEntry) {
+            throw new ApiRouteError(`Add your exact address (like you${publicEntry.trim().toLowerCase()}) instead of all of ${publicEntry.trim()}`, { status: 400 });
+        }
         const allowedSenders = normalizeAllowedSenders(parsed.data.allowedSenders);
         if (enabled && (!campaignId || allowedSenders.length === 0)) {
             throw new ApiRouteError("Choose a campaign and add at least one allowed sender before turning this on", { status: 400 });
@@ -71,8 +75,9 @@ export async function handlePutInboundSettings(request: Request) {
             if (!campaign) throw new ApiRouteError("Campaign not found", { status: 400 });
         }
         const { data: existing } = await admin.from("business_inbound_addresses").select("address_token").eq("business_id", businessId).maybeSingle();
+        const { data: business } = existing ? { data: null } : await admin.from("businesses").select("slug, name").eq("id", businessId).maybeSingle();
         const { error } = await admin.from("business_inbound_addresses").upsert({
-            business_id: businessId, address_token: existing?.address_token ?? randomBytes(12).toString("hex"),
+            business_id: businessId, address_token: existing?.address_token ?? newAddressToken(business?.slug || business?.name || ""),
             enabled, campaign_id: campaignId, allowed_senders: allowedSenders, updated_by: user.id, updated_at: new Date().toISOString(),
         }, { onConflict: "business_id" });
         if (error) throw error;

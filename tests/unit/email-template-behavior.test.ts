@@ -20,8 +20,8 @@ describe("email content and fallback behavior", () => {
         expect(text.length).toBeGreaterThan(30);
         expect(text).not.toContain("@media");
         expect(text).not.toContain("<!--[if mso]");
-        // Review requests go out as the business, so they carry no Zyene branding.
-        const unbranded = preview.id === "aeo-report-white-label" || /^(review-request|campaign-)/.test(preview.id);
+        // Customer-facing mail (review requests, recovery) goes out as the business, so they carry no Zyene branding.
+        const unbranded = preview.id === "aeo-report-white-label" || /^(review-request|campaign-|recovery-)/.test(preview.id);
         if (unbranded) {
             expect(preview.html).not.toContain(EMAIL_BRAND.logo);
             if (preview.id !== "aeo-report-white-label") expect(preview.html).not.toContain(EMAIL_BRAND.address);

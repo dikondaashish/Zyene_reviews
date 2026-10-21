@@ -84,6 +84,7 @@ export async function handleSupportChatLeadPost(request: Request): Promise<Respo
     try {
         const { subject, html } = supportChatLeadEmail(lead);
         const result = await sendEmail({
+            stream: "forms",
             to: leadInbox(),
             subject,
             html,
