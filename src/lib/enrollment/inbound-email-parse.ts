@@ -8,6 +8,11 @@ export type ParsedAddress = { email: string; name: string | null };
 const EMAIL = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
 const NO_REPLY = /^(no-?reply|do-?not-?reply|mailer-daemon|postmaster|bounce[s]?|notifications?)@/i;
 export const MAX_RECIPIENTS_PER_EMAIL = 5;
+/** Shared mailbox providers: a customer on the sender's provider is not the sender's colleague. */
+const PUBLIC_EMAIL_DOMAINS = new Set([
+    "gmail.com", "googlemail.com", "outlook.com", "hotmail.com", "live.com", "msn.com", "yahoo.com", "ymail.com",
+    "icloud.com", "me.com", "mac.com", "aol.com", "proton.me", "protonmail.com", "gmx.com", "zoho.com", "mail.com",
+]);
 
 export function parseAddress(raw: string | null | undefined): ParsedAddress | null {
     const value = (raw ?? "").trim();
@@ -78,7 +83,8 @@ export function pickCustomerRecipients(recipients: string[], context: {
         seen.add(parsed.email);
         const domain = domainOf(parsed.email);
         if (domain === context.inboundDomain.toLowerCase()) continue; // our inbound address
-        if (parsed.email === sender || domain === domainOf(sender)) continue; // sender / their colleagues
+        if (parsed.email === sender) continue;
+        if (domain === domainOf(sender) && !PUBLIC_EMAIL_DOMAINS.has(domain)) continue; // sender's colleagues
         if (excluded.has(parsed.email) || senderAllowed(parsed.email, context.allowedSenders) || allowedDomains.includes(domain)) continue; // staff
         if (NO_REPLY.test(parsed.email)) continue;
         result.push(parsed);

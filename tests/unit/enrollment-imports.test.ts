@@ -147,6 +147,13 @@ describe("invoice-copy email enrollment", () => {
         expect(db.tables.inbound_email_events.find((e) => e.provider_event_id === "e4")).toMatchObject({ status: "ignored" });
     });
 
+    it("keeps customers on the sender's public mail provider but not company colleagues or staff", () => {
+        const context = { inboundDomain: "in.collectratings.test", senderEmail: "owner@gmail.com", allowedSenders: ["owner@gmail.com"], excludedEmails: ["staff@gmail.com"] };
+        expect(pickCustomerRecipients(["Pat <pat@gmail.com>", "staff@gmail.com", "owner@gmail.com"], context))
+            .toEqual([{ email: "pat@gmail.com", name: "Pat" }]);
+        expect(pickCustomerRecipients(["colleague@shop.test"], { ...context, senderEmail: "billing@shop.test" })).toEqual([]);
+    });
+
     it("splits address-list headers without breaking quoted names", () => {
         expect(splitAddressList("\"Lee, Pat\" <pat@customer.test>, sam@customer.test; <x@y.test>"))
             .toEqual(["\"Lee, Pat\" <pat@customer.test>", "sam@customer.test", "<x@y.test>"]);

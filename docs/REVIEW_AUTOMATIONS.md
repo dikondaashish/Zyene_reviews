@@ -108,7 +108,7 @@ Automations page → "Enroll customers from invoice emails".
 - **Webhook security:** `/api/webhooks/resend-inbound` verifies the Svix signature and processes each provider event once.
 - **Recipients:** Resend's `email.received` payload lists only recipients on the receiving domain in `to`/`cc`, so the webhook reads the original To/Cc headers from `GET /emails/receiving/{id}` (uses `RESEND_API_KEY`, the account that owns the receiving domain). If that lookup fails, the event claim is released and a 500 lets Resend retry.
 - **Senders:** only allow-listed senders count (exact address or `@domain`).
-- **Never enrolled:** the sender, the sender's domain, team members, the business's own address, no-reply mailboxes, and our inbound domain. At most 5 recipients per email are considered.
+- **Never enrolled:** the sender, the sender's company domain (not public providers like gmail.com or outlook.com, where customers share the domain), team members, the business's own address, no-reply mailboxes, and our inbound domain. At most 5 recipients per email are considered.
 - **Storage:** only addresses and the outcome are kept, never the subject, body or attachments.
 - **Sending:** customers go into the campaign's always-open enrollment stream (daily limit, same send checks). A customer already queued from an earlier invoice is not added again.
 
