@@ -1,6 +1,4 @@
 import { EMAIL_BRAND } from "@/lib/email/email-brand";
-import { emailCompanyPlainText } from "@/lib/email/email-brand";
-import { emailButton } from "@/lib/email/email-layout";
 import { emailHtmlToText } from "@/lib/email/html-to-text";
 import { escapeHtml } from "@/lib/security/html-escape";
 import { reviewRequestLayout } from "@/lib/email/review-request-layout";
@@ -41,7 +39,7 @@ export function reviewRequestEmailPlainText({
             .replace(/\{business_name\}/g, () => value(businessName))
             .replace(/\{review_link\}/g, () => value(reviewLink))
             .replace(/\{sender_name\}/g, () => value(sender));
-        return `${isHtml ? emailHtmlToText(rendered) : rendered}\n\n${emailCompanyPlainText()}`;
+        return isHtml ? emailHtmlToText(rendered) : rendered;
     }
 
     const intro = sender
@@ -60,14 +58,17 @@ export function reviewRequestEmailPlainText({
         "",
         "Thanks,",
         signoff,
-        "",
-        emailCompanyPlainText(),
     ].join("\n");
 }
 
+function plainLink(url: string): string {
+    const href = escapeHtml(url);
+    return `<a href="${href}" style="color:${EMAIL_BRAND.link};text-decoration:underline;word-break:break-all;">${href}</a>`;
+}
+
 /**
- * Minimal HTML for one-to-one review requests. Plain-text vibe, single link,
- * keeps the business sender prominent without marketing chrome.
+ * Plain personal HTML for one-to-one review requests, written as the business:
+ * a single visible link and no Zyene branding (we only deliver the message).
  */
 export function reviewRequestEmail({
     customerName,
@@ -84,11 +85,10 @@ export function reviewRequestEmail({
     }
 
     if (template) {
-        const text = reviewRequestEmailPlainText({ customerName, businessName, reviewLink, template, senderName })
-            .slice(0, -(`\n\n${emailCompanyPlainText()}`).length);
+        const text = reviewRequestEmailPlainText({ customerName, businessName, reviewLink, template, senderName });
         const href = escapeHtml(reviewLink);
         const escaped = escapeHtml(text).replace(/\n/g, "<br>");
-        const body = href ? escaped.split(href).join(`<a href="${href}" style="color:${EMAIL_BRAND.link};text-decoration:underline;word-break:break-all;">${href}</a>`) : escaped;
+        const body = href ? escaped.split(href).join(plainLink(reviewLink)) : escaped;
         return reviewRequestLayout(`<p style="margin:0;white-space:pre-wrap;">${body}</p>`, businessName);
     }
 
@@ -105,8 +105,8 @@ export function reviewRequestEmail({
     <p style="margin:0 0 16px;">Hi ${greeting},</p>
     <p style="margin:0 0 16px;">${intro}</p>
     <p style="margin:0 0 16px;">If you have a minute, we&rsquo;d love to hear how it went:</p>
-    ${emailButton("Share your feedback", reviewLink)}
-    <p style="margin:0 0 16px;color:#5f6368;">Thank you for sharing your honest feedback.</p>
+    <p style="margin:0 0 16px;">${plainLink(reviewLink)}</p>
+    <p style="margin:0 0 16px;">Thank you for sharing your honest feedback.</p>
     <p style="margin:0 0 4px;">Thanks,</p>
     <p style="margin:0;">${signoff}</p>
 `, businessName);

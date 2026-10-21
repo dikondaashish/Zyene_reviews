@@ -54,7 +54,8 @@ for (const width of widths) {
                     return issues;
                 });
                 expect(issues, `${preview.id} at ${width}px / ${mode}`).toEqual([]);
-                if (preview.id !== "aeo-report-white-label") {
+                // Review requests are sent as the business and carry no Zyene branding.
+                if (preview.id !== "aeo-report-white-label" && !/^(review-request|campaign-)/.test(preview.id)) {
                     await expect(page.getByText(EMAIL_BRAND.address)).toBeVisible();
                     const brandLogo = page.getByAltText("Zyene logo");
                     await expect(brandLogo).toHaveAttribute("src", EMAIL_BRAND.logo);
