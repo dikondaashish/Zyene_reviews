@@ -1,7 +1,13 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { z } from "zod";
+import { getAppBaseUrl } from "@/config/env";
 
 export const FACEBOOK_STATE_COOKIE = "fb_oauth_state";
+
+/** Must match a Valid OAuth Redirect URI in the Meta app, in both the dialog and the code exchange. */
+export function getFacebookRedirectUri(): string {
+    return `${getAppBaseUrl()}/api/integrations/facebook/callback`;
+}
 const stateSchema = z.object({
     nonce: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
     userId: z.string().uuid(),

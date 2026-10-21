@@ -4,8 +4,9 @@ import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integra
 import { createClient } from "@/lib/db/supabase/server";
 import { getAppIntegrationsUrl } from "@/config/env";
 import { getAppId, getAppSecret } from "@/services/facebook/client";
-import { createFacebookOAuthState, FACEBOOK_STATE_COOKIE, facebookCookieOptions } from
-    "@/services/facebook/oauth-state";
+import {
+    createFacebookOAuthState, FACEBOOK_STATE_COOKIE, facebookCookieOptions, getFacebookRedirectUri,
+} from "@/services/facebook/oauth-state";
 
 const connectQuerySchema = z.object({ businessId: z.string().uuid() });
 
@@ -50,9 +51,7 @@ export async function GET(request: Request) {
     }
 
     const appId = getAppId();
-    const rootDomain =
-        process.env.NEXT_PUBLIC_ROOT_DOMAIN || "http://localhost:3000";
-    const redirectUri = `${rootDomain}/api/integrations/facebook/callback`;
+    const redirectUri = getFacebookRedirectUri();
 
     const state = createFacebookOAuthState(user.id, businessId, getAppSecret());
 
