@@ -18,7 +18,8 @@ export async function processDueScheduledReviewRequests(options: { limit?: numbe
         .from("review_requests")
         .select("id, business_id, customer_name, customer_phone, customer_email, channel")
         .eq("status", "queued")
-        .eq("trigger_source", "manual")
+        // Manual schedules and quiet-hours deferrals; campaign rows sleep inside their own worker.
+        .is("campaign_id", null)
         .not("scheduled_for", "is", null)
         .lte("scheduled_for", nowIso)
         .order("scheduled_for", { ascending: true })

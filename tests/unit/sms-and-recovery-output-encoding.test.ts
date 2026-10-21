@@ -32,7 +32,8 @@ describe("review request output encoding", () => {
     it("uses the safe label at every customer-name SMS interpolation", () => {
         for (const path of [
             "src/lib/review-requests/send-outbound-dispatch.ts",
-            "src/services/customers/bulk-request-action.ts",
+            // Bulk sends use the dashboard SMS copy (dashboardRequestSms), which applies smsLabel.
+            "src/lib/review-requests/dashboard-request-message.ts",
             "src/lib/notifications/review-request.ts",
         ]) {
             const source = readFileSync(join(process.cwd(), path), "utf8");

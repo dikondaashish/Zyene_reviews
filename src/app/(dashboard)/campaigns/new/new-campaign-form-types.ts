@@ -8,6 +8,8 @@ export interface CampaignForm {
     delay_minutes: number;
     follow_up_enabled: boolean;
     follow_up_delay_hours: number;
+    /** Stop reminders once the customer opens the review link (a click is not a review). */
+    stop_on_click: boolean;
     follow_up_template: string;
     drip_step3_template: string;
 }

@@ -1,13 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-const mocks = vi.hoisted(() => ({ sms: vi.fn(), email: vi.fn() }));
-vi.mock("@/services/twilio/send-sms", () => ({ sendSMS: mocks.sms }));
-vi.mock("@/services/resend/send-review-request-email", () => ({ sendReviewRequestEmail: mocks.email }));
+const mocks = vi.hoisted(() => ({ dispatch: vi.fn() }));
+vi.mock("@/lib/review-requests/dispatch-review-request", () => ({ dispatchReviewRequest: mocks.dispatch }));
 vi.mock("@/lib/logger", () => ({ logger: { error: vi.fn() } }));
 import { renderCampaignSubject, sendReviewRequest } from "@/lib/notifications/review-request";
 import { verifyReviewTracking } from "@/lib/review-requests/tracking-token";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
+const admin = {} as SupabaseClient;
 const base = { requestId: "request-a", businessId: "business-a", businessSlug: "acme-dental", businessName: "Acme Dental",
     customerName: "Sam", customerEmail: "synthetic@example.test", customerPhone: "+15555550100" };
+const dispatched = () => mocks.dispatch.mock.calls[0][1];
 
 describe("campaign / drip review request sender", () => {
     beforeEach(() => {
@@ -15,39 +17,55 @@ describe("campaign / drip review request sender", () => {
         vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "synthetic-tracking-secret");
         vi.stubEnv("NEXT_PUBLIC_ROOT_DOMAIN", "zyenereviews.test");
         vi.stubEnv("NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN", "capture.test");
-        mocks.sms.mockResolvedValue({ sent: true, error: null });
-        mocks.email.mockResolvedValue({ sent: true });
+        mocks.dispatch.mockResolvedValue({ sendStatus: "sent", deferUntil: null, errorMessage: null, resendEmailId: null, smsLegStatus: "sent", emailLegStatus: null });
     });
 
     it("links to the public review page with a signed per-request ref, not /review/{businessId}", async () => {
-        const result = await sendReviewRequest({ ...base, contactMethods: ["sms"], smsTemplate: "Hi {customer_name}: {review_link}" });
+        const result = await sendReviewRequest(admin, { ...base, contactMethods: ["sms"], smsTemplate: "Hi {customer_name}: {review_link}" });
         const url = new URL(result.reviewLink!);
         expect(`${url.origin}${url.pathname}`).toBe("https://capture.test/acme-dental");
         expect(url.searchParams.get("ref")).toBe("request-a");
         expect(verifyReviewTracking("request-a", "business-a", url.searchParams.get("sig"))).toBe(true);
-        expect(mocks.sms).toHaveBeenCalledWith("+15555550100", `Hi Sam: ${result.reviewLink}`);
-        expect(result.reviewLink).not.toContain("/review/");
+        expect(verifyReviewTracking("request-b", "business-a", url.searchParams.get("sig"))).toBe(false);
+        expect(verifyReviewTracking("request-a", "business-b", url.searchParams.get("sig"))).toBe(false);
+        expect(dispatched().sms.body).toBe(`Hi Sam: ${result.reviewLink}`);
+        expect(result.smsSent).toBe(true);
     });
 
     it("uses the SMS template for SMS and the email template and subject for email", async () => {
-        await sendReviewRequest({ ...base, contactMethods: ["sms", "email"], smsTemplate: "Text {review_link}",
+        await sendReviewRequest(admin, { ...base, contactMethods: ["sms", "email"], smsTemplate: "Text {review_link}",
             emailTemplate: "<p>Hello {customer_name}, <a href=\"{review_link}\">review</a></p>", emailSubject: "Thanks {customer_name}" });
-        expect(mocks.sms.mock.calls[0][1]).toMatch(/^Text https:\/\/capture\.test\/acme-dental\?ref=request-a/);
-        const email = mocks.email.mock.calls[0][0];
-        expect(email.subject).toBe("Thanks Sam");
-        expect(email.html).toContain("Hello Sam");
-        expect(email.html).not.toContain("Text ");
+        const input = dispatched();
+        expect(input.channels).toEqual(["sms", "email"]);
+        expect(input.sms.body).toMatch(/^Text https:\/\/capture\.test\/acme-dental\?ref=request-a/);
+        expect(input.emailMessage.subject).toBe("Thanks Sam");
+        expect(input.emailMessage.html).toContain("Hello Sam");
+        expect(input.emailMessage.html).not.toContain("Text ");
+    });
+
+    it("applies the frequency cap to first messages but not to reminders of the same request", async () => {
+        await sendReviewRequest(admin, { ...base, contactMethods: ["email"] });
+        expect(dispatched()).toMatchObject({ step: 1, frequencyCap: "apply" });
+        mocks.dispatch.mockClear();
+        await sendReviewRequest(admin, { ...base, contactMethods: ["email"], isFollowUp: true, step: 3 });
+        expect(dispatched()).toMatchObject({ step: 3, frequencyCap: "skip" });
     });
 
     it("falls back to the default subject when the campaign has none", async () => {
-        await sendReviewRequest({ ...base, contactMethods: ["email"], isFollowUp: true });
-        expect(mocks.email.mock.calls[0][0].subject).toBe("Following up on your visit to Acme Dental");
+        await sendReviewRequest(admin, { ...base, contactMethods: ["email"], isFollowUp: true });
+        expect(dispatched().emailMessage.subject).toBe("Following up on your visit to Acme Dental");
     });
 
-    it("still sends SMS when a shared template contains HTML, with tags stripped", async () => {
-        await sendReviewRequest({ ...base, contactMethods: ["sms"], smsTemplate: "<p>Thanks {customer_name}!</p> {review_link}" });
-        expect(mocks.sms).toHaveBeenCalledTimes(1);
-        expect(mocks.sms.mock.calls[0][1]).toMatch(/^Thanks Sam! https:\/\/capture\.test\//);
+    it("strips HTML from a shared template for SMS instead of skipping the text", async () => {
+        await sendReviewRequest(admin, { ...base, contactMethods: ["sms"], smsTemplate: "<p>Thanks {customer_name}!</p> {review_link}" });
+        expect(dispatched().sms.body).toMatch(/^Thanks Sam! https:\/\/capture\.test\//);
+    });
+
+    it("passes through deferral so callers can wait out quiet hours", async () => {
+        const until = new Date("2030-01-01T13:00:00Z");
+        mocks.dispatch.mockResolvedValue({ sendStatus: "deferred", deferUntil: until, errorMessage: "Quiet hours", resendEmailId: null, smsLegStatus: null, emailLegStatus: null });
+        const result = await sendReviewRequest(admin, { ...base, contactMethods: ["sms"] });
+        expect(result).toMatchObject({ sendStatus: "deferred", deferUntil: until, smsSent: false });
     });
 
     it("keeps rendered subjects on one line", () => {

@@ -1,26 +1,33 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { REVIEW_RESPONSE_SOURCE_ZYENE_AUTO } from "@/lib/reviews/response-source";
-import { listAccounts, replyToReview } from "@/services/google/business-profile";
-import { getValidGoogleToken } from "@/services/google/sync-service";
+import { REVIEW_RESPONSE_SOURCE_ZYENE, REVIEW_RESPONSE_SOURCE_ZYENE_AUTO } from "@/lib/reviews/response-source";
+import { postGoogleReviewReply } from "@/services/reviews/reply-review-access";
 
 /**
- * Post a reply to Google and mark the review as responded (Auto commenter / system).
- * For background jobs - no end-user session; uses service role.
+ * Post a reply to Google and mark the review as responded (auto rules, templates, or an
+ * approved draft). For background jobs and approvals - uses the service role.
+ *
+ * Returns false (and posts nothing) when the review was answered in the meantime: Google's
+ * reply endpoint overwrites, so we re-check right before posting to avoid replacing a reply.
  */
-export async function postGoogleReplySystem(reviewId: string, text: string): Promise<void> {
+export async function postGoogleReplySystem(
+    reviewId: string,
+    text: string,
+    options: { approved?: boolean } = {},
+): Promise<boolean> {
     const trimmed = text.trim();
     if (!trimmed) throw new Error("Reply text is empty");
 
     const admin = createAdminClient();
     const { data: review, error } = await admin
         .from("reviews")
-        .select("id, business_id, platform, platform_id, external_id")
+        .select("id, business_id, platform, platform_id, external_id, response_status")
         .eq("id", reviewId)
         .single();
 
     if (error || !review) {
         throw new Error("Review not found");
     }
+    if (review.response_status !== "pending") return false;
 
     if (review.platform !== "google") {
         throw new Error("Only Google reviews support auto-reply");
@@ -36,16 +43,8 @@ export async function postGoogleReplySystem(reviewId: string, text: string): Pro
         throw new Error("Review integration does not belong to its business");
     }
 
-    const { accessToken, platform } = await getValidGoogleToken(review.platform_id as string);
-    const locationId = platform.external_id as string | null;
-    if (!locationId) throw new Error("Platform location ID missing");
-
-    const accounts = await listAccounts(accessToken!);
-    const account = accounts.find((a) => a.type === "ORGANIZATION") || accounts[0];
-    if (!account) throw new Error("No Google Business Account found");
-
-    const accountId = account.name.split("/")[1];
-    await replyToReview(accessToken!, accountId, locationId, review.external_id as string, trimmed);
+    // Same location resolution as manual dashboard replies (google_location_id first).
+    await postGoogleReviewReply(review.platform_id as string, review.external_id as string, trimmed);
 
     const { error: updateError } = await admin
         .from("reviews")
@@ -53,9 +52,10 @@ export async function postGoogleReplySystem(reviewId: string, text: string): Pro
             response_status: "responded",
             response_text: trimmed,
             responded_at: new Date().toISOString(),
-            response_source: REVIEW_RESPONSE_SOURCE_ZYENE_AUTO,
+            response_source: options.approved ? REVIEW_RESPONSE_SOURCE_ZYENE : REVIEW_RESPONSE_SOURCE_ZYENE_AUTO,
         })
         .eq("id", review.id);
 
     if (updateError) throw updateError;
+    return true;
 }

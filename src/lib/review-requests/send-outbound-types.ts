@@ -27,7 +27,8 @@ export type SendOutboundReviewRequestResult =
     | {
           success: true;
           requestId: string;
-          status: "sent";
+          /** "queued" when quiet hours delayed the send; it goes out automatically later. */
+          status: "sent" | "queued";
           channel: OutboundChannel;
           reviewLink: string;
           errorMessage: string | null;

@@ -1,6 +1,7 @@
-import { isTestContact } from "@/lib/customers/test-contact";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
+import { blockedReason, checkReviewRequestSend } from "@/lib/review-requests/send-guard";
+import { channelsFor } from "@/lib/review-requests/dispatch-review-request";
 import {
     fail,
     isValidEmail,
@@ -20,6 +21,7 @@ export type OutboundBusinessRow = {
     sender_name: string | null;
     review_request_frequency_cap_days: number | null;
     organization_id: string | null;
+    timezone: string | null;
 };
 
 export type OutboundPrepared = {
@@ -30,6 +32,7 @@ export type OutboundPrepared = {
     phoneNorm: string | null;
     emailNorm: string | null;
     b: OutboundBusinessRow;
+    timezone: string | null;
 };
 
 export async function prepareOutboundReviewRequest(
@@ -65,7 +68,7 @@ export async function prepareOutboundReviewRequest(
     const { data: business, error: bizErr } = await admin
         .from("businesses")
         .select(
-            "id, name, slug, email, sender_name, review_request_frequency_cap_days, organization_id",
+            "id, name, slug, email, sender_name, review_request_frequency_cap_days, organization_id, timezone",
         )
         .eq("id", input.businessId)
         .maybeSingle();
@@ -115,63 +118,16 @@ export async function prepareOutboundReviewRequest(
         }
     }
 
-    const frequencyCapDays = b.review_request_frequency_cap_days ?? 30;
-
-    if ((channel === "sms" || channel === "both") && phoneNorm) {
-        const { data: contact } = await admin
-            .from("customers")
-            .select("last_request_sent_at, is_opted_out, tags")
-            .eq("business_id", b.id)
-            .eq("phone", phoneNorm)
-            .maybeSingle();
-
-        if (contact?.is_opted_out || isTestContact(contact)) {
-            return fail(400, channel, "This contact is opted out or tagged zyene:test and cannot receive review requests.");
-        }
-        if (contact?.last_request_sent_at) {
-            const lastSent = new Date(contact.last_request_sent_at);
-            const diffDays = (Date.now() - lastSent.getTime()) / (1000 * 3600 * 24);
-            if (diffDays < frequencyCapDays) {
-                return fail(
-                    400,
-                    channel,
-                    `Already sent to this contact recently. Cap is ${frequencyCapDays} days.`,
-                );
-            }
-        }
-
-        const { data: smsOptOut } = await admin
-            .from("sms_opt_outs")
-            .select("id")
-            .eq("phone_number", phoneNorm)
-            .maybeSingle();
-        if (smsOptOut) {
-            return fail(400, channel, "Customer has opted out of SMS.");
-        }
-    }
-
-    if ((channel === "email" || channel === "both") && emailNorm) {
-        const { data: contact } = await admin
-            .from("customers")
-            .select("last_request_sent_at, is_opted_out, tags")
-            .eq("business_id", b.id)
-            .eq("email", emailNorm)
-            .maybeSingle();
-
-        if (contact?.is_opted_out || isTestContact(contact)) {
-            return fail(400, channel, "This contact is opted out or tagged zyene:test and cannot receive review requests.");
-        }
-        if (contact?.last_request_sent_at) {
-            const lastSent = new Date(contact.last_request_sent_at);
-            const diffDays = (Date.now() - lastSent.getTime()) / (1000 * 3600 * 24);
-            if (diffDays < frequencyCapDays) {
-                return fail(
-                    400,
-                    channel,
-                    `Already sent to this contact recently. Cap is ${frequencyCapDays} days.`,
-                );
-            }
-        }
+    // Same eligibility rules as the send itself (re-checked again right before sending).
+    const guard = await checkReviewRequestSend(admin, {
+        businessId: b.id,
+        channels: channelsFor(channel),
+        phone: phoneNorm,
+        email: emailNorm,
+        frequencyCap: "apply",
+    });
+    if (channel !== "link" && guard.allowed.length === 0) {
+        return fail(400, channel, blockedReason(guard.blocked));
     }
 
     return {
@@ -182,5 +138,6 @@ export async function prepareOutboundReviewRequest(
         phoneNorm,
         emailNorm,
         b,
+        timezone: b.timezone,
     };
 }

@@ -29,6 +29,7 @@ export const MARKETING_ROUTE_PREFIXES = [
     "/enterprise",
     "/es",
     "/newsletter",
+    "/unsubscribe",
     "/tools",
     "/docs",
     "/growth",

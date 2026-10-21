@@ -23,6 +23,7 @@ const CSRF_EXEMPT = ["/api/webhooks", "/api/inngest", "/api/cron", "/api/v1", "/
 const EMAIL_UNSUBSCRIBE_POSTS = [
     "/api/marketing/newsletter/unsubscribe",
     "/api/marketing/product-email/unsubscribe",
+    "/api/review-requests/unsubscribe",
 ];
 
 const MUTATING_METHODS = ["POST", "PUT", "DELETE", "PATCH"];

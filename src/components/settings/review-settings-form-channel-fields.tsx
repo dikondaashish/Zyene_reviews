@@ -26,7 +26,10 @@ export function ReviewSettingsFormChannelFields({ form }: { form: UseFormReturn<
                         </FormControl>
                         <div className="space-y-1 leading-none">
                             <FormLabel>SMS Requests</FormLabel>
-                            <FormDescription>Send review requests via text message.</FormDescription>
+                            <FormDescription>
+                                Send review requests by text. Turning this off also stops texts already queued
+                                (scheduled requests and campaign reminders); they are skipped with a reason.
+                            </FormDescription>
                         </div>
                     </FormItem>
                 )}
@@ -41,7 +44,9 @@ export function ReviewSettingsFormChannelFields({ form }: { form: UseFormReturn<
                         </FormControl>
                         <div className="space-y-1 leading-none">
                             <FormLabel>Email Requests</FormLabel>
-                            <FormDescription>Send review requests via email.</FormDescription>
+                            <FormDescription>
+                                Send review requests by email. Turning this off also stops queued emails.
+                            </FormDescription>
                         </div>
                     </FormItem>
                 )}

@@ -62,24 +62,26 @@ export function NewCampaignReviewStep({ form, context, customerCount = 0 }: NewC
 
                 {form.follow_up_enabled && (
                     <div className="rounded-lg border border-primary/20 p-4">
-                        <p className="text-xs text-muted-foreground mb-1">Reminder drip</p>
+                        <p className="text-xs text-muted-foreground mb-1">Reminders</p>
                         <p className="text-sm">
-                            Day 0 → Day 7 → Day 14. Stops after a tracked click or completed request; publication is not verified.
+                            Up to 2 reminders, {Math.round(form.follow_up_delay_hours / 24)} day(s) apart.{" "}
+                            {form.stop_on_click ? "Stops when the customer opens the link" : "Keeps reminding after a link open"},
+                            finishes the review page, opts out, or you confirm their review. Publication is not verified automatically.
                         </p>
-                        <p className="text-xs text-muted-foreground mt-3 mb-1">Step 2 (Day 7)</p>
+                        <p className="text-xs text-muted-foreground mt-3 mb-1">Reminder 1</p>
                         <p className="text-sm font-mono bg-muted/50 rounded p-3 whitespace-pre-wrap">
                             {renderCampaignPreview(form.follow_up_template, context)}
                         </p>
                         {form.drip_step3_template.trim() ? (
                             <>
-                                <p className="text-xs text-muted-foreground mt-3 mb-1">Step 3 (Day 14)</p>
+                                <p className="text-xs text-muted-foreground mt-3 mb-1">Reminder 2</p>
                                 <p className="text-sm font-mono bg-muted/50 rounded p-3 whitespace-pre-wrap">
                                     {renderCampaignPreview(form.drip_step3_template, context)}
                                 </p>
                             </>
                         ) : (
                             <p className="text-xs text-muted-foreground mt-3">
-                                Step 3 uses the Step 2 message (optional template left blank).
+                                Reminder 2 reuses the Reminder 1 message.
                             </p>
                         )}
                     </div>

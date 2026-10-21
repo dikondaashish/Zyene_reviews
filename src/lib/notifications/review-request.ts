@@ -1,13 +1,13 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
-import { sendSMS } from "@/services/twilio/send-sms";
 import { smsLabel } from "@/lib/security/sms-label";
-import { sendReviewRequestEmail } from "@/services/resend/send-review-request-email";
 import {
     reviewRequestEmail,
     reviewRequestEmailPlainText,
 } from "@/services/resend/templates/review-request-email";
 import { reviewRequestSubject } from "@/lib/email/review-request-subject";
 import { signedReviewCaptureLink } from "@/lib/review-requests/review-capture-url";
+import { dispatchReviewRequest, type DispatchResult } from "@/lib/review-requests/dispatch-review-request";
 
 const DEFAULT_SMS_TEMPLATE = "Hi {customer_name}! Thanks for visiting {business_name}. We'd love your feedback: {review_link}";
 
@@ -26,9 +26,13 @@ interface SendReviewRequestOptions {
     /** Custom subject; falls back to the default first/follow-up subject. */
     emailSubject?: string;
     isFollowUp?: boolean;
+    /** Campaign step: 1 = first message, 2/3 = reminders (claims are per step). */
+    step?: 1 | 2 | 3;
     /** Optional human-friendly sender (e.g. owner first name) for From + signoff. */
     senderName?: string | null;
 }
+
+export type SendReviewRequestResult = DispatchResult & { emailSent: boolean; smsSent: boolean; reviewLink: string | null };
 
 /** SMS is plain text: drop any HTML a shared template might carry. */
 function toSmsText(template: string): string {
@@ -44,66 +48,43 @@ export function renderCampaignSubject(subject: string, customerName: string, bus
         .trim();
 }
 
-export async function sendReviewRequest({
-    requestId,
-    businessId,
-    businessSlug,
-    businessName,
-    customerName,
-    contactMethods,
-    customerEmail,
-    customerPhone,
-    smsTemplate,
-    emailTemplate,
-    emailSubject,
-    isFollowUp = false,
-    senderName,
-}: SendReviewRequestOptions) {
-    const results = {
-        emailSent: false,
-        smsSent: false,
-        error: null as string | null,
-        reviewLink: null as string | null,
-    };
-
+/** Campaign + reminder sends. Guarded and claimed per message via dispatchReviewRequest. */
+export async function sendReviewRequest(admin: SupabaseClient, options: SendReviewRequestOptions): Promise<SendReviewRequestResult> {
+    const { requestId, businessId, businessSlug, businessName, customerName, isFollowUp = false } = options;
+    const step = options.step ?? (isFollowUp ? 2 : 1);
     try {
         const reviewLink = signedReviewCaptureLink(businessSlug, requestId, businessId);
-        results.reviewLink = reviewLink;
+        const sender = (options.senderName || "").trim() || undefined;
+        const smsBody = toSmsText(options.smsTemplate || DEFAULT_SMS_TEMPLATE)
+            .replace(/\{customer_name\}/g, smsLabel(customerName, "there"))
+            .replace(/\{business_name\}/g, smsLabel(businessName, "us"))
+            .replace(/\{review_link\}/g, reviewLink);
+        const templateProps = { customerName, businessName, reviewLink, template: options.emailTemplate, senderName: sender };
+        const customSubject = options.emailSubject ? renderCampaignSubject(options.emailSubject, customerName, businessName) : "";
 
-        // 1. Send SMS
-        if (contactMethods.includes("sms") && customerPhone) {
-            const messageBody = toSmsText(smsTemplate || DEFAULT_SMS_TEMPLATE)
-                .replace(/\{customer_name\}/g, smsLabel(customerName, "there"))
-                .replace(/\{business_name\}/g, smsLabel(businessName, "us"))
-                .replace(/\{review_link\}/g, reviewLink);
-
-            const smsResult = await sendSMS(customerPhone, messageBody);
-            results.smsSent = smsResult.sent;
-            if (!smsResult.sent) results.error = smsResult.error as string | null;
-        }
-
-        // 2. Send Email
-        if (contactMethods.includes("email") && customerEmail) {
-            const sender = (senderName || "").trim() || undefined;
-            const templateProps = { customerName, businessName, reviewLink, template: emailTemplate, senderName: sender };
-            const customSubject = emailSubject ? renderCampaignSubject(emailSubject, customerName, businessName) : "";
-
-            const emailResult = await sendReviewRequestEmail({
-                to: customerEmail,
+        const result = await dispatchReviewRequest(admin, {
+            requestId, businessId, step,
+            channels: options.contactMethods,
+            phone: options.customerPhone ?? null,
+            email: options.customerEmail ?? null,
+            // A reminder is part of the same request, not a new ask.
+            frequencyCap: step === 1 ? "apply" : "skip",
+            sms: { body: smsBody },
+            emailMessage: {
                 subject: customSubject || reviewRequestSubject(businessName, isFollowUp),
                 html: reviewRequestEmail(templateProps),
                 text: reviewRequestEmailPlainText(templateProps),
-                fallbackSenderName: sender,
-                fallbackBusinessName: businessName,
-            });
-
-            results.emailSent = emailResult.sent;
-        }
-
-        return results;
+            },
+            senderName: sender,
+            businessName,
+        });
+        return { ...result, reviewLink, smsSent: result.smsLegStatus === "sent", emailSent: result.emailLegStatus === "sent" };
     } catch (err: unknown) {
         logger.error({ err: err }, "Error in sendReviewRequest:");
         const message = err instanceof Error ? err.message : "An unexpected error occurred";
-        return { ...results, error: message };
+        return {
+            sendStatus: "failed", deferUntil: null, errorMessage: message, resendEmailId: null,
+            smsLegStatus: null, emailLegStatus: null, emailSent: false, smsSent: false, reviewLink: null,
+        };
     }
 }

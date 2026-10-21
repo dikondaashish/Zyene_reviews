@@ -15,6 +15,7 @@ export type BusinessRow = {
     sender_name: string | null;
     review_request_frequency_cap_days: number | null;
     organization_id: string;
+    timezone: string | null;
 };
 
 export type PreparedScheduledSend = {

@@ -15,6 +15,7 @@ import {
     requestFlowCompleted,
     reviewRequestChannelCell,
 } from "./requests-page-display";
+import { RequestOutcomeNote, RequestReviewConfirmButton } from "./request-review-confirm-button";
 
 export type RequestListRow = {
     id: string;
@@ -28,6 +29,10 @@ export type RequestListRow = {
     created_at?: string | null;
     review_left?: boolean | null;
     completed_at?: string | null;
+    review_confirmed_at?: string | null;
+    review_confirmation_source?: "manual" | "matched" | null;
+    error_message?: string | null;
+    deferred_reason?: string | null;
 };
 
 export function RequestsListSection({
@@ -71,8 +76,10 @@ export function RequestsListSection({
                                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                         {reviewRequestChannelCell(req.channel)}
                                     </div>
-                                    <div className="ml-auto">
+                                    <div className="ml-auto text-right">
                                         {getRequestStatusBadge(req, requestFlowCompleted(req))}
+                                        <RequestOutcomeNote req={req} />
+                                        <RequestReviewConfirmButton requestId={req.id} confirmedSource={req.review_confirmation_source} status={req.status} />
                                     </div>
                                 </div>
                             </div>
@@ -92,6 +99,7 @@ export function RequestsListSection({
                             <TableHead>Phone / Email</TableHead>
                             <TableHead>Channel</TableHead>
                             <TableHead>Status</TableHead>
+                            <TableHead>Review</TableHead>
                             <TableHead className="text-right">Sent At</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -104,7 +112,13 @@ export function RequestsListSection({
                                         {formatReviewRequestContact(req)}
                                     </TableCell>
                                     <TableCell>{reviewRequestChannelCell(req.channel)}</TableCell>
-                                    <TableCell>{getRequestStatusBadge(req, requestFlowCompleted(req))}</TableCell>
+                                    <TableCell>
+                                        {getRequestStatusBadge(req, requestFlowCompleted(req))}
+                                        <RequestOutcomeNote req={req} />
+                                    </TableCell>
+                                    <TableCell>
+                                        <RequestReviewConfirmButton requestId={req.id} confirmedSource={req.review_confirmation_source} status={req.status} />
+                                    </TableCell>
                                     <TableCell className="text-right text-muted-foreground">
                                         {req.created_at
                                             ? formatDistanceToNow(new Date(req.created_at), { addSuffix: true })
@@ -114,7 +128,7 @@ export function RequestsListSection({
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={5} className="h-24 text-center">
+                                <TableCell colSpan={6} className="h-24 text-center">
                                     No requests sent yet.
                                 </TableCell>
                             </TableRow>

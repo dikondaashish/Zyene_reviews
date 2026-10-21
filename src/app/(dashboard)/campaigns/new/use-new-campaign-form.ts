@@ -38,6 +38,7 @@ export function useNewCampaignForm(context: CampaignPreviewContext) {
         delay_minutes: 0,
         follow_up_enabled: false,
         follow_up_delay_hours: 168,
+        stop_on_click: true,
         follow_up_template: DEFAULT_FOLLOW_UP,
         drip_step3_template: "",
     });

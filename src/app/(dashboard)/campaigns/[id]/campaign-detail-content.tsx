@@ -1,6 +1,7 @@
 "use client";
 
 import { CSVImportDialog } from "@/components/campaigns/csv-import-dialog";
+import { CampaignGradualImports } from "@/components/campaigns/campaign-gradual-imports";
 import { CampaignDetailContacts } from "./campaign-detail-contacts";
 import { CampaignDetailFunnel } from "./campaign-detail-funnel";
 import { CampaignDetailHeader } from "./campaign-detail-header";
@@ -21,6 +22,7 @@ export function CampaignDetailContent({ detail }: CampaignDetailContentProps) {
             <CampaignDetailHeader campaign={campaign} detail={detail} />
             <CampaignDetailStats funnelStages={funnelStages} />
             <CampaignDetailFunnel funnelStages={funnelStages} maxFunnel={maxFunnel} />
+            <CampaignGradualImports campaignId={campaign.id} channel={campaign.channel as "sms" | "email" | "both"} campaignStatus={campaign.status} />
             <CampaignDetailContacts requests={requests} mounted={mounted} />
             <CSVImportDialog
                 open={csvDialogOpen}

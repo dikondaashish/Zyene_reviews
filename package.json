@@ -18,6 +18,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:security:sql": "node scripts/test-security-sql.mjs",
+    "test:automation:sql": "node scripts/test-automation-sql.mjs",
     "eval:support-chat": "tsx --env-file=.env.local scripts/eval-support-chat.ts",
     "verify:critical-flows": "tsx scripts/verify-critical-flows.ts",
     "verify:competitor-watch": "tsx scripts/verify-competitor-watch-week1.ts",

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, Building2, CreditCard, Globe, Settings2, Target, Users } from "lucide-react";
+import { Bell, Building2, CreditCard, Globe, MessageSquare, Settings2, Target, Users } from "lucide-react";
 
 import type { SettingsAccess } from "@/lib/auth/settings-access";
 import { cn } from "@/lib/utils";
@@ -31,6 +31,7 @@ const businessNavItems: NavItem[] = [
     icon: Building2,
   },
   { title: "Public Profile", href: "/settings/public-profile", icon: Globe },
+  { title: "Reply rules", href: "/settings/reply-rules", icon: MessageSquare },
   {
     title: "Notifications",
     href: "/settings/notifications",

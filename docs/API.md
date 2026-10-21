@@ -178,6 +178,8 @@ Errors: OAuth denials redirect with error query params; token exchange failures 
 | `POST` | `/api/webhooks/slack` | Slack signing secret v0 (`SLACK_SIGNING_SECRET`), 5-min replay window; website chat live takeover |
 | `POST` | `/api/webhooks/resend` | Svix (`RESEND_WEBHOOK_SECRET`) |
 | `POST` | `/api/webhooks/twilio` | Twilio signature |
+| `POST` | `/api/webhooks/twilio/status` | Twilio signature (URL = `TWILIO_STATUS_CALLBACK_URL`). Review-request SMS delivered / undelivered / failed; duplicate and out-of-order callbacks ignored by rank |
+| `POST` | `/api/webhooks/resend-inbound` | Svix (`RESEND_INBOUND_WEBHOOK_SECRET`). `email.received` for invoice-copy enrollment; each event processed once; only addresses stored |
 | `POST` | `/api/webhooks/google/pubsub` | `?token=` = `GOOGLE_PUBSUB_VERIFICATION_TOKEN` |
 | `POST` | `/api/webhooks/google/gbp-reviews` | Legacy token `GOOGLE_GBP_WEBHOOK_SECRET` |
 | `POST` | `/api/webhooks/square` | Square signature key |
@@ -196,6 +198,19 @@ Errors: OAuth denials redirect with error query params; token exchange failures 
 
 ---
 
+**Review automations (session APIs).** See [REVIEW_AUTOMATIONS.md](./REVIEW_AUTOMATIONS.md).
+
+| Method | Path | Notes |
+|--------|------|-------|
+| `POST` | `/api/requests/[id]/confirm-review` | `{ confirmed }`. Manual "review confirmed" (write access; 404 for other tenants) |
+| `GET`/`PUT` | `/api/settings/reply-rules` | Per-star rules, approvers. PUT: owner/admin/manager; auto/template need the auto-reply plan |
+| `POST` / `PATCH`, `DELETE` | `/api/settings/reply-templates`, `/api/settings/reply-templates/[id]` | Saved reply templates (managers) |
+| `GET` / `POST` | `/api/reviews/reply-approvals`, `/api/reviews/reply-approvals/[id]` | List drafts; approve (optionally edited) or reject. Designated approvers, else managers. `409` if already handled |
+| `GET` / `POST` | `/api/campaigns/[id]/imports` | Import progress; upload validated rows (`consentConfirmed: true`, `dailyLimit` 1-500, ≤5000 rows) |
+| `PATCH` | `/api/campaigns/[id]/imports/[importId]` | `status`: active / paused / cancelled, or `dailyLimit` |
+| `GET`/`PUT` | `/api/settings/inbound-enrollment` | Invoice-copy address, campaign, allowed senders (managers) |
+| `GET`/`POST` | `/api/review-requests/unsubscribe?ref&sig` | Public. GET shows confirm page; POST (form or RFC 8058 one-click) unsubscribes this email from this business's review requests |
+
 ## 6. Cron (`GET /api/cron/*`)
 
 **Auth:** `Authorization: Bearer <CRON_SECRET>` (some also accept Vercel Cron headers).
@@ -208,7 +223,8 @@ Errors: OAuth denials redirect with error query params; token exchange failures 
 | `/api/cron/sync-reviews` | Review sync kick |
 | `/api/cron/follow-up` | Follow-up reminders |
 | `/api/cron/google-performance` | GBP metrics pull |
-| `/api/cron/scheduled-review-requests` | Due scheduled sends |
+| `/api/cron/scheduled-review-requests` | Due scheduled sends and quiet-hours deferrals (backstop for the Inngest scheduled job; `vercel.json` every 5 min) |
+| `/api/cron/enrollment-imports` | Gradual CSV / invoice-email enrollment, up to each import's daily limit per local day (`vercel.json` every 15 min) |
 | `/api/cron/competitor-watch` | Competitor snapshots |
 | `/api/cron/monthly-newsletter` | Marketing newsletter |
 | `/api/cron/register-google-pubsub-notifications` | Re-register Pub/Sub |

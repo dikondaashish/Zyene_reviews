@@ -55,16 +55,28 @@ export function getRequestStatusBadge(
         channel?: string | null;
         email_status?: string | null;
         sms_status?: string | null;
+        review_confirmed_at?: string | null;
+        review_confirmation_source?: string | null;
     },
     converted: boolean,
 ) {
-    if (converted) {
+    // Only a confirmed review earns the star. Opening the link or being handed off to Google
+    // is shown as what it is; we cannot see whether Google published a review.
+    if (req.review_confirmed_at) {
         return (
             <Badge className="bg-chart-4/15 text-warning-foreground hover:bg-chart-4/15 border-chart-4/35">
                 <Star className="mr-1 fill-chart-4 text-warning-foreground size-3" />{" "}
-                Review Left
+                {req.review_confirmation_source === "manual" ? "Review confirmed (manual)" : "Review confirmed"}
             </Badge>
         );
+    }
+    if (converted) {
+        const label = req.status === "feedback_left" ? "Private feedback" : req.status === "completed" ? "Sent to Google" : "Finished review page";
+        return <Badge variant="outline" className="border-primary/30 text-primary">{label}</Badge>;
+    }
+    if (req.status === "skipped") return <Badge variant="outline" className="text-muted-foreground">Skipped</Badge>;
+    if (req.status === "rated_positive" || req.status === "rated_negative") {
+        return <Badge variant="outline" className="border-primary/30 text-primary">Rated</Badge>;
     }
 
     const status = req.status;
@@ -147,6 +159,8 @@ export function getRequestStatusBadge(
     if (ch === "sms" && s === "failed") {
         return <Badge variant="destructive">SMS Failed</Badge>;
     }
+    if (s === "undelivered") return <Badge variant="destructive">SMS not delivered</Badge>;
+    if (e === "bounced" || e === "complained") return <Badge variant="destructive">{e === "bounced" ? "Email bounced" : "Marked as spam"}</Badge>;
 
     switch (status) {
         case "sent":

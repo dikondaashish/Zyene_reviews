@@ -4,11 +4,12 @@ import { dispatchDashboardReviewChannels } from "./review-request-dashboard-disp
 import { patchRequest } from "./scheduled-queue-patch";
 import { reviewRequestSubject } from "@/lib/email/review-request-subject";
 import type { PreparedScheduledSend } from "./scheduled-queue-types";
+import { deferReviewRequest, quietHoursReason } from "./defer-request";
 
 export async function sendPreparedScheduledRow(
     admin: SupabaseClient,
     prepared: PreparedScheduledSend,
-): Promise<"sent" | "failed"> {
+): Promise<"sent" | "failed" | "skipped"> {
     const { b, channel, phoneNorm, emailNorm, displayName, reviewLink, businessId, requestId, customerName } = prepared;
 
     const businessName = b.name || "us";
@@ -17,8 +18,9 @@ export async function sendPreparedScheduledRow(
         typeof b.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email.trim()) ? b.email.trim() : undefined;
     const subject = reviewRequestSubject(businessName);
 
-    const { sendStatus, errorMessage, resendEmailId, bumpLegs, smsLegStatus, emailLegStatus } =
-        await dispatchDashboardReviewChannels({
+    const dispatched = await dispatchDashboardReviewChannels(admin, {
+            requestId,
+            businessId,
             channel,
             phoneNorm,
             emailNorm,
@@ -29,6 +31,15 @@ export async function sendPreparedScheduledRow(
             reviewLink,
             subject,
         });
+    const { sendStatus, errorMessage, resendEmailId, bumpLegs, smsLegStatus, emailLegStatus } = dispatched;
+
+    if (sendStatus === "deferred" && dispatched.deferUntil) {
+        await deferReviewRequest(admin, {
+            requestId, businessId, until: dispatched.deferUntil,
+            reason: quietHoursReason(dispatched.deferUntil, b.timezone),
+        });
+        return "skipped";
+    }
 
     const sentAt = sendStatus === "sent" ? new Date().toISOString() : null;
     await patchRequest(admin, businessId, requestId, {
@@ -45,5 +56,5 @@ export async function sendPreparedScheduledRow(
         await bumpCustomerAfterSend(admin, businessId, customerName ?? undefined, phoneNorm, emailNorm, bumpLegs);
     }
 
-    return sendStatus;
+    return sendStatus === "deferred" ? "skipped" : sendStatus;
 }

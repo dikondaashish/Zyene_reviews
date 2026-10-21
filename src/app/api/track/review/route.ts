@@ -23,6 +23,10 @@ const updateSchema = z.object({
         .refine((obj) => Object.keys(obj).length > 0, "trackData cannot be empty"),
 });
 
+const STATUS_RANK: Record<string, number> = {
+    rated_positive: 1, rated_negative: 1, completed: 2, feedback_left: 2, review_left: 3,
+};
+
 export async function POST(request: Request) {
     try {
         const body = await request.json();
@@ -40,7 +44,7 @@ export async function POST(request: Request) {
 
         const { data: existing, error: lookupError } = await supabase
             .from("review_requests")
-            .select("id")
+            .select("id, status, campaign_id")
             .eq("id", requestId)
             .eq("business_id", businessId)
             .maybeSingle();
@@ -49,9 +53,19 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Review request not found" }, { status: 404 });
         }
 
+        // Statuses only move forward (rated -> finished). Finishing the page means the customer
+        // was handed off to Google or left private feedback; it is not proof a review was posted.
+        const { completed_at: _clientTime, status, ...facts } = trackData;
+        void _clientTime;
+        const advance = status && STATUS_RANK[status] > (STATUS_RANK[existing.status] ?? 0);
+        const finished = status === "completed" || status === "feedback_left";
         const { error } = await supabase
             .from("review_requests")
-            .update(trackData)
+            .update({
+                ...facts,
+                ...(advance ? { status } : {}),
+                ...(finished ? { completed_at: new Date().toISOString() } : {}),
+            })
             .eq("id", requestId)
             .eq("business_id", businessId);
 
@@ -59,7 +73,7 @@ export async function POST(request: Request) {
             throw error;
         }
 
-        if (trackData.completed_at || trackData.status === "completed" || trackData.status === "feedback_left") {
+        if (finished) {
             await terminateReviewRequestDrip(supabase, requestId, "clicked");
         }
 

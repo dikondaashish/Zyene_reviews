@@ -7,6 +7,7 @@ import { Form } from "@/components/ui/form";
 import type { BusinessSettingsRecord } from "@/types/components";
 import { ReviewSettingsFormChannelFields } from "./review-settings-form-channel-fields";
 import { ReviewSettingsFormTimingFields } from "./review-settings-form-timing-fields";
+import { ReviewSettingsFormQuietHoursFields } from "./review-settings-form-quiet-hours-fields";
 import { useReviewSettingsForm } from "./use-review-settings-form";
 
 interface ReviewSettingsFormProps {
@@ -21,9 +22,7 @@ export function ReviewSettingsForm({ business }: ReviewSettingsFormProps) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <ReviewSettingsFormTimingFields form={form} />
                 <ReviewSettingsFormChannelFields form={form} />
-                <p className="text-xs text-muted-foreground">
-                    Note: Quiet hours settings are currently only available for admin users via direct configuration.
-                </p>
+                <ReviewSettingsFormQuietHoursFields form={form} timezone={business.timezone ?? null} />
                 <Button type="submit" disabled={isLoading || !form.formState.isDirty}>
                     {isLoading && <Loader2 className="mr-2 animate-spin size-4" />}
                     Save Changes

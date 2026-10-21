@@ -1,4 +1,3 @@
-import { isTestContact } from "@/lib/customers/test-contact";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { BusinessRow, DueRow } from "./scheduled-queue-types";
 import { patchRequest } from "./scheduled-queue-patch";
@@ -21,7 +20,6 @@ export async function validateScheduledSendContact(
 ): Promise<"failed" | ScheduledSendContactFields> {
     const phoneNorm = row.customer_phone?.trim() || null;
     const emailNorm = row.customer_email?.trim() || null;
-    const frequencyCapDays = b.review_request_frequency_cap_days ?? 30;
     const needSms = channel === "sms" || channel === "both";
     const needEmail = channel === "email" || channel === "both";
 
@@ -31,45 +29,6 @@ export async function validateScheduledSendContact(
             await patchRequest(admin, businessId, requestId, {
                 status: "failed",
                 error_message: "Missing or invalid phone for SMS.",
-                sent_at: null,
-            });
-            return "failed";
-        }
-
-        const { data: contact } = await admin
-            .from("customers")
-            .select("last_request_sent_at, is_opted_out, tags")
-            .eq("business_id", businessId)
-            .eq("phone", phoneNorm)
-            .maybeSingle();
-
-        if (contact?.is_opted_out || isTestContact(contact)) {
-            await patchRequest(admin, businessId, requestId, {
-                status: "failed",
-                error_message: "Contact is opted out or tagged zyene:test.",
-                sent_at: null,
-            });
-            return "failed";
-        }
-
-        if (contact?.last_request_sent_at) {
-            const lastSent = new Date(contact.last_request_sent_at);
-            const diffDays = (Date.now() - lastSent.getTime()) / (1000 * 3600 * 24);
-            if (diffDays < frequencyCapDays) {
-                await patchRequest(admin, businessId, requestId, {
-                    status: "failed",
-                    error_message: `Frequency cap: already sent within ${frequencyCapDays} days.`,
-                    sent_at: null,
-                });
-                return "failed";
-            }
-        }
-
-        const { data: optOut } = await admin.from("sms_opt_outs").select("id").eq("phone_number", phoneNorm).maybeSingle();
-        if (optOut) {
-            await patchRequest(admin, businessId, requestId, {
-                status: "failed",
-                error_message: "Customer opted out of SMS.",
                 sent_at: null,
             });
             return "failed";
@@ -84,35 +43,6 @@ export async function validateScheduledSendContact(
                 sent_at: null,
             });
             return "failed";
-        }
-
-        const { data: contact } = await admin
-            .from("customers")
-            .select("last_request_sent_at, is_opted_out, tags")
-            .eq("business_id", businessId)
-            .eq("email", emailNorm)
-            .maybeSingle();
-
-        if (contact?.is_opted_out || isTestContact(contact)) {
-            await patchRequest(admin, businessId, requestId, {
-                status: "failed",
-                error_message: "Contact is opted out or tagged zyene:test.",
-                sent_at: null,
-            });
-            return "failed";
-        }
-
-        if (contact?.last_request_sent_at) {
-            const lastSent = new Date(contact.last_request_sent_at);
-            const diffDays = (Date.now() - lastSent.getTime()) / (1000 * 3600 * 24);
-            if (diffDays < frequencyCapDays) {
-                await patchRequest(admin, businessId, requestId, {
-                    status: "failed",
-                    error_message: `Frequency cap: already sent within ${frequencyCapDays} days.`,
-                    sent_at: null,
-                });
-                return "failed";
-            }
         }
     }
 
@@ -142,6 +72,8 @@ export async function validateScheduledSendContact(
         ? rootDomain
         : process.env.NEXT_PUBLIC_REVIEW_CAPTURE_DOMAIN || "collectratings.com";
     const reviewLink = signedReviewLink(`${protocol}://${reviewCaptureDomain}/${slug}`, requestId, businessId);
+    // Opt-outs, unsubscribes, channel switches and the frequency cap are checked by the shared
+    // dispatcher right before sending (sendPreparedScheduledRow), so they apply at send time.
 
     return { channel, phoneNorm, emailNorm, displayName, reviewLink };
 }

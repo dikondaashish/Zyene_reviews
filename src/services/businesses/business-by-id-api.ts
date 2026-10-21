@@ -60,6 +60,13 @@ export async function patchBusiness(
             .select()
             .single();
 
+        // RLS lets only owners/admins/managers update a business: zero rows means no permission.
+        if (error?.code === "PGRST116") {
+            throw new ApiRouteError("Only owners, admins and managers can change these settings", {
+                status: 403,
+                code: "BUSINESS_UPDATE_FORBIDDEN",
+            });
+        }
         if (error) {
             throw new ApiRouteError("Internal Server Error", {
                 status: 500,

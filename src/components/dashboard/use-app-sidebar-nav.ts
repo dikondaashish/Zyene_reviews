@@ -18,6 +18,7 @@ import {
   Target,
   User,
   Users,
+  Zap,
 } from "lucide-react";
 
 import { useLanguage } from "@/lib/language-context";
@@ -46,6 +47,11 @@ export function useAppSidebarNav(
       { title: dict.nav.qa, url: "/questions", icon: HelpCircle },
       { title: dict.nav.requests, url: "/requests", icon: Send },
       { title: dict.nav.campaigns, url: "/campaigns", icon: LayoutGrid },
+      {
+        title: (dict.nav as Record<string, string>).automations || "Automations",
+        url: "/automations",
+        icon: Zap,
+      },
       {
         title: dict.nav.analytics,
         url: "/analytics",

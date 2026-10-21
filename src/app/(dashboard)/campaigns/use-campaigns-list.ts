@@ -71,7 +71,7 @@ export function useCampaignsList() {
     };
 
     const getCompletedPercent = (c: Campaign) => {
-        const completed = c.total_completed || c.total_reviews_received || 0;
+        const completed = c.total_completed || 0;
         return c.total_sent > 0 ? Math.round((completed / c.total_sent) * 100) : 0;
     };
 

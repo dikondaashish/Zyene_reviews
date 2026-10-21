@@ -82,6 +82,9 @@ export const businessPatchSchema = z
         review_request_frequency_cap_days: z.number().int().min(1).max(365).optional(),
         review_request_sms_enabled: z.boolean().optional(),
         review_request_email_enabled: z.boolean().optional(),
+        review_request_quiet_hours_enabled: z.boolean().optional(),
+        review_request_quiet_start: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d(:00)?$/).optional(),
+        review_request_quiet_end: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d(:00)?$/).optional(),
     })
     .strict();
 

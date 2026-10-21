@@ -23,6 +23,10 @@ type SendReviewRequestEmailProps = {
      */
     fallbackSenderName?: string | null;
     fallbackBusinessName?: string | null;
+    /** Signed per-request unsubscribe URL (adds List-Unsubscribe + one-click headers). */
+    unsubscribeUrl?: string;
+    /** Provider idempotency key so a retried job cannot send the same email twice. */
+    idempotencyKey?: string;
 };
 
 /**
@@ -38,6 +42,8 @@ export async function sendReviewRequestEmail({
     replyTo,
     fallbackSenderName,
     fallbackBusinessName,
+    unsubscribeUrl,
+    idempotencyKey,
 }: SendReviewRequestEmailProps): Promise<{ sent: boolean; id?: string; error?: string }> {
     const apiKey = process.env.RESEND_COLLECTRATINGS_API_KEY?.trim();
     if (!apiKey || !resendCollectratings) {
@@ -55,11 +61,21 @@ export async function sendReviewRequestEmail({
             }),
             replyTo: replyTo ?? undefined,
             headers: REVIEW_REQUEST_EMAIL_HEADERS,
+            unsubscribeUrl,
+            idempotencyKey,
         });
     }
 
     const replyList =
         typeof replyTo === "string" && replyTo.trim().length > 0 ? [replyTo.trim()] : [];
+
+    const headers = {
+        ...REVIEW_REQUEST_EMAIL_HEADERS,
+        ...(unsubscribeUrl ? {
+            "List-Unsubscribe": `<${unsubscribeUrl}>`,
+            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+        } : {}),
+    };
 
     try {
         const { data, error } = await resendCollectratings.emails.send({
@@ -69,10 +85,8 @@ export async function sendReviewRequestEmail({
             html,
             text: text || emailHtmlToText(html),
             ...(replyList.length > 0 ? { replyTo: replyList } : {}),
-            ...(Object.keys(REVIEW_REQUEST_EMAIL_HEADERS).length > 0
-                ? { headers: REVIEW_REQUEST_EMAIL_HEADERS }
-                : {}),
-        });
+            ...(Object.keys(headers).length > 0 ? { headers } : {}),
+        }, idempotencyKey ? { idempotencyKey } : undefined);
 
         if (error) {
             logger.error({ err: error }, "[resend-collect] Review request failed");

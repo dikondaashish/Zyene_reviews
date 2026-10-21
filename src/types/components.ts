@@ -112,6 +112,7 @@ export interface BusinessSettingsRecord {
     review_request_frequency_cap_days?: number | null;
     review_request_sms_enabled?: boolean | null;
     review_request_email_enabled?: boolean | null;
+    review_request_quiet_hours_enabled?: boolean | null; review_request_quiet_start?: string | null; review_request_quiet_end?: string | null;
     [key: string]: unknown;
 }
 

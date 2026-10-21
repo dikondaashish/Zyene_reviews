@@ -22,7 +22,7 @@ describe("automatic Google replies entitlement", () => {
     mocks.single.mockResolvedValue({ data: review(), error: null });
     mocks.quota.mockResolvedValue({ allowed: false, current: 1500, max: 1500 });
     mocks.draft.mockResolvedValue("Thanks for visiting Juniper!");
-    mocks.publish.mockResolvedValue(undefined);
+    mocks.publish.mockResolvedValue(true);
     mocks.rpc.mockResolvedValue({ error: null });
   });
   it("publishes for an eligible paid business even when customer-draft quota is exhausted", async () => {

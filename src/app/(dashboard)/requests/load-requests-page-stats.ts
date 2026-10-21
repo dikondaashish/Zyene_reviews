@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { isOutboundRequest } from "@/lib/metrics/business-metrics";
 import { loadReviewRequestMetrics } from "@/lib/metrics/load-review-request-metrics";
+import { attachRequestOutcomes } from "./load-request-outcomes";
 
 export async function loadRequestsPageStats(
     businessId: string,
@@ -21,7 +22,7 @@ export async function loadRequestsPageStats(
 
     return {
         ok: true as const,
-        requests: requests as Array<Record<string, unknown>>,
+        requests: (await attachRequestOutcomes(admin, businessId, requests)) as Array<Record<string, unknown>>,
         stats: {
             ...metricsResult.metrics,
             reviews: metricsResult.metrics.completed,
