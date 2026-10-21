@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getBusiness } from "@/services/yelp/adapter";
 import { syncYelpReviewsForPlatform } from "@/services/yelp/sync-service";
 import * as Sentry from "@sentry/nextjs";
@@ -32,7 +33,8 @@ export async function handleYelpConfirm(req: Request) {
 
         const yelpBusiness = await getBusiness(yelpBusinessId);
 
-        const { data: platform, error } = await supabase
+        // review_platforms writes are service-role only; canManageBusinessIntegration gated this above.
+        const { data: platform, error } = await createAdminClient()
             .from("review_platforms")
             .upsert(
                 {
