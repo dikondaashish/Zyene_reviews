@@ -4,6 +4,7 @@ import { sendReviewRequestEmail } from "@/services/resend/send-review-request-em
 import { claimReviewRequestMessage, recordMessageResult } from "@/lib/review-requests/message-ledger";
 import { unsubscribeUrl } from "@/lib/review-requests/unsubscribe-token";
 import { escapeHtml } from "@/lib/security/html-escape";
+import { EMAIL_COLORS } from "@/lib/email/transactional-email-styles";
 
 /**
  * Provider call for one review-request message, wrapped in the per-message send claim.
@@ -37,7 +38,7 @@ export async function deliverReviewRequestSms(admin: SupabaseClient, args: Commo
 /** Visible unsubscribe link in the body (the List-Unsubscribe header alone is not shown by every client). */
 export function withUnsubscribeFooter(html: string, text: string | undefined, url: string, businessName?: string | null) {
     const who = businessName ? ` from ${escapeHtml(businessName)}` : "";
-    const footer = `<p style="font-size:12px;line-height:18px;color:#6b7280;margin:16px 0 0">Don't want review requests${who}? <a href="${escapeHtml(url)}" style="color:#6b7280">Unsubscribe</a></p>`;
+    const footer = `<p style="font-size:12px;line-height:18px;color:${EMAIL_COLORS.muted};margin:16px 0 0">Don't want review requests${who}? <a href="${escapeHtml(url)}" style="color:${EMAIL_COLORS.muted}">Unsubscribe</a></p>`;
     const htmlOut = /<\/body>/i.test(html) ? html.replace(/<\/body>(?![\s\S]*<\/body>)/i, `${footer}</body>`) : `${html}${footer}`;
     const textOut = `${text ?? ""}\n\nUnsubscribe from review requests: ${url}`.trim();
     return { html: htmlOut, text: textOut };
