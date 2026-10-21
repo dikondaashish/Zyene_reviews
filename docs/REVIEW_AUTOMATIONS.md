@@ -106,6 +106,7 @@ Automations page → "Enroll customers from invoice emails".
 
 - **Address:** each business gets `reviews-<random token>@<INBOUND_EMAIL_DOMAIN>` to CC/BCC on invoices.
 - **Webhook security:** `/api/webhooks/resend-inbound` verifies the Svix signature and processes each provider event once.
+- **Recipients:** Resend's `email.received` payload lists only recipients on the receiving domain in `to`/`cc`, so the webhook reads the original To/Cc headers from `GET /emails/receiving/{id}` (uses `RESEND_API_KEY`, the account that owns the receiving domain). If that lookup fails, the event claim is released and a 500 lets Resend retry.
 - **Senders:** only allow-listed senders count (exact address or `@domain`).
 - **Never enrolled:** the sender, the sender's domain, team members, the business's own address, no-reply mailboxes, and our inbound domain. At most 5 recipients per email are considered.
 - **Storage:** only addresses and the outcome are kept, never the subject, body or attachments.
@@ -115,7 +116,7 @@ Automations page → "Enroll customers from invoice emails".
 
 | Dependency | Needed for | Steps |
 |---|---|---|
-| `INBOUND_EMAIL_DOMAIN`, `RESEND_INBOUND_WEBHOOK_SECRET` | Invoice-copy enrollment | Add a receiving domain in Resend (MX records), point its `email.received` webhook at `/api/webhooks/resend-inbound`, set both env vars. Until then the UI says the feature is not available. **Unverified:** whether Resend's `email.received` payload lists BCC'd envelope recipients; CC works either way. |
+| `INBOUND_EMAIL_DOMAIN`, `RESEND_INBOUND_WEBHOOK_SECRET` | Invoice-copy enrollment | Add a receiving domain in Resend (MX records), point its `email.received` webhook at `/api/webhooks/resend-inbound`, set both env vars. Until then the UI says the feature is not available. **Production (2026-10-21):** `inbound.zyenereviews.com` on the zyene.inc Resend account (MX `receive.forge.rmta.net` in Cloudflare; root Zoho MX untouched), webhook `email.received` → `https://app.zyenereviews.com/api/webhooks/resend-inbound`. Customers on CC or To are read from headers; a customer who is only BCC'd on the copy is not visible to us. |
 | `TWILIO_STATUS_CALLBACK_URL` (optional) | Delivery callbacks | Defaults to `${NEXT_PUBLIC_APP_URL}/api/webhooks/twilio/status` on https. Set it explicitly if the public URL differs, because the Twilio signature is checked against it |
 | Resend webhook on the CollectRatings account | Delivery / bounce events for review-request email | Review-request email is sent from the CollectRatings Resend account; its webhook must also point at `/api/webhooks/resend`, signed with `RESEND_WEBHOOK_SECRET` |
 | Vercel crons | Scheduled-send backstop and enrollment | `vercel.json` adds `scheduled-review-requests` (every 5 min) and `enrollment-imports` (every 15 min). Needs a Vercel plan that allows sub-daily crons. The follow-up reminder cron already runs every 15 min on cron-job.org |
