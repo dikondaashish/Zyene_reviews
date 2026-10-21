@@ -114,11 +114,12 @@ export function useFacebookIntegrationCard({
     }
 
     async function handleDisconnect() {
+        if (!platform?.id) return;
         try {
-            await disconnectFacebookIntegration(businessId, router);
+            await disconnectFacebookIntegration(platform.id, router);
             setShowDisconnect(false);
-        } catch {
-            toast.error("Failed to disconnect. Please try again.");
+        } catch (err: unknown) {
+            toast.error(err instanceof Error ? err.message : "Failed to disconnect. Please try again.");
         }
     }
 
