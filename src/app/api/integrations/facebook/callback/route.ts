@@ -6,7 +6,7 @@ import { getAppSecret } from "@/services/facebook/client";
 import { completeFacebookOAuth } from "@/services/facebook/complete-oauth";
 import { FB_CONNECT_COOKIE } from "@/services/facebook/connect-session";
 import {
-    FACEBOOK_STATE_COOKIE, facebookCookieOptions, verifyFacebookOAuthState,
+    FACEBOOK_STATE_COOKIE, facebookCookieOptions, getFacebookRedirectUri, verifyFacebookOAuthState,
 } from "@/services/facebook/oauth-state";
 
 function integrationsRedirect(query: string) {
@@ -32,8 +32,7 @@ export async function GET(request: NextRequest) {
         return integrationsRedirect("?fb_error=invalid_state");
     }
 
-    const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "http://localhost:3000";
-    const redirectUri = `${rootDomain}/api/integrations/facebook/callback`;
+    const redirectUri = getFacebookRedirectUri();
 
     try {
         const selectionNonce = await completeFacebookOAuth(

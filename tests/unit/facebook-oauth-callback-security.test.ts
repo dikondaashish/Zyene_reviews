@@ -9,7 +9,10 @@ vi.mock("@/lib/auth/manage-business-integration", () => ({
     canManageBusinessIntegration: mocks.canManage,
 }));
 vi.mock("@/services/facebook/complete-oauth", () => ({ completeFacebookOAuth: mocks.complete }));
-vi.mock("@/config/env", () => ({ getAppIntegrationsUrl: () => "https://app.example.com/integrations" }));
+vi.mock("@/config/env", () => ({
+    getAppBaseUrl: () => "https://app.example.com",
+    getAppIntegrationsUrl: () => "https://app.example.com/integrations",
+}));
 
 import { GET } from "@/app/api/integrations/facebook/callback/route";
 import { createFacebookOAuthState, FACEBOOK_STATE_COOKIE } from "@/services/facebook/oauth-state";
@@ -60,7 +63,9 @@ describe("Facebook OAuth callback authorization", () => {
     it("sets only an opaque browser cookie after verified exchange", async () => {
         const state = createFacebookOAuthState(USER_ID, BUSINESS_ID, process.env.FACEBOOK_APP_SECRET!);
         const response = await GET(callback(state.nonce, state.cookieValue));
-        expect(mocks.complete).toHaveBeenCalledWith("code", expect.any(String), USER_ID, BUSINESS_ID);
+        expect(mocks.complete).toHaveBeenCalledWith(
+            "code", "https://app.example.com/api/integrations/facebook/callback", USER_ID, BUSINESS_ID,
+        );
         expect(response.cookies.get("fb_connect_data")?.value).toBe("selection-nonce");
     });
 });
