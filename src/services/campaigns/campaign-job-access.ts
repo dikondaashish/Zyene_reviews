@@ -3,7 +3,7 @@ import type { createAdminClient } from "@/lib/db/supabase/admin";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 
 export const campaignJobSchema = z.object({
-    campaignId: z.uuid(), businessId: z.uuid(), userId: z.uuid(),
+    campaignId: z.uuid(), businessId: z.uuid(), userId: z.uuid(), importRowId: z.uuid().optional(),
     contact: z.object({ name: z.string().max(200).optional(), phone: z.string().max(50).optional(),
         email: z.email().max(320).optional() }),
 });
@@ -14,7 +14,7 @@ type Admin = ReturnType<typeof createAdminClient>;
 export async function loadAuthorizedCampaignJob(admin: Admin, job: CampaignJobData) {
     if (!(await userCanAccessBusiness(admin, job.userId, job.businessId, true))) return null;
     const { data, error } = await admin.from("campaigns")
-        .select("*, businesses(name, slug, sender_name, organization_id, review_request_frequency_cap_days)")
+        .select("*, businesses(name, slug, sender_name, organization_id, timezone, review_request_frequency_cap_days)")
         .eq("id", job.campaignId).eq("business_id", job.businessId).single();
     if (error || !data?.businesses || !["active", "processing"].includes(data.status)) return null;
     return data;
@@ -22,8 +22,9 @@ export async function loadAuthorizedCampaignJob(admin: Admin, job: CampaignJobDa
 
 export async function campaignContactPermission(admin: Admin, job: Pick<CampaignJobData, "businessId" | "contact">, frequencyCapDays: number) {
     if (job.contact.phone) {
+        // sms_opt_outs is keyed by phone_number (the live table has no id column).
         const { data, error } = await admin.from("sms_opt_outs")
-            .select("id").eq("phone_number", job.contact.phone).maybeSingle();
+            .select("phone_number").eq("phone_number", job.contact.phone).maybeSingle();
         if (error) throw error;
         if (data) return { allowed: false, reason: "Customer opted out of SMS" };
     }

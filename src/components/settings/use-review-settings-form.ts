@@ -21,6 +21,9 @@ export function useReviewSettingsForm(business: BusinessSettingsRecord) {
             review_request_frequency_cap_days: business.review_request_frequency_cap_days ?? 30,
             review_request_sms_enabled: business.review_request_sms_enabled ?? true,
             review_request_email_enabled: business.review_request_email_enabled ?? true,
+            review_request_quiet_hours_enabled: business.review_request_quiet_hours_enabled ?? false,
+            review_request_quiet_start: (business.review_request_quiet_start ?? "21:00").slice(0, 5),
+            review_request_quiet_end: (business.review_request_quiet_end ?? "08:00").slice(0, 5),
         },
     });
 

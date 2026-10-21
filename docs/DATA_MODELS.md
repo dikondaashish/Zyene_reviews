@@ -118,11 +118,11 @@ Typical fields: business link, rating, free-text, category, status, customer con
 | Field | Notes |
 |-------|-------|
 | `business_id` | |
-| `name`, `status` | active/paused/completed |
+| `name`, `status` | draft / active / paused / completed / archived; `processing` is legacy (sends keep campaigns `active` so follow-ups run; `20261020120000`) |
 | `trigger_type` | manual / scheduled / pos_payment (POS may be locked in UI) |
 | `channel` | sms / email / both |
 | Templates | SMS + email subject/body |
-| Counters | sent/opened/clicked/reviews received |
+| Counters | `total_sent` / `total_opened` / `total_clicked` / `total_completed`, recomputed from `review_requests` by trigger `review_requests_campaign_stats` (`20261020121000`); `total_reviews_received` is unused |
 
 ### `review_requests`
 
@@ -130,10 +130,25 @@ Typical fields: business link, rating, free-text, category, status, customer con
 |-------|-------|
 | `business_id`, optional `campaign_id` | |
 | Customer phone/email/name | |
-| `trigger_source` | manual, campaign, zapier, pos_* , … |
+| `trigger_source` | manual, campaign, zapier, pos_* , … (campaign sends now record `campaign`) |
 | `channel`, `status` | queued → sent → delivered → opened → clicked → review_left / failed |
 | `review_link`, timestamps, `error_message` | |
-| `scheduled_for` | for delayed sends |
+| `scheduled_for` | for delayed sends; a row is only claimed for sending once `scheduled_for <= now()` |
+
+### Review-automation tables (2026-10-21)
+
+Migrations `20261021090000` – `20261021120000`. All have RLS: business members read their own rows (`authorized_business_ids()`), writes are server-side only except rules/templates/approvers (owners/admins/managers).
+
+| Table | Purpose |
+|-------|---------|
+| `review_request_messages` | One row per intended message (request × step × channel). Unique key = send claim (no double sends); provider id + delivery status (`sent` / `delivered` / `undelivered` / `failed` / `bounced` / `complained`) with `status_rank` so late callbacks never move status back |
+| `review_request_email_unsubscribes` | Per-business email opt-out (`link`, `one_click`, hard `bounce`, `complaint`) |
+| `review_reply_rules`, `review_reply_templates`, `review_reply_approvers` | Per-star action (`approval` default / `auto` / `template` / `ignore`), saved replies, designated approvers |
+| `review_reply_drafts` | Approval queue; unique `review_id` (one draft per review) |
+| `enrollment_imports`, `enrollment_import_rows` | Gradual CSV / invoice-email enrollment; rows unique per contact per import |
+| `business_inbound_addresses`, `inbound_email_events` | Invoice-copy address + allowed senders; processed events (unique provider id; no content stored) |
+
+New columns: `businesses.review_request_quiet_hours_enabled/_start/_end`, `reply_rules_enabled(_at)`; `campaigns.stop_on_click` (default true); `review_requests.review_confirmed_at`, `review_confirmation_source` (`manual` | `matched`), `review_confirmed_by`, `deferred_reason`. `campaigns.total_reviews_received` now counts **confirmed** reviews; `total_completed` counts finished review pages (Google hand-off or private feedback), which is not proof of a review.
 
 ### `customers`
 

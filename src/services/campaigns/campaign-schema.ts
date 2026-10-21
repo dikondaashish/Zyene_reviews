@@ -10,7 +10,8 @@ export const patchCampaignSchema = z.object({
     email_template: z.string().max(20000).optional(),
     delay_minutes: z.number().int().min(0).max(7 * 24 * 60).optional(),
     follow_up_enabled: z.boolean().optional(),
-    follow_up_delay_hours: z.number().int().min(0).max(30 * 24).optional(),
+    follow_up_delay_hours: z.number().int().min(1).max(30 * 24).optional(),
+    stop_on_click: z.boolean().optional(),
     follow_up_template: z.string().max(5000).optional(),
     drip_step3_template: z.string().max(5000).optional().nullable(),
 }).superRefine((value, ctx) => {

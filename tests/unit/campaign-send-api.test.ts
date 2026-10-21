@@ -36,7 +36,21 @@ describe("selected campaign sending", () => {
         const response = await handleCampaignSend(request(), campaignId);
         expect(await response.json()).toMatchObject({ success: true, data: { queuedCount: 1, skippedCount: 0 } });
         expect(mocks.send).toHaveBeenCalledWith([expect.objectContaining({ id: `campaign:${campaignId}:customer:${customerId}`, data: expect.objectContaining({ businessId: "business", contact: expect.objectContaining({ phone: "123" }) }) })]);
+        // Sending keeps the campaign "active" so the follow-up cron still picks it up.
+        expect(mocks.createAdminClient().from).not.toHaveBeenCalled();
+    });
+    it("accepts a legacy processing campaign and moves it back to active", async () => {
+        campaignQuery.maybeSingle.mockResolvedValue({ data: { id: campaignId, business_id: "business", status: "processing", channel: "sms" } });
+        expect((await handleCampaignSend(request(), campaignId)).status).toBe(200);
+        const adminFrom = mocks.createAdminClient().from;
+        expect(adminFrom).toHaveBeenCalledWith("campaigns");
+        expect(adminFrom().update).toHaveBeenCalledWith({ status: "active" });
         expect(mocks.adminEq).toHaveBeenCalledWith("business_id", "business");
+    });
+    it.each(["draft", "paused", "completed"])("rejects a %s campaign before enqueuing", async (status) => {
+        campaignQuery.maybeSingle.mockResolvedValue({ data: { id: campaignId, business_id: "business", status, channel: "sms" } });
+        expect((await handleCampaignSend(request(), campaignId)).status).toBe(400);
+        expect(mocks.send).not.toHaveBeenCalled();
     });
     it("never enqueues for an unauthorized business", async () => {
         mocks.access.mockResolvedValue(false);

@@ -1,9 +1,9 @@
 /** Google review sync - sync-platform */
 
+import { loadAutoReplySettings } from "@/services/reviews/auto-reply-eligibility";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
-import type { AutoReplyBusinessSettings } from "@/services/reviews/auto-reply-eligibility";
 import type { GooglePlatformWithTokens } from "@/types/google-sync";
 import {
   clearGoogleSyncBootstrapHandoff,
@@ -49,12 +49,7 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
                 context.googleLocationId
             );
 
-            const { data: autoReplyRow } = await admin
-                .from("businesses")
-                .select("auto_reply_enabled, auto_reply_enabled_at, auto_reply_min_rating, auto_reply_tone")
-                .eq("id", context.platform.business_id)
-                .single();
-            const autoReplySettings = (autoReplyRow || null) as AutoReplyBusinessSettings | null;
+            const autoReplySettings = await loadAutoReplySettings(admin, context.platform.business_id);
 
             let totalSyncedFull = 0;
             const seenGoogleExternalIds = new Set<string>();

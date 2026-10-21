@@ -3,9 +3,9 @@ import type { DripCampaignRow, DripRequestRow } from "@/lib/campaigns/drip-phase
 import { shouldSkipDripSend } from "@/lib/campaigns/drip-phase1";
 
 export const DRIP_REQUEST_SELECT =
-    "id, business_id, campaign_id, customer_name, customer_email, customer_phone, drip_status, drip_steps_sent, review_left, clicked_at, completed_at, last_drip_channel, sent_at, step2_sent_at";
+    "id, business_id, campaign_id, customer_name, customer_email, customer_phone, drip_status, drip_steps_sent, review_left, review_confirmed_at, clicked_at, completed_at, last_drip_channel, sent_at, step2_sent_at";
 export const DRIP_CAMPAIGN_SELECT =
-    "id, business_id, status, follow_up_enabled, follow_up_template, drip_step3_template, drip_channel_alternate, channel, businesses (id, organization_id, name, sender_name)";
+    "id, business_id, status, follow_up_enabled, follow_up_template, drip_step3_template, drip_channel_alternate, channel, follow_up_delay_hours, stop_on_click, businesses (id, organization_id, name, slug, sender_name, timezone)";
 
 export async function loadDripSendContext(
     admin: ReturnType<typeof createAdminClient>, campaign: DripCampaignRow, req: DripRequestRow, step: 2 | 3,
@@ -27,6 +27,7 @@ export async function loadDripSendContext(
         .eq("drip_steps_sent", step - 1).maybeSingle();
     const request = data as unknown as DripRequestRow | null;
     if (error || request?.id !== req.id || request.business_id !== business.id || request.campaign_id !== campaign.id ||
-        request.drip_steps_sent !== step - 1 || shouldSkipDripSend(request)) return null;
+        request.drip_steps_sent !== step - 1 ||
+        shouldSkipDripSend(request, { stopOnClick: liveCampaign.stop_on_click !== false })) return null;
     return { campaign: liveCampaign, business, request };
 }

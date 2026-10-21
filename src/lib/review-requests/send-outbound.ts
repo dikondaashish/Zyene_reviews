@@ -5,6 +5,7 @@ import { dispatchOutboundReviewChannels } from "./send-outbound-dispatch";
 import { prepareOutboundReviewRequest } from "./send-outbound-validate";
 import { reviewRequestSubject } from "@/lib/email/review-request-subject";
 import { signedReviewLink } from "@/lib/review-requests/tracking-token";
+import { deferReviewRequest, quietHoursReason } from "@/lib/review-requests/defer-request";
 import {
     fail,
     isValidEmail,
@@ -75,14 +76,9 @@ export async function sendOutboundReviewRequest(
         typeof b.email === "string" && isValidEmail(b.email.trim()) ? b.email.trim() : undefined;
     const subject = reviewRequestSubject(businessName);
 
-    const {
-        sendStatus,
-        errorMessage,
-        resendEmailId,
-        bumpLegs,
-        smsLegStatus,
-        emailLegStatus,
-    } = await dispatchOutboundReviewChannels({
+    const dispatched = await dispatchOutboundReviewChannels(admin, {
+        requestId,
+        businessId: b.id,
         channel,
         phoneNorm,
         emailNorm,
@@ -93,6 +89,16 @@ export async function sendOutboundReviewRequest(
         reviewLink,
         subject,
     });
+    const { sendStatus, errorMessage, resendEmailId, bumpLegs, smsLegStatus, emailLegStatus } = dispatched;
+
+    if (sendStatus === "deferred" && dispatched.deferUntil) {
+        await deferReviewRequest(admin, {
+            requestId, businessId: b.id, until: dispatched.deferUntil,
+            reason: quietHoursReason(dispatched.deferUntil, prepared.timezone),
+        });
+        await admin.from("review_requests").update({ review_link: reviewLink }).eq("id", requestId).eq("business_id", b.id);
+        return { success: true, requestId, status: "queued", channel, reviewLink, errorMessage: "Delayed by quiet hours" };
+    }
 
     const sentAt = sendStatus === "sent" ? new Date().toISOString() : null;
     const patch: Record<string, unknown> = {
@@ -128,6 +134,9 @@ export async function sendOutboundReviewRequest(
 
     if (sendStatus === "failed") {
         return fail(500, channel, errorMessage ?? "Send failed.", requestId, reviewLink);
+    }
+    if (sendStatus === "skipped") {
+        return fail(400, channel, errorMessage ?? "Not eligible to receive review requests.", requestId, reviewLink);
     }
 
     return {

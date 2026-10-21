@@ -1,5 +1,6 @@
-import { isTestContact } from "@/lib/customers/test-contact";
 import { logger } from "@/lib/logger";
+import { blockedReason, checkReviewRequestSend } from "@/lib/review-requests/send-guard";
+import { channelsFor } from "@/lib/review-requests/dispatch-review-request";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { User } from "@supabase/supabase-js";
 import { checkLimit } from "@/lib/stripe/check-limits";
@@ -89,65 +90,17 @@ export async function prepareExecuteSendReviewRequest(params: {
 
     const phoneNorm = normalizeCustomerPhone(customerPhone);
     const emailNorm = normalizeCustomerEmail(customerEmail);
-    const frequencyCapDays =
-        (business as { review_request_frequency_cap_days?: number | null }).review_request_frequency_cap_days ?? 30;
-
-    if ((channel === "sms" || channel === "both") && phoneNorm) {
-        const { data: contact } = await supabase
-            .from("customers")
-            .select("last_request_sent_at, is_opted_out, tags")
-            .eq("business_id", businessId)
-            .eq("phone", phoneNorm)
-            .maybeSingle();
-
-        if (contact?.is_opted_out || isTestContact(contact)) {
-            return apiError("This contact is opted out or tagged zyene:test and cannot receive review requests.", { status: 400 });
-        }
-
-        if (contact?.last_request_sent_at) {
-            const lastSent = new Date(contact.last_request_sent_at);
-            const diffDays = (Date.now() - lastSent.getTime()) / (1000 * 3600 * 24);
-            if (diffDays < frequencyCapDays) {
-                return apiError(`Already sent to this customer recently. Cap is ${frequencyCapDays} days.`, {
-                    status: 400,
-                });
-            }
-        }
-    }
-
-    if ((channel === "email" || channel === "both") && emailNorm) {
-        const { data: contact } = await supabase
-            .from("customers")
-            .select("last_request_sent_at, is_opted_out, tags")
-            .eq("business_id", businessId)
-            .eq("email", emailNorm)
-            .maybeSingle();
-
-        if (contact?.is_opted_out || isTestContact(contact)) {
-            return apiError("This contact is opted out or tagged zyene:test and cannot receive review requests.", { status: 400 });
-        }
-
-        if (contact?.last_request_sent_at) {
-            const lastSent = new Date(contact.last_request_sent_at);
-            const diffDays = (Date.now() - lastSent.getTime()) / (1000 * 3600 * 24);
-            if (diffDays < frequencyCapDays) {
-                return apiError(`Already sent to this customer recently. Cap is ${frequencyCapDays} days.`, {
-                    status: 400,
-                });
-            }
-        }
-    }
-
-    if ((channel === "sms" || channel === "both") && phoneNorm) {
-        const { data: optOut } = await admindClient
-            .from("sms_opt_outs")
-            .select("id")
-            .eq("phone_number", phoneNorm)
-            .maybeSingle();
-
-        if (optOut) {
-            return apiError("Customer has opted out of SMS", { status: 400 });
-        }
+    // Shared eligibility rules (channel switches, STOP, unsubscribes, opt-outs, frequency cap).
+    // They are checked again right before the message is sent, including for scheduled sends.
+    const guard = await checkReviewRequestSend(admindClient, {
+        businessId,
+        channels: channelsFor(channel),
+        phone: phoneNorm,
+        email: emailNorm,
+        frequencyCap: "apply",
+    });
+    if (guard.allowed.length === 0) {
+        return apiError(`Not sent: ${blockedReason(guard.blocked)}`, { status: 400 });
     }
 
     const scheduleDate = scheduledFor ? new Date(scheduledFor) : null;
@@ -157,7 +110,7 @@ export async function prepareExecuteSendReviewRequest(params: {
             scheduleDate.getTime() > Date.now() + 60_000,
     );
 
-    if (!(business as { slug?: string | null }).slug && !isScheduled) {
+    if (!(business as { slug?: string | null }).slug) {
         return apiError(
             "Set a public profile link (slug) in Settings before sending review requests so the message includes your review page.",
             { status: 400 },

@@ -1,24 +1,19 @@
-import { sendSMS } from "@/services/twilio/send-sms";
-import { sendReviewRequestEmail } from "@/services/resend/send-review-request-email";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import {
     reviewRequestEmail,
     reviewRequestEmailPlainText,
 } from "@/services/resend/templates/review-request-email";
 import { plgSmsFooter } from "@/lib/growth/plg-attribution";
 import { smsLabel } from "@/lib/security/sms-label";
-import type { BumpAfterSendLegs } from "./bump-after-send";
+import { channelsFor, dispatchReviewRequest, type DispatchResult } from "./dispatch-review-request";
 import type { OutboundChannel } from "./send-outbound-types";
 
-export type ChannelSendResult = {
-    sendStatus: "sent" | "failed";
-    errorMessage: string | null;
-    resendEmailId: string | null;
-    bumpLegs?: BumpAfterSendLegs;
-    smsLegStatus: "sent" | "failed" | null;
-    emailLegStatus: "sent" | "failed" | null;
-};
+export type ChannelSendResult = DispatchResult;
 
-export async function dispatchOutboundReviewChannels(args: {
+/** API / Zapier / POS message copy, sent through the shared guarded dispatcher. */
+export async function dispatchOutboundReviewChannels(admin: SupabaseClient, args: {
+    requestId: string;
+    businessId: string;
     channel: OutboundChannel;
     phoneNorm: string | null;
     emailNorm: string | null;
@@ -29,119 +24,26 @@ export async function dispatchOutboundReviewChannels(args: {
     reviewLink: string;
     subject: string;
 }): Promise<ChannelSendResult> {
-    const {
-        channel,
-        phoneNorm,
-        emailNorm,
-        displayName,
-        businessName,
+    const { displayName, businessName, senderName, reviewLink } = args;
+    const templateProps = { customerName: displayName, businessName, reviewLink, senderName };
+    return dispatchReviewRequest(admin, {
+        requestId: args.requestId,
+        businessId: args.businessId,
+        step: 1,
+        channels: channelsFor(args.channel),
+        phone: args.phoneNorm,
+        email: args.emailNorm,
+        frequencyCap: "apply",
+        sms: {
+            body: `Hi ${smsLabel(displayName, "there")}! Thanks for visiting ${smsLabel(businessName, "us")}. We'd love your feedback - it only takes 30 seconds: ${reviewLink}${plgSmsFooter()}`,
+        },
+        emailMessage: {
+            subject: args.subject,
+            html: reviewRequestEmail(templateProps),
+            text: reviewRequestEmailPlainText(templateProps),
+            replyTo: args.businessEmail,
+        },
         senderName,
-        businessEmail,
-        reviewLink,
-        subject,
-    } = args;
-
-    let sendStatus: "sent" | "failed" = "sent";
-    let errorMessage: string | null = null;
-    let resendEmailId: string | null = null;
-    let bumpLegs: BumpAfterSendLegs | undefined;
-    let smsLegStatus: "sent" | "failed" | null = null;
-    let emailLegStatus: "sent" | "failed" | null = null;
-
-    if (channel === "sms" && phoneNorm) {
-        const messageBody = `Hi ${smsLabel(displayName, "there")}! Thanks for visiting ${smsLabel(businessName, "us")}. We'd love your feedback - it only takes 30 seconds: ${reviewLink}${plgSmsFooter()}`;
-        const r = await sendSMS(phoneNorm, messageBody);
-        if (!r.sent) {
-            sendStatus = "failed";
-            errorMessage = r.error ?? "SMS failed";
-            smsLegStatus = "failed";
-        } else {
-            smsLegStatus = "sent";
-        }
-    } else if (channel === "email" && emailNorm) {
-        const html = reviewRequestEmail({
-            customerName: displayName,
-            businessName,
-            reviewLink,
-            senderName,
-        });
-        const r = await sendReviewRequestEmail({
-            to: emailNorm,
-            subject,
-            html,
-            text: reviewRequestEmailPlainText({
-                customerName: displayName,
-                businessName,
-                reviewLink,
-                senderName,
-            }),
-            replyTo: businessEmail,
-            fallbackSenderName: senderName,
-            fallbackBusinessName: businessName,
-        });
-        if (!r.sent) {
-            sendStatus = "failed";
-            errorMessage = r.error ?? "Email failed";
-            emailLegStatus = "failed";
-        } else {
-            resendEmailId = r.id ?? null;
-            emailLegStatus = "sent";
-        }
-    } else if (channel === "both" && phoneNorm && emailNorm) {
-        const messageBody = `Hi ${smsLabel(displayName, "there")}! Thanks for visiting ${smsLabel(businessName, "us")}. We'd love your feedback - it only takes 30 seconds: ${reviewLink}${plgSmsFooter()}`;
-        const smsR = await sendSMS(phoneNorm, messageBody);
-
-        const html = reviewRequestEmail({
-            customerName: displayName,
-            businessName,
-            reviewLink,
-            senderName,
-        });
-        const emailR = await sendReviewRequestEmail({
-            to: emailNorm,
-            subject,
-            html,
-            text: reviewRequestEmailPlainText({
-                customerName: displayName,
-                businessName,
-                reviewLink,
-                senderName,
-            }),
-            replyTo: businessEmail,
-            fallbackSenderName: senderName,
-            fallbackBusinessName: businessName,
-        });
-
-        const smsOk = smsR.sent;
-        const emailOk = emailR.sent;
-        smsLegStatus = smsOk ? "sent" : "failed";
-        emailLegStatus = emailOk ? "sent" : "failed";
-
-        if (!smsOk && !emailOk) {
-            sendStatus = "failed";
-            errorMessage = [
-                `SMS: ${smsR.error ?? "failed"}`,
-                `Email: ${emailR.error ?? "failed"}`,
-            ].join(". ");
-        } else {
-            sendStatus = "sent";
-            bumpLegs = { phone: smsOk, email: emailOk };
-            if (!smsOk || !emailOk) {
-                const parts: string[] = [];
-                if (!smsOk) parts.push(`SMS did not send: ${smsR.error ?? "failed"}`);
-                if (!emailOk) parts.push(`Email did not send: ${emailR.error ?? "failed"}`);
-                errorMessage = parts.join(" ");
-            }
-            if (emailOk && emailR.id) resendEmailId = emailR.id;
-        }
-    }
-
-    return {
-        sendStatus,
-        errorMessage,
-        resendEmailId,
-        bumpLegs,
-        smsLegStatus,
-        emailLegStatus,
-    };
+        businessName,
+    });
 }

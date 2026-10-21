@@ -77,7 +77,7 @@ export function CampaignsListSection({
                                             Opened: <strong className="text-foreground">{getOpenedPercent(campaign)}%</strong>
                                         </span>
                                         <span>
-                                            Completed: <strong className="text-foreground">{getCompletedPercent(campaign)}%</strong>
+                                            Finished page: <strong className="text-foreground">{getCompletedPercent(campaign)}%</strong>
                                         </span>
                                     </div>
                                 </div>

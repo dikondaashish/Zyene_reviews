@@ -3,6 +3,7 @@ export type TwilioMessageParams = {
     to: string;
     from?: string;
     messagingServiceSid?: string;
+    statusCallback?: string;
 };
 
 export function ensureSmsOptOutText(body: string): string {
@@ -12,14 +13,15 @@ export function ensureSmsOptOutText(body: string): string {
 export function buildTwilioMessageParams(
     to: string,
     body: string,
-    options: { messagingServiceSid?: string; phoneNumber?: string },
+    options: { messagingServiceSid?: string; phoneNumber?: string; statusCallback?: string },
 ): TwilioMessageParams | null {
+    const callback = options.statusCallback ? { statusCallback: options.statusCallback } : {};
     if (options.messagingServiceSid) {
-        return { body, messagingServiceSid: options.messagingServiceSid, to };
+        return { body, messagingServiceSid: options.messagingServiceSid, to, ...callback };
     }
 
     if (options.phoneNumber) {
-        return { body, from: options.phoneNumber, to };
+        return { body, from: options.phoneNumber, to, ...callback };
     }
 
     return null;

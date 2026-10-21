@@ -13,30 +13,41 @@ const baseForm: CampaignForm = {
     email_template: "b",
     delay_minutes: 0,
     follow_up_enabled: true,
-    follow_up_delay_hours: 168,
+    follow_up_delay_hours: 72,
+    stop_on_click: true,
     follow_up_template: "Step2 body",
     drip_step3_template: "",
 };
 
-describe("NewCampaignTimingStep Phase 1 drip UI", () => {
-    it("shows drip copy, reminder toggle label, optional step 3, no delay chips", () => {
-        const html = renderToStaticMarkup(
-            createElement(NewCampaignTimingStep, {
-                form: baseForm,
-                updateForm: () => {},
-            }),
-        );
-        expect(html).toContain("Enable reminder drip");
-        expect(html).toContain("Day 0");
-        expect(html).toContain("Day 7");
-        expect(html).toContain("Day 14");
-        expect(html).toContain("Step 2 message (Day 7)");
-        expect(html).toContain("Step 3 message (Day 14)");
-        expect(html).toContain("optional");
-        expect(html).toContain("Falls back to the Step 2 message if left blank");
-        expect(html).not.toContain("24 hours");
-        expect(html).not.toContain("48 hours");
-        expect(html).not.toContain("72 hours");
-        expect(html).not.toContain("Follow-up Delay");
+const render = (form: CampaignForm) =>
+    renderToStaticMarkup(createElement(NewCampaignTimingStep, { form, updateForm: () => {} }));
+
+describe("NewCampaignTimingStep reminder settings", () => {
+    it("shows the configured reminder delay instead of a fixed 7-day schedule", () => {
+        const html = render(baseForm);
+        expect(html).toContain("Send reminders");
+        expect(html).toContain("Up to 2 reminders, 3 days apart");
+        expect(html).toContain("Reminder 1 (after 3 days)");
+        expect(html).toContain("Reminder 2 (after 6 days)");
+        expect(html).toContain("Time between reminders");
+        expect(html).not.toContain("Day 0");
+    });
+
+    it("explains that opening the link is not proof of a review and offers the stop-on-click switch", () => {
+        const html = render(baseForm);
+        expect(html).toContain("Stop reminders after the customer opens the link");
+        expect(html).toContain("does not prove a review was posted");
+        expect(html).toMatch(/id="stop-on-click"[^>]*aria-checked="true"|aria-checked="true"[^>]*id="stop-on-click"/);
+    });
+
+    it("explains how delay changes affect already-queued contacts", () => {
+        const html = render(baseForm);
+        expect(html).toContain("already-queued contacts keep their original delay");
+        expect(html).toContain("Applies to reminders not yet sent");
+    });
+
+    it("hides reminder details when reminders are off", () => {
+        const html = render({ ...baseForm, follow_up_enabled: false });
+        expect(html).not.toContain("Time between reminders");
     });
 });

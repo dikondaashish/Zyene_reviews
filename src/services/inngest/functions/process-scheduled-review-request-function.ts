@@ -1,38 +1,8 @@
-import { logger } from "@/lib/logger";
 import { inngest } from "../client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { sendReviewRequest } from "@/lib/notifications/review-request";
-import { generateContentWithFallback } from "@/domains/ai/adapters/vertex-adapter";
-import { BATCH_REVIEWS_PROMPT } from "@/domains/ai/prompts";
-import { sendReviewAlert } from "@/lib/notifications/review-alert";
-import { batchAnalysisSchema } from "@/domains/ai/schemas/response-schemas";
-import {
-    syncGoogleReviewsForPlatform,
-    prepareGoogleSync,
-    syncGoogleReviewsPage,
-    finalizeGoogleSync,
-    enqueueMissingGoogleReviewAnalysis,
-    hideGoogleReviewsRemovedFromSource,
-    readGoogleReviewSyncResumeCursor,
-} from "@/services/google/sync-service";
-import { MAX_REVIEW_PAGES } from "@/services/google/constants";
-import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
-import {
-    normalizeSentimentForDb,
-    normalizeThemesForDb,
-    normalizeUrgencyForDb,
-} from "@/domains/ai/normalize-analysis-for-db";
-import { pingReviewSyncHeartbeat } from "@/lib/monitoring/review-sync-heartbeat";
-import { checkLimit } from "@/lib/stripe/check-limits";
-import { planAllowsAutoCommenter } from "@/services/stripe/plans";
-import { generateReplyDraftText, type ReplyTone } from "@/domains/ai/services/generate-reply-draft";
-import { postGoogleReplySystem } from "@/services/reviews/post-google-reply-system";
-import {
-    AUTO_REPLY_ENABLED_AT_SKEW_MS,
-    AUTO_REPLY_MAX_REVIEW_AGE_MS,
-} from "@/services/reviews/auto-reply-eligibility";
 import { acquireLock, releaseLock } from "@/lib/db/redis-lock";
 import { processOneScheduled } from "@/lib/review-requests/process-scheduled-queue";
+import type { DueRow } from "@/lib/review-requests/scheduled-queue-types";
 
 export const processScheduledReviewRequest = inngest.createFunction(
     {
@@ -44,7 +14,7 @@ export const processScheduledReviewRequest = inngest.createFunction(
         },
     },
     { event: "review-request/scheduled.send" },
-    async ({ event, step }: { event: { data: { reviewRequestId: string; sendAt: string } }; step: any }) => {
+    async ({ event, step }) => {
         const admin = createAdminClient();
         const reviewRequestId = event.data.reviewRequestId;
         const sendAtIso = event.data.sendAt;
@@ -54,13 +24,9 @@ export const processScheduledReviewRequest = inngest.createFunction(
             throw new Error(`Invalid sendAt: ${sendAtIso}`);
         }
 
-        // 1) Wait until scheduled time
-        await step.run("sleep-until-send", async () => {
-            if (sendAt.getTime() > Date.now()) {
-                // Inngest supports sleepUntil; step is typed as any here.
-                await step.sleepUntil("scheduled-wait", sendAt);
-            }
-        });
+        // 1) Wait until scheduled time. Steps cannot be nested inside step.run, so this must be top-level;
+        // a past sendAt resolves immediately.
+        await step.sleepUntil("scheduled-wait", sendAt);
 
         // 2) Lock to prevent double-send (10 minutes)
         const lockKey = `lock:review-request:${reviewRequestId}`;
@@ -77,17 +43,7 @@ export const processScheduledReviewRequest = inngest.createFunction(
                     .select("id, business_id, customer_name, customer_phone, customer_email, channel, status")
                     .eq("id", reviewRequestId)
                     .maybeSingle();
-                return data as
-                    | {
-                          id: string;
-                          business_id: string;
-                          customer_name: string | null;
-                          customer_phone: string | null;
-                          customer_email: string | null;
-                          channel: string;
-                          status: string;
-                      }
-                    | null;
+                return data as (DueRow & { status: string }) | null;
             });
 
             if (!row) {

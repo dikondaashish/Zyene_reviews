@@ -1,9 +1,13 @@
 /**
- * Phase 1 drip: fixed 7-day / 7-day reminders, channel alternate, terminate helpers.
- * No visual builder, branching, or platform-sync review matching.
+ * Campaign reminders: configurable delay between steps, optional stop-on-click, channel
+ * alternate, terminate helpers. No platform-sync review matching (reviews only stop
+ * reminders when confirmed on the request).
  */
 
+/** Default gap between reminder steps when a campaign has no explicit delay (7 days). */
 export const DRIP_STEP_DELAY_HOURS = 7 * 24; // 168
+/** A reminder this far past its due time is not sent (e.g. after a long pause); the sequence ends. */
+export const DRIP_STALE_AFTER_HOURS = 72;
 
 export type DripChannel = "sms" | "email";
 export type DripStatus = "idle" | "active" | "completed" | "terminated";
@@ -12,7 +16,9 @@ export type DripTerminatedReason =
     | "review_left"
     | "opted_out"
     | "manual_stop"
-    | "exhausted";
+    | "exhausted"
+    | "expired"
+    | "unsubscribed";
 
 /** Prefer email as "last" when both sent so Step 2 alternates to SMS. */
 export function primaryChannelFromMethods(methods: DripChannel[]): DripChannel | null {
@@ -48,11 +54,20 @@ export function pickDripChannel(args: {
     return null;
 }
 
+export function reminderDelayHours(followUpDelayHours: number | null | undefined): number {
+    return followUpDelayHours && followUpDelayHours > 0 ? followUpDelayHours : DRIP_STEP_DELAY_HOURS;
+}
+
 /** Cutoff: rows with sent_at / step2_sent_at at or before this ISO are due. */
-export function dueBeforeIso(delayHours = DRIP_STEP_DELAY_HOURS): string {
-    const cutoff = new Date();
-    cutoff.setTime(cutoff.getTime() - delayHours * 60 * 60 * 1000);
-    return cutoff.toISOString();
+export function dueBeforeIso(delayHours = DRIP_STEP_DELAY_HOURS, now = new Date()): string {
+    return new Date(now.getTime() - delayHours * 60 * 60 * 1000).toISOString();
+}
+
+/** True when a reminder is so late that sending it now would surprise the customer. */
+export function isStaleReminder(previousSentAt: string | null, delayHours: number, now = new Date()): boolean {
+    if (!previousSentAt) return true;
+    const dueAt = new Date(previousSentAt).getTime() + delayHours * 3_600_000;
+    return now.getTime() - dueAt > DRIP_STALE_AFTER_HOURS * 3_600_000;
 }
 
 export function shouldSkipDripSend(row: {
@@ -60,10 +75,12 @@ export function shouldSkipDripSend(row: {
     review_left: boolean | null;
     clicked_at: string | null;
     completed_at: string | null;
-}): boolean {
+    review_confirmed_at?: string | null;
+}, options: { stopOnClick?: boolean } = {}): boolean {
     if (row.drip_status !== "active") return true;
-    if (row.review_left) return true;
-    if (row.clicked_at) return true;
+    if (row.review_left || row.review_confirmed_at) return true;
+    if ((options.stopOnClick ?? true) && row.clicked_at) return true;
+    // Finished the review page (Google hand-off or private feedback): never remind again.
     if (row.completed_at) return true;
     return false;
 }

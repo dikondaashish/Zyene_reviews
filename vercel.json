@@ -43,6 +43,14 @@
     {
       "path": "/api/cron/aeo-report-scheduler",
       "schedule": "0 11 * * *"
+    },
+    {
+      "path": "/api/cron/scheduled-review-requests",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/enrollment-imports",
+      "schedule": "*/15 * * * *"
     }
   ]
 }

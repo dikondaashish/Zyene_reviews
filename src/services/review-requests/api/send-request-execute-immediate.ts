@@ -5,6 +5,7 @@ import { bumpCustomerAfterSend } from "@/lib/review-requests/bump-after-send";
 import { dispatchDashboardReviewChannels } from "@/lib/review-requests/review-request-dashboard-dispatch";
 import { reviewRequestSubject } from "@/lib/email/review-request-subject";
 import { signedReviewLink } from "@/lib/review-requests/tracking-token";
+import { deferReviewRequest, quietHoursReason } from "@/lib/review-requests/defer-request";
 import type { SendRequestPrepared } from "./send-request-execute-prepare";
 
 export async function executeImmediateSendReviewRequest(prepared: SendRequestPrepared) {
@@ -49,8 +50,9 @@ export async function executeImmediateSendReviewRequest(prepared: SendRequestPre
             : undefined;
     const subject = reviewRequestSubject(businessName);
 
-    const { sendStatus, errorMessage, resendEmailId, bumpLegs, smsLegStatus, emailLegStatus } =
-        await dispatchDashboardReviewChannels({
+    const dispatched = await dispatchDashboardReviewChannels(admindClient, {
+            requestId,
+            businessId,
             channel,
             phoneNorm,
             emailNorm,
@@ -61,6 +63,14 @@ export async function executeImmediateSendReviewRequest(prepared: SendRequestPre
             reviewLink,
             subject,
         });
+    const { sendStatus, errorMessage, resendEmailId, bumpLegs, smsLegStatus, emailLegStatus } = dispatched;
+
+    if (sendStatus === "deferred" && dispatched.deferUntil) {
+        const reason = quietHoursReason(dispatched.deferUntil, (business as { timezone?: string | null }).timezone);
+        await deferReviewRequest(admindClient, { requestId, businessId, until: dispatched.deferUntil, reason });
+        await admindClient.from("review_requests").update({ review_link: reviewLink }).eq("id", requestId).eq("business_id", businessId);
+        return apiOk({ ...requestRecord, status: "queued", scheduled_for: dispatched.deferUntil.toISOString(), deferred_reason: reason });
+    }
 
     const sentAt = sendStatus === "sent" ? new Date().toISOString() : null;
     const statusPatch = {
@@ -113,6 +123,9 @@ export async function executeImmediateSendReviewRequest(prepared: SendRequestPre
     if (sendStatus === "failed") {
         const label = channel === "both" ? "SMS and email" : channel === "email" ? "email" : "SMS";
         return apiError(`Failed to send (${label}): ${errorMessage}`, { status: 500 });
+    }
+    if (sendStatus === "skipped") {
+        return apiError(`Not sent: ${errorMessage ?? "this contact is not eligible"}`, { status: 400 });
     }
 
     return apiOk(finalRequestRecord);

@@ -15,7 +15,7 @@ describe("system reply platform tenant boundary", () => {
             select: () => query, eq: () => query,
             single: async () => ({ data: {
                 id: "review-a", business_id: "business-a", platform: "google",
-                platform_id: "platform-b", external_id: "external-a",
+                platform_id: "platform-b", external_id: "external-a", response_status: "pending",
             }, error: null }),
             maybeSingle: async () => ({ data: { id: "platform-b", business_id: "business-b" }, error: null }),
         };

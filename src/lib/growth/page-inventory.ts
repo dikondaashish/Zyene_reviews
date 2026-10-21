@@ -202,10 +202,10 @@ export function buildGrowthPageInventory(): GrowthPageEntry[] {
                 notes: "301 to /case-studies/{slug}",
             })
         ),
-
         // ── Phase 6 partnerships ──
         entry({ path: "/partners", label: "Partners", phase: 6, priority: "P1", pageType: "conversion" }),
         entry({ path: "/newsletter/unsubscribe", label: "Newsletter unsubscribe", phase: 6, priority: " - ", pageType: "ops", inSitemap: false, indexed: false }),
+        entry({ path: "/unsubscribe/review-requests", label: "Review request email unsubscribe", phase: 6, priority: " - ", pageType: "ops", inSitemap: false, indexed: false }),
 
         // ── Phase 7 PLG ──
         entry({ path: "/tools", label: "Free tools hub", phase: 7, priority: "P1", pageType: "tool" }),

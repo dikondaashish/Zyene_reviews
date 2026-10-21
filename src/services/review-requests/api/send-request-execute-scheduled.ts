@@ -32,6 +32,7 @@ export async function executeScheduledSendReviewRequest(prepared: SendRequestPre
     }
 
     await inngest.send({
+        id: `review-request-scheduled:${requestRecord.id}`,
         name: "review-request/scheduled.send",
         data: {
             reviewRequestId: requestRecord.id,

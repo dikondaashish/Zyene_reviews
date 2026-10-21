@@ -1,6 +1,6 @@
 import { inngest } from "@/services/inngest/client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { dueBeforeIso } from "@/lib/campaigns/drip-phase1";
+import { dueBeforeIso, reminderDelayHours } from "@/lib/campaigns/drip-phase1";
 import { sendDripStep } from "@/lib/campaigns/drip-step-send";
 import type { DripCampaignRow, DripRequestRow } from "@/lib/campaigns/drip-phase1-types";
 import { DRIP_CAMPAIGN_SELECT, DRIP_REQUEST_SELECT } from "@/lib/campaigns/drip-send-context";
@@ -29,9 +29,11 @@ export const followUpWorker = inngest.createFunction(
             if (c?.id !== campaignId || !c.follow_up_enabled || c.status !== "active" ||
                 !z.uuid().safeParse(c.business_id).success || business?.id !== c.business_id) return;
 
-            const cutoff = dueBeforeIso();
+            // Reminder delay and stop-on-click are read live from the campaign.
+            const cutoff = dueBeforeIso(reminderDelayHours(c.follow_up_delay_hours));
+            const stopOnClick = c.stop_on_click !== false;
 
-            const { data: step2Rows, error: step2Error } = await admin
+            let step2Query = admin
                 .from("review_requests")
                 .select(DRIP_REQUEST_SELECT)
                 .eq("campaign_id", campaignId)
@@ -39,10 +41,10 @@ export const followUpWorker = inngest.createFunction(
                 .eq("drip_status", "active")
                 .eq("drip_steps_sent", 1)
                 .eq("review_left", false)
-                .is("clicked_at", null)
                 .is("completed_at", null)
-                .lt("sent_at", cutoff)
-                .limit(100);
+                .lt("sent_at", cutoff);
+            if (stopOnClick) step2Query = step2Query.is("clicked_at", null);
+            const { data: step2Rows, error: step2Error } = await step2Query.limit(100);
             if (step2Error) throw step2Error;
 
             for (const req of (step2Rows ?? []) as unknown as DripRequestRow[]) {
@@ -55,7 +57,7 @@ export const followUpWorker = inngest.createFunction(
                 });
             }
 
-            const { data: step3Rows, error: step3Error } = await admin
+            let step3Query = admin
                 .from("review_requests")
                 .select(DRIP_REQUEST_SELECT)
                 .eq("campaign_id", campaignId)
@@ -63,10 +65,10 @@ export const followUpWorker = inngest.createFunction(
                 .eq("drip_status", "active")
                 .eq("drip_steps_sent", 2)
                 .eq("review_left", false)
-                .is("clicked_at", null)
                 .is("completed_at", null)
-                .lt("step2_sent_at", cutoff)
-                .limit(100);
+                .lt("step2_sent_at", cutoff);
+            if (stopOnClick) step3Query = step3Query.is("clicked_at", null);
+            const { data: step3Rows, error: step3Error } = await step3Query.limit(100);
             if (step3Error) throw step3Error;
 
             for (const req of (step3Rows ?? []) as unknown as DripRequestRow[]) {

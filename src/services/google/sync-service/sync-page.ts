@@ -1,11 +1,11 @@
 /** Google review sync - sync-page */
 
+import { loadAutoReplySettings } from "@/services/reviews/auto-reply-eligibility";
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { computeReviewHash } from "@/utils/review-hash";
 import { inngest } from "@/services/inngest/client";
 import { AI_ANALYSIS_BATCH_SIZE } from "@/services/google/constants";
-import type { AutoReplyBusinessSettings } from "@/services/reviews/auto-reply-eligibility";
 import { publishGoogleReviewSyncProgress } from "./review-lifecycle";
 import { listReviewsWithOrderByFallback, syncStateManagerFromContext } from "./list-reviews";
 import { processGoogleReview } from "./process-review";
@@ -73,12 +73,7 @@ export async function syncGoogleReviewsPage(
         }
     }
 
-    const { data: autoReplyRow } = await admin
-        .from("businesses")
-        .select("auto_reply_enabled, auto_reply_enabled_at, auto_reply_min_rating, auto_reply_tone")
-        .eq("id", context.platform.business_id)
-        .single();
-    const autoReplySettings = (autoReplyRow || null) as AutoReplyBusinessSettings | null;
+    const autoReplySettings = await loadAutoReplySettings(admin, context.platform.business_id);
 
     let syncedCount = 0;
     const reviewIdsToAnalyze: string[] = [];

@@ -11,7 +11,7 @@ export async function loadScheduledSendBusiness(
 ): Promise<"failed" | BusinessRow> {
     const { data: business, error: bizErr } = await admin
         .from("businesses")
-        .select("id, name, slug, email, sender_name, review_request_frequency_cap_days, organization_id")
+        .select("id, name, slug, email, sender_name, review_request_frequency_cap_days, organization_id, timezone")
         .eq("id", businessId)
         .maybeSingle();
 

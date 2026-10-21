@@ -22,6 +22,8 @@ type CampaignSendEvent = {
         campaignId: string;
         businessId: string;
         userId: string;
+        /** Set when the contact came from a gradual import (CSV / invoice email). */
+        importRowId?: string;
         contact: {
             name?: string;
             phone?: string;

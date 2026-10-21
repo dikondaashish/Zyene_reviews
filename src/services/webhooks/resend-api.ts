@@ -2,6 +2,7 @@ import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { type ResendEvent, getEmailId, normalizeResendEventType, verifyResendWebhook } from "./resend-webhook-utils";
+import { applyResendFact, resendFact } from "./resend-delivery-apply";
 
 export async function handleResendWebhook(request: Request) {
     const raw = await request.text();
@@ -23,40 +24,18 @@ export async function handleResendWebhook(request: Request) {
         return NextResponse.json({ ok: true, skipped: true });
     }
 
-    const admin = createAdminClient();
-    const nowIso = new Date().toISOString();
-
-    const patch: Record<string, unknown> = {};
-
-    if (type === "email.delivered" || type === "delivered") {
-        patch.delivered_at = nowIso;
-    } else if (type === "email.opened" || type === "opened") {
-        patch.opened_at = nowIso;
-    } else if (type === "email.clicked" || type === "clicked") {
-        patch.clicked_at = nowIso;
-        patch.status = "clicked";
-    } else if (type === "email.bounced" || type === "bounced") {
-        patch.status = "failed";
-        const reason =
-            typeof (body.data as Record<string, unknown> | undefined)?.["error"] === "string"
-                ? ((body.data as Record<string, unknown>)["error"] as string)
-                : null;
-        patch.error_message = reason ? `Email bounced: ${reason}` : "Email bounced";
-    } else {
+    const fact = resendFact(type);
+    if (!fact) {
         return NextResponse.json({ ok: true, ignored: true, type });
     }
 
-    const { data, error } = await admin
-        .from("review_requests")
-        .update(patch)
-        .eq("resend_email_id", emailId)
-        .select("id")
-        .limit(5);
-
-    if (error) {
+    try {
+        const matched = await applyResendFact(createAdminClient(), {
+            emailId, fact, data: body.data as Record<string, unknown> | undefined,
+        });
+        return NextResponse.json({ ok: true, matched });
+    } catch (error) {
         logger.error({ err: error }, "[webhooks/resend] update failed:");
         return NextResponse.json({ error: "DB update failed" }, { status: 500 });
     }
-
-    return NextResponse.json({ ok: true, matched: (data ?? []).length });
 }
