@@ -9,6 +9,14 @@ import { createFacebookOAuthState, FACEBOOK_STATE_COOKIE, facebookCookieOptions 
 
 const connectQuerySchema = z.object({ businessId: z.string().uuid() });
 
+// `pages_show_list` is required for /me/accounts to return the user's Pages.
+const FACEBOOK_SCOPES = [
+    "pages_show_list",
+    "pages_read_engagement",
+    "pages_manage_metadata",
+    "pages_read_user_content",
+].join(",");
+
 /**
  * GET: Redirects user to Facebook OAuth login.
  * Expects ?businessId= in the query string (stored in state for the callback).
@@ -48,17 +56,18 @@ export async function GET(request: Request) {
 
     const state = createFacebookOAuthState(user.id, businessId, getAppSecret());
 
-    const scopes = [
-        "pages_read_engagement",
-        "pages_manage_metadata",
-        "pages_read_user_content",
-    ].join(",");
+    // Facebook Login for Business apps pick permissions via a dashboard configuration;
+    // classic apps send them as `scope`.
+    const configId = process.env.FACEBOOK_LOGIN_CONFIG_ID;
+    const permissions = configId
+        ? `&config_id=${encodeURIComponent(configId)}`
+        : `&scope=${FACEBOOK_SCOPES}`;
 
     const oauthUrl =
         `https://www.facebook.com/v19.0/dialog/oauth?` +
         `client_id=${appId}` +
         `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-        `&scope=${scopes}` +
+        permissions +
         `&state=${state.nonce}` +
         `&response_type=code`;
 
