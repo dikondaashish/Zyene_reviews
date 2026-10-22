@@ -1,4 +1,5 @@
 import { logger } from "@/lib/logger";
+import { createAdminClient } from "@/lib/db/supabase/admin";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import type { GoogleLocationFull } from "@/services/google/listing-information";
@@ -28,14 +29,17 @@ export async function persistGoogleListingSnapshot(
                 updated_at: now,
             })
             .eq("id", businessId),
-        supabase
+        // review_platforms writes are service-role only; the caller resolved platformId from a
+        // business the user can access, and these values come from Google, not the request.
+        createAdminClient()
             .from("review_platforms")
             .update({
                 google_profile_health_score: profileHealthScore,
                 google_listing_synced_at: now,
                 updated_at: now,
             })
-            .eq("id", platformId),
+            .eq("id", platformId)
+            .eq("business_id", businessId),
     ]);
 
     for (const write of writes) {
