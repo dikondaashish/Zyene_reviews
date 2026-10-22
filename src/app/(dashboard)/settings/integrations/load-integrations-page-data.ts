@@ -1,4 +1,6 @@
 import { createClient } from "@/lib/db/supabase/server";
+import { createAdminClient } from "@/lib/db/supabase/admin";
+import { YELP_REVIEWS_UNAVAILABLE_KEY } from "@/services/yelp/sync-state";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { planAllowsPublicReviewWidget } from "@/services/stripe/plans";
 import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
@@ -35,6 +37,8 @@ export type IntegrationsPageData =
           googlePlatform: Record<string, unknown> | undefined;
           yelpPlatform: Record<string, unknown> | undefined;
           facebookPlatform: Record<string, unknown> | undefined;
+          /** Last Yelp sync found the API plan has no review text (rating/count only). */
+          yelpReviewsUnavailable: boolean;
           apiKey: PublicApiKey | null;
           canManageApiKeys: boolean;
           connectedCount: number;
@@ -46,6 +50,22 @@ export type IntegrationsPageData =
           squareConnection: SquareConnectionSummary;
           squareConfigured: boolean;
       };
+
+/**
+ * `sync_state` is service-role only (column grants), so read just this flag server-side.
+ * The platform id comes from the caller's own business context.
+ */
+async function loadYelpReviewsUnavailable(platformId: unknown): Promise<boolean> {
+    if (typeof platformId !== "string") return false;
+    const { data } = await createAdminClient()
+        .from("review_platforms")
+        .select("sync_state")
+        .eq("id", platformId)
+        .maybeSingle();
+    const state = data?.sync_state;
+    return !!state && typeof state === "object" && !Array.isArray(state) &&
+        (state as Record<string, unknown>)[YELP_REVIEWS_UNAVAILABLE_KEY] === true;
+}
 
 export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> {
     const { business, organization } = await getActiveBusinessId();
@@ -98,6 +118,7 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
                 .eq("status", "active")
                 .maybeSingle(),
         ]);
+    const yelpReviewsUnavailable = await loadYelpReviewsUnavailable(yelpPlatform?.id);
     const visibleRollup = visibleRollupMap.get(business.id);
     const totalReviews = visibleRollup?.totalVisible ?? 0;
 
@@ -139,6 +160,7 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
         googlePlatform,
         yelpPlatform,
         facebookPlatform,
+        yelpReviewsUnavailable,
         apiKey,
         canManageApiKeys: canManageApiKeys(member.data?.role),
         connectedCount,
