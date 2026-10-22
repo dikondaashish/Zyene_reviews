@@ -74,7 +74,7 @@ Auth: Supabase session (`getUser`) + active business context unless noted.
 |--------|------|---------|
 | `GET`/`POST` | `/api/reviews` | List / create-related review ops for active business |
 | `GET`/`PATCH`/`DELETE` | `/api/reviews/[id]` | Single review |
-| `POST` | `/api/reviews/[id]/reply` | Publish or save reply |
+| `POST` / `DELETE` | `/api/reviews/[id]/reply` | Publish (or edit) / delete the public reply. Google and Facebook (Page comment, needs `pages_manage_engagement`); other platforms `400` |
 | `POST` | `/api/reviews/bulk` | Bulk actions |
 | `GET` | `/api/reviews/export` | Export |
 | `GET`/`POST` | `/api/reviews/private` | Private feedback inbox |

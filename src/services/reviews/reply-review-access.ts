@@ -4,6 +4,10 @@ import { deleteReviewReply, replyToReview, listAccounts } from "@/services/googl
 import { getValidGoogleToken } from "@/services/google/sync-service";
 import { apiError } from "@/app/api/_shared/responses";
 import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
+import { deleteFacebookReviewReply, postFacebookReviewReply } from "@/services/facebook/reply";
+
+/** Platforms whose public replies Zyene can post and delete. */
+const REPLYABLE_PLATFORMS = new Set(["google", "facebook"]);
 
 type ReviewRow = {
     id: string;
@@ -13,7 +17,7 @@ type ReviewRow = {
     business_id?: string | null;
 };
 
-export async function fetchAuthorizedGoogleReview(reviewId: string, userId: string) {
+export async function fetchAuthorizedReplyReview(reviewId: string, userId: string) {
     const supabase = await createClient();
 
     const { data: review, error: reviewError } = await supabase
@@ -30,8 +34,8 @@ export async function fetchAuthorizedGoogleReview(reviewId: string, userId: stri
 
     const row = review as ReviewRow;
 
-    if (row.platform !== "google") {
-        return { ok: false as const, response: apiError("Only Google reviews supported currently", { status: 400 }) };
+    if (!REPLYABLE_PLATFORMS.has(row.platform)) {
+        return { ok: false as const, response: apiError("Replies from Zyene support Google and Facebook reviews", { status: 400 }) };
     }
 
     if (!row.platform_id) {
@@ -81,11 +85,33 @@ export async function deleteGoogleReviewReply(platformId: string, externalReview
     await deleteReviewReply(accessToken, accountId, locationId, externalReviewId);
 }
 
+/** Post a reply on the review's own platform. */
+export async function postReviewReply(review: ReviewRow, text: string) {
+    if (review.platform === "facebook") {
+        await postFacebookReviewReply(review.platform_id!, review.external_id!, text);
+        return;
+    }
+    await postGoogleReviewReply(review.platform_id!, review.external_id!, text);
+}
+
+/** Delete the reply on the review's own platform. */
+export async function deletePlatformReviewReply(review: ReviewRow) {
+    if (review.platform === "facebook") {
+        await deleteFacebookReviewReply(review.platform_id!, review.external_id!);
+        return;
+    }
+    await deleteGoogleReviewReply(review.platform_id!, review.external_id!);
+}
+
 export function mapReviewReplyError(error: unknown) {
     const message = error instanceof Error ? error.message : "Internal Server Error";
 
     if (message.includes("Google connection expired") || message.includes("reconnect") || message.includes("invalid_grant")) {
         return apiError("Google connection expired. Please reconnect your account.", { status: 401 });
+    }
+
+    if (message.includes("Facebook Graph API error: 401") || message.includes("Facebook Graph API error: 403")) {
+        return apiError("Facebook connection expired or lacks reply permission. Reconnect Facebook.", { status: 401 });
     }
 
     if (message.includes("rate limit") || message.includes("Quota")) {
