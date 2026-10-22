@@ -16,8 +16,8 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import type { IntegrationPlatformSummary } from "@/types/components";
-import { YelpCardIcon } from "./yelp-card-icon";
 import { postYelpReviewSync } from "./yelp-card-sync-api";
+import { BrandLogoTile } from "@/components/integrations/brand-logo-tile";
 
 interface YelpIntegrationCardConnectedProps {
     platform: IntegrationPlatformSummary;
@@ -47,7 +47,7 @@ export function YelpIntegrationCardConnected({
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <YelpCardIcon className="text-destructive size-6" />
+                        <BrandLogoTile domain="yelp.com" name="Yelp" />
                         <div>
                             <h3 className="ui-card-title">Yelp</h3>
                             <p className="text-xs text-muted-foreground">Rating and review count</p>

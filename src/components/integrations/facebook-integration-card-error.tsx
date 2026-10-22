@@ -3,8 +3,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { XCircle, AlertTriangle, Loader2 } from "lucide-react";
-import { FacebookBrandIcon } from "@/components/integrations/facebook-brand-icon";
 import type { IntegrationPlatformSummary } from "@/types/components";
+import { BrandLogoTile } from "@/components/integrations/brand-logo-tile";
 
 export function FacebookIntegrationCardError({
     platform,
@@ -19,8 +19,8 @@ export function FacebookIntegrationCardError({
         <Card className="border-destructive/30 dark:border-destructive/30">
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <FacebookBrandIcon className="shrink-0 size-5" aria-hidden />
+                    <div className="flex items-center gap-3">
+                        <BrandLogoTile domain="facebook.com" name="Facebook" />
                         <CardTitle className="ui-card-title">Facebook</CardTitle>
                     </div>
                     <div className="flex items-center gap-1.5 text-xs font-medium text-destructive">

@@ -38,6 +38,7 @@
     "pts": "pts",
     "response_rate": "Tasa de Respuesta",
     "reviews_responded": "% de reseñas respondidas",
+    "reviews_with_reply": "de tus reseñas tienen respuesta",
     "no_reviews": "Sin reseñas aún",
     "pending_reviews": "Reseñas Pendientes",
     "awaiting_response": "Esperando respuesta",

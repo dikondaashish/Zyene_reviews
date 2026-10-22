@@ -86,6 +86,7 @@ export async function buildCompetitorsListProps(
         marketBriefLatest,
         ownBusinessChart: {
             name: raw.ownBusiness?.name ?? "Your business",
+            website: raw.ownBusiness?.website ?? null,
             // Google only, like the competitor numbers it sits next to.
             averageRating: visibleRollupAll.googleVisibleCount > 0 ? visibleRollupAll.googleAverageRating : null,
             totalReviews: visibleRollupAll.googleVisibleCount > 0 ? visibleRollupAll.googleVisibleCount : null,

@@ -1,39 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { FunnelStage } from "./campaign-detail-types";
+import { StepFunnel, type StepFunnelStage } from "@/components/metrics/step-funnel";
 
-interface CampaignDetailFunnelProps {
-    funnelStages: FunnelStage[];
-    maxFunnel: number;
-}
-
-export function CampaignDetailFunnel({ funnelStages, maxFunnel }: CampaignDetailFunnelProps) {
+/** The campaign's one results view: each step, and how many made it from the step above. */
+export function CampaignDetailFunnel({ funnelStages }: { funnelStages: StepFunnelStage[] }) {
     return (
         <Card>
-            <CardHeader>
-                <CardTitle className="ui-card-title">Conversion Funnel</CardTitle>
+            <CardHeader className="pb-2">
+                <CardTitle className="ui-card-title">Results</CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="space-y-3">
-                    {funnelStages.map((stage) => {
-                        const pct = maxFunnel > 0 ? (stage.value / maxFunnel) * 100 : 0;
-                        return (
-                            <div key={stage.label} className="flex items-center gap-3">
-                                <span className="text-sm font-medium w-20 text-right">{stage.label}</span>
-                                <div className="flex-1 h-8 bg-muted rounded-full overflow-hidden">
-                                    <div
-                                        className={`h-full ${stage.color} rounded-full transition-all duration-500 flex items-center justify-end pr-3`}
-                                        style={{ width: `${Math.max(pct, 2)}%` }}
-                                    >
-                                        {pct >= 10 && (
-                                            <span className="text-xs font-semibold text-primary-foreground">{stage.value}</span>
-                                        )}
-                                    </div>
-                                </div>
-                                <span className="text-sm text-muted-foreground w-12">{Math.round(pct)}%</span>
-                            </div>
-                        );
-                    })}
-                </div>
+                <StepFunnel stages={funnelStages} label="Campaign results funnel" />
             </CardContent>
         </Card>
     );

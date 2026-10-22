@@ -3,7 +3,6 @@
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2 } from "lucide-react";
-import { GoogleCardGoogleIcon } from "@/components/integrations/google-card-google-icon";
 import { GoogleIntegrationCardNeedsLocationCallout } from "@/components/integrations/google-integration-card-needs-location-callout";
 import { GoogleIntegrationCardSyncStatsRow } from "@/components/integrations/google-integration-card-sync-stats-row";
 import { GoogleIntegrationCardForceSyncCallout } from "@/components/integrations/google-integration-card-force-sync-callout";
@@ -11,6 +10,7 @@ import { GoogleIntegrationCardSyncFooter } from "@/components/integrations/googl
 import { GoogleIntegrationCardLocationDialog } from "@/components/integrations/google-integration-card-location-dialog";
 import { GoogleIntegrationCardSearchConsoleRow } from "@/components/integrations/google-integration-card-search-console-row";
 import type { GoogleLocationAccount } from "@/components/integrations/google-card-location-api";
+import { BrandLogoTile } from "@/components/integrations/brand-logo-tile";
 
 export function GoogleIntegrationCardConnected({
     businessName,
@@ -71,9 +71,7 @@ export function GoogleIntegrationCardConnected({
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center rounded-lg bg-card border border-border size-10">
-                            <GoogleCardGoogleIcon />
-                        </div>
+                        <BrandLogoTile domain="google.com" name="Google" />
                         <div>
                             <p className="font-semibold text-base">Google Business Profile</p>
                             {businessName && <p className="text-sm text-muted-foreground">{businessName}</p>}

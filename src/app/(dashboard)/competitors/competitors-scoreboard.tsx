@@ -3,6 +3,7 @@
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Scoreboard } from "@/lib/competitors/scoreboard";
+import { BusinessLogo } from "@/components/competitors/business-logo";
 
 /** Google sometimes removes reviews, so a period can go negative; show it as it is. */
 function signed(value: number): string {
@@ -15,7 +16,16 @@ function NewReviews({ value }: { value: number | null }) {
 }
 
 /** Verdict first, then one ranked table: the answer to "how am I doing against them?" */
-export function CompetitorsScoreboard({ scoreboard, rangeLabel }: { scoreboard: Scoreboard; rangeLabel: string }) {
+export function CompetitorsScoreboard({
+    scoreboard,
+    rangeLabel,
+    websiteById,
+}: {
+    scoreboard: Scoreboard;
+    rangeLabel: string;
+    /** Row id ("you" for the owner) → website, for the logo. */
+    websiteById: Record<string, string | null | undefined>;
+}) {
     return (
         <section aria-labelledby="competitor-scoreboard-title" className="overflow-hidden rounded-xl border bg-card">
             <header className="border-b border-border px-5 py-4 sm:px-6">
@@ -23,12 +33,15 @@ export function CompetitorsScoreboard({ scoreboard, rangeLabel }: { scoreboard: 
                 {scoreboard.details.map((line) => (
                     <p key={line} className="mt-1 text-sm leading-6 text-muted-foreground">{line}</p>
                 ))}
+                <p className="mt-3 text-xs text-muted-foreground">
+                    Rank is by Google star rating, what customers compare first. &ldquo;New&rdquo; shows who is collecting reviews fastest.
+                </p>
             </header>
             <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                     <thead>
                         <tr className="border-b bg-muted/30 text-left text-xs text-muted-foreground">
-                            <th scope="col" className="w-10 px-4 py-2.5 font-medium sm:px-6">#</th>
+                            <th scope="col" className="w-16 px-4 py-2.5 font-medium sm:px-6">Rank</th>
                             <th scope="col" className="px-3 py-2.5 font-medium">Business</th>
                             <th scope="col" className="px-3 py-2.5 text-right font-medium">Google rating</th>
                             <th scope="col" className="hidden px-3 py-2.5 text-right font-medium sm:table-cell">Total reviews</th>
@@ -39,14 +52,19 @@ export function CompetitorsScoreboard({ scoreboard, rangeLabel }: { scoreboard: 
                         {scoreboard.rows.map((row, index) => (
                             <tr key={row.id} className={cn("border-b last:border-0", row.isYou && "bg-primary/5")}>
                                 <td className="px-4 py-3 tabular-nums text-muted-foreground sm:px-6">{row.rating ? index + 1 : null}</td>
-                                <td className="max-w-[16rem] px-3 py-3">
-                                    <span className={cn("block truncate", row.isYou ? "font-semibold text-foreground" : "text-foreground")}>
-                                        {row.isYou ? `You (${row.name})` : row.name}
-                                    </span>
-                                    <span className="mt-0.5 block text-xs text-muted-foreground sm:hidden">
-                                        {row.totalReviews != null ? `${row.totalReviews.toLocaleString("en-US")} reviews` : "Reviews not loaded"}
-                                        {row.newReviews != null ? ` · ${signed(row.newReviews)} new` : ""}
-                                    </span>
+                                <td className="max-w-[18rem] px-3 py-3">
+                                    <div className="flex items-center gap-2.5">
+                                        <BusinessLogo name={row.name} website={websiteById[row.id]} className="size-7" />
+                                        <div className="min-w-0">
+                                            <span className={cn("block truncate", row.isYou ? "font-semibold text-foreground" : "text-foreground")}>
+                                                {row.isYou ? `You (${row.name})` : row.name}
+                                            </span>
+                                            <span className="mt-0.5 block text-xs text-muted-foreground sm:hidden">
+                                                {row.totalReviews != null ? `${row.totalReviews.toLocaleString("en-US")} reviews` : "Reviews not loaded"}
+                                                {row.newReviews != null ? ` · ${signed(row.newReviews)} new` : ""}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td className="px-4 py-3 text-right sm:px-3">
                                     {row.rating ? (

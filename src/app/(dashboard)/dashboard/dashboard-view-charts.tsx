@@ -50,7 +50,7 @@ export function DashboardViewCharts({
                                 <TrendingUp className="rotate-180 size-3" />
                             )}
                             <span className="max-sm:sr-only">
-                                {Math.abs(totalReviewsTrend)}% vs 30d prior
+                                {Math.abs(totalReviewsTrend)}% vs this time last year
                             </span>
                             <span className="sm:hidden">{Math.abs(totalReviewsTrend)}%</span>
                         </div>

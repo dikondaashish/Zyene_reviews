@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { MetricProvenance } from "@/components/google-seo-aeo/metric-provenance";
 import type { VisibilityTile } from "./aeo-visibility-view-model";
 import { SeoSection } from "./seo-section";
+import { EngineLogo } from "@/components/google-seo-aeo/engine-logo";
 
 export type AeoVisibilityContent = {
     tiles: VisibilityTile[];
@@ -65,7 +66,7 @@ export function AeoVisibilitySection({ content }: { content: AeoVisibilityConten
                 {content.tiles.map((tile) => (
                     <li key={tile.engineId} className="min-w-0 border-b border-r border-border p-4 sm:p-5">
                         <div className="flex items-center justify-between gap-2">
-                            <p className="truncate text-sm font-medium text-foreground">{tile.label}</p>
+                            <p className="flex min-w-0 items-center gap-2 text-sm font-medium text-foreground"><EngineLogo engineId={tile.engineId} /><span className="truncate">{tile.label}</span></p>
                             <div className="flex shrink-0 items-center gap-1.5">
                                 {tile.basis === "estimated" ? (
                                     <Badge variant="outline" className="text-[10px]">

@@ -38,6 +38,7 @@
     "pts": "pts",
     "response_rate": "Response Rate",
     "reviews_responded": "% of reviews responded",
+    "reviews_with_reply": "of your reviews have a reply",
     "no_reviews": "No reviews yet",
     "pending_reviews": "Pending Reviews",
     "awaiting_response": "Awaiting response",

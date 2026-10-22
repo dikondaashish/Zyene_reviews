@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TimeAgo } from "@/components/ui/time-ago";
 import type { CompetitorPlacesRowMeta } from "@/lib/competitors/places-snapshot-meta";
+import { BusinessLogo } from "@/components/competitors/business-logo";
 import type { Competitor } from "./competitors-types";
 
 export function CompetitorsTrackedMobileCard({
@@ -22,11 +23,7 @@ export function CompetitorsTrackedMobileCard({
     isDeleting: boolean;
     onDeleteRequest: (id: string) => void;
 }) {
-    const updatedAt = competitor.updated_at ? (
-        <TimeAgo date={competitor.updated_at} />
-    ) : (
-        "Not yet"
-    );
+    const updatedAt = competitor.updated_at ? <TimeAgo date={competitor.updated_at} /> : "Not yet";
 
     return (
         <div
@@ -36,6 +33,7 @@ export function CompetitorsTrackedMobileCard({
             <div className="flex min-w-0 items-start gap-3">
                 <div className="min-w-0 flex-1 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
+                        <BusinessLogo name={competitor.name} website={places?.websiteUrl} />
                         <p className="font-semibold leading-snug break-words">{competitor.name}</p>
                         {syncing ? (
                             <Badge variant="secondary" className="flex shrink-0 items-center gap-1">

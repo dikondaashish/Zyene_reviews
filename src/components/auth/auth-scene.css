@@ -62,7 +62,7 @@
 .scene-tint--facebook { --tint: var(--brand-facebook); }
 .scene-tint--yelp { --tint: var(--brand-yelp); }
 .scene-platform { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--paper-muted); }
-.scene-platform svg { width: 12px; height: 12px; flex-shrink: 0; }
+.scene-platform svg, .scene-platform img { width: 12px; height: 12px; flex-shrink: 0; }
 .scene-yelp-icon { color: var(--brand-yelp); }
 .scene-stars { display: inline-flex; gap: 1px; flex-shrink: 0; color: var(--scene-star); }
 .scene-star-off { color: color-mix(in srgb, var(--paper-ink) 14%, var(--paper)); }

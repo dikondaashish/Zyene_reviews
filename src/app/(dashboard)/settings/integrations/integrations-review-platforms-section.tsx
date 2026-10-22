@@ -4,7 +4,6 @@ import { YelpIntegrationCard } from "@/components/integrations/yelp-card";
 import { FacebookIntegrationCard } from "@/components/integrations/facebook-card";
 import { PlaceholderCard } from "@/components/integrations/placeholder-card";
 import { IntegrationsSectionHeader, IntegrationsStatusBadge } from "./integrations-section-header";
-import { TripAdvisorIcon } from "./integrations-icons";
 import type { IntegrationsPageData } from "./load-integrations-page-data";
 
 type OkData = Extract<IntegrationsPageData, { kind: "ok" }>;
@@ -46,9 +45,9 @@ export function IntegrationsReviewPlatformsSection({ data }: { data: OkData }) {
                     dbVisibleFacebookAverageRating={rollup?.facebookAverageRating ?? null}
                 />
                 <PlaceholderCard
-                    name="TripAdvisor"
+                    name="Tripadvisor"
                     description="Sync TripAdvisor reviews for hotels & businesses"
-                    icon={<TripAdvisorIcon />}
+                    logoDomain="tripadvisor.com"
                     accentColor="bg-chart-2/100"
                 />
             </div>

@@ -11,7 +11,7 @@ import { CompetitorsListMarketBriefCard } from "./competitors-list-market-brief-
 import { CompetitorsListToolbar } from "./competitors-list-toolbar";
 import { CompetitorsScoreboard } from "./competitors-scoreboard";
 import { CompetitorsSyncStatus } from "./competitors-sync-status";
-import { CompetitorsTableInsightsSection } from "./competitors-table-insights-section";
+import { CompetitorsAiIdeas } from "./competitors-ai-ideas";
 import { CompetitorsTrackedSection } from "./competitors-tracked-section";
 import type { CompetitorsListProps } from "./competitors-types";
 import { useCompetitorsList } from "./use-competitors-list";
@@ -50,6 +50,12 @@ export function CompetitorsList(props: CompetitorsListProps) {
         [list.activeEventRows, list.competitors],
     );
 
+    const websiteById = useMemo(() => {
+        const map: Record<string, string | null | undefined> = { you: ownBusinessChart.website };
+        for (const c of list.competitors) map[c.id] = list.activePlacesMetaByCompetitorId[c.id]?.websiteUrl;
+        return map;
+    }, [list.competitors, list.activePlacesMetaByCompetitorId, ownBusinessChart.website]);
+
     const hasCompetitors = list.competitors.length > 0;
 
     return (
@@ -72,7 +78,7 @@ export function CompetitorsList(props: CompetitorsListProps) {
                 <CompetitorsListEmptyState businessId={businessId} onAddCompetitor={list.handleAddCompetitor} />
             ) : (
                 <>
-                    <CompetitorsScoreboard scoreboard={scoreboard} rangeLabel={list.rangeLabel} />
+                    <CompetitorsScoreboard scoreboard={scoreboard} rangeLabel={list.rangeLabel} websiteById={websiteById} />
                     <CompetitorsTrackedSection
                         competitors={list.competitors}
                         activePlacesMetaByCompetitorId={list.activePlacesMetaByCompetitorId}
@@ -82,15 +88,19 @@ export function CompetitorsList(props: CompetitorsListProps) {
                         onDeleteRequest={list.setDeleteConfirm}
                     />
                     <CompetitorsChangesCard items={changes} rangeLabel={list.rangeLabel} />
-                    <CompetitorsTableInsightsSection
+                    <CompetitorsAiIdeas
                         competitors={list.competitors}
                         latestInsightByCompetitor={list.latestInsightByCompetitor}
+                        scoreboard={scoreboard}
+                        rangeLabel={list.rangeLabel}
                     />
                     <CompetitorsListMarketBriefCard
                         competitors={list.competitors}
                         marketBriefLatest={marketBriefLatest}
                         briefGenLoading={list.briefGenLoading}
                         onGenerateMarketBrief={list.handleGenerateMarketBrief}
+                        scoreboard={scoreboard}
+                        keywordDiscoverySplit={list.activeKeywordDiscoverySplit}
                     />
                 </>
             )}

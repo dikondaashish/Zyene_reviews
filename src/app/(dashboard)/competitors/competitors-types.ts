@@ -106,6 +106,7 @@ export type CompetitorsListProps = {
     /** Stored listing aggregates for the active business (same basis as competitor totals from Places). */
     ownBusinessChart: {
         name: string;
+        website: string | null;
         averageRating: number | null;
         totalReviews: number | null;
     };

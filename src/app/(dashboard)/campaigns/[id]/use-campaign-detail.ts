@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { fetchCampaignDetail, patchCampaignStatus } from "./campaign-detail-api";
-import { buildCampaignFunnelStages, campaignMaxFunnel } from "./campaign-detail-funnel-utils";
+import { buildCampaignFunnelStages } from "./campaign-detail-funnel-utils";
 import type { Campaign, ReviewRequest } from "./campaign-detail-types";
 import { importCampaignCsvContacts, sendCampaignToContacts } from "./use-campaign-detail-send";
 
@@ -92,7 +92,6 @@ export function useCampaignDetail(campaignId: string) {
     };
 
     const funnelStages = useMemo(() => buildCampaignFunnelStages(campaign), [campaign]);
-    const maxFunnel = useMemo(() => campaignMaxFunnel(campaign), [campaign]);
 
     return {
         router,
@@ -119,7 +118,6 @@ export function useCampaignDetail(campaignId: string) {
         sendToContacts,
         handleCSVImport,
         funnelStages,
-        maxFunnel,
     };
 }
 

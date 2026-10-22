@@ -19,6 +19,8 @@ export function useQuestionsPageClient({ questions, isDemo }: QuestionsPageClien
 
     const rows = isDemo ? DEMO_QUESTIONS : questions;
 
+    const unansweredCount = rows.filter((q) => !q.has_merchant_answer).length;
+
     const filtered = useMemo(() => {
         if (filter === "unanswered") {
             return rows.filter((q) => !q.has_merchant_answer);
@@ -90,6 +92,8 @@ export function useQuestionsPageClient({ questions, isDemo }: QuestionsPageClien
         filter,
         setFilter,
         filtered,
+        rows,
+        unansweredCount,
         isDemo,
         dialogOpen,
         setDialogOpen,

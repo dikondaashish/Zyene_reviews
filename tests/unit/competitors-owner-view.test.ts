@@ -26,6 +26,22 @@ describe("buildScoreboard", () => {
         ]);
     });
 
+    it("names every competitor gaining reviews faster, even ones ranked below you on rating", () => {
+        const board = buildScoreboard({
+            own: { name: "Wolfpack BBQ", rating: 4.7, totalReviews: 1464, newReviews: 150 },
+            competitors: [
+                { id: "j", name: "Joe's KC BBQ", rating: 4.8, totalReviews: 18224, newReviews: 435 },
+                { id: "a", name: "Arthur Bryant's Barbeque", rating: 4.2, totalReviews: 10029, newReviews: 160 },
+                { id: "g", name: "Gates Bar-B-Q", rating: 4.0, totalReviews: 4249, newReviews: 67 },
+            ],
+        }, "90 Days");
+        expect(board.headline).toBe("You're #2 of 4 on Google rating");
+        expect(board.rows.map((r) => r.name)).toEqual(["Joe's KC BBQ", "Wolfpack BBQ", "Arthur Bryant's Barbeque", "Gates Bar-B-Q"]);
+        expect(board.details[1]).toBe(
+            "In the last 90 days, 2 competitors got more new reviews than you (Joe's KC BBQ +435, Arthur Bryant's Barbeque +160); you gained 150.",
+        );
+    });
+
     it("celebrates the lead without overclaiming", () => {
         const board = buildScoreboard({ own: { ...own, rating: 4.9, totalReviews: 2000, newReviews: 40 }, competitors }, "7 Days");
         expect(board.headline).toBe("You have the best Google rating of 3 businesses");

@@ -1,5 +1,3 @@
-import type { LucideIcon } from "lucide-react";
-
 export interface Campaign {
     id: string;
     name: string;
@@ -45,9 +43,3 @@ export const statusColors: Record<string, string> = {
     queued: "bg-muted text-muted-foreground",
 };
 
-export interface FunnelStage {
-    label: string;
-    value: number;
-    icon: LucideIcon;
-    color: string;
-}

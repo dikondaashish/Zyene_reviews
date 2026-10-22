@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TimeAgo } from "@/components/ui/time-ago";
 import type { CompetitorPlacesRowMeta } from "@/lib/competitors/places-snapshot-meta";
+import { BusinessLogo } from "@/components/competitors/business-logo";
 import type { Competitor } from "./competitors-types";
 
 export function CompetitorsTrackedDesktopRow({
@@ -23,17 +24,14 @@ export function CompetitorsTrackedDesktopRow({
     isDeleting: boolean;
     onDeleteRequest: (id: string) => void;
 }) {
-    const updatedAt = competitor.updated_at ? (
-        <TimeAgo date={competitor.updated_at} />
-    ) : (
-        "Not yet"
-    );
+    const updatedAt = competitor.updated_at ? <TimeAgo date={competitor.updated_at} /> : "Not yet";
 
     return (
         <TableRow key={competitor.id}>
             <TableCell className="font-medium align-top">
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
+                        <BusinessLogo name={competitor.name} website={places?.websiteUrl} className="size-7" />
                         {competitor.name}
                         {syncing && (
                             <Badge variant="secondary" className="flex items-center gap-1">

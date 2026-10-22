@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { FacebookBrandIcon } from "@/components/integrations/facebook-brand-icon";
+import { BrandLogoTile } from "@/components/integrations/brand-logo-tile";
 
 export function FacebookIntegrationCardDisconnected({
     connecting,
@@ -21,8 +22,8 @@ export function FacebookIntegrationCardDisconnected({
     return (
         <Card>
             <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
-                    <FacebookBrandIcon className="shrink-0 size-5" aria-hidden />
+                <div className="flex items-center gap-3">
+                    <BrandLogoTile domain="facebook.com" name="Facebook" />
                     <CardTitle className="ui-card-title">Facebook</CardTitle>
                 </div>
                 <CardDescription>Track Facebook and Instagram page reviews &amp; recommendations</CardDescription>

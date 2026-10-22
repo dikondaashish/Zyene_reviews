@@ -67,11 +67,18 @@ export function buildScoreboard({ own, competitors }: ScoreboardInput, periodLab
         }
     }
 
-    const fastest = [...others].filter((r) => r.newReviews !== null).sort((a, b) => (b.newReviews ?? 0) - (a.newReviews ?? 0))[0];
-    if (fastest?.newReviews != null && fastest.newReviews > own.newReviews) {
-        details.push(`In the last ${periodLabel.toLowerCase()}, ${fastest.name} gained ${plural(fastest.newReviews, "review")}; you gained ${own.newReviews}.`);
-    } else if (fastest?.newReviews != null) {
-        details.push(`In the last ${periodLabel.toLowerCase()}, you gained at least as many new reviews as any competitor.`);
+    // Pace is reported separately from rating rank: a competitor ranked below you on
+    // rating can still be collecting reviews faster, and the owner should hear about it.
+    const withPace = others.filter((r) => r.newReviews !== null);
+    const faster = withPace.filter((r) => (r.newReviews ?? 0) > own.newReviews).sort((a, b) => (b.newReviews ?? 0) - (a.newReviews ?? 0));
+    const period = `In the last ${periodLabel.toLowerCase()}`;
+    if (faster.length === 1) {
+        details.push(`${period}, ${faster[0].name} gained ${plural(faster[0].newReviews ?? 0, "review")}; you gained ${own.newReviews}.`);
+    } else if (faster.length > 1) {
+        const list = faster.map((r) => `${r.name} +${r.newReviews}`).join(", ");
+        details.push(`${period}, ${faster.length} competitors got more new reviews than you (${list}); you gained ${own.newReviews}.`);
+    } else if (withPace.length > 0) {
+        details.push(`${period}, you gained at least as many new reviews as any competitor.`);
     }
 
     return { rows, ratingRank, ratedCount: rated.length, headline, details };

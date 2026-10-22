@@ -38,6 +38,7 @@
     "pts": "Pkt",
     "response_rate": "Antwortrate",
     "reviews_responded": "% beantwortet",
+    "reviews_with_reply": "deiner Bewertungen haben eine Antwort",
     "no_reviews": "Noch keine Bewertungen",
     "pending_reviews": "Ausstehend",
     "awaiting_response": "Warten auf Antwort",
