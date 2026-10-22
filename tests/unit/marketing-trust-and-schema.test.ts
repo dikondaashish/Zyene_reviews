@@ -15,6 +15,20 @@ describe("organization and website schema", () => {
     expect(org).not.toHaveProperty("aggregateRating");
   });
 
+  it("includes verified sameAs profiles in Organization JSON-LD and no aggregateRating or review", () => {
+    const org = buildOrganizationSchema();
+    const sameAs = org.sameAs as string[];
+    expect(sameAs).toContain("https://www.linkedin.com/company/zyene-reviews/");
+    expect(sameAs).toContain("https://www.crunchbase.com/organization/zyene-reviews");
+    expect(sameAs).toContain("https://www.g2.com/products/zyene-reviews/reviews");
+    expect(sameAs).toContain("https://www.capterra.com/p/10263337/Zyene-Reviews/");
+    expect(sameAs).toContain("https://www.producthunt.com/products/zyene-reviews");
+    expect(sameAs).toContain("https://sourceforge.net/software/product/Zyene-Reviews/");
+    expect(sameAs).toContain("https://stackshare.io/zyene-reviews-review-management-for-local-businesses");
+    expect(org).not.toHaveProperty("aggregateRating");
+    expect(org).not.toHaveProperty("review");
+  });
+
   it("includes alternateName ['ZyeneReviews', 'Zyene'] in WebSite JSON-LD", () => {
     const markup = renderToStaticMarkup(createElement(WebSiteJsonLd));
     const jsonMatch = markup.match(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/);
