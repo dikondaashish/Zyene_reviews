@@ -16,7 +16,7 @@ export default async function TechnicalAuditPage() {
             <BusinessContextEmptyState
                 icon={Building2}
                 title="Add a business to run a technical audit"
-                description="Technical audits are scoped to your active location. Create or select a business first."
+                description="Website checks look at one location at a time. Create or select a business first."
             />
         );
     }
@@ -24,7 +24,7 @@ export default async function TechnicalAuditPage() {
     if (data.kind === "no-website") {
         return (
             <div className="space-y-6 p-4 md:p-8">
-                <h1 className="ui-page-title">Technical audit</h1>
+                <h1 className="ui-page-title">Website check</h1>
                 <Card>
                     <CardContent className="flex flex-col items-start gap-3 py-8">
                         <Globe2 className="size-8 text-muted-foreground" />
@@ -44,7 +44,7 @@ export default async function TechnicalAuditPage() {
         <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
             <GoogleSeoAeoSubnav active="/google-seo-aeo/audit" />
             <div>
-                <h1 className="ui-page-title">Technical audit</h1>
+                <h1 className="ui-page-title">Website check</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
                     What&apos;s stopping AI engines and search from reading and citing {data.businessName}&apos;s site.
                 </p>

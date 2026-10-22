@@ -4,6 +4,7 @@ import { getAuditFixAction, type AuditItem, type AuditStatus } from "./google-se
 import type { GoogleSeoAeoContentProps } from "./google-seo-aeo-content-props";
 import { AuditCheckRow } from "./audit-check-row";
 import { summarizeAudits } from "./audit-presentation";
+import { rankByImpact } from "./audit-guidance";
 import { AeoProfileHealthSummary } from "./aeo-profile-health-summary";
 import { SeoSection } from "./seo-section";
 
@@ -32,7 +33,7 @@ function CollapsedChecks({ title, audits, unscored }: { title: string; audits: A
                         key={audit.id}
                         audit={audit}
                         action={unscored ? undefined : getAuditFixAction(audit.id)}
-                        statusLabel={unscored ? (UNSCORED_LABEL[audit.status] ?? "Not scored") : "On track"}
+                        statusLabel={unscored ? (UNSCORED_LABEL[audit.status] ?? "Not checked") : "Done well"}
                     />
                 ))}
             </div>
@@ -41,7 +42,8 @@ function CollapsedChecks({ title, audits, unscored }: { title: string; audits: A
 }
 
 export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoAeoContentProps }) {
-    const summary = summarizeAudits(content.audits);
+    const base = summarizeAudits(content.audits);
+    const summary = { ...base, needsAttention: rankByImpact(base.needsAttention) };
     const toFix = summary.needsAttention.length;
 
     return (
@@ -49,10 +51,11 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
             <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div className="min-w-0">
                     <h1 id="google-visibility-title" className="ui-page-title">
-                        Google SEO &amp; AI visibility
+                        Google &amp; AI visibility
                     </h1>
                     <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted-foreground">
-                        How {content.businessName} shows up in Google Search and AI answers, and what to improve next.
+                        How easily customers find {content.businessName} on Google and in AI assistants like ChatGPT,
+                        and the simplest things you can do to get found more often.
                     </p>
                 </div>
                 {areEstimatedAeoSurfacesEnabled() ? <RunAuditControls businessId={content.businessId} /> : null}
@@ -62,11 +65,11 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
 
             <SeoSection
                 id="audit-results-title"
-                title="What to fix"
-                description="Highest-impact improvements first. Each one links straight to where you fix it."
+                title="Your to-do list"
+                description="Biggest wins first. Each button takes you straight to the place you fix it."
                 actions={
                     <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium tabular-nums text-muted-foreground">
-                        {toFix === 0 ? "All clear" : `${toFix} open`}
+                        {toFix === 0 ? "All clear" : `${toFix} to do`}
                     </span>
                 }
             >
@@ -83,11 +86,11 @@ export function GoogleSeoAeoScoreAuditSection({ content }: { content: GoogleSeoA
                     </div>
                 ) : (
                     <p className="px-5 py-6 text-sm text-muted-foreground sm:px-6">
-                        Nothing to fix right now. Every measured check is on track.
+                        You are all caught up. Every check we can measure is passing.
                     </p>
                 )}
-                <CollapsedChecks title="On track" audits={summary.onTrack} />
-                <CollapsedChecks title="Not scored" audits={summary.unscored} unscored />
+                <CollapsedChecks title="Already done well" audits={summary.onTrack} />
+                <CollapsedChecks title="Not checked yet" audits={summary.unscored} unscored />
             </SeoSection>
         </div>
     );

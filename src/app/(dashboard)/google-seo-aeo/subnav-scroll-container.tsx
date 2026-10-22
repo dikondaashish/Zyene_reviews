@@ -6,7 +6,7 @@ type SubnavScrollContainerProps = { label: string; className?: string; children:
 
 /**
  * On phones the tab row scrolls sideways, and the current tab could start off
- * screen (Alerts, Competitive insights, Advanced tools). Centre it on load.
+ * screen (Alerts, Competitor insights, More tools). Centre it on load.
  * Sets scrollLeft directly rather than scrollIntoView, so the page never jumps.
  */
 export function SubnavScrollContainer({ label, className, children }: SubnavScrollContainerProps) {

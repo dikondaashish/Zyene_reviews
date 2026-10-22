@@ -27,7 +27,7 @@ export async function Phase3Page() {
     ];
     return <div className="min-w-0 space-y-8 overflow-x-hidden p-4 md:p-8">
         <GoogleSeoAeoSubnav active="/google-seo-aeo/phase-3" />
-        <header className="flex flex-wrap items-start justify-between gap-4"><div><h1 className="ui-page-title">Advanced tools</h1>
+        <header className="flex flex-wrap items-start justify-between gap-4"><div><h1 className="ui-page-title">More tools</h1>
             <p className="mt-1 text-sm text-muted-foreground">Advanced measurement and agency delivery for {data.businessName}.</p></div>
             <form action={runPhase3Refresh}><Button type="submit"><RefreshCw className="mr-2 size-4" />Refresh insights</Button></form></header>
         <section className="space-y-4" aria-labelledby="phase3-signals"><div><h2 id="phase3-signals" className="ui-section-title">Operational signals</h2>

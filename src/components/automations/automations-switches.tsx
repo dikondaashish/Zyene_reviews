@@ -38,23 +38,35 @@ export function AutomationsSwitches({ businessId, settings, canManage }: { busin
     };
 
     const row = (key: Key, label: string, help: string) => (
-        <div className="flex items-start justify-between gap-4 py-3">
-            <div>
-                <Label htmlFor={key}>{label}</Label>
-                <p className="text-xs text-muted-foreground">{help}</p>
+        <div className="flex items-start justify-between gap-4 px-5 py-4 sm:px-6">
+            <div className="min-w-0">
+                <Label htmlFor={key} className="text-sm font-medium">{label}</Label>
+                <p className="mt-0.5 text-sm leading-6 text-muted-foreground">{help}</p>
             </div>
             <Switch id={key} checked={values[key]} disabled={!canManage || pending} onCheckedChange={(v) => save(key, v)} />
         </div>
     );
 
     return (
-        <section className="divide-y rounded-lg border bg-card px-4">
-            {row("review_request_sms_enabled", "Text message requests", "Off also stops queued texts and SMS reminders (they're skipped with a reason).")}
-            {row("review_request_email_enabled", "Email requests", "Off also stops queued emails and email reminders.")}
-            {row("review_request_quiet_hours_enabled", "Quiet hours",
-                `Hold messages between ${settings.quietStart} and ${settings.quietEnd} (${settings.timezone || "UTC"}). Change the times in settings.`)}
-            <p className="py-3 text-xs text-muted-foreground">
-                More options (delays, frequency cap, quiet-hour times) in <Link className="underline" href="/settings/business-information">Review request settings</Link>.
+        <section aria-labelledby="sending-switches-title" className="overflow-hidden rounded-xl border bg-card">
+            <header className="border-b border-border px-5 py-4 sm:px-6">
+                <h2 id="sending-switches-title" className="ui-section-title">How requests reach customers</h2>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                    Changes save instantly and apply to every campaign.
+                    {canManage ? null : " Only owners, admins and managers can change these."}
+                </p>
+            </header>
+            <div className="divide-y divide-border">
+                {row("review_request_sms_enabled", "Text messages", "Turning this off also cancels texts and text reminders that are already scheduled.")}
+                {row("review_request_email_enabled", "Emails", "Turning this off also cancels emails and email reminders that are already scheduled.")}
+                {row("review_request_quiet_hours_enabled", "Quiet hours",
+                    `No messages between ${settings.quietStart} and ${settings.quietEnd} (${settings.timezone || "UTC"}). Anything due then waits until morning.`)}
+            </div>
+            <p className="border-t border-border bg-muted/25 px-5 py-3 text-sm text-muted-foreground sm:px-6">
+                Change quiet-hour times, reminder delays and how often a customer can be asked in{" "}
+                <Link className="font-medium text-foreground underline underline-offset-4" href="/settings/business-information">
+                    review request settings
+                </Link>.
             </p>
         </section>
     );

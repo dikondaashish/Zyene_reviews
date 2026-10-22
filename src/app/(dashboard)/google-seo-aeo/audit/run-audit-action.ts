@@ -34,7 +34,7 @@ export async function runTechnicalAuditNow(businessId: string): Promise<RunAudit
         return { success: false, error: "You do not have permission to run this audit." };
     }
     if (!isLiveCrawlingEnabled()) {
-        return { success: false, error: "Technical audits are not yet enabled for this deployment." };
+        return { success: false, error: "Website checks are not yet enabled for this deployment." };
     }
 
     const supabase = await createClient();

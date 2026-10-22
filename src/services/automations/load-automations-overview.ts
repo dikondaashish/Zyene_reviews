@@ -5,7 +5,8 @@ export type OverviewSettings = {
     smsEnabled: boolean; emailEnabled: boolean; quietHoursEnabled: boolean; quietStart: string; quietEnd: string;
     timezone: string | null; replyRulesEnabled: boolean; autoReplyEnabled: boolean; hasSlug: boolean;
 };
-export type OverviewItem = { id: string; title: string; detail: string | null; at: string | null };
+/** `tone` lets the UI colour a delivery result without parsing its text. */
+export type OverviewItem = { id: string; title: string; detail: string | null; at: string | null; tone?: "good" | "bad" | "neutral" };
 export type ActionNeeded = { title: string; href: string };
 export type AutomationsOverview = {
     settings: OverviewSettings;
@@ -14,6 +15,8 @@ export type AutomationsOverview = {
 };
 
 const WEEK_MS = 7 * 86_400_000;
+const channelLabel = (channel: unknown) => (channel === "sms" ? "Text" : channel === "email" ? "Email" : String(channel));
+const BAD_STATUSES = new Set(["failed", "undelivered", "bounced", "complained"]);
 const STATUS_TEXT: Record<string, string> = {
     sent: "Sent", delivered: "Delivered", failed: "Failed", undelivered: "Not delivered", bounced: "Bounced", complained: "Marked as spam", claimed: "Sending",
 };
@@ -50,8 +53,8 @@ export async function loadAutomationsOverview(admin: SupabaseClient, businessId:
     if ((campaigns.count ?? 0) > 0 && !settings.smsEnabled && !settings.emailEnabled) {
         actions.push({ title: "Both SMS and email are off, so active campaigns can't send", href: "/settings/business-information" });
     }
-    if ((failures.count ?? 0) > 0) actions.push({ title: `${failures.count} request(s) failed or were skipped this week`, href: "/requests" });
-    if (pausedImports) actions.push({ title: `${pausedImports} import(s) paused`, href: "/campaigns" });
+    if ((failures.count ?? 0) > 0) actions.push({ title: `${failures.count} message${failures.count === 1 ? "" : "s"} failed or ${failures.count === 1 ? "was" : "were"} skipped this week`, href: "/requests" });
+    if (pausedImports) actions.push({ title: `${pausedImports} customer import${pausedImports === 1 ? " is" : "s are"} paused`, href: "/campaigns" });
 
     return {
         settings,
@@ -59,11 +62,12 @@ export async function loadAutomationsOverview(admin: SupabaseClient, businessId:
             activeCampaigns: campaigns.count ?? 0, activeReminders: reminders.count ?? 0, upcoming: upcoming.count ?? 0,
             activeImports: (imports.data ?? []).filter((i) => i.status === "active").length, pendingApprovals: approvals, failures7d: failures.count ?? 0,
         },
-        upcoming: (upcoming.data ?? []).map((r) => ({ id: r.id, title: `${name(r)} · ${String(r.channel).toUpperCase()}`, detail: r.deferred_reason ?? null, at: r.scheduled_for })),
+        upcoming: (upcoming.data ?? []).map((r) => ({ id: r.id, title: `${name(r)} · ${channelLabel(r.channel)}`, detail: r.deferred_reason ?? null, at: r.scheduled_for })),
         recent: (recent.data ?? []).map((m) => {
             const req = (Array.isArray(m.review_requests) ? m.review_requests[0] : m.review_requests) as { customer_name?: string | null } | null;
             const step = m.step === 1 ? "Request" : `Reminder ${Number(m.step) - 1}`;
-            return { id: m.id, title: `${step} to ${name(req ?? {})} · ${String(m.channel).toUpperCase()}`, detail: STATUS_TEXT[m.status as string] ?? String(m.status), at: m.created_at };
+            return { id: m.id, title: `${step} to ${name(req ?? {})} · ${channelLabel(m.channel)}`, detail: STATUS_TEXT[m.status as string] ?? String(m.status), at: m.created_at,
+                tone: BAD_STATUSES.has(m.status as string) ? "bad" : m.status === "delivered" ? "good" : "neutral" };
         }),
         failures: (failures.data ?? []).map((r) => ({ id: r.id, title: `${name(r)} · ${r.status === "skipped" ? "Skipped" : "Failed"}`, detail: r.error_message ?? null, at: r.created_at })),
         actions,

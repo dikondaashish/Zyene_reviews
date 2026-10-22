@@ -1,10 +1,10 @@
 import { Download } from "lucide-react";
 
 const EXPORTS = [
-    { label: "Prompts & results", href: "/api/aeo/prompts/export" },
-    { label: "Citations", href: "/api/aeo/citations/export" },
+    { label: "AI questions & answers", href: "/api/aeo/prompts/export" },
+    { label: "Sources AI cited", href: "/api/aeo/citations/export" },
     { label: "Competitors", href: "/api/competitors/export" },
-    { label: "Crawl findings", href: "/api/aeo/crawl-findings/export" },
+    { label: "Website check results", href: "/api/aeo/crawl-findings/export" },
 ] as const;
 
 /** F7.2: CSV export, one link per table. Citations and crawl findings have no dedicated browsing page yet, so this is their only export entry point. */
@@ -15,7 +15,7 @@ export function DataExportsSection() {
             aria-labelledby="data-exports-title"
         >
             <h2 id="data-exports-title" className="ui-section-title">
-                Download CSV
+                Download your data (CSV)
             </h2>
             <ul className="flex flex-wrap gap-x-5 gap-y-2">
                 {EXPORTS.map((item) => (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -48,55 +48,78 @@ export function InboundEnrollmentCard({
     });
 
     return (
-        <section className="space-y-4 rounded-lg border bg-card p-4">
-            <div className="flex items-start justify-between gap-4">
-                <div>
-                    <h2 className="ui-section-title">Enroll customers from invoice emails</h2>
-                    <p className="text-sm text-muted-foreground max-w-2xl">
-                        Add your enrollment address as BCC on invoices or receipts. The customer is added to the chosen campaign (a few per day).
-                        Only mail from your allowed senders counts; your team, your business and your own domain are never enrolled. We keep
-                        only the addresses, never the invoice.
+        <section id="invoice-enrollment" aria-labelledby="invoice-enrollment-title" className="scroll-mt-24 overflow-hidden rounded-xl border bg-card">
+            <header className="flex items-start justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
+                <div className="min-w-0">
+                    <h2 id="invoice-enrollment-title" className="ui-section-title">Sign up customers from your invoice emails</h2>
+                    <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+                        Every time you email an invoice or receipt, that customer can be added to a review campaign. No lists to upload.
                     </p>
                 </div>
-                <Switch checked={enabled} disabled={disabled} onCheckedChange={setEnabled} aria-label="Enable email enrollment" />
-            </div>
+                <Switch checked={enabled} disabled={disabled} onCheckedChange={setEnabled} aria-label="Turn on invoice email sign-ups" />
+            </header>
             {!initial.configured && (
-                <p className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">
-                    Not available yet: inbound email isn&apos;t set up on this account. Your settings are saved, but no email can arrive until it is.
+                <p className="mx-5 mt-5 rounded-lg border border-dashed p-3 text-sm text-muted-foreground sm:mx-6">
+                    Not available on your account yet. You can fill this in now; it starts working once we finish switching on email receiving.
                 </p>
             )}
-            {initial.address && (
-                <div className="space-y-1">
-                    <div className="flex flex-wrap items-center gap-2 text-sm">
-                        <span>Your address:</span>
-                        <code className="break-all rounded bg-muted px-1">{initial.address}</code>
-                        <Button type="button" variant="outline" size="sm" onClick={copyAddress}>Copy</Button>
+            <ol className="space-y-6 p-5 sm:p-6">
+                <Step n={1} title="Copy your sign-up address">
+                    {initial.address ? (
+                        <div className="flex flex-wrap items-center gap-2">
+                            <code className="break-all rounded-md bg-muted px-2 py-1.5 text-sm text-foreground">{initial.address}</code>
+                            <Button type="button" variant="outline" size="sm" onClick={copyAddress}>Copy</Button>
+                        </div>
+                    ) : (
+                        <p className="text-sm text-muted-foreground">Your address appears here once this is available.</p>
+                    )}
+                </Step>
+                <Step n={2} title="Add it as a hidden copy (BCC) in your invoicing tool">
+                    <p className="text-sm leading-6 text-muted-foreground">
+                        Do this once, in QuickBooks, Square, Jobber or whatever you send invoices from. Customers never see it.
+                    </p>
+                </Step>
+                <Step n={3} title="Choose where those customers go">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="space-y-1.5">
+                            <Label htmlFor="inbound-campaign">Campaign</Label>
+                            <select id="inbound-campaign" className="h-9 w-full rounded-md border bg-background px-2 text-sm" value={campaignId}
+                                disabled={disabled} onChange={(e) => setCampaignId(e.target.value)}>
+                                <option value="">Choose a campaign</option>
+                                {campaigns.map((c) => <option key={c.id} value={c.id}>{c.name}{c.status === "paused" ? " (paused)" : ""}</option>)}
+                            </select>
+                            <p className="text-xs leading-5 text-muted-foreground">New customers are invited a few per day.</p>
+                        </div>
+                        <div className="space-y-1.5">
+                            <Label htmlFor="inbound-senders">Who sends your invoices</Label>
+                            <Textarea id="inbound-senders" rows={3} value={senders} disabled={disabled} onChange={(e) => setSenders(e.target.value)}
+                                placeholder={"you@gmail.com\nbilling@yourshop.com"} />
+                            <p className="text-xs leading-5 text-muted-foreground">
+                                One per line. Include your invoicing tool&apos;s sending address, or @yourdomain.com for your whole domain.
+                                Mail from anyone else is ignored.
+                            </p>
+                        </div>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                        Paste it once into your invoicing tool&apos;s BCC setting. BCC keeps it hidden from your customers.
-                    </p>
-                </div>
-            )}
-            <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1">
-                    <Label htmlFor="inbound-campaign">Campaign</Label>
-                    <select id="inbound-campaign" className="h-9 w-full rounded-md border bg-background px-2 text-sm" value={campaignId}
-                        disabled={disabled} onChange={(e) => setCampaignId(e.target.value)}>
-                        <option value="">Choose a campaign</option>
-                        {campaigns.map((c) => <option key={c.id} value={c.id}>{c.name}{c.status === "paused" ? " (paused)" : ""}</option>)}
-                    </select>
-                </div>
-                <div className="space-y-1">
-                    <Label htmlFor="inbound-senders">Allowed senders</Label>
-                    <Textarea id="inbound-senders" rows={3} value={senders} disabled={disabled} onChange={(e) => setSenders(e.target.value)}
-                        placeholder={"you@gmail.com\nbilling@yourshop.com"} />
-                    <p className="text-xs text-muted-foreground">
-                        One per line: an exact address (Gmail and Outlook are fine), or @yourdomain.com for your own domain.
-                        Invoicing tools send from their own address, so add that too (for example QuickBooks&apos; sender).
-                    </p>
-                </div>
-            </div>
-            {canManage && <Button onClick={save} disabled={pending}>Save</Button>}
+                </Step>
+            </ol>
+            <footer className="flex flex-col gap-3 border-t border-border bg-muted/25 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <p className="text-xs leading-5 text-muted-foreground">
+                    We only keep the customer&apos;s email address, never the invoice. Your own team is never signed up.
+                </p>
+                {canManage && <Button onClick={save} disabled={pending} className="self-start sm:self-auto">Save</Button>}
+            </footer>
         </section>
+    );
+}
+
+function Step({ n, title, children }: { n: number; title: string; children: ReactNode }) {
+    return (
+        <li className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3">
+            <span className="grid size-6 place-items-center rounded-full bg-primary/10 text-xs font-semibold text-primary" aria-hidden>{n}</span>
+            <div className="min-w-0 space-y-2">
+                <h3 className="ui-card-title pt-0.5 text-foreground">{title}</h3>
+                {children}
+            </div>
+        </li>
     );
 }

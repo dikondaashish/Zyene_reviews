@@ -5,12 +5,12 @@ import { isLiveCrawlingEnabled, isLiveAlertingEnabled } from "@/lib/features/aeo
 
 const TABS = [
     { href: "/google-seo-aeo", label: "Overview" },
-    { href: "/google-seo-aeo/prompts", label: "Prompts" },
-    { href: "/google-seo-aeo/geo-grid", label: "Geo-grid" },
-    { href: "/google-seo-aeo/audit", label: "Technical audit" },
+    { href: "/google-seo-aeo/prompts", label: "AI questions" },
+    { href: "/google-seo-aeo/geo-grid", label: "Local map rankings" },
+    { href: "/google-seo-aeo/audit", label: "Website check" },
     { href: "/google-seo-aeo/alerts", label: "Alerts" },
-    { href: "/google-seo-aeo/phase-2", label: "Competitive insights" },
-    { href: "/google-seo-aeo/phase-3", label: "Advanced tools" },
+    { href: "/google-seo-aeo/phase-2", label: "Competitor insights" },
+    { href: "/google-seo-aeo/phase-3", label: "More tools" },
 ] as const;
 
 /** Shared across every google-seo-aeo page - none of them linked to each other before this. */

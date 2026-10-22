@@ -7,6 +7,7 @@ import { AeoVisibilitySection } from "./aeo-visibility-section";
 import { SearchConsoleSection } from "./search-console-section";
 import { ShareOfVoiceSection } from "./share-of-voice-section";
 import { DataExportsSection } from "./data-exports-section";
+import { CompetitorSnapshotSection } from "./competitor-snapshot-section";
 import { GoogleSeoAeoSubnav } from "./google-seo-aeo-subnav";
 
 export default async function GoogleSeoAeoPage() {
@@ -16,8 +17,8 @@ export default async function GoogleSeoAeoPage() {
         return (
             <BusinessContextEmptyState
                 icon={Building2}
-                title="Add a business to run Google SEO/AEO audits"
-                description="Google SEO/AEO is scoped to your active location. Create or select a business first."
+                title="Add a business to see your Google and AI visibility"
+                description="This page looks at one location at a time. Create or select a business to get started."
             />
         );
     }
@@ -27,7 +28,7 @@ export default async function GoogleSeoAeoPage() {
             <BusinessContextEmptyState
                 icon={Plug}
                 title="Connect Google Business Profile"
-                description="We read your Google profile to score it, find what to fix, and track how AI answers mention you."
+                description="Connect your Google Business Profile and we will score it, list what to fix in plain steps, and track how often AI assistants recommend you."
                 hint=""
                 primaryLabel="Connect Google"
                 primaryHref="/settings/integrations"
@@ -47,8 +48,10 @@ export default async function GoogleSeoAeoPage() {
              * which is the opposite of "we have not looked yet".
              */}
             {data.content.aeoVisibility ? <AeoVisibilitySection content={data.content.aeoVisibility} /> : null}
-            {data.content.shareOfVoice ? <ShareOfVoiceSection result={data.content.shareOfVoice} /> : null}
             {data.content.searchConsole ? <SearchConsoleSection content={data.content.searchConsole} /> : null}
+            {/* Comparison sits together: Google ratings first, then AI mentions. */}
+            <CompetitorSnapshotSection content={data.content} />
+            {data.content.shareOfVoice ? <ShareOfVoiceSection result={data.content.shareOfVoice} /> : null}
             <GoogleSeoAeoBottomSection content={data.content} />
             <DataExportsSection />
         </div>
