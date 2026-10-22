@@ -152,11 +152,11 @@ New columns: `businesses.review_request_quiet_hours_enabled/_start/_end`, `reply
 
 ### `customers`
 
-CRM contacts per business (see `20260304000000_create_customers_table.sql` and follow-ups). Support import/merge; respect `opt_outs`.
+CRM contacts per business (see `20260304000000_create_customers_table.sql` and follow-ups). Support import/merge; respect `sms_opt_outs`.
 
-### `opt_outs`
+### `sms_opt_outs`
 
-Historically phone-global unique opt-out. **Assumption:** sending paths must check opt-outs before SMS.
+Phone-global SMS opt-out (renamed from `opt_outs`). Sending paths must check it before SMS. The unused legacy `opt_outs`, `customer_contacts` and `locations` tables were dropped in `20261022160000_drop_unused_legacy_tables.sql`.
 
 ### `invitations`
 
