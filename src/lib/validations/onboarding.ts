@@ -63,6 +63,14 @@ export const stepCategorySchema = z.object({
       "other",
     ], { message: "Please select a valid category" })
     .refine((val) => val !== undefined, "Please select a valid category"),
+  /** Saved as the business's Support Email: customer replies to review requests go here. */
+  supportEmail: z
+    .string()
+    .trim()
+    .max(255)
+    // Empty (or only spaces) means "skip"; anything else must be a real address.
+    .refine((v) => v === "" || z.string().email().safeParse(v).success, "Enter a valid email address")
+    .optional(),
 });
 
 export type StepCategoryFormData = z.infer<typeof stepCategorySchema>;

@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
 import { smsLabel } from "@/lib/security/sms-label";
+import { customerFirstName, fillSubjectFirstName } from "@/lib/email/customer-first-name";
 import {
     reviewRequestEmail,
     reviewRequestEmailPlainText,
@@ -8,6 +9,7 @@ import {
 import { reviewRequestSubject } from "@/lib/email/review-request-subject";
 import { signedReviewCaptureLink } from "@/lib/review-requests/review-capture-url";
 import { dispatchReviewRequest, type DispatchResult } from "@/lib/review-requests/dispatch-review-request";
+import { isValidEmail } from "@/lib/review-requests/send-outbound-types";
 
 const DEFAULT_SMS_TEMPLATE = "Hi {customer_name}! Thanks for visiting {business_name}. We'd love your feedback: {review_link}";
 
@@ -30,6 +32,8 @@ interface SendReviewRequestOptions {
     step?: 1 | 2 | 3;
     /** Optional human-friendly sender (e.g. owner first name) for From + signoff. */
     senderName?: string | null;
+    /** The business's Support Email (`businesses.email`). Customer replies go here; omitted when invalid. */
+    businessEmail?: string | null;
 }
 
 export type SendReviewRequestResult = DispatchResult & { emailSent: boolean; smsSent: boolean; reviewLink: string | null };
@@ -39,9 +43,15 @@ function toSmsText(template: string): string {
     return template.replace(/<[^>]+>/g, "").replace(/[ \t]+\n/g, "\n").trim();
 }
 
+/** Same rule as the single-request paths: only a valid Support Email becomes the reply-to. */
+export function replyToAddress(businessEmail: string | null | undefined): string | null {
+    const value = (businessEmail ?? "").trim();
+    return value && isValidEmail(value) ? value : null;
+}
+
 /** Render subject placeholders; headers must stay single-line. */
 export function renderCampaignSubject(subject: string, customerName: string, businessName: string): string {
-    return subject
+    return fillSubjectFirstName(subject, customerName)
         .replace(/\{customer_name\}/g, customerName)
         .replace(/\{business_name\}/g, businessName)
         .replace(/[\r\n]+/g, " ")
@@ -56,6 +66,7 @@ export async function sendReviewRequest(admin: SupabaseClient, options: SendRevi
         const reviewLink = signedReviewCaptureLink(businessSlug, requestId, businessId);
         const sender = (options.senderName || "").trim() || undefined;
         const smsBody = toSmsText(options.smsTemplate || DEFAULT_SMS_TEMPLATE)
+            .replace(/\{first_name\}/g, smsLabel(customerFirstName(customerName), "there"))
             .replace(/\{customer_name\}/g, smsLabel(customerName, "there"))
             .replace(/\{business_name\}/g, smsLabel(businessName, "us"))
             .replace(/\{review_link\}/g, reviewLink);
@@ -74,6 +85,7 @@ export async function sendReviewRequest(admin: SupabaseClient, options: SendRevi
                 subject: customSubject || reviewRequestSubject(businessName, isFollowUp, customerName),
                 html: reviewRequestEmail(templateProps),
                 text: reviewRequestEmailPlainText(templateProps),
+                replyTo: replyToAddress(options.businessEmail),
             },
             senderName: sender,
             businessName,

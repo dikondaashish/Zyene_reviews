@@ -3,10 +3,11 @@
 import { PanelLoading } from "@/components/dashboard/panel-loading";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CAMPAIGN_TEMPLATES } from "@/lib/campaigns/templates";
-import { CampaignTemplateCard } from "@/components/campaigns/campaign-template-card";
+import type { BusinessType } from "@/lib/campaigns/business-types";
+import { TemplateLibrary } from "./template-library";
 import { CampaignsEmptyState } from "./campaigns-empty-state";
 import { CampaignsListSection } from "./campaigns-list-section";
+import { CampaignsSummary } from "./campaigns-summary";
 import type { Campaign } from "./campaigns-list-types";
 
 export function CampaignsTabs({
@@ -14,15 +15,17 @@ export function CampaignsTabs({
     campaigns,
     toggleStatus,
     deleteCampaign,
-    getOpenedPercent,
     getCompletedPercent,
+    businessId,
+    savedBusinessType,
 }: {
     loading: boolean;
     campaigns: Campaign[];
     toggleStatus: (campaign: Campaign) => void;
     deleteCampaign: (id: string) => void;
-    getOpenedPercent: (c: Campaign) => number;
     getCompletedPercent: (c: Campaign) => number;
+    businessId: string | null;
+    savedBusinessType: BusinessType | null;
 }) {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -36,8 +39,8 @@ export function CampaignsTabs({
     return (
         <Tabs value={activeTab} onValueChange={changeTab} className="w-full">
             <TabsList variant="line" className="mb-4 w-full min-w-0 justify-start border-b border-border">
-                <TabsTrigger value="all">All Campaigns</TabsTrigger>
-                <TabsTrigger value="templates">Template Library</TabsTrigger>
+                <TabsTrigger value="all">Your campaigns</TabsTrigger>
+                <TabsTrigger value="templates">Ready-made templates</TabsTrigger>
             </TabsList>
 
             <TabsContent value="all" className="space-y-6">
@@ -47,23 +50,20 @@ export function CampaignsTabs({
 
                 {!loading && campaigns.length === 0 && <CampaignsEmptyState />}
 
+                {!loading && campaigns.length > 0 && <CampaignsSummary campaigns={campaigns} />}
+
                 {!loading && campaigns.length > 0 && (
                     <CampaignsListSection
                         campaigns={campaigns}
                         toggleStatus={toggleStatus}
                         deleteCampaign={deleteCampaign}
-                        getOpenedPercent={getOpenedPercent}
                         getCompletedPercent={getCompletedPercent}
                     />
                 )}
             </TabsContent>
 
             <TabsContent value="templates">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-                    {CAMPAIGN_TEMPLATES.map((template) => (
-                        <CampaignTemplateCard key={template.id} template={template} />
-                    ))}
-                </div>
+                <TemplateLibrary key={businessId ?? "none"} businessId={businessId} savedBusinessType={savedBusinessType} active={activeTab === "templates"} />
             </TabsContent>
         </Tabs>
     );

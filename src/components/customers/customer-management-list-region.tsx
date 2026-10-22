@@ -23,6 +23,7 @@ export function CustomerManagementListRegion({
     onSendRequest,
     onSelectionChange,
     onCustomersMerged,
+    clearSelectionSignal,
 }: {
     businessId: string;
     isLoading: boolean;
@@ -41,6 +42,7 @@ export function CustomerManagementListRegion({
     onSendRequest: (c: Customer) => void;
     onSelectionChange: (ids: string[]) => void;
     onCustomersMerged: (customer: Customer, removedCustomerId: string) => void;
+    clearSelectionSignal: number;
 }) {
     if (isLoading) {
         return (
@@ -67,8 +69,8 @@ export function CustomerManagementListRegion({
                         </h2>
                         <p className="text-sm leading-relaxed text-muted-foreground">
                             {databaseEmpty
-                                ? "Add contacts manually or import a CSV to start sending review requests and tracking engagement."
-                                : "Try the “All” tab, adjust your search or tag filter, or pick another segment, your contacts are still in the full list."}
+                                ? "Add customers one at a time, or import a spreadsheet of names with emails or phone numbers. Then you can ask them for reviews."
+                                : "Nobody here matches. Your customers are all still saved; try Everyone or clear your search."}
                         </p>
                     </div>
                     <div className="flex flex-wrap items-center justify-center gap-2">
@@ -80,13 +82,13 @@ export function CustomerManagementListRegion({
                                 </Button>
                                 <Button variant="outline" onClick={onOpenImport} className="rounded-lg border-border">
                                     <Upload className="mr-2 size-4" />
-                                    Import CSV
+                                    Import list
                                 </Button>
                             </>
                         ) : (
                             <>
                                 <Button variant="outline" className="rounded-lg" onClick={onShowAllTab}>
-                                    Show all contacts
+                                    Show everyone
                                 </Button>
                                 {(search || tagFilter) && (
                                     <Button
@@ -113,6 +115,7 @@ export function CustomerManagementListRegion({
             onSendRequest={onSendRequest}
             onSelectionChange={onSelectionChange}
             onCustomersMerged={onCustomersMerged}
+            clearSelectionSignal={clearSelectionSignal}
         />
     );
 }

@@ -4,6 +4,10 @@ import {
 } from "./competitor-watch-helpers";
 import type { CompetitorWatchScanState } from "./competitor-watch-types";
 import type { CompetitorWatchRowInput } from "./competitor-watch-row-metrics";
+import { pushCompetitorAlert } from "./competitor-watch-alert";
+
+/** Same cut-off the page uses to hide routine review ticks (lib/competitors/change-feed.ts). */
+const MIN_REVIEW_CHANGE_FOR_INSIGHT = 5;
 
 export function recordCompetitorWatchRowEvents(
     state: CompetitorWatchScanState,
@@ -56,77 +60,28 @@ export function recordCompetitorWatchRowEvents(
         email_alerts_enabled: true,
     };
 
+    const alert = (eventType: string, title: string, summary: string, value: number, delta: number, threshold: number) =>
+        pushCompetitorAlert(state, competitor, { eventType, title, summary, value, delta, threshold, provider, emailEnabled: settings.email_alerts_enabled });
+
     if (ratingDelta >= settings.rating_alert_delta) {
-        const title = `${competitor.name} rating surge alert`;
-        const summary = `${competitor.name} rating increased by ${ratingDelta.toFixed(1)} (threshold ${settings.rating_alert_delta.toFixed(1)}).`;
-        state.eventsToInsert.push({
-            competitor_id: competitor.id,
-            business_id: competitor.business_id,
-            event_type: "competitor.alert.rating_surge",
-            title,
-            summary,
-            event_value: currRating,
-            event_delta: ratingDelta,
-            metadata: { threshold: settings.rating_alert_delta, provider },
-            created_at: state.now.toISOString(),
-        });
-        const orgId = state.orgByBusiness.get(competitor.business_id);
-        if (orgId) {
-            state.appEventsToInsert.push({
-                organization_id: orgId,
-                business_id: competitor.business_id,
-                event_type: "competitor.alert.rating_surge",
-                entity_type: "competitor",
-                entity_id: competitor.id,
-                metadata: { name: competitor.name, delta: ratingDelta, threshold: settings.rating_alert_delta },
-            });
-        }
-        if (settings.email_alerts_enabled) {
-            state.alertEmailQueue.push({
-                businessId: competitor.business_id,
-                title,
-                summary,
-                eventType: "competitor.alert.rating_surge",
-            });
-        }
+        alert("competitor.alert.rating_surge", `${competitor.name} rating went up`,
+            `${competitor.name}'s Google rating rose by ${ratingDelta.toFixed(1)} to ${currRating.toFixed(1)}.`,
+            currRating, ratingDelta, settings.rating_alert_delta);
     }
-
+    // A competitor slipping is as useful to an owner as one surging: it is a window to win their customers.
+    if (ratingDelta <= -settings.rating_alert_delta) {
+        alert("competitor.alert.rating_drop", `${competitor.name} rating dropped`,
+            `${competitor.name}'s Google rating fell by ${Math.abs(ratingDelta).toFixed(1)} to ${currRating.toFixed(1)}.`,
+            currRating, ratingDelta, settings.rating_alert_delta);
+    }
     if (reviewsDelta >= settings.review_spike_threshold) {
-        const title = `${competitor.name} review spike alert`;
-        const summary = `${competitor.name} review volume increased by ${reviewsDelta} (threshold ${settings.review_spike_threshold}).`;
-        state.eventsToInsert.push({
-            competitor_id: competitor.id,
-            business_id: competitor.business_id,
-            event_type: "competitor.alert.review_spike",
-            title,
-            summary,
-            event_value: currReviews,
-            event_delta: reviewsDelta,
-            metadata: { threshold: settings.review_spike_threshold, provider },
-            created_at: state.now.toISOString(),
-        });
-        const orgId = state.orgByBusiness.get(competitor.business_id);
-        if (orgId) {
-            state.appEventsToInsert.push({
-                organization_id: orgId,
-                business_id: competitor.business_id,
-                event_type: "competitor.alert.review_spike",
-                entity_type: "competitor",
-                entity_id: competitor.id,
-                metadata: { name: competitor.name, delta: reviewsDelta, threshold: settings.review_spike_threshold },
-            });
-        }
-        if (settings.email_alerts_enabled) {
-            state.alertEmailQueue.push({
-                businessId: competitor.business_id,
-                title,
-                summary,
-                eventType: "competitor.alert.review_spike",
-            });
-        }
+        alert("competitor.alert.review_spike", `${competitor.name} got a burst of reviews`,
+            `${competitor.name} gained ${reviewsDelta} reviews since the last check (now ${currReviews}).`,
+            currReviews, reviewsDelta, settings.review_spike_threshold);
     }
 
-    if (ratingDelta !== 0 || reviewsDelta !== 0) {
+    // AI write-ups cost money and repeat themselves on +1 review days; only meaningful moves earn one.
+    if (ratingDelta !== 0 || Math.abs(reviewsDelta) >= MIN_REVIEW_CHANGE_FOR_INSIGHT) {
         const existing = state.insightInputByCompetitor.get(competitor.id);
         if (!existing) {
             state.insightInputByCompetitor.set(competitor.id, {

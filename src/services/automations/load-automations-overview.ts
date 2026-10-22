@@ -15,7 +15,7 @@ export type AutomationsOverview = {
 };
 
 const WEEK_MS = 7 * 86_400_000;
-const channelLabel = (channel: unknown) => (channel === "sms" ? "Text" : channel === "email" ? "Email" : String(channel));
+const channelLabel = (channel: unknown) => (channel === "sms" ? "Text" : channel === "email" ? "Email" : channel === "both" ? "Text and email" : String(channel));
 const BAD_STATUSES = new Set(["failed", "undelivered", "bounced", "complained"]);
 const STATUS_TEXT: Record<string, string> = {
     sent: "Sent", delivered: "Delivered", failed: "Failed", undelivered: "Not delivered", bounced: "Bounced", complained: "Marked as spam", claimed: "Sending",
@@ -50,10 +50,11 @@ export async function loadAutomationsOverview(admin: SupabaseClient, businessId:
     const actions: ActionNeeded[] = [];
     if (!settings.hasSlug) actions.push({ title: "Set your public review page link so requests can be sent", href: "/settings/public-profile" });
     if (approvals > 0) actions.push({ title: `${approvals} review repl${approvals === 1 ? "y is" : "ies are"} waiting for approval`, href: "/reviews/approvals" });
-    if ((campaigns.count ?? 0) > 0 && !settings.smsEnabled && !settings.emailEnabled) {
-        actions.push({ title: "Both SMS and email are off, so active campaigns can't send", href: "/settings/business-information" });
+    // Same "is anything running" rule as the status headline: campaigns or imports.
+    if ((campaigns.count ?? 0) + (imports.data ?? []).filter((i) => i.status === "active").length > 0 && !settings.smsEnabled && !settings.emailEnabled) {
+        actions.push({ title: "Text and email are both off, so no review requests can go out", href: "/settings/business-information" });
     }
-    if ((failures.count ?? 0) > 0) actions.push({ title: `${failures.count} message${failures.count === 1 ? "" : "s"} failed or ${failures.count === 1 ? "was" : "were"} skipped this week`, href: "/requests" });
+    if ((failures.count ?? 0) > 0) actions.push({ title: `${failures.count} request${failures.count === 1 ? "" : "s"} failed or ${failures.count === 1 ? "was" : "were"} skipped this week`, href: "/requests" });
     if (pausedImports) actions.push({ title: `${pausedImports} customer import${pausedImports === 1 ? " is" : "s are"} paused`, href: "/campaigns" });
 
     return {

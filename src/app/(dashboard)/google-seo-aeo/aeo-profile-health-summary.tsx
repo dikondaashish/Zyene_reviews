@@ -56,11 +56,11 @@ export function AeoProfileHealthSummary({ content, summary, priorityAudit }: Aeo
                     aria-label="Google profile health score"
                     aria-valuemin={0}
                     aria-valuemax={100}
-                    aria-valuenow={content.score}
+                    aria-valuenow={content.measuredCount === 0 ? undefined : content.score}
                 >
                     <div
                         className={cn("h-full rounded-full transition-[width] duration-200", TONE_BAR[verdict.tone])}
-                        style={{ width: `${content.score}%` }}
+                        style={{ width: `${content.measuredCount === 0 ? 0 : content.score}%` }}
                     />
                 </div>
                 <p className="mt-3 text-sm leading-6 text-foreground">{verdict.summary}</p>

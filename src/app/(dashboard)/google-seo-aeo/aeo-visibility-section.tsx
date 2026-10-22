@@ -19,7 +19,8 @@ function describeRate(rate: string): string {
     const value = Number.parseFloat(rate);
     if (value >= 50) return "Named in most answers";
     if (value >= 20) return "Named in some answers";
-    if (value > 0) return "Rarely named";
+    // A very small rate can display as "0.0%"; only a true zero means never named.
+    if (value > 0 || !/^0%$/.test(rate.trim())) return "Rarely named";
     return "Not named yet";
 }
 

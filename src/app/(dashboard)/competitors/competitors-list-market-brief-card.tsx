@@ -30,10 +30,10 @@ export function CompetitorsListMarketBriefCard({
                 <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
                     <div className="min-w-0 space-y-1.5">
                         <CardTitle className="ui-card-title flex items-center gap-2">
-                            AI market positioning brief
+                            How you stand out: AI summary
                         </CardTitle>
                         <CardDescription className="text-muted-foreground">
-                            Competitive analysis based on your search terms and public listing data.
+                            A short read on where you win and where competitors are ahead, written by AI from public Google data.
                         </CardDescription>
                     </div>
                     {competitors.length > 0 ? (
@@ -99,14 +99,9 @@ export function CompetitorsListMarketBriefCard({
                                 </div>
                             ) : null}
                             <p className="border-t border-border pt-3 text-[11px] text-muted-foreground">
-                                AI Brief · Generated <TimeAgo date={marketBriefLatest.created_at} />
+                                Written by AI <TimeAgo date={marketBriefLatest.created_at} />. Check it against what you know.
                                 {marketBriefLatest.data_limitations ? (
-                                    <span
-                                        className="ml-1.5 cursor-help border-b border-dotted border-border/70"
-                                        title={marketBriefLatest.data_limitations}
-                                    >
-                                        ℹ limitations
-                                    </span>
+                                    <span className="mt-1 block">Keep in mind: {marketBriefLatest.data_limitations}</span>
                                 ) : null}
                             </p>
                         </>

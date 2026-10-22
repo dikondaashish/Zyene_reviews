@@ -67,26 +67,24 @@ export function customerTableMetricColumns(
     cols.push(
         {
             accessorKey: "total_requests_sent",
-            header: "Requests",
-            cell: ({ row }) => (
-                <div className="flex items-center gap-2">
-                    <Badge
-                        variant="outline"
-                        className="text-xs font-normal border-border text-muted-foreground"
-                    >
-                        {row.getValue("total_requests_sent") || 0} sent
+            header: "Times asked",
+            cell: ({ row }) => {
+                const sent = Number(row.getValue("total_requests_sent") || 0);
+                return (
+                    <Badge variant="outline" className="text-xs font-normal border-border text-muted-foreground">
+                        {sent === 0 ? "Not yet" : `${sent} ${sent === 1 ? "time" : "times"}`}
                     </Badge>
-                </div>
-            ),
+                );
+            },
         },
         {
             accessorKey: "last_request_sent_at",
-            header: "Last Sent",
+            header: "Last asked",
             cell: ({ row }) => {
                 const date = row.original.last_request_sent_at;
                 return (
                     <div className="text-xs text-muted-foreground whitespace-nowrap">
-                        {date ? formatDistanceToNow(new Date(date), { addSuffix: true }) : "Not recorded"}
+                        {date ? formatDistanceToNow(new Date(date), { addSuffix: true }) : "Never"}
                     </div>
                 );
             },

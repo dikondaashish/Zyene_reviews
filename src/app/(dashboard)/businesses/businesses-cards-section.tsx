@@ -1,5 +1,7 @@
 import { BusinessesEmptyState } from "@/app/(dashboard)/businesses/businesses-empty-state";
 import { BusinessDirectory } from "@/components/businesses/business-directory";
+import { BusinessesSummary } from "@/components/businesses/businesses-summary";
+import { summarizeBusinesses } from "@/components/businesses/business-attention";
 import { getGoogleConnectionStatus } from "@/lib/google/is-google-connected";
 import type { VisibleReviewRollup } from "@/lib/reviews/visible-review-rollups";
 import type { BusinessContextBusiness } from "@/types/business-context";
@@ -29,5 +31,11 @@ export function BusinessesCardsSection({ businesses, activeBusinessId, visibleRe
             pendingReviews: stats?.pendingVisible ?? 0,
         };
     });
-    return <BusinessDirectory businesses={entries} activeBusinessId={activeBusinessId} />;
+    return (
+        <>
+            {/* One location already shows these numbers on its own row. */}
+            {entries.length > 1 ? <BusinessesSummary summary={summarizeBusinesses(entries)} /> : null}
+            <BusinessDirectory businesses={entries} activeBusinessId={activeBusinessId} />
+        </>
+    );
 }

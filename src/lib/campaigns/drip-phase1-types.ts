@@ -10,8 +10,8 @@ export type DripCampaignRow = {
     follow_up_delay_hours?: number | null;
     stop_on_click?: boolean | null;
     businesses:
-        | { id: string; organization_id: string; name: string; slug?: string | null; sender_name?: string | null; timezone?: string | null }
-        | { id: string; organization_id: string; name: string; slug?: string | null; sender_name?: string | null; timezone?: string | null }[]
+        | { id: string; organization_id: string; name: string; slug?: string | null; sender_name?: string | null; email?: string | null; timezone?: string | null }
+        | { id: string; organization_id: string; name: string; slug?: string | null; sender_name?: string | null; email?: string | null; timezone?: string | null }[]
         | null;
 };
 

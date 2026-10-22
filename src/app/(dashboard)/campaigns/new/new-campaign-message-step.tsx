@@ -21,15 +21,15 @@ export function NewCampaignMessageStep({
     return (
         <div className="space-y-6">
             <div>
-                <h2 className="ui-section-title mb-1">Message Templates</h2>
+                <h2 className="ui-section-title mb-1">What customers will read</h2>
                 <p className="text-sm text-muted-foreground">
-                    Craft your review request message. Use {"{customer_name}"}, {"{business_name}"}, and {"{review_link}"} as placeholders.
+                    Write it like a short note from you. These fill in for each customer: {"{first_name}"} (their first name, or &ldquo;there&rdquo;), {"{customer_name}"}, {"{business_name}"} and {"{review_link}"}.
                 </p>
             </div>
 
             {(form.channel === "sms" || form.channel === "both") && (
                 <div className="space-y-3">
-                    <Label htmlFor="sms_template">SMS Template</Label>
+                    <Label htmlFor="sms_template">Text message</Label>
                     <Textarea
                         id="sms_template"
                         value={form.sms_template}
@@ -62,7 +62,7 @@ export function NewCampaignMessageStep({
                 <>
                     {form.channel === "both" && <Separator />}
                     <div className="space-y-3">
-                        <Label htmlFor="email_subject">Email Subject</Label>
+                        <Label htmlFor="email_subject">Email subject</Label>
                         <Input
                             id="email_subject"
                             value={form.email_subject}
@@ -71,7 +71,7 @@ export function NewCampaignMessageStep({
                         />
                     </div>
                     <div className="space-y-3">
-                        <Label htmlFor="email_template">Email Body</Label>
+                        <Label htmlFor="email_template">Email message</Label>
                         <Textarea
                             id="email_template"
                             value={form.email_template}
@@ -80,7 +80,7 @@ export function NewCampaignMessageStep({
                             className="font-mono text-sm"
                         />
                         <p className="text-xs text-muted-foreground">
-                            HTML is supported. Use placeholders like {"{customer_name}"} and {"{review_link}"}.
+                            Plain text reads as a personal email and is less likely to land in Promotions. HTML also works.
                         </p>
                     </div>
                 </>

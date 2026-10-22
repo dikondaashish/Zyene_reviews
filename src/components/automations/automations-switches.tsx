@@ -57,10 +57,10 @@ export function AutomationsSwitches({ businessId, settings, canManage }: { busin
                 </p>
             </header>
             <div className="divide-y divide-border">
-                {row("review_request_sms_enabled", "Text messages", "Turning this off also cancels texts and text reminders that are already scheduled.")}
-                {row("review_request_email_enabled", "Emails", "Turning this off also cancels emails and email reminders that are already scheduled.")}
+                {row("review_request_sms_enabled", "Text messages", "While this is off, no texts go out. Texts and reminders that come due in the meantime are skipped, not sent later.")}
+                {row("review_request_email_enabled", "Emails", "While this is off, no emails go out. Emails and reminders that come due in the meantime are skipped, not sent later.")}
                 {row("review_request_quiet_hours_enabled", "Quiet hours",
-                    `No messages between ${settings.quietStart} and ${settings.quietEnd} (${settings.timezone || "UTC"}). Anything due then waits until morning.`)}
+                    `No messages between ${settings.quietStart} and ${settings.quietEnd} (${settings.timezone || "UTC"}). Anything due in that window waits until ${settings.quietEnd}.`)}
             </div>
             <p className="border-t border-border bg-muted/25 px-5 py-3 text-sm text-muted-foreground sm:px-6">
                 Change quiet-hour times, reminder delays and how often a customer can be asked in{" "}

@@ -24,7 +24,7 @@ export function getAutomationStatus(overview: AutomationsOverview): AutomationSt
         return {
             label: "Running, with problems",
             tone: "warning",
-            summary: `Requests are going out, but ${counts.failures7d} did not reach the customer this week.`,
+            summary: `Requests are going out, but ${counts.failures7d} failed or ${counts.failures7d === 1 ? "was" : "were"} skipped this week.`,
         };
     }
     return {

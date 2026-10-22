@@ -31,11 +31,10 @@ export function CompetitorsTrackedSection({
     return (
         <Card className="col-span-1 md:col-span-2">
             <CardHeader>
-                <CardTitle className="ui-card-title">Tracked Competitors</CardTitle>
+                <CardTitle className="ui-card-title">Competitors you track</CardTitle>
                 <CardDescription>
-                    Ratings and reviews from Google Places. Primary category, website, and short
-                    description come from public listing data after sync - not competitors&apos; private
-                    search-keyword reports.
+                    Public details from each business&apos;s Google listing. Use the links to see their profile
+                    the way customers do.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 pt-0">

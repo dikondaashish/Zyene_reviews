@@ -48,7 +48,7 @@ export function CompetitorAlertsForm({
     return (
         <form onSubmit={onSubmit} className="space-y-6 max-w-md">
             <div className="space-y-2">
-                <Label htmlFor="rating-delta">Rating surge threshold</Label>
+                <Label htmlFor="rating-delta">Rating change threshold</Label>
                 <Input
                     id="rating-delta"
                     type="number"
@@ -59,7 +59,7 @@ export function CompetitorAlertsForm({
                     onChange={(e) => setRatingDelta(e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground">
-                    Alert when a competitor&apos;s rating jumps by at least this amount vs the last snapshot (e.g. 0.20).
+                    Alert when a competitor&apos;s Google rating rises or falls by at least this much since the last daily check (e.g. 0.20).
                 </p>
             </div>
             <div className="space-y-2">

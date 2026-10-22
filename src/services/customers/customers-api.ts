@@ -104,6 +104,10 @@ export async function createCustomer(request: NextRequest) {
     } catch (error: unknown) {
         logger.error({ err: error }, "Error saving customer:");
         const message = error instanceof Error ? error.message : "Failed to save customer";
+        // Database wording ("row-level security policy") means nothing to an owner.
+        if (/row-level security/i.test(message)) {
+            return apiError("You don't have permission to add customers to this business. Ask an owner or manager.", { status: 403, details: requestId });
+        }
         return apiError(message, { status: 500, details: requestId });
     }
 }

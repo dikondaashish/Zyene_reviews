@@ -3,8 +3,10 @@ import type { ShareOfVoiceResult } from "@/services/aeo/reporting/share-of-voice
 import { SeoSection } from "./seo-section";
 
 /** Headline an owner can repeat in a meeting: where you place, and who leads if not you. */
-function placementSentence(ranking: { competitorId: string | null; label: string }[]): string {
+function placementSentence(ranking: { competitorId: string | null; label: string; mentions: number }[]): string {
     const place = ranking.findIndex((brand) => brand.competitorId === null) + 1;
+    const own = ranking[place - 1];
+    if (place > 1 && own && ranking[0].mentions === own.mentions) return `You're tied for most mentions with ${ranking[0].label}.`;
     if (place === 1 && ranking.length === 1) return "You are the only tracked business AI assistants named.";
     if (place === 1) return `You are mentioned most often, ahead of ${ranking.length - 1} competitor${ranking.length === 2 ? "" : "s"}.`;
     if (place === 0) return `You were not named. ${ranking[0]?.label ?? "A competitor"} leads.`;

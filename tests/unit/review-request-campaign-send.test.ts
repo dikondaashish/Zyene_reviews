@@ -51,6 +51,21 @@ describe("campaign / drip review request sender", () => {
         expect(dispatched()).toMatchObject({ step: 3, frequencyCap: "skip" });
     });
 
+    it("sends customer replies to the business's Support Email, and to nobody when it is missing or invalid", async () => {
+        await sendReviewRequest(admin, { ...base, contactMethods: ["email"], businessEmail: " owner@acmedental.test " });
+        expect(dispatched().emailMessage.replyTo).toBe("owner@acmedental.test");
+        for (const businessEmail of [null, "", "not-an-email"]) {
+            mocks.dispatch.mockClear();
+            await sendReviewRequest(admin, { ...base, contactMethods: ["email"], businessEmail });
+            expect(dispatched().emailMessage.replyTo).toBeNull();
+        }
+    });
+
+    it("uses the same reply-to for reminders", async () => {
+        await sendReviewRequest(admin, { ...base, contactMethods: ["email"], isFollowUp: true, step: 2, businessEmail: "owner@acmedental.test" });
+        expect(dispatched().emailMessage.replyTo).toBe("owner@acmedental.test");
+    });
+
     it("falls back to the default subject, led by the customer's first name, when the campaign has none", async () => {
         await sendReviewRequest(admin, { ...base, contactMethods: ["email"], isFollowUp: true });
         expect(dispatched().emailMessage.subject).toBe("Sam, following up on your visit to Acme Dental");

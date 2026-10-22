@@ -25,7 +25,7 @@ export function CompetitorsTrackedMobileCard({
     const updatedAt = competitor.updated_at ? (
         <TimeAgo date={competitor.updated_at} />
     ) : (
-        ", "
+        "Not yet"
     );
 
     return (
@@ -71,29 +71,29 @@ export function CompetitorsTrackedMobileCard({
             <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 border-t border-border pt-3 text-sm">
                 <div>
                     <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                        Category
+                        Type
                     </dt>
                     <dd className="mt-0.5 text-muted-foreground">
                         {syncing ? (
-                            ", "
+                            "Updating…"
                         ) : places?.primaryType ? (
                             <span title={places.typesPreview ?? undefined}>{places.primaryType}</span>
                         ) : (
-                            ", "
+                            "Not listed"
                         )}
                     </dd>
                 </div>
                 <div>
                     <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                        Avg rating
+                        Rating
                     </dt>
                     <dd className="mt-0.5">
                         {syncing ? (
-                            <span className="text-muted-foreground">,</span>
+                            <span className="text-muted-foreground">Updating…</span>
                         ) : (
                             <span className="inline-flex items-center gap-1">
-                                <Star className="shrink-0 fill-chart-4 text-warning-foreground size-3.5" />
-                                {competitor.average_rating || "-"}
+                                {competitor.average_rating ? <Star className="shrink-0 fill-chart-4 text-warning-foreground size-3.5" aria-hidden /> : null}
+                                {competitor.average_rating || "Not loaded"}
                             </span>
                         )}
                     </dd>
@@ -104,7 +104,7 @@ export function CompetitorsTrackedMobileCard({
                     </dt>
                     <dd className="mt-0.5">
                         {syncing ? (
-                            <span className="text-muted-foreground">,</span>
+                            <span className="text-muted-foreground">Updating…</span>
                         ) : (
                             (competitor.total_reviews || 0).toLocaleString()
                         )}
@@ -136,14 +136,14 @@ export function CompetitorsTrackedMobileCard({
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
                     >
-                        Maps
+                        Google listing
                         <ExternalLink className="shrink-0 size-3" />
                     </a>
                 ) : (
-                    <span className="text-muted-foreground">Maps: N/A</span>
+                    <span className="text-muted-foreground">No Google link</span>
                 )}
             </div>
-            <p className="mt-2 text-[11px] text-muted-foreground">Source: {sourceLabel}</p>
+            <p className="mt-2 text-[11px] text-muted-foreground">{sourceLabel}</p>
         </div>
     );
 }

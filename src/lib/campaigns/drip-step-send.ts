@@ -64,6 +64,7 @@ export async function sendDripStep(args: {
             businessSlug: business.slug,
             businessName: business.name,
             senderName: business.sender_name ?? null,
+            businessEmail: business.email ?? null,
             customerName: request.customer_name || "Customer",
             contactMethods: [channel],
             customerEmail: request.customer_email,

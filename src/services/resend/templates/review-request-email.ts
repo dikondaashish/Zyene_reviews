@@ -2,6 +2,7 @@ import { EMAIL_BRAND } from "@/lib/email/email-brand";
 import { emailHtmlToText } from "@/lib/email/html-to-text";
 import { escapeHtml } from "@/lib/security/html-escape";
 import { reviewRequestLayout } from "@/lib/email/review-request-layout";
+import { customerFirstName } from "@/lib/email/customer-first-name";
 
 interface ReviewRequestEmailProps {
     customerName: string;
@@ -35,6 +36,7 @@ export function reviewRequestEmailPlainText({
         const isHtml = /<[a-z][\s\S]*>/i.test(template);
         const value = (text: string) => isHtml ? escapeHtml(text) : text;
         const rendered = template
+            .replace(/\{first_name\}/g, () => value(customerFirstName(customerName) || "there"))
             .replace(/\{customer_name\}/g, () => value(customerName || ""))
             .replace(/\{business_name\}/g, () => value(businessName))
             .replace(/\{review_link\}/g, () => value(reviewLink))
@@ -78,8 +80,8 @@ export function reviewRequestEmail({
     senderName,
 }: ReviewRequestEmailProps): string {
     if (template && template.includes("<") && template.includes(">")) {
-        const values: Record<string, string> = { customer_name: customerName || "", business_name: businessName, review_link: reviewLink, sender_name: senderName || "" };
-        const html = template.replace(/\{(customer_name|business_name|review_link|sender_name)\}/g,
+        const values: Record<string, string> = { first_name: customerFirstName(customerName) || "there", customer_name: customerName || "", business_name: businessName, review_link: reviewLink, sender_name: senderName || "" };
+        const html = template.replace(/\{(first_name|customer_name|business_name|review_link|sender_name)\}/g,
             (_, key: string) => escapeHtml(values[key]));
         return reviewRequestLayout(html, businessName);
     }

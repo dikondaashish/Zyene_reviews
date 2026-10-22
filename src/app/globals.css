@@ -263,9 +263,11 @@
   * {
     @apply border-border outline-ring/50;
   }
-  html {
-    overflow-x: clip;
-  }
+  /* Horizontal clipping lives on <body> only. While <html> keeps the default
+   * overflow, body's overflow is applied to the viewport, so the scroll lock
+   * menus and dialogs put on <body> locks the page. Setting overflow on <html>
+   * too turned <body> into its own scroll box when locked, which unstuck the
+   * sticky dashboard header and opened header menus off-screen after scrolling. */
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-inter), Inter, Helvetica, Arial, sans-serif;

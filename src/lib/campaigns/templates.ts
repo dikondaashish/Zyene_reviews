@@ -1,64 +1,60 @@
 /** Pre-built campaign templates for review requests (SMS, email, drip sequences). */
-import { MessageSquare, Calendar, Zap, Mail, Users } from "lucide-react";
+import { Calendar, Zap, Users } from "lucide-react";
 import type { CampaignTemplate } from "@/types/campaigns";
+import { buildTemplate } from "@/lib/campaigns/template-builder";
+import { HOSPITALITY_RETAIL_TEMPLATES } from "@/lib/campaigns/templates-hospitality-retail";
+import { CARE_WELLNESS_TEMPLATES } from "@/lib/campaigns/templates-care-wellness";
 export type { CampaignTemplate };
 
-export const CAMPAIGN_TEMPLATES: CampaignTemplate[] = [
-    {
-        id: "post-visit",
-        name: "Post-Visit Review",
-        description: "Best for retail and restaurants. Send right after a customer leaves.",
-        icon: Zap,
+/** General templates that suit any business. Listed first; ids are linked from elsewhere. */
+const GENERAL_TEMPLATES: CampaignTemplate[] = [
+    buildTemplate({
+        id: "post-visit", name: "Post-Visit Review", businessTypes: [], icon: Zap,
         color: "text-chart-5 bg-chart-5/10 border-chart-5/20",
-        defaultValues: {
-            name: "Post-Visit Review Request",
-            channel: "sms",
-            trigger_type: "manual_batch",
-            sms_template: "Hi {customer_name}! Thanks for visiting {business_name} today. We'd love your feedback - it takes 30 seconds: {review_link}",
-            email_subject: "How was your visit to {business_name}?",
-            email_template: "<p>Hi {customer_name},</p><p>Thank you for visiting {business_name} today! We'd really appreciate your feedback - it helps us improve and helps others discover us.</p><p><a href=\"{review_link}\">Leave a Review</a></p>",
-            delay_minutes: 60,
-            follow_up_enabled: true,
-            follow_up_delay_hours: 48,
-            follow_up_template: "Hi {customer_name}, just a friendly reminder - we'd love to hear about your experience at {business_name}: {review_link}"
-        }
-    },
-    {
-        id: "appointment-followup",
-        name: "Appointment Follow-up",
+        description: "Best for retail and restaurants. Send right after a customer leaves.",
+        channel: "sms", delayMinutes: 60,
+        sms: "Hi {first_name}, it's {business_name}. Thanks for coming in today. How did it go? {review_link}",
+        emailSubject: "{first_name}, how did we do?",
+        emailParagraphs: [
+            "Thanks for coming in to {business_name}. I wanted to check in while your visit is still fresh.",
+            "Would you take a minute to tell us how it went? Your words help us and help others nearby decide.",
+        ],
+        closing: "If anything wasn't right, please say so. We read every response.",
+        reminderDelayHours: 48,
+        reminder: "Hi {first_name}, {business_name} here. Got a minute to tell us how your visit went? {review_link}",
+    }),
+    buildTemplate({
+        id: "appointment-followup", name: "Appointment Follow-up", businessTypes: [], icon: Calendar,
         description: "Perfect for services, clinics, and salons. Optimized for appointments.",
-        icon: Calendar,
-        color: "text-primary bg-primary/10 border-primary/20",
-        defaultValues: {
-            name: "Service Follow-up",
-            channel: "both",
-            trigger_type: "manual_batch",
-            sms_template: "Hi {customer_name}, thanks for choosing {business_name} for your appointment. How did we do? {review_link}",
-            email_subject: "Thank you for your visit to {business_name}",
-            email_template: "<p>Hi {customer_name},</p><p>Thank you for choosing {business_name} for your appointment. We would appreciate your honest feedback.</p><p><a href=\"{review_link}\">Share your feedback</a></p><p>Thank you, the {business_name} team</p>",
-            delay_minutes: 120,
-            follow_up_enabled: false,
-            follow_up_delay_hours: 24,
-            follow_up_template: ""
-        }
-    },
-    {
-        id: "re-engagement",
-        name: "Customer Re-engagement",
-        description: "Bring back customers who haven't visited in a while.",
-        icon: Users,
+        channel: "both", delayMinutes: 120,
+        sms: "Hi {first_name}, thanks for your appointment with {business_name}. How did we do? {review_link}",
+        emailSubject: "{first_name}, a quick question about your appointment",
+        emailParagraphs: [
+            "Thank you for choosing {business_name} for your appointment.",
+            "How was everything, from booking to the visit itself? A few honest words would mean a lot to our team.",
+        ],
+        closing: "If something could have gone better, I'd genuinely like to know.",
+        reminderDelayHours: 24, remindersOn: false, reminder: "",
+    }),
+    buildTemplate({
+        id: "re-engagement", name: "Customer Re-engagement", businessTypes: [], icon: Users,
         color: "text-sync-action bg-sync-action/10 border-sync-action/20",
-        defaultValues: {
-            name: "Re-engagement Campaign",
-            channel: "email",
-            trigger_type: "manual_batch",
-            sms_template: "Hi {customer_name}, we miss you at {business_name}! Hope to see you soon. {review_link}",
-            email_subject: "We miss you at {business_name}!",
-            email_template: "<p>Hi {customer_name},</p><p>It has been a while since your last visit to {business_name}. We would love to welcome you back.</p><p>If you would like to share feedback about your last experience, you can leave a review here:</p><p><a href=\"{review_link}\">Share your feedback</a></p><p>Thank you, the {business_name} team</p>",
-            delay_minutes: 0,
-            follow_up_enabled: true,
-            follow_up_delay_hours: 72,
-            follow_up_template: "Quick reminder: We'd love to see you back!"
-        }
-    }
+        description: "Bring back customers who haven't visited in a while.",
+        channel: "email", delayMinutes: 0,
+        sms: "Hi {first_name}, it's {business_name}. It's been a while. How was your last visit with us? {review_link}",
+        emailSubject: "{first_name}, it's been a while",
+        emailParagraphs: [
+            "It has been a little while since we last saw you at {business_name}, and I wanted to say thank you for coming in.",
+            "If you have a minute, would you share how your last visit went? It helps us know what to keep and what to fix.",
+        ],
+        closing: "Either way, we'd love to see you again.",
+        reminderDelayHours: 72,
+        reminder: "Hi {first_name}, {business_name} here. Got a minute to share how your last visit went? {review_link}",
+    }),
+];
+
+export const CAMPAIGN_TEMPLATES: CampaignTemplate[] = [
+    ...GENERAL_TEMPLATES,
+    ...HOSPITALITY_RETAIL_TEMPLATES,
+    ...CARE_WELLNESS_TEMPLATES,
 ];

@@ -5,13 +5,14 @@ import { cn } from "@/lib/utils";
 import type { GoogleSeoAeoContentProps } from "./google-seo-aeo-content-props";
 import { SeoSection } from "./seo-section";
 
-type Comparison = { text: string; ahead: boolean };
+type Comparison = { text: string; tone: "they-lead" | "you-lead" | "even" };
 
 /** One plain sentence per competitor, so a manager does not have to compare columns in their head. */
 function compareToYou(rating: number, reviews: number, yourRating: number, yourReviews: number): Comparison {
-    if (rating > yourRating + 0.05) return { text: "Higher rating than you", ahead: true };
-    if (reviews > yourReviews) return { text: `${(reviews - yourReviews).toLocaleString()} more reviews than you`, ahead: true };
-    return { text: "You are ahead", ahead: false };
+    if (rating > yourRating + 0.05) return { text: "Higher rating than you", tone: "they-lead" };
+    if (reviews > yourReviews) return { text: `${(reviews - yourReviews).toLocaleString()} more reviews than you`, tone: "they-lead" };
+    if (Math.abs(rating - yourRating) <= 0.05 && reviews === yourReviews) return { text: "About the same as you", tone: "even" };
+    return { text: "You are ahead", tone: "you-lead" };
 }
 
 export function CompetitorSnapshotSection({ content }: { content: GoogleSeoAeoContentProps }) {
@@ -31,8 +32,8 @@ export function CompetitorSnapshotSection({ content }: { content: GoogleSeoAeoCo
             {content.competitors.length === 0 ? (
                 <div className="flex flex-col items-start gap-3 px-5 py-6 sm:px-6">
                     <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-                        Add two or three nearby businesses you compete with. We will show how your rating, reviews, and
-                        AI mentions stack up against theirs.
+                        Add two or three nearby businesses you compete with. We will show how your rating and reviews
+                        stack up against theirs, and how often AI assistants name them instead of you.
                     </p>
                     <Button asChild size="sm" variant="outline">
                         <Link href="/competitors">Add competitors</Link>
@@ -63,9 +64,11 @@ export function CompetitorSnapshotSection({ content }: { content: GoogleSeoAeoCo
                                     <span
                                         className={cn(
                                             "rounded-full px-2 py-0.5 text-xs font-medium",
-                                            comparison.ahead
+                                            comparison.tone === "they-lead"
                                                 ? "bg-warning/15 text-warning-foreground"
-                                                : "bg-success/10 text-success",
+                                                : comparison.tone === "even"
+                                                  ? "bg-muted text-muted-foreground"
+                                                  : "bg-success/10 text-success",
                                         )}
                                     >
                                         {comparison.text}

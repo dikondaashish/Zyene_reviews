@@ -13,6 +13,13 @@ import { TimeAgo } from "@/components/ui/time-ago";
 import type { Competitor, CompetitorInsight } from "./competitors-types";
 import { priorityBadgeVariant } from "./competitors-table-priority-badge";
 
+
+/** "HIGH" / "high" -> "High": the AI returns any case, owners should not read shouting. */
+function titleCase(value: string): string {
+    const v = value.trim().toLowerCase();
+    return v ? v.charAt(0).toUpperCase() + v.slice(1) : v;
+}
+
 export function CompetitorsTableInsightsSection({
     competitors,
     latestInsightByCompetitor,
@@ -27,7 +34,7 @@ export function CompetitorsTableInsightsSection({
     return (
         <Card className="col-span-1 md:col-span-2">
             <CardHeader>
-                <CardTitle className="ui-card-title">AI Competitor Insights</CardTitle>
+                <CardTitle className="ui-card-title">Ideas from AI</CardTitle>
                 <CardDescription>
                     Latest AI-generated insights from recent competitor movement.
                 </CardDescription>
@@ -47,7 +54,7 @@ export function CompetitorsTableInsightsSection({
                                             variant={priorityBadgeVariant(insight.priority)}
                                             className="w-fit shrink-0"
                                         >
-                                            {String(insight.priority || "low").toUpperCase()}
+                                            {titleCase(insight.priority || "low")} priority
                                         </Badge>
                                     </div>
                                     <p className="text-sm mt-2">{insight.summary}</p>
@@ -58,8 +65,7 @@ export function CompetitorsTableInsightsSection({
                                     ) : null}
                                     {insight.owner_suggestion ? (
                                         <p className="text-xs mt-1 text-muted-foreground">
-                                            Suggested owner:{" "}
-                                            {String(insight.owner_suggestion).toUpperCase()}
+                                            Best handled by: {titleCase(String(insight.owner_suggestion))}
                                         </p>
                                     ) : null}
                                     {Array.isArray(insight.actions) && insight.actions.length > 0 ? (
@@ -74,9 +80,9 @@ export function CompetitorsTableInsightsSection({
                                                         Impact: {action.impact}
                                                     </p>
                                                     <p className="text-[11px] text-muted-foreground">
-                                                        Effort: {String(action.effort || "").toUpperCase()}{" "}
+                                                        Effort: {titleCase(action.effort || "")}{" "}
                                                         • Priority:{" "}
-                                                        {String(action.priority || "").toUpperCase()}
+                                                        {titleCase(action.priority || "")}
                                                     </p>
                                                 </div>
                                             ))}
@@ -96,7 +102,7 @@ export function CompetitorsTableInsightsSection({
                                         </div>
                                     ) : null}
                                     <p className="text-[11px] text-muted-foreground mt-3">
-                                        Confidence {Math.round((insight.confidence ?? 0.5) * 100)}% •{" "}
+                                        {insight.confidence != null ? <>AI confidence {Math.round(insight.confidence * 100)}% · </> : null}
                                         <TimeAgo date={insight.created_at} />
                                     </p>
                                 </div>

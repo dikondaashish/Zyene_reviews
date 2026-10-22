@@ -13,14 +13,14 @@ export function NewCampaignTimingStep({ form, updateForm }: NewCampaignTimingSte
     return (
         <div className="space-y-6">
             <div>
-                <h2 className="ui-section-title mb-1">Timing & Follow-up</h2>
+                <h2 className="ui-section-title mb-1">Timing and reminders</h2>
                 <p className="text-sm text-muted-foreground">
                     Control when messages are sent and whether to send follow-ups.
                 </p>
             </div>
 
             <div className="space-y-3">
-                <Label>Send Delay</Label>
+                <Label>When to send the first message</Label>
                 <p className="text-xs text-muted-foreground">
                     How long after adding contacts should the first message be sent? Changing this later only
                     affects contacts added afterwards; already-queued contacts keep their original delay.

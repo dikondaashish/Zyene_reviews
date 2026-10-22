@@ -28,6 +28,8 @@ export function CustomerTableMobileList({
     setOptedOut: (customer: Customer, value: boolean) => void | Promise<void>;
     handleRowNavigate: (e: React.MouseEvent, customerId: string) => void;
 }) {
+    // Reads rows off `table`, whose identity never changes; see customer-table-pagination.tsx.
+    "use no memo";
     return (
         <div className="space-y-3 lg:hidden">
             {table.getRowModel().rows?.length ? (

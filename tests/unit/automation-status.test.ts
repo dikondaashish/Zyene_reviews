@@ -30,7 +30,7 @@ describe("getAutomationStatus", () => {
     it("surfaces failures as a warning", () => {
         const status = getAutomationStatus(overview({ counts: { failures7d: 2 } }));
         expect(status).toMatchObject({ label: "Running, with problems", tone: "warning" });
-        expect(status.summary).toContain("2 did not reach");
+        expect(status.summary).toContain("2 failed or were skipped this week");
     });
 
     it("only claims nothing needs attention when there are no actions", () => {

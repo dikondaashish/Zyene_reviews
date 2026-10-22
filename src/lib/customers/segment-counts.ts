@@ -44,7 +44,8 @@ export function computeCustomerSegmentCounts(
         const hasReview = Boolean(customer.has_linked_review);
 
         if (!hasContactInfo(customer)) no_contact++;
-        if (hasRequest && !hasReview) never_reviewed++;
+        // Only people a reminder can reach: opted-out and test contacts are never sent one.
+        if (hasRequest && !hasReview && !customer.is_opted_out && !isTestContact(customer)) never_reviewed++;
         if (hasReview) already_reviewed++;
         if (isRecent(customer, since)) recent++;
     }
@@ -69,7 +70,7 @@ export function computeCustomerManagementMetrics(customers: CustomerSegmentInput
     const withRequestAndReview = withRequest.filter((c) => Boolean(c.has_linked_review));
     const reviewConversionPercent =
         withRequest.length > 0 ? (withRequestAndReview.length / withRequest.length) * 100 : 0;
-    const neverReviewedCount = withRequest.filter((c) => !c.has_linked_review).length;
+    const neverReviewedCount = withRequest.filter((c) => !c.has_linked_review && !c.is_opted_out).length;
 
     return {
         totalCustomers,

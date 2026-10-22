@@ -12,7 +12,7 @@ export function BusinessesPageHeader({ atLimit, organizationName }: {
         <PageHeader
             eyebrow={organizationName || "Your workspace"}
             title="Businesses"
-            description="Manage your locations, reviews, and platform connections."
+            description="Every location you manage, how each one is doing, and what needs your attention."
             actions={
                 <Button asChild className="rounded-lg">
                     <Link href={atLimit ? BUSINESS_LIMIT_UPGRADE_BILLING_HREF : "/businesses/add"}>

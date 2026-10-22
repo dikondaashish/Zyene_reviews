@@ -8,6 +8,7 @@ import {
     computeCustomerManagementMetrics,
     recentCustomerWindow,
 } from "@/lib/customers/segment-counts";
+import { isTestContact } from "@/lib/customers/test-contact";
 import {
     emptySegmentCounts,
     type CustomerManagementStats,
@@ -45,7 +46,7 @@ export function useCustomerManagementViews(
         const list = uniqueCustomers;
         switch (smartTab) {
             case "never_reviewed":
-                return list.filter((c) => (c.total_requests_sent ?? 0) > 0 && !c.has_linked_review);
+                return list.filter((c) => (c.total_requests_sent ?? 0) > 0 && !c.has_linked_review && !c.is_opted_out && !isTestContact(c));
             case "already_reviewed":
                 return list.filter((c) => Boolean(c.has_linked_review));
             case "recent":

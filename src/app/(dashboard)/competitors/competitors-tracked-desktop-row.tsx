@@ -26,7 +26,7 @@ export function CompetitorsTrackedDesktopRow({
     const updatedAt = competitor.updated_at ? (
         <TimeAgo date={competitor.updated_at} />
     ) : (
-        ", "
+        "Not yet"
     );
 
     return (
@@ -54,30 +54,30 @@ export function CompetitorsTrackedDesktopRow({
             </TableCell>
             <TableCell className="align-top text-sm text-muted-foreground">
                 {syncing ? (
-                    ", "
+                    "Updating…"
                 ) : places?.primaryType ? (
                     <span title={places.typesPreview ?? undefined}>{places.primaryType}</span>
                 ) : (
-                    ", "
+                    "Not listed"
                 )}
             </TableCell>
             <TableCell className="align-top">
                 <div className="flex items-center text-sm">
                     {syncing ? (
-                        <span className="text-muted-foreground">,</span>
+                        <span className="text-muted-foreground">Updating…</span>
                     ) : (
                         <>
-                            <Star className="text-warning-foreground fill-chart-4 mr-1 size-4" />
-                            {competitor.average_rating || "-"}
+                            {competitor.average_rating ? <Star className="text-warning-foreground fill-chart-4 mr-1 size-4" aria-hidden /> : null}
+                            {competitor.average_rating || "Not loaded"}
                         </>
                     )}
                 </div>
             </TableCell>
             <TableCell className="align-top">
                 {syncing ? (
-                    <span className="text-muted-foreground">,</span>
+                    <span className="text-muted-foreground">Updating…</span>
                 ) : (
-                    competitor.total_reviews || 0
+                    (competitor.total_reviews || 0).toLocaleString("en-US")
                 )}
             </TableCell>
             <TableCell className="align-top">
@@ -89,10 +89,10 @@ export function CompetitorsTrackedDesktopRow({
                         className="inline-flex items-center gap-1 text-primary hover:underline text-xs"
                     >
                         <Globe className="shrink-0 size-3.5" />
-                        Site
+                        Website
                     </a>
                 ) : (
-                    <span className="text-muted-foreground text-xs">,</span>
+                    <span className="text-muted-foreground text-xs">Not listed</span>
                 )}
             </TableCell>
             <TableCell className="align-top">
@@ -103,16 +103,16 @@ export function CompetitorsTrackedDesktopRow({
                         rel="noopener noreferrer"
                         className="flex items-center text-primary hover:underline text-xs"
                     >
-                        View <ExternalLink className="ml-1 size-3" />
+                        Open <ExternalLink className="ml-1 size-3" />
                     </a>
                 ) : (
-                    <span className="text-muted-foreground text-xs">N/A</span>
+                    <span className="text-muted-foreground text-xs">Not linked</span>
                 )}
             </TableCell>
             <TableCell className="text-sm text-muted-foreground align-top">
                 <div className="space-y-1">
                     <div>{updatedAt}</div>
-                    <div className="text-[11px]">Source: {sourceLabel}</div>
+                    <div className="text-[11px]">{sourceLabel}</div>
                 </div>
             </TableCell>
             <TableCell className="text-right">

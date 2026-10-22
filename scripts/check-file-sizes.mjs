@@ -91,10 +91,6 @@ const BASELINE = {
     why: "TODO: split",
   },
   "src/services/stripe/checkout-api.ts": { max: 251, why: "TODO: split" },
-  "src/services/competitors/external-metrics.ts": {
-    max: 241,
-    why: "TODO: split",
-  },
   "src/app/actions/onboarding/business.ts": { max: 241, why: "TODO: split" },
   "src/services/google/performance-queries.ts": {
     max: 234,

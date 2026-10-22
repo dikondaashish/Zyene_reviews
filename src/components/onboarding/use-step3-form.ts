@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -13,9 +13,9 @@ export function useStep3Form(
     initialCategory: string | undefined,
     onNext: () => void,
     externalIsLoading = false,
+    defaultSupportEmail = "",
 ) {
     const [isLoading, setIsLoading] = useState(externalIsLoading);
-    const autoSubmitTriggered = useRef(false);
 
     const form = useForm<StepCategoryFormData>({
         resolver: zodResolver(stepCategorySchema),
@@ -23,6 +23,7 @@ export function useStep3Form(
             category:
                 (initialCategory as StepCategoryFormData["category"]) ||
                 (undefined as unknown as StepCategoryFormData["category"]),
+            supportEmail: defaultSupportEmail,
         },
         mode: "onChange",
     });
@@ -36,24 +37,14 @@ export function useStep3Form(
 
     const selectedCategory = form.watch("category");
 
-    useEffect(() => {
-        if (!selectedCategory || isLoading || autoSubmitTriggered.current) return;
-        if (initialCategory && selectedCategory === initialCategory) return;
-
-        const timer = setTimeout(() => {
-            autoSubmitTriggered.current = true;
-            form.handleSubmit(onSubmit)();
-        }, 600);
-
-        return () => clearTimeout(timer);
-    }, [selectedCategory]); // eslint-disable-line react-hooks/exhaustive-deps
+    // No auto-continue on pick: the owner should see and confirm the reply email below the grid.
 
     const onSubmit = async (data: StepCategoryFormData) => {
         setIsLoading(true);
         try {
             const result = await updateBusinessCategory(businessId, data);
             if (result.success) {
-                toast.success("Category saved!");
+                toast.success("Saved");
                 onNext();
             } else {
                 toast.error(result.error || "Failed to save category");

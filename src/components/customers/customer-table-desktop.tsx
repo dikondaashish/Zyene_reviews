@@ -23,6 +23,8 @@ export function CustomerTableDesktop({
     handleRowNavigate: (e: React.MouseEvent, customerId: string) => void;
     onRowActivate: (customerId: string) => void;
 }) {
+    // Reads rows off `table`, whose identity never changes; see customer-table-pagination.tsx.
+    "use no memo";
     return (
         <div className="hidden overflow-x-auto rounded-2xl border border-border/80 bg-card shadow-sm lg:block">
             <Table>
