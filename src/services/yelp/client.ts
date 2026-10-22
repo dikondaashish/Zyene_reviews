@@ -21,6 +21,8 @@ function getApiKey(): string {
 interface YelpRequestOptions {
     path: string;
     params?: Record<string, string>;
+    /** Statuses the caller handles (e.g. 404 on plans without reviews): logged at info, still thrown. */
+    expectedStatuses?: number[];
 }
 
 export async function yelpFetch<T>(options: YelpRequestOptions): Promise<T> {
@@ -42,7 +44,11 @@ export async function yelpFetch<T>(options: YelpRequestOptions): Promise<T> {
 
     if (!response.ok) {
         const errorBody = await response.text();
-        logger.error(`[Yelp API] ${response.status}: ${errorBody}`);
+        if (options.expectedStatuses?.includes(response.status)) {
+            logger.info({ status: response.status, path: options.path }, "[Yelp API] expected non-2xx response");
+        } else {
+            logger.error(`[Yelp API] ${response.status}: ${errorBody}`);
+        }
         throw new YelpApiError(response.status, response.statusText);
     }
 
