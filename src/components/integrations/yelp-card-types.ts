@@ -22,4 +22,6 @@ export interface YelpCardProps {
     dbYelpSyncedRowCount?: number;
     /** Live `reviews` count (`is_visible = true`, platform yelp). */
     dbVisibleYelpReviewCount?: number;
+    /** The Yelp API plan has no review text; only rating and review count sync. */
+    reviewsUnavailable?: boolean;
 }

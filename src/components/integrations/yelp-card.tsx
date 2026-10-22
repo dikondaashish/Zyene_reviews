@@ -14,6 +14,7 @@ export function YelpIntegrationCard(props: YelpCardProps) {
             <YelpIntegrationCardConnected
                 platform={s.platform}
                 businessId={s.businessId}
+                reviewsUnavailable={props.reviewsUnavailable ?? false}
                 mounted={s.mounted}
                 yelpSyncedCount={s.yelpSyncedCount}
                 isSyncing={s.isSyncing}
