@@ -19,7 +19,7 @@ export function getAppSecret(): string {
 interface GraphRequestOptions {
     path: string;
     params?: Record<string, string>;
-    method?: "GET" | "POST";
+    method?: "GET" | "POST" | "DELETE";
     body?: Record<string, string>;
 }
 

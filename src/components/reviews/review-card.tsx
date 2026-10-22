@@ -36,7 +36,7 @@ export function ReviewCard({
         (reply.isReplying && review.response_status !== "responded") || reply.isEditingReply;
 
     const canManageGoogleReply =
-        review.platform === "google" &&
+        (review.platform === "google" || review.platform === "facebook") &&
         review.response_status === "responded" &&
         !!(review.response_text && review.response_text.trim());
 

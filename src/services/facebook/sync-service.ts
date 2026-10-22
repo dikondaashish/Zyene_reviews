@@ -91,7 +91,7 @@ export async function syncFacebookReviewsForPlatform(
                     rating: review.rating,
                     text: review.content,
                     review_date: review.publishedAt,
-                    response_status: "pending" as const,
+                    // response_status defaults to 'pending' on insert; never overwrite a posted reply's status.
                 };
 
                 const { data: upserted, error: upsertError } = await admin

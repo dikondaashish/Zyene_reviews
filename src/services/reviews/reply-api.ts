@@ -6,10 +6,10 @@ import { REVIEW_RESPONSE_SOURCE_ZYENE } from "@/lib/reviews/response-source";
 import { invalidateDashboardStatsCache } from "@/lib/dashboard/invalidate-dashboard-stats-cache";
 import { reviewReplySchema } from "./reply-schema";
 import {
-    deleteGoogleReviewReply,
-    fetchAuthorizedGoogleReview,
+    deletePlatformReviewReply,
+    fetchAuthorizedReplyReview,
     mapReviewReplyError,
-    postGoogleReviewReply,
+    postReviewReply,
 } from "./reply-review-access";
 
 export async function handleReviewReplyPost(request: Request, reviewId: string) {
@@ -26,11 +26,11 @@ export async function handleReviewReplyPost(request: Request, reviewId: string) 
         }
         const { text } = parsed.data;
 
-        const access = await fetchAuthorizedGoogleReview(reviewId, user.id);
+        const access = await fetchAuthorizedReplyReview(reviewId, user.id);
         if (!access.ok) return access.response;
 
         const { review } = access;
-        await postGoogleReviewReply(review.platform_id!, review.external_id!, text);
+        await postReviewReply(review, text);
 
         const admin = createAdminClient();
         const { error: updateError } = await admin
@@ -62,11 +62,11 @@ export async function handleReviewReplyDelete(_request: Request, reviewId: strin
     }
 
     try {
-        const access = await fetchAuthorizedGoogleReview(reviewId, user.id);
+        const access = await fetchAuthorizedReplyReview(reviewId, user.id);
         if (!access.ok) return access.response;
 
         const { review } = access;
-        await deleteGoogleReviewReply(review.platform_id!, review.external_id!);
+        await deletePlatformReviewReply(review);
 
         const admin = createAdminClient();
         const { error: updateError } = await admin
