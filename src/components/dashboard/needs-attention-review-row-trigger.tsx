@@ -66,10 +66,9 @@ export function NeedsAttentionReviewRowTrigger({
                         {Array.from({ length: 5 }).map((_, i) => (
                             <Star
                                 key={i}
-                                strokeWidth={i < rating ? 0 : 1.35}
                                 className={cn(
-                                    "shrink-0 text-warning-foreground size-2.5",
-                                    i < rating ? "fill-chart-4" : "fill-none"
+                                    "shrink-0 size-2.5",
+                                    i < rating ? "text-chart-4" : "text-muted-foreground/25"
                                 )}
                                 aria-hidden
                             />

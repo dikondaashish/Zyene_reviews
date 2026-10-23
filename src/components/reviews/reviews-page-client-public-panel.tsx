@@ -8,6 +8,7 @@ import { MessageSquare, SearchX } from "lucide-react";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { PanelLoading } from "@/components/dashboard/panel-loading";
 import type { ReviewManagementItem } from "@/types/components";
+import type { ReviewStatusCounts } from "@/lib/reviews/status-counts";
 
 interface ReviewsPageClientPublicPanelProps {
     businessId: string;
@@ -18,6 +19,7 @@ interface ReviewsPageClientPublicPanelProps {
     reviews: ReviewManagementItem[];
     isImportingGoogleReviews: boolean;
     publicCount: number;
+    statusCounts: ReviewStatusCounts | null;
     resultCount: number;
     onFilterChange: (key: string, value: string) => void;
     onRefresh: () => void;
@@ -32,6 +34,7 @@ export function ReviewsPageClientPublicPanel({
     reviews,
     isImportingGoogleReviews,
     publicCount,
+    statusCounts,
     resultCount,
     onFilterChange,
     onRefresh,
@@ -40,7 +43,7 @@ export function ReviewsPageClientPublicPanel({
         <section aria-label="Public reviews inbox" className="min-w-0 overflow-hidden rounded-xl border border-border bg-card">
             <div className="space-y-3 border-b border-border p-4">
             <ReviewSearch key={filters.q || ""} query={filters.q || ""} onSearch={(q) => onFilterChange("q", q)} />
-            <ReviewsFilters filters={filters} onFilterChange={onFilterChange} />
+            <ReviewsFilters filters={filters} onFilterChange={onFilterChange} counts={statusCounts ? { all: publicCount, ...statusCounts } : null} />
             </div>
             {loading && reviews.length === 0 ? <PanelLoading label="reviews" className="h-[360px]" /> : <div aria-busy={loading} inert={loading} className={loading ? "opacity-60 transition-opacity" : "transition-opacity"}>
                 {reviews && reviews.length > 0 ? (

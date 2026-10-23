@@ -90,7 +90,7 @@ export function CompetitorsTrackedMobileCard({
                             <span className="text-muted-foreground">Updating…</span>
                         ) : (
                             <span className="inline-flex items-center gap-1">
-                                {competitor.average_rating ? <Star className="shrink-0 fill-chart-4 text-warning-foreground size-3.5" aria-hidden /> : null}
+                                {competitor.average_rating ? <Star className="shrink-0 text-chart-4 size-3.5" aria-hidden /> : null}
                                 {competitor.average_rating || "Not loaded"}
                             </span>
                         )}

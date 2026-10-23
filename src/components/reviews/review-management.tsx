@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CompactReviewRow } from "@/components/reviews/compact-review-row";
 import { BulkReviewActionBar } from "@/components/reviews/bulk-review-action-bar";
+import { useReviewRowOpenState } from "@/components/reviews/use-review-row-open-state";
 import { Button } from "@/components/ui/button";
 import { CheckSquare, Square } from "lucide-react";
 import type { ReviewManagementItem } from "@/types/components";
@@ -29,6 +30,7 @@ export function ReviewManagement({
 }: ReviewManagementProps) {
     const totalCount = resultCount ?? reviews.length;
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+    const rows = useReviewRowOpenState(reviews);
 
     const toggleSelect = (id: string, selected: boolean) => {
         const newSet = new Set(selectedIds);
@@ -82,6 +84,9 @@ export function ReviewManagement({
                 {reviews.map((review) => (
                     <CompactReviewRow
                         key={review.id}
+                        open={rows.openIds.has(review.id)}
+                        onOpenChange={rows.setOpen}
+                        onReplyPosted={rows.onReplyPosted}
                         review={review}
                         googleMapsListingUrl={googleMapsListingUrl}
                         planAllowsAiReplies={planAllowsAiReplies}

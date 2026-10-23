@@ -39,4 +39,6 @@ export interface ReviewCardProps {
     isSelected?: boolean;
     onSelect?: (id: string, selected: boolean) => void;
     onRefresh?: () => void;
+    /** Called after a new reply is posted, with this review's id. */
+    onReplyPosted?: (reviewId: string) => void;
 }

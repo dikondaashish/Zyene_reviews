@@ -32,13 +32,14 @@
  * Hover darkens to #dd4513 rather than the reference's lighter #f17e58, which
  * would drop white text to 2.7:1; #f17e58 stays as the on-dark accent. Orange
  * text uses the brand #ed5a29 (owner decision, 2026-10-16).
- * Filled CTAs use --cta #d14212 (white text 4.7:1, AA) with darker hover
- * #b8380e and pressed #a3300b; #ed5a29 with white text is only 3.4:1. */
+ * Filled CTAs are the brand orange #ed5a29 with white text, matching the
+ * dashboard (hover #dd4513, pressed #d14212). Owner's call: brand colour over
+ * the 4.5:1 AA ratio (white on #ed5a29 is 3.4:1, AA for large/bold text only). */
 .marketing-site {
  --background:#f7f5f1; --foreground:#23262a; --card:#ffffff; --card-foreground:#23262a;
  --popover:#ffffff; --popover-foreground:#23262a; --muted:#f2f0eb; --muted-foreground:#505763;
  --secondary:#f1f2f4; --secondary-foreground:#23262a; --accent:#f1f2f4; --accent-foreground:#23262a;
- --primary:#ed5a29; --cta:#d14212; --cta-hover:#b8380e; --cta-active:#a3300b; --primary-foreground:#ffffff; --cta-foreground:#ffffff; --border:#e3e5e8; --input:#d5d8dd; --ring:#ed5a29;
+ --primary:#ed5a29; --cta:#ed5a29; --cta-hover:#dd4513; --cta-active:#d14212; --primary-foreground:#ffffff; --cta-foreground:#ffffff; --border:#e3e5e8; --input:#d5d8dd; --ring:#ed5a29;
  --success:#166534; --success-foreground:#ffffff; --success-wash:#dcfce7; --success-bright:#2cc896; --warning:#fbbf24; --warning-foreground:#854d0e;
  --destructive:#cc0000; --destructive-foreground:#ffffff;
  --canvas:#f2f0eb; --brand-wash:#feefea; --brand-wash-border:#f8cdbb; --brand-orange:#ed5a29;

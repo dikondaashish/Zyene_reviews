@@ -2,6 +2,10 @@ import { MessageSquare, Sparkles, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Review, ReviewCardTone } from "@/components/reviews/review-card-types";
 
+/** Secondary to Reply: a soft orange tint that deepens on hover and press, never a solid fill. */
+const AI_SUGGEST_CLASS =
+    "h-9 w-full border-primary/25 bg-primary/10 px-4 text-xs font-semibold text-primary transition-colors hover:border-primary/45 hover:bg-primary/20 hover:text-primary active:bg-primary/25";
+
 export function ReviewCardPendingReplyActions({
     review,
     isReplying,
@@ -51,7 +55,8 @@ export function ReviewCardPendingReplyActions({
                     </Button>
                     <Button
                         size="sm"
-                        className="h-9 w-full border border-primary/20 bg-primary/10 px-4 text-xs font-semibold text-primary hover:bg-primary/20"
+                        variant="outline"
+                        className={AI_SUGGEST_CLASS}
                         onClick={() => !activeTone && onToneClick("professional")}
                     >
                         <Sparkles className="mr-2 size-3.5" />
@@ -70,7 +75,8 @@ export function ReviewCardPendingReplyActions({
                     </Button>
                     <Button
                         size="sm"
-                        className="h-9 w-full border border-primary/20 bg-primary/10 px-4 text-xs font-semibold text-primary hover:bg-primary/20"
+                        variant="outline"
+                        className={AI_SUGGEST_CLASS}
                         onClick={onSuggestProfessional}
                     >
                         <Sparkles className="mr-2 size-3.5" />

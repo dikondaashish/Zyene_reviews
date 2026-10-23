@@ -23,7 +23,7 @@ export const AI_REPLIES_CONTENT: FeatureLandingContent = {
       { icon: Inbox, title: "Open a review", text: "From the Reviews inbox, or the Needs your attention list on your dashboard.", sample: "4★ · Priya S." },
       { icon: Sparkles, title: "Click AI suggest", text: "A draft written for this review appears in the reply box.", sample: "AI suggest" },
       { icon: SlidersHorizontal, title: "Pick a tone", text: "Switch between the three tones. Each draft is kept while you compare.", sample: "Professional · Friendly · Concise" },
-      { icon: PenLine, title: "Make it yours", text: "Edit anything you like. Nothing is posted until you click Post Reply.", sample: "Edit reply" },
+      { icon: PenLine, title: "Make it yours", text: "Edit anything you like. Nothing is posted until you click Post reply.", sample: "Edit reply" },
       { icon: Send, title: "Post to Google", text: "The reply goes live on your Business Profile and the review moves to Responded.", sample: "Posted to Google" },
     ],
   },
@@ -94,7 +94,7 @@ export const AI_REPLIES_CONTENT: FeatureLandingContent = {
   note: "AI reply suggestions need a paid plan or an active trial. Replies post to Google only; for Facebook and Yelp reviews, reply on those sites. Business replies don’t use your monthly allowance of AI customer review drafts, but a fair-use limit of 100 AI drafts per business per day applies.",
   faqs: [
     { question: "How does the AI write a reply?", answer: "It reads the star rating, the review text, and your business name and category, then writes a draft in the tone you pick. For short 4 and 5 star reviews with little or no text, it picks from a rotating set of thank-you messages so your replies don’t all read the same." },
-    { question: "Will Zyene post AI replies without me?", answer: "Not with AI suggestions. A draft only goes to Google when you click Post Reply. If you want new Google reviews answered for you, turn on automatic replies, which post without approval for the star ratings you choose." },
+    { question: "Will Zyene post AI replies without me?", answer: "Not with AI suggestions. A draft only goes to Google when you click Post reply. If you want new Google reviews answered for you, turn on automatic replies, which post without approval for the star ratings you choose." },
     { question: "Can I use AI replies for Facebook and Yelp reviews?", answer: "Not from Zyene. Replies you post from Zyene go to Google. Facebook and Yelp reviews appear in your inbox for monitoring, and you reply to them on those sites." },
     { question: "Is there a limit on AI replies?", answer: "AI replies to your reviews are included on paid plans and trials, with no monthly quota. They are counted separately from AI customer review drafts, which have a monthly allowance. A fair-use limit of 100 AI drafts per business per day applies." },
     { question: "Which tones can I choose?", answer: "Professional, Friendly and Concise. Professional is polished and courteous, Friendly is warm and conversational, and Concise keeps it to two or three sentences." },

@@ -25,7 +25,7 @@ export function ReplyRuleRow({
         <div className="flex flex-col gap-2 rounded-md border p-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-1 text-sm font-medium" aria-label={`${rule.rating} star reviews`}>
                 {Array.from({ length: 5 }, (_, i) => (
-                    <Star key={i} className={`size-4 ${i < rule.rating ? "fill-chart-4 text-chart-4" : "text-muted-foreground/40"}`} />
+                    <Star key={i} className={`size-4 ${i < rule.rating ? "text-chart-4" : "text-muted-foreground/25"}`} />
                 ))}
                 <span className="ml-2">{rule.rating}-star reviews</span>
             </div>

@@ -2,13 +2,14 @@ import { MessageSquare, Mail, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { isCompletedRequest } from "@/lib/metrics/business-metrics";
 
-export function formatReviewRequestContact(req: {
-    customer_phone?: string | null;
-    customer_email?: string | null;
-}) {
+/** Phone and email on their own lines, each cut short with the full value on hover. */
+export function ReviewRequestContactCell({ req }: { req: { customer_phone?: string | null; customer_email?: string | null } }) {
+    const lines = [req.customer_phone, req.customer_email].filter((v): v is string => Boolean(v));
+    if (lines.length === 0) return <span>-</span>;
     return (
-        [req.customer_phone, req.customer_email].filter(Boolean).join(" · ") ||
-        ", "
+        <div className="min-w-0 space-y-0.5">
+            {lines.map((line) => <span key={line} title={line} className="block truncate">{line}</span>)}
+        </div>
     );
 }
 
@@ -65,7 +66,7 @@ export function getRequestStatusBadge(
     if (req.review_confirmed_at) {
         return (
             <Badge className="bg-chart-4/15 text-warning-foreground hover:bg-chart-4/15 border-chart-4/35">
-                <Star className="mr-1 fill-chart-4 text-warning-foreground size-3" />{" "}
+                <Star className="mr-1 text-chart-4 size-3" />{" "}
                 {req.review_confirmation_source === "manual" ? "Review confirmed (manual)" : "Review confirmed"}
             </Badge>
         );

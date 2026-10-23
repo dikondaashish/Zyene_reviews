@@ -72,7 +72,8 @@ export function CompetitorsListMarketBriefCard({
                             </div>
                         ) : null}
 
-                        <details className="group rounded-lg bg-muted/40 px-4 py-3 text-sm">
+                        {/* Open by default so the reasoning is visible; the owner can still hide it. */}
+                        <details open className="group rounded-lg bg-muted/40 px-4 py-3 text-sm">
                             <summary className="cursor-pointer list-none font-medium text-foreground [&::-webkit-details-marker]:hidden">
                                 <span className="group-open:hidden">Read the AI&apos;s reasoning</span>
                                 <span className="hidden group-open:inline">Hide the AI&apos;s reasoning</span>

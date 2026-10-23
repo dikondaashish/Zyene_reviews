@@ -4,6 +4,7 @@ import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { NextResponse, type NextRequest } from "next/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
+import { countReviewsByStatus } from "@/lib/reviews/status-counts";
 
 async function handleValidatedRequest(request: NextRequest) {
     const supabase = await createClient();
@@ -33,7 +34,7 @@ async function handleValidatedRequest(request: NextRequest) {
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    const [{ count: publicCount }, { count: privateCount }] = await Promise.all([
+    const [{ count: publicCount }, { count: privateCount }, statusCounts] = await Promise.all([
         supabase
             .from("reviews")
             .select("*", { count: "exact", head: true })
@@ -43,6 +44,7 @@ async function handleValidatedRequest(request: NextRequest) {
             .from("private_feedback")
             .select("*", { count: "exact", head: true })
             .eq("business_id", businessId),
+        countReviewsByStatus(supabase, businessId),
     ]);
 
     let reviews: unknown[] = [];
@@ -121,6 +123,7 @@ async function handleValidatedRequest(request: NextRequest) {
             page,
             publicCount: publicCount || 0,
             privateCount: privateCount || 0,
+            statusCounts,
         },
         {
             headers: {

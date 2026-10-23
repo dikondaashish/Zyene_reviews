@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import {
-    formatReviewRequestContact,
+    ReviewRequestContactCell,
     getRequestStatusBadge,
     requestFlowCompleted,
     reviewRequestChannelCell,
@@ -48,12 +48,13 @@ export function RequestsListSection({
 }) {
     const customerSuffix = customerQuery ? `&customer=${customerQuery}` : "";
 
+    // Switch on the list's own width, not the screen's: with the sidebar open, a laptop screen
+    // has too little room for six columns, so it keeps the card layout until the table fits.
     return (
-        <>
-            <div className="space-y-3 lg:hidden">
+        <div className="@container">
+            <div className="space-y-3 @[54rem]:hidden">
                 {requests.length > 0 ? (
                     requests.map((req) => {
-                        const contact = formatReviewRequestContact(req);
                         return (
                             <div
                                 key={req.id}
@@ -64,7 +65,7 @@ export function RequestsListSection({
                                         <p className="font-semibold leading-snug break-words">
                                             {req.customer_name || "Guest"}
                                         </p>
-                                        <p className="mt-1 break-all text-xs text-muted-foreground">{contact}</p>
+                                        <div className="mt-1 text-xs text-muted-foreground"><ReviewRequestContactCell req={req} /></div>
                                     </div>
                                     <div className="shrink-0 text-right text-xs text-muted-foreground">
                                         {req.created_at
@@ -91,7 +92,7 @@ export function RequestsListSection({
                     </div>
                 )}
             </div>
-            <div className="hidden overflow-x-auto rounded-md border bg-card lg:block">
+            <div className="hidden overflow-x-auto rounded-md border bg-card @[54rem]:block">
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -108,8 +109,8 @@ export function RequestsListSection({
                             requests.map((req) => (
                                 <TableRow key={req.id} className="transition-colors hover:bg-muted/50">
                                     <TableCell className="font-medium">{req.customer_name || "Guest"}</TableCell>
-                                    <TableCell className="max-w-[240px] break-all text-muted-foreground">
-                                        {formatReviewRequestContact(req)}
+                                    <TableCell className="max-w-[220px] text-muted-foreground">
+                                        <ReviewRequestContactCell req={req} />
                                     </TableCell>
                                     <TableCell>{reviewRequestChannelCell(req.channel)}</TableCell>
                                     <TableCell>
@@ -155,6 +156,6 @@ export function RequestsListSection({
                     </Button>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

@@ -23,20 +23,21 @@ export function ReviewCard({
     isSelected = false,
     onSelect,
     onRefresh,
+    onReplyPosted,
 }: ReviewCardProps) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [detailOpen, setDetailOpen] = useState(false);
     const [activePhoto, setActivePhoto] = useState<string | null>(null);
     const [deleteReplyOpen, setDeleteReplyOpen] = useState(false);
 
-    const reply = useReviewCardReply(review, planAllowsAiReplies, onRefresh);
+    const reply = useReviewCardReply(review, planAllowsAiReplies, onRefresh, onReplyPosted);
     const list = useReviewCardListMutations(review, onRefresh, () => setDeleteReplyOpen(false));
 
     const showReplyComposer =
         (reply.isReplying && review.response_status !== "responded") || reply.isEditingReply;
 
     const canManageGoogleReply =
-        (review.platform === "google" || review.platform === "facebook") &&
+        review.platform === "google" &&
         review.response_status === "responded" &&
         !!(review.response_text && review.response_text.trim());
 

@@ -83,9 +83,9 @@
 .hero-phone-stars { display:flex; justify-content:center; width:100%; margin-top:1.25cqw; }
 .hero-phone-stars label { position:relative; display:flex; align-items:center; justify-content:center; flex:1; height:4.3cqw; min-height:24px; cursor:pointer; }
 .hero-phone-stars input { position:absolute; inset:0; opacity:0; width:100%; height:100%; cursor:pointer; }
-.hero-phone-stars svg { pointer-events:none; width:2.5cqw; height:2.5cqw; color:#a4a9b0; stroke-width:1.5; fill:transparent; }
+.hero-phone-stars svg { pointer-events:none; width:2.5cqw; height:2.5cqw; color:#d5d8dd; }
 .hero-phone-stars input:focus-visible + svg { outline:2px solid #be3900; outline-offset:3px; border-radius:2px; }
-.hero-phone-stars svg.is-filled { fill:#ffb300; color:#df9600; }
+.hero-phone-stars svg.is-filled { color:#ffb300; }
 .hero-phone-submit { width:94%; min-height:32px; margin-top:1cqw; border-radius:999px; padding:1cqw .4cqw; background:var(--primary); color:#fffefd; font-size:1.7cqw; font-weight:600; cursor:pointer; transition:transform 180ms,background-color 180ms; }
 .hero-phone-submit:disabled { background:#d8d4d0; color:#756f6b; cursor:not-allowed; }
 .hero-phone-submit:active { transform:scale(.98); }

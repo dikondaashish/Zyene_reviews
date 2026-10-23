@@ -33,7 +33,7 @@ export function MockStars({ value = 5, size = 16 }: { value?: number; size?: num
   return (
     <span className="mk-stars">
       {[1, 2, 3, 4, 5].map((n) => (
-        <Star key={n} size={size} fill={n <= value ? "currentColor" : "none"} className={n <= value ? undefined : "mk-star-off"} />
+        <Star key={n} size={size} className={n <= value ? undefined : "mk-star-off"} />
       ))}
     </span>
   );

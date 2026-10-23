@@ -1,51 +1,96 @@
-import { AlertTriangle, CheckCircle2, Flag, Mail, MessageSquare, MousePointerClick, Send } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { StepFunnel } from "@/components/metrics/step-funnel";
+import { Send, CheckCircle2, MousePointerClick, Star } from "lucide-react";
 
-type RequestsStats = {
-    totalSent: number;
-    delivered: number;
-    clicked: number;
-    reviews: number;
-    emailSent: number;
-    smsSent: number;
-    totalFailed: number;
-    deliveryRate: number;
-    clickRate: number;
-    conversionRate: number;
-};
-
-/** One funnel (sent → delivered → clicked → finished) instead of four tiles of "X of Y sent". */
-export function RequestsStatsSection({ stats }: { stats: RequestsStats }) {
+export function RequestsStatsSection({
+    stats,
+}: {
+    stats: {
+        totalSent: number;
+        delivered: number;
+        clicked: number;
+        reviews: number;
+        emailSent: number;
+        smsSent: number;
+        totalFailed: number;
+        deliveryRate: number;
+        clickRate: number;
+        conversionRate: number;
+    };
+}) {
     return (
-        <Card className="mb-8">
-            <CardHeader className="pb-2">
-                <CardTitle className="ui-card-title">From request to review</CardTitle>
-                <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                    <span className="inline-flex items-center gap-1"><Mail className="size-3.5" aria-hidden />{stats.emailSent} email</span>
-                    <span className="inline-flex items-center gap-1"><MessageSquare className="size-3.5" aria-hidden />{stats.smsSent} text</span>
-                    {stats.totalFailed > 0 ? (
-                        <span className="inline-flex items-center gap-1 text-destructive"><AlertTriangle className="size-3.5" aria-hidden />{stats.totalFailed} failed</span>
-                    ) : null}
-                </p>
-            </CardHeader>
-            <CardContent className="max-w-3xl">
-                <StepFunnel
-                    label="Review request funnel"
-                    stages={[
-                        { key: "sent", label: "Sent", value: stats.totalSent, icon: Send },
-                        { key: "delivered", label: "Delivered", value: stats.delivered, icon: CheckCircle2 },
-                        { key: "clicked", label: "Clicked the link", value: stats.clicked, icon: MousePointerClick },
-                        {
-                            key: "finished",
-                            label: "Finished the review page",
-                            value: stats.reviews,
-                            icon: Flag,
-                            hint: "Google doesn't tell us if they then posted, so confirm reviews in the list below.",
-                        },
-                    ]}
-                />
-            </CardContent>
-        </Card>
+        // Four across only when the page area (not the screen) has room; with the sidebar open
+        // on a laptop the cards stay 2×2 instead of squeezing their labels.
+        <div className="@container mb-8">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 @3xl:grid-cols-4">
+                <Card className="border-l-4 border-l-primary">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                            Total Sent
+                        </CardTitle>
+                        <Send className="text-primary size-4" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{stats.totalSent}</div>
+                        <p className="text-xs text-muted-foreground">
+                            {stats.emailSent} email · {stats.smsSent} SMS
+                            {stats.totalFailed > 0 ? (
+                                <span className="text-destructive">
+                                    {" "}
+                                    · {stats.totalFailed} failed
+                                </span>
+                            ) : null}
+                        </p>
+                    </CardContent>
+                </Card>
+                <Card className="border-l-4 border-l-emerald-500">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                            Delivery Rate
+                        </CardTitle>
+                        <CheckCircle2 className="text-success size-4" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">
+                            {stats.deliveryRate.toFixed(1)}%
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                            {stats.delivered} of {stats.totalSent} sent
+                        </p>
+                    </CardContent>
+                </Card>
+                <Card className="border-l-4 border-l-amber-600">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                            Click Rate
+                        </CardTitle>
+                        <MousePointerClick className="text-warning-foreground size-4" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">
+                            {stats.clickRate.toFixed(1)}%
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                            {stats.clicked} of {stats.totalSent} sent
+                        </p>
+                    </CardContent>
+                </Card>
+                <Card className="border-l-4 border-l-yellow-500">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                            Request completion
+                        </CardTitle>
+                        <Star className="text-warning size-4" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">
+                            {stats.conversionRate.toFixed(1)}%
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                            {stats.reviews} completed of {stats.totalSent} sent; publication unverified
+                        </p>
+                    </CardContent>
+                </Card>
+            </div>
+        </div>
     );
 }

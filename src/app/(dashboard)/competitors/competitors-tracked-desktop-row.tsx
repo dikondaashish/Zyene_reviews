@@ -65,7 +65,7 @@ export function CompetitorsTrackedDesktopRow({
                         <span className="text-muted-foreground">Updating…</span>
                     ) : (
                         <>
-                            {competitor.average_rating ? <Star className="text-warning-foreground fill-chart-4 mr-1 size-4" aria-hidden /> : null}
+                            {competitor.average_rating ? <Star className="text-chart-4 mr-1 size-4" aria-hidden /> : null}
                             {competitor.average_rating || "Not loaded"}
                         </>
                     )}

@@ -61,7 +61,7 @@ export function FacebookIntegrationCardConnected({
                     <div className="grid grid-cols-3 gap-2 text-center sm:gap-3">
                         <div className="rounded-lg bg-card p-2 border border-border">
                             <div className="flex items-center justify-center gap-1 text-sm font-semibold">
-                                <Star className="text-warning-foreground size-3.5" />
+                                <Star className="text-warning size-3.5" />
                                 {fbRatingDisplay}
                             </div>
                             <div className="text-[10px] text-muted-foreground">Rating</div>

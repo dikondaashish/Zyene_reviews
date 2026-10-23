@@ -72,7 +72,7 @@ Auth: Supabase session (`getUser`) + active business context unless noted.
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| `GET`/`POST` | `/api/reviews` | List / create-related review ops for active business |
+| `GET`/`POST` | `/api/reviews` | List / create-related review ops for active business. `GET` returns `reviews`, `count`, `totalPages`, `page`, `publicCount`, `privateCount` and `statusCounts` (`{ needs_response, responded, ignored }` across all visible reviews, ignoring rating/search; `null` if a count failed) |
 | `GET`/`PATCH`/`DELETE` | `/api/reviews/[id]` | Single review |
 | `POST` / `DELETE` | `/api/reviews/[id]/reply` | Publish (or edit) / delete the public reply. Google and Facebook (Page comment, needs `pages_manage_engagement`); other platforms `400` |
 | `POST` | `/api/reviews/bulk` | Bulk actions |

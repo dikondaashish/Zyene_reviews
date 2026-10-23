@@ -263,6 +263,12 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* Stars are always solid shapes, never outlined: a coloured star for a filled
+   * one, a faded grey star for an empty one. A `fill-*` utility still sets the colour. */
+  svg.lucide-star {
+    fill: currentColor;
+    stroke: none;
+  }
   /* Horizontal clipping lives on <body> only. While <html> keeps the default
    * overflow, body's overflow is applied to the viewport, so the scroll lock
    * menus and dialogs put on <body> locks the page. Setting overflow on <html>
@@ -495,4 +501,11 @@
 }
 .betteruptime-announcement__message {
   color: var(--card-foreground);
+}
+
+/* Underline tabs: only the active tab gets a bar. A grey bar on a hovered
+ * inactive tab looked like a scrollbar, so hover only darkens the label.
+ * Unlayered so it beats the hover shadow utility in components/ui/tabs.tsx. */
+[data-slot="tabs-list"][data-variant="line"] [data-slot="tabs-trigger"][data-state="inactive"]:hover {
+  box-shadow: none;
 }
