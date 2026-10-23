@@ -48,6 +48,7 @@ export default async function ReviewsPage(props: {
                 initialGoogleLastSyncedAt={data.initialGoogleLastSyncedAt}
                 autoCommenterPlanOk={data.autoCommenterPlanOk}
                 autoReplyInitial={data.autoReplyInitial}
+                replyRules={data.replyRules}
                 initialReviews={data.initialReviews}
                 initialCount={data.initialCount}
                 initialTotalPages={data.initialTotalPages}

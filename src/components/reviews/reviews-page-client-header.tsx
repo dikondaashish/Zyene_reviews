@@ -6,6 +6,7 @@ import { Download, Eye } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { AutoReplyToolbar, type AutoReplySettingsState } from "@/components/reviews/auto-reply-toolbar";
+import type { ReplyRulesSummary } from "@/services/reviews/reply-rules-summary-load";
 
 interface ReviewsPageClientHeaderProps {
     count: number;
@@ -15,6 +16,7 @@ interface ReviewsPageClientHeaderProps {
     isGoogleConnected: boolean;
     autoCommenterPlanOk: boolean;
     autoReplyInitial: AutoReplySettingsState;
+    replyRules: ReplyRulesSummary;
 }
 
 export function ReviewsPageClientHeader(props: ReviewsPageClientHeaderProps) {
@@ -24,7 +26,7 @@ export function ReviewsPageClientHeader(props: ReviewsPageClientHeaderProps) {
                 title="Reviews"
                 titleAdornment={<>
                     <span className="rounded-md border border-border bg-card px-2 py-0.5 text-xs font-medium tabular-nums text-muted-foreground">
-                        {props.count.toLocaleString("en-US")} total
+                        {props.count.toLocaleString("en-US")} public
                     </span>
                     {props.isDemo && <Badge variant="outline"><Eye className="mr-1 size-3" />Demo</Badge>}
                 </>}
@@ -38,7 +40,7 @@ export function ReviewsPageClientHeader(props: ReviewsPageClientHeaderProps) {
             />
             {props.isGoogleConnected && (
                 <AutoReplyToolbar businessId={props.businessId} googleConnected={props.isGoogleConnected}
-                    planAllowsAutoCommenter={props.autoCommenterPlanOk} initial={props.autoReplyInitial} />
+                    planAllowsAutoCommenter={props.autoCommenterPlanOk} initial={props.autoReplyInitial} replyRules={props.replyRules} />
             )}
         </header>
     );

@@ -32,7 +32,8 @@ export function RequestsStatsSection({
                     <CardContent>
                         <div className="text-2xl font-bold">{stats.totalSent}</div>
                         <p className="text-xs text-muted-foreground">
-                            {stats.emailSent} email · {stats.smsSent} SMS
+                            {stats.emailSent} by email · {stats.smsSent} by text
+                            {stats.emailSent + stats.smsSent > stats.totalSent ? " (some got both)" : ""}
                             {stats.totalFailed > 0 ? (
                                 <span className="text-destructive">
                                     {" "}

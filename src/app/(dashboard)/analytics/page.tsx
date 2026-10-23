@@ -8,6 +8,11 @@ import { BarChart3 } from "lucide-react";
 import { buildAnalyticsRangePayload } from "@/lib/analytics/build-analytics-range-payload";
 import { AnalyticsPageClient } from "@/components/analytics/analytics-page-client";
 
+export const metadata = {
+    title: "Analytics",
+    description: "Ratings, review volume and Google listing performance over time.",
+};
+
 export default async function AnalyticsPage({
     searchParams,
 }: {

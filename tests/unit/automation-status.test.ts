@@ -6,7 +6,7 @@ function overview(patch: { settings?: Partial<AutomationsOverview["settings"]>; 
     return {
         settings: {
             smsEnabled: true, emailEnabled: true, quietHoursEnabled: false, quietStart: "21:00", quietEnd: "08:00",
-            timezone: null, replyRulesEnabled: false, autoReplyEnabled: false, hasSlug: true, ...patch.settings,
+            timezone: null, replyRulesEnabled: false, autoReplyEnabled: false, autoReplyMinRating: 4, hasSlug: true, ...patch.settings,
         },
         counts: { activeCampaigns: 1, activeReminders: 0, upcoming: 3, activeImports: 0, pendingApprovals: 0, failures7d: 0, ...patch.counts },
         upcoming: [], recent: [], failures: [], actions: patch.actions ?? [],

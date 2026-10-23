@@ -5,6 +5,11 @@ import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-erro
 import { createClient } from "@/lib/db/supabase/server";
 import { getSettingsAccessContext } from "@/lib/auth/settings-access-context";
 
+export const metadata = {
+    title: "Notifications",
+    description: "Choose which alerts you get and how.",
+};
+
 export default async function NotificationSettingsPage() {
   const { user, activeContext, access } = await getSettingsAccessContext();
   if (!user) redirect("/login");

@@ -4,6 +4,11 @@ import { DashboardView } from "./dashboard-view";
 import { loadDashboardPageData } from "./load-dashboard-data";
 import { getSettingsAccessContext } from "@/lib/auth/settings-access-context";
 
+export const metadata = {
+    title: "Dashboard",
+    description: "Your reviews, requests and Google listing at a glance.",
+};
+
 export default async function DashboardPage() {
   const cookieStore = await cookies();
   const localeVal = cookieStore.get("locale")?.value || "en";

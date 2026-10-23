@@ -8,6 +8,11 @@ import { UsersRound } from "lucide-react";
 import { enrichCustomersWithReviewLinkage } from "@/lib/customers/review-linkage";
 import { dedupeCustomersByIdentity } from "@/lib/customers/dedupe-by-identity";
 
+export const metadata = {
+    title: "Customers",
+    description: "Everyone you can ask for a review.",
+};
+
 export default async function CustomersPage() {
     const { businessId, businesses } = await getActiveBusinessId();
 

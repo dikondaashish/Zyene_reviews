@@ -3,7 +3,7 @@ import { countPendingReplyDrafts } from "@/services/reviews/reply-drafts-load";
 
 export type OverviewSettings = {
     smsEnabled: boolean; emailEnabled: boolean; quietHoursEnabled: boolean; quietStart: string; quietEnd: string;
-    timezone: string | null; replyRulesEnabled: boolean; autoReplyEnabled: boolean; hasSlug: boolean;
+    timezone: string | null; replyRulesEnabled: boolean; autoReplyEnabled: boolean; autoReplyMinRating: number; hasSlug: boolean;
 };
 /** `tone` lets the UI colour a delivery result without parsing its text. */
 export type OverviewItem = { id: string; title: string; detail: string | null; at: string | null; tone?: "good" | "bad" | "neutral" };
@@ -25,7 +25,7 @@ export async function loadAutomationsOverview(admin: SupabaseClient, businessId:
     const weekAgo = new Date(now.getTime() - WEEK_MS).toISOString();
     const weekAhead = new Date(now.getTime() + WEEK_MS).toISOString();
     const [biz, campaigns, reminders, upcoming, recent, failures, imports, approvals] = await Promise.all([
-        admin.from("businesses").select("slug, timezone, review_request_sms_enabled, review_request_email_enabled, review_request_quiet_hours_enabled, review_request_quiet_start, review_request_quiet_end, reply_rules_enabled, auto_reply_enabled").eq("id", businessId).maybeSingle(),
+        admin.from("businesses").select("slug, timezone, review_request_sms_enabled, review_request_email_enabled, review_request_quiet_hours_enabled, review_request_quiet_start, review_request_quiet_end, reply_rules_enabled, auto_reply_enabled, auto_reply_min_rating").eq("id", businessId).maybeSingle(),
         admin.from("campaigns").select("id", { count: "exact", head: true }).eq("business_id", businessId).eq("status", "active"),
         admin.from("review_requests").select("id", { count: "exact", head: true }).eq("business_id", businessId).eq("drip_status", "active"),
         admin.from("review_requests").select("id, customer_name, channel, scheduled_for, deferred_reason", { count: "exact" })
@@ -43,7 +43,7 @@ export async function loadAutomationsOverview(admin: SupabaseClient, businessId:
         quietHoursEnabled: Boolean(b.review_request_quiet_hours_enabled),
         quietStart: String(b.review_request_quiet_start ?? "21:00").slice(0, 5), quietEnd: String(b.review_request_quiet_end ?? "08:00").slice(0, 5),
         timezone: (b.timezone as string | null) ?? null, replyRulesEnabled: Boolean(b.reply_rules_enabled),
-        autoReplyEnabled: Boolean(b.auto_reply_enabled), hasSlug: Boolean(b.slug),
+        autoReplyEnabled: Boolean(b.auto_reply_enabled), autoReplyMinRating: Number(b.auto_reply_min_rating ?? 4), hasSlug: Boolean(b.slug),
     };
     const name = (row: { customer_name?: string | null }) => row.customer_name || "Customer";
     const pausedImports = (imports.data ?? []).filter((i) => i.status === "paused").length;

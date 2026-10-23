@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { AUTO_REPLY_TONES, type AutoReplyTone } from "@/components/reviews/auto-reply-toolbar-types";
+import { ReplyRulesCallout } from "./reply-rules-summary-panel";
 
 export function AutoReplyToolbarControls({
     enabled,
@@ -110,6 +111,7 @@ export function AutoReplyToolbarControls({
                       ? "Automatic publishing is on. You can turn it off at any time."
                       : "Automatic publishing is off. No replies will be posted automatically."}
             </p>
+            <ReplyRulesCallout />
             </section>
         </details>
     );

@@ -6,6 +6,11 @@ import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { Globe } from "lucide-react";
 
+export const metadata = {
+    title: "Public review page",
+    description: "The page customers see when you ask for a review.",
+};
+
 export default async function PublicProfilePage() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();

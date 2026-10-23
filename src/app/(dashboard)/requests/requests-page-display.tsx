@@ -50,6 +50,9 @@ export function requestFlowCompleted(req: {
     return isCompletedRequest(req);
 }
 
+/** Progress the customer made (clicked, rated, finished): green, so only failures read as red. */
+const GOOD_OUTCOME_BADGE = "border-chart-2/30 bg-chart-2/15 text-success";
+
 export function getRequestStatusBadge(
     req: {
         status: string;
@@ -73,11 +76,11 @@ export function getRequestStatusBadge(
     }
     if (converted) {
         const label = req.status === "feedback_left" ? "Private feedback" : req.status === "completed" ? "Sent to Google" : "Finished review page";
-        return <Badge variant="outline" className="border-primary/30 text-primary">{label}</Badge>;
+        return <Badge variant="outline" className={GOOD_OUTCOME_BADGE}>{label}</Badge>;
     }
     if (req.status === "skipped") return <Badge variant="outline" className="text-muted-foreground">Skipped</Badge>;
     if (req.status === "rated_positive" || req.status === "rated_negative") {
-        return <Badge variant="outline" className="border-primary/30 text-primary">Rated</Badge>;
+        return <Badge variant="outline" className={GOOD_OUTCOME_BADGE}>Rated</Badge>;
     }
 
     const status = req.status;
@@ -178,7 +181,7 @@ export function getRequestStatusBadge(
             );
         case "clicked":
             return (
-                <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/30">
+                <Badge variant="outline" className={GOOD_OUTCOME_BADGE}>
                     Clicked
                 </Badge>
             );
