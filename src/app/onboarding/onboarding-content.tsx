@@ -29,7 +29,7 @@ export function OnboardingContent(props: OnboardingContentProps) {
             </div>
 
             <div
-                className={`relative z-10 space-y-6 mx-auto w-full pt-1 pb-20 px-4 ${currentStep === 4 ? "max-w-5xl" : currentStep === 2 ? "max-w-4xl" : "max-w-xl"}`}
+                className={`relative z-10 space-y-6 mx-auto w-full pt-1 pb-20 px-4 ${currentStep === 4 ? "max-w-5xl" : currentStep === 2 ? "max-w-4xl" : currentStep === 6 || currentStep === 7 ? "max-w-2xl" : "max-w-xl"}`}
             >
                 <OnboardingStepIndicator currentStep={currentStep} />
                 <OnboardingSteps

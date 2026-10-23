@@ -1,17 +1,17 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { ONBOARDING_STEPS } from "./onboarding-types";
+import { ONBOARDING_PHASES, onboardingPhaseIndex } from "./onboarding-types";
 
 export function OnboardingStepIndicator({ currentStep }: { currentStep: number }) {
     const reduceMotion = useReducedMotion() ?? false;
+    const activeIndex = onboardingPhaseIndex(currentStep);
 
     return (
         <div className="flex items-center justify-center gap-0">
-            {ONBOARDING_STEPS.map((step, index) => {
-                const stepNum = index + 1;
-                const isActive = stepNum === currentStep;
-                const isCompleted = stepNum < currentStep;
+            {ONBOARDING_PHASES.map((step, index) => {
+                const isActive = index === activeIndex;
+                const isCompleted = index < activeIndex;
                 const StepIcon = step.icon;
 
                 return (
@@ -46,7 +46,7 @@ export function OnboardingStepIndicator({ currentStep }: { currentStep: number }
                             </span>
                         </div>
 
-                        {index < ONBOARDING_STEPS.length - 1 && (
+                        {index < ONBOARDING_PHASES.length - 1 && (
                             <div className="w-6 sm:w-10 h-[2px] mx-1 sm:mx-1.5 mb-6 sm:mb-4 rounded-full overflow-hidden bg-secondary/60">
                                 <motion.div
                                     className="h-full bg-primary rounded-full"

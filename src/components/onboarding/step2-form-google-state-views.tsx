@@ -1,7 +1,8 @@
 "use client";
 
-import { Loader2, CheckCircle2, RefreshCw, ArrowRight, MapPin } from "lucide-react";
+import { Loader2, CheckCircle2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Step2LocationPicker } from "./step2-location-picker";
 import type { OnboardingGoogleLocationInfo } from "@/types/components";
 import type { GoogleConnectionState } from "@/components/onboarding/step2-form-types";
 import type { UseFormReturn } from "react-hook-form";
@@ -36,40 +37,7 @@ export function Step2FormGoogleStateViews({
     }
 
     if (googleState.status === "success" && availableLocations.length > 0) {
-        return (
-            <div className="max-w-md mx-auto space-y-5 py-8">
-                <div className="text-center space-y-2">
-                    <div className="rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 mx-auto size-14">
-                        <MapPin className="text-primary size-7" />
-                    </div>
-                    <p className="font-bold text-xl text-foreground">Select your business</p>
-                    <p className="text-xs text-muted-foreground">
-                        We found {availableLocations.length} locations. Pick one.
-                    </p>
-                </div>
-                <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
-                    {availableLocations.map((loc, idx) => (
-                        <button
-                            key={loc.name || idx}
-                            type="button"
-                            onClick={() => void handleSelection(loc)}
-                            disabled={advancing}
-                            className="w-full text-left p-4 rounded-2xl border border-border bg-background/60 hover:border-primary/40 hover:bg-primary/[0.03] transition-all flex items-center justify-between group"
-                        >
-                            <div>
-                                <p className="font-bold text-sm text-foreground">{loc.businessName}</p>
-                                <p className="text-[11px] text-muted-foreground mt-0.5">{loc.fullAddress}</p>
-                            </div>
-                            {advancing ? (
-                                <Loader2 className="animate-spin text-primary size-4" />
-                            ) : (
-                                <ArrowRight className="text-muted-foreground group-hover:text-primary transition-colors size-4" />
-                            )}
-                        </button>
-                    ))}
-                </div>
-            </div>
-        );
+        return <Step2LocationPicker locations={availableLocations} advancing={advancing} onSelect={handleSelection} />;
     }
 
     if (googleState.status === "success" && availableLocations.length === 0) {

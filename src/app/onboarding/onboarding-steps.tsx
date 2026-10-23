@@ -22,7 +22,6 @@ type OnboardingStepsProps = {
     setGoogleConnectionError: (message: string | null) => void;
     showPaymentCancelled: boolean;
     handleBusinessUpdate: (updated: Partial<OnboardingBusiness>) => void;
-    handleStep1Next: () => void;
     reset: () => void;
 };
 
@@ -63,7 +62,6 @@ export function OnboardingSteps(props: OnboardingStepsProps) {
                         user={props.user}
                         googleConnected={props.googleConnected}
                         showPaymentCancelled={props.showPaymentCancelled}
-                        handleStep1Next={props.handleStep1Next}
                         reset={props.reset}
                     />
                 )}

@@ -95,7 +95,7 @@ consumers before retirement. Dated evidence is not proof of current deployment.
 Live agent playbooks under `.agent/docs/`. Canonical skills: `.agents/skills/` (synced to `.claude` / `.windsurf`). Cursor UI skill: `.cursor/skills/ui-ux-pro-max/`.
 
 - `.agent/docs/AGENTS.md` — optional Next.js docs-mirror notes
-- `.agent/docs/ONBOARDING_FLOW.md` — current 5-step onboarding
+- `.agent/docs/ONBOARDING_FLOW.md` — current onboarding (connect, results, plan, automate, all set)
 - `.agent/docs/GOOGLE_SYNC_TROUBLESHOOTING.md`
 
 ## Archived docs (`docs/archive/`)

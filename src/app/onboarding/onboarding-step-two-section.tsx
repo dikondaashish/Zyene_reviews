@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Step2Form } from "@/components/onboarding/step2-form";
 import type { OnboardingBusiness } from "./onboarding-types";
 import type { GoogleOAuthAuthorization } from "@/types/components";
@@ -40,14 +40,6 @@ export function OnboardingStepTwoSection({
 
     return (
         <div>
-            <button
-                type="button"
-                onClick={() => setCurrentStep(1)}
-                className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-4 cursor-pointer group"
-            >
-                <ArrowLeft className="group-hover:-translate-x-0.5 transition-transform size-3.5" />
-                Back
-            </button>
             <div className="relative">
                 <div className="relative">
                     <Step2Form

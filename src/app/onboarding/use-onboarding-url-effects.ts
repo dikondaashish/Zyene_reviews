@@ -72,7 +72,8 @@ export function useOnboardingUrlEffects({
                         // Only a server-verified Stripe trial carries an event id.
                         if (r.trialEventId) trackMetaStartTrial(r.trialEventId);
                         toast.success("Subscription started!");
-                        setCurrentStep(5);
+                        // Paid plans can automate replies, so set that up before the finish screen.
+                        setCurrentStep(7);
                     } else {
                         toast.error(r.error || "Could not verify checkout");
                     }
@@ -90,7 +91,7 @@ export function useOnboardingUrlEffects({
                 .then((r) => {
                     if (r.success) {
                         toast.success("Plan updated!");
-                        setCurrentStep(5);
+                        setCurrentStep(7);
                     } else {
                         toast.error(r.error || "Could not confirm your subscription");
                     }

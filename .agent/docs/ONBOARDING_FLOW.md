@@ -20,24 +20,22 @@ Marketing layout uses `auth.${NEXT_PUBLIC_ROOT_DOMAIN}` for login/signup links. 
 
 ## Onboarding steps (`src/app/onboarding/`)
 
-Source of truth for step labels: `src/app/onboarding/onboarding-types.ts` (`ONBOARDING_STEPS`).
+Source of truth: `src/app/onboarding/onboarding-types.ts` (`ONBOARDING_STEP` ids, `ONBOARDING_PHASES` labels).
+Step ids are what `users.onboarding_step` stores; new steps took new ids so saved progress keeps its meaning.
 
-1. **Organization**  
-   Organization name. Creates/updates org, advances to Business.
+Owners see five phases: **Connect → Your results → Plan → Automate → All set**.
 
-2. **Business**  
-   Business name and location fields (address, city, state, phone).  
-   Optional: Connect with Google Business Profile to auto-fill.  
-   User can edit after connecting. Next or skip Google.
+| Phase | Step id | What happens |
+|-------|---------|--------------|
+| Connect | 1 | Workspace name. **Skipped**: a stored 0 or 1 opens step 2, and the signup default "<Name>'s Org" is renamed to the business name when step 3 is saved (`services/onboarding/name-default-workspace.ts`). A name the owner chose is never changed. |
+| Connect | 2 | Business. Connect Google (searchable list once there are 6+ locations) or enter details by hand. |
+| Connect | 3 | Industry (pre-filled from the Google category) and support email. Saves step 6 with Google, else 4. |
+| Your results | 6 | Google only. The owner's real rating, review count, unanswered and unhappy (1–2★, unanswered) counts, plus up to 3 unhappy reviews. Polls while the first import runs. Same definitions as the dashboard (`lib/reviews/unanswered-reviews.ts`). |
+| Plan | 4 | Plan and Stripe checkout, or "Explore free" (goes to 5). |
+| Automate | 7 | After a successful checkout. One choice writes reply rules for all five ratings via `PUT /api/settings/reply-rules`: auto-post 4–5★ and approve 1–3★ (Growth+ only), approve everything, or reply myself. Ends with a "Zyene will now" list. Waits briefly for the Stripe webhook to switch the plan on. |
+| All set | 5 | Completion screen, then the dashboard. |
 
-3. **Category**  
-   Industry category (Restaurant, Coffee, Salon, Dental, Gym, Spa, Hotel, Retail, Automotive, Healthcare, Other, etc.). Saves and advances.
-
-4. **Plan**  
-   Plan selection and Stripe checkout / trial path. Advances when billing step completes.
-
-5. **All Set**  
-   Completion screen, then redirect to dashboard.
+New accounts are on plan `none`, which has no AI drafts or auto-replies, so nothing that needs a plan is offered before the Plan step.
 
 Notification preferences are configured under **Settings → Notifications** after onboarding (not a dedicated onboarding step in the current UI).
 

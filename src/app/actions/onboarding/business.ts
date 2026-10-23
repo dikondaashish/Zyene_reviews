@@ -3,6 +3,7 @@ import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redis } from "@/lib/db/redis";
+import { nameDefaultWorkspaceAfterBusiness } from "@/services/onboarding/name-default-workspace";
 import {
   stepBusinessLocationSchema,
   stepCategorySchema,
@@ -179,11 +180,19 @@ export async function updateBusinessCategory(
       };
     }
 
-    // Update onboarding step to 4 (Plan Selection)
+    await nameDefaultWorkspaceAfterBusiness(supabase, businessId);
+
+    // Owners with Google go to their results (6) before the plan (4).
+    const { data: googleRow } = await supabase
+      .from("review_platforms")
+      .select("google_location_id")
+      .eq("business_id", businessId)
+      .eq("platform", "google")
+      .maybeSingle();
     const { error: stepError } = await supabase
       .from("users")
       .update({
-        onboarding_step: 4,
+        onboarding_step: googleRow?.google_location_id ? 6 : 4,
       } as never)
       .eq("id", user.id);
 

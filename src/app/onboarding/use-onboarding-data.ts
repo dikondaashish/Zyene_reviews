@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { OnboardingBusiness, OnboardingOrganization, OnboardingUser } from "./onboarding-types";
+import { ONBOARDING_STEP, type OnboardingBusiness, type OnboardingOrganization, type OnboardingUser } from "./onboarding-types";
 import { loadOnboardingBusiness } from "./load-onboarding-business";
 
 type UseOnboardingDataArgs = {
@@ -84,9 +84,9 @@ export function useOnboardingData({
                             .eq("id", authUser.id)
                             .single();
 
-                        if (userData?.onboarding_step) {
-                            setCurrentStep(userData.onboarding_step);
-                        }
+                        // The workspace step is skipped: it is named after the business later.
+                        const stored = userData?.onboarding_step ?? 0;
+                        setCurrentStep(stored <= ONBOARDING_STEP.workspace ? ONBOARDING_STEP.business : stored);
                         setIsStepResolved(true);
                     }
                 }

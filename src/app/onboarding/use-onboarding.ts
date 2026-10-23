@@ -57,10 +57,6 @@ export function useOnboarding() {
         setBusiness((prev) => (prev ? { ...prev, ...updated } : prev));
     };
 
-    const handleStep1Next = () => {
-        setCurrentStep(2);
-    };
-
     return {
         currentStep,
         setCurrentStep,
@@ -80,6 +76,5 @@ export function useOnboarding() {
         isStepResolved,
         checkoutVerifying,
         handleBusinessUpdate,
-        handleStep1Next,
     };
 }

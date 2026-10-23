@@ -9,3 +9,4 @@ export * from "./business-update";
 export * from "./notifications";
 export * from "./google-sync";
 export * from "./billing";
+export * from "./results";

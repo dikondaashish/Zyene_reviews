@@ -149,7 +149,8 @@ export async function finalizeOnboardingStripeCheckout(params: {
 
     const { error: updateError } = await supabase
       .from("users")
-      .update({ onboarding_step: 5 } as never)
+      // Automate (7) comes next: a paid plan can reply for the owner.
+      .update({ onboarding_step: 7 } as never)
       .eq("id", user.id);
 
     if (updateError) {
