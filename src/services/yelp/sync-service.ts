@@ -1,6 +1,8 @@
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { getReviews, getBusiness } from "./adapter";
+import { getReviews, getBusiness, type NormalizedYelpReview } from "./adapter";
+import { YelpApiError } from "./client";
+import { YELP_REVIEWS_UNAVAILABLE_KEY } from "./sync-state";
 import { analyzeReview } from "@/domains/ai/services/ai-analysis-service";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
 
@@ -9,13 +11,30 @@ export interface YelpSyncResult {
     total: number;
     analyzed: number;
     alerts: number;
+    /** True when the Yelp API plan does not include the reviews endpoint (rating/count still sync). */
+    reviewsUnavailable: boolean;
+}
+
+
+/** Free Yelp API plans answer the reviews endpoint with 404; treat that as "no review text", not an outage. */
+async function fetchReviewsIfAvailable(
+    yelpBusinessId: string
+): Promise<{ reviews: NormalizedYelpReview[]; unavailable: boolean }> {
+    try {
+        return { reviews: await getReviews(yelpBusinessId), unavailable: false };
+    } catch (error: unknown) {
+        if (error instanceof YelpApiError && error.status === 404) {
+            return { reviews: [], unavailable: true };
+        }
+        throw error;
+    }
 }
 
 /**
  * Sync Yelp reviews for a given review_platform record.
  *
- * NOTE: Yelp API only returns the 3 most recent reviews per call.
- * This means we poll frequently via cron to catch new reviews.
+ * NOTE: Yelp API only returns the 3 most recent reviews per call, and free plans
+ * return none (404); rating and review count still come from business details.
  */
 export async function syncYelpReviewsForPlatform(
     platformId: string
@@ -39,8 +58,10 @@ export async function syncYelpReviewsForPlatform(
     }
 
     try {
-        // 2. Fetch reviews from Yelp (max 3)
-        const yelpReviews = await getReviews(yelpBusinessId);
+        // 2. Business details are on every plan; review text only on plans that include it.
+        const bizData = await getBusiness(yelpBusinessId);
+        const { reviews: yelpReviews, unavailable: reviewsUnavailable } =
+            await fetchReviewsIfAvailable(yelpBusinessId);
         let analyzedCount = 0;
         let alertsCount = 0;
 
@@ -89,38 +110,19 @@ export async function syncYelpReviewsForPlatform(
         analyzedCount = syncOutcomes.filter((o) => o.analyzed).length;
         alertsCount = syncOutcomes.filter((o) => o.alerted).length;
 
-        // 6. Update platform stats
-        const { count, data: allReviews } = await admin
-            .from("reviews")
-            .select("rating", { count: "exact" })
-            .eq("business_id", platform.business_id)
-            .eq("platform", "yelp");
-
-        const totalReviews = count || 0;
-        const avgRating =
-            allReviews && allReviews.length > 0
-                ? allReviews.reduce((sum, r) => sum + (r.rating || 0), 0) /
-                allReviews.length
-                : 0;
-
-        // Also fetch live Yelp stats
-        let liveReviewCount = totalReviews;
-        let liveRating = avgRating;
-        try {
-            const bizData = await getBusiness(yelpBusinessId);
-            liveReviewCount = bizData.reviewCount;
-            liveRating = bizData.rating;
-        } catch {
-            // Use local counts if live fetch fails
-        }
-
+        // 6. Update platform stats from Yelp's live listing numbers
+        const previousState =
+            platform.sync_state && typeof platform.sync_state === "object" && !Array.isArray(platform.sync_state)
+                ? platform.sync_state
+                : {};
         await admin
             .from("review_platforms")
             .update({
                 last_synced_at: new Date().toISOString(),
-                total_reviews: liveReviewCount,
-                average_rating: parseFloat(liveRating.toFixed(1)),
+                total_reviews: bizData.reviewCount,
+                average_rating: parseFloat(bizData.rating.toFixed(1)),
                 sync_status: "active",
+                sync_state: { ...previousState, [YELP_REVIEWS_UNAVAILABLE_KEY]: reviewsUnavailable },
             })
             .eq("id", platformId);
 
@@ -129,6 +131,7 @@ export async function syncYelpReviewsForPlatform(
             total: yelpReviews.length,
             analyzed: analyzedCount,
             alerts: alertsCount,
+            reviewsUnavailable,
         };
     } catch (error: unknown) {
         logger.error({ err: error }, `[Yelp Sync] Error for platform ${platformId}:`);

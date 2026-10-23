@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { postFacebookReviewSync } from "@/components/integrations/facebook-card-sync-api";
+import { disconnectListingPlatform } from "@/app/(dashboard)/settings/integrations/disconnect-listing-platform";
 
 type AppRouterLike = { refresh: () => void };
 
@@ -10,15 +11,9 @@ export async function runFacebookReviewsSync(router: AppRouterLike, businessId: 
     }
 }
 
-export async function disconnectFacebookIntegration(businessId: string, router: AppRouterLike): Promise<void> {
-    const res = await fetch(`/api/businesses/${businessId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            disconnectPlatform: "facebook",
-        }),
-    });
-    if (!res.ok) throw new Error("Disconnect failed");
+export async function disconnectFacebookIntegration(platformId: string, router: AppRouterLike): Promise<void> {
+    const result = await disconnectListingPlatform(platformId, "facebook");
+    if (!result.ok) throw new Error(result.error);
     toast.success("Facebook disconnected");
     router.refresh();
 }

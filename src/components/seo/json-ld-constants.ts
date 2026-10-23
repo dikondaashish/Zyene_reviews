@@ -13,4 +13,11 @@ export const JSON_LD_DEFAULT_OG_IMAGE = `${MARKETING_SITE_ORIGIN}/og/zyene-revie
 export const JSON_LD_ORGANIZATION_SAME_AS = [
     JSON_LD_ORGANIZATION_URL,
     "https://zyene.com",
+    "https://www.linkedin.com/company/zyene-reviews/",
+    "https://www.crunchbase.com/organization/zyene-reviews",
+    "https://www.g2.com/products/zyene-reviews/reviews",
+    "https://www.capterra.com/p/10263337/Zyene-Reviews/",
+    "https://www.producthunt.com/products/zyene-reviews",
+    "https://sourceforge.net/software/product/Zyene-Reviews/",
+    "https://stackshare.io/zyene-reviews-review-management-for-local-businesses",
 ] as const;

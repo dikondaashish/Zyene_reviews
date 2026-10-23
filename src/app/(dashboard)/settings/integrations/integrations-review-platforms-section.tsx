@@ -34,6 +34,7 @@ export function IntegrationsReviewPlatformsSection({ data }: { data: OkData }) {
                     businessName={data.business.name || ""}
                     dbYelpSyncedRowCount={rollup?.yelpRowCount ?? 0}
                     dbVisibleYelpReviewCount={rollup?.yelpVisibleCount ?? 0}
+                    reviewsUnavailable={data.yelpReviewsUnavailable}
                 />
                 <FacebookIntegrationCard
                     platform={data.facebookPlatform as Parameters<typeof FacebookIntegrationCard>[0]["platform"]}

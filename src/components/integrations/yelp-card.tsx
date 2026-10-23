@@ -5,15 +5,23 @@ import type { YelpCardProps } from "./yelp-card-types";
 import { YelpIntegrationCardConnected } from "./yelp-integration-card-connected";
 import { YelpIntegrationCardError } from "./yelp-integration-card-error";
 import { YelpIntegrationCardConnectFlow } from "./yelp-integration-card-connect-flow";
+import { getYelpCardView } from "./yelp-card-view";
 
 export function YelpIntegrationCard(props: YelpCardProps) {
     const s = useYelpIntegrationCard(props);
 
-    if (s.isConnected && s.platform) {
+    const view = getYelpCardView({
+        isConnected: !!(s.isConnected && s.platform),
+        hasError: !!s.hasError,
+        showConnect: s.showConnect,
+    });
+
+    if (view === "connected" && s.platform) {
         return (
             <YelpIntegrationCardConnected
                 platform={s.platform}
                 businessId={s.businessId}
+                reviewsUnavailable={props.reviewsUnavailable ?? false}
                 mounted={s.mounted}
                 yelpSyncedCount={s.yelpSyncedCount}
                 isSyncing={s.isSyncing}
@@ -24,7 +32,7 @@ export function YelpIntegrationCard(props: YelpCardProps) {
         );
     }
 
-    if (s.hasError) {
+    if (view === "error") {
         return <YelpIntegrationCardError onReconnect={() => s.setShowConnect(true)} />;
     }
 

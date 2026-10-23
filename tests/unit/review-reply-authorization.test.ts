@@ -10,7 +10,7 @@ vi.mock("@/services/google/business-profile", () => ({
 }));
 vi.mock("@/services/google/sync-service", () => ({ getValidGoogleToken: vi.fn() }));
 
-import { fetchAuthorizedGoogleReview } from "@/services/reviews/reply-review-access";
+import { fetchAuthorizedReplyReview } from "@/services/reviews/reply-review-access";
 
 describe("Google reply authorization", () => {
     beforeEach(() => {
@@ -30,20 +30,20 @@ describe("Google reply authorization", () => {
 
     it("denies a viewer before exposing the platform ID to reply logic", async () => {
         mocks.canManage.mockResolvedValue(false);
-        const result = await fetchAuthorizedGoogleReview("review-a", "viewer-a");
+        const result = await fetchAuthorizedReplyReview("review-a", "viewer-a");
         expect(result.ok).toBe(false);
         expect(mocks.canManage).toHaveBeenCalledWith(expect.anything(), "viewer-a", "business-a");
     });
 
     it("allows only an active manager of the review's business", async () => {
         mocks.canManage.mockResolvedValue(true);
-        const result = await fetchAuthorizedGoogleReview("review-a", "manager-a");
+        const result = await fetchAuthorizedReplyReview("review-a", "manager-a");
         expect(result.ok).toBe(true);
     });
 
     it("rejects a review whose platform ID was changed to another tenant's integration", async () => {
         mocks.canManage.mockResolvedValue(true);
         mocks.platform.mockResolvedValue({ data: { id: "platform-b", business_id: "business-b" }, error: null });
-        expect((await fetchAuthorizedGoogleReview("review-a", "manager-a")).ok).toBe(false);
+        expect((await fetchAuthorizedReplyReview("review-a", "manager-a")).ok).toBe(false);
     });
 });

@@ -22,6 +22,7 @@ import { BrandLogoTile } from "@/components/integrations/brand-logo-tile";
 interface YelpIntegrationCardConnectedProps {
     platform: IntegrationPlatformSummary;
     businessId: string;
+    reviewsUnavailable: boolean;
     mounted: boolean;
     yelpSyncedCount: number;
     isSyncing: boolean;
@@ -33,6 +34,7 @@ interface YelpIntegrationCardConnectedProps {
 export function YelpIntegrationCardConnected({
     platform,
     businessId,
+    reviewsUnavailable,
     mounted,
     yelpSyncedCount,
     isSyncing,
@@ -48,7 +50,7 @@ export function YelpIntegrationCardConnected({
                         <BrandLogoTile domain="yelp.com" name="Yelp" />
                         <div>
                             <h3 className="ui-card-title">Yelp</h3>
-                            <p className="text-xs text-muted-foreground">Business reviews</p>
+                            <p className="text-xs text-muted-foreground">Rating and review count</p>
                         </div>
                     </div>
                     <Badge variant="outline" className="bg-chart-2/10 text-success border-chart-2/30 text-[10px]">
@@ -60,9 +62,13 @@ export function YelpIntegrationCardConnected({
                 <div className="grid grid-cols-2 gap-3">
                     <div className="bg-muted rounded-md p-2.5">
                         <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
-                            <Star className="size-3" /> Reviews synced
+                            <Star className="size-3" /> {reviewsUnavailable ? "Yelp rating" : "Reviews synced"}
                         </div>
-                        <p className="text-lg font-bold text-foreground">{yelpSyncedCount}</p>
+                        <p className="text-lg font-bold text-foreground">
+                            {reviewsUnavailable
+                                ? `${Number(platform.average_rating ?? 0).toFixed(1)}★ · ${platform.total_reviews ?? 0}`
+                                : yelpSyncedCount}
+                        </p>
                     </div>
                     <div className="bg-muted rounded-md p-2.5">
                         <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
@@ -84,7 +90,9 @@ export function YelpIntegrationCardConnected({
                 </div>
                 <p className="text-[10px] text-warning-foreground mt-3 flex items-center gap-1">
                     <AlertTriangle className="size-3" />
-                    Yelp API returns 3 most recent reviews per sync
+                    {reviewsUnavailable
+                        ? "Your Yelp API plan doesn't include review text. Rating and review count still sync."
+                        : "Yelp API returns 3 most recent reviews per sync"}
                 </p>
             </CardContent>
             <CardFooter className="pt-0 flex items-center justify-between">

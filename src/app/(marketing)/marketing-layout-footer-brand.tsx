@@ -11,7 +11,7 @@ export function MarketingLayoutFooterBrand() {
                 </span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-                Review management and local SEO for owner-operators at a fraction of enterprise pricing.
+                Zyene Reviews is review management software that helps local businesses collect Google reviews, reply with AI, and track their reputation.
             </p>
             <p className="mt-6 text-xs text-muted-foreground/70">
                 © {new Date().getFullYear()} Zyene, Inc.

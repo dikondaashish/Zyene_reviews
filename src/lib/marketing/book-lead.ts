@@ -14,6 +14,9 @@ export type BookLeadInput = {
     email: string;
     industry?: string;
     goal?: string;
+    /** What opened the wizard (exit_intent, scroll_depth, manual, ...). */
+    trigger?: string;
+    pagePath?: string;
 };
 
 export type BookLeadResult =
@@ -49,7 +52,7 @@ export async function captureBookLead(input: BookLeadInput): Promise<BookLeadRes
 
         await recordMarketingEvent({
             eventName: "homepage_book_lead",
-            pagePath: BOOK_LEAD_PAGE_PATH,
+            pagePath: input.pagePath ?? BOOK_LEAD_PAGE_PATH,
             source: BOOK_LEAD_SOURCE,
             utmSource: "homepage",
             utmMedium: "lead_magnet",
@@ -57,6 +60,7 @@ export async function captureBookLead(input: BookLeadInput): Promise<BookLeadRes
             metadata: {
                 industry: input.industry ?? "",
                 goal: input.goal ?? "",
+                trigger: input.trigger ?? "",
             },
         });
 

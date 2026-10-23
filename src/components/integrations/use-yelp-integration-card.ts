@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import type { YelpBusinessResult, YelpCardProps } from "./yelp-card-types";
+import { disconnectListingPlatform } from "@/app/(dashboard)/settings/integrations/disconnect-listing-platform";
 
 export function useYelpIntegrationCard({
     platform,
@@ -100,20 +101,14 @@ export function useYelpIntegrationCard({
     };
 
     const handleDisconnect = async () => {
-        try {
-            await fetch(`/api/businesses/${businessId}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    disconnect_platform: "yelp",
-                }),
-            });
-
-            toast.success("Yelp disconnected");
-            router.refresh();
-        } catch {
-            toast.error("Failed to disconnect");
+        if (!platform?.id) return;
+        const result = await disconnectListingPlatform(platform.id, "yelp");
+        if (!result.ok) {
+            toast.error(result.error);
+            return;
         }
+        toast.success("Yelp disconnected");
+        router.refresh();
     };
 
     return {

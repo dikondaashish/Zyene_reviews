@@ -74,7 +74,7 @@ Auth: Supabase session (`getUser`) + active business context unless noted.
 |--------|------|---------|
 | `GET`/`POST` | `/api/reviews` | List / create-related review ops for active business. `GET` returns `reviews`, `count`, `totalPages`, `page`, `publicCount`, `privateCount` and `statusCounts` (`{ needs_response, responded, ignored }` across all visible reviews, ignoring rating/search; `null` if a count failed) |
 | `GET`/`PATCH`/`DELETE` | `/api/reviews/[id]` | Single review |
-| `POST` | `/api/reviews/[id]/reply` | Publish or save reply |
+| `POST` / `DELETE` | `/api/reviews/[id]/reply` | Publish (or edit) / delete the public reply. Google and Facebook (Page comment, needs `pages_manage_engagement`); other platforms `400` |
 | `POST` | `/api/reviews/bulk` | Bulk actions |
 | `GET` | `/api/reviews/export` | Export |
 | `GET`/`POST` | `/api/reviews/private` | Private feedback inbox |
@@ -252,8 +252,8 @@ Unauthenticated or lightly rate-limited:
 | `/api/marketing/chat/agent-messages` | `GET ?sessionId&since` → team (Slack) replies since a time, for reconnect catch-up |
 | `/api/marketing/newsletter/subscribe`, `unsubscribe` | Newsletter |
 | `/api/marketing/agency-waitlist` | Agency waitlist |
-| `/api/marketing/book-lead` | Overview-guide lead capture (returns download URL) |
-| `/api/marketing/events/track` | Funnel events |
+| `/api/marketing/book-lead` | Free-guide lead wizard capture: `email`, optional `industry`/`goal` ids, `trigger`, `pagePath` (returns download URL) |
+| `/api/marketing/events/track` | Allowlisted funnel events (template pack, local SEO checklist, exit intent, `lead_wizard_*`) |
 | `/api/marketing/tools/*` | Free tools (places search, reputation score, review link, review response) |
 | `/api/track/review`, `/api/track/review-open` | Open/click tracking pixels/redirects |
 | `/api/indexnow` | IndexNow ping helper |

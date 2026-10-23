@@ -117,6 +117,8 @@ export async function getReviews(
     const data = await yelpFetch<YelpReviewsResponse>({
         path: `/businesses/${yelpBusinessId}/reviews`,
         params: { sort_by: "newest" },
+        // Free Yelp plans answer 404 here; sync-service treats that as "no review text".
+        expectedStatuses: [404],
     });
 
     return data.reviews.map((review) => ({
