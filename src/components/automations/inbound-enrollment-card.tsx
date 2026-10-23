@@ -71,7 +71,11 @@ export function InboundEnrollmentCard({
                             <Button type="button" variant="outline" size="sm" onClick={copyAddress}>Copy</Button>
                         </div>
                     ) : (
-                        <p className="text-sm text-muted-foreground">Your address appears here once this is available.</p>
+                        <p className="text-sm text-muted-foreground">
+                            {initial.configured
+                                ? "Your address is created the first time you save this section. Choose a campaign below, then press Save."
+                                : "Your address appears here once email receiving is switched on for your account."}
+                        </p>
                     )}
                 </Step>
                 <Step n={2} title="Add it as a hidden copy (BCC) in your invoicing tool">

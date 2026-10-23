@@ -21,13 +21,26 @@ export async function handleCampaignGet(campaignId: string) {
         return apiError("Campaign not found", { status: 404, details: requestId });
     }
 
-    const { data: requests } = await supabase
-        .from("review_requests")
-        .select("id, customer_name, customer_phone, customer_email, channel, status, sent_at, opened_at, clicked_at, created_at")
-        .eq("campaign_id", campaignId)
-        .order("created_at", { ascending: false });
+    const [{ data: requests }, { data: business }] = await Promise.all([
+        supabase
+            .from("review_requests")
+            .select("id, customer_name, customer_phone, customer_email, channel, status, sent_at, opened_at, clicked_at, created_at")
+            .eq("campaign_id", campaignId)
+            .order("created_at", { ascending: false }),
+        supabase
+            .from("businesses")
+            .select("slug, review_request_sms_enabled, review_request_email_enabled")
+            .eq("id", campaign.business_id)
+            .maybeSingle(),
+    ]);
+    // Lets the campaign page warn when a business-wide switch stops its messages going out.
+    const sendReadiness = {
+        smsEnabled: business?.review_request_sms_enabled !== false,
+        emailEnabled: business?.review_request_email_enabled !== false,
+        hasReviewLink: Boolean(business?.slug),
+    };
 
-    return apiOk({ campaign, requests: requests || [], requestId });
+    return apiOk({ campaign: { ...campaign, sendReadiness }, requests: requests || [], requestId });
 }
 
 export async function handleCampaignPatch(request: Request, campaignId: string) {

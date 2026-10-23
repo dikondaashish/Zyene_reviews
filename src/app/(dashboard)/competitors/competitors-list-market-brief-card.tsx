@@ -17,6 +17,47 @@ type CompetitorsListMarketBriefCardProps = {
     keywordDiscoverySplit: { discoveryPct: number; directPct: number };
 };
 
+/** The AI's suggested moves and its reasoning. */
+function BriefDetails({ brief }: { brief: CompetitorMarketBriefLatest }) {
+    return (
+        <>
+            {brief.opportunity_actions.length > 0 ? (
+                <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Try this</p>
+                    <ol className="mt-2 grid gap-3 md:grid-cols-2">
+                        {brief.opportunity_actions.map((a, i) => (
+                            <li key={`${brief.id}-a-${i}`} className="flex gap-3 rounded-lg border bg-card p-3">
+                                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-primary/10 text-xs font-semibold text-primary" aria-hidden>{i + 1}</span>
+                                <div className="min-w-0">
+                                    <p className="text-sm font-semibold text-foreground">{a.title}</p>
+                                    <p className="mt-0.5 text-sm leading-6 text-muted-foreground">{a.detail}</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ol>
+                </div>
+            ) : null}
+
+            {/* Open by default so the reasoning is visible; the owner can still hide it. */}
+            <details open className="group rounded-lg bg-muted/40 px-4 py-3 text-sm">
+                <summary className="cursor-pointer list-none font-medium text-foreground [&::-webkit-details-marker]:hidden">
+                    <span className="group-open:hidden">Read the AI&apos;s reasoning</span>
+                    <span className="hidden group-open:inline">Hide the AI&apos;s reasoning</span>
+                </summary>
+                <div className="mt-3 space-y-3 text-muted-foreground">
+                    <p className="font-medium text-foreground">{brief.headline}</p>
+                    <p>{brief.overview}</p>
+                    {brief.positioning_bullets.length > 0 ? (
+                        <ul className="list-disc space-y-1 pl-5">
+                            {brief.positioning_bullets.map((b, i) => <li key={`${brief.id}-b-${i}`}>{b}</li>)}
+                        </ul>
+                    ) : null}
+                </div>
+            </details>
+        </>
+    );
+}
+
 /** Numbers first, then the AI's moves; its full reasoning is one click away for whoever wants it. */
 export function CompetitorsListMarketBriefCard({
     competitors, marketBriefLatest: brief, briefGenLoading, onGenerateMarketBrief, scoreboard, keywordDiscoverySplit,
@@ -55,39 +96,15 @@ export function CompetitorsListMarketBriefCard({
                             </p>
                         ) : null}
 
-                        {brief.opportunity_actions.length > 0 ? (
-                            <div>
-                                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Try this</p>
-                                <ol className="mt-2 grid gap-3 md:grid-cols-2">
-                                    {brief.opportunity_actions.map((a, i) => (
-                                        <li key={`${brief.id}-a-${i}`} className="flex gap-3 rounded-lg border bg-card p-3">
-                                            <span className="grid size-6 shrink-0 place-items-center rounded-full bg-primary/10 text-xs font-semibold text-primary" aria-hidden>{i + 1}</span>
-                                            <div className="min-w-0">
-                                                <p className="text-sm font-semibold text-foreground">{a.title}</p>
-                                                <p className="mt-0.5 text-sm leading-6 text-muted-foreground">{a.detail}</p>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ol>
-                            </div>
-                        ) : null}
-
-                        {/* Open by default so the reasoning is visible; the owner can still hide it. */}
-                        <details open className="group rounded-lg bg-muted/40 px-4 py-3 text-sm">
-                            <summary className="cursor-pointer list-none font-medium text-foreground [&::-webkit-details-marker]:hidden">
-                                <span className="group-open:hidden">Read the AI&apos;s reasoning</span>
-                                <span className="hidden group-open:inline">Hide the AI&apos;s reasoning</span>
-                            </summary>
-                            <div className="mt-3 space-y-3 text-muted-foreground">
-                                <p className="font-medium text-foreground">{brief.headline}</p>
-                                <p>{brief.overview}</p>
-                                {brief.positioning_bullets.length > 0 ? (
-                                    <ul className="list-disc space-y-1 pl-5">
-                                        {brief.positioning_bullets.map((b, i) => <li key={`${brief.id}-b-${i}`}>{b}</li>)}
-                                    </ul>
-                                ) : null}
-                            </div>
-                        </details>
+                        {stale ? (
+                            // Old numbers stay out of sight until the owner asks for them.
+                            <details className="rounded-lg border border-border px-4 py-3 text-sm">
+                                <summary className="cursor-pointer font-medium text-foreground">Show the old summary</summary>
+                                <div className="mt-4 space-y-5"><BriefDetails brief={brief} /></div>
+                            </details>
+                        ) : (
+                            <BriefDetails brief={brief} />
+                        )}
 
                         <p className="text-xs text-muted-foreground">
                             Written by AI <TimeAgo date={brief.created_at} /> from public Google listings and your own search terms. Check it against what you know.

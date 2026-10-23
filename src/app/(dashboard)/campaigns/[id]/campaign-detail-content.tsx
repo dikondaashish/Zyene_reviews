@@ -3,6 +3,7 @@
 import { CSVImportDialog } from "@/components/campaigns/csv-import-dialog";
 import { CampaignGradualImports } from "@/components/campaigns/campaign-gradual-imports";
 import { CampaignDetailContacts } from "./campaign-detail-contacts";
+import { CampaignDetailFlow } from "./campaign-detail-flow";
 import { CampaignDetailFunnel } from "./campaign-detail-funnel";
 import { CampaignDetailHeader } from "./campaign-detail-header";
 import type { CampaignDetailState } from "./use-campaign-detail";
@@ -19,6 +20,7 @@ export function CampaignDetailContent({ detail }: CampaignDetailContentProps) {
     return (
         <div className="flex min-w-0 flex-1 flex-col gap-6 overflow-x-hidden p-4 sm:p-6">
             <CampaignDetailHeader campaign={campaign} detail={detail} />
+            <CampaignDetailFlow campaign={campaign} />
             <CampaignDetailFunnel funnelStages={funnelStages} />
             <CampaignGradualImports campaignId={campaign.id} channel={campaign.channel as "sms" | "email" | "both"} campaignStatus={campaign.status} />
             <CampaignDetailContacts requests={requests} mounted={mounted} />

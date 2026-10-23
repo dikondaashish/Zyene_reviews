@@ -1,3 +1,5 @@
+import type { SendReadiness } from "@/lib/campaigns/campaign-flow";
+
 export interface Campaign {
     id: string;
     name: string;
@@ -16,6 +18,9 @@ export interface Campaign {
     total_completed: number;
     total_reviews_received: number;
     created_at: string;
+    stop_on_click?: boolean | null;
+    /** Business-wide sending switches, attached by GET /api/campaigns/[id]. */
+    sendReadiness?: SendReadiness;
 }
 
 export interface ReviewRequest {

@@ -37,6 +37,7 @@ export type ReviewsPageLoadResult =
               auto_reply_tone: "professional" | "friendly" | "concise";
           };
           replyRules: ReplyRulesSummary;
+          businessName: string;
           initialReviews: ReviewManagementItem[] | PrivateFeedback[];
           initialCount: number;
           initialTotalPages: number;
@@ -135,6 +136,7 @@ export async function loadReviewsPageData(
             })(),
         },
         replyRules,
+        businessName: typeof business?.name === "string" ? business.name : "",
         initialReviews: list.reviews,
         initialCount: list.count,
         initialTotalPages: list.count ? Math.ceil(list.count / pageSize) : 0,

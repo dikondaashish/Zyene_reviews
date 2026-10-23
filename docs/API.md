@@ -88,7 +88,7 @@ Auth: Supabase session (`getUser`) + active business context unless noted.
 | `POST` | `/api/customers/import`, `/bulk`, `/merge` | Import/bulk/merge |
 | `GET` | `/api/customers/stats` | Stats |
 | `GET`/`POST` | `/api/campaigns` | Campaign CRUD list/create |
-| `GET`/`PATCH`/`DELETE` | `/api/campaigns/[id]` | Campaign detail |
+| `GET`/`PATCH`/`DELETE` | `/api/campaigns/[id]` | Campaign detail. `GET` also returns `campaign.sendReadiness` (`smsEnabled`, `emailEnabled`, `hasReviewLink`) so the page can warn when a business-wide switch blocks sending |
 | `POST` | `/api/campaigns/[id]/send` | Trigger send |
 
 ### Requests, team, businesses, billing

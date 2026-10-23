@@ -49,6 +49,7 @@ export default async function ReviewsPage(props: {
                 autoCommenterPlanOk={data.autoCommenterPlanOk}
                 autoReplyInitial={data.autoReplyInitial}
                 replyRules={data.replyRules}
+                businessName={data.businessName}
                 initialReviews={data.initialReviews}
                 initialCount={data.initialCount}
                 initialTotalPages={data.initialTotalPages}

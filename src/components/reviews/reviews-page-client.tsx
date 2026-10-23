@@ -27,6 +27,7 @@ export function ReviewsPageClient(props: ReviewsPageClientProps) {
                 autoCommenterPlanOk={props.autoCommenterPlanOk}
                 autoReplyInitial={props.autoReplyInitial}
                 replyRules={props.replyRules}
+                businessName={props.businessName}
             />
 
             <ReviewsPageClientTypeTabs
