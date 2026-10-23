@@ -12,8 +12,8 @@ export function RecentAutomationsCard({ items }: { items: RecentAutomation[] }) 
                     <h2 id="recent-automations-title" className="ui-section-title">Recent automations</h2>
                     <p className="mt-0.5 text-xs text-muted-foreground">What Zyene did for you in the last 30 days</p>
                 </div>
-                <Link href="/automations" className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
-                    All activity<ArrowRight className="size-3.5" aria-hidden />
+                <Link href="/automations/calendar" className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
+                    Open calendar<ArrowRight className="size-3.5" aria-hidden />
                 </Link>
             </header>
             {items.length === 0 ? (

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { Info, MoreHorizontal } from "lucide-react";
 import {
     Dialog,
@@ -16,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import type { Review } from "@/components/reviews/review-card-types";
 import { ReviewCardDetailsDialogBody } from "@/components/reviews/review-card-details-dialog-body";
+import { ReportToGoogleDialog } from "@/components/reviews/report-to-google-dialog";
 
 export function ReviewCardDetailsAndMenu({
     review,
@@ -34,6 +38,9 @@ export function ReviewCardDetailsAndMenu({
     googleMapsHref: string | null;
     onPhotoClick: (url: string) => void;
 }) {
+    const [reportOpen, setReportOpen] = useState(false);
+    // Owners mostly want this for unhappy reviews; Google only accepts reports for its own reviews.
+    const canReport = review.platform === "google" && review.rating <= 3;
     return (
         <div className="flex w-full items-center justify-between gap-2 sm:ml-auto sm:w-auto sm:justify-end">
             <div className="flex items-center gap-1">
@@ -91,8 +98,14 @@ export function ReviewCardDetailsAndMenu({
                                 Mark as Ignored
                             </DropdownMenuItem>
                         )}
+                        {canReport && (
+                            <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => setReportOpen(true)}>
+                                Report to Google…
+                            </DropdownMenuItem>
+                        )}
                     </DropdownMenuContent>
                 </DropdownMenu>
+                {canReport && <ReportToGoogleDialog open={reportOpen} onOpenChange={setReportOpen} authorName={review.author_name} />}
             </div>
         </div>
     );

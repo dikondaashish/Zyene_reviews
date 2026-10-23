@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { CalendarDays } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { AutomationsOverview } from "@/services/automations/load-automations-overview";
 import type { InboundSettings } from "@/services/enrollment/inbound-settings-api";
 import type { SetupProgress } from "@/lib/automations/setup-progress";
@@ -18,12 +21,17 @@ export function AutomationsOverviewView({
 }) {
     return (
         <div className="flex min-w-0 flex-col gap-8 p-4 md:p-8">
-            <header>
-                <h1 className="ui-page-title">Automations</h1>
-                <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted-foreground">
-                    The work Zyene does for you in the background: asking customers for reviews, following up, and replying to
-                    reviews. Check here that everything is running.
-                </p>
+            <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                    <h1 className="ui-page-title">Automations</h1>
+                    <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted-foreground">
+                        The work Zyene does for you in the background: asking customers for reviews, following up, and replying to
+                        reviews. Check here that everything is running.
+                    </p>
+                </div>
+                <Button asChild variant="outline" className="shrink-0">
+                    <Link href="/automations/calendar"><CalendarDays className="size-4" aria-hidden />Calendar</Link>
+                </Button>
             </header>
 
             {setup && <AutomationSetupTracker progress={setup} />}

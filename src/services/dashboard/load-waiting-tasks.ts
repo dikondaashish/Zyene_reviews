@@ -6,7 +6,7 @@ import { loadSetupProgress } from "@/services/automations/load-setup-progress";
 /** Loads the dashboard task list with the caller's RLS client. Fails soft to no tasks. */
 export async function loadWaitingTasks(
     supabase: SupabaseClient,
-    input: { businessId: string; googleConnected: boolean; brokenLinks: number },
+    input: { businessId: string; googleConnected: boolean; brokenLinks: number; includeSetup: boolean },
 ): Promise<WaitingTask[]> {
     try {
         const [drafts, lowRatings, setup] = await Promise.all([
@@ -15,7 +15,7 @@ export async function loadWaitingTasks(
             supabase.from("reviews").select("id", { count: "exact", head: true })
                 .eq("business_id", input.businessId).eq("is_visible", true)
                 .eq("response_status", "pending").lte("rating", 2),
-            loadSetupProgress(supabase, input.businessId, input.googleConnected),
+            input.includeSetup ? loadSetupProgress(supabase, input.businessId, input.googleConnected) : Promise.resolve(null),
         ]);
         return buildWaitingTasks({
             pendingApprovals: drafts.count ?? 0,

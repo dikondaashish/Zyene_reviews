@@ -35,7 +35,7 @@ export function WaitingOnYouCard({ tasks, userName }: { tasks: WaitingTask[]; us
                     </h2>
                 </div>
                 <Button asChild size="sm" variant="secondary" className="shrink-0 bg-card text-foreground hover:bg-card/90">
-                    <Link href={first.href}>{first.cta}: {first.kind === "setup" ? "next step" : "start here"}</Link>
+                    <Link href={first.href}>Start here</Link>
                 </Button>
             </header>
             <ul className="divide-y divide-border">

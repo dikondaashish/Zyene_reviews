@@ -3,6 +3,7 @@ import {
     syncCompetitorWatchRowMetrics,
     type CompetitorWatchRowInput,
 } from "./competitor-watch-row-metrics";
+import { alertBaseline } from "@/lib/competitors/snapshot-movement";
 import { recordCompetitorWatchRowEvents } from "./competitor-watch-row-events";
 
 export async function processCompetitorWatchRow(
@@ -13,8 +14,10 @@ export async function processCompetitorWatchRow(
     const metrics = await syncCompetitorWatchRowMetrics(state, competitor);
     if (metrics.skip) return;
 
-    const prevRating = Number(latest?.average_rating || 0);
-    const prevReviews = Number(latest?.total_reviews || 0);
+    // Google sometimes alternates between two totals for one place; compare like with like.
+    const baseline = latest ? alertBaseline(latest, state.recentByCompetitor.get(competitor.id) ?? [], metrics.currReviews) : undefined;
+    const prevRating = Number(baseline?.average_rating || 0);
+    const prevReviews = Number(baseline?.total_reviews || 0);
 
     // Reading a different Google place than last time (e.g. the first run after
     // switching from name search to the exact place the owner picked) is not a
@@ -25,8 +28,8 @@ export async function processCompetitorWatchRow(
         hasLatest: Boolean(latest) && !placeSwitched,
         currRating: metrics.currRating,
         currReviews: metrics.currReviews,
-        ratingDelta: metrics.ratingDelta,
-        reviewsDelta: metrics.reviewsDelta,
+        ratingDelta: baseline ? Number((metrics.currRating - prevRating).toFixed(1)) : metrics.ratingDelta,
+        reviewsDelta: baseline ? metrics.currReviews - prevReviews : metrics.reviewsDelta,
         provider: metrics.provider,
         prevRating,
         prevReviews,

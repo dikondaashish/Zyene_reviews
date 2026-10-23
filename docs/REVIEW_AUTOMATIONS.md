@@ -86,7 +86,41 @@ Rules apply to Google reviews received after the switch was turned on.
 - **No overwriting:** the review is re-checked right before posting, so an existing reply is never replaced.
 - **Failures:** if Google rejects the reply, the draft can be retried.
 
-Automatic posting (AI or template) needs the auto-reply plan. We never ask Google to remove reviews.
+Automatic posting (AI or template) needs the auto-reply plan. We never ask Google to remove reviews automatically. For 1–3★ Google reviews, the review "…" menu has **Report to Google**. It explains which reviews Google removes, then opens Google's Reviews Management Tool, where the owner files the report. Google has no API for this.
+
+**Where owners see this:**
+
+- **Reviews page:** shows the active rules, or suggests setting them.
+- **Dashboard:** a "waiting for you" banner lists, in this order:
+  - pending approvals
+  - unanswered 1–2★ reviews
+  - broken links
+  - the next setup step (`lib/dashboard/waiting-tasks.ts`)
+- **Recent automations feed:** lists auto replies, approved drafts posted, and requests sent.
+
+## 4a. Owner views of automation
+
+- **Setup tracker** (top of Automations, `lib/automations/setup-progress.ts`): five steps, each done or not.
+  - Google connected
+  - review link set
+  - replies handled
+  - customers added
+  - a campaign or import running
+- **Activity calendar** (`/automations/calendar`, `lib/automations/activity-calendar.ts`): one month of activity, keyed by day in the business's time zone. It shows:
+  - requests and reminders sent or delivered
+  - queued sends by `scheduled_for`
+  - replies posted from Zyene (auto or not)
+  - new visible reviews
+
+  Each source is capped at 1,000 rows per month, and the page says when a cap is hit.
+- **Campaign flow** (campaign detail): the drip worker's steps, plus blockers from `campaign.sendReadiness` on `GET /api/campaigns/[id]`.
+
+**Competitor counts.** Google sometimes alternates between two review totals for one place. Two places use `isSameReviewSeries` to compare like with like:
+
+- the scoreboard's "new in period" (`computeCompetitorMovementRows`)
+- the watch job's alerts (`alertBaseline` in `competitor-watch-process-row.ts`)
+
+So a flip is not reported as hundreds of new reviews, a rating change, or an AI write-up. Snapshots are still stored as read.
 
 ## 5. Gradual CSV enrollment
 
