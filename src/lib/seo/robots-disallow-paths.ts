@@ -17,6 +17,8 @@ export const MARKETING_ROBOTS_DISALLOW = [
     "/reviews/",
     "/campaigns",
     "/campaigns/",
+    "/automations",
+    "/automations/",
     "/analytics",
     "/analytics/",
     "/competitors",

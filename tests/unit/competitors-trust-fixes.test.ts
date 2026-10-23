@@ -62,6 +62,7 @@ describe("switching to the exact place", () => {
             latestByCompetitor: new Map([["c", { id: "s", competitor_id: "c", captured_at: "2026-10-21T08:00:00.000Z", average_rating: 3.9, total_reviews: 40, provider_place_id: previousPlace }]]),
             settingsByBusiness: new Map([["biz", { rating_alert_delta: 0.2, review_spike_threshold: 20, email_alerts_enabled: true }]]),
             orgByBusiness: new Map([["biz", "org"]]),
+            recentByCompetitor: new Map(),
             eventsToInsert: [], appEventsToInsert: [], alertEmailQueue: [], insightInputByCompetitor: new Map(),
         } as unknown as CompetitorWatchScanState;
     }

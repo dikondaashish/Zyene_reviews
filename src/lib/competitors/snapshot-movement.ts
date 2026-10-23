@@ -27,10 +27,26 @@ export type CompetitorMovementRow = {
 const SERIES_TOLERANCE_RATIO = 0.03;
 const SERIES_TOLERANCE_MIN = 20;
 
+/** True when two review totals plausibly come from the same Google count, not the "other" one. */
+export function isSameReviewSeries(a: number, b: number): boolean {
+    return Math.abs(a - b) <= Math.max(SERIES_TOLERANCE_MIN, Math.max(a, b) * SERIES_TOLERANCE_RATIO);
+}
+
 function sameSeriesBaseline(rows: SnapshotMovementInput[], last: SnapshotMovementInput): SnapshotMovementInput | undefined {
     const latest = Number(last.total_reviews);
-    const tolerance = Math.max(SERIES_TOLERANCE_MIN, latest * SERIES_TOLERANCE_RATIO);
-    return rows.find((r) => r !== last && Math.abs(Number(r.total_reviews) - latest) <= tolerance);
+    return rows.find((r) => r !== last && isSameReviewSeries(Number(r.total_reviews), latest));
+}
+
+/**
+ * What an alert should compare a new reading against. Normally the latest snapshot; when the
+ * new total jumps to the other series, the newest recent snapshot from the same series, so a
+ * flip back is not reported as hundreds of new (or lost) reviews and a rating change.
+ */
+export function alertBaseline<T extends { average_rating: number; total_reviews: number }>(
+    latest: T, recentNewestFirst: T[], currReviews: number,
+): T {
+    if (isSameReviewSeries(Number(latest.total_reviews), currReviews)) return latest;
+    return recentNewestFirst.find((r) => isSameReviewSeries(Number(r.total_reviews), currReviews)) ?? latest;
 }
 
 export function computeCompetitorMovementRows(

@@ -5,6 +5,9 @@ import { pingCompetitorWatchHeartbeat } from "@/lib/monitoring/competitor-watch-
 import { DEFAULT_RATING_ALERT_DELTA, DEFAULT_REVIEW_SPIKE_THRESHOLD } from "./competitor-watch-helpers";
 import type { CompetitorWatchScanState } from "./competitor-watch-types";
 
+/** About two weeks of daily snapshots: enough to find the other side of a flip-flopping count. */
+const RECENT_SNAPSHOTS_FOR_ALERTS = 14;
+
 export type CompetitorRow = {
     id: string;
     business_id: string;
@@ -117,6 +120,7 @@ export async function loadCompetitorWatchScanContext(
         string,
         CompetitorWatchScanState["latestByCompetitor"] extends Map<string, infer V> ? V : never
     >();
+    const recentByCompetitor: CompetitorWatchScanState["recentByCompetitor"] = new Map();
     for (const row of (existingSnapshots || []) as Array<{
         id: string;
         competitor_id: string;
@@ -125,6 +129,11 @@ export async function loadCompetitorWatchScanContext(
         total_reviews: number;
         metadata: Record<string, unknown> | null;
     }>) {
+        const recent = recentByCompetitor.get(row.competitor_id) ?? [];
+        if (recent.length < RECENT_SNAPSHOTS_FOR_ALERTS) {
+            recent.push({ average_rating: row.average_rating, total_reviews: row.total_reviews });
+            recentByCompetitor.set(row.competitor_id, recent);
+        }
         if (!latestByCompetitor.has(row.competitor_id)) {
             const placeId = row.metadata?.provider_place_id;
             latestByCompetitor.set(row.competitor_id, {
@@ -161,6 +170,7 @@ export async function loadCompetitorWatchScanContext(
         settingsByBusiness,
         orgByBusiness,
         latestByCompetitor,
+        recentByCompetitor,
         snapshotsToInsert,
         eventsToInsert,
         appEventsToInsert,

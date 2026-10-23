@@ -10,6 +10,8 @@ export type CompetitorWatchScanState = {
         /** Google place the snapshot was read from; null for manual or fallback snapshots. */
         provider_place_id: string | null;
     }>;
+    /** Recent snapshots per competitor, newest first, for alertBaseline (lib/competitors/snapshot-movement). */
+    recentByCompetitor: Map<string, Array<{ average_rating: number; total_reviews: number }>>;
     snapshotsToInsert: Array<Record<string, unknown>>;
     eventsToInsert: Array<Record<string, unknown>>;
     appEventsToInsert: Array<Record<string, unknown>>;

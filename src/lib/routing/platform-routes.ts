@@ -111,6 +111,7 @@ export const PLATFORM_ROUTE_PREFIXES = [
     "/businesses",
     "/reviews",
     "/campaigns",
+    "/automations",
     "/analytics",
     "/competitors",
     "/customers",

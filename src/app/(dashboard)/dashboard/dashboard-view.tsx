@@ -35,6 +35,10 @@ export function DashboardView(props: DashboardViewProps) {
         hasEngagementData,
         requestsThisMonth,
     });
+    const showGettingStarted = shouldShowGettingStartedBanner({
+        isGoogleConnected,
+        hasSentReviewRequest: requestSent,
+    });
 
     return (
         <div className="flex min-w-0 w-full flex-col gap-6 overflow-x-hidden">
@@ -51,14 +55,12 @@ export function DashboardView(props: DashboardViewProps) {
                         business={business}
                         isGoogleConnected={isGoogleConnected}
                         brokenPlaceLinksCount={props.brokenPlaceLinksCount}
+                        includeSetup={!showGettingStarted}
                     />
                 </Suspense>
             )}
 
-            {shouldShowGettingStartedBanner({
-                isGoogleConnected,
-                hasSentReviewRequest: requestSent,
-            }) && (
+            {showGettingStarted && (
                 <div className="mt-2">
                     <GettingStartedBanner
                         googleConnected={isGoogleConnected}

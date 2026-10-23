@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeCompetitorMovementRows } from "../../src/lib/competitors/snapshot-movement";
+import { alertBaseline, computeCompetitorMovementRows } from "../../src/lib/competitors/snapshot-movement";
 
 describe("snapshot-movement", () => {
   it("returns null deltas when no snapshots", () => {
@@ -111,5 +111,14 @@ describe("snapshot-movement", () => {
     expect(rows[0].reviewsDelta).toBe(18);
     expect(rows[0].ratingDelta).toBe(0);
     expect(rows[0].hasBaseline).toBe(true);
+  });
+
+  it("alertBaseline compares a flip back with the same series, not the latest reading", () => {
+    const latest = { average_rating: 4.1, total_reviews: 4721 };
+    const recent = [latest, { average_rating: 4.1, total_reviews: 4718 }, { average_rating: 4.0, total_reviews: 4243 }];
+    expect(alertBaseline(latest, recent, 4249)).toEqual({ average_rating: 4.0, total_reviews: 4243 });
+    expect(alertBaseline(latest, recent, 4725)).toBe(latest);
+    // A genuine burst has no matching history, so it is still measured from the latest reading.
+    expect(alertBaseline(latest, recent, 5300)).toBe(latest);
   });
 });
