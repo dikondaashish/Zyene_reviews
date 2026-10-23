@@ -32,21 +32,22 @@ export function CampaignsTabs({
     const urlTab = searchParams.get("tab") === "templates" ? "templates" : "all";
     const [activeTab, setActiveTab] = useState(urlTab);
     const [seenUrlTab, setSeenUrlTab] = useState(urlTab);
-    // A link or back/forward that changes ?tab= still moves the tabs.
+    // A link or back/forward that changes ?tab= still moves the tabs. Only a change in the URL
+    // value counts: comparing against the clicked tab would snap a click back while ?tab= catches up.
     if (urlTab !== seenUrlTab) {
         setSeenUrlTab(urlTab);
         setActiveTab(urlTab);
     }
     // Both tabs' data is already loaded, so switch at once and only note the tab in the URL.
     // router.replace would re-render the whole page on the server first, making clicks feel dead.
+    // A null state lets Next sync useSearchParams; passing its own state makes it skip the update.
     const changeTab = (value: string) => {
         const tab = value === "templates" ? "templates" : "all";
         setActiveTab(tab);
-        setSeenUrlTab(tab);
         const params = new URLSearchParams(window.location.search);
         if (tab === "templates") params.set("tab", tab);
         else params.delete("tab");
-        window.history.replaceState(window.history.state, "", `/campaigns${params.size ? `?${params}` : ""}`);
+        window.history.replaceState(null, "", `/campaigns${params.size ? `?${params}` : ""}`);
     };
     return (
         <Tabs value={activeTab} onValueChange={changeTab} className="w-full">
