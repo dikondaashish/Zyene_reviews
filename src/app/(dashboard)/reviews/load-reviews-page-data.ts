@@ -7,6 +7,7 @@ import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
 import { countReviewsByStatus, type ReviewStatusCounts } from "@/lib/reviews/status-counts";
 import type { ReviewManagementItem } from "@/types/components";
 import type { PrivateFeedback } from "@/components/reviews/private-feedback-card";
+import { loadReplyRulesSummary, type ReplyRulesSummary } from "@/services/reviews/reply-rules-summary-load";
 import { loadReviewsPageList } from "./reviews-page-list-load";
 
 export type ReviewsPageSearchParams = {
@@ -35,6 +36,7 @@ export type ReviewsPageLoadResult =
               auto_reply_min_rating: 3 | 4 | 5;
               auto_reply_tone: "professional" | "friendly" | "concise";
           };
+          replyRules: ReplyRulesSummary;
           initialReviews: ReviewManagementItem[] | PrivateFeedback[];
           initialCount: number;
           initialTotalPages: number;
@@ -70,7 +72,7 @@ export async function loadReviewsPageData(
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    const [{ count: publicCount, error: publicCountErr }, { count: privateCount, error: privateCountErr }, statusCounts] =
+    const [{ count: publicCount, error: publicCountErr }, { count: privateCount, error: privateCountErr }, statusCounts, replyRules] =
         await Promise.all([
             supabase
                 .from("reviews")
@@ -82,6 +84,7 @@ export async function loadReviewsPageData(
                 .select("*", { count: "exact", head: true })
                 .eq("business_id", businessId),
             countReviewsByStatus(supabase, businessId),
+            loadReplyRulesSummary(supabase, businessId),
         ]);
 
     if (publicCountErr || privateCountErr) {
@@ -131,6 +134,7 @@ export async function loadReviewsPageData(
                 return "professional";
             })(),
         },
+        replyRules,
         initialReviews: list.reviews,
         initialCount: list.count,
         initialTotalPages: list.count ? Math.ceil(list.count / pageSize) : 0,

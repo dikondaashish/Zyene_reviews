@@ -18,6 +18,21 @@ export type CompetitorMovementRow = {
     hasBaseline: boolean;
 };
 
+/**
+ * Google sometimes alternates between two review counts for the same place (for example a
+ * chain whose listings get merged on some days). Comparing against a snapshot from the
+ * other series produced swings like -448 in a month. The baseline is therefore the earliest
+ * snapshot in the window whose count is close to the latest one.
+ */
+const SERIES_TOLERANCE_RATIO = 0.03;
+const SERIES_TOLERANCE_MIN = 20;
+
+function sameSeriesBaseline(rows: SnapshotMovementInput[], last: SnapshotMovementInput): SnapshotMovementInput | undefined {
+    const latest = Number(last.total_reviews);
+    const tolerance = Math.max(SERIES_TOLERANCE_MIN, latest * SERIES_TOLERANCE_RATIO);
+    return rows.find((r) => r !== last && Math.abs(Number(r.total_reviews) - latest) <= tolerance);
+}
+
 export function computeCompetitorMovementRows(
     competitors: Array<{ id: string; name: string }>,
     snapshotRows: SnapshotMovementInput[]
@@ -34,9 +49,9 @@ export function computeCompetitorMovementRows(
             .sort((a, b) => new Date(a.captured_at).getTime() - new Date(b.captured_at).getTime());
 
         const meaningful = rows.filter((r) => Number(r.total_reviews) > 0 || Number(r.average_rating) > 0);
-        const first = meaningful[0];
         const last = meaningful[meaningful.length - 1];
-        if (!first || !last || meaningful.length < 2) {
+        const first = last ? sameSeriesBaseline(meaningful, last) : undefined;
+        if (!first || !last) {
             return {
                 competitorId: c.id,
                 name: c.name,

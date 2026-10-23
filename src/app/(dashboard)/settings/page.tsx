@@ -1,6 +1,11 @@
 import { redirect } from "next/navigation";
 import { getSettingsAccessContext } from "@/lib/auth/settings-access-context";
 
+export const metadata = {
+    title: "Settings",
+    description: "Manage your account, business and team settings.",
+};
+
 export default async function SettingsPage({
   searchParams,
 }: {

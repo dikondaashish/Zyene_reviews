@@ -52,6 +52,7 @@
     "listing_completeness": "Integridad del perfil",
     "listing_desc": "Campos completados en Google",
     "edit_listing": "Editar perfil",
+    "full_health_check": "Revisión completa",
     "lodging_completeness": "Datos de alojamiento",
     "lodging_desc": "Comodidades rellenadas en Google",
     "lodging_desc_empty": "Ejecutar sincronización de Google",

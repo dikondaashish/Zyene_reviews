@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { AutoReplyEnableDialog } from "@/components/reviews/auto-reply-enable-dialog";
 import { UpgradeModal } from "@/components/settings/upgrade-modal";
+import type { ReplyRulesSummary } from "@/services/reviews/reply-rules-summary-load";
 import { AutoReplyToolbarControls } from "./auto-reply-toolbar-controls";
+import { ReplyRulesSummaryPanel } from "./reply-rules-summary-panel";
 import type { AutoReplySettingsState } from "./auto-reply-toolbar-types";
 import { useAutoReplyToolbar } from "./use-auto-reply-toolbar";
 
@@ -14,17 +16,23 @@ export function AutoReplyToolbar({
     googleConnected,
     planAllowsAutoCommenter,
     initial,
+    replyRules,
 }: {
     businessId: string;
     googleConnected: boolean;
     planAllowsAutoCommenter: boolean;
     initial: AutoReplySettingsState;
+    replyRules: ReplyRulesSummary;
 }) {
     const [confirmOpen, setConfirmOpen] = useState(false);
     const t = useAutoReplyToolbar(businessId, planAllowsAutoCommenter, initial);
 
     if (!googleConnected) {
         return null;
+    }
+    // Rules replace the single switch (see the reply rules settings page).
+    if (replyRules.enabled) {
+        return <ReplyRulesSummaryPanel summary={replyRules} />;
     }
 
     return (

@@ -1,5 +1,7 @@
 import type { AutomationsOverview } from "@/services/automations/load-automations-overview";
 import type { InboundSettings } from "@/services/enrollment/inbound-settings-api";
+import type { SetupProgress } from "@/lib/automations/setup-progress";
+import { AutomationSetupTracker } from "./automation-setup-tracker";
 import { AutomationsSwitches } from "./automations-switches";
 import { AutomationsActivity } from "./automations-activity";
 import { AutomationsRecipes } from "./automations-recipes";
@@ -8,10 +10,11 @@ import { InboundEnrollmentCard } from "./inbound-enrollment-card";
 
 /** Reads top to bottom as: is it working, what runs, how it sends, what happened. */
 export function AutomationsOverviewView({
-    businessId, overview, inbound, campaigns, canManage,
+    businessId, overview, inbound, campaigns, canManage, setup,
 }: {
     businessId: string; overview: AutomationsOverview; inbound: InboundSettings;
     campaigns: { id: string; name: string; status: string }[]; canManage: boolean;
+    setup: SetupProgress | null;
 }) {
     return (
         <div className="flex min-w-0 flex-col gap-8 p-4 md:p-8">
@@ -23,6 +26,7 @@ export function AutomationsOverviewView({
                 </p>
             </header>
 
+            {setup && <AutomationSetupTracker progress={setup} />}
             <AutomationsStatusPanel overview={overview} />
             <AutomationsRecipes overview={overview} invoiceEnrollmentOn={inbound.enabled && inbound.configured} />
             <AutomationsSwitches businessId={businessId} settings={overview.settings} canManage={canManage} />

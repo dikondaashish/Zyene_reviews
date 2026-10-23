@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BusinessDirectoryRow } from "@/components/businesses/business-directory-row";
-import { setActiveBusiness } from "@/lib/auth/business-context";
+import { openBusiness as switchAndOpenBusiness } from "@/lib/auth/business-context";
 import { attentionRank, needsAttention as businessNeedsAttention } from "@/components/businesses/business-attention";
 import type { BusinessDestination, BusinessDirectoryEntry } from "@/types/business-directory";
 
@@ -35,8 +35,9 @@ export function BusinessDirectory({ businesses, activeBusinessId }: {
         setOpeningId(id);
         startTransition(async () => {
             try {
-                if (id !== activeBusinessId) await setActiveBusiness(id);
-                router.push(destination);
+                // Switching re-renders on the server anyway, so let that response be the destination page.
+                if (id !== activeBusinessId) await switchAndOpenBusiness(id, destination);
+                else router.push(destination);
             } catch {
                 toast.error("Could not open this business", { description: "Please try again." });
                 setOpeningId(null);

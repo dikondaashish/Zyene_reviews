@@ -1,0 +1,14 @@
+Generated using the built-in image-generation tool.
+
+Use case: stylized-concept
+Create ONE original, beautifully designed 3D brand mascot for Zyene Reviews, isolated on a truly transparent background. The user wants an invented being with the simple memorability of an abstract AI companion, an impossible friendly life form. Art direction: restrained, iconic, tactile, surreal, charming. The supplied conversational reference is an orange hand-drawn meditating character: borrow only its calm playfulness, not its human anatomy.
+
+DESIGN: A small living knot of five plump orange pebble-like lobes, seamlessly joined in a soft asymmetrical five-point silhouette. A sculpted rounded star-creature whose lobes are thick and pillowy, almost liquid, with one top lobe gently curled forward and two bottom lobes folded under in a relaxed floating pose. The central body has a small perfectly inset glossy near-black oval face with two tiny warm ivory dot eyes of slightly different heights, and a subtle little smile. Eyes gaze curiously at the viewer. It feels sentient and slightly mischievous. One side lobe lifts as a small friendly wave. Just above the curled top lobe float TWO small orange droplets, as if pieces of the creature are gently defying gravity. The five-lobed anatomy subtly references five review stars; the smiling face feels conversational. No additional symbolic props are needed.
+
+MATERIAL / RENDER: premium 3D designer collectible, satin orange silicone and softly glazed ceramic, a tactile finish with delicate microtexture, broad soft highlights, subtle subsurface scattering along edges, beautiful dimensional shading, immaculate modeling and smooth organic transitions. Zyene orange #ff4f00 is dominant. Deep charcoal only on the small face inset, ivory only for tiny eyes. Soft large studio lights illuminate the object only. Minimal reflections, natural material response, no blazing lights or chrome.
+
+COMPOSITION: one full mascot, three-quarter front view, friendly slight head/body tilt, all lobes and the two droplets fully inside frame, centered, mascot fills 75 percent of a square canvas, generous transparent padding. Make the silhouette strong enough to recognize as a tiny app companion. This is the final PNG asset, not a mockup or design sheet.
+
+BACKGROUND: actual transparent alpha, clean silhouette cutout, no environment, no floor or shadow underneath, no colored backdrop, no checkerboard baked in.
+AVOID: humanoid robot, mechanical arms, cyclops eye, astronaut, spacesuit, glass dome, orbit rings, galaxies, storefronts, review cards, extra stars, tentacles, metal seams, accessories, text, logos, watermark, glossy gold, excessive details, glow or bloom outside the silhouette, 2D illustration.
+

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { GettingStartedBanner } from "@/components/dashboard/getting-started-banner";
@@ -13,6 +14,7 @@ import { DashboardViewGooglePerformance } from "./dashboard-view-google-performa
 import { DashboardViewHeader } from "./dashboard-view-header";
 import { DashboardViewStatCards } from "./dashboard-view-stat-cards";
 import { DashboardViewTopRow } from "./dashboard-view-top-row";
+import { DashboardViewWaiting } from "./dashboard-view-waiting";
 import type { DashboardViewProps } from "./types";
 
 export function DashboardView(props: DashboardViewProps) {
@@ -40,6 +42,17 @@ export function DashboardView(props: DashboardViewProps) {
             {useDemoData && <DemoModeBanner className="mb-2" />}
 
             <DashboardViewHeader user={user} dict={dict} business={business} />
+
+            {!useDemoData && (
+                <Suspense fallback={null}>
+                    <DashboardViewWaiting
+                        user={user}
+                        business={business}
+                        isGoogleConnected={isGoogleConnected}
+                        brokenPlaceLinksCount={props.brokenPlaceLinksCount}
+                    />
+                </Suspense>
+            )}
 
             {shouldShowGettingStartedBanner({
                 isGoogleConnected,

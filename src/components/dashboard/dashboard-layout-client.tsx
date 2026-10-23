@@ -7,16 +7,26 @@ import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { DashboardTourProvider } from "@/components/tours/dashboard-tour-provider";
 import { PrivacyChoicesButton } from "@/components/privacy/privacy-choices-button";
+import { ContextSwitchProvider, ContextSwitchStatus, useContextSwitch } from "@/components/dashboard/context-switch";
 
 interface DashboardLayoutClientProps {
     children: React.ReactNode;
     header: React.ReactNode;
 }
 
-export function DashboardLayoutClient({
+export function DashboardLayoutClient(props: DashboardLayoutClientProps) {
+    return (
+        <ContextSwitchProvider>
+            <DashboardShell {...props} />
+        </ContextSwitchProvider>
+    );
+}
+
+function DashboardShell({
     children,
     header,
 }: DashboardLayoutClientProps) {
+    const { pendingName } = useContextSwitch();
     // The provider owns the user's preference; resizing must not reset it.
     const isDesktop = useMediaQuery("(min-width: 1024px)");
     // Tablet: collapse to icon (768px-1023px)
@@ -52,8 +62,9 @@ export function DashboardLayoutClient({
                 {header}
             </header>
 
-            <div id="dashboard-main" tabIndex={-1} className="flex min-w-0 flex-1 flex-col gap-4 overflow-x-hidden p-4 sm:gap-5 sm:p-5 max-md:pb-20 max-lg:pb-[max(1rem,env(safe-area-inset-bottom,0px))] lg:p-6 lg:overflow-x-visible lg:pb-6">
+            <div id="dashboard-main" tabIndex={-1} aria-busy={pendingName ? true : undefined} className="relative flex min-w-0 flex-1 flex-col gap-4 overflow-x-hidden p-4 sm:gap-5 sm:p-5 max-md:pb-20 max-lg:pb-[max(1rem,env(safe-area-inset-bottom,0px))] lg:p-6 lg:overflow-x-visible lg:pb-6">
                 {children}
+                <ContextSwitchStatus />
             </div>
             <footer className="mt-auto shrink-0 flex flex-col gap-3 border-t border-border bg-canvas px-3 py-4 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-5 lg:px-6">
                 <div className="shrink-0 text-center sm:text-left">

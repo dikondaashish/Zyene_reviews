@@ -13,6 +13,17 @@ type Recipe = {
     href: string;
 };
 
+function replyStat(pending: number, settings: AutomationsOverview["settings"]): string {
+    if (pending > 0) return `${pending} waiting for your approval`;
+    if (settings.replyRulesEnabled) return "Nothing waiting for approval";
+    // Only the single switch is on: say plainly which reviews are left without a reply.
+    if (settings.autoReplyEnabled) {
+        const min = settings.autoReplyMinRating;
+        return `Replying to ${min === 5 ? "5★" : `${min}★ and up`} only · set reply rules to cover lower ratings`;
+    }
+    return "Set a rule for each star rating";
+}
+
 function buildRecipes({ counts, settings }: AutomationsOverview, invoiceEnrollmentOn: boolean): Recipe[] {
     const replyOn = settings.replyRulesEnabled || settings.autoReplyEnabled;
     return [
@@ -29,7 +40,7 @@ function buildRecipes({ counts, settings }: AutomationsOverview, invoiceEnrollme
             title: "Replies to new reviews",
             when: "When a new review arrives, we write a reply in your voice. You choose which ones need your approval first.",
             on: replyOn,
-            stat: counts.pendingApprovals > 0 ? `${counts.pendingApprovals} waiting for your approval` : "Nothing waiting for approval",
+            stat: replyStat(counts.pendingApprovals, settings),
             href: counts.pendingApprovals > 0 ? "/reviews/approvals" : "/settings/reply-rules",
         },
         {

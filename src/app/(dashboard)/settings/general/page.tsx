@@ -9,6 +9,11 @@ import { RestartTourSection } from "@/components/settings/restart-tour-section";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
 
+export const metadata = {
+    title: "General settings",
+    description: "Your profile and account preferences.",
+};
+
 export default async function GeneralSettingsPage() {
     const supabase = await createClient();
 

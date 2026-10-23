@@ -3,6 +3,11 @@ import { normalizeSavedBusinessType } from "@/lib/campaigns/business-types";
 import CampaignsPage from "./page-client";
 
 /** Loads the saved business type on the server so the template picker starts on it without a flash. */
+export const metadata = {
+    title: "Campaigns",
+    description: "Ask groups of customers for reviews and follow up automatically.",
+};
+
 export default async function CampaignsRoute() {
     const { businessId, business } = await getActiveBusinessId();
     return (

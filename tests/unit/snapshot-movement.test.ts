@@ -99,4 +99,17 @@ describe("snapshot-movement", () => {
     expect(rows[0].ratingDelta).toBe(1);
     expect(rows[0].reviewsDelta).toBe(10);
   });
+
+  it("compares against the same count series when Google alternates between two totals", () => {
+    const snap = (day: number, total: number, rating: number) => ({
+      competitor_id: "a", captured_at: `2026-10-${String(day).padStart(2, "0")}T08:00:00.000Z`, average_rating: rating, total_reviews: total,
+    });
+    const rows = computeCompetitorMovementRows(
+      [{ id: "a", name: "A" }],
+      [snap(1, 4697, 4.1), snap(2, 4231, 4.0), snap(3, 4702, 4.1), snap(4, 4249, 4.0)]
+    );
+    expect(rows[0].reviewsDelta).toBe(18);
+    expect(rows[0].ratingDelta).toBe(0);
+    expect(rows[0].hasBaseline).toBe(true);
+  });
 });

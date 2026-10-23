@@ -2,8 +2,6 @@
 
 import * as React from "react"
 import { ChevronsUpDown, Store, Plus, Check } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { toast } from "sonner"
 
 import {
     DropdownMenu,
@@ -14,7 +12,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { setActiveBusiness } from "@/lib/auth/business-context"
+import { useContextSwitch } from "@/components/dashboard/context-switch"
 import Link from "next/link"
 import { BUSINESS_LIMIT_UPGRADE_BILLING_HREF } from "@/lib/billing/business-limit-upgrade-href"
 
@@ -29,21 +27,14 @@ interface BusinessSwitcherProps {
 }
 
 export function BusinessSwitcher({ businesses, activeBusinessId, maxBusinesses = 1 }: BusinessSwitcherProps) {
-    const router = useRouter()
-    const [switching, startTransition] = React.useTransition()
+    const { pendingName, switchTo } = useContextSwitch()
+    const switching = pendingName !== null
 
     const activeBusiness = businesses.find((b) => b.id === activeBusinessId) || businesses[0]
 
     const handleSwitch = (businessId: string) => {
         if (switching || businessId === activeBusinessId) return
-        startTransition(async () => {
-            try {
-                await setActiveBusiness(businessId)
-                router.refresh()
-            } catch {
-                toast.error("Could not switch business. Please try again.")
-            }
-        })
+        switchTo(businessId, businesses.find((b) => b.id === businessId)?.name || "business")
     }
 
     return (

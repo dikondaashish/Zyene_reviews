@@ -19,13 +19,14 @@ export function ReviewsPageClient(props: ReviewsPageClientProps) {
     return (
         <div className="min-w-0 space-y-5">
             <ReviewsPageClientHeader
-                count={l.publicCount + l.privateCount}
+                count={l.publicCount}
                 isDemo={props.isDemo}
                 businessId={props.businessId}
                 exportType={l.type}
                 isGoogleConnected={props.isGoogleConnected}
                 autoCommenterPlanOk={props.autoCommenterPlanOk}
                 autoReplyInitial={props.autoReplyInitial}
+                replyRules={props.replyRules}
             />
 
             <ReviewsPageClientTypeTabs

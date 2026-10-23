@@ -85,11 +85,18 @@ export function DashboardViewGoogleHealth({
                 <CardContent>
                     <ScoreGauge score={googleProfileHealthScore} label={dict.dashboard.listing_completeness} />
                     <p className="mt-1 text-xs text-muted-foreground">{dict.dashboard.listing_desc}</p>
-                    <Link href="/settings/business-information" className="mt-3 inline-block">
-                        <Button variant="outline" size="sm">
-                            {dict.dashboard.edit_listing}
-                        </Button>
-                    </Link>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                        <Link href="/settings/business-information">
+                            <Button variant="outline" size="sm">
+                                {dict.dashboard.edit_listing}
+                            </Button>
+                        </Link>
+                        <Link href="/google-seo-aeo">
+                            <Button variant="ghost" size="sm">
+                                {dict.dashboard.full_health_check}
+                            </Button>
+                        </Link>
+                    </div>
                 </CardContent>
             </Card>
             {showLodgingCard && (

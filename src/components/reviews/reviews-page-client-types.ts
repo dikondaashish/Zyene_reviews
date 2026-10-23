@@ -2,6 +2,7 @@ import type { ReviewManagementItem } from "@/types/components";
 import type { AutoReplySettingsState } from "./auto-reply-toolbar";
 import type { PrivateFeedback } from "./private-feedback-card";
 import type { ReviewStatusCounts } from "@/lib/reviews/status-counts";
+import type { ReplyRulesSummary } from "@/services/reviews/reply-rules-summary-load";
 
 export interface ReviewsPageClientProps {
     businessId: string;
@@ -12,6 +13,7 @@ export interface ReviewsPageClientProps {
     initialGoogleLastSyncedAt?: string | null;
     autoCommenterPlanOk: boolean;
     autoReplyInitial: AutoReplySettingsState;
+    replyRules: ReplyRulesSummary;
     initialReviews: ReviewManagementItem[] | PrivateFeedback[];
     initialCount: number;
     initialTotalPages: number;

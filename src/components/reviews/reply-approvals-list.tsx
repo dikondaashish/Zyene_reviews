@@ -35,7 +35,7 @@ function DraftCard({ draft, canApprove }: { draft: PendingReplyDraft; canApprove
         <li className="space-y-3 rounded-lg border bg-card p-4">
             <div className="flex flex-wrap items-center gap-2">
                 <span className="flex" aria-label={`${rating} stars`}>
-                    {Array.from({ length: 5 }, (_, i) => <Star key={i} className={`size-4 ${i < rating ? "text-chart-4" : "text-muted-foreground/25"}`} />)}
+                    {Array.from({ length: 5 }, (_, i) => <Star key={i} strokeWidth={0} aria-hidden className={`size-4 fill-current ${i < rating ? "text-warning" : "text-muted-foreground/25"}`} />)}
                 </span>
                 <span className="text-sm font-medium">{draft.review?.authorName || "Google reviewer"}</span>
                 <Badge variant="outline">{draft.source === "ai" ? "AI draft" : "Template"}</Badge>
