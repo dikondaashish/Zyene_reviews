@@ -29,8 +29,8 @@ export function RatingStepStars({ rating, hoverRating, onRate, onHoverRating }: 
                         className={cn(
                             "size-9 sm:size-12 transition-colors duration-200",
                             (hoverRating !== null ? star <= hoverRating : rating !== null && star <= rating)
-                                ? "fill-chart-4 text-chart-4"
-                                : "fill-muted text-muted-foreground/40 dark:fill-accent dark:text-muted-foreground"
+                                ? "text-chart-4"
+                                : "text-muted-foreground/25 dark:text-muted-foreground/40"
                         )}
                     />
                 </button>

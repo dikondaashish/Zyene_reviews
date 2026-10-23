@@ -14,7 +14,7 @@ export async function Phase2Page() {
     return (
         <div className="min-w-0 space-y-8 overflow-x-hidden p-4 md:p-8">
             <GoogleSeoAeoSubnav active="/google-seo-aeo/phase-2" />
-            <header><h1 className="ui-page-title">Competitive insights</h1><p className="mt-1 text-sm text-muted-foreground">Measured AI visibility, technical evidence, optimization workflows, and reporting for {data.businessName}.</p></header>
+            <header><h1 className="ui-page-title">Competitor insights</h1><p className="mt-1 text-sm text-muted-foreground">Measured AI visibility, technical evidence, optimization workflows, and reporting for {data.businessName}.</p></header>
             <VisibilityPanel data={data.visibility} />
             <TechnicalPanel data={data.operations} />
             <RecommendationsPanel data={data.operations} />

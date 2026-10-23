@@ -17,17 +17,17 @@ export function CustomerTableMobileMetrics({
                     Requests
                 </dt>
                 <dd className="mt-0.5 font-medium text-foreground">
-                    {customer.total_requests_sent ?? 0} sent
+                    {(customer.total_requests_sent ?? 0) === 0 ? "Not asked yet" : `Asked ${customer.total_requests_sent} ${customer.total_requests_sent === 1 ? "time" : "times"}`}
                 </dd>
             </div>
             <div>
                 <dt className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                    Last sent
+                    Last asked
                 </dt>
                 <dd className="mt-0.5 text-muted-foreground">
                     {customer.last_request_sent_at
                         ? formatDistanceToNow(new Date(customer.last_request_sent_at), { addSuffix: true })
-                        : "Not recorded"}
+                        : "Never"}
                 </dd>
             </div>
             {showVisitsSpend ? (

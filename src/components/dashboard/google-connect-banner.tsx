@@ -41,11 +41,7 @@ export function GoogleConnectBanner({
                     )}
                 </p>
             </div>
-            <Button
-                asChild
-                size="sm"
-                className="h-8 shrink-0 bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border"
-            >
+            <Button asChild size="sm" className="h-8 shrink-0">
                 <Link href="/settings/integrations">
                     <Link2 className="mr-2 size-3.5" />
                     {isReconnect ? "Reconnect Google" : "Connect Google"}

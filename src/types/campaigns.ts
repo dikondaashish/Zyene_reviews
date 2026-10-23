@@ -19,5 +19,7 @@ export interface CampaignTemplate {
     description: string;
     icon: LucideIcon;
     color: string;
+    /** Business types this template is written for; empty or absent means it suits any business. */
+    businessTypes?: readonly string[];
     defaultValues: CampaignTemplateDefaults;
 }

@@ -26,7 +26,7 @@ export function buildGoogleSeoAeoAudits(input: {
             detail:
                 input.listingDescription.length === 0
                     ? "No Google description found."
-                    : `${input.keywordCoverage} target keywords found in description.`,
+                    : `${input.keywordCoverage} target keyword${input.keywordCoverage === 1 ? "" : "s"} found in description.`,
         },
         {
             id: "review-frequency",

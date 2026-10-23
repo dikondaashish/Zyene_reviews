@@ -18,25 +18,23 @@ export function CustomerDetailStatsSection({
             <SectionHeading
                 icon={BarChart3}
                 title="Summary"
-                description="Quick stats for requests and engagement with this contact."
+                description="How this customer has responded to your requests."
             />
             <Card className="overflow-hidden rounded-2xl border-border/80 shadow-sm">
                 <CardContent className="p-0">
-                    <div className="grid divide-y divide-border/80 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4 lg:divide-x">
+                    <div className="grid divide-y divide-border/80 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
                         <div className="px-5 py-5 sm:px-6 sm:py-6">
                             <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                                Requests sent
-                            </p>
-                            <p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-foreground">
-                                {stats.totalRequestsSent}
-                            </p>
-                        </div>
-                        <div className="px-5 py-5 sm:px-6 sm:py-6">
-                            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                                Completed requests / feedback
+                                Responded
                             </p>
                             <p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-foreground">
                                 {stats.reviewsLeftCount}
+                                {/* Feedback left without a request also counts, so "X of N" only when it can't read as more than N. */}
+                                {stats.totalRequestsSent > 0 && stats.reviewsLeftCount <= stats.totalRequestsSent ? (
+                                    <span className="text-base font-medium text-muted-foreground">
+                                        {" "}of {stats.totalRequestsSent} {stats.totalRequestsSent === 1 ? "request" : "requests"}
+                                    </span>
+                                ) : null}
                             </p>
                         </div>
                         <div className="px-5 py-5 sm:px-6 sm:py-6">

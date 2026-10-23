@@ -22,12 +22,12 @@ export function NewCampaignBasicsStep({ form, updateForm, audienceSelected }: Ne
     return (
         <div className="space-y-6">
             <div>
-                <h2 className="ui-section-title mb-1">Campaign Basics</h2>
-                <p className="text-sm text-muted-foreground">Give your campaign a name and choose how to reach customers.</p>
+                <h2 className="ui-section-title mb-1">Name and channel</h2>
+                <p className="text-sm text-muted-foreground">Name it so you can find it later, and pick how customers hear from you.</p>
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="name">Campaign Name</Label>
+                <Label htmlFor="name">Campaign name</Label>
                 <Input
                     id="name"
                     placeholder="e.g. Post-Visit Follow-up"
@@ -37,12 +37,12 @@ export function NewCampaignBasicsStep({ form, updateForm, audienceSelected }: Ne
             </div>
 
             <div className="space-y-3">
-                <Label>Channel</Label>
+                <Label>Send by</Label>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {([
-                        { value: "sms" as const, label: "SMS", icon: MessageSquare, desc: "Text message" },
-                        { value: "email" as const, label: "Email", icon: Mail, desc: "Email message" },
-                        { value: "both" as const, label: "Both", icon: Megaphone, desc: "SMS + Email" },
+                        { value: "sms" as const, label: "Text message", icon: MessageSquare, desc: "Most people read texts within minutes" },
+                        { value: "email" as const, label: "Email", icon: Mail, desc: "Room for a longer, personal note" },
+                        { value: "both" as const, label: "Both", icon: Megaphone, desc: "Text and email, whichever we have" },
                     ]).map((ch) => (
                         <button
                             key={ch.value}
@@ -64,12 +64,12 @@ export function NewCampaignBasicsStep({ form, updateForm, audienceSelected }: Ne
             </div>
 
             {!audienceSelected && <div className="space-y-3">
-                <Label>Trigger Type</Label>
+                <Label>When do customers get it?</Label>
                 <div className="grid grid-cols-1 gap-3">
                     {([
-                        { value: "manual_batch" as const, label: "Manual Batch", icon: Upload, desc: "Upload or enter a list of contacts to send to", available: true },
-                        { value: "scheduled" as const, label: "Scheduled", icon: Calendar, desc: "Send at specific times (e.g. every Friday at 2pm)", available: true },
-                        { value: "pos_payment" as const, label: "After Payment", icon: CreditCard, desc: "Automatically send after a POS transaction", available: false },
+                        { value: "manual_batch" as const, label: "When I add customers", icon: Upload, desc: "Pick customers or upload a list; they are asked after the delay you set", available: true },
+                        { value: "scheduled" as const, label: "On a schedule", icon: Calendar, desc: "Send at set times, for example every Friday at 2pm", available: true },
+                        { value: "pos_payment" as const, label: "After each payment", icon: CreditCard, desc: "Ask automatically when a customer pays at your till", available: false },
                     ]).map((tr) => (
                         <button
                             key={tr.value}
@@ -89,7 +89,7 @@ export function NewCampaignBasicsStep({ form, updateForm, audienceSelected }: Ne
                             <div className="flex-1">
                                 <div className="flex items-center gap-2">
                                     <span className="font-medium text-sm">{tr.label}</span>
-                                    {!tr.available && <Badge variant="outline" className="text-xs"><Lock className="mr-1 size-3" />Coming Soon</Badge>}
+                                    {!tr.available && <Badge variant="outline" className="text-xs"><Lock className="mr-1 size-3" />Coming soon</Badge>}
                                 </div>
                                 <span className="text-xs text-muted-foreground">{tr.desc}</span>
                             </div>

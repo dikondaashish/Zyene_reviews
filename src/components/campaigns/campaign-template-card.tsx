@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { businessTypeAudience, normalizeSavedBusinessType } from "@/lib/campaigns/business-types";
 
 interface CampaignTemplateCardProps {
     template: CampaignTemplate;
@@ -14,6 +15,7 @@ interface CampaignTemplateCardProps {
 
 export function CampaignTemplateCard({ template, compact = false }: CampaignTemplateCardProps) {
     const Icon = template.icon;
+    const forType = normalizeSavedBusinessType(template.businessTypes?.[0]);
 
     return (
         <Card className={cn(
@@ -28,6 +30,9 @@ export function CampaignTemplateCard({ template, compact = false }: CampaignTemp
                     <Icon className="size-5" />
                 </div>
                 
+                <p className="mb-1 text-xs font-medium text-muted-foreground">
+                    {forType ? `For ${businessTypeAudience(forType)}` : "For any business"}
+                </p>
                 <h3 className="ui-card-title text-foreground mb-1 group-hover:text-primary transition-colors">
                     {template.name}
                 </h3>
@@ -43,7 +48,7 @@ export function CampaignTemplateCard({ template, compact = false }: CampaignTemp
                     className="w-full rounded-lg border-border hover:bg-primary hover:border-primary hover:text-primary-foreground transition-all group/btn"
                 >
                     <Link href={`/campaigns/new?templateId=${template.id}`}>
-                        Use Template
+                        Use template
                         <ArrowRight className="ml-2 transition-transform group-hover/btn:translate-x-1 size-3.5" />
                     </Link>
                 </Button>

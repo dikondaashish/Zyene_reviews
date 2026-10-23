@@ -1,5 +1,6 @@
 import type { ReviewManagementItem } from "@/types/components";
 import type { PrivateFeedback } from "./private-feedback-card";
+import type { ReviewStatusCounts } from "@/lib/reviews/status-counts";
 
 export async function fetchReviewsPageData(params: {
     type: string;
@@ -29,6 +30,7 @@ export async function fetchReviewsPageData(params: {
         page: number;
         publicCount: number;
         privateCount: number;
+        statusCounts: ReviewStatusCounts | null;
     };
 }
 

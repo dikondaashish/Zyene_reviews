@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import type { EngineTrend } from "./load-prompt-detail";
+import { engineName } from "@/services/aeo/engines/engine-name";
 
 const LINE_COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
 const subscribeToClientReady = () => () => {};
@@ -66,6 +67,7 @@ export function PromptTrendChart({ trend, weeks }: { trend: EngineTrend[]; weeks
                             key={engine.engineId}
                             type="monotone"
                             dataKey={engine.engineId}
+                            name={engineName(engine.engineId)}
                             stroke={LINE_COLORS[i % LINE_COLORS.length]}
                             strokeWidth={2}
                             connectNulls={false}

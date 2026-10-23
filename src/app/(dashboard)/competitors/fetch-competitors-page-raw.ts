@@ -3,6 +3,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { getGoogleSearchKeywords } from "@/services/google/performance-queries";
 import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 import { fromUntypedTable } from "@/lib/db/supabase/typed-table";
+import { NOTABLE_COMPETITOR_EVENTS_FILTER } from "@/lib/competitors/change-feed";
 
 export async function fetchCompetitorsPageRaw(businessId: string, rangeStart: Date) {
     const supabase = await createClient();
@@ -27,7 +28,7 @@ export async function fetchCompetitorsPageRaw(businessId: string, rangeStart: Da
             .select("id, business_id, name, google_url, average_rating, total_reviews, created_at, updated_at")
             .eq("business_id", businessId)
             .order("created_at", { ascending: false }),
-        supabase.from("businesses").select("id, name").eq("id", businessId).maybeSingle(),
+        supabase.from("businesses").select("id, name, website").eq("id", businessId).maybeSingle(),
         fromUntypedTable(supabase, "competitor_snapshots")
             .select("id, competitor_id, business_id, captured_at, average_rating, total_reviews, source, metadata")
             .eq("business_id", businessId)
@@ -38,6 +39,7 @@ export async function fetchCompetitorsPageRaw(businessId: string, rangeStart: Da
             .select("id, competitor_id, business_id, event_type, title, summary, event_value, event_delta, created_at")
             .eq("business_id", businessId)
             .gte("created_at", rangeStart.toISOString())
+            .or(NOTABLE_COMPETITOR_EVENTS_FILTER)
             .order("created_at", { ascending: false })
             .limit(200),
         fromUntypedTable(supabase, "competitor_insights")
@@ -84,6 +86,8 @@ export async function fetchCompetitorsPageRaw(businessId: string, rangeStart: Da
                 .select("rating")
                 .eq("business_id", businessId)
                 .eq("is_visible", true)
+                // Google only: competitors are measured on Google, so you are too.
+                .eq("platform", "google")
                 .gte("review_date", rangeStart.toISOString())
                 .order("id", { ascending: true })
                 .range(from, to)

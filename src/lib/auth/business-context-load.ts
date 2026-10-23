@@ -4,6 +4,7 @@
  * Deliberately not a server action - it is an internal helper for
  * business-context.ts, which owns the "use server" boundary.
  */
+import { cache } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { logger } from "@/lib/logger";
@@ -38,8 +39,11 @@ async function fetchFromDatabase(
     supabase: SupabaseClient<Database>,
     userId: string,
 ): Promise<UserBusinessContext> {
-    // Business-scoped memberships (source of truth for which org the user is working in)
-    const { data: memberBusinesses, error: businessError } = await supabase
+    // Business-scoped memberships (source of truth for which org the user is working in), and
+    // all org memberships (invited teammates have organization_members + business_members; RLS
+    // requires the org row). Independent, so both queries run at once.
+    const [{ data: memberBusinesses, error: businessError }, { data: orgMemberRows, error: orgError }] = await Promise.all([
+        supabase
         .from("business_members")
         .select(`
             business_id,
@@ -55,19 +59,8 @@ async function fetchFromDatabase(
             )
         `)
         .eq("user_id", userId)
-        .eq("status", "active");
-
-    let businesses = (memberBusinesses ?? []).reduce<BusinessContextBusiness[]>(
-        (acc, entry: { businesses?: BusinessContextBusiness | null }) => {
-            const business = entry.businesses;
-            if (business && business.status !== "archived") acc.push(business);
-            return acc;
-        },
-        []
-    );
-
-    // All org memberships (invited teammates have organization_members + business_members; RLS requires org row)
-    const { data: orgMemberRows, error: orgError } = await supabase
+        .eq("status", "active"),
+        supabase
         .from("organization_members")
         .select(`
             role,
@@ -87,7 +80,17 @@ async function fetchFromDatabase(
             )
         `)
         .eq("user_id", userId)
-        .eq("status", "active");
+        .eq("status", "active"),
+    ]);
+
+    let businesses = (memberBusinesses ?? []).reduce<BusinessContextBusiness[]>(
+        (acc, entry: { businesses?: BusinessContextBusiness | null }) => {
+            const business = entry.businesses;
+            if (business && business.status !== "archived") acc.push(business);
+            return acc;
+        },
+        []
+    );
 
     type OrgMemberRow = {
         role: string;
@@ -116,12 +119,22 @@ async function fetchFromDatabase(
 }
 
 /**
- * Always resolves live memberships; the legacy argument is kept for callers.
+ * Live memberships, loaded once per server request: the layout, settings access and the page
+ * all ask for them while rendering one page. Nothing is kept between requests, so a switch or a
+ * membership change shows on the very next request.
  */
+/** One slot per user per request; the user id is the cache key. */
+const requestSlot = cache((userId: string): { userId: string; load: Promise<UserBusinessContext> | null } => ({ userId, load: null }));
+
+/** Always resolves live memberships; `skipCache` re-reads even within the same request. */
 export async function loadUserBusinessContext(
     supabase: SupabaseClient<Database>,
     userId: string,
-    _skipCache: boolean,
+    skipCache: boolean,
 ): Promise<UserBusinessContext> {
-    return fetchFromDatabase(supabase, userId);
+    if (skipCache) return fetchFromDatabase(supabase, userId);
+    // Outside a React render (route handlers, scripts) `cache` hands out a fresh slot each call.
+    const slot = requestSlot(userId);
+    slot.load ??= fetchFromDatabase(supabase, userId);
+    return slot.load;
 }

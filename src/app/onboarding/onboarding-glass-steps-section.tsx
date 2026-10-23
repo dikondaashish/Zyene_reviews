@@ -63,6 +63,7 @@ export function OnboardingGlassStepsSection({
                             businessName={business.name}
                             city={business.city ?? ""}
                             initialCategory={business.category ?? undefined}
+                            defaultSupportEmail={business.email || user?.email || ""}
                             isGoogleConnected={googleConnected}
                             onNext={async () => setCurrentStep(4)}
                             isLoading={isLoading}

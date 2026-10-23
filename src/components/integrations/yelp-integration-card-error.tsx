@@ -4,7 +4,7 @@ import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
-import { YelpCardIcon } from "./yelp-card-icon";
+import { BrandLogoTile } from "@/components/integrations/brand-logo-tile";
 
 interface YelpIntegrationCardErrorProps {
     onReconnect: () => void;
@@ -16,7 +16,7 @@ export function YelpIntegrationCardError({ onReconnect }: YelpIntegrationCardErr
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <YelpCardIcon className="text-destructive size-6" />
+                        <BrandLogoTile domain="yelp.com" name="Yelp" />
                         <div>
                             <h3 className="ui-card-title">Yelp</h3>
                             <p className="text-xs text-muted-foreground">Business reviews</p>

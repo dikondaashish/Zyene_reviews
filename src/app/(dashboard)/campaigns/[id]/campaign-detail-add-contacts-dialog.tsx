@@ -44,12 +44,12 @@ export function CampaignDetailAddContactsDialog({
             <DialogTrigger asChild>
                 <Button>
                     <Plus className="mr-2 size-4" />
-                    Add Contacts
+                    Add customers
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle>Add Contacts</DialogTitle>
+                    <DialogTitle>Add customers</DialogTitle>
                 </DialogHeader>
 
                 <div className="flex gap-2 mb-4">

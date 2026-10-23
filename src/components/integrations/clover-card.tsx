@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
+import { BrandLogoTile } from "@/components/integrations/brand-logo-tile";
 
 const CLOVER_ERROR_MESSAGES: Record<string, string> = {
     denied: "Clover authorization was denied.",
@@ -66,16 +65,7 @@ export function CloverCard({ businessId, connection, configured }: CloverCardPro
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
-                        <div className="flex size-10 items-center justify-center rounded-lg border border-chart-2/25 bg-chart-2/10">
-                            <Image
-                                src={getBrandLogoUrl("clover.com")}
-                                alt="Clover logo"
-                                width={20}
-                                height={20}
-                                className="size-5 object-contain"
-                                unoptimized
-                            />
-                        </div>
+                        <BrandLogoTile domain="clover.com" name="Clover" />
                         <div>
                             <p className="text-base font-semibold">Clover</p>
                             <p className="text-sm text-muted-foreground">

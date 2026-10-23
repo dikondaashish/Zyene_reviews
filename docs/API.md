@@ -72,7 +72,7 @@ Auth: Supabase session (`getUser`) + active business context unless noted.
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| `GET`/`POST` | `/api/reviews` | List / create-related review ops for active business |
+| `GET`/`POST` | `/api/reviews` | List / create-related review ops for active business. `GET` returns `reviews`, `count`, `totalPages`, `page`, `publicCount`, `privateCount` and `statusCounts` (`{ needs_response, responded, ignored }` across all visible reviews, ignoring rating/search; `null` if a count failed) |
 | `GET`/`PATCH`/`DELETE` | `/api/reviews/[id]` | Single review |
 | `POST` | `/api/reviews/[id]/reply` | Publish or save reply |
 | `POST` | `/api/reviews/bulk` | Bulk actions |
@@ -133,6 +133,7 @@ Auth: Supabase session (`getUser`) + active business context unless noted.
 | Method | Path | Purpose |
 |--------|------|---------|
 | `GET` | `/api/competitors/range-data`, `range-meta`, `export` | Competitor watch data |
+| `GET` | `/api/competitors/suggestions` | Up to 6 nearby businesses in the active business's Google category that it does not track yet, most-reviewed first → `{suggestions, reason?: "no_listing" \| "unavailable"}`. Places API; cached 24h per business in Redis |
 | `GET` | `/api/analytics/range-data`, `export` | Analytics |
 | Various | `/api/aeo/*` | Exports, reports, crawler logs (session) |
 | `GET` | `/api/aeo/balance` | Prepaid AI visibility balance for the active org (plan credit + paid balance, tests left, `canTopUp`). Returns `{ live: false }` while `AEO_METERED_BILLING_LIVE` is off |

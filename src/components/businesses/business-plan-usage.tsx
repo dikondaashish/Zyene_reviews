@@ -9,9 +9,9 @@ export function BusinessPlanUsage({ count, limit }: { count: number; limit: numb
             <div className="flex items-center gap-3">
                 <Building2 className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
                 <div>
-                    <p className="text-sm font-medium">{count} of {limit} business {limit === 1 ? "slot" : "slots"} used</p>
+                    <p className="text-sm font-medium">{count} of {limit} {limit === 1 ? "location" : "locations"} on your plan</p>
                     <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                        {atLimit ? "Managing another location? Upgrade your plan to add it here." : "Add locations as your business grows. Each has its own reviews and settings."}
+                        {atLimit ? "Opening another location? Upgrade your plan to add it here." : `You can add ${limit - count} more. Each location gets its own reviews, requests and settings.`}
                     </p>
                 </div>
             </div>

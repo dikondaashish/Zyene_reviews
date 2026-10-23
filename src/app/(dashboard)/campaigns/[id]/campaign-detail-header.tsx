@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import type { Campaign } from "./campaign-detail-types";
 import { CampaignDetailAddContactsDialog } from "./campaign-detail-add-contacts-dialog";
 import type { CampaignDetailState } from "./use-campaign-detail";
+import { CHANNEL_LABEL, getCampaignStatusNote } from "../campaign-presentation";
 
 interface CampaignDetailHeaderProps {
     campaign: Campaign;
@@ -32,11 +33,11 @@ export function CampaignDetailHeader({ campaign, detail }: CampaignDetailHeaderP
                                         : ""
                             }
                         >
-                            {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
+                            {getCampaignStatusNote(campaign).label}
                         </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground mt-1">
-                        {campaign.channel === "both" ? "SMS + Email" : campaign.channel.toUpperCase()} · {campaign.trigger_type.replace("_", " ")} · Created {mounted ? new Date(campaign.created_at).toLocaleDateString() : "-"}
+                        {CHANNEL_LABEL[campaign.channel] ?? campaign.channel} · Created {mounted ? new Date(campaign.created_at).toLocaleDateString() : "-"}
                     </p>
                 </div>
             </div>

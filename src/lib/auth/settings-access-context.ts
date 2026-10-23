@@ -4,11 +4,11 @@ import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { createClient } from "@/lib/db/supabase/server";
 import { logger } from "@/lib/logger";
 import { getSettingsAccess } from "@/lib/auth/settings-access";
+import { getRequestUser } from "@/lib/auth/request-user";
 
 async function loadSettingsAccessContext() {
   const supabase = await createClient();
-  const [userResult, activeContext] = await Promise.all([supabase.auth.getUser(), getActiveBusinessId()]);
-  const user = userResult.data.user;
+  const [user, activeContext] = await Promise.all([getRequestUser(), getActiveBusinessId()]);
 
   if (!user) {
     return {

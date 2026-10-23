@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { SmartInsightsData, SmartInsightsSuggestion } from "./smart-insights-card-types";
 import { themesForSuggestionExamples } from "./smart-insights-card-themes-for-suggestion";
+import { positiveMentionPct } from "@/lib/dashboard/dashboard-visuals";
 
 export function useSmartInsightsCard(businessName?: string) {
     const [data, setData] = useState<SmartInsightsData | null>(null);
@@ -88,7 +89,7 @@ export function useSmartInsightsCard(businessName?: string) {
     }, []);
 
     const headlineText =
-        data?.headline || `Guests love ${businessName || "your business"}. The food is fantastic.`;
+        data?.headline || `What customers say about ${businessName || "your business"}.`;
     const parts = headlineText.split(".");
     const firstPart = parts[0] ? parts[0] + "." : headlineText;
     const secondPart = parts.slice(1).join(".").trim();
@@ -96,13 +97,7 @@ export function useSmartInsightsCard(businessName?: string) {
     const selectedTheme =
         data?.themes?.length ? data.themes[selectedThemeIndex] || data.themes[0] : null;
 
-    const positiveThemesCount =
-        data?.themes?.filter((t) => (t.sentiment || "").toLowerCase() === "positive").length ?? 0;
-    let positivePct = 88;
-    if (data?.themes?.length) {
-        positivePct = Math.round((positiveThemesCount / data.themes.length) * 100);
-        if (positivePct < 50) positivePct = 78;
-    }
+    const positivePct = positiveMentionPct(data?.themes ?? []);
 
     return {
         data,

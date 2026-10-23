@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import { viewStoredAnswer, type StoredAnswer } from "./view-answer-action";
 import type { HeadToHeadRow } from "./load-prompt-detail";
+import { EngineLogo } from "@/components/google-seo-aeo/engine-logo";
+import { engineName } from "@/services/aeo/engines/engine-name";
 
 /** F3.6: single prompt, all engines, who was named, verbatim answer on demand. */
 export function PromptHeadToHead({ rows }: { rows: HeadToHeadRow[] }) {
@@ -51,7 +53,7 @@ export function PromptHeadToHead({ rows }: { rows: HeadToHeadRow[] }) {
                 <tbody>
                     {rows.map((row) => (
                         <tr id={`engine-${row.engineId}`} key={row.sampleId} className="border-b last:border-0 scroll-mt-24">
-                            <td className="py-2 capitalize">{row.engineId.replace(/_/g, " ")}</td>
+                            <td className="py-2"><span className="flex items-center gap-2"><EngineLogo engineId={row.engineId} />{engineName(row.engineId)}</span></td>
                             <td className="py-2">
                                 {row.status !== "ok" ? (
                                     <Badge variant="outline" className="gap-1 text-xs">
@@ -92,7 +94,7 @@ export function PromptHeadToHead({ rows }: { rows: HeadToHeadRow[] }) {
             <Dialog open={open !== null} onOpenChange={(v) => !v && setOpen(null)}>
                 <DialogContent className="max-h-[80vh] max-w-2xl overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle>Verbatim answer - {open?.engineId}</DialogTitle>
+                        <DialogTitle>Verbatim answer - {open ? engineName(open.engineId) : ""}</DialogTitle>
                         <DialogDescription>
                             {open?.modelId ? `Model: ${open.modelId} · ` : ""}
                             {open ? new Date(open.sampledAt).toLocaleString() : ""}

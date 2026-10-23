@@ -23,6 +23,8 @@ export interface CustomerTableProps {
     onCustomerUpdated?: (customer: Customer) => void;
     onSendRequest?: (customer: Customer) => void;
     onSelectionChange?: (selectedIds: string[]) => void;
+    /** Change it to untick every row (the bulk bar's Clear button). */
+    clearSelectionSignal?: number;
     onCustomersMerged?: (customer: Customer, removedCustomerId: string) => void;
 }
 

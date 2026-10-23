@@ -1,9 +1,19 @@
-import { Sparkles, Loader2 } from "lucide-react";
+import { Globe, Sparkles, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import type { Review, ReviewCardTone } from "@/components/reviews/review-card-types";
 import { REVIEW_CARD_TONES } from "@/components/reviews/review-card-types";
+
+const PLATFORM_NAMES: Record<string, string> = { google: "Google", facebook: "Facebook" };
+
+/** Owners should know before clicking that the reply is public and signed as the business. */
+export function replyVisibilityNote(platform: string, isEditing: boolean): string {
+    const where = PLATFORM_NAMES[platform] ?? "the review site";
+    return isEditing
+        ? `Replaces your public reply on ${where}.`
+        : `Posts publicly on ${where} under your business name.`;
+}
 
 export function ReviewCardComposer({
     review,
@@ -96,6 +106,10 @@ export function ReviewCardComposer({
                 )}
             </div>
             <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
+                <p className="flex items-center gap-1.5 text-xs text-muted-foreground sm:mr-auto">
+                    <Globe className="size-3.5 shrink-0" aria-hidden="true" />
+                    {replyVisibilityNote(review.platform, isEditingReply)}
+                </p>
                 <button
                     type="button"
                     onClick={onCancelReplyComposer}
@@ -116,11 +130,11 @@ export function ReviewCardComposer({
                 >
                     {isSubmitting
                         ? isEditingReply
-                            ? "Saving..."
-                            : "Posting..."
+                            ? "Saving…"
+                            : "Posting…"
                         : isEditingReply
                           ? "Update reply"
-                          : "Post Reply"}
+                          : "Post reply"}
                 </Button>
             </div>
         </div>

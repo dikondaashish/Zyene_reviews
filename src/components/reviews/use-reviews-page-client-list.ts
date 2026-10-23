@@ -1,7 +1,7 @@
 "use client";
 
 import { toast } from "sonner";
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useGoogleSyncRemoteState } from "@/hooks/use-google-sync-remote-state";
 import { fetchReviewsPageData, updateReviewsPageUrl } from "@/components/reviews/reviews-page-client-fetch";
 import type { ReviewsPageClientProps } from "./reviews-page-client-types";
@@ -21,6 +21,7 @@ export function useReviewsPageClientList(props: ReviewsPageClientProps) {
         initialPage,
         initialPublicCount,
         initialPrivateCount,
+        initialStatusCounts,
         initialType,
         initialFilters,
     } = props;
@@ -34,6 +35,9 @@ export function useReviewsPageClientList(props: ReviewsPageClientProps) {
     const [page, setPage] = useState(initialPage);
     const [publicCount, setPublicCount] = useState(initialPublicCount);
     const [privateCount, setPrivateCount] = useState(initialPrivateCount);
+    const [statusCounts, setStatusCounts] = useState(initialStatusCounts);
+    // A server refresh (business switch, router.refresh) brings new counts.
+    useEffect(() => setStatusCounts(initialStatusCounts), [initialStatusCounts]);
     const [type, setType] = useState(initialType);
     const [filters, setFilters] = useState(initialFilters);
     const [isFetching, setIsFetching] = useState(false);
@@ -82,6 +86,7 @@ export function useReviewsPageClientList(props: ReviewsPageClientProps) {
                 setPage(data.page);
                 setPublicCount(data.publicCount);
                 setPrivateCount(data.privateCount);
+                setStatusCounts(data.statusCounts ?? null);
             } catch {
                 if (version === requestVersion.current) toast.error("Could not update reviews. Previous results are still shown; try again.");
             } finally {
@@ -110,6 +115,7 @@ export function useReviewsPageClientList(props: ReviewsPageClientProps) {
         page,
         publicCount,
         privateCount,
+        statusCounts,
         type,
         filters,
         loading,

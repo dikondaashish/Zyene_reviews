@@ -58,8 +58,9 @@ export function useYelpIntegrationCard({
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Search failed");
 
-            setSearchResults(data.businesses || []);
-            if (data.businesses?.length === 0) {
+            const businesses: YelpBusinessResult[] = data.data?.businesses ?? [];
+            setSearchResults(businesses);
+            if (businesses.length === 0) {
                 toast.info("No businesses found. Try different search terms.");
             }
         } catch (error: unknown) {

@@ -19,7 +19,7 @@ export function DemoRatingPreview() {
     <fieldset className="tour-rating-picker">
       <legend className="sr-only">Choose a rating</legend>
       {[1, 2, 3, 4, 5].map(value => <button type="button" key={value} aria-label={`${value} ${value === 1 ? "star" : "stars"}`} aria-pressed={rating === value} onClick={() => setRating(value)}>
-        <Star size={26} fill={value <= rating ? "currentColor" : "none"} aria-hidden="true" />
+        <Star size={26} className={value <= rating ? undefined : "text-muted-foreground/30"} aria-hidden="true" />
       </button>)}
     </fieldset>
     <p className="tour-rating-description" role="status">{rating ? `${rating} of 5 stars selected` : "Choose a star to continue"}</p>

@@ -1,62 +1,61 @@
 "use client";
 
-import { Users, Percent, MessageCircleOff, BarChart3 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { CustomerManagementStats } from "@/components/customers/customer-management-constants";
+import type { SmartSegmentTab } from "@/components/customers/customer-segment-tabs";
 
-export function CustomerManagementStatsGrid({ stats }: { stats: CustomerManagementStats | null }) {
+type FigureProps = { label: string; value: string | number; hint: string; onClick?: () => void; emphasis?: boolean };
+
+function Figure({ label, value, hint, onClick, emphasis }: FigureProps) {
+    const body = (
+        <>
+            <span className="block text-xs font-medium text-muted-foreground">{label}</span>
+            <span className={cn("mt-1 block text-2xl font-semibold tabular-nums tracking-tight", emphasis ? "text-warning-foreground" : "text-foreground")}>
+                {value}
+            </span>
+            <span className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+                {hint}
+                {onClick ? <ArrowRight className="size-3 transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden /> : null}
+            </span>
+        </>
+    );
+    const base = "group min-w-0 bg-card px-5 py-4 text-left";
+    return onClick ? (
+        <button type="button" onClick={onClick} className={cn(base, "transition-colors hover:bg-muted/40 focus-visible:bg-muted/40 focus-visible:outline-none")}>
+            {body}
+        </button>
+    ) : (
+        <div className={base}>{body}</div>
+    );
+}
+
+/** Four plain numbers; the one that implies work opens the list of people behind it. */
+export function CustomerManagementStatsGrid({ stats, onSelectSegment }: {
+    stats: CustomerManagementStats | null;
+    onSelectSegment: (tab: SmartSegmentTab) => void;
+}) {
+    const waiting = stats?.neverReviewedCount ?? 0;
     return (
-        <div className="mb-6 grid grid-cols-1 gap-3 min-[400px]:grid-cols-2 xl:grid-cols-4">
-            <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
-                <div className="flex shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 size-9">
-                    <Users className="text-primary size-4" />
-                </div>
-                <div className="min-w-0 flex-1">
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        Customers (excludes test tags)
-                    </p>
-                    <p className="text-xl font-semibold text-foreground">{stats?.totalCustomers ?? "-"}</p>
-                </div>
-            </div>
-            <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
-                <div className="flex shrink-0 items-center justify-center rounded-lg bg-chart-2/10 size-9">
-                    <Percent className="text-success size-4" />
-                </div>
-                <div className="min-w-0 flex-1">
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        Request completion
-                    </p>
-                    <p className="text-xl font-semibold text-foreground">
-                        {stats != null ? `${stats.reviewConversionPercent}%` : "-"}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground">Feedback or Google handoff; publication unverified</p>
-                </div>
-            </div>
-            <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
-                <div className="flex shrink-0 items-center justify-center rounded-lg bg-chart-4/10 size-9">
-                    <MessageCircleOff className="text-warning-foreground size-4" />
-                </div>
-                <div className="min-w-0 flex-1">
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        Not completed
-                    </p>
-                    <p className="text-xl font-semibold text-foreground">{stats?.neverReviewedCount ?? "-"}</p>
-                    <p className="text-[10px] text-muted-foreground">No completed request yet</p>
-                </div>
-            </div>
-            <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
-                <div className="flex shrink-0 items-center justify-center rounded-lg bg-chart-4/15 size-9">
-                    <BarChart3 className="text-warning-foreground size-4" />
-                </div>
-                <div className="min-w-0 flex-1">
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        Avg requests sent
-                    </p>
-                    <p className="text-xl font-semibold text-foreground">
-                        {stats != null ? stats.avgRequestsSent : "-"}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground">Per customer (all contacts)</p>
-                </div>
-            </div>
-        </div>
+        <section aria-label="Customer summary" className="mb-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border/70 bg-border/60 lg:grid-cols-4">
+            <Figure label="Customers" value={stats?.totalCustomers ?? "-"} hint="Test contacts are not counted" />
+            <Figure
+                label="Response rate"
+                value={stats != null ? `${stats.reviewConversionPercent}%` : "-"}
+                hint="Of people asked, how many acted"
+            />
+            <Figure
+                label="Asked, no response yet"
+                value={stats?.neverReviewedCount ?? "-"}
+                hint={waiting > 0 ? "See who to remind" : "Nobody is waiting"}
+                emphasis={waiting > 0}
+                onClick={waiting > 0 ? () => onSelectSegment("never_reviewed") : undefined}
+            />
+            <Figure
+                label="Requests per customer"
+                value={stats != null ? stats.avgRequestsSent : "-"}
+                hint="Average, including reminders"
+            />
+        </section>
     );
 }

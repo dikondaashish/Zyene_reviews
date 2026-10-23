@@ -58,7 +58,7 @@ To change a region's behaviour, edit `JURISDICTION_RULES`. Nothing else hard-cod
 | essential | always on, locked | auth/session, OAuth state, consent + jurisdiction cookies, UI preferences, Sentry errors, Stripe redirect, Google Sign-In |
 | functional | off | Cal.com embed on `/demo` (click-to-load), Better Stack status widget |
 | analytics | off | GTM → GA4, CTA dataLayer listener, Sentry Session Replay, first-party marketing events, signup funnel dataLayer events |
-| marketing | off | Meta Pixel, Google Ads via GTM Consent Mode, `zyene_utm` attribution cookie |
+| marketing | off | Meta Pixel (PageView + `StartTrial` after a server-verified Stripe trial), Google Ads via GTM Consent Mode, `zyene_utm` attribution cookie |
 
 ## 5. Storage of the choice
 
@@ -74,7 +74,7 @@ To change a region's behaviour, edit `JURISDICTION_RULES`. Nothing else hard-cod
 - `PrivacyScripts` renders `<Script>` tags only for granted categories. Nothing is server-rendered, so the HTML of every page contains no tracker. Hydration uses the "nothing granted" snapshot, so there is no flash of trackers.
 - **GTM** loads if analytics **or** marketing is granted. A Consent Mode v2 `default` is queued before `gtm.js`, so tags inside the container see the per-category state. Later grants push `gtag('consent','update',…)`. **The container contents (GTM-WF6DJZ8J) are not in this repo.** Every tag there must respect Consent Mode, or must be triggered only on `analytics_storage`/`ad_storage` granted.
 - **Sentry:** errors are always on (no cookies). `replayIntegration` is attached via `Sentry.addIntegration` only after analytics consent. The sample rates come from `Sentry.init`.
-- **Plain functions** (`trackMarketingEventClient`, `trackSignupEvent`, `UtmCapture`) check `hasConsent()` / `usePrivacy()` before touching storage or sending events.
+- **Plain functions** (`trackMarketingEventClient`, `trackSignupEvent`, `trackMetaStartTrial`, `UtmCapture`) check `hasConsent()` / `usePrivacy()` before touching storage or sending events.
 - **Third-party iframes** use `FunctionalEmbedGate`, which shows a click-to-load placeholder. The `/demo` calendar is gated this way. The "Book an appointment" dialog is not gated, because opening it is the visitor's request.
 - **Withdrawal** (any category turned off that was running, including US defaults) expires known tracker cookies (`_ga*`, `_gid`, `_gat`, `_fbp`, `_fbc`, `_gcl*`, `zyene_utm`) on the host and parent domain, then reloads. Scripts that already ran cannot be unloaded in place. Third-party cookies inside iframes (Cal.com) cannot be deleted by us.
 

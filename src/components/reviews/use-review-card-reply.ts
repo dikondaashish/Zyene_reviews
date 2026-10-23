@@ -9,7 +9,8 @@ import { useReviewCardSubmit } from "@/components/reviews/use-review-card-submit
 export function useReviewCardReply(
     review: Review,
     planAllowsAiReplies: boolean,
-    onRefresh?: () => void
+    onRefresh?: () => void,
+    onReplyPosted?: (reviewId: string) => void
 ) {
     const [isReplying, setIsReplying] = useState(false);
     const [replyText, setReplyText] = useState("");
@@ -42,7 +43,8 @@ export function useReviewCardReply(
         stopAiStream,
         resetAfterSubmit,
         onAiLimitOrPlan,
-        onRefresh
+        onRefresh,
+        onReplyPosted
     );
 
     const handleReplyTextChange = useCallback(

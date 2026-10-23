@@ -27,7 +27,6 @@ export function useCompetitorsList({
     ownSearchKeywords,
     keywordDiscoverySplit,
     placesMetaByCompetitorId,
-    ownBusinessChart,
 }: CompetitorsListProps) {
     const [competitors, setCompetitors] = useState<Competitor[]>(initialCompetitors);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
@@ -87,18 +86,13 @@ export function useCompetitorsList({
     });
 
     const {
-        chartData,
         movementCards,
         latestSnapshotByCompetitor,
         latestInsightByCompetitor,
-        alertEvents,
     } = useCompetitorsListMemos({
         competitors,
-        mounted,
-        ownBusinessChart,
         activeSnapshotRows,
         activeInsightRows,
-        activeEventRows,
     });
 
     const isSyncing = (competitor: Competitor) => competitorsListIsSyncing(competitor, mounted);
@@ -123,8 +117,6 @@ export function useCompetitorsList({
         latestInsightByCompetitor,
         movementCards,
         activeEventRows,
-        alertEvents,
-        chartData,
         isSyncing,
         handleGenerateMarketBrief,
         handleSyncCompetitorWatch,

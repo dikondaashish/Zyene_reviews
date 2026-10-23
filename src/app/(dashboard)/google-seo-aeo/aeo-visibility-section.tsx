@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { MetricProvenance } from "@/components/google-seo-aeo/metric-provenance";
 import type { VisibilityTile } from "./aeo-visibility-view-model";
 import { SeoSection } from "./seo-section";
+import { EngineLogo } from "@/components/google-seo-aeo/engine-logo";
 
 export type AeoVisibilityContent = {
     tiles: VisibilityTile[];
@@ -14,22 +15,32 @@ export type AeoVisibilityContent = {
     windowDays: number;
 };
 
+/** Plain reading of a pre-formatted rate, so "23%" arrives with a meaning attached. */
+function describeRate(rate: string): string {
+    const value = Number.parseFloat(rate);
+    if (value >= 50) return "Named in most answers";
+    if (value >= 20) return "Named in some answers";
+    // A very small rate can display as "0.0%"; only a true zero means never named.
+    if (value > 0 || !/^0%$/.test(rate.trim())) return "Rarely named";
+    return "Not named yet";
+}
+
 /** A suppressed rate is never rendered as 0%, which would misrepresent missing evidence. */
 export function AeoVisibilitySection({ content }: { content: AeoVisibilityContent }) {
     return (
         <SeoSection
             id="ai-visibility-title"
-            title="AI visibility"
+            title="Do AI assistants recommend you?"
             meta={
                 <>
-                    <Badge variant="outline">{content.overallBasis === "measured" ? "Measured" : "Estimated"}</Badge>
+                    <Badge variant="outline">{content.overallBasis === "measured" ? "Real answers" : "Estimated"}</Badge>
                     <MetricProvenance title="Visibility across all engines" rows={content.overallProvenance} />
                 </>
             }
-            description={`How often AI answer engines mention you, over the last ${content.windowDays} days. Failed or refused answers are not counted against you.`}
+            description={`When customers ask ChatGPT, Gemini and similar tools for a recommendation, how often your business is named. Last ${content.windowDays} days.`}
         >
             <div className="p-5 sm:p-6">
-                <p className="text-sm font-medium text-muted-foreground">All engines</p>
+                <p className="text-sm font-medium text-muted-foreground">Across all AI assistants</p>
                 {content.overallRate === null ? (
                     <>
                         <p className="mt-1 text-2xl font-semibold text-foreground">Not enough data yet</p>
@@ -39,7 +50,10 @@ export function AeoVisibilitySection({ content }: { content: AeoVisibilityConten
                     </>
                 ) : (
                     <>
-                        <p className="mt-1 text-4xl font-semibold tabular-nums text-foreground">{content.overallRate}</p>
+                        <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                            <p className="text-4xl font-semibold tabular-nums text-foreground">{content.overallRate}</p>
+                            <p className="text-sm font-medium text-foreground">{describeRate(content.overallRate)}</p>
+                        </div>
                         <div className="mt-3 h-2 max-w-xl overflow-hidden rounded-full bg-muted">
                             <div className="h-full rounded-full bg-primary" style={{ width: content.overallRate }} />
                         </div>
@@ -52,7 +66,7 @@ export function AeoVisibilitySection({ content }: { content: AeoVisibilityConten
                 {content.tiles.map((tile) => (
                     <li key={tile.engineId} className="min-w-0 border-b border-r border-border p-4 sm:p-5">
                         <div className="flex items-center justify-between gap-2">
-                            <p className="truncate text-sm font-medium text-foreground">{tile.label}</p>
+                            <p className="flex min-w-0 items-center gap-2 text-sm font-medium text-foreground"><EngineLogo engineId={tile.engineId} /><span className="truncate">{tile.label}</span></p>
                             <div className="flex shrink-0 items-center gap-1.5">
                                 {tile.basis === "estimated" ? (
                                     <Badge variant="outline" className="text-[10px]">

@@ -2,8 +2,6 @@
 
 import * as React from "react"
 import { Building2, ChevronsUpDown, Check } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { toast } from "sonner"
 
 import {
     DropdownMenu,
@@ -14,7 +12,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { setActiveBusiness } from "@/lib/auth/business-context"
+import { useContextSwitch } from "@/components/dashboard/context-switch"
 
 interface OrganizationSwitcherProps {
     organizations: {
@@ -29,8 +27,8 @@ export function OrganizationSwitcher({
     organizations,
     activeOrganizationId,
 }: OrganizationSwitcherProps) {
-    const router = useRouter()
-    const [switching, startTransition] = React.useTransition()
+    const { pendingName, switchTo } = useContextSwitch()
+    const switching = pendingName !== null
 
     const activeOrg =
         organizations.find((org) => org.id === activeOrganizationId) || organizations[0]
@@ -39,14 +37,7 @@ export function OrganizationSwitcher({
     const handleSwitch = (org: OrganizationSwitcherProps["organizations"][number]) => {
         const businessId = org.defaultBusinessId
         if (switching || org.id === activeOrganizationId || !businessId) return
-        startTransition(async () => {
-            try {
-                await setActiveBusiness(businessId)
-                router.refresh()
-            } catch {
-                toast.error("Could not switch organization. Please try again.")
-            }
-        })
+        switchTo(businessId, org.name, "Could not switch organization. Please try again.")
     }
 
     if (!canSwitch) {

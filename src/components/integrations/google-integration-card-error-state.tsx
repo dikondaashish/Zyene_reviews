@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { RefreshCw, AlertTriangle } from "lucide-react";
-import { GoogleCardGoogleIcon } from "@/components/integrations/google-card-google-icon";
+import { BrandLogoTile } from "@/components/integrations/brand-logo-tile";
 
 export function GoogleIntegrationCardErrorState({ onReconnect }: { onReconnect: () => void }) {
     return (
@@ -13,9 +13,7 @@ export function GoogleIntegrationCardErrorState({ onReconnect }: { onReconnect: 
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center rounded-lg bg-card border border-border size-10">
-                            <GoogleCardGoogleIcon />
-                        </div>
+                        <BrandLogoTile domain="google.com" name="Google" />
                         <div>
                             <p className="font-semibold text-base">Google Business Profile</p>
                             <p className="text-sm text-muted-foreground">Sync reviews and respond directly</p>

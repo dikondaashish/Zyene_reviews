@@ -37,6 +37,8 @@ export function CustomerTableMobileCard({
     onNavigate: (e: React.MouseEvent, customerId: string) => void;
     onActivate: (customerId: string) => void;
 }) {
+    // Reads selection off `row`, whose identity survives a selection change; see customer-table-pagination.tsx.
+    "use no memo";
     const customer = row.original;
     const display = customerDisplayName(customer);
 

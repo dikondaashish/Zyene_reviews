@@ -29,19 +29,20 @@ export function CompetitorsListKeywordsCard({
                         Your Google search terms
                     </CardTitle>
                     <CardDescription>
-                        Monthly search impressions for your listing from Google Business Profile.
+                        What people typed into Google when your listing showed up, and how often it was shown each month.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     {activeKeywordDiscoverySplit.directPct + activeKeywordDiscoverySplit.discoveryPct > 0 ? (
                         <p className="text-sm text-muted-foreground">
                             <span className="font-medium text-foreground">
-                                {activeKeywordDiscoverySplit.discoveryPct}% discovery
+                                {activeKeywordDiscoverySplit.discoveryPct}%
                             </span>{" "}
-                            vs{" "}
+                            found you by searching for what you offer;{" "}
                             <span className="font-medium text-foreground">
-                                {activeKeywordDiscoverySplit.directPct}% name/brand
-                            </span>
+                                {activeKeywordDiscoverySplit.directPct}%
+                            </span>{" "}
+                            searched for your name.
                         </p>
                     ) : null}
                     <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -54,7 +55,7 @@ export function CompetitorsListKeywordsCard({
                                     {k.keyword}
                                 </span>
                                 <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
-                                    {k.impressions.toLocaleString()} imp.
+                                    {k.impressions.toLocaleString()} times shown
                                 </span>
                             </li>
                         ))}

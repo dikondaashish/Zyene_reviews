@@ -110,12 +110,15 @@
 :root:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) .cta-button:hover:not(:disabled) {
   background-color: var(--primary-hover);
   border-color: var(--primary-hover);
+  /* Text on an orange button is always white, even when a call site restyled its resting colours. */
+  color: var(--primary-foreground);
 }
 
 :root:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) [data-slot="button"][data-variant="default"]:active:not(:disabled),
 :root:has([data-dashboard-shell], [data-app-onboarding], [data-app-palette]) .cta-button:active:not(:disabled) {
   background-color: var(--primary-active);
   border-color: var(--primary-active);
+  color: var(--primary-foreground);
 }
 
 /* User-requested exceptions: Smart Insights and Your Customer Portal keep the

@@ -1,6 +1,7 @@
 import type { ReviewManagementItem } from "@/types/components";
 import type { AutoReplySettingsState } from "./auto-reply-toolbar";
 import type { PrivateFeedback } from "./private-feedback-card";
+import type { ReviewStatusCounts } from "@/lib/reviews/status-counts";
 
 export interface ReviewsPageClientProps {
     businessId: string;
@@ -17,6 +18,7 @@ export interface ReviewsPageClientProps {
     initialPage: number;
     initialPublicCount: number;
     initialPrivateCount: number;
+    initialStatusCounts: ReviewStatusCounts | null;
     initialType: string;
     initialFilters: {
         status: string;

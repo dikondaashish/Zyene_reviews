@@ -3,8 +3,10 @@
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/db/supabase/server";
+import { getRequestUser } from "@/lib/auth/request-user";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { setSentryTenantContext } from "@/lib/monitoring/set-sentry-tenant-context";
 import type {
@@ -67,9 +69,7 @@ export async function getActiveBusinessId(options?: {
         allBusinesses: [] as BusinessContextBusiness[],
     };
 
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
+    const user = await getRequestUser();
 
     if (!user) return empty;
 
@@ -158,4 +158,16 @@ export async function setActiveBusiness(businessId: string) {
 
     // Purge the entire router cache to ensure all pages immediately reflect the new active business
     revalidatePath("/", "layout");
+}
+
+const OPEN_BUSINESS_DESTINATIONS = new Set(["/dashboard", "/reviews", "/settings/integrations", "/settings/business-information"]);
+
+/**
+ * Switch business and go straight to one of its pages. One round trip: the redirect carries the
+ * destination page, instead of re-rendering the current page and then navigating.
+ */
+export async function openBusiness(businessId: string, destination: string) {
+    if (!OPEN_BUSINESS_DESTINATIONS.has(destination)) throw new Error("Unknown destination");
+    await setActiveBusiness(businessId);
+    redirect(destination);
 }

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { HelpCircle, Link2, ListChecks } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScoreGauge } from "@/components/dashboard/dashboard-mini-visuals";
+import { CountStatus } from "./dashboard-view-count-status";
 import { DashboardViewGoogleHealthLodging } from "./dashboard-view-google-health-lodging";
 import type { DashboardViewProps } from "./types";
 
@@ -48,13 +50,7 @@ export function DashboardViewGoogleHealth({
                         <HelpCircle className="text-muted-foreground size-4" />
                     </CardHeader>
                     <CardContent>
-                        <div
-                            className={`text-2xl font-bold ${
-                                unansweredQaCount === 0 ? "text-success" : "text-warning-foreground"
-                            }`}
-                        >
-                            {unansweredQaCount}
-                        </div>
+                        <CountStatus count={unansweredQaCount} okLabel="All answered" problemTone="ok" />
                         <p className="mt-1 text-xs text-muted-foreground">{dict.dashboard.qa_desc}</p>
                         <Link href="/questions" className="mt-3 inline-block">
                             <Button variant="outline" size="sm">
@@ -70,13 +66,7 @@ export function DashboardViewGoogleHealth({
                     <Link2 className="text-muted-foreground size-4" />
                 </CardHeader>
                 <CardContent>
-                    <div
-                        className={`text-2xl font-bold ${
-                            brokenPlaceLinksCount === 0 ? "text-success" : "text-destructive"
-                        }`}
-                    >
-                        {brokenPlaceLinksCount}
-                    </div>
+                    <CountStatus count={brokenPlaceLinksCount} okLabel="All working" problemTone="bad" />
                     <p className="mt-1 text-xs text-muted-foreground">{dict.dashboard.links_desc}</p>
                     <Link href="/settings/business-information" className="mt-3 inline-block">
                         <Button variant="outline" size="sm">
@@ -93,22 +83,7 @@ export function DashboardViewGoogleHealth({
                     <ListChecks className="text-muted-foreground size-4" />
                 </CardHeader>
                 <CardContent>
-                    <div
-                        className={`text-2xl font-bold ${
-                            googleProfileHealthScore === null
-                                ? "text-muted-foreground"
-                                : googleProfileHealthScore >= 80
-                                  ? "text-success"
-                                  : googleProfileHealthScore >= 40
-                                    ? "text-warning-foreground"
-                                    : "text-destructive"
-                        }`}
-                    >
-                        {googleProfileHealthScore !== null ? `${googleProfileHealthScore}` : "-"}
-                        {googleProfileHealthScore !== null && (
-                            <span className="text-lg font-semibold text-muted-foreground">/100</span>
-                        )}
-                    </div>
+                    <ScoreGauge score={googleProfileHealthScore} label={dict.dashboard.listing_completeness} />
                     <p className="mt-1 text-xs text-muted-foreground">{dict.dashboard.listing_desc}</p>
                     <Link href="/settings/business-information" className="mt-3 inline-block">
                         <Button variant="outline" size="sm">

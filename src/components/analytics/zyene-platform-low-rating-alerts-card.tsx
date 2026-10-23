@@ -62,7 +62,7 @@ export function ZyenePlatformLowRatingAlertsCard({
                                                         className={cn(
                                                             "size-3",
                                                             i < stars
-                                                                ? "fill-chart-4 text-warning-foreground"
+                                                                ? "text-chart-4"
                                                                 : "text-muted-foreground/30"
                                                         )}
                                                     />

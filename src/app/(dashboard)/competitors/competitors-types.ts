@@ -1,7 +1,6 @@
 import type { Database } from "@/lib/db/supabase/database.types";
 import type { CompetitorRangeKey } from "@/lib/competitors/date-range";
 import type { CompetitorPlacesRowMeta } from "@/lib/competitors/places-snapshot-meta";
-import type { CompetitorMovementRow } from "@/lib/competitors/snapshot-movement";
 
 export type Competitor = Database["public"]["Tables"]["competitors"]["Row"];
 
@@ -84,13 +83,6 @@ export type CompetitorWatchBenchmarkRange = {
     marketAvgReviewGain: number | null;
 };
 
-export type CompetitorChartDataEntry = {
-    name: string;
-    fullName: string;
-    rating: number;
-    reviews: number;
-    isOwn: boolean;
-};
 
 export type CompetitorsListProps = {
     businessId: string;
@@ -114,29 +106,8 @@ export type CompetitorsListProps = {
     /** Stored listing aggregates for the active business (same basis as competitor totals from Places). */
     ownBusinessChart: {
         name: string;
+        website: string | null;
         averageRating: number | null;
         totalReviews: number | null;
     };
-};
-
-export type CompetitorsTableSectionProps = {
-    competitors: Competitor[];
-    activeBenchmarkRange: CompetitorWatchBenchmarkRange;
-    activeOwnBusinessInRange: {
-        avgRating: number | null;
-        reviewCount: number;
-    };
-    activePlacesMetaByCompetitorId: Record<string, CompetitorPlacesRowMeta>;
-    latestSnapshotByCompetitor: Map<string, CompetitorSnapshot>;
-    latestInsightByCompetitor: Map<string, CompetitorInsight>;
-    movementCards: CompetitorMovementRow[];
-    activeEventRows: CompetitorEvent[];
-    rangeLabel: string;
-    isSyncing: (competitor: Competitor) => boolean;
-    isDeleting: string | null;
-    onDeleteRequest: (id: string) => void;
-};
-
-export type CompetitorsChartsSectionProps = {
-    chartData: CompetitorChartDataEntry[];
 };

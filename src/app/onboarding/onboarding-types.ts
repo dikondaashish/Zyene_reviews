@@ -10,6 +10,8 @@ export interface OnboardingBusiness {
     name: string;
     city: string | null;
     category: string | null;
+    /** Support Email; customer replies to review requests go here. */
+    email?: string | null;
     address_line1?: string | null;
     state?: string | null;
     phone?: string | null;

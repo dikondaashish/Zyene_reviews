@@ -6,7 +6,7 @@ export function competitorAlertEmail(props: { businessName: string; title: strin
         preheader: `A competitor monitoring update for ${props.businessName}.`,
         eyebrow: "Competitor monitoring",
         bodyHtml: emailParagraph(`Update for ${props.businessName}`) + emailParagraph(props.summary)
-            + emailButton("Open competitor monitoring", props.dashboardUrl),
+            + emailButton("See your competitors", props.dashboardUrl),
         footerHtml: emailSettingsFooter(props.settingsUrl, "Manage competitor alert settings"),
     });
 }

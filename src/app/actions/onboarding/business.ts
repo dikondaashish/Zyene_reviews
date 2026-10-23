@@ -166,7 +166,8 @@ export async function updateBusinessCategory(
     const { error: updateError } = await supabase
       .from("businesses")
       .update({
-        category: data.category,
+        category: validationResult.data.category,
+        ...(validationResult.data.supportEmail ? { email: validationResult.data.supportEmail } : {}),
       })
       .eq("id", businessId);
 

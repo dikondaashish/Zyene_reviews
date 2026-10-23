@@ -18,7 +18,7 @@ export function QuestionsPageClient(props: QuestionsPageClientProps) {
 
     return (
         <div className="min-w-0 space-y-4 overflow-x-hidden">
-            <QuestionsPageClientFilterTabs filter={v.filter} onFilterChange={v.setFilter} />
+            <QuestionsPageClientFilterTabs filter={v.filter} onFilterChange={v.setFilter} totalCount={v.rows.length} unansweredCount={v.unansweredCount} />
 
             {v.filtered.length === 0 ? (
                 <QuestionsPageClientEmptyState />

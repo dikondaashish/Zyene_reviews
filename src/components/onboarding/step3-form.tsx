@@ -6,12 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Step3FormCategoryGrid } from "./step3-form-category-grid";
 import { Step3FormHeader } from "./step3-form-header";
 import { useStep3Form } from "./use-step3-form";
+import { Step3FormSupportEmail } from "./step3-form-support-email";
 
 interface Step3FormProps {
     businessId: string;
     businessName: string;
     city: string;
     initialCategory?: string;
+    /** Prefill for the reply address: the business's saved email, else the owner's sign-up email. */
+    defaultSupportEmail?: string;
     isGoogleConnected?: boolean;
     onNext: () => void;
     isLoading?: boolean;
@@ -20,6 +23,7 @@ interface Step3FormProps {
 export function Step3Form({
     businessId,
     initialCategory,
+    defaultSupportEmail = "",
     isGoogleConnected = false,
     onNext,
     isLoading: externalIsLoading = false,
@@ -29,6 +33,7 @@ export function Step3Form({
         initialCategory,
         onNext,
         externalIsLoading,
+        defaultSupportEmail,
     );
 
     return (
@@ -47,6 +52,12 @@ export function Step3Form({
                         {form.formState.errors.category.message}
                     </p>
                 )}
+
+                <Step3FormSupportEmail
+                    register={form.register}
+                    error={form.formState.errors.supportEmail?.message}
+                    disabled={isLoading}
+                />
 
                 <Button
                     type="submit"

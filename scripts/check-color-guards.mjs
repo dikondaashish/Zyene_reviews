@@ -12,6 +12,8 @@ const LITERAL_COLOR_FILES = new Set([
   "tests/unit/customer-portal-print-color-security.test.ts",
   // Verifies stored hex review-page backgrounds pass through the preview unchanged.
   "tests/unit/public-profile-editor-initial-preview.test.ts",
+  // Pins the owner-chosen brand orange and white button text to their exact values.
+  "tests/unit/orange-button-text.test.ts",
   // Standalone email documents and their preview gallery cannot resolve app CSS tokens.
   "src/lib/email/email-layout.ts", "src/lib/email/review-request-layout.ts",
   "src/lib/email/email-brand.ts",

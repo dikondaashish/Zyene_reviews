@@ -54,6 +54,7 @@ export default async function ReviewsPage(props: {
                 initialPage={data.initialPage}
                 initialPublicCount={data.initialPublicCount}
                 initialPrivateCount={data.initialPrivateCount}
+                initialStatusCounts={data.initialStatusCounts}
                 initialType={data.initialType}
                 initialFilters={data.initialFilters}
             />

@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import type { Customer } from "@/components/customers/customer-table-types";
 
 export function CustomerTablePagination({ table }: { table: Table<Customer> }) {
+    // `table` keeps one identity while its rows change; compiler memoization
+    // keyed on it would freeze these counts after a filter or page change.
+    "use no memo";
     const { pageIndex, pageSize } = table.getState().pagination;
     const total = table.getFilteredRowModel().rows.length;
     const selected = table.getFilteredSelectedRowModel().rows.length;

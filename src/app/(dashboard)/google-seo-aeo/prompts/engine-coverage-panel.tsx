@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import type { EngineCoverage } from "./load-prompts-page-data";
+import { EngineLogo } from "@/components/google-seo-aeo/engine-logo";
 
 /**
  * F1.10 coverage panel.
@@ -28,7 +29,7 @@ export function EngineCoveragePanel({ engines }: { engines: EngineCoverage[] }) 
                 return (
                     <li key={engine.id} className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                            <p className="text-sm font-medium">{engine.label}</p>
+                            <p className="flex items-center gap-2 text-sm font-medium"><EngineLogo engineId={engine.id} />{engine.label}</p>
                             <p className="text-xs text-muted-foreground">{engine.reason}</p>
                         </div>
                         <Badge variant={label.variant} className="shrink-0 text-xs">

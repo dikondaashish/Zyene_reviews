@@ -102,7 +102,7 @@ Campaign page → Gradual import.
 
 ## 6. Invoice-copy email enrollment
 
-Automations page → "Enroll customers from invoice emails".
+Automations page → "Sign up customers from your invoice emails".
 
 - **Address:** each business gets `<business-slug>-<4-char code>@<INBOUND_EMAIL_DOMAIN>` (e.g. `willow-hair-studio-k7m2@in.zyenereviews.com`) to BCC on invoices. The name makes it recognisable; the random code keeps it unguessable, because invoicing tools send from addresses shared by all their users. Older `reviews-<hex token>@…` addresses still work, and `INBOUND_EMAIL_LEGACY_DOMAINS` keeps a previous receiving domain working after a domain move (`src/lib/enrollment/inbound-address.ts`).
 - **Webhook security:** `/api/webhooks/resend-inbound` verifies the Svix signature and processes each provider event once.

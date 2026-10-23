@@ -32,7 +32,7 @@ export function AiRepliesHeroVisual() {
           </div>
           <div className="vz-air-actions">
             <span className="mk-button mk-button-ghost">Cancel</span>
-            <span className="mk-button">Post Reply</span>
+            <span className="mk-button">Post reply</span>
           </div>
         </div>
       </div>

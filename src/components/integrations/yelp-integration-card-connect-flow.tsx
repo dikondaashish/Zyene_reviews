@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { YelpBusinessResult } from "./yelp-card-types";
 import { YelpCardIcon } from "./yelp-card-icon";
+import { BrandLogoTile } from "@/components/integrations/brand-logo-tile";
 
 interface YelpIntegrationCardConnectFlowProps {
     showConnect: boolean;
@@ -39,13 +40,11 @@ export function YelpIntegrationCardConnectFlow({
     return (
         <Card className="border">
             <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <YelpCardIcon className="text-destructive size-6" />
-                        <div>
-                            <h3 className="ui-card-title">Yelp</h3>
-                            <p className="text-xs text-muted-foreground">Monitor Yelp reviews; publish replies on Yelp</p>
-                        </div>
+                <div className="flex items-center gap-3">
+                    <BrandLogoTile domain="yelp.com" name="Yelp" />
+                    <div>
+                        <h3 className="ui-card-title">Yelp</h3>
+                        <p className="text-xs text-muted-foreground">Monitor Yelp reviews; publish replies on Yelp</p>
                     </div>
                 </div>
             </CardHeader>
@@ -56,7 +55,7 @@ export function YelpIntegrationCardConnectFlow({
                             Connect your Yelp business to sync and monitor reviews.
                         </p>
                         <Button className="h-9 text-sm" variant="destructive" onClick={() => onShowConnect(true)}>
-                            <YelpCardIcon className="mr-2 text-destructive-foreground size-4" />
+                            <YelpCardIcon className="mr-2 size-4 rounded-sm bg-white p-px" />
                             Connect Yelp
                         </Button>
                     </div>

@@ -69,6 +69,7 @@ export const processCampaignContact = inngest.createFunction(
             const result = await sendReviewRequest(admin, {
                 requestId: requestRecord.id, businessId: job.businessId, businessSlug: liveCampaign.businesses.slug,
                 businessName: liveCampaign.businesses.name, senderName: liveCampaign.businesses.sender_name,
+                businessEmail: liveCampaign.businesses.email,
                 customerName: job.contact.name || "Customer", contactMethods: canSend.channels,
                 customerEmail: job.contact.email, customerPhone: job.contact.phone,
                 smsTemplate: liveCampaign.sms_template || undefined, emailTemplate: liveCampaign.email_template || undefined,

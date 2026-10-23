@@ -1,21 +1,25 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { ShareOfVoiceResult } from "@/services/aeo/reporting/share-of-voice";
 import { SeoSection } from "./seo-section";
+
+/** Headline an owner can repeat in a meeting: where you place, and who leads if not you. */
+function placementSentence(ranking: { competitorId: string | null; label: string; mentions: number }[]): string {
+    const place = ranking.findIndex((brand) => brand.competitorId === null) + 1;
+    const own = ranking[place - 1];
+    if (place > 1 && own && ranking[0].mentions === own.mentions) return `You're tied for most mentions with ${ranking[0].label}.`;
+    if (place === 1 && ranking.length === 1) return "You are the only tracked business AI assistants named.";
+    if (place === 1) return `You are mentioned most often, ahead of ${ranking.length - 1} competitor${ranking.length === 2 ? "" : "s"}.`;
+    if (place === 0) return `You were not named. ${ranking[0]?.label ?? "A competitor"} leads.`;
+    return `You place #${place} of ${ranking.length}. ${ranking[0]?.label} is mentioned most often.`;
+}
 
 /** F3.2: share of tracked-brand mentions that named us, vs. each configured competitor. */
 export function ShareOfVoiceSection({ result }: { result: ShareOfVoiceResult }) {
     return (
         <SeoSection
             id="share-of-voice-title"
-            title="Share of voice"
-            description="When AI answers mention you or a tracked competitor, how often it is you. Last 30 days."
-            actions={
-                <Button asChild size="sm" variant="ghost">
-                    <Link href="/competitors">Manage competitors</Link>
-                </Button>
-            }
+            title="You vs. competitors in AI answers"
+            description="Out of every AI answer that named you or a competitor you track, the share that named you. Last 30 days."
             bodyClassName="p-5 sm:p-6"
         >
             {result.suppressed && result.reason === "insufficient_competitors" && (
@@ -38,6 +42,7 @@ export function ShareOfVoiceSection({ result }: { result: ShareOfVoiceResult }) 
             )}
             {!result.suppressed && (
                 <div className="max-w-3xl space-y-4">
+                    <p className="text-sm font-medium text-foreground">{placementSentence(result.ranking)}</p>
                     <ul className="space-y-4">
                         {result.ranking.map((brand) => {
                             const isYou = brand.competitorId === null;

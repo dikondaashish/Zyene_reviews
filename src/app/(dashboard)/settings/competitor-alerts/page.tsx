@@ -40,9 +40,9 @@ export default async function CompetitorAlertsSettingsPage() {
       <div>
         <h1 className="ui-page-title">Competitor alerts</h1>
         <p className="text-sm text-muted-foreground max-w-xl">
-          When the daily competitor job detects a rating jump or review spike
-          above these thresholds, we record an alert and optionally email your
-          team. Tune values for your market (noisy vs quiet competitors).
+          When the daily check finds a competitor&apos;s rating rising or falling,
+          or a burst of new reviews, past these amounts, we show an alert on the
+          Competitors page and can email your team. Raise them if you get too many.
         </p>
       </div>
       <CompetitorAlertsForm

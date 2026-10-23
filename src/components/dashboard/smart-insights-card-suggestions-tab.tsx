@@ -1,5 +1,7 @@
 import { useId } from "react";
 import { ChevronDown, Lightbulb } from "lucide-react";
+import { SuggestionSignals } from "@/components/dashboard/smart-insights-suggestion-signals";
+import { isActNow } from "@/lib/dashboard/dashboard-visuals";
 import type { SmartInsightsSuggestion } from "@/components/dashboard/smart-insights-card-types";
 
 interface SmartInsightsCardSuggestionsTabProps {
@@ -45,28 +47,12 @@ export function SmartInsightsCardSuggestionsTab({
                                 <span className="shrink-0 pt-0.5">
                                     <span className="rounded-lg bg-primary/10 flex items-center justify-center size-8">
                                         <Lightbulb
-                                            className={`${ (suggestion.urgency || "").toLowerCase().includes("now") ? "text-primary" : "text-foreground" } size-4`}
+                                            className={`${ isActNow(suggestion.urgency || "") ? "text-primary" : "text-foreground" } size-4`}
                                         />
                                     </span>
                                 </span>
                                 <span className="flex-1 space-y-2">
-                                    <span className="flex flex-wrap items-center gap-2">
-                                        <span
-                                            className={`px-2 py-0.5 rounded text-[11px] font-bold tracking-tight ${
-                                                (suggestion.urgency || "").toLowerCase().includes("now")
-                                                    ? "bg-destructive/10 text-destructive"
-                                                    : "bg-muted text-foreground"
-                                            }`}
-                                        >
-                                            {suggestion.urgency}
-                                        </span>
-                                        <span className="px-2 py-0.5 rounded text-[11px] font-bold tracking-tight bg-success/10 text-success">
-                                            {suggestion.impact}
-                                        </span>
-                                        <span className="px-2 py-0.5 rounded text-[11px] font-bold tracking-tight bg-muted text-muted-foreground">
-                                            Effort: {suggestion.effort}
-                                        </span>
-                                    </span>
+                                    <SuggestionSignals suggestion={suggestion} />
                                     <span className="flex items-center justify-between">
                                         <span className="text-[15px] font-bold text-foreground">{suggestion.title}</span>
                                         <ChevronDown

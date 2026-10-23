@@ -20,6 +20,11 @@ export async function POST(req: Request) {
         return apiError("Unauthorized", { status: 401, details: requestId });
     }
 
+    if (!process.env.YELP_API_KEY) {
+        logger.error("[Yelp Connect] YELP_API_KEY is not configured");
+        return apiError("Yelp integration is temporarily unavailable.", { status: 503, details: requestId });
+    }
+
     try {
         const parsed = connectSchema.safeParse(await req.json());
         if (!parsed.success) {

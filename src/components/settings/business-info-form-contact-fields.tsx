@@ -4,6 +4,7 @@ import type { UseFormReturn } from "react-hook-form";
 
 import {
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -37,6 +38,7 @@ export function BusinessInfoFormContactFields({ form }: { form: UseFormReturn<Bu
                         <FormControl>
                             <Input placeholder="support@example.com" {...field} />
                         </FormControl>
+                        <FormDescription>When customers reply to a review request email, the reply comes here.</FormDescription>
                         <FormMessage />
                     </FormItem>
                 )}

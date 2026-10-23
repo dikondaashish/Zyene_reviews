@@ -14,7 +14,7 @@ type Admin = ReturnType<typeof createAdminClient>;
 export async function loadAuthorizedCampaignJob(admin: Admin, job: CampaignJobData) {
     if (!(await userCanAccessBusiness(admin, job.userId, job.businessId, true))) return null;
     const { data, error } = await admin.from("campaigns")
-        .select("*, businesses(name, slug, sender_name, organization_id, timezone, review_request_frequency_cap_days)")
+        .select("*, businesses(name, slug, sender_name, email, organization_id, timezone, review_request_frequency_cap_days)")
         .eq("id", job.campaignId).eq("business_id", job.businessId).single();
     if (error || !data?.businesses || !["active", "processing"].includes(data.status)) return null;
     return data;

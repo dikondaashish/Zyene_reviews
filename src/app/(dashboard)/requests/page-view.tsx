@@ -26,7 +26,7 @@ export default async function RequestsPage({
 
     if (data.kind === "error") {
         return (
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-4 sm:p-6 sm:pt-5 lg:p-8 lg:pt-8">
+            <div className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-4 sm:p-6 sm:pt-5 lg:p-8 lg:pt-8">
                 <DashboardFetchError
                     message="We could not load review requests. Check your connection and try again."
                     retryHref="/requests"
@@ -36,7 +36,7 @@ export default async function RequestsPage({
     }
 
     return (
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-4 sm:p-6 sm:pt-5 lg:p-8 lg:pt-8">
+        <div className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-4 sm:p-6 sm:pt-5 lg:p-8 lg:pt-8">
             <RequestsPageHeader
                 businessId={data.business.id}
                 businessSlug={data.business.slug || undefined}

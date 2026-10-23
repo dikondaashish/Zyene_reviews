@@ -55,7 +55,7 @@ it("only recommends pages on the business website", () => {
 });
 it("uses the active business and preserves replacement characters in its name", () => {
     const preview = renderCampaignPreview("Hi {customer_name}: {business_name} {review_link}", { businessName: "A $& B", slug: "real-business", timezone: "America/New_York" });
-    expect(preview).toContain("Sample customer: A $& B");
+    expect(preview).toContain("Alex Sample: A $& B");
     expect(preview).toContain("/real-business");
     expect(preview).not.toContain("Sunrise");
 });

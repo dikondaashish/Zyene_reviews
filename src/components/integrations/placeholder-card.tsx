@@ -9,18 +9,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Bell, Clock } from "lucide-react";
 import { toast } from "sonner";
+import { BrandLogoTile } from "@/components/integrations/brand-logo-tile";
 
 interface PlaceholderCardProps {
     name: string;
     description: string;
-    icon: React.ReactNode;
+    /** Brand domain for the logo tile. */
+    logoDomain: string;
     accentColor?: string;
 }
 
 export function PlaceholderCard({
     name,
     description,
-    icon,
+    logoDomain,
     accentColor = "bg-muted-foreground",
 }: PlaceholderCardProps) {
     const handleNotify = () => {
@@ -40,9 +42,7 @@ export function PlaceholderCard({
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center rounded-xl bg-muted/80 border border-border size-10">
-                            {icon}
-                        </div>
+                        <BrandLogoTile domain={logoDomain} name={name} />
                         <div>
                             <p className="font-semibold text-sm">{name}</p>
                             <p className="text-xs text-muted-foreground leading-relaxed">

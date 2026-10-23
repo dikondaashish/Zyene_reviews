@@ -32,14 +32,14 @@ export function CompetitorsTrackedDesktopTable({
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="min-w-[140px]">Competitor Name</TableHead>
-                        <TableHead className="min-w-[120px]">Primary category</TableHead>
-                        <TableHead>Avg Rating</TableHead>
-                        <TableHead>Total Reviews</TableHead>
+                        <TableHead className="min-w-[140px]">Business</TableHead>
+                        <TableHead className="min-w-[120px]">Type</TableHead>
+                        <TableHead>Rating</TableHead>
+                        <TableHead>Reviews</TableHead>
                         <TableHead className="min-w-[90px]">Website</TableHead>
-                        <TableHead className="min-w-[90px]">Maps</TableHead>
-                        <TableHead className="min-w-[120px]">Last Updated</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                        <TableHead className="min-w-[90px]">Google listing</TableHead>
+                        <TableHead className="min-w-[120px]">Updated</TableHead>
+                        <TableHead className="text-right"><span className="sr-only">Remove</span></TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>

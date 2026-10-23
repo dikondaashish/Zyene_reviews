@@ -49,6 +49,7 @@ export function ReviewsPageClient(props: ReviewsPageClientProps) {
                     reviews={l.reviews as ReviewManagementItem[]}
                     isImportingGoogleReviews={l.isImportingGoogleReviews}
                     publicCount={l.publicCount}
+                    statusCounts={l.statusCounts}
                     resultCount={l.count}
                     onFilterChange={l.handleFilterChange}
                     onRefresh={l.refresh}

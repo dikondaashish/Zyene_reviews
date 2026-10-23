@@ -4,6 +4,7 @@ import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { isGoogleBusinessConnected } from "@/lib/google/is-google-connected";
 import { resolveGoogleMapsListingUrl } from "@/lib/google/maps-listing-url";
 import { planAllowsAiReviewFeatures } from "@/services/stripe/plans";
+import { countReviewsByStatus, type ReviewStatusCounts } from "@/lib/reviews/status-counts";
 import type { ReviewManagementItem } from "@/types/components";
 import type { PrivateFeedback } from "@/components/reviews/private-feedback-card";
 import { loadReviewsPageList } from "./reviews-page-list-load";
@@ -40,6 +41,7 @@ export type ReviewsPageLoadResult =
           initialPage: number;
           initialPublicCount: number;
           initialPrivateCount: number;
+          initialStatusCounts: ReviewStatusCounts | null;
           initialType: string;
           initialFilters: { status: string; rating: string; sort: string; q?: string };
       };
@@ -68,7 +70,7 @@ export async function loadReviewsPageData(
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    const [{ count: publicCount, error: publicCountErr }, { count: privateCount, error: privateCountErr }] =
+    const [{ count: publicCount, error: publicCountErr }, { count: privateCount, error: privateCountErr }, statusCounts] =
         await Promise.all([
             supabase
                 .from("reviews")
@@ -79,6 +81,7 @@ export async function loadReviewsPageData(
                 .from("private_feedback")
                 .select("*", { count: "exact", head: true })
                 .eq("business_id", businessId),
+            countReviewsByStatus(supabase, businessId),
         ]);
 
     if (publicCountErr || privateCountErr) {
@@ -104,6 +107,7 @@ export async function loadReviewsPageData(
                 typeof business?.google_review_url === "string" ? business.google_review_url : null,
             platformExternalUrl:
                 typeof googlePlatform?.external_url === "string" ? googlePlatform.external_url : null,
+            businessName: typeof business?.name === "string" ? business.name : null,
         }),
         isDemo,
         isGoogleConnected,
@@ -133,6 +137,7 @@ export async function loadReviewsPageData(
         initialPage: page,
         initialPublicCount: publicCount || 0,
         initialPrivateCount: privateCount || 0,
+        initialStatusCounts: statusCounts,
         initialType: searchParams.type || "public",
         initialFilters: {
             status: searchParams.status || "needs_response",

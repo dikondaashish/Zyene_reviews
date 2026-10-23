@@ -17,8 +17,8 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { CheckCircle2, ExternalLink, RefreshCw, Star, MessageSquare, Clock, Loader2 } from "lucide-react";
-import { FacebookBrandIcon } from "@/components/integrations/facebook-brand-icon";
 import type { IntegrationPlatformSummary } from "@/types/components";
+import { BrandLogoTile } from "@/components/integrations/brand-logo-tile";
 
 export function FacebookIntegrationCardConnected({
     platform,
@@ -46,8 +46,8 @@ export function FacebookIntegrationCardConnected({
             <Card className="border-primary/20 bg-primary/10 dark:border-primary/30 dark:bg-primary/15">
                 <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <FacebookBrandIcon className="shrink-0 size-5" aria-hidden />
+                        <div className="flex items-center gap-3">
+                            <BrandLogoTile domain="facebook.com" name="Facebook" />
                             <CardTitle className="ui-card-title">Facebook</CardTitle>
                         </div>
                         <div className="flex items-center gap-1.5 text-xs font-medium text-success">
@@ -61,7 +61,7 @@ export function FacebookIntegrationCardConnected({
                     <div className="grid grid-cols-3 gap-2 text-center sm:gap-3">
                         <div className="rounded-lg bg-card p-2 border border-border">
                             <div className="flex items-center justify-center gap-1 text-sm font-semibold">
-                                <Star className="text-warning-foreground size-3.5" />
+                                <Star className="text-warning size-3.5" />
                                 {fbRatingDisplay}
                             </div>
                             <div className="text-[10px] text-muted-foreground">Rating</div>

@@ -18,21 +18,31 @@ export const INTEGRATION_BRAND_CHIPS: IntegrationBrandChip[] = [
     { name: "REST API", color: "var(--brand-api-neutral)", letter: "</>" },
 ];
 
-/** Crisp vector marks served from /public/integrations/logos, keyed by root domain. */
+/**
+ * Sharp logo files served from /public/integrations/logos, keyed by root domain.
+ * SVGs are the brands' own vector marks (Simple Icons, or the brand's site);
+ * the two PNGs are 120px+ icons for brands with no public vector mark.
+ */
 const LOCAL_BRAND_LOGOS: Record<string, string> = {
-    "google.com": "google",
-    "facebook.com": "facebook",
-    "yelp.com": "yelp",
-    "zapier.com": "zapier",
-    "squareup.com": "square",
-    "square.com": "square",
-    "clover.com": "clover",
-    "toasttab.com": "toast",
+    "google.com": "google.svg",
+    "facebook.com": "facebook.svg",
+    "yelp.com": "yelp.svg",
+    "tripadvisor.com": "tripadvisor.svg",
+    "zapier.com": "zapier.svg",
+    "squareup.com": "square.svg",
+    "square.com": "square.svg",
+    "clover.com": "clover.svg",
+    "toasttab.com": "toast.svg",
+    "perplexity.ai": "perplexity.svg",
+    "gemini.google.com": "gemini.svg",
+    "claude.ai": "claude.svg",
+    "chatgpt.com": "chatgpt.png",
+    "copilot.microsoft.com": "copilot.png",
 };
 
-/** Logo URL for a brand domain: a local SVG when we ship one, else Google's favicon service. */
+/** Logo URL for a brand domain: our local file when we ship one, else Google's favicon service. */
 export function getBrandLogoUrl(domain: string): string {
     const local = LOCAL_BRAND_LOGOS[domain];
-    if (local) return `/integrations/logos/${local}.svg`;
+    if (local) return `/integrations/logos/${local}`;
     return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=256`;
 }

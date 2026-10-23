@@ -10,40 +10,90 @@ import { assertAeoQueriesSucceeded } from "@/services/aeo/query-results";
 type Admin = SupabaseClient<Database>;
 type DateRange = { start: string; end: string };
 
-export async function buildAeoReportModel(db: Admin, businessId: string, range: DateRange): Promise<AeoReportModel> {
+type ReportBranding = {
+    name: string; logo_url: string | null; primary_color: string; hide_powered_by: boolean;
+    aeo_sender_domain: string | null; aeo_sender_domain_status: string;
+};
+type PromptAggregate = { prompt: string; named: number; samples: number };
+
+async function loadReportBranding(db: Admin, organizationId: string): Promise<ReportBranding> {
+    const organization = await db.from("organizations" as never)
+        .select("name, logo_url, primary_color, hide_powered_by, aeo_sender_domain, aeo_sender_domain_status" as never)
+        .eq("id" as never, organizationId).single() as unknown as {
+            data: ReportBranding | null; error: { message: string } | null;
+        };
+    if (organization.error || !organization.data) throw new Error("Unable to load report branding");
+    return organization.data;
+}
+
+async function fetchLogoDataUrl(logoUrl: string | null): Promise<string | null> {
+    if (!logoUrl) return null;
+    const safety = await checkOriginIsPublic(logoUrl);
+    if (!safety.safe) return null;
+    try {
+        const response = await fetchPublicHttpBytes(logoUrl, { redirect: "error", timeoutMs: 8_000, maxBytes: 2_000_001 });
+        if (!response.ok) throw new Error(`Logo returned HTTP ${response.status}`);
+        const mime = response.contentType?.split(";")[0] ?? "";
+        const bytes = Buffer.from(response.bytes);
+        if (!/^image\/(png|jpe?g)$/.test(mime) || bytes.length > 2_000_000) return null;
+        return `data:${mime};base64,${bytes.toString("base64")}`;
+    } catch {
+        // Report still carries the agency name and color.
+        return null;
+    }
+}
+
+export function summarizePromptSamples(
+    samples: { id: string; prompt_id: string | null }[],
+    ownNamed: Set<string>,
+    promptNames: Map<string, string>,
+): PromptAggregate[] {
+    const aggregates = new Map<string, PromptAggregate>();
+    for (const sample of samples) {
+        if (!sample.prompt_id) continue;
+        const row = aggregates.get(sample.prompt_id) ?? { prompt: promptNames.get(sample.prompt_id) ?? "Deleted prompt", named: 0, samples: 0 };
+        row.samples += 1;
+        if (ownNamed.has(sample.id)) row.named += 1;
+        aggregates.set(sample.prompt_id, row);
+    }
+    return [...aggregates.values()].sort((a, b) => b.samples - a.samples || b.named - a.named).slice(0, 20);
+}
+
+async function loadPromptNames(db: Admin, promptIds: string[]) {
+    if (!promptIds.length) return new Map<string, string>();
+    const prompts = await db.from("aeo_prompts").select("id, prompt_text").in("id", promptIds);
+    if (prompts.error) throw new Error(`Unable to load report prompts: ${prompts.error.message}`);
+    return new Map((prompts.data ?? []).map((row) => [row.id, row.prompt_text]));
+}
+
+async function loadReportInputs(db: Admin, businessId: string, range: DateRange) {
+    const from = `${range.start}T00:00:00.000Z`;
+    const to = `${range.end}T23:59:59.999Z`;
     const [business, sampleResult, citations, findings] = await Promise.all([
         db.from("businesses").select("name, organization_id").eq("id", businessId).single(),
         db.from("aeo_samples").select("id, prompt_id, status, is_estimated").eq("business_id", businessId)
-            .gte("sampled_at", `${range.start}T00:00:00.000Z`).lte("sampled_at", `${range.end}T23:59:59.999Z`),
+            .gte("sampled_at", from).lte("sampled_at", to),
         db.from("aeo_citations").select("classification").eq("business_id", businessId)
-            .gte("created_at", `${range.start}T00:00:00.000Z`).lte("created_at", `${range.end}T23:59:59.999Z`),
+            .gte("created_at", from).lte("created_at", to),
         db.from("crawl_findings").select("id, crawl_runs!inner(business_id, started_at)")
-            .eq("crawl_runs.business_id", businessId).gte("crawl_runs.started_at", `${range.start}T00:00:00.000Z`)
-            .lte("crawl_runs.started_at", `${range.end}T23:59:59.999Z`),
+            .eq("crawl_runs.business_id", businessId).gte("crawl_runs.started_at", from)
+            .lte("crawl_runs.started_at", to),
     ]);
     assertAeoQueriesSucceeded("Unable to load AEO report inputs", business, sampleResult, citations, findings);
     if (!business.data) throw new Error("Unable to load AEO report business");
-    const organization = await db.from("organizations" as never)
-        .select("name, logo_url, primary_color, hide_powered_by, aeo_sender_domain, aeo_sender_domain_status" as never)
-        .eq("id" as never, business.data.organization_id).single() as unknown as { data: {
-            name: string; logo_url: string | null; primary_color: string; hide_powered_by: boolean;
-            aeo_sender_domain: string | null; aeo_sender_domain_status: string;
-        } | null; error: { message: string } | null };
-    if (organization.error || !organization.data) throw new Error("Unable to load report branding");
-    let brandLogoDataUrl: string | null = null;
-    if (organization.data.logo_url) {
-        const safety = await checkOriginIsPublic(organization.data.logo_url);
-        if (safety.safe) try {
-            const response = await fetchPublicHttpBytes(organization.data.logo_url, { redirect: "error", timeoutMs: 8_000, maxBytes: 2_000_001 });
-            if (!response.ok) throw new Error(`Logo returned HTTP ${response.status}`);
-            const mime = response.contentType?.split(";")[0] ?? "";
-            const bytes = Buffer.from(response.bytes);
-            if (/^image\/(png|jpe?g)$/.test(mime) && bytes.length <= 2_000_000) {
-                brandLogoDataUrl = `data:${mime};base64,${bytes.toString("base64")}`;
-            }
-        } catch { /* Report still carries the agency name and color. */ }
-    }
-    const real = (sampleResult.data ?? []).filter((row) => !row.is_estimated);
+    return {
+        business: business.data,
+        samples: sampleResult.data ?? [],
+        citations: citations.data ?? [],
+        findingCount: findings.data?.length ?? 0,
+    };
+}
+
+export async function buildAeoReportModel(db: Admin, businessId: string, range: DateRange): Promise<AeoReportModel> {
+    const { business, samples, citations, findingCount } = await loadReportInputs(db, businessId, range);
+    const branding = await loadReportBranding(db, business.organization_id);
+    const brandLogoDataUrl = await fetchLogoDataUrl(branding.logo_url);
+    const real = samples.filter((row) => !row.is_estimated);
     const successful = real.filter((row) => row.status === "ok");
     const ids = successful.map((row) => row.id);
     const mentions = ids.length ? await db.from("aeo_brand_mentions").select("sample_id, brand_kind, cited_only")
@@ -51,36 +101,26 @@ export async function buildAeoReportModel(db: Admin, businessId: string, range: 
     if (mentions.error) throw new Error("Unable to load report mentions");
     const ownNamed = new Set((mentions.data ?? []).filter((row) => row.brand_kind === "own" && !row.cited_only).map((row) => row.sample_id));
     const promptIds = [...new Set(successful.map((row) => row.prompt_id).filter((id): id is string => Boolean(id)))];
-    const prompts = promptIds.length ? await db.from("aeo_prompts").select("id, prompt_text").in("id", promptIds) : { data: [], error: null };
-    if (prompts.error) throw new Error(`Unable to load report prompts: ${prompts.error.message}`);
-    const promptNames = new Map((prompts.data ?? []).map((row) => [row.id, row.prompt_text]));
-    const aggregates = new Map<string, { prompt: string; named: number; samples: number }>();
-    for (const sample of successful) {
-        if (!sample.prompt_id) continue;
-        const row = aggregates.get(sample.prompt_id) ?? { prompt: promptNames.get(sample.prompt_id) ?? "Deleted prompt", named: 0, samples: 0 };
-        row.samples += 1;
-        if (ownNamed.has(sample.id)) row.named += 1;
-        aggregates.set(sample.prompt_id, row);
-    }
+    const promptNames = await loadPromptNames(db, promptIds);
     return {
-        brandName: organization.data.name,
-        brandColor: organization.data.primary_color,
-        brandLogoUrl: organization.data.logo_url,
+        brandName: branding.name,
+        brandColor: branding.primary_color,
+        brandLogoUrl: branding.logo_url,
         brandLogoDataUrl,
-        hidePoweredBy: organization.data.hide_powered_by,
-        senderDomain: organization.data.aeo_sender_domain,
-        senderDomainVerified: organization.data.aeo_sender_domain_status === "verified",
-        businessName: business.data.name ?? "Business",
+        hidePoweredBy: branding.hide_powered_by,
+        senderDomain: branding.aeo_sender_domain,
+        senderDomainVerified: branding.aeo_sender_domain_status === "verified",
+        businessName: business.name ?? "Business",
         periodStart: range.start,
         periodEnd: range.end,
         visibilityPercent: successful.length ? (ownNamed.size / successful.length) * 100 : null,
         successfulSamples: successful.length,
         totalSamples: real.length,
-        citations: citations.data?.length ?? 0,
-        ownCitations: citations.data?.filter((row) => row.classification === "own").length ?? 0,
+        citations: citations.length,
+        ownCitations: citations.filter((row) => row.classification === "own").length,
         competitorMentions: mentions.data?.filter((row) => row.brand_kind === "competitor").length ?? 0,
-        technicalFindings: findings.data?.length ?? 0,
-        topPrompts: [...aggregates.values()].sort((a, b) => b.samples - a.samples || b.named - a.named).slice(0, 20),
+        technicalFindings: findingCount,
+        topPrompts: summarizePromptSamples(successful, ownNamed, promptNames),
     };
 }
 

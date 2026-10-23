@@ -1,6 +1,13 @@
 import { renderCampaignPreview, type CampaignPreviewContext } from "@/lib/campaigns/preview";
 import { DELAY_OPTIONS } from "./new-campaign-constants";
 import type { CampaignForm } from "./new-campaign-form-types";
+import { CampaignReplyEmailNote } from "./campaign-reply-email-note";
+
+const TRIGGER_LABEL: Record<CampaignForm["trigger_type"], string> = {
+    manual_batch: "When I add customers",
+    scheduled: "On a schedule",
+    pos_payment: "After each payment",
+};
 
 interface NewCampaignReviewStepProps {
     context: CampaignPreviewContext;
@@ -12,50 +19,52 @@ export function NewCampaignReviewStep({ form, context, customerCount = 0 }: NewC
     return (
         <div className="space-y-6">
             <div>
-                <h2 className="ui-section-title mb-1">Review campaign</h2>
+                <h2 className="ui-section-title mb-1">Check and start</h2>
                 <p className="text-sm text-muted-foreground">
-                    Preview for {context.businessName}, using a sample customer. Business timezone: {context.timezone}. Message length and delivery eligibility vary by recipient; usage counts against your plan allowances.
+                    This is what a customer of {context.businessName} will get, shown with a sample name and link. Times follow your business timezone ({context.timezone}). Each message counts toward your plan.
                 </p>
             </div>
 
             <div className="space-y-4">
                 <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
-                    <p className="font-semibold">{customerCount ? `${customerCount} selected customers` : "No recipients added yet"}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{customerCount ? "Queueing starts this campaign for eligible contacts. Opted-out customers and contacts without the selected channel are skipped. Saving the campaign only does not save or send to this selection." : "Create this campaign, then add contacts from its details page to start sending."}</p>
+                    <p className="font-semibold">{customerCount ? `${customerCount} customer${customerCount === 1 ? "" : "s"} will be asked` : "No customers added yet"}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{customerCount ? "Starting the campaign sends to everyone who can be reached. People who opted out, or have no phone or email for this channel, are skipped. Saving without starting sends nothing and does not keep this selection." : "Save the campaign, then add customers from its page to start asking."}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <div className="rounded-lg border p-4">
-                        <p className="text-xs text-muted-foreground mb-1">Campaign Name</p>
+                        <p className="text-xs text-muted-foreground mb-1">Campaign name</p>
                         <p className="font-semibold">{form.name}</p>
                     </div>
                     <div className="rounded-lg border p-4">
-                        <p className="text-xs text-muted-foreground mb-1">Channel</p>
-                        <p className="font-semibold capitalize">{form.channel === "both" ? "SMS + Email" : form.channel.toUpperCase()}</p>
+                        <p className="text-xs text-muted-foreground mb-1">Send by</p>
+                        <p className="font-semibold">{form.channel === "both" ? "Text and email" : form.channel === "sms" ? "Text message" : "Email"}</p>
                     </div>
                     <div className="rounded-lg border p-4">
-                        <p className="text-xs text-muted-foreground mb-1">Trigger</p>
-                        <p className="font-semibold capitalize">{form.trigger_type.replace("_", " ")}</p>
+                        <p className="text-xs text-muted-foreground mb-1">Customers get it</p>
+                        <p className="font-semibold">{TRIGGER_LABEL[form.trigger_type]}</p>
                     </div>
                     <div className="rounded-lg border p-4">
-                        <p className="text-xs text-muted-foreground mb-1">Send Delay</p>
+                        <p className="text-xs text-muted-foreground mb-1">First message</p>
                         <p className="font-semibold">
-                            {DELAY_OPTIONS.find((d) => d.value === form.delay_minutes)?.label || "Immediately"}
+                            {DELAY_OPTIONS.find((d) => d.value === form.delay_minutes)?.label || "Right away"}
                         </p>
                     </div>
                 </div>
 
                 {(form.channel === "sms" || form.channel === "both") && (
                     <div className="rounded-lg border p-4">
-                        <p className="text-xs text-muted-foreground mb-2">SMS Template</p>
+                        <p className="text-xs text-muted-foreground mb-2">Text message</p>
                         <p className="text-sm whitespace-pre-wrap font-mono bg-muted/50 rounded p-3">{renderCampaignPreview(form.sms_template, context)}</p>
                     </div>
                 )}
 
+                {(form.channel === "email" || form.channel === "both") && <CampaignReplyEmailNote replyEmail={context.replyEmail} />}
+
                 {(form.channel === "email" || form.channel === "both") && (
                     <div className="rounded-lg border p-4">
-                        <p className="text-xs text-muted-foreground mb-1">Email Subject</p>
+                        <p className="text-xs text-muted-foreground mb-1">Email subject</p>
                         <p className="text-sm font-semibold mb-2">{renderCampaignPreview(form.email_subject, context)}</p>
-                        <p className="text-xs text-muted-foreground mb-2">Email Body</p>
+                        <p className="text-xs text-muted-foreground mb-2">Email message</p>
                         <div className="text-sm bg-muted/50 rounded p-3 font-mono whitespace-pre-wrap">{renderCampaignPreview(form.email_template, context)}</div>
                     </div>
                 )}
@@ -64,7 +73,7 @@ export function NewCampaignReviewStep({ form, context, customerCount = 0 }: NewC
                     <div className="rounded-lg border border-primary/20 p-4">
                         <p className="text-xs text-muted-foreground mb-1">Reminders</p>
                         <p className="text-sm">
-                            Up to 2 reminders, {Math.round(form.follow_up_delay_hours / 24)} day(s) apart.{" "}
+                            Up to 2 reminders, {Math.round(form.follow_up_delay_hours / 24)} {Math.round(form.follow_up_delay_hours / 24) === 1 ? "day" : "days"} apart.{" "}
                             {form.stop_on_click ? "Stops when the customer opens the link" : "Keeps reminding after a link open"},
                             finishes the review page, opts out, or you confirm their review. Publication is not verified automatically.
                         </p>

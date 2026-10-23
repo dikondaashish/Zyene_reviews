@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Download, Loader2, RefreshCw } from "lucide-react";
 import type { CompetitorRangeKey } from "@/lib/competitors/date-range";
 import { AddCompetitorDialog } from "./add-competitor-dialog";
+import { SuggestCompetitorsDialog } from "./suggest-competitors-dialog";
 import type { Competitor } from "./competitors-types";
 
 type CompetitorsListToolbarProps = {
@@ -60,8 +61,8 @@ export function CompetitorsListToolbar({
                             ) : (
                                 <RefreshCw className="md:mr-2 size-4" />
                             )}
-                            <span className="md:hidden">Sync</span>
-                            <span className="hidden md:inline">Sync from Google</span>
+                            <span className="md:hidden">Refresh</span>
+                            <span className="hidden md:inline">Refresh now</span>
                         </Button>
                     ) : null}
                     <Button variant="outline" size="sm" className="w-full sm:w-auto" asChild>
@@ -73,9 +74,14 @@ export function CompetitorsListToolbar({
                         >
                             <Download className="md:mr-2 size-4" />
                             <span className="md:hidden">CSV</span>
-                            <span className="hidden md:inline">Export CSV</span>
+                            <span className="hidden md:inline">Download CSV</span>
                         </a>
                     </Button>
+                    {competitors.length > 0 ? (
+                        <div className="col-span-2 sm:col-span-1">
+                            <SuggestCompetitorsDialog businessId={businessId} onAddCompetitor={onAddCompetitor} />
+                        </div>
+                    ) : null}
                     <div className="col-span-2 w-full sm:col-span-1 sm:w-auto [&_button]:w-full sm:[&_button]:w-auto">
                         <AddCompetitorDialog
                             businessId={businessId}

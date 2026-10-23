@@ -26,7 +26,7 @@ export default async function GeoGridPage() {
         <div className="min-w-0 space-y-6 overflow-x-hidden p-4 md:p-8">
             <GoogleSeoAeoSubnav active="/google-seo-aeo/geo-grid" />
             <div>
-                <h1 className="ui-page-title">Local geo-grid</h1>
+                <h1 className="ui-page-title">Local map rankings</h1>
                 <p className="text-muted-foreground mt-1 text-sm">
                     Where {data.businessName} actually ranks in Google Maps across real coordinates.
                 </p>

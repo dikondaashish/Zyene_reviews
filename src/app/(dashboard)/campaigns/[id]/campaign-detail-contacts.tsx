@@ -24,7 +24,7 @@ export function CampaignDetailContacts({ requests, mounted }: CampaignDetailCont
             <CardContent>
                 {requests.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-8">
-                        No contacts sent yet. Click &ldquo;Add Contacts&rdquo; to get started.
+                        Nobody has been asked yet. Click &ldquo;Add customers&rdquo; to start.
                     </p>
                 ) : (
                     <Table>

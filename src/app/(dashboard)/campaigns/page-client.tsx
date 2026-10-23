@@ -3,14 +3,14 @@
 import { CampaignsPageHeader } from "./campaigns-page-header";
 import { CampaignsTabs } from "./campaigns-tabs";
 import { useCampaignsList } from "./use-campaigns-list";
+import type { BusinessType } from "@/lib/campaigns/business-types";
 
-export default function CampaignsPage() {
+export default function CampaignsPage({ businessId, savedBusinessType }: { businessId: string | null; savedBusinessType: BusinessType | null }) {
     const {
         campaigns,
         loading,
         toggleStatus,
         deleteCampaign,
-        getOpenedPercent,
         getCompletedPercent,
     } = useCampaignsList();
 
@@ -22,8 +22,9 @@ export default function CampaignsPage() {
                 campaigns={campaigns}
                 toggleStatus={toggleStatus}
                 deleteCampaign={deleteCampaign}
-                getOpenedPercent={getOpenedPercent}
                 getCompletedPercent={getCompletedPercent}
+                businessId={businessId}
+                savedBusinessType={savedBusinessType}
             />
         </div>
     );

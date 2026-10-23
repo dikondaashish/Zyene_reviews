@@ -12,7 +12,7 @@
       "runtimeExecutable": "/bin/bash",
       "runtimeArgs": [
         "-c",
-        "source /Users/ashishdikonda/.nvm/nvm.sh && NEXT_PUBLIC_ROOT_DOMAIN=localhost:3000 pnpm dev"
+        "source /Users/ashishdikonda/.nvm/nvm.sh && NEXT_PUBLIC_ROOT_DOMAIN=localhost:3000 NEXT_PUBLIC_APP_URL=http://app.localhost:3000 pnpm dev"
       ],
       "port": 3000,
       "url": "http://app.localhost:3000"

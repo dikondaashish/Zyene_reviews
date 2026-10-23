@@ -1,13 +1,18 @@
 "use client";
 
-import { CompetitorsListAlertsCard } from "./competitors-list-alerts-card";
+import { useMemo } from "react";
+import { buildScoreboard } from "@/lib/competitors/scoreboard";
+import { buildChangeFeed } from "@/lib/competitors/change-feed";
+import { CompetitorsChangesCard } from "./competitors-changes-card";
 import { CompetitorsListDeleteDialog } from "./competitors-list-delete-dialog";
 import { CompetitorsListEmptyState } from "./competitors-list-empty-state";
 import { CompetitorsListKeywordsCard } from "./competitors-list-keywords-card";
-import { CompetitorsListMainContent } from "./competitors-list-main-content";
 import { CompetitorsListMarketBriefCard } from "./competitors-list-market-brief-card";
-import { CompetitorsListSyncHealthCard } from "./competitors-list-sync-health-card";
 import { CompetitorsListToolbar } from "./competitors-list-toolbar";
+import { CompetitorsScoreboard } from "./competitors-scoreboard";
+import { CompetitorsSyncStatus } from "./competitors-sync-status";
+import { CompetitorsAiIdeas } from "./competitors-ai-ideas";
+import { CompetitorsTrackedSection } from "./competitors-tracked-section";
 import type { CompetitorsListProps } from "./competitors-types";
 import { useCompetitorsList } from "./use-competitors-list";
 
@@ -16,75 +21,94 @@ export type {
     CompetitorWatchBenchmarkRange,
 } from "./competitors-types";
 
+/** Reads top to bottom as: where do I stand, who am I watching, what changed, what could I do. */
 export function CompetitorsList(props: CompetitorsListProps) {
-    const {
-        businessId,
-        latestRun,
-        latestSuccessRun,
-        latestFailedRun,
-        marketBriefLatest,
-    } = props;
-
+    const { businessId, latestRun, latestSuccessRun, marketBriefLatest, ownBusinessChart } = props;
     const list = useCompetitorsList(props);
 
+    const scoreboard = useMemo(() => {
+        const gained = new Map(list.movementCards.map((m) => [m.competitorId, m.hasBaseline ? m.reviewsDelta : null]));
+        return buildScoreboard({
+            own: {
+                name: (ownBusinessChart.name || "Your business").trim(),
+                rating: ownBusinessChart.averageRating != null ? Number(ownBusinessChart.averageRating) : null,
+                totalReviews: ownBusinessChart.totalReviews != null ? Number(ownBusinessChart.totalReviews) : null,
+                newReviews: list.activeOwnBusinessInRange.reviewCount,
+            },
+            competitors: list.competitors.map((c) => ({
+                id: c.id,
+                name: c.name,
+                rating: c.average_rating != null && Number(c.average_rating) > 0 ? Number(c.average_rating) : null,
+                totalReviews: c.total_reviews ?? null,
+                newReviews: gained.get(c.id) ?? null,
+            })),
+        }, list.rangeLabel);
+    }, [list.movementCards, list.competitors, list.activeOwnBusinessInRange.reviewCount, list.rangeLabel, ownBusinessChart]);
+
+    const changes = useMemo(
+        () => buildChangeFeed(list.activeEventRows, new Map(list.competitors.map((c) => [c.id, c.name]))),
+        [list.activeEventRows, list.competitors],
+    );
+
+    const websiteById = useMemo(() => {
+        const map: Record<string, string | null | undefined> = { you: ownBusinessChart.website };
+        for (const c of list.competitors) map[c.id] = list.activePlacesMetaByCompetitorId[c.id]?.websiteUrl;
+        return map;
+    }, [list.competitors, list.activePlacesMetaByCompetitorId, ownBusinessChart.website]);
+
+    const hasCompetitors = list.competitors.length > 0;
+
     return (
-        <div className="min-w-0 space-y-6 overflow-x-hidden sm:space-y-8">
-            <CompetitorsListToolbar
-                rangeOptions={list.rangeOptions}
-                optimisticRange={list.optimisticRange}
-                setRange={list.setRange}
-                competitors={list.competitors}
-                syncWatchLoading={list.syncWatchLoading}
-                onSyncCompetitorWatch={list.handleSyncCompetitorWatch}
-                businessId={businessId}
-                onAddCompetitor={list.handleAddCompetitor}
-            />
+        <div className="min-w-0 space-y-6 overflow-x-hidden">
+            <div className="space-y-3">
+                <CompetitorsListToolbar
+                    rangeOptions={list.rangeOptions}
+                    optimisticRange={list.optimisticRange}
+                    setRange={list.setRange}
+                    competitors={list.competitors}
+                    syncWatchLoading={list.syncWatchLoading}
+                    onSyncCompetitorWatch={list.handleSyncCompetitorWatch}
+                    businessId={businessId}
+                    onAddCompetitor={list.handleAddCompetitor}
+                />
+                {hasCompetitors ? <CompetitorsSyncStatus latestRun={latestRun} latestSuccessRun={latestSuccessRun} /> : null}
+            </div>
+
+            {!hasCompetitors ? (
+                <CompetitorsListEmptyState businessId={businessId} onAddCompetitor={list.handleAddCompetitor} />
+            ) : (
+                <>
+                    <CompetitorsScoreboard scoreboard={scoreboard} rangeLabel={list.rangeLabel} websiteById={websiteById} />
+                    <CompetitorsTrackedSection
+                        competitors={list.competitors}
+                        activePlacesMetaByCompetitorId={list.activePlacesMetaByCompetitorId}
+                        latestSnapshotByCompetitor={list.latestSnapshotByCompetitor}
+                        isSyncing={list.isSyncing}
+                        isDeleting={list.isDeleting}
+                        onDeleteRequest={list.setDeleteConfirm}
+                    />
+                    <CompetitorsChangesCard items={changes} rangeLabel={list.rangeLabel} />
+                    <CompetitorsAiIdeas
+                        competitors={list.competitors}
+                        latestInsightByCompetitor={list.latestInsightByCompetitor}
+                        scoreboard={scoreboard}
+                        rangeLabel={list.rangeLabel}
+                    />
+                    <CompetitorsListMarketBriefCard
+                        competitors={list.competitors}
+                        marketBriefLatest={marketBriefLatest}
+                        briefGenLoading={list.briefGenLoading}
+                        onGenerateMarketBrief={list.handleGenerateMarketBrief}
+                        scoreboard={scoreboard}
+                        keywordDiscoverySplit={list.activeKeywordDiscoverySplit}
+                    />
+                </>
+            )}
 
             <CompetitorsListKeywordsCard
                 activeOwnSearchKeywords={list.activeOwnSearchKeywords}
                 activeKeywordDiscoverySplit={list.activeKeywordDiscoverySplit}
             />
-
-            <CompetitorsListMarketBriefCard
-                competitors={list.competitors}
-                marketBriefLatest={marketBriefLatest}
-                briefGenLoading={list.briefGenLoading}
-                onGenerateMarketBrief={list.handleGenerateMarketBrief}
-            />
-
-            <CompetitorsListSyncHealthCard
-                latestRun={latestRun}
-                latestSuccessRun={latestSuccessRun}
-                latestFailedRun={latestFailedRun}
-            />
-
-            <CompetitorsListAlertsCard
-                alertEvents={list.alertEvents}
-                rangeLabel={list.rangeLabel}
-            />
-
-            {list.competitors.length === 0 ? (
-                <CompetitorsListEmptyState
-                    businessId={businessId}
-                    onAddCompetitor={list.handleAddCompetitor}
-                />
-            ) : (
-                <CompetitorsListMainContent
-                    competitors={list.competitors}
-                    activeBenchmarkRange={list.activeBenchmarkRange}
-                    activeOwnBusinessInRange={list.activeOwnBusinessInRange}
-                    activePlacesMetaByCompetitorId={list.activePlacesMetaByCompetitorId}
-                    latestSnapshotByCompetitor={list.latestSnapshotByCompetitor}
-                    latestInsightByCompetitor={list.latestInsightByCompetitor}
-                    movementCards={list.movementCards}
-                    activeEventRows={list.activeEventRows}
-                    rangeLabel={list.rangeLabel}
-                    isSyncing={list.isSyncing}
-                    isDeleting={list.isDeleting}
-                    onDeleteRequest={list.setDeleteConfirm}
-                    chartData={list.chartData}
-                />
-            )}
 
             <CompetitorsListDeleteDialog
                 competitors={list.competitors}

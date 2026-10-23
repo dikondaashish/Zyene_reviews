@@ -163,13 +163,13 @@ export function AddCompetitorDialog({
             <DialogTrigger asChild>
                 <Button>
                     <Plus className="mr-2 size-4" />
-                    Track Competitor
+                    Add a competitor
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[640px] p-0 overflow-x-hidden overflow-y-auto">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader className="px-6 pt-6 pb-2">
-                        <DialogTitle className="text-3xl tracking-tight">Add a Competitor</DialogTitle>
+                        <DialogTitle className="text-3xl tracking-tight">Add a competitor</DialogTitle>
                         <DialogDescription>
                             Search on Google as you type, then pick the right listing. We will prefill the name and
                             Maps link; you can still edit before saving.

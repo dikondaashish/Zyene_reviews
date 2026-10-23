@@ -33,7 +33,7 @@ export function useCampaignsList() {
                 body: JSON.stringify({ status: newStatus }),
             });
             if (res.ok) {
-                toast.success(`Campaign ${newStatus === "active" ? "resumed" : "paused"}`);
+                toast.success(newStatus === "paused" ? "Campaign paused" : campaign.status === "draft" ? "Campaign started" : "Campaign resumed");
                 fetchCampaigns();
             } else {
                 const errorData = await res.json();
@@ -75,15 +75,11 @@ export function useCampaignsList() {
         return c.total_sent > 0 ? Math.round((completed / c.total_sent) * 100) : 0;
     };
 
-    const getOpenedPercent = (c: Campaign) =>
-        c.total_sent > 0 ? Math.round((c.total_opened / c.total_sent) * 100) : 0;
-
     return {
         campaigns,
         loading,
         toggleStatus,
         deleteCampaign,
         getCompletedPercent,
-        getOpenedPercent,
     };
 }

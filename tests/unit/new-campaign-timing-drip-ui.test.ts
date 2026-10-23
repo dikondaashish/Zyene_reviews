@@ -35,7 +35,7 @@ describe("NewCampaignTimingStep reminder settings", () => {
 
     it("explains that opening the link is not proof of a review and offers the stop-on-click switch", () => {
         const html = render(baseForm);
-        expect(html).toContain("Stop reminders after the customer opens the link");
+        expect(html).toContain("Stop reminding once they open the link");
         expect(html).toContain("does not prove a review was posted");
         expect(html).toMatch(/id="stop-on-click"[^>]*aria-checked="true"|aria-checked="true"[^>]*id="stop-on-click"/);
     });

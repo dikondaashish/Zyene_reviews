@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Phase2OperationsData } from "./phase2-types";
+import { WebVitalsLights } from "./web-vitals-lights";
 
 export function TechnicalPanel({ data }: { data: Phase2OperationsData }) {
     return (
@@ -9,8 +10,8 @@ export function TechnicalPanel({ data }: { data: Phase2OperationsData }) {
                 <Card><CardHeader><CardTitle className="ui-card-title">AI crawler activity · 30 days</CardTitle></CardHeader><CardContent>
                     {data.crawlerHits.length ? <div className="divide-y">{data.crawlerHits.map((row) => <div key={row.crawler} className="flex justify-between py-2 text-sm"><span>{row.crawler}</span><span>{row.count} hits · {new Date(row.latest).toLocaleDateString()}</span></div>)}</div> : <Empty text="Connect a log drain to measure crawler traffic." />}
                 </CardContent></Card>
-                <Card><CardHeader><CardTitle className="ui-card-title">Rendered-page diagnostics</CardTitle></CardHeader><CardContent>
-                    {data.diagnostics.length ? <div className="divide-y">{data.diagnostics.slice(0, 10).map((row, index) => <div key={`${row.url}-${index}`} className="py-2 text-sm"><p className="truncate font-medium">{row.url}</p><p className="text-xs text-muted-foreground">JS-only {row.jsDelta === null ? "unavailable" : `${Math.round(row.jsDelta * 100)}%`} · LCP {row.lcp ?? "n/a"} ms · CLS {row.cls ?? "n/a"} · INP {row.inp ?? "n/a"} ms · {row.indexStatus ?? "index unknown"}</p></div>)}</div> : <Empty text="Run a technical audit to collect rendered diagnostics." />}
+                <Card><CardHeader><CardTitle className="ui-card-title">Page speed and health</CardTitle></CardHeader><CardContent>
+                    {data.diagnostics.length ? <div className="divide-y">{data.diagnostics.slice(0, 10).map((row, index) => <div key={`${row.url}-${index}`} className="py-2 text-sm"><p className="truncate font-medium">{row.url}</p><WebVitalsLights lcp={row.lcp} cls={row.cls} inp={row.inp} /><p className="mt-1 text-xs text-muted-foreground">{row.indexStatus ?? "Index status unknown"}{row.jsDelta !== null && Math.round(row.jsDelta * 100) > 0 ? ` · ${Math.round(row.jsDelta * 100)}% of the text only appears after JavaScript runs` : ""}</p></div>)}</div> : <Empty text="Run a technical audit to collect rendered diagnostics." />}
                 </CardContent></Card>
                 <Card><CardHeader><CardTitle className="ui-card-title">Uncited relevant pages</CardTitle></CardHeader><CardContent>
                     {data.pageGaps.length ? <div className="divide-y">{data.pageGaps.slice(0, 10).map((row) => <div key={`${row.url}-${row.prompt}`} className="py-2 text-sm"><p className="truncate font-medium">{row.url}</p><p className="text-xs text-muted-foreground">Targets “{row.prompt}” · {Math.round(row.score * 100)}% term match</p></div>)}</div> : <Empty text="No uncited relevant-page gap is measured." />}

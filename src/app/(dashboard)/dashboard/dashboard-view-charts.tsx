@@ -50,7 +50,7 @@ export function DashboardViewCharts({
                                 <TrendingUp className="rotate-180 size-3" />
                             )}
                             <span className="max-sm:sr-only">
-                                {Math.abs(totalReviewsTrend)}% vs 30d prior
+                                {Math.abs(totalReviewsTrend)}% vs this time last year
                             </span>
                             <span className="sm:hidden">{Math.abs(totalReviewsTrend)}%</span>
                         </div>
@@ -73,7 +73,7 @@ export function DashboardViewCharts({
                     </div>
                     <div className="flex shrink-0 items-center gap-1 text-xl font-medium tracking-tight">
                         {displayAverageRating.toFixed(1)}
-                        <Star className="fill-chart-4 text-warning-foreground size-4" strokeWidth={1} />
+                        <Star className="text-chart-4 size-4" />
                     </div>
                 </CardHeader>
                 <CardContent className="flex-1 pt-6 pb-6">

@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TimeAgo } from "@/components/ui/time-ago";
 import type { CompetitorPlacesRowMeta } from "@/lib/competitors/places-snapshot-meta";
+import { BusinessLogo } from "@/components/competitors/business-logo";
+import { withMapsQuery } from "@/lib/google/maps-listing-url";
 import type { Competitor } from "./competitors-types";
 
 export function CompetitorsTrackedMobileCard({
@@ -22,11 +24,7 @@ export function CompetitorsTrackedMobileCard({
     isDeleting: boolean;
     onDeleteRequest: (id: string) => void;
 }) {
-    const updatedAt = competitor.updated_at ? (
-        <TimeAgo date={competitor.updated_at} />
-    ) : (
-        ", "
-    );
+    const updatedAt = competitor.updated_at ? <TimeAgo date={competitor.updated_at} /> : "Not yet";
 
     return (
         <div
@@ -36,6 +34,7 @@ export function CompetitorsTrackedMobileCard({
             <div className="flex min-w-0 items-start gap-3">
                 <div className="min-w-0 flex-1 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
+                        <BusinessLogo name={competitor.name} website={places?.websiteUrl} />
                         <p className="font-semibold leading-snug break-words">{competitor.name}</p>
                         {syncing ? (
                             <Badge variant="secondary" className="flex shrink-0 items-center gap-1">
@@ -71,29 +70,29 @@ export function CompetitorsTrackedMobileCard({
             <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 border-t border-border pt-3 text-sm">
                 <div>
                     <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                        Category
+                        Type
                     </dt>
                     <dd className="mt-0.5 text-muted-foreground">
                         {syncing ? (
-                            ", "
+                            "Updating…"
                         ) : places?.primaryType ? (
                             <span title={places.typesPreview ?? undefined}>{places.primaryType}</span>
                         ) : (
-                            ", "
+                            "Not listed"
                         )}
                     </dd>
                 </div>
                 <div>
                     <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                        Avg rating
+                        Rating
                     </dt>
                     <dd className="mt-0.5">
                         {syncing ? (
-                            <span className="text-muted-foreground">,</span>
+                            <span className="text-muted-foreground">Updating…</span>
                         ) : (
                             <span className="inline-flex items-center gap-1">
-                                <Star className="shrink-0 fill-chart-4 text-warning-foreground size-3.5" />
-                                {competitor.average_rating || "-"}
+                                {competitor.average_rating ? <Star className="shrink-0 text-chart-4 size-3.5" aria-hidden /> : null}
+                                {competitor.average_rating || "Not loaded"}
                             </span>
                         )}
                     </dd>
@@ -104,7 +103,7 @@ export function CompetitorsTrackedMobileCard({
                     </dt>
                     <dd className="mt-0.5">
                         {syncing ? (
-                            <span className="text-muted-foreground">,</span>
+                            <span className="text-muted-foreground">Updating…</span>
                         ) : (
                             (competitor.total_reviews || 0).toLocaleString()
                         )}
@@ -131,19 +130,19 @@ export function CompetitorsTrackedMobileCard({
                 ) : null}
                 {competitor.google_url ? (
                     <a
-                        href={competitor.google_url}
+                        href={withMapsQuery(competitor.google_url, competitor.name)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
                     >
-                        Maps
+                        Google listing
                         <ExternalLink className="shrink-0 size-3" />
                     </a>
                 ) : (
-                    <span className="text-muted-foreground">Maps: N/A</span>
+                    <span className="text-muted-foreground">No Google link</span>
                 )}
             </div>
-            <p className="mt-2 text-[11px] text-muted-foreground">Source: {sourceLabel}</p>
+            <p className="mt-2 text-[11px] text-muted-foreground">{sourceLabel}</p>
         </div>
     );
 }

@@ -1,4 +1,5 @@
 "use server";
+import { createHash } from "node:crypto";
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
@@ -79,11 +80,13 @@ export async function savePlanSelection(
 /**
  * After Stripe Checkout redirects back to onboarding, verify the session belongs to
  * the user's org (subscription is created; plan limits are synced via webhook).
+ * `trialEventId` is set only when that subscription is in a Stripe trial: an opaque,
+ * stable hash of the subscription id used as the Meta `StartTrial` event id.
  */
 export async function finalizeOnboardingStripeCheckout(params: {
   sessionId?: string;
   planSwitchedOnly?: boolean;
-}) {
+}): Promise<{ success: boolean; error?: string; trialEventId?: string }> {
   try {
     const supabase = await createClient();
 
@@ -106,6 +109,7 @@ export async function finalizeOnboardingStripeCheckout(params: {
     }
 
     const orgId = member.organization_id as string;
+    let trialEventId: string | undefined;
 
     if (params.planSwitchedOnly) {
       const { data: org } = await supabase
@@ -118,7 +122,9 @@ export async function finalizeOnboardingStripeCheckout(params: {
         return { success: false, error: "Subscription not found yet. Please refresh." };
       }
     } else if (params.sessionId) {
-      const session = await stripe.checkout.sessions.retrieve(params.sessionId);
+      const session = await stripe.checkout.sessions.retrieve(params.sessionId, {
+        expand: ["subscription"],
+      });
 
       if (session.status !== "complete") {
         return { success: false, error: "Checkout is not complete." };
@@ -128,9 +134,14 @@ export async function finalizeOnboardingStripeCheckout(params: {
         return { success: false, error: "This checkout does not belong to your organization." };
       }
 
-      const subscriptionId = session.subscription as string | null;
-      if (!subscriptionId) {
+      const subscription = session.subscription;
+      if (!subscription) {
         return { success: false, error: "No subscription on this checkout session." };
+      }
+
+      // Checkout without intro-trial eligibility creates a paid subscription: no trial event.
+      if (typeof subscription !== "string" && subscription.status === "trialing") {
+        trialEventId = `trial_${createHash("sha256").update(subscription.id).digest("hex").slice(0, 32)}`;
       }
     } else {
       return { success: false, error: "Invalid request." };
@@ -148,7 +159,7 @@ export async function finalizeOnboardingStripeCheckout(params: {
 
     revalidatePath("/onboarding");
 
-    return { success: true };
+    return { success: true, trialEventId };
   } catch (error: unknown) {
     logger.error({ err: error }, "finalizeOnboardingStripeCheckout:");
     return { success: false, error: "Could not verify checkout. Please try again." };

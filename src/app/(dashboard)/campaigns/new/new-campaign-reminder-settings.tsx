@@ -60,7 +60,7 @@ export function NewCampaignReminderSettings({ form, updateForm }: Props) {
 
                     <div className="flex items-start justify-between gap-3">
                         <div>
-                            <Label htmlFor="stop-on-click">Stop reminders after the customer opens the link</Label>
+                            <Label htmlFor="stop-on-click">Stop reminding once they open the link</Label>
                             <p className="text-xs text-muted-foreground mt-1">
                                 On by default. Opening the link does not prove a review was posted; turn this off to keep
                                 reminding until they finish the review page.

@@ -20,7 +20,7 @@ export function CustomerDetailTimelineFeedbackItem({ item }: { item: TimelineFee
                                 key={i}
                                 className={cn(
                                     "size-4",
-                                    i < item.rating ? "fill-chart-4 text-warning-foreground" : "text-muted-foreground/25"
+                                    i < item.rating ? "text-chart-4" : "text-muted-foreground/25"
                                 )}
                             />
                         ))}

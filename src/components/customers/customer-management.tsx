@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { Customer } from "@/components/customers/customer-table";
 import { useCustomerManagement } from "@/components/customers/use-customer-management";
 import { CustomerManagementHeader } from "@/components/customers/customer-management-header";
@@ -16,6 +17,8 @@ interface CustomerManagementProps {
 
 export function CustomerManagement({ businessId, initialCustomers }: CustomerManagementProps) {
     const cm = useCustomerManagement(businessId, initialCustomers);
+    // Bumped by the bulk bar's Clear so the table unticks its checkboxes too, not just the parent list.
+    const [clearSignal, setClearSignal] = useState(0);
 
     return (
         <div className="min-w-0 animate-in fade-in overflow-x-hidden duration-500">
@@ -26,7 +29,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                 isExporting={cm.isExporting}
             />
 
-            <CustomerManagementStatsGrid stats={cm.resolvedStats} />
+            <CustomerManagementStatsGrid stats={cm.resolvedStats} onSelectSegment={cm.setSmartTab} />
 
             <CustomerManagementFilterToolbar
                 searchQuery={cm.search}
@@ -42,7 +45,10 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
             {cm.selectedIds.length > 0 && (
                 <BulkActionBar
                     selectedCount={cm.selectedIds.length}
-                    onClear={() => cm.setSelectedIds([])}
+                    onClear={() => {
+                        cm.setSelectedIds([]);
+                        setClearSignal((n) => n + 1);
+                    }}
                     onDelete={() => cm.setBulkDeleteOpen(true)}
                     onSendRequests={cm.onBulkSendCampaign}
                     onAddTag={() => void cm.handleBulkAction("tag", { tags: ["VIP"], mode: "add" })}
@@ -72,6 +78,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                 onSendRequest={cm.sendRequestToCustomer}
                 onSelectionChange={cm.setSelectedIds}
                 onCustomersMerged={cm.handleCustomersMerged}
+                clearSelectionSignal={clearSignal}
             />
 
             <CustomerManagementDialogs

@@ -100,7 +100,7 @@ export async function loadCompetitorWatchScanContext(
     const competitorIds = competitors.map((c) => c.id);
     const { data: existingSnapshots, error: snapshotsErr } = await admin
         .from("competitor_snapshots")
-        .select("id, competitor_id, captured_at, average_rating, total_reviews")
+        .select("id, competitor_id, captured_at, average_rating, total_reviews, metadata")
         .in("competitor_id", competitorIds)
         .order("captured_at", { ascending: false });
 
@@ -115,7 +115,7 @@ export async function loadCompetitorWatchScanContext(
 
     const latestByCompetitor = new Map<
         string,
-        { id: string; competitor_id: string; captured_at: string; average_rating: number; total_reviews: number }
+        CompetitorWatchScanState["latestByCompetitor"] extends Map<string, infer V> ? V : never
     >();
     for (const row of (existingSnapshots || []) as Array<{
         id: string;
@@ -123,9 +123,18 @@ export async function loadCompetitorWatchScanContext(
         captured_at: string;
         average_rating: number;
         total_reviews: number;
+        metadata: Record<string, unknown> | null;
     }>) {
         if (!latestByCompetitor.has(row.competitor_id)) {
-            latestByCompetitor.set(row.competitor_id, row);
+            const placeId = row.metadata?.provider_place_id;
+            latestByCompetitor.set(row.competitor_id, {
+                id: row.id,
+                competitor_id: row.competitor_id,
+                captured_at: row.captured_at,
+                average_rating: row.average_rating,
+                total_reviews: row.total_reviews,
+                provider_place_id: typeof placeId === "string" ? placeId : null,
+            });
         }
     }
 

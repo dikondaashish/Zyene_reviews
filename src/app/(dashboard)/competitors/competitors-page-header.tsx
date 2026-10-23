@@ -3,8 +3,8 @@ import { PageHeader } from "@/components/dashboard/page-header";
 export function CompetitorsPageHeader({ recentAlertsCount }: { recentAlertsCount: number }) {
     return (
         <PageHeader
-            title="Competitor Monitoring"
-            description="Keep track of your competitors' review performance to stay ahead."
+            title="Competitors"
+            description="See how your Google rating and reviews compare with the businesses your customers also consider."
             actionsClassName="w-full sm:w-auto"
             actions={recentAlertsCount > 0 ? (
                 <a
@@ -14,7 +14,7 @@ export function CompetitorsPageHeader({ recentAlertsCount }: { recentAlertsCount
                     <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-primary px-1.5 text-xs text-primary-foreground">
                         {recentAlertsCount}
                     </span>
-                    Alerts in period
+                    {recentAlertsCount === 1 ? "alert to check" : "alerts to check"}
                 </a>
             ) : null}
         />

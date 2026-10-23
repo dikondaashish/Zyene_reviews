@@ -23,7 +23,7 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ p
                     href="/google-seo-aeo/prompts"
                     className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
                 >
-                    <ArrowLeft className="size-3.5" /> Prompt library
+                    <ArrowLeft className="size-3.5" /> AI questions
                 </Link>
                 <h1 className="ui-page-title mt-1 break-words">{data.promptText}</h1>
             </div>

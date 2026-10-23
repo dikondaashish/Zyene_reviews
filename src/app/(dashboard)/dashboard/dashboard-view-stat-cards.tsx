@@ -57,7 +57,7 @@ export function DashboardViewStatCards({
                 iconName="response"
                 suffix="%"
                 precision={1}
-                description={responseRateLabel}
+                description={displayTotalReviews > 0 ? dict.dashboard.reviews_with_reply : responseRateLabel}
                 delay={0.3}
             />
             <ProStatCard

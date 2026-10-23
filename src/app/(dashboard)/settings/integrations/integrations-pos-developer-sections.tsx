@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Workflow, Code2, MonitorPlay } from "lucide-react";
 import { PlaceholderCard } from "@/components/integrations/placeholder-card";
 import { ZapierCard } from "@/components/integrations/zapier-card";
@@ -8,7 +7,6 @@ import { DeveloperApiCard } from "@/components/integrations/developer-api-card";
 import { WidgetCard } from "@/components/integrations/widget-card";
 import { WidgetUpgradeCard } from "@/components/integrations/widget-upgrade-card";
 import { IntegrationsSectionHeader, IntegrationsStatusBadge } from "./integrations-section-header";
-import { getBrandLogoUrl } from "@/lib/marketing/integration-brands";
 import type { IntegrationsPageData } from "./load-integrations-page-data";
 import type { PublicApiKey } from "@/lib/api-keys/credentials";
 
@@ -50,16 +48,7 @@ export function IntegrationsPosAutomationSection({
                 <PlaceholderCard
                     name="Toast"
                     description="Connect Toast POS for automatic follow-ups"
-                    icon={
-                        <Image
-                            src={getBrandLogoUrl("toasttab.com")}
-                            alt="Toast logo"
-                            width={20}
-                            height={20}
-                            className="size-5 object-contain"
-                            unoptimized
-                        />
-                    }
+                    logoDomain="toasttab.com"
                     accentColor="bg-primary"
                 />
                 <ZapierCard hasApiKey={Boolean(apiKey)} />

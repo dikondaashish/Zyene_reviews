@@ -1,11 +1,11 @@
-export const STEPS = ["Basics", "Message", "Timing", "Review & Launch"];
+export const STEPS = ["Basics", "Message", "Timing", "Check and start"];
 
 export const DELAY_OPTIONS = [
-    { value: 0, label: "Immediately" },
-    { value: 60, label: "1 hour" },
-    { value: 120, label: "2 hours" },
-    { value: 240, label: "4 hours" },
-    { value: 1440, label: "1 day" },
+    { value: 0, label: "Right away" },
+    { value: 60, label: "1 hour later" },
+    { value: 120, label: "2 hours later" },
+    { value: 240, label: "4 hours later" },
+    { value: 1440, label: "Next day" },
 ];
 
 export const REMINDER_DELAY_OPTIONS = [

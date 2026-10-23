@@ -12,7 +12,9 @@ export function useReviewCardSubmit(
     stopAiStream: () => void,
     onSuccess: () => void,
     onAiLimitOrPlan: (kind: "limit" | "plan") => void,
-    onRefresh?: () => void
+    onRefresh?: () => void,
+    /** A new reply went live (not an edit), so the inbox can move on to the next review. */
+    onReplyPosted?: (reviewId: string) => void
 ) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,6 +33,7 @@ export function useReviewCardSubmit(
 
             toast.success(isEditingReply ? "Reply updated" : "Reply posted successfully");
             onSuccess();
+            if (!isEditingReply) onReplyPosted?.(review.id);
             if (onRefresh) onRefresh();
             else router.refresh();
         } catch (e: unknown) {
@@ -50,6 +53,7 @@ export function useReviewCardSubmit(
         stopAiStream,
         onSuccess,
         onRefresh,
+        onReplyPosted,
         router,
         onAiLimitOrPlan,
     ]);

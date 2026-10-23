@@ -19,6 +19,7 @@ import { CustomerTableMobileList } from "@/components/customers/customer-table-m
 import { CustomerTablePagination } from "@/components/customers/customer-table-pagination";
 import { CustomerMergeDialog } from "@/components/customers/customer-merge-dialog";
 import { useCustomerTableMutations } from "@/components/customers/use-customer-table-mutations";
+import { useCustomerTableSelection, useReportCustomerSelection } from "@/components/customers/use-customer-table-selection";
 import type { Customer, CustomerTableProps } from "@/components/customers/customer-table-types";
 
 export type { Customer } from "@/components/customers/customer-table-types";
@@ -31,12 +32,13 @@ export function CustomerTable({
     onSendRequest,
     onSelectionChange,
     onCustomersMerged,
+    clearSelectionSignal,
 }: CustomerTableProps) {
     const router = useRouter();
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-    const [rowSelection, setRowSelection] = React.useState({});
+    const [rowSelection, setRowSelection] = useCustomerTableSelection(data, clearSelectionSignal);
     const [deleteTarget, setDeleteTarget] = React.useState<Customer | null>(null);
     const [mergeTarget, setMergeTarget] = React.useState<Customer | null>(null);
 
@@ -95,14 +97,11 @@ export function CustomerTable({
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
+        getRowId: (row) => row.id,
         state: { sorting, columnFilters, columnVisibility, rowSelection },
     });
 
-    React.useEffect(() => {
-        if (onSelectionChange) {
-            onSelectionChange(table.getFilteredSelectedRowModel().rows.map((row) => row.original.id));
-        }
-    }, [rowSelection, table, onSelectionChange]);
+    useReportCustomerSelection(table, rowSelection, onSelectionChange);
 
     return (
         <div className="min-w-0 w-full">

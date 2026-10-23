@@ -23,12 +23,12 @@ export function CustomerManagementHeader({
                     </div>
                     <h1 className="ui-page-title text-foreground">Customers</h1>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                    Keep your contacts organized and ready for your next campaign.
+                <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+                    Everyone you can ask for a review. Add people one at a time or import a list, then send them a request.
                 </p>
                 <details className="text-xs text-muted-foreground">
-                    <summary className="w-fit cursor-pointer py-1 focus-visible:outline-2 focus-visible:outline-ring">Using test contacts</summary>
-                    <p className="max-w-prose py-1 leading-relaxed">Add the tag <code>zyene:test</code> to exclude a contact from sends and customer metrics. Remove it to include them again.</p>
+                    <summary className="w-fit cursor-pointer py-1 focus-visible:outline-2 focus-visible:outline-ring">Testing with your own contact?</summary>
+                    <p className="max-w-prose py-1 leading-relaxed">Give them the tag <code>zyene:test</code>. They will not be sent requests or counted in the numbers below. Remove the tag to include them again.</p>
                 </details>
             </div>
 
@@ -40,7 +40,7 @@ export function CustomerManagementHeader({
                 >
                     <Upload className="shrink-0 md:mr-2 size-4" />
                     <span className="md:hidden">Import</span>
-                    <span className="hidden md:inline">Import CSV</span>
+                    <span className="hidden md:inline">Import list</span>
                 </Button>
                 <Button
                     variant="outline"
@@ -50,7 +50,7 @@ export function CustomerManagementHeader({
                 >
                     {isExporting ? <Loader2 aria-hidden className="size-4 animate-spin" /> : <Download className="shrink-0 md:mr-2 size-4" />}
                     <span className="md:hidden">{isExporting ? "Exporting…" : "Export"}</span>
-                    <span className="hidden md:inline">{isExporting ? "Exporting…" : "Export CSV"}</span>
+                    <span className="hidden md:inline">{isExporting ? "Exporting…" : "Download list"}</span>
                 </Button>
                 <Button
                     onClick={onAddClick}
@@ -58,7 +58,7 @@ export function CustomerManagementHeader({
                 >
                     <UserPlus className="shrink-0 md:mr-2 size-4" />
                     <span className="md:hidden">Add</span>
-                    <span className="hidden md:inline">Add Customer</span>
+                    <span className="hidden md:inline">Add customer</span>
                 </Button>
             </div>
         </div>

@@ -3,6 +3,7 @@ import { BedDouble } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
+import { ScoreGauge } from "@/components/dashboard/dashboard-mini-visuals";
 
 type Props = {
     dict: Dictionary;
@@ -24,22 +25,7 @@ export function DashboardViewGoogleHealthLodging({
                 <BedDouble className="text-muted-foreground size-4" />
             </CardHeader>
             <CardContent>
-                <div
-                    className={`text-2xl font-bold ${
-                        googleLodgingHealthScore === null
-                            ? "text-muted-foreground"
-                            : googleLodgingHealthScore >= 80
-                              ? "text-success"
-                              : googleLodgingHealthScore >= 40
-                                ? "text-warning-foreground"
-                                : "text-destructive"
-                    }`}
-                >
-                    {googleLodgingHealthScore !== null ? `${googleLodgingHealthScore}` : "-"}
-                    {googleLodgingHealthScore !== null && (
-                        <span className="text-lg font-semibold text-muted-foreground">/100</span>
-                    )}
-                </div>
+                <ScoreGauge score={googleLodgingHealthScore} label={dict.dashboard.lodging_completeness} />
                 <p className="mt-1 text-xs text-muted-foreground">
                     {googleLodgingHealthScore === null && googleLodgingApplicable === null
                         ? dict.dashboard.lodging_desc_empty

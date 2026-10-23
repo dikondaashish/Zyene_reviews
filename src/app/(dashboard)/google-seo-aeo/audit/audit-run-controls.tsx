@@ -37,7 +37,7 @@ export function AuditRunControls({
             toast.error(result.error);
             return;
         }
-        toast.success("Technical audit started. This runs in the background and can take a minute or two.");
+        toast.success("Website check started. This runs in the background and can take a minute or two.");
         router.refresh();
     }
 
@@ -45,7 +45,7 @@ export function AuditRunControls({
         return (
             <Alert>
                 <AlertTriangle className="size-4" />
-                <AlertTitle>Technical audits are switched off</AlertTitle>
+                <AlertTitle>Website checks are switched off</AlertTitle>
                 <AlertDescription>
                     New audits are currently unavailable. Any findings below are historical. Contact support for availability.
                 </AlertDescription>

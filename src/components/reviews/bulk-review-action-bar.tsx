@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Check, X, EyeOff, Loader2 } from "lucide-react";
+import { MessageSquare, X, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -14,11 +14,12 @@ interface BulkReviewActionBarProps {
 }
 
 export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId, onRefresh }: BulkReviewActionBarProps) {
-    const [isUpdating, setIsUpdating] = useState(false);
+    const [updating, setUpdating] = useState<"ignored" | "pending" | null>(null);
+    const isUpdating = updating !== null;
     const router = useRouter();
 
     const handleBulkStatusUpdate = async (status: 'ignored' | 'pending') => {
-        setIsUpdating(true);
+        setUpdating(status);
         try {
             const res = await fetch("/api/reviews/bulk", {
                 method: "POST",
@@ -35,14 +36,16 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
 
             const payload = (data as { data?: { count?: number } }).data;
             const updatedCount = payload?.count ?? (data as { count?: number }).count ?? selectedIds.length;
-            toast.success(`Successfully updated ${updatedCount} reviews`);
+            const noun = updatedCount === 1 ? "review" : "reviews";
+            toast.success(status === "ignored" ? `${updatedCount} ${noun} marked as ignored` : `${updatedCount} ${noun} moved back to Needs reply`);
             onClearSelection();
-            onRefresh ? onRefresh() : router.refresh();
+            if (onRefresh) onRefresh();
+            else router.refresh();
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : "An unexpected error occurred";
             toast.error(message);
         } finally {
-            setIsUpdating(false);
+            setUpdating(null);
         }
     };
 
@@ -77,12 +80,8 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
                         disabled={isUpdating}
                         className="h-9 w-full rounded-lg text-xs text-background/80 hover:bg-background/20 hover:text-background sm:h-8 sm:w-auto sm:rounded-full"
                     >
-                        {isUpdating ? (
-                            <Loader2 className="mr-1.5 animate-spin size-3.5" />
-                        ) : (
-                            <EyeOff className="mr-1.5 size-3.5" />
-                        )}
-                        Mark as Ignored
+                        {updating === "ignored" ? <Loader2 className="mr-1.5 animate-spin size-3.5" /> : <EyeOff className="mr-1.5 size-3.5" />}
+                        Mark as ignored
                     </Button>
 
                     <Button
@@ -92,8 +91,8 @@ export function BulkReviewActionBar({ selectedIds, onClearSelection, businessId,
                         disabled={isUpdating}
                         className="h-9 w-full rounded-lg text-xs text-background/80 hover:bg-background/20 hover:text-background sm:h-8 sm:w-auto sm:rounded-full"
                     >
-                        <Check className="mr-1.5 text-success size-3.5" />
-                        Pending
+                        {updating === "pending" ? <Loader2 className="mr-1.5 animate-spin size-3.5" /> : <MessageSquare className="mr-1.5 size-3.5" />}
+                        Mark as needs reply
                     </Button>
                 </div>
 
