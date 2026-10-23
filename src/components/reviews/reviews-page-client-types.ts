@@ -14,6 +14,7 @@ export interface ReviewsPageClientProps {
     autoCommenterPlanOk: boolean;
     autoReplyInitial: AutoReplySettingsState;
     replyRules: ReplyRulesSummary;
+    businessName: string;
     initialReviews: ReviewManagementItem[] | PrivateFeedback[];
     initialCount: number;
     initialTotalPages: number;

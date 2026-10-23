@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/dashboard/page-header";
 import { SyncButton } from "@/components/dashboard/sync-button";
 import { AutoReplyToolbar, type AutoReplySettingsState } from "@/components/reviews/auto-reply-toolbar";
 import type { ReplyRulesSummary } from "@/services/reviews/reply-rules-summary-load";
+import { ReviewGrowthIdeas } from "@/components/reviews/review-growth-ideas";
 
 interface ReviewsPageClientHeaderProps {
     count: number;
@@ -17,6 +18,7 @@ interface ReviewsPageClientHeaderProps {
     autoCommenterPlanOk: boolean;
     autoReplyInitial: AutoReplySettingsState;
     replyRules: ReplyRulesSummary;
+    businessName: string;
 }
 
 export function ReviewsPageClientHeader(props: ReviewsPageClientHeaderProps) {
@@ -42,6 +44,7 @@ export function ReviewsPageClientHeader(props: ReviewsPageClientHeaderProps) {
                 <AutoReplyToolbar businessId={props.businessId} googleConnected={props.isGoogleConnected}
                     planAllowsAutoCommenter={props.autoCommenterPlanOk} initial={props.autoReplyInitial} replyRules={props.replyRules} />
             )}
+            {!props.isDemo && <ReviewGrowthIdeas businessName={props.businessName} />}
         </header>
     );
 }

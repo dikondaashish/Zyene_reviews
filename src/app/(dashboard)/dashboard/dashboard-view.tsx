@@ -15,6 +15,7 @@ import { DashboardViewHeader } from "./dashboard-view-header";
 import { DashboardViewStatCards } from "./dashboard-view-stat-cards";
 import { DashboardViewTopRow } from "./dashboard-view-top-row";
 import { DashboardViewWaiting } from "./dashboard-view-waiting";
+import { DashboardViewRecentAutomations } from "./dashboard-view-recent-automations";
 import type { DashboardViewProps } from "./types";
 
 export function DashboardView(props: DashboardViewProps) {
@@ -75,6 +76,11 @@ export function DashboardView(props: DashboardViewProps) {
             <DashboardViewGooglePerformance {...props} />
             <DashboardViewExtendedStats {...props} />
             <DashboardViewCharts {...props} />
+            {!useDemoData && (
+                <Suspense fallback={null}>
+                    <DashboardViewRecentAutomations businessId={business.id} />
+                </Suspense>
+            )}
             <DashboardViewBottomRow {...props} />
         </div>
     );

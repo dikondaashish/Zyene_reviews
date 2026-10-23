@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import type { Customer } from "@/components/customers/customer-table";
 import type { SmartSegmentTab } from "@/components/customers/customer-segment-tabs";
@@ -20,7 +21,9 @@ export function useCustomerManagementData(businessId: string, initialCustomers: 
     const [isExporting, setIsExporting] = useState(false);
     const [stats, setStats] = useState<CustomerManagementStats | null>(null);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+    // `?import=1` (from the Reviews page ideas) opens the import dialog straight away.
+    const searchParams = useSearchParams();
+    const [isImportModalOpen, setIsImportModalOpen] = useState(() => searchParams.get("import") === "1");
 
     const loadStats = useCallback(async () => {
         if (!businessId) return;
