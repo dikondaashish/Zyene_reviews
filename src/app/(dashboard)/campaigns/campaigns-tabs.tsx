@@ -1,7 +1,8 @@
 "use client";
 
 import { PanelLoading } from "@/components/dashboard/panel-loading";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { BusinessType } from "@/lib/campaigns/business-types";
 import { TemplateLibrary } from "./template-library";
@@ -27,14 +28,25 @@ export function CampaignsTabs({
     businessId: string | null;
     savedBusinessType: BusinessType | null;
 }) {
-    const router = useRouter();
     const searchParams = useSearchParams();
-    const activeTab = searchParams.get("tab") === "templates" ? "templates" : "all";
+    const urlTab = searchParams.get("tab") === "templates" ? "templates" : "all";
+    const [activeTab, setActiveTab] = useState(urlTab);
+    const [seenUrlTab, setSeenUrlTab] = useState(urlTab);
+    // A link or back/forward that changes ?tab= still moves the tabs.
+    if (urlTab !== seenUrlTab) {
+        setSeenUrlTab(urlTab);
+        setActiveTab(urlTab);
+    }
+    // Both tabs' data is already loaded, so switch at once and only note the tab in the URL.
+    // router.replace would re-render the whole page on the server first, making clicks feel dead.
     const changeTab = (value: string) => {
-        const params = new URLSearchParams(searchParams.toString());
-        if (value === "templates") params.set("tab", value);
+        const tab = value === "templates" ? "templates" : "all";
+        setActiveTab(tab);
+        setSeenUrlTab(tab);
+        const params = new URLSearchParams(window.location.search);
+        if (tab === "templates") params.set("tab", tab);
         else params.delete("tab");
-        router.replace(`/campaigns${params.size ? `?${params}` : ""}`, { scroll: false });
+        window.history.replaceState(window.history.state, "", `/campaigns${params.size ? `?${params}` : ""}`);
     };
     return (
         <Tabs value={activeTab} onValueChange={changeTab} className="w-full">

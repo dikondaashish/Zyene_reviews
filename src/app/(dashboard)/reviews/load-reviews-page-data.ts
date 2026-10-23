@@ -107,6 +107,7 @@ export async function loadReviewsPageData(
                 typeof business?.google_review_url === "string" ? business.google_review_url : null,
             platformExternalUrl:
                 typeof googlePlatform?.external_url === "string" ? googlePlatform.external_url : null,
+            businessName: typeof business?.name === "string" ? business.name : null,
         }),
         isDemo,
         isGoogleConnected,

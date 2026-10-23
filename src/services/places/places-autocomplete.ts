@@ -1,4 +1,5 @@
 import { logger } from "@/lib/logger";
+import { googleMapsPlaceUrl } from "@/lib/google/maps-listing-url";
 import { NextRequest, NextResponse } from "next/server";
 
 const PLACES_AUTOCOMPLETE_URL = "https://places.googleapis.com/v1/places:autocomplete";
@@ -91,7 +92,7 @@ export async function searchPlacesAutocomplete(request: NextRequest) {
                         ? p.text.text.slice(primary.length).replace(/^,\s*/, "").trim()
                         : "") ||
                     "";
-                const mapsUrl = `https://www.google.com/maps/search/?api=1&query_place_id=${encodeURIComponent(placeId)}`;
+                const mapsUrl = googleMapsPlaceUrl(placeId, primary);
                 acc.push({
                     placeId,
                     primaryText: primary,

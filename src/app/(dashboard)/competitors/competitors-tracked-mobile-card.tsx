@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { TimeAgo } from "@/components/ui/time-ago";
 import type { CompetitorPlacesRowMeta } from "@/lib/competitors/places-snapshot-meta";
 import { BusinessLogo } from "@/components/competitors/business-logo";
+import { withMapsQuery } from "@/lib/google/maps-listing-url";
 import type { Competitor } from "./competitors-types";
 
 export function CompetitorsTrackedMobileCard({
@@ -129,7 +130,7 @@ export function CompetitorsTrackedMobileCard({
                 ) : null}
                 {competitor.google_url ? (
                     <a
-                        href={competitor.google_url}
+                        href={withMapsQuery(competitor.google_url, competitor.name)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 font-medium text-primary hover:underline"

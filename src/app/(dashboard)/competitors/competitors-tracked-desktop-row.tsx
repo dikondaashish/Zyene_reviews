@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { TimeAgo } from "@/components/ui/time-ago";
 import type { CompetitorPlacesRowMeta } from "@/lib/competitors/places-snapshot-meta";
 import { BusinessLogo } from "@/components/competitors/business-logo";
+import { withMapsQuery } from "@/lib/google/maps-listing-url";
 import type { Competitor } from "./competitors-types";
 
 export function CompetitorsTrackedDesktopRow({
@@ -96,7 +97,7 @@ export function CompetitorsTrackedDesktopRow({
             <TableCell className="align-top">
                 {competitor.google_url ? (
                     <a
-                        href={competitor.google_url}
+                        href={withMapsQuery(competitor.google_url, competitor.name)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center text-primary hover:underline text-xs"
