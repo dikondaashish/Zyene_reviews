@@ -33,7 +33,7 @@ Owners see five phases: **Connect → Your results → Plan → Automate → All
 | Your results | 6 | Google only. The owner's real rating, review count, unanswered and unhappy (1–2★, unanswered) counts, plus up to 3 unhappy reviews. Polls while the first import runs. Same definitions as the dashboard (`lib/reviews/unanswered-reviews.ts`). |
 | Plan | 4 | Plan and Stripe checkout, or "Explore free" (goes to 5). |
 | Automate | 7 | After a successful checkout. One choice writes reply rules for all five ratings via `PUT /api/settings/reply-rules`: auto-post 4–5★ and approve 1–3★ (Growth+ only), approve everything, or reply myself. Ends with a "Zyene will now" list. Waits briefly for the Stripe webhook to switch the plan on. |
-| All set | 5 | Completion screen, then the dashboard. |
+| All set | 5 | One welcome screen: live Google import status, what happens next (dashboard priorities, activity calendar, reviews take a few days) and three ways out: dashboard, first review request, or a 1-minute tour. The tour no longer starts by itself after onboarding; it runs only from "Show me around" or Settings. |
 
 New accounts are on plan `none`, which has no AI drafts or auto-replies, so nothing that needs a plan is offered before the Plan step.
 

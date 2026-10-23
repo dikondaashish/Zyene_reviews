@@ -5,7 +5,16 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { completeOnboarding } from "@/app/actions/onboarding";
+import { completeTour } from "@/app/actions/tour";
 import { fireOnboardingConfetti } from "./step5-form-confetti";
+
+export type Step5Destination = "dashboard" | "requests" | "calendar" | "tour";
+
+const DESTINATIONS: Record<Exclude<Step5Destination, "dashboard">, string> = {
+    requests: "/requests",
+    calendar: "/automations/calendar",
+    tour: "/dashboard?tour=true",
+};
 
 export function useStep5Form(businessId: string, onNext: () => void) {
     const router = useRouter();
@@ -17,7 +26,7 @@ export function useStep5Form(businessId: string, onNext: () => void) {
         void fireOnboardingConfetti();
     }, []);
 
-    const handleGoToDashboard = async (destination?: "requests") => {
+    const handleGoToDashboard = async (destination: Step5Destination = "dashboard") => {
         setIsCompleting(true);
         try {
             const result = await completeOnboarding(businessId);
@@ -25,8 +34,11 @@ export function useStep5Form(businessId: string, onNext: () => void) {
                 toast.error(result.error || "Could not finish setup. Please try again.");
                 return;
             }
-            if (destination === "requests") router.push("/requests");
-            else onNext();
+            // This screen is the welcome. The product tour only runs when the owner asks for it
+            // (here or from Settings), so a new owner never gets a chain of pop-ups.
+            if (destination !== "tour") await completeTour().catch(() => null);
+            if (destination === "dashboard") onNext();
+            else router.push(DESTINATIONS[destination]);
         } catch {
             toast.error("Something went wrong. Please try again.");
         } finally {

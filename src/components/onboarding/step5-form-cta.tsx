@@ -10,11 +10,13 @@ export function Step5FormCta({
     isCompleting,
     onGoToDashboard,
     onFirstRequest,
+    onTour,
 }: {
     isLoading: boolean;
     isCompleting: boolean;
     onGoToDashboard: () => void;
     onFirstRequest: () => void;
+    onTour: () => void;
 }) {
     return (
         <motion.div
@@ -47,9 +49,14 @@ export function Step5FormCta({
                 Send your first review request
                 <ArrowRight className="ml-2 opacity-50 group-hover:translate-x-0.5 transition-transform size-4" />
             </button>
-            <p className="mt-4 text-xs text-muted-foreground/60 font-medium">
-                Ready to grow your online reputation.
-            </p>
+            <button
+                type="button"
+                disabled={isLoading || isCompleting}
+                onClick={onTour}
+                className="mt-4 text-xs font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+            >
+                Show me around first (1 minute)
+            </button>
         </motion.div>
     );
 }

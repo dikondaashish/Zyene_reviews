@@ -1,15 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AlertTriangle, CheckCircle2, Loader2, Star } from "lucide-react";
+import { AlertTriangle, CalendarDays, CheckCircle2, Clock, LayoutDashboard, Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useGoogleSyncRemoteState } from "@/hooks/use-google-sync-remote-state";
-
-const CHECK_ITEMS = [
-    { label: "Business profile created", delay: 0.1 },
-    { label: "Review templates ready", delay: 0.3 },
-] as const;
 
 /**
  * Live Google import status, replacing a hardcoded "~1 hour" promise that production
@@ -67,16 +62,59 @@ function GoogleSyncStatusRow({ businessId }: { businessId: string }) {
     );
 }
 
+/** Plain expectations for the first days, so nothing that happens next is a surprise. */
+function WhatHappensNext({ onOpenCalendar }: { onOpenCalendar: () => void }) {
+    const items = [
+        { icon: LayoutDashboard, text: "Your dashboard puts what needs you first, starting with unhappy reviews." },
+        {
+            icon: CalendarDays,
+            text: "Everything Zyene sends or posts for you shows on your activity calendar.",
+            action: { label: "Open calendar", onClick: onOpenCalendar },
+        },
+        { icon: Clock, text: "Reviews come in as customers answer your requests, so the first ones often take a few days." },
+    ];
+    return (
+        <>
+            {items.map((item, i) => (
+                <motion.div
+                    key={item.text}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 + i * 0.1, duration: 0.3 }}
+                    className="flex items-start gap-3 rounded-xl border border-border bg-background p-3.5"
+                >
+                    <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                        <item.icon className="size-4 text-primary" aria-hidden />
+                    </div>
+                    <p className="text-xs leading-5 text-muted-foreground">
+                        {item.text}
+                        {item.action ? (
+                            <>
+                                {" "}
+                                <button type="button" onClick={item.action.onClick} className="font-semibold text-primary hover:underline">
+                                    {item.action.label}
+                                </button>
+                            </>
+                        ) : null}
+                    </p>
+                </motion.div>
+            ))}
+        </>
+    );
+}
+
 export function Step5FormCelebration({
     firstName,
     businessName,
     businessId,
     googleConnected,
+    onOpenCalendar,
 }: {
     firstName: string;
     businessName: string;
     businessId: string;
     googleConnected: boolean;
+    onOpenCalendar: () => void;
 }) {
     return (
         <>
@@ -86,60 +124,21 @@ export function Step5FormCelebration({
                 transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
                 className="inline-flex"
             >
-                <div className="relative">
-                    <div className="relative bg-primary/10 rounded-full flex items-center justify-center size-16">
-                        <CheckCircle2 className="text-primary size-8" aria-hidden="true" />
-                    </div>
+                <div className="relative bg-primary/10 rounded-full flex items-center justify-center size-16">
+                    <CheckCircle2 className="text-primary size-8" aria-hidden="true" />
                 </div>
             </motion.div>
 
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="space-y-2"
-            >
-                <h1 className="ui-page-title text-foreground">
-                    You&apos;re all set, {firstName}!
-                </h1>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="space-y-2">
+                <h1 className="ui-page-title text-foreground">You&apos;re all set, {firstName}!</h1>
                 <p className="text-muted-foreground text-sm max-w-xs mx-auto">
-                    Your Zyene Reviews dashboard is ready for{" "}
-                    <strong className="text-foreground">{businessName}</strong>.
+                    Zyene is ready for <strong className="text-foreground">{businessName}</strong>. Here&apos;s what happens now.
                 </p>
             </motion.div>
 
             <div className="grid grid-cols-1 gap-2.5 max-w-sm mx-auto text-left">
-                {CHECK_ITEMS.map((item) => (
-                    <motion.div
-                        key={item.label}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: item.delay, duration: 0.3 }}
-                        className="flex items-center gap-3 p-3.5 bg-chart-2/10 rounded-xl border border-chart-2/25"
-                    >
-                        <div className="rounded-lg bg-chart-2/15 flex items-center justify-center shrink-0 size-7">
-                            <CheckCircle2 className="text-success size-4" />
-                        </div>
-                        <span className="text-xs font-medium text-foreground">{item.label}</span>
-                    </motion.div>
-                ))}
-
                 {googleConnected ? <GoogleSyncStatusRow businessId={businessId} /> : null}
-
-                <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4, duration: 0.3 }}
-                    className="flex items-center gap-3 p-3.5 bg-primary/[0.04] rounded-xl border border-primary/10"
-                >
-                    <div className="rounded-lg bg-primary/10 flex items-center justify-center shrink-0 size-7">
-                        <Star className="text-primary size-4" />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                        <strong className="text-foreground">Next:</strong> Send your first review request from the
-                        dashboard.
-                    </p>
-                </motion.div>
+                <WhatHappensNext onOpenCalendar={onOpenCalendar} />
             </div>
         </>
     );
