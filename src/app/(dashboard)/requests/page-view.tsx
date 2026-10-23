@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { loadRequestsPageData } from "./load-requests-page-data";
 import { RequestsPageHeader } from "./requests-page-header";
+import { GetReviewsTabs } from "@/components/dashboard/get-reviews-tabs";
 import { RequestsStatsSection } from "./requests-stats-section";
 import { RequestsListSection, type RequestListRow } from "./requests-list-section";
 
@@ -37,6 +38,7 @@ export default async function RequestsPage({
 
     return (
         <div className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-4 sm:p-6 sm:pt-5 lg:p-8 lg:pt-8">
+            <GetReviewsTabs active="/requests" />
             <RequestsPageHeader
                 businessId={data.business.id}
                 businessSlug={data.business.slug || undefined}

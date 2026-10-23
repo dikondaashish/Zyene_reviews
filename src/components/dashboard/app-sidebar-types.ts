@@ -5,4 +5,6 @@ export type AppSidebarNavItem = {
     url: string;
     icon: React.ComponentType<{ className?: string }>;
     tourTarget?: string;
+    /** Other route prefixes that count as this item, e.g. the pages under "Get reviews". */
+    matchUrls?: string[];
 };

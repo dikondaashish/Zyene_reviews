@@ -10,6 +10,7 @@ import { AutomationsActivity } from "./automations-activity";
 import { AutomationsRecipes } from "./automations-recipes";
 import { AutomationsStatusPanel } from "./automations-status-panel";
 import { InboundEnrollmentCard } from "./inbound-enrollment-card";
+import { GetReviewsTabs } from "@/components/dashboard/get-reviews-tabs";
 
 /** Reads top to bottom as: is it working, what runs, how it sends, what happened. */
 export function AutomationsOverviewView({
@@ -21,6 +22,7 @@ export function AutomationsOverviewView({
 }) {
     return (
         <div className="flex min-w-0 flex-col gap-8 p-4 md:p-8">
+            <GetReviewsTabs active="/automations" />
             <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                     <h1 className="ui-page-title">Automations</h1>

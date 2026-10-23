@@ -10,7 +10,6 @@ import {
   Globe,
   HelpCircle,
   Home,
-  LayoutGrid,
   MessageSquare,
   Plug,
   Send,
@@ -18,12 +17,12 @@ import {
   Target,
   User,
   Users,
-  Zap,
 } from "lucide-react";
 
 import { useLanguage } from "@/lib/language-context";
 import type { AppSidebarNavItem } from "@/components/dashboard/app-sidebar-types";
 import type { SettingsAccess } from "@/lib/auth/settings-access";
+import { GET_REVIEWS_URLS } from "@/components/dashboard/get-reviews-tabs";
 
 export function useAppSidebarNav(
   hideGoogleQaNav: boolean | undefined,
@@ -42,16 +41,16 @@ export function useAppSidebarNav(
         icon: Users,
         tourTarget: "tour-customers-nav",
       },
+      // Requests, campaigns and automations are one job for an owner, so one item and shared tabs.
+      {
+        title: dict.nav.get_reviews,
+        url: "/campaigns",
+        icon: Send,
+        matchUrls: GET_REVIEWS_URLS,
+      },
       { title: dict.nav.competitors, url: "/competitors", icon: Target },
       { title: dict.nav.reviews, url: "/reviews", icon: MessageSquare },
       { title: dict.nav.qa, url: "/questions", icon: HelpCircle },
-      { title: dict.nav.requests, url: "/requests", icon: Send },
-      { title: dict.nav.campaigns, url: "/campaigns", icon: LayoutGrid },
-      {
-        title: (dict.nav as Record<string, string>).automations || "Automations",
-        url: "/automations",
-        icon: Zap,
-      },
       {
         title: dict.nav.analytics,
         url: "/analytics",
@@ -65,11 +64,6 @@ export function useAppSidebarNav(
         url: "/google-seo-aeo",
         icon: Globe,
       },
-      {
-        title: dict.nav.integrations,
-        url: "/settings/integrations",
-        icon: Plug,
-      },
     ];
     if (hideGoogleQaNav) {
       return base.filter((item) => item.url !== "/questions");
@@ -80,6 +74,7 @@ export function useAppSidebarNav(
   const settingsItems = React.useMemo<AppSidebarNavItem[]>(() => {
     const result: AppSidebarNavItem[] = [
       { title: dict.nav.general, url: "/settings/general", icon: User },
+      { title: dict.nav.integrations, url: "/settings/integrations", icon: Plug },
       {
         title: dict.nav.business_info,
         url: "/settings/business-information",

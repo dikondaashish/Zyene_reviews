@@ -27,7 +27,7 @@ export const dashboardTourSteps: TourStep[] = [
         target: "tour-sidebar",
         title: "Navigation Menu",
         description:
-            "Browse all sections from here - Reviews, Campaigns, Customers, Analytics, Integrations, and more. Everything is one click away.",
+            "Browse all sections from here: Reviews, Get reviews (campaigns, requests and automations), Customers, Analytics and more. Integrations are under Settings.",
         placement: "right",
         icon: "panel-left",
     },

@@ -19,7 +19,7 @@ export function AppSidebarMainNavItems({ items, pathname }: { items: AppSidebarN
             {groups.filter(group => group.items.length > 0).map(group => (
                 <ul key={group.id} className="app-sidebar-menu">
                     {group.items.map(item => {
-                        const isActive = appSidebarNavItemIsActive(pathname, item.url);
+                        const isActive = appSidebarNavItemIsActive(pathname, item.url, item.matchUrls);
                         return (
                             <li key={item.url} data-tour-target={item.tourTarget}>
                                 <Link href={item.url} className="app-sidebar-link" aria-current={isActive ? "page" : undefined}

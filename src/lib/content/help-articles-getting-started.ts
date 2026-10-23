@@ -86,7 +86,7 @@ export const gs3: HelpArticle = {
         { type: "p", text: "Your first review request can be sent within 2 minutes of completing setup. Here's how." },
         { type: "h2", text: "Option A: Send a Single Manual Request" },
         { type: "ol", items: [
-            "From your dashboard, click 'Review Requests' in the left navigation.",
+            "From your dashboard, click 'Get reviews' in the left navigation, then the 'Requests' tab.",
             "Click 'New Request'.",
             "Enter the customer's name, phone number, and/or email address.",
             "Select the channel: SMS, Email, or Both.",
