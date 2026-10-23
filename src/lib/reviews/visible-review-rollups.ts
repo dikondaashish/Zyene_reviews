@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { calculateReviewMetrics } from "@/lib/metrics/business-metrics";
 import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
+import { isUnhappyUnanswered } from "@/lib/reviews/unanswered-reviews";
 
 export type VisibleReviewRollup = {
     /** All stored rows, including hidden rows. Diagnostics only. */
@@ -11,6 +12,8 @@ export type VisibleReviewRollup = {
     totalVisible: number;
     respondedVisible: number;
     pendingVisible: number;
+    /** Unanswered 1–2★ reviews; see `@/lib/reviews/unanswered-reviews`. */
+    unhappyPendingVisible: number;
     responseRateVisible: number;
     averageRatingVisible: number;
     positiveVisible: number;
@@ -35,6 +38,7 @@ export function emptyVisibleReviewRollup(): VisibleReviewRollup {
         totalVisible: 0,
         respondedVisible: 0,
         pendingVisible: 0,
+        unhappyPendingVisible: 0,
         responseRateVisible: 0,
         averageRatingVisible: 0,
         positiveVisible: 0,
@@ -115,9 +119,8 @@ export async function fetchVisibleReviewRollupsByBusinessIds(
 
     for (const id of businessIds) {
         const rows = rowsByBusiness.get(id) ?? [];
-        const all = calculateReviewMetrics(
-            rows.filter((row) => row.is_visible === true),
-        );
+        const visibleRows = rows.filter((row) => row.is_visible === true);
+        const all = calculateReviewMetrics(visibleRows);
         const google = platformRollup(rows, "google");
         const facebook = platformRollup(rows, "facebook");
         const yelp = platformRollup(rows, "yelp");
@@ -127,6 +130,7 @@ export async function fetchVisibleReviewRollupsByBusinessIds(
             totalVisible: all.totalReviews,
             respondedVisible: all.respondedReviews,
             pendingVisible: all.pendingReviews,
+            unhappyPendingVisible: visibleRows.filter(isUnhappyUnanswered).length,
             responseRateVisible: all.responseRate,
             averageRatingVisible: Number(all.averageRating.toFixed(1)),
             positiveVisible: all.positiveReviews,

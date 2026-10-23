@@ -4,6 +4,8 @@ export function createEmptyDashboardStatsState() {
     return {
         responseRate: 0,
         pendingCount: 0,
+        /** Unanswered 1–2★ reviews; the attention list only loads the first few. */
+        unhappyUnansweredCount: 0,
         recentReviews: [] as RawReviewRow[],
         attentionReviews: [] as RawReviewRow[],
         trendData: [] as { day: string; count: number }[],

@@ -2,9 +2,9 @@ import type { NeedsAttentionCopy } from "@/components/dashboard/needs-attention-
 
 export const DEFAULT_NEEDS_ATTENTION_COPY: NeedsAttentionCopy = {
     title: "Needs your attention",
-    subtitleZero: "No urgent reviews right now",
-    subtitleOne: "1 urgent review - we can draft a response for you",
-    subtitleMany: "{count} urgent reviews - we can draft responses for you",
+    subtitleZero: "No unhappy reviews are waiting for a reply",
+    subtitleOne: "1 unhappy review has no reply. We can draft one for you.",
+    subtitleMany: "{count} unhappy reviews have no reply. Most urgent first.",
     viewAll: "View all",
     yourReplyLabel: "Your reply as owner",
     sentToGoogle: "Posted to Google",
@@ -20,7 +20,7 @@ export const DEFAULT_NEEDS_ATTENTION_COPY: NeedsAttentionCopy = {
     sent: "Sent",
     urgencyLabel: "Urgency {score}",
     emptyTitle: "All clear!",
-    emptyDescription: "No urgent reviews need your attention right now.",
+    emptyDescription: "Every 1 and 2-star review has a reply.",
     demoSendHint: "Connect Google Business Profile to post replies from here.",
 };
 

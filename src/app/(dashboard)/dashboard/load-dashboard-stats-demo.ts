@@ -19,6 +19,7 @@ export function applyDashboardStatsDemo(
     stats.hasEngagementData = true;
     stats.newReviews30d = DASHBOARD_DEMO_DATA.newReviews30d;
     stats.attentionReviews = [...DASHBOARD_DEMO_DATA.attentionReviews];
+    stats.unhappyUnansweredCount = stats.attentionReviews.length;
     stats.totalReviewsTrend = 12;
     stats.averageRatingTrend = 0.1;
 
@@ -32,6 +33,7 @@ export function applyDashboardStatsDemo(
             DASHBOARD_DEMO_DATA.total_reviews -
             DASHBOARD_DEMO_DATA.pendingCount,
         pendingVisible: DASHBOARD_DEMO_DATA.pendingCount,
+        unhappyPendingVisible: DASHBOARD_DEMO_DATA.attentionReviews.length,
         responseRateVisible: DASHBOARD_DEMO_DATA.responseRate,
         averageRatingVisible: DASHBOARD_DEMO_DATA.average_rating,
         positiveVisible: Math.round(

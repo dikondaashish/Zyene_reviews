@@ -61,6 +61,7 @@ export function processDashboardStatsQueryResults(
     }
 
     stats.pendingCount = visibleReviewRollup?.pendingVisible ?? 0;
+    stats.unhappyUnansweredCount = visibleReviewRollup?.unhappyPendingVisible ?? 0;
     stats.responseRate = visibleReviewRollup?.responseRateVisible ?? 0;
 
     stats.recentReviews = (recentResult.data || []) as RawReviewRow[];

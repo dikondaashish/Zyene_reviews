@@ -9,6 +9,7 @@ type Props = Pick<
     | "dict"
     | "recentReviews"
     | "attentionReviews"
+    | "unhappyUnansweredCount"
     | "planAllowsAiReplies"
     | "useDemoData"
 >;
@@ -17,6 +18,7 @@ export function DashboardViewBottomRow({
     dict,
     recentReviews,
     attentionReviews,
+    unhappyUnansweredCount,
     planAllowsAiReplies,
     useDemoData,
 }: Props) {
@@ -69,6 +71,7 @@ export function DashboardViewBottomRow({
                             (r) => (r.response_status ?? "pending") === "pending",
                         ),
                     )}
+                    totalCount={unhappyUnansweredCount}
                     viewAllHref="/reviews?status=needs_response&sort=lowest"
                     planAllowsAiReplies={planAllowsAiReplies}
                     isDemo={useDemoData}

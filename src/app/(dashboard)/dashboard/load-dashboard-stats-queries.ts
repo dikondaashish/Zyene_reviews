@@ -1,5 +1,6 @@
 import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 import { loadReviewRequestMetrics } from "@/lib/metrics/load-review-request-metrics";
+import { NOT_RESPONDED_OR_FILTER, UNHAPPY_MAX_RATING } from "@/lib/reviews/unanswered-reviews";
 import type { DashboardAuthContext } from "./load-dashboard-auth";
 
 export async function runDashboardStatsQueries(auth: DashboardAuthContext) {
@@ -23,10 +24,12 @@ export async function runDashboardStatsQueries(auth: DashboardAuthContext) {
             .select("*")
             .eq("business_id", business.id)
             .eq("is_visible", true)
-            .eq("response_status", "pending")
-            .or("rating.lte.2,urgency_score.gte.7")
-            .order("review_date", { ascending: false })
+            .is("responded_at", null)
+            .or(NOT_RESPONDED_OR_FILTER)
+            .gte("rating", 1)
+            .lte("rating", UNHAPPY_MAX_RATING)
             .order("urgency_score", { ascending: false, nullsFirst: false })
+            .order("review_date", { ascending: false })
             .limit(5),
         fetchAllReviewRowsPaginated(1000, (from, to) =>
             supabase

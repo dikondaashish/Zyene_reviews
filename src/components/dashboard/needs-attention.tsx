@@ -12,6 +12,7 @@ import { useNeedsAttentionController } from "@/components/dashboard/use-needs-at
 
 export function NeedsAttention({
     reviews,
+    totalCount,
     viewAllHref = "/reviews?status=needs_response&sort=lowest",
     copy: copyProp,
     className,
@@ -19,6 +20,8 @@ export function NeedsAttention({
     isDemo = false,
 }: {
     reviews: NeedsAttentionReview[];
+    /** How many reviews qualify in total; the list itself is only the first few. */
+    totalCount?: number;
     viewAllHref?: string;
     copy?: Partial<NeedsAttentionCopy>;
     className?: string;
@@ -37,7 +40,7 @@ export function NeedsAttention({
         return <NeedsAttentionEmpty copy={ctl.copy} className={className} />;
     }
 
-    const urgentCount = reviews.length;
+    const urgentCount = Math.max(totalCount ?? 0, reviews.length);
 
     return (
         <div

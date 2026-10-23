@@ -22,6 +22,7 @@ export async function loadDashboardStatsFromCache(
     stats.pendingCount = parsed.pendingCount || 0;
     stats.recentReviews = parsed.recentReviews || [];
     stats.attentionReviews = parsed.attentionReviews || [];
+    stats.unhappyUnansweredCount = stats.attentionReviews.length;
     stats.trendData = parsed.trendData || [];
     stats.ratingData = parsed.ratingData || [];
     stats.totalReviewsTrend = parsed.totalReviewsTrend || 0;
@@ -36,6 +37,7 @@ export async function loadDashboardStatsFromCache(
 
     if (!useDemoData && visibleReviewRollup) {
         stats.pendingCount = visibleReviewRollup.pendingVisible;
+        stats.unhappyUnansweredCount = visibleReviewRollup.unhappyPendingVisible;
         stats.responseRate = visibleReviewRollup.responseRateVisible;
         const ratedReviews =
             visibleReviewRollup.positiveVisible +

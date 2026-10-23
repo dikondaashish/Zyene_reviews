@@ -33,9 +33,9 @@ export const dashboardTourSteps: TourStep[] = [
     },
     {
         target: "tour-stats",
-        title: "Dashboard Results",
+        title: "Your reputation",
         description:
-            "Your key metrics at a glance - total reviews, average rating, response rate, and pending reviews. These update in real-time.",
+            "Your rating, total reviews, how many you've replied to and what's new this month. The full charts are on Analytics.",
         placement: "bottom",
         icon: "home",
     },

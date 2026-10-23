@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
 import { buildWaitingTasks, type WaitingTask } from "@/lib/dashboard/waiting-tasks";
 import { loadSetupProgress } from "@/services/automations/load-setup-progress";
+import { NOT_RESPONDED_OR_FILTER, UNHAPPY_MAX_RATING } from "@/lib/reviews/unanswered-reviews";
 
 /** Loads the dashboard task list with the caller's RLS client. Fails soft to no tasks. */
 export async function loadWaitingTasks(
@@ -14,7 +15,8 @@ export async function loadWaitingTasks(
                 .eq("business_id", input.businessId).in("status", ["pending", "failed"]),
             supabase.from("reviews").select("id", { count: "exact", head: true })
                 .eq("business_id", input.businessId).eq("is_visible", true)
-                .eq("response_status", "pending").lte("rating", 2),
+                .is("responded_at", null).or(NOT_RESPONDED_OR_FILTER)
+                .gte("rating", 1).lte("rating", UNHAPPY_MAX_RATING),
             input.includeSetup ? loadSetupProgress(supabase, input.businessId, input.googleConnected) : Promise.resolve(null),
         ]);
         return buildWaitingTasks({

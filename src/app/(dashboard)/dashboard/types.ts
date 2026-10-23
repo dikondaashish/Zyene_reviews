@@ -1,7 +1,6 @@
 import type { ReactElement } from "react";
 import type { User } from "@supabase/supabase-js";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
-import type { GooglePerformanceTotals } from "@/services/google/performance-queries";
 import type {
   BusinessContextBusiness,
   BusinessContextOrganization,
@@ -82,28 +81,15 @@ export interface DashboardViewProps {
   pendingCount: number;
   totalReviewsTrend: number;
   averageRatingTrend: number;
-  responseRateLabel: string;
-  showUnansweredQaCard: boolean;
-  unansweredQaCount: number;
   brokenPlaceLinksCount: number;
-  googleProfileHealthScore: number | null;
-  showLodgingCard: boolean;
-  googleLodgingHealthScore: number | null;
-  googleLodgingApplicable: boolean | null;
-  googleHealthMetricsGridClass: string;
-  googlePerf: GooglePerformanceTotals | null;
-  positivePercent: number;
-  negativePercent: number;
-  hasSentimentData: boolean;
-  engagementRate: number;
   hasEngagementData: boolean;
   maxRequestsPerMonth: number;
   isPaidPlan: boolean;
   newReviews30d: number;
-  trendData: Array<{ day: string; count: number }>;
-  ratingData: Array<{ rating: number; count: number }>;
   recentReviews: RawReviewRow[];
   attentionReviews: RawReviewRow[];
+  /** Every unanswered 1–2★ review, not just the few in `attentionReviews`. */
+  unhappyUnansweredCount: number;
   planAllowsAiReplies: boolean;
 }
 

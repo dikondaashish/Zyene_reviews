@@ -7,10 +7,6 @@ import {
     shouldShowGettingStartedBanner,
 } from "@/components/dashboard/getting-started-visibility";
 import { DashboardViewBottomRow } from "./dashboard-view-bottom-row";
-import { DashboardViewCharts } from "./dashboard-view-charts";
-import { DashboardViewExtendedStats } from "./dashboard-view-extended-stats";
-import { DashboardViewGoogleHealth } from "./dashboard-view-google-health";
-import { DashboardViewGooglePerformance } from "./dashboard-view-google-performance";
 import { DashboardViewHeader } from "./dashboard-view-header";
 import { DashboardViewStatCards } from "./dashboard-view-stat-cards";
 import { DashboardViewTopRow } from "./dashboard-view-top-row";
@@ -72,18 +68,16 @@ export function DashboardView(props: DashboardViewProps) {
                 </div>
             )}
 
-            <DashboardViewTopRow business={business} />
+            {/* Four blocks: what needs you (above), your reputation, what Zyene did, reviews to answer.
+                Charts and Google listing detail live on Analytics and Google SEO/AEO. */}
             <DashboardViewStatCards {...props} />
-            <DashboardViewGoogleHealth {...props} />
-            <DashboardViewGooglePerformance {...props} />
-            <DashboardViewExtendedStats {...props} />
-            <DashboardViewCharts {...props} />
             {!useDemoData && (
                 <Suspense fallback={null}>
                     <DashboardViewRecentAutomations businessId={business.id} />
                 </Suspense>
             )}
             <DashboardViewBottomRow {...props} />
+            <DashboardViewTopRow business={business} />
         </div>
     );
 }
