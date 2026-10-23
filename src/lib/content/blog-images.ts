@@ -175,6 +175,13 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         height: 675,
         caption: "Live review carousels build immediate buyer trust directly on high-conversion landing pages.",
     },
+    "how-to-get-google-reviews-auto-repair-shops": {
+        src: "/images/blog/auto_repair_google_reviews.jpg",
+        alt: "Service advisor handing car keys to a satisfied customer over the counter next to a Google review QR code stand",
+        width: 1200,
+        height: 675,
+        caption: "In-person checkout interactions paired with countertop QR stands capture reviews at peak customer relief.",
+    },
 };
 
 export function getBlogImage(slug: string): ContentImage {
