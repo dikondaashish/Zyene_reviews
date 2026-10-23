@@ -13,7 +13,7 @@ const TEXT_URL = "https://places.googleapis.com/v1/places:searchText";
 const SEARCH_RADIUS_METERS = 8_000;
 /** Candidates beyond this are not "nearby" to a local customer. */
 export const MAX_COMPETITOR_DISTANCE_KM = 15;
-const CANDIDATE_FIELDS = "places.id,places.displayName,places.rating,places.userRatingCount,places.primaryType,places.types,places.location";
+const CANDIDATE_FIELDS = "places.id,places.displayName,places.rating,places.userRatingCount,places.primaryType,places.types,places.location,places.shortFormattedAddress";
 
 /** Types too broad to compare on: matching them lumps unrelated businesses together. */
 export const GENERIC_PLACE_TYPES = new Set([
@@ -31,6 +31,7 @@ export interface PlaceCandidate {
     primaryType?: string;
     types?: string[];
     location?: { latitude?: number; longitude?: number };
+    shortFormattedAddress?: string;
 }
 
 export interface BusinessProfile extends PlaceCandidate {
@@ -88,7 +89,8 @@ async function placesPost(url: string, apiKey: string, body: Record<string, unkn
     return data.places ?? [];
 }
 
-export async function findComparableCompetitors(apiKey: string, business: BusinessProfile): Promise<PlaceCandidate[]> {
+/** The `limit` most-reviewed comparable businesses nearby (three for the chat check). */
+export async function findComparableCompetitors(apiKey: string, business: BusinessProfile, limit = 3): Promise<PlaceCandidate[]> {
     const { latitude, longitude } = business.location ?? {};
     if (typeof latitude !== "number" || typeof longitude !== "number") return [];
     const circle = { center: { latitude, longitude }, radius: SEARCH_RADIUS_METERS };
@@ -107,5 +109,5 @@ export async function findComparableCompetitors(apiKey: string, business: Busine
     return candidates
         .filter((candidate) => isComparable(business, candidate, type))
         .sort((a, b) => (b.userRatingCount ?? 0) - (a.userRatingCount ?? 0))
-        .slice(0, 3);
+        .slice(0, limit);
 }

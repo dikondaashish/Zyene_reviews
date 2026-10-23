@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { AlertTriangle, ChevronDown, Clock, MessageSquare, ImageIcon } from "lucide-react";
+import { AlertTriangle, ChevronDown, Clock, MessageSquare } from "lucide-react";
 import type { ReviewManagementItem } from "@/types/components";
 import type { Review } from "@/components/reviews/review-card-types";
 import { ReviewCard } from "@/components/reviews/review-card";
@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { isUrgentReview, replyWaitLabel } from "@/lib/reviews/inbox-signals";
 import { reviewRowDomId } from "@/components/reviews/use-review-row-open-state";
+import { ReviewPhotoStrip, reviewPhotoUrls } from "@/components/reviews/review-photo-strip";
 
 export function CompactReviewRow(props: {
     review: ReviewManagementItem;
@@ -36,7 +37,8 @@ export function CompactReviewRow(props: {
     const rating = typeof review.rating === "number" ? review.rating : 0;
     const platform = typeof review.platform === "string" ? review.platform : "Review";
     const text = typeof review.text === "string" && review.text.trim() ? review.text.trim() : typeof review.content === "string" ? review.content.trim() : "";
-    const photoCount = Array.isArray(review.review_photo_urls) ? review.review_photo_urls.length : 0;
+    const photos = reviewPhotoUrls(review.review_photo_urls);
+    const toggle = () => props.onOpenChange(review.id, !open);
     const urgent = isUrgentReview({ rating: review.rating, urgency_score: review.urgency_score, response_status: review.response_status });
     const waiting = replyWaitLabel(rawDate, review.response_status, new Date());
     return (
@@ -44,8 +46,9 @@ export function CompactReviewRow(props: {
             <div className="flex min-w-0 items-start gap-3 px-4 py-5 sm:gap-4 sm:px-5">
                 <input type="checkbox" className="mt-3 size-4 shrink-0 cursor-pointer rounded accent-primary focus-visible:outline-2 focus-visible:outline-ring"
                     aria-label={`Select review by ${author}`} checked={isSelected} onChange={(e) => onSelect(review.id, e.target.checked)} />
-                <button type="button" className="group min-w-0 flex-1 rounded-md text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
-                    aria-expanded={open} aria-controls={detailId} onClick={() => props.onOpenChange(review.id, !open)}>
+                <div className="group min-w-0 flex-1">
+                <button type="button" className="block w-full min-w-0 rounded-md text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+                    aria-expanded={open} aria-controls={detailId} onClick={toggle}>
                     <span className="flex min-w-0 items-start gap-3">
                         <span className="relative size-10 shrink-0">
                             <Avatar className="size-10 border border-border">
@@ -77,19 +80,19 @@ export function CompactReviewRow(props: {
                                 </span>}
                             </span>
                             {!open && <span className={cn("mt-3 block max-w-[75ch] text-sm leading-relaxed [overflow-wrap:anywhere]", text ? "line-clamp-2 text-foreground/85" : "italic text-muted-foreground")}>{text || "Left a star rating without a written review."}</span>}
-                            <span className="mt-3 flex flex-wrap items-center justify-between gap-2">
-                                <span className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    {photoCount > 0 && <><ImageIcon className="size-3.5" aria-hidden="true" />{photoCount} {photoCount === 1 ? "photo" : "photos"}</>}
-                                </span>
-                                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary group-hover:underline">
-                                    <MessageSquare className="size-3.5" aria-hidden="true" />
-                                    {open ? "Close review" : review.response_status === "responded" ? "View conversation" : "Read & reply"}
-                                    <ChevronDown className={cn("size-3.5 transition-transform motion-reduce:transition-none", open && "rotate-180")} aria-hidden="true" />
-                                </span>
-                            </span>
                         </span>
                     </span>
                 </button>
+                {/* Photos sit outside the toggle so each one can open on its own; the full review shows them too. */}
+                {!open && photos.length > 0 && <div className="mt-3 pl-[52px]"><ReviewPhotoStrip urls={photos} author={author} /></div>}
+                {/* Same toggle as the row above, kept out of the tab order so keyboard users meet it once. */}
+                <button type="button" tabIndex={-1} onClick={toggle} aria-controls={detailId}
+                    className="mt-3 ml-auto flex w-fit items-center gap-1.5 text-xs font-medium text-primary hover:underline group-hover:underline">
+                    <MessageSquare className="size-3.5" aria-hidden="true" />
+                    {open ? "Close review" : review.response_status === "responded" ? "View conversation" : "Read & reply"}
+                    <ChevronDown className={cn("size-3.5 transition-transform motion-reduce:transition-none", open && "rotate-180")} aria-hidden="true" />
+                </button>
+                </div>
             </div>
             <div id={detailId} hidden={!open}>
                 {hasOpened && <div className="border-t border-border/60 px-4 py-4 sm:pl-[104px] sm:pr-5">
