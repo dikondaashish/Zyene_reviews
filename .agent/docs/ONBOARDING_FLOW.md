@@ -35,6 +35,8 @@ Owners see five phases: **Connect → Your results → Plan → Automate → All
 | Automate | 7 | After a successful checkout. One choice writes reply rules for all five ratings via `PUT /api/settings/reply-rules`: auto-post 4–5★ and approve 1–3★ (Growth+ only), approve everything, or reply myself. Ends with a "Zyene will now" list. Waits briefly for the Stripe webhook to switch the plan on. |
 | All set | 5 | One welcome screen: live Google import status, what happens next (dashboard priorities, activity calendar, reviews take a few days) and three ways out: dashboard, first review request, or a 1-minute tour. The tour no longer starts by itself after onboarding; it runs only from "Show me around" or Settings. |
 
+Every onboarding screen has a **Get help** button (bottom left, from `app/onboarding/layout.tsx`): a help article for the current step, an email to support@zyenereviews.com with the step in the subject, and the help centre. Step-to-article map: `src/lib/onboarding/onboarding-help.ts`.
+
 New accounts are on plan `none`, which has no AI drafts or auto-replies, so nothing that needs a plan is offered before the Plan step.
 
 Notification preferences are configured under **Settings → Notifications** after onboarding (not a dedicated onboarding step in the current UI).

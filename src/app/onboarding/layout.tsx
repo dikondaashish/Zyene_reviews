@@ -8,6 +8,7 @@ export const metadata: Metadata = {
 
 import { redirect } from "next/navigation";
 import { ZyeneReviewsLogoMark } from "@/components/brand/zyene-reviews-logo-mark";
+import { OnboardingHelpButton } from "@/components/onboarding/onboarding-help-button";
 
 export default async function OnboardingLayout({
     children,
@@ -60,6 +61,7 @@ export default async function OnboardingLayout({
                     {children}
                 </div>
             </main>
+            <OnboardingHelpButton />
         </div>
     );
 }
