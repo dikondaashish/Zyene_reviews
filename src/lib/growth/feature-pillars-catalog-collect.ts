@@ -127,7 +127,7 @@ export const COLLECT_FEATURE_PILLARS: FeaturePillarPage[] = [
         title: "AI Review Replies",
         tagline: "A thoughtful reply in seconds, in the tone you choose.",
         metaTitle: "AI Review Response Generator",
-        metaDescription: "Draft replies to Google reviews with AI in a Professional, Friendly or Concise tone. Edit, then publish to Google without leaving Zyene.",
+        metaDescription: "Draft thoughtful AI review replies for Google reviews in your preferred brand tone and publish them directly to Google without leaving your dashboard.",
         bullets: [
             "One-click AI reply suggestions for every review",
             "Professional, Friendly or Concise tones",

@@ -8,8 +8,8 @@ export const birdeyePricingBreakdown2026Post: BlogPostSource = {
   pillar: "competitor-analysis", pillarLabel: "Competitor Analysis",
   publishedAt: "2026-03-24", dateModified: "2026-10-11",
   author: { name: "Zyene Reviews Team", role: "Editorial" },
-  metaTitle: "Birdeye Pricing vs Zyene Reviews: 2026 Quote Guide",
-  metaDescription: "Birdeye pricing requires a quote. Compare scope, AI replies, request allowances and contract terms with Zyene's published plans from $29.99/month.",
+  metaTitle: "Birdeye Pricing 2026: Costs & Alternatives",
+  metaDescription: "Birdeye doesn't publish prices. See what third-party trackers report, what drives the bill, and how it compares to plans from $29.99/mo.",
   keywords: ["birdeye pricing", "birdeye vs zyene reviews", "birdeye cost", "birdeye pricing 2026"],
   relatedSlugs: ["birdeye-alternatives-for-local-businesses", "podium-pricing-vs-zyene-reviews"],
   internalLinks: [
