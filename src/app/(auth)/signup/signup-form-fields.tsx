@@ -6,8 +6,9 @@ import { SignupFormPhoneFields } from "@/app/(auth)/signup/signup-form-phone-fie
 import type { useSignupForm } from "@/app/(auth)/signup/use-signup-form";
 
 export function SignupFormFields(props: ReturnType<typeof useSignupForm>) {
-    const { fullName, setFullName, email, setEmail, password, setPassword,
+    const { fullName, setFullName, email, setEmail, password, setPassword, confirmPassword, setConfirmPassword,
         showPassword, setShowPassword, isLoading, handleSubmit, formError } = props;
+    const mismatch = confirmPassword.length > 0 && confirmPassword !== password;
     return (
         <form onSubmit={handleSubmit} onInput={props.trackStart} className="auth-fields" aria-busy={isLoading}>
             <AuthError message={formError} />
@@ -25,11 +26,20 @@ export function SignupFormFields(props: ReturnType<typeof useSignupForm>) {
             </div>
             <div className="auth-field">
                 <label htmlFor="password">Password</label>
-                <AuthPasswordField id="password" name="password" placeholder="At least 6 characters"
-                    value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6}
+                <AuthPasswordField id="password" name="password" placeholder="At least 8 characters"
+                    value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8}
                     disabled={isLoading} autoComplete="new-password" aria-describedby="password-help"
                     visible={showPassword} onToggle={() => setShowPassword(!showPassword)} />
                 <PasswordStrengthIndicator id="password-help" password={password} />
+            </div>
+            <div className="auth-field">
+                <label htmlFor="confirmPassword">Confirm password</label>
+                <AuthPasswordField id="confirmPassword" name="confirmPassword" placeholder="Type it again"
+                    value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required minLength={8}
+                    disabled={isLoading} autoComplete="new-password" aria-invalid={mismatch || undefined}
+                    aria-describedby={mismatch ? "confirm-password-help" : undefined}
+                    visible={showPassword} onToggle={() => setShowPassword(!showPassword)} />
+                {mismatch && <p id="confirm-password-help" className="auth-hint" role="alert">Passwords don&apos;t match yet.</p>}
             </div>
             <SignupFormPhoneFields {...props} />
             <AuthSubmit loading={isLoading} pending="Creating account…">Create account</AuthSubmit>

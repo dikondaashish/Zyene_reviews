@@ -91,16 +91,6 @@
 .auth-legal { font-size: var(--auth-small); line-height: 1.5; color: var(--muted-foreground); text-align: center; text-wrap: pretty; }
 .auth-legal a { color: var(--foreground); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--foreground) 25%, transparent); text-underline-offset: 3px; }
 
-.auth-optional { border: 1px solid var(--border); border-radius: 10px; }
-.auth-optional summary {
-  min-height: var(--auth-control); padding: 0 14px; display: flex; align-items: center; gap: 8px;
-  cursor: pointer; font-size: 14px; font-weight: 500; list-style: none;
-}
-.auth-optional summary::-webkit-details-marker { display: none; }
-.auth-optional summary span { margin-left: auto; font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
-.auth-optional summary svg { flex-shrink: 0; color: var(--muted-foreground); transition: transform 160ms ease-out; }
-.auth-optional[open] summary svg:last-child { transform: rotate(180deg); }
-.auth-optional-content { display: grid; gap: 14px; padding: 4px 14px 16px; }
 .auth-consent { display: flex; align-items: flex-start; gap: 10px; }
 .auth-consent input { width: 16px; height: 16px; margin-top: 3px; flex-shrink: 0; accent-color: var(--primary); }
 .auth-consent label { font-size: 12px; line-height: 1.6; color: var(--muted-foreground); cursor: pointer; }
@@ -146,7 +136,6 @@
   .auth-text-link:hover { color: var(--foreground); text-decoration-color: currentColor; }
   .auth-back:hover, .auth-password-toggle:hover { color: var(--foreground); }
   .auth-password-toggle:hover { background: var(--muted); }
-  .auth-optional summary:hover { background: color-mix(in srgb, var(--muted) 60%, transparent); }
 }
 
 @media (prefers-reduced-motion: reduce) {

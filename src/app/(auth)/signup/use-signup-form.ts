@@ -17,26 +17,37 @@ export function useSignupForm() {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [smsReviewAlertsConsent, setSmsReviewAlertsConsent] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [formError, setFormError] = useState<string | null>(null);
     const { checkingExistingSession } = useSignupSession(inviteToken);
+    // New owners give a mobile number; team members joining by invite don't have to.
+    const phoneRequired = !inviteToken;
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (isLoading) return;
         setFormError(null);
 
-        if (password.length < 6) {
-            setFormError("Use a password with at least 6 characters.");
+        if (password.length < 8) {
+            setFormError("Use a password with at least 8 characters.");
+            return;
+        }
+        if (password !== confirmPassword) {
+            setFormError("The two passwords don't match. Type the same password in both boxes.");
             return;
         }
 
         const phoneTrimmed = phone.trim();
+        if (phoneRequired && !phoneTrimmed) {
+            setFormError("Add your mobile number, including your country code, for example +1 555 123 4567.");
+            return;
+        }
         if (phoneTrimmed && !isPlausibleMobileNumber(phoneTrimmed)) {
-            setFormError("Check the mobile number under SMS review alerts. Include your country code, for example +1 555 123 4567.");
+            setFormError("Check your mobile number. Include your country code, for example +1 555 123 4567.");
             return;
         }
 
@@ -87,6 +98,9 @@ export function useSignupForm() {
         setPhone,
         password,
         setPassword,
+        confirmPassword,
+        setConfirmPassword,
+        phoneRequired,
         smsReviewAlertsConsent,
         setSmsReviewAlertsConsent,
         showPassword,

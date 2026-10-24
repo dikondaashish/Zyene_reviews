@@ -22,7 +22,7 @@ export function ResetPasswordForm() {
             <form onSubmit={handleSubmit} className="auth-fields" aria-busy={isLoading}>
                 <div className="auth-field">
                     <label htmlFor="password">New password</label>
-                    <AuthPasswordField id="password" placeholder="Minimum 6 characters" value={password}
+                    <AuthPasswordField id="password" placeholder="Minimum 8 characters" value={password}
                         onChange={(e) => setPassword(e.target.value)} required disabled={disabled}
                         autoComplete="new-password" visible={showPassword} onToggle={() => setShowPassword(!showPassword)} />
                 </div>
