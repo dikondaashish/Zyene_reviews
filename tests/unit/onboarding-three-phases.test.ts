@@ -8,11 +8,10 @@ import { AUTOMATE_OPTIONS, availableOptions, replyRulesPayload } from "@/compone
 const source = (file: string) => readFileSync(path.join(process.cwd(), file), "utf8");
 
 describe("onboarding phases", () => {
-    it("shows connect, results, plan, automate, all set in that order", () => {
-        expect(ONBOARDING_PHASES.map((p) => p.label)).toEqual(["Connect", "Your results", "Plan", "Automate", "All set"]);
-        const order = [ONBOARDING_STEP.business, ONBOARDING_STEP.details, ONBOARDING_STEP.results, ONBOARDING_STEP.plan, ONBOARDING_STEP.automate, ONBOARDING_STEP.done];
-        const phases = order.map(onboardingPhaseIndex);
-        expect(phases).toEqual([0, 0, 1, 2, 3, 4]);
+    it("shows about you, connect, results, plan, automate, all set in that order", () => {
+        expect(ONBOARDING_PHASES.map((p) => p.label)).toEqual(["About you", "Connect", "Your results", "Plan", "Automate", "All set"]);
+        const order = [ONBOARDING_STEP.about, ONBOARDING_STEP.business, ONBOARDING_STEP.details, ONBOARDING_STEP.results, ONBOARDING_STEP.plan, ONBOARDING_STEP.automate, ONBOARDING_STEP.done];
+        expect(order.map(onboardingPhaseIndex)).toEqual([0, 1, 1, 2, 3, 4, 5]);
     });
 
     it("keeps the stored ids existing users already have", () => {
@@ -20,8 +19,10 @@ describe("onboarding phases", () => {
         expect(onboardingPhaseIndex(0)).toBe(0);
     });
 
-    it("skips the workspace step and routes through results and automate", () => {
-        expect(source("src/app/onboarding/use-onboarding-data.ts")).toContain("stored <= ONBOARDING_STEP.workspace ? ONBOARDING_STEP.business");
+    it("starts with About you, returns there while the mobile number is missing, then routes through results and automate", () => {
+        const data = source("src/app/onboarding/use-onboarding-data.ts");
+        expect(data).toContain("stored <= ONBOARDING_STEP.about || missingPhone ? ONBOARDING_STEP.about : stored");
+        expect(data).toContain("!userData?.phone?.trim() && stored < ONBOARDING_STEP.done");
         expect(source("src/app/actions/onboarding/business.ts")).toContain("onboarding_step: googleRow?.google_location_id ? 6 : 4");
         expect(source("src/app/actions/onboarding/billing.ts")).toContain("onboarding_step: 7");
         expect(source("src/app/onboarding/use-onboarding-url-effects.ts")).not.toContain("setCurrentStep(5)");

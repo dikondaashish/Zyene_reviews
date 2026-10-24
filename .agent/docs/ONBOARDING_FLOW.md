@@ -23,11 +23,11 @@ Marketing layout uses `auth.${NEXT_PUBLIC_ROOT_DOMAIN}` for login/signup links. 
 Source of truth: `src/app/onboarding/onboarding-types.ts` (`ONBOARDING_STEP` ids, `ONBOARDING_PHASES` labels).
 Step ids are what `users.onboarding_step` stores; new steps took new ids so saved progress keeps its meaning.
 
-Owners see five phases: **Connect → Your results → Plan → Automate → All set**.
+Owners see six phases: **About you → Connect → Your results → Plan → Automate → All set**.
 
 | Phase | Step id | What happens |
 |-------|---------|--------------|
-| Connect | 1 | Workspace name. **Skipped**: a stored 0 or 1 opens step 2, and the signup default "<Name>'s Org" is renamed to the business name when step 3 is saved (`services/onboarding/name-default-workspace.ts`). A name the owner chose is never changed. |
+| About you | 1 | First screen for every new owner. Google sign-ups (no number from the signup form) must add a mobile number; agreeing to SMS review alerts is an optional, unticked box. Everyone picks business or agency (`organizations.type`, owner only; nothing reads it yet). Anyone still missing a number is sent back here until onboarding is done. Saved by `app/actions/onboarding/about-you.ts`, which seeds notification preferences like email signup does. The workspace is named after the business when step 3 is saved. |
 | Connect | 2 | Business. Connect Google (searchable list once there are 6+ locations) or enter details by hand. |
 | Connect | 3 | Industry (pre-filled from the Google category) and support email. Saves step 6 with Google, else 4. |
 | Your results | 6 | Google only. The owner's real rating, review count, unanswered and unhappy (1–2★, unanswered) counts, plus up to 3 unhappy reviews. Polls while the first import runs. Same definitions as the dashboard (`lib/reviews/unanswered-reviews.ts`). |

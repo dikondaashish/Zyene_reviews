@@ -6,6 +6,7 @@ import { Step4SubscriptionForm } from "@/components/onboarding/step4-subscriptio
 import { Step5Form } from "@/components/onboarding/step5-form";
 import { StepResults } from "@/components/onboarding/step-results";
 import { StepAutomate } from "@/components/onboarding/step-automate";
+import { StepAboutYou } from "@/components/onboarding/step-about-you";
 import { updateOnboardingStep } from "@/app/actions/onboarding";
 import { ONBOARDING_STEP, type OnboardingBusiness, type OnboardingOrganization, type OnboardingUser } from "./onboarding-types";
 
@@ -46,6 +47,13 @@ export function OnboardingGlassStepsSection({
     return (
         <div className="relative">
             <div className="relative pro-card p-5 sm:p-7">
+                {currentStep === ONBOARDING_STEP.about && (
+                    <StepAboutYou
+                        firstName={(user.user_metadata?.full_name || user.email || "there").split(/[\s@]/)[0]}
+                        hasPhone={Boolean(user.phone?.trim())}
+                        onNext={() => setCurrentStep(ONBOARDING_STEP.business)}
+                    />
+                )}
                 {currentStep === ONBOARDING_STEP.details && business && (
                     <div>
                         <BackButton onClick={() => setCurrentStep(ONBOARDING_STEP.business)} />

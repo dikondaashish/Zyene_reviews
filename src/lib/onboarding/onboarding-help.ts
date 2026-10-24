@@ -10,7 +10,7 @@ const GETTING_STARTED: StepHelp = {
 };
 
 const STEP_HELP: Record<number, StepHelp> = {
-    1: GETTING_STARTED,
+    1: { stepName: "About you", article: { title: "Creating your account", path: "/getting-started/creating-your-account" } },
     2: GETTING_STARTED,
     3: { stepName: "Business details", article: { title: "Creating your account", path: "/getting-started/creating-your-account" } },
     6: { stepName: "Your results", article: { title: "Understanding your dashboard", path: "/getting-started/understanding-your-dashboard" } },

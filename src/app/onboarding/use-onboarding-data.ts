@@ -48,7 +48,12 @@ export function useOnboardingData({
                 }
 
                 if (authUser) {
-                    setUser(authUser);
+                    const { data: userData } = await supabase
+                        .from("users")
+                        .select("onboarding_step, phone")
+                        .eq("id", authUser.id)
+                        .single();
+                    setUser({ ...authUser, phone: userData?.phone ?? null });
 
                     const { data: member, error: memberErr } = await supabase
                         .from("organization_members")
@@ -78,15 +83,10 @@ export function useOnboardingData({
                     }
 
                     if (!isStepResolved) {
-                        const { data: userData } = await supabase
-                            .from("users")
-                            .select("onboarding_step")
-                            .eq("id", authUser.id)
-                            .single();
-
-                        // The workspace step is skipped: it is named after the business later.
+                        // About you comes first, and again for anyone still missing a mobile number.
                         const stored = userData?.onboarding_step ?? 0;
-                        setCurrentStep(stored <= ONBOARDING_STEP.workspace ? ONBOARDING_STEP.business : stored);
+                        const missingPhone = !userData?.phone?.trim() && stored < ONBOARDING_STEP.done;
+                        setCurrentStep(stored <= ONBOARDING_STEP.about || missingPhone ? ONBOARDING_STEP.about : stored);
                         setIsStepResolved(true);
                     }
                 }

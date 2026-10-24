@@ -10,3 +10,4 @@ export * from "./notifications";
 export * from "./google-sync";
 export * from "./billing";
 export * from "./results";
+export * from "./about-you";
