@@ -19,13 +19,11 @@ describe("Get reviews navigation", () => {
         expect(appSidebarNavItemIsActive("/requestsx", "/campaigns", GET_REVIEWS_URLS)).toBe(false);
     });
 
-    it("lists one sidebar item instead of three, with Integrations under Settings", () => {
+    it("keeps Requests, Campaigns, Automations and Integrations as their own sidebar items", () => {
         const nav = source("src/components/dashboard/use-app-sidebar-nav.ts");
-        expect(nav).toContain("dict.nav.get_reviews");
-        expect(nav).not.toContain('url: "/requests"');
-        expect(nav).not.toContain('url: "/automations"');
-        const settingsStart = nav.indexOf("settingsItems");
-        expect(nav.indexOf('url: "/settings/integrations"')).toBeGreaterThan(settingsStart);
+        expect(nav).not.toContain("dict.nav.get_reviews");
+        for (const url of ["/requests", "/campaigns", "/automations"]) expect(nav).toContain(`url: "${url}"`);
+        expect(nav.indexOf('url: "/settings/integrations"')).toBeLessThan(nav.indexOf("settingsItems"));
     });
 
     it("shows the shared tabs on all three pages", () => {
