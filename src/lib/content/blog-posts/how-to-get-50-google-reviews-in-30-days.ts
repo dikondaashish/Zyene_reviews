@@ -11,7 +11,7 @@ export const howToGet50GoogleReviewsIn30DaysPost: BlogPostSource = {
     dateModified: "2026-10-11",
     author: { name: "Karthik", role: "Founder" },
     metaTitle: "How to Get 50 Google Reviews in 30 Days",
-    metaDescription: "A step-by-step playbook for getting 50 Google reviews in 30 days. Includes request scripts, channel selection, a planning example, and automation tips.",
+    metaDescription: "Learn how to get 50 Google reviews in 30 days by building a repeatable request workflow that asks recent customers for feedback via SMS and email.",
     keywords: ["how to get more google reviews", "get 50 google reviews", "google review strategy", "review request strategy"],
     relatedSlugs: ["why-google-reviews-matter-in-2026", "how-reviews-impact-local-map-pack-ranking", "birdeye-pricing-breakdown-2026"],
     internalLinks: [

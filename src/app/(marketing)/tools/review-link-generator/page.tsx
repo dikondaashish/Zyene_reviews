@@ -8,7 +8,7 @@ import { ReviewLinkGeneratorGuide } from "./review-link-generator-guide";
 export const metadata: Metadata = mergeMarketingSocial({
     title: "Free Google Review Link Generator",
     description:
-        "Find your business on Google Maps and generate a direct review link to share by text, email or QR code. Free Google review link generator.",
+        "Find your business and create a direct review URL with our free Google review link generator so customers can open your rating dialog in one click.",
     alternates: { canonical: "https://www.zyenereviews.com/tools/review-link-generator" },
     openGraph: {
         title: "Free Google Review Link Generator",
