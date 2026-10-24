@@ -21,7 +21,6 @@ const LITERAL_COLOR_FILES = new Set([
 ]);
 
 const SKIP_BASENAMES = new Set([
-  "qr-code-card.tsx",
   "report-generator.tsx",
   "report-generator-pdf.ts",
   "layout.tsx",
@@ -37,12 +36,6 @@ const SKIP_BASENAMES = new Set([
   "opengraph-image-content.tsx",
   "og-card.tsx", // Shared OG card renderer (ImageResponse needs literal colours)
   "transactional-email-styles.ts",
-  "qr-code-helpers.ts",
-  "qr-code-branded-download-canvas-utils.ts",
-  "qr-code-branded-download-paint-rest.ts",
-  "qr-code-branded-download-paint-top.ts",
-  "qr-code-branded-print-html.ts",
-  "qr-code-branded-print.ts",
   "use-public-profile-editor-qr-share.ts",
   // Standalone HTML/PDF artifacts and their shared input color cannot resolve
   // application CSS variables when rendered outside the dashboard.
