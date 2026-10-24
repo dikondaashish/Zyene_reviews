@@ -77,7 +77,7 @@ export function DashboardView(props: DashboardViewProps) {
             {/* What Zyene achieved this month, and what it cost, before anything else. */}
             {!useDemoData && (
                 <Suspense fallback={null}>
-                    <DashboardViewValueSummary businessId={business.id} organization={props.organization} />
+                    <DashboardViewValueSummary businessId={business.id} businessName={business.name || ""} organization={props.organization} />
                 </Suspense>
             )}
 

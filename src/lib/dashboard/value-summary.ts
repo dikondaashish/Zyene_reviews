@@ -75,3 +75,12 @@ export function calculateValueSummary(input: ValueSummaryInput) {
 }
 
 export type ValueSummary = ReturnType<typeof calculateValueSummary>;
+
+/** How the month is going, so the dashboard can cheer, encourage, or nudge. */
+export type ValueTier = "strong" | "growing" | "quiet";
+
+export function valueTier(s: ValueSummary): ValueTier {
+    if (!s.hasActivity) return "quiet";
+    if (s.sentToGoogle >= 10 || (s.newReviews >= 5 && s.newReviewsChange > 0)) return "strong";
+    return "growing";
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateValueSummary, monthlyPlanPrice } from "@/lib/dashboard/value-summary";
+import { calculateValueSummary, monthlyPlanPrice, valueTier } from "@/lib/dashboard/value-summary";
 import { currentMonthPeriod } from "@/services/dashboard/load-value-summary";
 import { monthlyChargeFromInvoice } from "@/services/dashboard/load-monthly-charge";
 
@@ -87,5 +87,14 @@ describe("actual Stripe charge", () => {
     it("turns an invoice total into a monthly amount", () => {
         expect(monthlyChargeFromInvoice(4999, "month")).toBe(49.99);
         expect(monthlyChargeFromInvoice(48000, "year")).toBe(40);
+    });
+});
+
+describe("valueTier", () => {
+    it("cheers a strong month, encourages a growing one, and nudges an empty one", () => {
+        const many = Array.from({ length: 12 }, () => visit("completed", 5));
+        expect(valueTier(calculateValueSummary({ ...base, requests: many }))).toBe("strong");
+        expect(valueTier(calculateValueSummary({ ...base, newReviews: 2, newReviewsLastMonth: 4, requests: [visit("completed")] }))).toBe("growing");
+        expect(valueTier(calculateValueSummary({ ...base, newReviews: 0, newReviewsLastMonth: 0, zyeneReplies: 0, requests: [] }))).toBe("quiet");
     });
 });

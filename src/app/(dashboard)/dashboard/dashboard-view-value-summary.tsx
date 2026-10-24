@@ -6,9 +6,11 @@ import type { DashboardViewProps } from "./types";
 /** Streams in after the rest of the dashboard; shows nothing if the numbers fail to load. */
 export async function DashboardViewValueSummary({
     businessId,
+    businessName,
     organization,
 }: {
     businessId: string;
+    businessName: string;
     organization: DashboardViewProps["organization"];
 }) {
     const supabase = await createClient();
@@ -16,5 +18,5 @@ export async function DashboardViewValueSummary({
     const summary = await loadValueSummary(supabase, businessId, organization, period);
     if (!summary) return null;
     const monthLabel = period.start.toLocaleString("en-US", { month: "long", timeZone: "UTC" });
-    return <ValueSummaryCard summary={summary} monthLabel={monthLabel} />;
+    return <ValueSummaryCard summary={summary} monthLabel={monthLabel} businessName={businessName.trim() || "there"} />;
 }
