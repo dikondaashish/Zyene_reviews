@@ -6,6 +6,8 @@ import { loadOnboardingResults, type OnboardingResults } from "@/app/actions/onb
 const POLL_MS = 4000;
 /** After this long the screen says the import will finish in the background. */
 const LONG_WAIT_MS = 90_000;
+/** Stop asking after this; Continue still works and the import carries on in the background. */
+const MAX_POLL_MS = 5 * 60_000;
 
 /** Loads the owner's numbers, polling while the first Google import is still running. */
 export function useStepResults(businessId: string) {
@@ -27,8 +29,9 @@ export function useStepResults(businessId: string) {
             }
             setResults(response.results);
             if (response.results.status === "importing") {
-                if (Date.now() - startedAt > LONG_WAIT_MS) setWaitedLong(true);
-                timer = setTimeout(() => void tick(), POLL_MS);
+                const waited = Date.now() - startedAt;
+                if (waited > LONG_WAIT_MS) setWaitedLong(true);
+                if (waited < MAX_POLL_MS) timer = setTimeout(() => void tick(), POLL_MS);
             }
         };
         void tick();

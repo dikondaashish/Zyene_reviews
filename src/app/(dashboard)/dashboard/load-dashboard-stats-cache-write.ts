@@ -1,3 +1,4 @@
+import { dashboardStatsCacheKey } from "@/lib/dashboard/invalidate-dashboard-stats-cache";
 import { logger } from "@/lib/logger";
 import type { DashboardCachedStats } from "./types";
 import type { DashboardStatsState } from "./load-dashboard-stats-state";
@@ -26,7 +27,7 @@ export async function cacheDashboardStats(
     try {
         const { redis } = await import("@/lib/db/redis");
         await redis.set(
-            `dashboard:stats:v2:${businessId}`,
+            dashboardStatsCacheKey(businessId),
             JSON.stringify(statsToCache),
             {
                 ex: 300,

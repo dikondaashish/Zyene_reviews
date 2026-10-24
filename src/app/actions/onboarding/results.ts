@@ -4,7 +4,7 @@ import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-review-rollups";
-import { NOT_RESPONDED_OR_FILTER, UNHAPPY_MAX_RATING } from "@/lib/reviews/unanswered-reviews";
+import { NEEDS_REPLY_STATUS, UNHAPPY_MAX_RATING } from "@/lib/reviews/unanswered-reviews";
 import { planAllowsAiReviewFeatures, planAllowsAutoCommenter } from "@/services/stripe/plan-entitlements";
 
 export type OnboardingReviewSample = { id: string; author: string; rating: number; text: string; date: string | null };
@@ -40,7 +40,7 @@ export async function loadOnboardingResults(businessId: string): Promise<{ succe
             fetchVisibleReviewRollupsByBusinessIds(supabase, [businessId]),
             supabase.from("reviews").select("id, author_name, rating, text, review_date")
                 .eq("business_id", businessId).eq("is_visible", true)
-                .is("responded_at", null).or(NOT_RESPONDED_OR_FILTER)
+                .eq("response_status", NEEDS_REPLY_STATUS).is("responded_at", null)
                 .gte("rating", 1).lte("rating", UNHAPPY_MAX_RATING)
                 .order("review_date", { ascending: false }).limit(3),
         ]);

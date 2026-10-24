@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { MilestoneCelebration } from "@/components/dashboard/milestone-celebration";
+import { WelcomeTourDialog } from "@/components/dashboard/welcome-tour/welcome-tour-dialog";
 import { DemoModeBanner } from "@/components/dashboard/demo-mode-banner";
 import { GettingStartedBanner } from "@/components/dashboard/getting-started-banner";
 import {
@@ -38,7 +39,11 @@ export function DashboardView(props: DashboardViewProps) {
 
     return (
         <div className="flex min-w-0 w-full flex-col gap-6 overflow-x-hidden">
-            <MilestoneCelebration businessId={business.id} isDemo={useDemoData} />
+            {props.welcome ? (
+                <WelcomeTourDialog data={props.welcome} />
+            ) : (
+                <MilestoneCelebration businessId={business.id} isDemo={useDemoData} />
+            )}
 
             {useDemoData && <DemoModeBanner className="mb-2" />}
 

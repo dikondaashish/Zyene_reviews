@@ -1,50 +1,39 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { completeOnboarding } from "@/app/actions/onboarding";
-import { completeTour } from "@/app/actions/tour";
-import { fireOnboardingConfetti } from "./step5-form-confetti";
 
-export type Step5Destination = "dashboard" | "requests" | "calendar" | "tour";
+/** Where setup ends: the real dashboard, where a one-time welcome and short tour take over. */
+export const WELCOME_URL = "/dashboard?welcome=1";
 
-const DESTINATIONS: Record<Exclude<Step5Destination, "dashboard">, string> = {
-    requests: "/requests",
-    calendar: "/automations/calendar",
-    tour: "/dashboard?tour=true",
-};
+const FAILED = "Could not finish setup. Please try again.";
 
-export function useStep5Form(businessId: string, onNext: () => void) {
+export function useStep5Form(businessId: string) {
     const router = useRouter();
-    const [mounted, setMounted] = useState(false);
-    const [isCompleting, setIsCompleting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const started = useRef(false);
+
+    const finish = useCallback(() => {
+        completeOnboarding(businessId)
+            .then((result) => {
+                if (result.success) router.replace(WELCOME_URL);
+                else setError(result.error || FAILED);
+            })
+            .catch(() => setError(FAILED));
+    }, [businessId, router]);
 
     useEffect(() => {
-        setMounted(true);
-        void fireOnboardingConfetti();
-    }, []);
+        if (started.current) return;
+        started.current = true;
+        finish();
+    }, [finish]);
 
-    const handleGoToDashboard = async (destination: Step5Destination = "dashboard") => {
-        setIsCompleting(true);
-        try {
-            const result = await completeOnboarding(businessId);
-            if (!result.success) {
-                toast.error(result.error || "Could not finish setup. Please try again.");
-                return;
-            }
-            // This screen is the welcome. The product tour only runs when the owner asks for it
-            // (here or from Settings), so a new owner never gets a chain of pop-ups.
-            if (destination !== "tour") await completeTour().catch(() => null);
-            if (destination === "dashboard") onNext();
-            else router.push(DESTINATIONS[destination]);
-        } catch {
-            toast.error("Something went wrong. Please try again.");
-        } finally {
-            setIsCompleting(false);
-        }
+    const retry = () => {
+        setError(null);
+        finish();
     };
 
-    return { mounted, isCompleting, handleGoToDashboard };
+    return { error, retry };
 }

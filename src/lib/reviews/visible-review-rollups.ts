@@ -3,7 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { calculateReviewMetrics } from "@/lib/metrics/business-metrics";
 import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
-import { isUnhappyUnanswered } from "@/lib/reviews/unanswered-reviews";
+import { isUnhappyUnanswered, needsReply } from "@/lib/reviews/unanswered-reviews";
 
 export type VisibleReviewRollup = {
     /** All stored rows, including hidden rows. Diagnostics only. */
@@ -129,7 +129,8 @@ export async function fetchVisibleReviewRollupsByBusinessIds(
             totalReviewRows: rows.length,
             totalVisible: all.totalReviews,
             respondedVisible: all.respondedReviews,
-            pendingVisible: all.pendingReviews,
+            // Same "needs a reply" as the inbox: Ignored reviews don't count.
+            pendingVisible: visibleRows.filter(needsReply).length,
             unhappyPendingVisible: visibleRows.filter(isUnhappyUnanswered).length,
             responseRateVisible: all.responseRate,
             averageRatingVisible: Number(all.averageRating.toFixed(1)),

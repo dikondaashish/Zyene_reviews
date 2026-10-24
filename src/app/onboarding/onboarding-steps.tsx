@@ -22,7 +22,6 @@ type OnboardingStepsProps = {
     setGoogleConnectionError: (message: string | null) => void;
     showPaymentCancelled: boolean;
     handleBusinessUpdate: (updated: Partial<OnboardingBusiness>) => void;
-    reset: () => void;
 };
 
 export function OnboardingSteps(props: OnboardingStepsProps) {
@@ -62,7 +61,6 @@ export function OnboardingSteps(props: OnboardingStepsProps) {
                         user={props.user}
                         googleConnected={props.googleConnected}
                         showPaymentCancelled={props.showPaymentCancelled}
-                        reset={props.reset}
                     />
                 )}
             </motion.div>

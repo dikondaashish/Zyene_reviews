@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Step3Form } from "@/components/onboarding/step3-form";
 import { Step4SubscriptionForm } from "@/components/onboarding/step4-subscription-form";
@@ -19,7 +18,6 @@ type OnboardingGlassStepsSectionProps = {
     user: OnboardingUser;
     googleConnected: boolean;
     showPaymentCancelled: boolean;
-    reset: () => void;
 };
 
 function BackButton({ onClick }: { onClick: () => void }) {
@@ -44,10 +42,7 @@ export function OnboardingGlassStepsSection({
     user,
     googleConnected,
     showPaymentCancelled,
-    reset,
 }: OnboardingGlassStepsSectionProps) {
-    const router = useRouter();
-
     return (
         <div className="relative">
             <div className="relative pro-card p-5 sm:p-7">
@@ -101,21 +96,8 @@ export function OnboardingGlassStepsSection({
                         onNext={() => setCurrentStep(ONBOARDING_STEP.done)}
                     />
                 )}
-                {currentStep === ONBOARDING_STEP.done && business && user && (
-                    <div>
-                        <Step5Form
-                            businessId={business.id}
-                            businessName={business.name}
-                            userEmail={user.email || ""}
-                            userName={user.user_metadata?.full_name || "Valued Customer"}
-                            googleConnected={googleConnected}
-                            onNext={() => {
-                                reset();
-                                router.push("/dashboard");
-                            }}
-                            isLoading={isLoading}
-                        />
-                    </div>
+                {currentStep === ONBOARDING_STEP.done && business && (
+                    <Step5Form businessId={business.id} businessName={business.name} />
                 )}
             </div>
         </div>

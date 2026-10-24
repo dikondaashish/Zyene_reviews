@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import type { User } from "@supabase/supabase-js";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
+import type { WelcomeTourData } from "@/components/dashboard/welcome-tour/welcome-tour-types";
 import type {
   BusinessContextBusiness,
   BusinessContextOrganization,
@@ -66,6 +67,8 @@ export interface DashboardCachedStats {
 
 export interface DashboardViewProps {
   canConfigureNotifications?: boolean;
+  /** Set only on the first visit after onboarding (`?welcome=1`). */
+  welcome?: WelcomeTourData | null;
   user: User;
   dict: Dictionary;
   business: BusinessExtended;

@@ -46,6 +46,9 @@ export function useDashboardTourState(): DashboardTourContextValue {
                     return;
                 }
 
+                // The first-run welcome (?welcome=1) offers the tour itself on its last slide.
+                if (searchParams.get("welcome") === "1") return;
+
                 const hasCompleted = await getTourStatus();
                 if (!cancelled && !hasCompleted) {
                     tourDelayTimer = setTimeout(() => {

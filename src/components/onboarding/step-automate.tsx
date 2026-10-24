@@ -7,7 +7,7 @@ import { useStepAutomate } from "./use-step-automate";
 
 /** Sets reply rules in one choice, then says plainly what Zyene will now do. */
 export function StepAutomate({ businessId, googleConnected, onNext }: { businessId: string; googleConnected: boolean; onNext: () => void }) {
-    const { plan, options, selected, setChoice, saving, save } = useStepAutomate(businessId, onNext);
+    const { plan, options, selected, setChoice, saving, save, skip, checkAgain } = useStepAutomate(businessId, onNext);
 
     if (!googleConnected) {
         return (
@@ -66,7 +66,8 @@ export function StepAutomate({ businessId, googleConnected, onNext }: { business
                     </div>
                     {!plan.aiAllowed && (
                         <p className="text-xs text-muted-foreground">
-                            Your plan is still switching on. Pick this for now and turn on drafts later in Settings, Reply rules.
+                            Your plan is still switching on, so only this option is ready.{" "}
+                            <button type="button" onClick={checkAgain} className="font-medium text-primary hover:underline">Check again</button>
                         </p>
                     )}
                     {plan.aiAllowed && !plan.autoAllowed && (
@@ -90,6 +91,9 @@ export function StepAutomate({ businessId, googleConnected, onNext }: { business
                         {saving ? <Loader2 className="mr-2 size-5 animate-spin" aria-hidden /> : null}
                         Turn it on<ArrowRight className="ml-2 size-5" aria-hidden />
                     </Button>
+                    <button type="button" onClick={skip} disabled={saving} className="w-full text-xs font-medium text-muted-foreground hover:text-foreground hover:underline">
+                        Skip for now
+                    </button>
                 </>
             )}
         </div>

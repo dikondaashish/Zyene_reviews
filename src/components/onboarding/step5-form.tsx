@@ -1,48 +1,26 @@
 "use client";
 
-import { Step5FormCelebration } from "./step5-form-celebration";
-import { Step5FormCta } from "./step5-form-cta";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useStep5Form } from "./use-step5-form";
 
-interface Step5FormProps {
-    businessId: string;
-    businessName: string;
-    userEmail: string;
-    userName: string;
-    googleConnected: boolean;
-    onNext: () => void;
-    isLoading?: boolean;
-}
-
-export function Step5Form({
-    businessId,
-    businessName,
-    userName,
-    googleConnected,
-    onNext,
-    isLoading = false,
-}: Step5FormProps) {
-    const { mounted, isCompleting, handleGoToDashboard } = useStep5Form(businessId, onNext);
-    const firstName = userName.split(" ")[0];
-
-    if (!mounted) return null;
+/** Finishes setup and opens the dashboard; the welcome there does the celebrating. */
+export function Step5Form({ businessId, businessName }: { businessId: string; businessName: string }) {
+    const { error, retry } = useStep5Form(businessId);
 
     return (
-        <div className="text-center space-y-6 py-2">
-            <Step5FormCelebration
-                firstName={firstName}
-                businessName={businessName}
-                businessId={businessId}
-                googleConnected={googleConnected}
-                onOpenCalendar={() => void handleGoToDashboard("calendar")}
-            />
-            <Step5FormCta
-                isLoading={isLoading}
-                isCompleting={isCompleting}
-                onGoToDashboard={() => void handleGoToDashboard()}
-                onFirstRequest={() => void handleGoToDashboard("requests")}
-                onTour={() => void handleGoToDashboard("tour")}
-            />
+        <div className="space-y-4 py-6 text-center" role="status">
+            <h1 className="ui-page-title text-foreground">{error ? "Almost there" : `Opening ${businessName}…`}</h1>
+            {error ? (
+                <>
+                    <p className="text-sm text-muted-foreground">{error}</p>
+                    <Button type="button" onClick={retry} className="cta-button h-12 w-full text-sm font-semibold">
+                        Try again
+                    </Button>
+                </>
+            ) : (
+                <Loader2 className="mx-auto size-6 animate-spin text-primary" aria-hidden />
+            )}
         </div>
     );
 }

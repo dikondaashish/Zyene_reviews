@@ -1,6 +1,7 @@
 import { MessageSquare } from "lucide-react";
 import { NeedsAttention } from "@/components/dashboard/needs-attention";
 import { DashboardAnimatedReviewCardsLazy } from "@/components/dashboard/dashboard-ssr-false-blocks";
+import { isUnhappyUnanswered } from "@/lib/reviews/unanswered-reviews";
 import { mapAttentionRows } from "./helpers";
 import type { DashboardViewProps } from "./types";
 
@@ -66,11 +67,7 @@ export function DashboardViewBottomRow({
 
             <div className="order-1 min-w-0 overflow-hidden" data-tour-target="tour-needs-attention">
                 <NeedsAttention
-                    reviews={mapAttentionRows(
-                        attentionReviews.filter(
-                            (r) => (r.response_status ?? "pending") === "pending",
-                        ),
-                    )}
+                    reviews={mapAttentionRows(attentionReviews.filter(isUnhappyUnanswered))}
                     totalCount={unhappyUnansweredCount}
                     viewAllHref="/reviews?status=needs_response&sort=lowest"
                     planAllowsAiReplies={planAllowsAiReplies}

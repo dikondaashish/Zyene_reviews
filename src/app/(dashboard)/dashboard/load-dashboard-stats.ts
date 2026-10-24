@@ -1,3 +1,4 @@
+import { dashboardStatsCacheKey } from "@/lib/dashboard/invalidate-dashboard-stats-cache";
 import { logger } from "@/lib/logger";
 import type { ReactElement } from "react";
 import type { VisibleReviewRollup } from "@/lib/reviews/visible-review-rollups";
@@ -28,7 +29,7 @@ export async function loadDashboardStats(
         return { stats, visibleReviewRollup };
     }
 
-    const cacheKey = `dashboard:stats:v2:${auth.business.id}`;
+    const cacheKey = dashboardStatsCacheKey(auth.business.id);
     let cachedStatsRaw: unknown = null;
     try {
         const { redis } = await import("@/lib/db/redis");
