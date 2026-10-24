@@ -25,3 +25,10 @@ export const STEP3_CATEGORIES = [
     { value: "healthcare", label: "Healthcare", icon: HeartPulse },
     { value: "other", label: "Other", icon: MoreHorizontal },
 ] as const;
+
+export type IndustryValue = (typeof STEP3_CATEGORIES)[number]["value"];
+
+/** The saved category if it is one of the tiles; "uncategorized" and anything else count as unknown. */
+export function knownIndustry(value: string | null | undefined): IndustryValue | null {
+    return STEP3_CATEGORIES.some((c) => c.value === value) ? (value as IndustryValue) : null;
+}

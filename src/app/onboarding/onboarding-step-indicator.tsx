@@ -1,64 +1,39 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import { ONBOARDING_PHASES, onboardingPhaseIndex } from "./onboarding-types";
 
+/** Segmented progress bar: one segment per phase, labels underneath on wider screens. */
 export function OnboardingStepIndicator({ currentStep }: { currentStep: number }) {
-    const reduceMotion = useReducedMotion() ?? false;
     const activeIndex = onboardingPhaseIndex(currentStep);
+    const active = ONBOARDING_PHASES[activeIndex];
 
     return (
-        <div className="flex items-center justify-center gap-0">
-            {ONBOARDING_PHASES.map((step, index) => {
-                const isActive = index === activeIndex;
-                const isCompleted = index < activeIndex;
-                const StepIcon = step.icon;
-
-                return (
-                    <div key={step.label} className="flex items-center">
-                        <div className="flex flex-col items-center gap-2">
-                            <div
-                                className={`rounded-2xl flex items-center justify-center transition-all duration-300 cursor-default ${isCompleted ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" : isActive ? "bg-primary/10 text-primary ring-2 ring-primary/30 shadow-sm" : "bg-secondary/60 text-muted-foreground"} size-10`}
-                            >
-                                {isCompleted ? (
-                                    <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2.5}
-                                            d="M5 13l4 4L19 7"
-                                        />
-                                    </svg>
-                                ) : (
-                                    <StepIcon className="size-4" />
-                                )}
-                            </div>
+        <nav aria-label="Setup progress" className="space-y-2">
+            <p className="text-xs font-medium text-muted-foreground sm:hidden">
+                Step {activeIndex + 1} of {ONBOARDING_PHASES.length}
+                <span className="text-foreground"> · {active.label}</span>
+            </p>
+            <ol className="grid gap-1.5 sm:gap-2" style={{ gridTemplateColumns: `repeat(${ONBOARDING_PHASES.length}, minmax(0, 1fr))` }}>
+                {ONBOARDING_PHASES.map((phase, index) => {
+                    const reached = index <= activeIndex;
+                    const isActive = index === activeIndex;
+                    return (
+                        <li key={phase.label} aria-current={isActive ? "step" : undefined} className="min-w-0">
+                            <div className={cn("h-1 rounded-full transition-colors duration-300", reached ? "bg-primary" : "bg-border")} />
                             <span
-                                className={`text-[11px] font-semibold tracking-wide hidden sm:block ${
-                                    isActive
-                                        ? "text-primary"
-                                        : isCompleted
-                                          ? "text-primary/70"
-                                          : "text-muted-foreground"
-                                }`}
+                                className={cn(
+                                    "mt-2 block truncate text-xs max-sm:sr-only",
+                                    isActive ? "font-semibold text-foreground" : reached ? "font-medium text-muted-foreground" : "text-muted-foreground/70",
+                                )}
                             >
-                                {step.label}
+                                {phase.label}
                             </span>
-                        </div>
-
-                        {index < ONBOARDING_PHASES.length - 1 && (
-                            <div className="w-6 sm:w-10 h-[2px] mx-1 sm:mx-1.5 mb-6 sm:mb-4 rounded-full overflow-hidden bg-secondary/60">
-                                <motion.div
-                                    className="h-full bg-primary rounded-full"
-                                    initial={false}
-                                    animate={{ width: isCompleted ? "100%" : "0%" }}
-                                    transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
-                                />
-                            </div>
-                        )}
-                    </div>
-                );
-            })}
-        </div>
+                            <span className="sr-only">{index < activeIndex ? " (done)" : isActive ? " (current)" : ""}</span>
+                        </li>
+                    );
+                })}
+            </ol>
+        </nav>
     );
 }

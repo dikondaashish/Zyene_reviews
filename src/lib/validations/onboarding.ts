@@ -33,15 +33,22 @@ export const stepBusinessLocationSchema = z.object({
     .string()
     .min(1, "City is required")
     .max(50, "Must be less than 50 characters"),
-  state: z
-    .string()
-    .min(2, "State code required (e.g., CA, NY)")
-    .max(2, "State must be 2 characters"),
+  /** Two-letter code (CA, NY) in the US; free text (a province or county) elsewhere, where it can be blank. */
+  state: z.string().trim().max(50, "Must be less than 50 characters"),
+  /** From the Google pick: the industry Google's place type points to (saved only if it is a real tile). */
+  category: z.string().max(40).optional(),
+  /** From the Google pick; gives the business its logo. */
+  website: z.string().trim().max(300).optional(),
+  /** ISO 3166 two-letter country code; missing means the US. */
+  country: z.string().regex(/^[A-Z]{2}$/, "Pick a country").optional(),
   phone: z
     .string()
     .regex(/^[\d\-\+\(\)\ ]*$/, "Invalid phone number")
     .optional()
     .or(z.literal("")),
+}).refine((data) => (data.country ?? "US") !== "US" || /^[A-Za-z]{2}$/.test(data.state), {
+  path: ["state"],
+  message: "State code required (e.g., CA, NY)",
 });
 
 export type StepBusinessLocationFormData = z.infer<typeof stepBusinessLocationSchema>;

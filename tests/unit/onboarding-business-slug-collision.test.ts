@@ -17,8 +17,13 @@ const slugTaken = {
 };
 const auth = { getUser: async () => ({ data: { user: { id: "u" } } }) };
 
-function updateChain(result: { error: unknown }) {
-  return { update: vi.fn().mockReturnThis(), eq: vi.fn().mockResolvedValue(result) };
+/** update().eq().select("slug"): the saved slug comes back so the next step can show the review link. */
+function updateChain(result: { error: unknown; data?: Array<{ slug: string }> | null }) {
+  return {
+    update: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    select: vi.fn().mockResolvedValue({ data: null, ...result }),
+  };
 }
 
 function insertChain(result: { data: unknown; error: unknown }) {
@@ -37,7 +42,7 @@ beforeEach(() => {
 describe("updateBusinessAndLocation slug handling", () => {
   it("keeps the existing slug when another business owns the derived one", async () => {
     const collision = updateChain({ error: slugTaken });
-    const retry = updateChain({ error: null });
+    const retry = updateChain({ error: null, data: [{ slug: "joes-old-slug" }] });
     m.client.mockResolvedValue({
       from: vi.fn().mockReturnValueOnce(collision).mockReturnValueOnce(retry),
       auth,
@@ -46,6 +51,7 @@ describe("updateBusinessAndLocation slug handling", () => {
     const result = await updateBusinessAndLocation(B, { businessName: "Joe's Pizza" });
 
     expect(result.success).toBe(true);
+    expect(result).toMatchObject({ slug: "joes-old-slug" });
     expect(collision.update).toHaveBeenCalledWith(expect.objectContaining({ slug: "joe-s-pizza" }));
     expect(retry.update).toHaveBeenCalledWith(expect.not.objectContaining({ slug: expect.anything() }));
     expect(retry.update).toHaveBeenCalledWith(expect.objectContaining({ name: "Joe's Pizza" }));

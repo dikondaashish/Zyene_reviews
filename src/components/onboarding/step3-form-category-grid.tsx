@@ -1,10 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { Check } from "lucide-react";
 import type { Control } from "react-hook-form";
 import { Controller } from "react-hook-form";
 
 import type { StepCategoryFormData } from "@/lib/validations/onboarding";
+import { cn } from "@/lib/utils";
 import { STEP3_CATEGORIES } from "./step3-form-categories";
 
 export function Step3FormCategoryGrid({
@@ -21,69 +22,35 @@ export function Step3FormCategoryGrid({
             control={control}
             name="category"
             render={({ field }) => (
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                    {STEP3_CATEGORIES.map((cat, index) => {
+                <div role="radiogroup" aria-label="Industry" className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                    {STEP3_CATEGORIES.map((cat) => {
                         const Icon = cat.icon;
                         const isSelected = field.value === cat.value;
 
                         return (
-                            <motion.button
+                            <button
                                 key={cat.value}
                                 type="button"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.03, duration: 0.3 }}
+                                role="radio"
+                                aria-checked={isSelected}
                                 onClick={() => {
                                     field.onChange(cat.value);
                                     onTriggerCategory();
                                 }}
                                 disabled={isLoading}
-                                className={`
-                      relative flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all duration-200 cursor-pointer group
-                      ${
-                          isSelected
-                              ? "border-primary bg-primary/[0.06] ring-2 ring-primary/20"
-                              : "border-border/40 bg-background/40 hover:border-primary/30 hover:bg-primary/[0.02]"
-                      }
-                    `}
-                            >
-                                {isSelected && (
-                                    <motion.div
-                                        initial={{ scale: 0 }}
-                                        animate={{ scale: 1 }}
-                                        className="absolute -top-1.5 -right-1.5 rounded-full bg-primary flex items-center justify-center size-5"
-                                    >
-                                        <svg
-                                            className="text-primary-foreground size-3"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={3}
-                                                d="M5 13l4 4L19 7"
-                                            />
-                                        </svg>
-                                    </motion.div>
+                                className={cn(
+                                    "relative flex flex-col items-center gap-2 rounded-lg border px-2 py-3 transition-colors cursor-pointer",
+                                    isSelected ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/40",
                                 )}
-
-                                <div
-                                    className={`rounded-xl flex items-center justify-center transition-colors ${isSelected ? "bg-primary/15 text-primary" : "bg-secondary/60 text-muted-foreground group-hover:text-primary/70"} size-10`}
-                                >
-                                    <Icon className="size-5" />
-                                </div>
-                                <span
-                                    className={`text-xs font-semibold text-center leading-tight ${
-                                        isSelected
-                                            ? "text-primary"
-                                            : "text-muted-foreground group-hover:text-foreground"
-                                    }`}
-                                >
+                            >
+                                {isSelected && <Check className="absolute right-1.5 top-1.5 size-3.5 text-primary" aria-hidden />}
+                                <span className={cn("grid size-8 place-items-center rounded-md", isSelected ? "bg-primary/10 text-primary" : "bg-muted text-foreground")} aria-hidden>
+                                    <Icon className="size-4" />
+                                </span>
+                                <span className={cn("text-center text-xs font-medium leading-tight", isSelected ? "text-foreground" : "text-muted-foreground")}>
                                     {cat.label}
                                 </span>
-                            </motion.button>
+                            </button>
                         );
                     })}
                 </div>

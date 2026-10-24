@@ -60,10 +60,10 @@ export async function createBusinessWithLocation(
           slug,
           address_line1: data.address,
           city: data.city,
-          state: data.state.toUpperCase(),
+          state: (data.country ?? "US") === "US" ? data.state.toUpperCase() : data.state || null,
           phone: data.phone || null,
           category: "uncategorized", // Will be set in Step 3
-          country: "US", // Default to US
+          country: data.country ?? "US",
           timezone: "America/Los_Angeles", // Default timezone, can be updated later
         })
         .select()

@@ -19,6 +19,7 @@ type OnboardingGlassStepsSectionProps = {
     user: OnboardingUser;
     googleConnected: boolean;
     showPaymentCancelled: boolean;
+    onBusinessUpdate: (updated: Partial<OnboardingBusiness>) => void;
 };
 
 function BackButton({ onClick }: { onClick: () => void }) {
@@ -26,7 +27,7 @@ function BackButton({ onClick }: { onClick: () => void }) {
         <button
             type="button"
             onClick={onClick}
-            className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-5 cursor-pointer group"
+            className="mb-3 flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer group"
         >
             <ArrowLeft className="group-hover:-translate-x-0.5 transition-transform size-3.5" />
             Back
@@ -43,10 +44,11 @@ export function OnboardingGlassStepsSection({
     user,
     googleConnected,
     showPaymentCancelled,
+    onBusinessUpdate,
 }: OnboardingGlassStepsSectionProps) {
     return (
-        <div className="relative">
-            <div className="relative pro-card p-5 sm:p-7">
+        <div>
+            <div>
                 {currentStep === ONBOARDING_STEP.about && (
                     <StepAboutYou
                         firstName={(user.user_metadata?.full_name || user.email || "there").split(/[\s@]/)[0]}
@@ -63,9 +65,14 @@ export function OnboardingGlassStepsSection({
                             city={business.city ?? ""}
                             initialCategory={business.category ?? undefined}
                             defaultSupportEmail={business.email || user?.email || ""}
-                            isGoogleConnected={googleConnected}
+                            categoryFromGoogle={Boolean(business.categoryFromGoogle)}
                             // Owners with Google see their own numbers before any plan is offered.
-                            onNext={async () => setCurrentStep(googleConnected ? ONBOARDING_STEP.results : ONBOARDING_STEP.plan)}
+                            businessSlug={business.slug ?? ""}
+                            onNext={(category, slug) => {
+                                // The badge stays only if the owner kept the industry Google picked.
+                                onBusinessUpdate({ category, slug, categoryFromGoogle: Boolean(business.categoryFromGoogle) && category === business.category });
+                                setCurrentStep(googleConnected ? ONBOARDING_STEP.results : ONBOARDING_STEP.plan);
+                            }}
                             isLoading={isLoading}
                         />
                     </div>

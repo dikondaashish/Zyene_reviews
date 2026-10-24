@@ -149,3 +149,10 @@ export function clientIpFrom(request: Request): string {
         "anonymous"
     );
 }
+
+// Onboarding business-name search (Google Text Search): per signed-in user.
+export const businessPlaceSearchRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(40, '10 m'),
+    prefix: '@upstash/ratelimit/business-place-search',
+});

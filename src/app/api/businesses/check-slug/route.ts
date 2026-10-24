@@ -3,6 +3,7 @@ import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { NextResponse } from "next/server";
 import { sanitizeSlug } from "@/lib/utils";
+import { isSlugTakenByAnotherBusiness } from "@/services/businesses/slug-availability";
 
 export async function GET(request: Request) {
     const supabase = await createClient();
@@ -27,24 +28,15 @@ export async function GET(request: Request) {
         return NextResponse.json({ available: false, reason: "Too short" });
     }
 
-    let query = supabase
-        .from("businesses")
-        .select("id")
-        .eq("slug", sanitized);
-
-    if (currentBusinessId) {
-        query = query.neq("id", currentBusinessId);
-    }
-
-    const { data, error } = await query.single();
-
-    if (error && error.code !== "PGRST116") { // PGRST116 means no rows found (which is good)
+    let isTaken: boolean;
+    try {
+        // Only a real id may be excluded; anything else would make the admin query fail.
+        const exclude = /^[0-9a-f-]{36}$/i.test(currentBusinessId ?? "") ? currentBusinessId : null;
+        isTaken = await isSlugTakenByAnotherBusiness(sanitized, exclude);
+    } catch (error) {
         logger.error({ err: error }, "Error checking slug:");
         return NextResponse.json({ error: "Database error" }, { status: 500 });
     }
-
-    // If data exists, it's taken. If error (no rows), it's available.
-    const isTaken = !!data;
 
     return NextResponse.json({
         available: !isTaken,

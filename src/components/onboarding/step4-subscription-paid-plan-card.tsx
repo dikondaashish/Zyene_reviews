@@ -1,11 +1,12 @@
 "use client";
 
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import * as PricingCard from "@/components/ui/pricing-card";
 import { cn } from "@/lib/utils";
 import type { Plan } from "@/services/stripe/plans";
+import { Step4PlanFeatureList } from "./step4-plan-feature-list";
 
 interface Step4SubscriptionPaidPlanCardProps {
     plan: Plan;
@@ -38,7 +39,7 @@ export function Step4SubscriptionPaidPlanCard({
         <PricingCard.Card
             className={cn(
                 "relative flex max-w-none flex-col size-full",
-                "transition-all duration-300 hover:-translate-y-2 hover:border-border dark:hover:border-border",
+                "transition-colors hover:border-primary/40",
                 isPro && "ring-2 ring-primary/50 hover:ring-primary/70",
             )}
         >
@@ -71,7 +72,7 @@ export function Step4SubscriptionPaidPlanCard({
                     className={cn(
                         "relative z-20 w-full font-semibold text-primary-foreground transition-all duration-300 cursor-pointer",
                         "bg-primary",
-                        "hover:-translate-y-1 hover:brightness-110 active:translate-y-0",
+                        "hover:brightness-110",
                     )}
                     onClick={() => onSubscribe(plan)}
                     disabled={loadingPlanId === plan.id || planBusy}
@@ -85,16 +86,7 @@ export function Step4SubscriptionPaidPlanCard({
                 </Button>
             </PricingCard.Header>
             <PricingCard.Body className="space-y-2 p-2">
-                <PricingCard.List className="space-y-2">
-                    {plan.features.map((feature) => (
-                        <PricingCard.ListItem key={feature} className="text-xs gap-2">
-                            <span className="mt-0.5 shrink-0">
-                                <CheckCircle2 className="text-success size-3.5" aria-hidden />
-                            </span>
-                            <span>{feature}</span>
-                        </PricingCard.ListItem>
-                    ))}
-                </PricingCard.List>
+                <Step4PlanFeatureList features={plan.features} />
             </PricingCard.Body>
         </PricingCard.Card>
     );

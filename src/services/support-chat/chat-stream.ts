@@ -22,7 +22,13 @@ type Emit = (event: SupportChatStreamEvent) => void;
  * event. Storage and Slack mirroring happen after the text, so they never slow
  * the first words down.
  */
-export async function streamSupportReply(chat: SupportChatRequest, conversation: ConversationRow | null, emit: Emit) {
+export async function streamSupportReply(
+    chat: SupportChatRequest,
+    conversation: ConversationRow | null,
+    emit: Emit,
+    /** The in-app setup assistant passes its own instructions; the website chat uses the default. */
+    systemInstruction: string = buildSupportSystemInstruction(),
+) {
     const sources = searchSiteContent(retrievalQuery(chat), 4);
     const guard = new ReplyStreamGuard();
     let shown = "";
@@ -35,7 +41,7 @@ export async function streamSupportReply(chat: SupportChatRequest, conversation:
     let failed = false;
     try {
         const stream = generateContentStreamWithFallback(buildSupportConversationPrompt(chat, sources), {
-            systemInstruction: buildSupportSystemInstruction(),
+            systemInstruction,
             temperature: 0.3,
             maxOutputTokens: 700,
         });

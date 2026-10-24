@@ -1,7 +1,9 @@
 import type { GoogleOAuthAuthorization } from "@/types/components";
+import type { OnboardingBusiness } from "@/app/onboarding/onboarding-types";
 
 export interface Step2FormProps {
-    onNext: () => Promise<void>;
+    /** `viaGoogle` is true only after a real Google Business Profile connection, never for typed-in details. */
+    onNext: (viaGoogle: boolean) => Promise<void>;
     onSkip: () => Promise<void>;
     isLoading: boolean;
     businessId: string;
@@ -9,6 +11,7 @@ export interface Step2FormProps {
     city: string;
     address?: string;
     state?: string;
+    country?: string;
     phone?: string;
     /** OAuth code passed from page.tsx after Google redirects back */
     pendingGoogleCode?: GoogleOAuthAuthorization | null;
@@ -19,13 +22,7 @@ export interface Step2FormProps {
     /** Clears a returned OAuth error when the user chooses to retry. */
     onGoogleConnectionErrorConsumed?: () => void;
     /** Called when Google returns business info so the parent state stays in sync */
-    onBusinessUpdate?: (info: {
-        name?: string;
-        address_line1?: string;
-        city?: string;
-        state?: string;
-        category?: string | null;
-    }) => void;
+    onBusinessUpdate?: (info: Partial<OnboardingBusiness>) => void;
     /** Initial connection status if already connected */
     initialConnected?: boolean;
 }

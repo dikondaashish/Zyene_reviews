@@ -1,72 +1,56 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { CheckCircle2, ArrowRight, Loader2 } from "lucide-react";
-import { Step2ChainIcon, Step2GoogleIcon } from "@/components/onboarding/step2-form-icons";
+import { ArrowRight, Check, Loader2, LockKeyhole } from "lucide-react";
+import { Step2GoogleIcon } from "@/components/onboarding/step2-form-icons";
 
+const BENEFITS = [
+    "Imports your existing Google reviews",
+    "Drafts replies in your tone for you to edit",
+    "New reviews show up within minutes",
+];
+
+/** The recommended path: connect the Google Business Profile and everything fills itself in. */
 export function Step2FormGoogleConnectPanel({ onConnectClick, pending, disabled }: {
     onConnectClick: () => void;
     pending: boolean;
     disabled: boolean;
 }) {
     return (
-        <div className="relative p-8 sm:p-10 lg:p-12 flex flex-col justify-center overflow-hidden bg-primary/[0.03]">
-
-            <div className="relative z-10 space-y-6">
-                <motion.div
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
-                    className="inline-flex"
-                >
-                    <div className="rounded-2xl bg-primary/10 flex items-center justify-center ring-1 ring-primary/20 size-14">
-                        <Step2ChainIcon />
-                    </div>
-                </motion.div>
-
-                <div>
-                    <h1 className="ui-page-title text-foreground">Connect your business</h1>
-                    <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed max-w-xs">
-                        Link Google to auto-fill your details, or enter them manually below.
-                    </p>
-                </div>
-
-                <motion.button
-                    type="button"
-                    onClick={onConnectClick}
-                    disabled={pending || disabled}
-                    aria-busy={pending}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full max-w-[340px] h-14 group relative flex items-center justify-between px-6 rounded-2xl bg-background border border-border shadow-sm hover:border-primary/40 transition-[box-shadow,border-color,opacity] duration-300 cursor-pointer overflow-hidden disabled:cursor-wait disabled:opacity-60"
-                >
-                    <div className="flex items-center gap-3.5 relative z-10">
-                        <div className="p-2 bg-white rounded-xl shadow-sm border border-border/50">
-                            <Step2GoogleIcon />
-                        </div>
-                        <span className="text-[14px] font-bold text-foreground tracking-tight">
-                            {pending ? "Connecting…" : "Connect Google Business"}
-                        </span>
-                    </div>
-
-                    <div className="relative z-10">
-                        {pending ? <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" /> :
-                            <ArrowRight className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-[color,transform] duration-300 size-5" />}
-                    </div>
-                </motion.button>
-
-                <div className="space-y-2.5">
-                    {[
-                        "Imports your existing Google reviews",
-                        "Drafts replies in your tone for you to edit",
-                        "New reviews show up within minutes",
-                    ].map((benefit) => (
-                        <div key={benefit} className="flex items-center gap-2.5 text-[13px] text-muted-foreground">
-                            <CheckCircle2 className="text-primary shrink-0 size-4" />
-                            <span className="font-medium">{benefit}</span>
-                        </div>
-                    ))}
-                </div>
+        <div className="space-y-4">
+            <div>
+                <h2 className="ui-section-title flex items-center gap-2 text-foreground">
+                    Connect Google Business Profile
+                    <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[11px] font-medium text-primary">Recommended</span>
+                </h2>
+                <p className="mt-0.5 text-xs text-muted-foreground">Fills in your details and brings in your reviews automatically.</p>
             </div>
+            <button
+                type="button"
+                onClick={onConnectClick}
+                disabled={pending || disabled}
+                aria-busy={pending}
+                className="group flex h-11 w-full items-center justify-between gap-3 rounded-lg border border-border bg-card px-3 transition-colors hover:border-primary/40 hover:bg-muted/40 disabled:cursor-wait disabled:opacity-60"
+            >
+                <span className="flex items-center gap-3">
+                    <span className="grid size-7 place-items-center rounded-md border border-border bg-white" aria-hidden><Step2GoogleIcon /></span>
+                    <span className="text-sm font-medium text-foreground">{pending ? "Connecting…" : "Connect with Google"}</span>
+                </span>
+                {pending
+                    ? <Loader2 aria-hidden className="size-4 animate-spin motion-reduce:animate-none" />
+                    : <ArrowRight aria-hidden className="size-4 text-muted-foreground transition-colors group-hover:text-primary" />}
+            </button>
+            <ul className="space-y-2">
+                {BENEFITS.map((benefit) => (
+                    <li key={benefit} className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Check className="size-4 shrink-0 text-success" aria-hidden />{benefit}
+                    </li>
+                ))}
+            </ul>
+            <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <LockKeyhole aria-hidden className="size-3 shrink-0" />
+                We only read your profile. We never post on your behalf.
+            </p>
+            <p className="text-xs text-muted-foreground">Not ready? You can connect Google later in Settings → Integrations.</p>
         </div>
     );
 }
