@@ -1,4 +1,4 @@
-import { MessageSquare, Mail, Star } from "lucide-react";
+import { Link2, MessageSquare, Mail, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { isCompletedRequest } from "@/lib/metrics/business-metrics";
 
@@ -25,6 +25,9 @@ export function reviewRequestChannelCell(channel: string | null | undefined) {
                 </span>
             </div>
         );
+    }
+    if (ch === "link") {
+        return <div className="flex items-center gap-1.5"><Link2 className="shrink-0 text-muted-foreground size-3.5" /><span className="font-medium uppercase">Link</span></div>;
     }
     if (ch === "sms") {
         return (

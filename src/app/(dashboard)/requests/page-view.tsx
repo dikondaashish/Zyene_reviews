@@ -6,11 +6,13 @@ import { RequestsPageHeader } from "./requests-page-header";
 import { GetReviewsTabs } from "@/components/dashboard/get-reviews-tabs";
 import { RequestsStatsSection } from "./requests-stats-section";
 import { RequestsListSection, type RequestListRow } from "./requests-list-section";
+import { RequestsLinkStatsSection } from "./requests-link-stats-section";
+import { RequestsViewTabs } from "./requests-view-tabs";
 
 export default async function RequestsPage({
     searchParams,
 }: {
-    searchParams: Promise<{ page?: string; customer?: string }>;
+    searchParams: Promise<{ page?: string; customer?: string; view?: string }>;
 }) {
     const [sp, supabase] = await Promise.all([searchParams, createClient()]);
     const {
@@ -45,12 +47,18 @@ export default async function RequestsPage({
                 businessName={data.business.name || undefined}
                 initialCustomer={data.initialCustomer}
             />
-            <RequestsStatsSection stats={data.stats} />
+            <RequestsViewTabs view={data.view} sentCount={data.stats.totalSent} visitCount={data.linkStats.visits} />
+            {data.view === "link" ? (
+                <RequestsLinkStatsSection stats={data.linkStats} />
+            ) : (
+                <RequestsStatsSection stats={data.stats} />
+            )}
             <RequestsListSection
                 requests={data.requests as RequestListRow[]}
                 page={data.page}
                 pageSize={data.pageSize}
                 customerQuery={data.customerQuery}
+                view={data.view}
             />
         </div>
     );

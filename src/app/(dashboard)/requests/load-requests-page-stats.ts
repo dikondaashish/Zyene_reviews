@@ -1,12 +1,17 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { isOutboundRequest } from "@/lib/metrics/business-metrics";
 import { loadReviewRequestMetrics } from "@/lib/metrics/load-review-request-metrics";
+import { calculatePublicLinkMetrics, isPublicLinkVisit } from "@/lib/metrics/public-link-metrics";
 import { attachRequestOutcomes } from "./load-request-outcomes";
+
+/** "sent": requests sent to a customer. "link": visits to the public review link or QR code. */
+export type RequestsView = "sent" | "link";
 
 export async function loadRequestsPageStats(
     businessId: string,
     page: number,
     pageSize: number,
+    view: RequestsView = "sent",
 ) {
     const admin = createAdminClient();
     const from = (page - 1) * pageSize;
@@ -16,7 +21,7 @@ export async function loadRequestsPageStats(
     if (!metricsResult.ok)
         return { ok: false as const, error: metricsResult.error };
     const requests = metricsResult.rows
-        .filter(isOutboundRequest)
+        .filter(view === "link" ? isPublicLinkVisit : isOutboundRequest)
         .sort((a, b) => b.created_at.localeCompare(a.created_at))
         .slice(from, to + 1);
 
@@ -27,5 +32,6 @@ export async function loadRequestsPageStats(
             ...metricsResult.metrics,
             reviews: metricsResult.metrics.completed,
         },
+        linkStats: calculatePublicLinkMetrics(metricsResult.rows),
     };
 }
