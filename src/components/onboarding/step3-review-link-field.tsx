@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Loader2, X } from "lucide-react";
-import { reviewCaptureBaseUrl } from "@/lib/review-requests/review-capture-url";
+import { reviewCaptureBaseUrl } from "@/lib/review-requests/review-capture-base";
 import type { ReviewLinkStatus } from "./use-review-link-draft";
 
 const STATUS: Record<ReviewLinkStatus, { text: string; tone: string } | null> = {
