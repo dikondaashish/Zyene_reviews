@@ -13,6 +13,7 @@ import { DashboardViewStatCards } from "./dashboard-view-stat-cards";
 import { DashboardViewTopRow } from "./dashboard-view-top-row";
 import { DashboardViewWaiting } from "./dashboard-view-waiting";
 import { DashboardViewRecentAutomations } from "./dashboard-view-recent-automations";
+import { DashboardViewValueSummary } from "./dashboard-view-value-summary";
 import type { DashboardViewProps } from "./types";
 
 export function DashboardView(props: DashboardViewProps) {
@@ -71,6 +72,13 @@ export function DashboardView(props: DashboardViewProps) {
                         canConfigureNotifications={canConfigureNotifications}
                     />
                 </div>
+            )}
+
+            {/* What Zyene achieved this month, and what it cost, before anything else. */}
+            {!useDemoData && (
+                <Suspense fallback={null}>
+                    <DashboardViewValueSummary businessId={business.id} organization={props.organization} />
+                </Suspense>
             )}
 
             {/* Four blocks: what needs you (above), your reputation, what Zyene did, reviews to answer.
