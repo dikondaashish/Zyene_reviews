@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateValueSummary, monthlyPlanPrice, valueTier } from "@/lib/dashboard/value-summary";
+import { calculateValueSummary, hasZyeneWins, monthlyPlanPrice, valueTier } from "@/lib/dashboard/value-summary";
 import { currentMonthPeriod } from "@/services/dashboard/load-value-summary";
 import { monthlyChargeFromInvoice } from "@/services/dashboard/load-monthly-charge";
 
@@ -96,5 +96,17 @@ describe("valueTier", () => {
         expect(valueTier(calculateValueSummary({ ...base, requests: many }))).toBe("strong");
         expect(valueTier(calculateValueSummary({ ...base, newReviews: 2, newReviewsLastMonth: 4, requests: [visit("completed")] }))).toBe("growing");
         expect(valueTier(calculateValueSummary({ ...base, newReviews: 0, newReviewsLastMonth: 0, zyeneReplies: 0, requests: [] }))).toBe("quiet");
+    });
+});
+
+describe("hasZyeneWins", () => {
+    it("hides the card when Zyene did nothing this month, even with outside reviews or unanswered sends", () => {
+        const idle = calculateValueSummary({ ...base, newReviews: 5, zyeneReplies: 0, requests: [sentSms("sent")] });
+        expect(hasZyeneWins(idle)).toBe(false);
+    });
+
+    it("shows the card once any win lands", () => {
+        expect(hasZyeneWins(calculateValueSummary({ ...base, zyeneReplies: 0, requests: [visit("clicked")] }))).toBe(true);
+        expect(hasZyeneWins(calculateValueSummary({ ...base, zyeneReplies: 1, requests: [] }))).toBe(true);
     });
 });

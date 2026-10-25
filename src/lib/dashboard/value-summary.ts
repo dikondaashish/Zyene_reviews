@@ -84,3 +84,11 @@ export function valueTier(s: ValueSummary): ValueTier {
     if (s.sentToGoogle >= 10 || (s.newReviews >= 5 && s.newReviewsChange > 0)) return "strong";
     return "growing";
 }
+
+/**
+ * Whether Zyene did anything for the business this month. With no link visits, no Google
+ * handoffs, no caught feedback and no replies there is no value to show, so the card hides.
+ */
+export function hasZyeneWins(s: ValueSummary): boolean {
+    return s.linkVisits + s.sentToGoogle + s.unhappyCaught + s.zyeneReplies > 0;
+}

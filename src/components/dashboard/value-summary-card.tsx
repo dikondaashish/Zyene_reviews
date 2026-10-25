@@ -2,17 +2,11 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { ArrowRight, HeartHandshake, Link2, MessageSquareReply, PartyPopper, ShieldCheck, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { valueTier, type ValueSummary, type ValueTier } from "@/lib/dashboard/value-summary";
+import { hasZyeneWins, valueTier, type ValueSummary } from "@/lib/dashboard/value-summary";
 import type { AverageSale, ReviewValue } from "@/lib/dashboard/review-value";
 import { paybackLabel, ValueStory } from "@/components/dashboard/value-story";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
-
-const TITLE: Record<ValueTier, (name: string) => string> = {
-    strong: (name) => `You're on a roll, ${name}!`,
-    growing: (name) => `Thanks, ${name}!`,
-    quiet: () => "Your next review is one share away.",
-};
 
 /** A tiny stat; the icon colour says what the win means. */
 function Win({ icon: Icon, value, label, tone }: { icon: LucideIcon; value: number; label: string; tone: string }) {
@@ -44,7 +38,9 @@ export function ValueSummaryCard({
     averageSale: AverageSale;
     reviewValue: ReviewValue;
 }) {
-    const tier = valueTier(s);
+    // Nothing Zyene did this month means nothing worth thanking them for: show no card at all.
+    if (!hasZyeneWins(s)) return null;
+    const title = valueTier(s) === "strong" ? `You're on a roll, ${businessName}!` : `Thanks, ${businessName}!`;
     const payback = paybackLabel(s.newReviews, s.monthlyPrice, reviewValue);
     const wins = [
         { icon: Link2, value: s.linkVisits, label: "link visits", tone: "text-primary" },
@@ -63,7 +59,7 @@ export function ValueSummaryCard({
                     <Sparkles className="size-3.5" aria-hidden />
                 </span>
                 <div className="min-w-0 flex-1 basis-[calc(100%-2.5rem)] text-sm text-muted-foreground md:basis-0">
-                    <span id="value-summary-title" className="mr-1 font-semibold text-foreground">{TITLE[tier](businessName)}</span>
+                    <span id="value-summary-title" className="mr-1 font-semibold text-foreground">{title}</span>
                     <ValueStory
                         businessId={businessId}
                         monthLabel={monthLabel}
@@ -80,19 +76,17 @@ export function ValueSummaryCard({
                         </span>
                     )}
                     <Link
-                        href={tier === "quiet" ? "/requests" : "/analytics?platform=zyene"}
+                        href="/analytics?platform=zyene"
                         className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline"
                     >
-                        {tier === "quiet" ? "Send a request" : "Details"}
+                        Details
                         <ArrowRight className="size-3.5" aria-hidden />
                     </Link>
                 </div>
             </div>
-            {tier !== "quiet" && (
-                <ul className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 pl-10 text-[11px] text-muted-foreground" aria-label="Other wins this month">
-                    {wins.map((win) => <Win key={win.label} {...win} />)}
-                </ul>
-            )}
+            <ul className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 pl-10 text-[11px] text-muted-foreground" aria-label="Other wins this month">
+                {wins.map((win) => <Win key={win.label} {...win} />)}
+            </ul>
         </section>
     );
 }
