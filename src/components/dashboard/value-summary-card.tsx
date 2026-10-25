@@ -75,7 +75,7 @@ export function ValueSummaryCard({ summary: s, monthLabel, businessName }: { sum
                     </span>
                     <div className="min-w-0">
                         <p className="text-[11px] font-semibold uppercase tracking-wider text-primary">Your {monthLabel} with Zyene</p>
-                        <h2 id="value-summary-title" className="mt-0.5 text-base font-semibold text-foreground sm:text-lg">
+                        <h2 id="value-summary-title" className="ui-section-title mt-0.5 text-foreground">
                             {copy.title(businessName)}
                         </h2>
                         <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{copy.body}</p>
