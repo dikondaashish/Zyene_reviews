@@ -1,6 +1,6 @@
 import { expect, test } from "./marketing-fixtures";
 
-/** Unrated stars are solid neutral grey (#d5d8dd); rated ones turn gold. */
+/** Unrated stars are solid neutral grey; rated ones turn gold. */
 const UNRATED_STAR = "rgb(213, 216, 221)";
 
 const VIEWPORTS = [
@@ -42,11 +42,24 @@ for (const viewport of VIEWPORTS) {
       borderRadius: viewport.width < 768 ? "24px" : "30px",
       overflow: "hidden",
     });
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-    ).toBe(true);
+    // On overflow, name the elements that stick out so a CI-only failure is diagnosable.
+    const overflow = await page.evaluate(() => {
+      if (document.documentElement.scrollWidth <= innerWidth) return null;
+      const clipped = (el: Element) => {
+        for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
+          if (/hidden|auto|scroll|clip/.test(getComputedStyle(p).overflowX)) return true;
+        }
+        return false;
+      };
+      return {
+        scrollWidth: document.documentElement.scrollWidth,
+        offenders: [...document.querySelectorAll("body *")]
+          .filter((el) => el.getBoundingClientRect().right > innerWidth + 0.5 && !clipped(el))
+          .slice(0, 8)
+          .map((el) => `${el.tagName.toLowerCase()}.${String(el.getAttribute("class") ?? "").split(" ").slice(0, 3).join(".")} right=${el.getBoundingClientRect().right.toFixed(1)}`),
+      };
+    });
+    expect(overflow, JSON.stringify(overflow)).toBeNull();
     const boxes = await page
       .locator(".home-hero h1 span, .hero-phone, .hero-laptop-lid")
       .evaluateAll((elements) =>
