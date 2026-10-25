@@ -1,5 +1,8 @@
 import { expect, test } from "./marketing-fixtures";
 
+/** Unrated stars are solid neutral grey (#d5d8dd); rated ones turn gold. */
+const UNRATED_STAR = "rgb(213, 216, 221)";
+
 const VIEWPORTS = [
   { width: 1920, height: 1080 },
   { width: 1680, height: 945 },
@@ -136,9 +139,10 @@ test("reduced motion disables all hero motion and keeps content visible", async 
     "opacity",
     "1",
   );
+  // Stars are always solid: an unrated one is neutral grey, never gold.
   await expect(page.locator(".hero-phone-stars svg").first()).toHaveCSS(
     "fill",
-    "rgba(0, 0, 0, 0)",
+    UNRATED_STAR,
   );
 });
 
@@ -190,12 +194,12 @@ test("phone starts neutral and yields to a customer's chosen rating", async ({
   await page.goto("/");
   const phone = page.locator(".hero-phone");
   const stars = phone.locator(".hero-phone-stars svg");
-  await expect(stars.last()).toHaveCSS("fill", "rgba(0, 0, 0, 0)");
+  await expect(stars.last()).toHaveCSS("fill", UNRATED_STAR);
   await phone
     .getByRole("radio", { name: "2 stars", exact: true })
     .check({ force: true });
   await expect(phone.locator(".is-filled")).toHaveCount(2);
-  await expect(stars.last()).toHaveCSS("fill", "rgba(0, 0, 0, 0)");
+  await expect(stars.last()).toHaveCSS("fill", UNRATED_STAR);
 });
 
 test("the interactive product tour follows How it works under its own heading", async ({ page }) => {
