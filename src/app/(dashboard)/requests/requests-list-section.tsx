@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import {
     Table,
@@ -8,7 +7,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import {
     ReviewRequestContactCell,
     getRequestStatusBadge,
@@ -16,6 +14,8 @@ import {
     reviewRequestChannelCell,
 } from "./requests-page-display";
 import { RequestOutcomeNote, RequestReviewConfirmButton } from "./request-review-confirm-button";
+import { RequestsPagination } from "./requests-pagination";
+import type { RequestsView } from "./load-requests-page-stats";
 
 export type RequestListRow = {
     id: string;
@@ -40,13 +40,18 @@ export function RequestsListSection({
     page,
     pageSize,
     customerQuery,
+    view = "sent",
 }: {
     requests: RequestListRow[];
     page: number;
     pageSize: number;
     customerQuery?: string;
+    view?: RequestsView;
 }) {
-    const customerSuffix = customerQuery ? `&customer=${customerQuery}` : "";
+    const query =
+        (view === "link" ? "&view=link" : "") +
+        (customerQuery ? `&customer=${encodeURIComponent(customerQuery)}` : "");
+    const emptyText = view === "link" ? "No public link visits yet." : "No requests sent yet.";
 
     // Switch on the list's own width, not the screen's: with the sidebar open, a laptop screen
     // has too little room for six columns, so it keeps the card layout until the table fits.
@@ -88,7 +93,7 @@ export function RequestsListSection({
                     })
                 ) : (
                     <div className="rounded-lg border border-dashed border-border py-12 text-center text-sm text-muted-foreground">
-                        No requests sent yet.
+                        {emptyText}
                     </div>
                 )}
             </div>
@@ -101,7 +106,7 @@ export function RequestsListSection({
                             <TableHead>Channel</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead>Review</TableHead>
-                            <TableHead className="text-right">Sent At</TableHead>
+                            <TableHead className="text-right">{view === "link" ? "Visited" : "Sent At"}</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -130,32 +135,14 @@ export function RequestsListSection({
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={6} className="h-24 text-center">
-                                    No requests sent yet.
+                                    {emptyText}
                                 </TableCell>
                             </TableRow>
                         )}
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-end sm:gap-2">
-                <div className="flex items-center justify-center gap-2 sm:justify-end">
-                    <Button variant="outline" size="sm" disabled={page <= 1} asChild>
-                        {page > 1 ? (
-                            <Link href={`/requests?page=${page - 1}${customerSuffix}`}>Previous</Link>
-                        ) : (
-                            <span>Previous</span>
-                        )}
-                    </Button>
-                    <span className="text-sm text-muted-foreground">Page {page}</span>
-                    <Button variant="outline" size="sm" disabled={requests.length < pageSize} asChild>
-                        {requests.length >= pageSize ? (
-                            <Link href={`/requests?page=${page + 1}${customerSuffix}`}>Next</Link>
-                        ) : (
-                            <span>Next</span>
-                        )}
-                    </Button>
-                </div>
-            </div>
+            <RequestsPagination page={page} hasNext={requests.length >= pageSize} query={query} />
         </div>
     );
 }

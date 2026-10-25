@@ -4,6 +4,7 @@ import {
     isOutboundRequest,
     isSentRequest,
 } from "@/lib/metrics/business-metrics";
+import { calculatePublicLinkMetrics } from "@/lib/metrics/public-link-metrics";
 
 function ratingSummary(requests: ReviewRequest[]) {
     const ratingsGiven = requests.filter(
@@ -32,6 +33,8 @@ export function computeZyenePlatformAnalyticsBase(
     const previousRequestFlow = previousRequests.filter(isOutboundRequest);
     const metrics = calculateRequestMetrics(requests);
     const previousMetrics = calculateRequestMetrics(previousRequests);
+    const linkVisits = calculatePublicLinkMetrics(requests);
+    const prevLinkVisits = calculatePublicLinkMetrics(previousRequests);
     const currentRatings = ratingSummary(allSourceRequests);
     const previousRatings = ratingSummary(previousAllSourceRequests);
     const requestRatings = ratingSummary(requestFlow);
@@ -58,6 +61,8 @@ export function computeZyenePlatformAnalyticsBase(
         totalClicked: metrics.clicked,
         totalCompleted: metrics.completed,
         totalPostedToGoogle,
+        linkVisits,
+        prevLinkVisits,
         prevSent: previousMetrics.totalSent,
         prevClicked: previousMetrics.clicked,
         prevCompleted: previousMetrics.completed,

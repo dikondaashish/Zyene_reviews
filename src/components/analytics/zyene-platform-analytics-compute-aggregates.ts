@@ -4,10 +4,17 @@ import {
   calculateRequestMetrics,
   isClickedRequest,
   isCompletedRequest,
-  isOutboundRequest,
   isSentRequest,
 } from "@/lib/metrics/business-metrics";
-import { buildZyenePlatformFunnelSteps } from "@/components/analytics/zyene-platform-funnel-steps";
+import {
+  buildZyenePlatformFunnelSteps,
+  buildZyenePlatformLinkFunnelSteps,
+} from "@/components/analytics/zyene-platform-funnel-steps";
+import {
+  calculatePublicLinkMetrics,
+  isPublicLinkVisit,
+  type PublicLinkMetrics,
+} from "@/lib/metrics/public-link-metrics";
 
 type BaseStats = {
   allSourceRequests: ReviewRequest[];
@@ -18,6 +25,7 @@ type BaseStats = {
   totalCompleted: number;
   totalPostedToGoogle: number;
   lowRatings: ReviewRequest[];
+  linkVisits: PublicLinkMetrics;
 };
 
 export function computeZyenePlatformAnalyticsAggregates(base: BaseStats) {
@@ -27,9 +35,13 @@ export function computeZyenePlatformAnalyticsAggregates(base: BaseStats) {
   const channelData = channels.map((ch) => {
     const chReqs = allSourceRequests.filter((r) => normalizedChannel(r) === ch);
     const metrics = calculateRequestMetrics(chReqs);
+    // Public link / QR visits only ever land in the Link row; opening the page is the click.
+    const link = calculatePublicLinkMetrics(chReqs);
     const sent = metrics.totalSent;
-    const clicked = metrics.clicked;
-    const completed = metrics.completed;
+    const visits = link.visits;
+    const reached = sent + visits;
+    const clicked = metrics.clicked + visits;
+    const completed = metrics.completed + link.completed;
     return {
       channel:
         ch === "sms"
@@ -40,10 +52,11 @@ export function computeZyenePlatformAnalyticsAggregates(base: BaseStats) {
               ? "SMS + Email"
               : "Link",
       sent,
+      visits,
       clicked,
       completed,
       clickRate: Math.round(metrics.clickRate),
-      conversionRate: Math.round(metrics.conversionRate),
+      conversionRate: Math.round(reached > 0 ? (completed / reached) * 100 : 0),
     };
   });
 
@@ -64,10 +77,9 @@ export function computeZyenePlatformAnalyticsAggregates(base: BaseStats) {
   const tagMap = new Map<string, number>();
   const dailyMap = new Map<
     string,
-    { date: string; sent: number; clicked: number; completed: number }
+    { date: string; sent: number; clicked: number; visits: number; completed: number }
   >();
   for (const r of allSourceRequests) {
-    if (!isOutboundRequest(r)) continue;
     if (r.tags_selected) {
       for (const tag of r.tags_selected) {
         const clean = tag.replace(/^[^\s]+\s/, "");
@@ -76,11 +88,15 @@ export function computeZyenePlatformAnalyticsAggregates(base: BaseStats) {
     }
     const date = new Date(r.created_at).toISOString().split("T")[0];
     if (!dailyMap.has(date))
-      dailyMap.set(date, { date, sent: 0, clicked: 0, completed: 0 });
+      dailyMap.set(date, { date, sent: 0, clicked: 0, visits: 0, completed: 0 });
     const entry = dailyMap.get(date)!;
+    if (isCompletedRequest(r)) entry.completed++;
+    if (isPublicLinkVisit(r)) {
+      entry.visits++;
+      continue;
+    }
     if (isSentRequest(r)) entry.sent++;
     if (isClickedRequest(r)) entry.clicked++;
-    if (isCompletedRequest(r)) entry.completed++;
   }
   const popularTags = Array.from(tagMap.entries())
     .map(([tag, count]) => ({ tag, count }))
@@ -100,6 +116,7 @@ export function computeZyenePlatformAnalyticsAggregates(base: BaseStats) {
     .slice(0, 10);
 
   const funnelSteps = buildZyenePlatformFunnelSteps(base);
+  const linkFunnelSteps = buildZyenePlatformLinkFunnelSteps(base.linkVisits);
 
   return {
     channelData,
@@ -111,5 +128,6 @@ export function computeZyenePlatformAnalyticsAggregates(base: BaseStats) {
     dailyData,
     lowRatingEntries,
     funnelSteps,
+    linkFunnelSteps,
   };
 }

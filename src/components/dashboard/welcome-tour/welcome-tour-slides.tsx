@@ -5,9 +5,11 @@ import type { LucideIcon } from "lucide-react";
 import { CalendarDays, Check, Copy, Handshake, Link2, MessageSquareReply, PartyPopper, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GoogleImportStatus } from "./google-import-status";
+import { sampleCoverFor } from "@/components/onboarding/onboarding-preview-model";
 import type { WelcomeTourData } from "./welcome-tour-types";
 
-export type WelcomeSlide = { icon: LucideIcon; title: string; body: React.ReactNode };
+/** `image` is the photo across the top of the slide (local files in /public). */
+export type WelcomeSlide = { icon: LucideIcon; image: string; title: string; body: React.ReactNode };
 
 function CopyLink({ url }: { url: string }) {
     const [copied, setCopied] = useState(false);
@@ -41,10 +43,11 @@ function Point({ children }: { children: React.ReactNode }) {
 }
 
 /** Five short slides in Zyene's voice. Everything they say is true for this business right now. */
-export function buildWelcomeSlides(data: WelcomeTourData, actions: { importCustomers: () => void; replyRules: () => void }): WelcomeSlide[] {
+export function buildWelcomeSlides(data: WelcomeTourData, actions: { importCustomers: () => void; replyRules: () => void; publicProfile: () => void }): WelcomeSlide[] {
     return [
         {
             icon: PartyPopper,
+            image: sampleCoverFor(data.category),
             title: `Great work, ${data.firstName}!`,
             body: (
                 <div className="space-y-3">
@@ -57,6 +60,7 @@ export function buildWelcomeSlides(data: WelcomeTourData, actions: { importCusto
         },
         {
             icon: Link2,
+            image: "/onboarding/welcome/review-link.jpg",
             title: "Your review link",
             body: (
                 <div className="space-y-3">
@@ -66,11 +70,16 @@ export function buildWelcomeSlides(data: WelcomeTourData, actions: { importCusto
                         <Point>Text or email it after a visit</Point>
                         <Point>Print the QR code from your dashboard for receipts, tables and the door</Point>
                     </ul>
+                    <p className="text-sm leading-6 text-muted-foreground">
+                        Want a different link, your logo or your colours? It&apos;s all yours to change in Settings → Public profile.
+                    </p>
+                    <Button type="button" variant="outline" size="sm" onClick={actions.publicProfile}>Customise my page</Button>
                 </div>
             ),
         },
         {
             icon: Users,
+            image: "/onboarding/welcome/past-customers.jpg",
             title: "Ask your past customers",
             body: (
                 <div className="space-y-3">
@@ -84,12 +93,14 @@ export function buildWelcomeSlides(data: WelcomeTourData, actions: { importCusto
         },
         {
             icon: MessageSquareReply,
+            image: "/onboarding/welcome/replies.jpg",
             title: "Replies, with you in control",
             body: (
                 <div className="space-y-3">
                     {data.replyRules.length > 0 ? (
                         <ul className="space-y-1">
                             {data.replyRules.map((line) => <Point key={line}>New {line}</Point>)}
+                            <Point>Change these any time in Settings → Reply rules.</Point>
                         </ul>
                     ) : (
                         <p className="text-sm leading-6 text-muted-foreground">
@@ -106,12 +117,14 @@ export function buildWelcomeSlides(data: WelcomeTourData, actions: { importCusto
         },
         {
             icon: Handshake,
+            image: "/onboarding/welcome/team.jpg",
             title: "We make a great team",
             body: (
                 <ul className="space-y-1">
                     <Point>Check &ldquo;Needs you&rdquo; at the top of your dashboard. It lists only what needs you today.</Point>
                     <Point>Reviews come in as customers answer, so the first new ones often take a few days.</Point>
                     <Point>Stuck? The help button at the top right is always there.</Point>
+                    <Point>Everything you set up today can be changed in Settings: your public page and link, reply rules, notifications and billing.</Point>
                 </ul>
             ),
         },

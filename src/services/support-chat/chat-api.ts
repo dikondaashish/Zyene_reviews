@@ -17,7 +17,7 @@ import { activeHumanAgent, ensureConversation, insertMessage } from "@/services/
 const LIMIT_REPLY =
     "You've asked a lot of great questions! To keep going, leave your details and our team will follow up personally.";
 
-function eventStream(run: (emit: (event: SupportChatStreamEvent) => void) => Promise<void>, status = 200): Response {
+export function eventStream(run: (emit: (event: SupportChatStreamEvent) => void) => Promise<void>, status = 200): Response {
     const body = new ReadableStream<Uint8Array>({
         async start(controller) {
             const emit = (event: SupportChatStreamEvent) => controller.enqueue(encodeStreamEvent(event));
@@ -38,7 +38,7 @@ function eventStream(run: (emit: (event: SupportChatStreamEvent) => void) => Pro
 }
 
 /** A complete canned answer, in the same stream format as a model reply. */
-function cannedReply(text: string, intent: "answer" | "handoff" | "off_topic", status = 200): Response {
+export function cannedReply(text: string, intent: "answer" | "handoff" | "off_topic", status = 200): Response {
     return eventStream(async (emit) => {
         emit({ type: "delta", text });
         emit({ type: "meta", intent, suggestions: [], actions: [], open: null });

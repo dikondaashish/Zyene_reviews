@@ -11,6 +11,7 @@ import { ApiRouteError } from "@/app/api/_shared/errors";
 import type { Database } from "@/lib/db/supabase/database.types";
 import { planAllowsAutoCommenter } from "@/services/stripe/plans";
 import { sanitizeSlug } from "@/lib/utils";
+import { isSlugTakenByAnotherBusiness } from "./slug-availability";
 
 import { DEFAULT_REVIEW_PAGE_BG, type BusinessPatchBody } from "./business-patch-schema";
 
@@ -112,14 +113,8 @@ export async function resolveUniqueSlug(
         });
     }
 
-    const { data: conflict } = await supabase
-        .from("businesses")
-        .select("id")
-        .eq("slug", sanitized)
-        .neq("id", businessId)
-        .maybeSingle();
-
-    if (conflict) {
+    // Other organisations' links are invisible to the owner's client, so ask the admin-backed check.
+    if (await isSlugTakenByAnotherBusiness(sanitized, businessId)) {
         throw new ApiRouteError("This link is already taken.", {
             status: 409,
             code: "SLUG_TAKEN",

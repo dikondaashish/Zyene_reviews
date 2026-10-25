@@ -7,8 +7,9 @@ import { stepBusinessLocationSchema, type StepBusinessLocationFormData } from "@
 import type { OnboardingGoogleLocationInfo } from "@/types/components";
 import type { Step2FormProps, GoogleConnectionState } from "@/components/onboarding/step2-form-types";
 import { useGoogleOAuthNavigation } from "@/components/onboarding/use-google-oauth-navigation";
-import { runStep2SaveAndNext, runStep2Skip } from "@/components/onboarding/step2-form-save-navigation";
+import { runStep2SaveAndNext, runStep2Skip, step2AfterSave } from "@/components/onboarding/step2-form-save-navigation";
 import { useStep2GoogleConnection } from "@/components/onboarding/use-step2-google-connection";
+import { knownIndustry } from "@/components/onboarding/step3-form-categories";
 
 export function useStep2FormController({
     onNext,
@@ -18,6 +19,7 @@ export function useStep2FormController({
     city,
     address = "",
     state: stateProp = "",
+    country = "US",
     phone = "",
     pendingGoogleCode,
     onGoogleCodeConsumed,
@@ -40,7 +42,8 @@ export function useStep2FormController({
             locationName: businessName || "",
             address: address || "",
             city: city || "",
-            state: stateProp || "CA",
+            state: stateProp || (country === "US" ? "CA" : ""),
+            country: country || "US",
             phone: phone || "",
         },
     });
@@ -55,10 +58,11 @@ export function useStep2FormController({
             locationName: businessName || "",
             address: address || "",
             city: city || "",
-            state: stateProp || "CA",
+            state: stateProp || (country === "US" ? "CA" : ""),
+            country: country || "US",
             phone: phone || "",
         });
-    }, [businessName, city, address, stateProp, phone, form]);
+    }, [businessName, city, address, stateProp, country, phone, form]);
 
     const watchedBusinessName = form.watch("businessName");
     useEffect(() => {
@@ -74,21 +78,18 @@ export function useStep2FormController({
         const newState = info.state || form.getValues("state");
         const newPhone = info.phone || form.getValues("phone");
 
-        form.reset({
-            businessName: newBusinessName,
-            locationName: newBusinessName,
-            address: newAddress,
-            city: newCity,
-            state: newState,
-            phone: newPhone,
-        });
+        form.reset({ businessName: newBusinessName, locationName: newBusinessName, address: newAddress, city: newCity,
+            state: newState, country: form.getValues("country") || "US", phone: newPhone });
 
+        const industry = knownIndustry(info.category);
         onBusinessUpdate?.({
             name: newBusinessName,
             address_line1: newAddress,
             city: newCity,
             state: newState,
             category: info.category || null,
+            // "other" means Google's category matched no tile: nothing was detected.
+            categoryFromGoogle: Boolean(industry && industry !== "other"),
         });
     };
 
@@ -109,7 +110,8 @@ export function useStep2FormController({
     const onSaveAndNext = async () => {
         setAdvancing(true);
         try {
-            await runStep2SaveAndNext(businessId, () => form.getValues(), onNext);
+            const viaGoogle = initialConnected || visibleGoogleState.status === "success";
+            await runStep2SaveAndNext(businessId, () => form.getValues(), step2AfterSave(viaGoogle, form.getValues("category"), onNext, onBusinessUpdate));
         } finally {
             setAdvancing(false);
         }

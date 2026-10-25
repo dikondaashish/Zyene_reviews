@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { completeTour } from "@/app/actions/tour";
 import { fireOnboardingConfetti } from "@/components/onboarding/step5-form-confetti";
 import { cn } from "@/lib/utils";
+import { BusinessLogo } from "@/components/competitors/business-logo";
 import { buildWelcomeSlides } from "./welcome-tour-slides";
 import type { WelcomeTourData } from "./welcome-tour-types";
 
@@ -33,6 +35,7 @@ export function WelcomeTourDialog({ data }: { data: WelcomeTourData }) {
     const slides = buildWelcomeSlides(data, {
         importCustomers: () => void finish("/customers?import=1"),
         replyRules: () => void finish("/settings/reply-rules"),
+        publicProfile: () => void finish("/settings/public-profile"),
     });
     const slide = slides[index];
     const last = index === slides.length - 1;
@@ -41,10 +44,21 @@ export function WelcomeTourDialog({ data }: { data: WelcomeTourData }) {
     return (
         <Dialog open={open} onOpenChange={(next) => { if (!next) void finish("/dashboard"); }}>
             <DialogContent className="max-w-md gap-0 overflow-hidden p-0">
-                <div className="flex items-center justify-center bg-primary/10 py-8">
-                    <span className="grid size-16 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-sm">
-                        <Icon className="size-8" aria-hidden />
-                    </span>
+                <div className="relative h-44 bg-muted">
+                    <Image key={slide.image} src={slide.image} alt="" fill priority sizes="448px" className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" aria-hidden />
+                    <div className="absolute inset-x-5 bottom-4 flex items-end gap-3">
+                        {index === 0 ? (
+                            <>
+                                <span className="rounded-lg bg-card p-1 shadow-sm"><BusinessLogo name={data.businessName} website={data.website} className="size-11" /></span>
+                                <span className="min-w-0 pb-0.5 font-display text-lg font-semibold leading-tight text-white drop-shadow-sm">{data.businessName}</span>
+                            </>
+                        ) : (
+                            <span className="grid size-11 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+                                <Icon className="size-5" aria-hidden />
+                            </span>
+                        )}
+                    </div>
                 </div>
                 <div className="space-y-4 px-6 pb-6 pt-5">
                     <div className="space-y-2">

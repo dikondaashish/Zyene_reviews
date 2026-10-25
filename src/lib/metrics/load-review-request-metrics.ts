@@ -10,6 +10,7 @@ import {
 export type ReviewRequestMetricRecord = RequestMetricRow & {
     id: string;
     created_at: string;
+    rating_given?: number | null;
 };
 
 export type LoadReviewRequestMetricsResult =
@@ -27,7 +28,7 @@ export async function loadReviewRequestMetrics(
             let query = supabase
                 .from("review_requests")
                 .select(
-                    "id,created_at,status,channel,customer_phone,customer_email,customer_name,campaign_id,sent_at,delivered_at,clicked_at,completed_at,review_left,email_status,sms_status",
+                    "id,created_at,status,channel,customer_phone,customer_email,customer_name,campaign_id,sent_at,delivered_at,clicked_at,completed_at,review_left,email_status,sms_status,rating_given",
                 )
                 .eq("business_id", businessId);
 

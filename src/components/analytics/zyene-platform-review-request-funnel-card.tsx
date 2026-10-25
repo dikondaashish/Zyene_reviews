@@ -20,10 +20,23 @@ export function ZyenePlatformReviewRequestFunnelCard({
   dateRange,
   funnelSteps,
   totalSent,
+  title = "Review Request Funnel",
+  subtitle = "Track every step from send to Google review",
+  badge = "Email + SMS only",
+  denominatorLabel = "sent",
+  footnote = "Every percentage uses sent requests as the denominator.",
+  gridClassName = "lg:grid-cols-6",
 }: {
   dateRange: string;
   funnelSteps: ZyeneFunnelStep[];
+  /** The first step's count; every percentage is a share of it. */
   totalSent: number;
+  title?: string;
+  subtitle?: string;
+  badge?: string;
+  denominatorLabel?: string;
+  footnote?: string;
+  gridClassName?: string;
 }) {
   return (
     <Card className="bg-card border-border overflow-hidden">
@@ -31,24 +44,24 @@ export function ZyenePlatformReviewRequestFunnelCard({
         <div className="space-y-1">
           <CardTitle className="ui-card-title flex items-center gap-2">
             <Filter className="text-primary size-5" aria-hidden="true" />
-            Review Request Funnel
+            {title}
           </CardTitle>
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-xs text-muted-foreground font-medium">
-              Track every step from send to Google review · {dateRange}
+              {subtitle} · {dateRange}
             </p>
             <Badge
               variant="secondary"
               className="text-[10px] font-bold bg-primary/10 text-primary border-primary/20"
             >
-              Email + SMS only
+              {badge}
             </Badge>
           </div>
         </div>
       </CardHeader>
       <CardContent>
         <LazyMotion features={domAnimation}>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className={cn("grid grid-cols-2 md:grid-cols-3 gap-3", gridClassName)}>
             {funnelSteps.map((step, idx) => {
               const percentOfSent = pct(step.count, totalSent);
               return (
@@ -88,7 +101,7 @@ export function ZyenePlatformReviewRequestFunnelCard({
                               : "bg-muted text-muted-foreground",
                         )}
                       >
-                        {percentOfSent}% of sent
+                        {percentOfSent}% of {denominatorLabel}
                       </Badge>
                     )}
                   </div>
@@ -98,7 +111,7 @@ export function ZyenePlatformReviewRequestFunnelCard({
           </div>
         </LazyMotion>
         <p className="mt-5 text-center text-xs text-muted-foreground">
-          Every percentage uses sent requests as the denominator.
+          {footnote}
         </p>
       </CardContent>
     </Card>

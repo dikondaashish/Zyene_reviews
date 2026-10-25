@@ -1,15 +1,16 @@
 "use client";
 
-import { CheckCircle2, Building2, Mail } from "lucide-react";
+import { Building2, Mail } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import * as PricingCard from "@/components/ui/pricing-card";
 import { cn } from "@/lib/utils";
 import { enterpriseSalesGmailComposeUrl } from "@/lib/enterprise-sales-contact";
 import type { Plan } from "@/services/stripe/plans";
+import { Step4PlanFeatureList } from "./step4-plan-feature-list";
 
 export function Step4SubscriptionEnterpriseCard({ enterprisePlan }: { enterprisePlan: Plan }) {
     return (
-        <PricingCard.Card className="relative flex w-full max-w-none flex-col border-dashed transition-all duration-300 hover:-translate-y-2 hover:border-solid hover:border-border dark:hover:border-border">
+        <PricingCard.Card className="relative flex w-full max-w-none flex-col border-dashed transition-colors hover:border-solid hover:border-primary/40">
             <PricingCard.Header className="relative z-10">
                 <PricingCard.Plan>
                     <PricingCard.PlanName>
@@ -28,7 +29,7 @@ export function Step4SubscriptionEnterpriseCard({ enterprisePlan }: { enterprise
                     rel="noopener noreferrer"
                     className={cn(
                         buttonVariants({ variant: "outline", size: "default" }),
-                        "w-full gap-2 font-semibold transition-all duration-200 hover:-translate-y-1 hover:bg-muted dark:hover:bg-muted",
+                        "w-full gap-2 font-semibold transition-colors hover:bg-muted dark:hover:bg-muted",
                     )}
                 >
                     <Mail className="size-4" aria-hidden />
@@ -36,16 +37,7 @@ export function Step4SubscriptionEnterpriseCard({ enterprisePlan }: { enterprise
                 </a>
             </PricingCard.Header>
             <PricingCard.Body>
-                <PricingCard.List>
-                    {enterprisePlan.features.map((feature) => (
-                        <PricingCard.ListItem key={feature}>
-                            <span className="mt-0.5 shrink-0">
-                                <CheckCircle2 className="text-success size-4" aria-hidden />
-                            </span>
-                            <span>{feature}</span>
-                        </PricingCard.ListItem>
-                    ))}
-                </PricingCard.List>
+                <Step4PlanFeatureList features={enterprisePlan.features} />
             </PricingCard.Body>
         </PricingCard.Card>
     );

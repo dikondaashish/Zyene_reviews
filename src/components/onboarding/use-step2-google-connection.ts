@@ -74,7 +74,8 @@ export function useStep2GoogleConnection({
         try {
             const result = await finalizeGoogleConnection(businessId, location.name, connectionId);
 
-            if (result.success && result.locationInfo) {
+            // `in` narrows the union whatever shape TypeScript infers for the failure branches.
+            if (result.success && "locationInfo" in result && result.locationInfo) {
                 setGoogleState({
                     status: "success",
                     reviewCount: result.reviewData?.reviewCount,
@@ -88,7 +89,7 @@ export function useStep2GoogleConnection({
                 }
                 updateFormAndParent(result.locationInfo, result.reviewData);
             } else {
-                toast.error(result.error || "Failed to finalize connection");
+                toast.error(("error" in result && result.error) || "Failed to finalize connection");
             }
         } catch {
             toast.error("Failed to select business");

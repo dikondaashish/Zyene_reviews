@@ -1,5 +1,3 @@
-import { MapPin, BarChart3, Gem, Zap, PartyPopper, UserRound } from "lucide-react";
-
 export interface OnboardingOrganization {
     id: string;
     name: string;
@@ -14,7 +12,18 @@ export interface OnboardingBusiness {
     email?: string | null;
     address_line1?: string | null;
     state?: string | null;
+    /** ISO two-letter code; the column defaults to US. */
+    country?: string | null;
     phone?: string | null;
+    website?: string | null;
+    /** The public review link: collectratings.com/<slug>. */
+    slug?: string | null;
+    average_rating?: number | null;
+    total_reviews?: number | null;
+    /** Google photo URL for the preview only; never saved. */
+    photoUrl?: string | null;
+    /** True only when Google picked the industry in this session (profile category or place type). */
+    categoryFromGoogle?: boolean;
 }
 
 export interface OnboardingUser {
@@ -37,12 +46,12 @@ export interface OnboardingUser {
 export const ONBOARDING_STEP = { about: 1, business: 2, details: 3, plan: 4, done: 5, results: 6, automate: 7 } as const;
 
 export const ONBOARDING_PHASES = [
-    { label: "About you", icon: UserRound, steps: [1] },
-    { label: "Connect", icon: MapPin, steps: [2, 3] },
-    { label: "Your results", icon: BarChart3, steps: [6] },
-    { label: "Plan", icon: Gem, steps: [4] },
-    { label: "Automate", icon: Zap, steps: [7] },
-    { label: "All set", icon: PartyPopper, steps: [5] },
+    { label: "About you", steps: [1] },
+    { label: "Connect", steps: [2, 3] },
+    { label: "Your results", steps: [6] },
+    { label: "Plan", steps: [4] },
+    { label: "Automate", steps: [7] },
+    { label: "All set", steps: [5] },
 ] as const;
 
 export function onboardingPhaseIndex(step: number): number {

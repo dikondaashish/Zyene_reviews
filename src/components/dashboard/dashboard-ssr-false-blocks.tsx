@@ -15,10 +15,6 @@ const AnimatedReviewCards = dynamic(
     { ssr: false, loading: () => <PanelLoading label="recent reviews" className="h-[360px] rounded-2xl border border-border bg-card" /> }
 );
 
-export function DashboardQrCodeLazy(props: CustomerPortalCardProps) {
-    return <DashboardCustomerPortalCard {...props} />;
-}
-
 export function DashboardCustomerPortalCard(props: CustomerPortalCardProps) {
     return <CustomerPortalCard {...props} />;
 }

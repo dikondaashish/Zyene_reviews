@@ -7,4 +7,7 @@ export type WelcomeTourData = {
     googleConnected: boolean;
     /** Plain-language reply rules, e.g. "1–3★ wait for your approval"; empty when rules are off. */
     replyRules: string[];
+    /** Picks the first slide's photo (their industry) and logo (their site's icon). */
+    category?: string | null;
+    website?: string | null;
 };

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "scripts/**/*.{mjs,ts}",
+    "docs/**/*.mjs",
+    "tests/**/*.{ts,tsx}",
+    "src/lib/images/image-loader.ts"
+  ],
+  "ignore": [
+    ".agents/**",
+    "public/**"
+  ],
+  "ignoreDependencies": [
+    "pino-pretty",
+    "prettier"
+  ],
+  "ignoreBinaries": [
+    "vercel"
+  ]
+}

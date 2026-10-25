@@ -5,14 +5,15 @@ import { Line, LineChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YA
 import { AnalyticsChartCard } from "@/components/analytics/analytics-chart-card";
 import { ChartEmpty, ChartKey, chartAxis, chartDate, chartTooltipStyle } from "@/components/analytics/chart-presentation";
 
-export type ZyeneDailyDatum = { date: string; sent: number; clicked: number; completed: number };
+export type ZyeneDailyDatum = { date: string; sent: number; clicked: number; visits: number; completed: number };
 const series = [
     { key: "sent", label: "Sent", color: "var(--primary)", dash: undefined },
     { key: "clicked", label: "Clicked", color: "var(--chart-5)", dash: "6 3" },
+    { key: "visits", label: "Link visits", color: "var(--chart-3)", dash: "1 4" },
     { key: "completed", label: "Completed", color: "var(--chart-2)", dash: "2 3" },
 ];
 export function ZyenePlatformDailyActivityCard({ dailyData }: { dailyData: ZyeneDailyDatum[] }) {
-    return <AnalyticsChartCard title="Daily activity" description="Requests sent, link clicks and completed reviews" icon={ChartNoAxesCombined} className="lg:col-span-3">
+    return <AnalyticsChartCard title="Daily activity" description="Requests sent, link clicks, public link visits and completed reviews" icon={ChartNoAxesCombined} className="lg:col-span-3">
         {!dailyData.length ? <ChartEmpty message="No request activity in this period" /> : <div className="space-y-5">
             <div className="flex flex-wrap gap-5">{series.map(s => <ChartKey key={s.key} label={s.label} color={s.color} />)}</div>
             <div className="h-[280px] w-full">

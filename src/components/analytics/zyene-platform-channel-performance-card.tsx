@@ -6,6 +6,8 @@ import { Link2, Mail, MessageSquare, Send } from "lucide-react";
 export type ZyeneChannelDatum = {
     channel: string;
     sent: number;
+    /** Public link / QR visits (Link row only); they count as clicks but were never sent. */
+    visits: number;
     clicked: number;
     completed: number;
     clickRate: number;
@@ -22,7 +24,7 @@ export function ZyenePlatformChannelPerformanceCard({ channelData }: { channelDa
                         Channel Performance
                     </CardTitle>
                     <p className="text-xs text-muted-foreground font-medium">
-                        Compare SMS, Email, and Link effectiveness
+                        Compare SMS, Email, and Link effectiveness (Link includes public link and QR visits)
                     </p>
                 </div>
             </CardHeader>
@@ -30,6 +32,7 @@ export function ZyenePlatformChannelPerformanceCard({ channelData }: { channelDa
                 {channelData.map((ch) => {
                     const ChannelIcon =
                         ch.channel === "SMS" ? MessageSquare : ch.channel === "Email" ? Mail : Link2;
+                    const reached = ch.sent + ch.visits;
                     return (
                         <div key={ch.channel} className="space-y-3">
                             <div className="flex items-center justify-between">
@@ -39,25 +42,33 @@ export function ZyenePlatformChannelPerformanceCard({ channelData }: { channelDa
                                     </div>
                                     <div>
                                         <p className="text-sm font-bold">{ch.channel}</p>
-                                        <p className="text-[10px] text-muted-foreground">{ch.sent} sent</p>
+                                        <p className="text-[10px] text-muted-foreground">
+                                            {ch.sent} sent{ch.visits > 0 ? ` · ${ch.visits} link visits` : ""}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="text-right space-y-0.5">
-                                    <p className="text-sm font-black text-primary">{ch.clickRate}% CTR</p>
-                                    <p className="text-[10px] text-muted-foreground">{ch.conversionRate}% converted</p>
+                                    {ch.visits > 0 ? (
+                                        <p className="text-sm font-black text-primary">{ch.conversionRate}% completed</p>
+                                    ) : (
+                                        <>
+                                            <p className="text-sm font-black text-primary">{ch.clickRate}% CTR</p>
+                                            <p className="text-[10px] text-muted-foreground">{ch.conversionRate}% converted</p>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                             <div className="h-2 w-full bg-border rounded-full overflow-hidden flex">
                                 <div
                                     className="h-full bg-primary rounded-l-full transition-all duration-700"
                                     style={{
-                                        width: `${ch.sent > 0 ? (ch.completed / ch.sent) * 100 : 0}%`,
+                                        width: `${reached > 0 ? (ch.completed / reached) * 100 : 0}%`,
                                     }}
                                 />
                                 <div
                                     className="h-full bg-primary/40 transition-all duration-700"
                                     style={{
-                                        width: `${ch.sent > 0 ? ((ch.clicked - ch.completed) / ch.sent) * 100 : 0}%`,
+                                        width: `${reached > 0 ? ((ch.clicked - ch.completed) / reached) * 100 : 0}%`,
                                     }}
                                 />
                             </div>
@@ -74,7 +85,7 @@ export function ZyenePlatformChannelPerformanceCard({ channelData }: { channelDa
                         </div>
                     );
                 })}
-                {channelData.every((ch) => ch.sent === 0) && (
+                {channelData.every((ch) => ch.sent === 0 && ch.visits === 0) && (
                     <div className="flex flex-col items-center justify-center py-8 text-muted-foreground space-y-2">
                         <Send className="opacity-20 size-8" />
                         <p className="text-sm">No requests sent in this period</p>

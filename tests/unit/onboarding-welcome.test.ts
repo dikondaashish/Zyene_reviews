@@ -15,7 +15,7 @@ const data = {
     googleConnected: true,
     replyRules: [],
 };
-const noop = { importCustomers: () => {}, replyRules: () => {} };
+const noop = { importCustomers: () => {}, replyRules: () => {}, publicProfile: () => {} };
 
 describe("first-run welcome", () => {
     it("ends onboarding in the real dashboard, not a separate page", () => {

@@ -1,7 +1,8 @@
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { getActiveBusinessId } from "@/lib/auth/business-context";
-import { loadRequestsPageStats } from "./load-requests-page-stats";
+import type { PublicLinkMetrics } from "@/lib/metrics/public-link-metrics";
+import { loadRequestsPageStats, type RequestsView } from "./load-requests-page-stats";
 
 export type RequestsPageLoadResult =
     | { kind: "no-business" }
@@ -11,6 +12,8 @@ export type RequestsPageLoadResult =
           business: { id: string; slug: string | null; name: string | null };
           page: number;
           pageSize: number;
+          view: RequestsView;
+          linkStats: PublicLinkMetrics;
           customerQuery: string | undefined;
           initialCustomer?: { name: string; phone: string; email: string };
           stats: {
@@ -31,6 +34,7 @@ export type RequestsPageLoadResult =
 export async function loadRequestsPageData(sp: {
     page?: string;
     customer?: string;
+    view?: string;
 }): Promise<RequestsPageLoadResult> {
     const { business } = await getActiveBusinessId();
 
@@ -40,8 +44,9 @@ export async function loadRequestsPageData(sp: {
 
     const page = Number(sp.page) || 1;
     const pageSize = 20;
+    const view: RequestsView = sp.view === "link" ? "link" : "sent";
 
-    const fetched = await loadRequestsPageStats(business.id, page, pageSize);
+    const fetched = await loadRequestsPageStats(business.id, page, pageSize, view);
     if (!fetched.ok) {
         logger.error({ err: fetched.error }, "[Requests page] Fetch failed:");
         return { kind: "error" };
@@ -71,6 +76,8 @@ export async function loadRequestsPageData(sp: {
         business: { id: business.id, slug: business.slug || "", name: business.name || "" },
         page,
         pageSize,
+        view,
+        linkStats: fetched.linkStats,
         customerQuery: sp.customer,
         initialCustomer,
         stats: fetched.stats,

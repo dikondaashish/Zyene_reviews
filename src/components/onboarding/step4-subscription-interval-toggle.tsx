@@ -16,7 +16,7 @@ export function Step4SubscriptionIntervalToggle({
 }: Step4SubscriptionIntervalToggleProps) {
     return (
         <div
-            className="inline-flex items-center gap-0.5 rounded-full border border-border bg-muted/80 p-1 dark:border-border/60 dark:bg-muted/80 self-start sm:self-auto"
+            className="inline-flex items-center gap-0.5 rounded-lg border border-border bg-muted/80 p-1 dark:border-border/60 dark:bg-muted/80 self-start sm:self-auto"
             role="tablist"
             aria-label="Billing interval"
         >
@@ -26,7 +26,7 @@ export function Step4SubscriptionIntervalToggle({
                 aria-selected={interval === "month"}
                 onClick={() => onIntervalChange("month")}
                 className={cn(
-                    "rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
+                    "rounded-md px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
                     interval === "month"
                         ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
                         : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground",
@@ -40,7 +40,7 @@ export function Step4SubscriptionIntervalToggle({
                 aria-selected={interval === "year"}
                 onClick={() => onIntervalChange("year")}
                 className={cn(
-                    "flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
+                    "flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2",
                     interval === "year"
                         ? "bg-card text-foreground ring-1 ring-primary/40 dark:bg-card dark:text-foreground dark:ring-primary/50"
                         : "text-muted-foreground hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground",

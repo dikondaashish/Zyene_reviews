@@ -53,6 +53,7 @@ export function OnboardingSteps(props: OnboardingStepsProps) {
                     />
                 ) : (
                     <OnboardingGlassStepsSection
+                        onBusinessUpdate={props.handleBusinessUpdate}
                         currentStep={currentStep}
                         setCurrentStep={props.setCurrentStep}
                         isLoading={props.isLoading}

@@ -13,13 +13,18 @@ export interface ChatRequestBody {
  * plain JSON and network failures throw; both become a friendly reply plus a meta
  * event, so the caller only ever handles stream events.
  */
-export async function streamChatReply(body: ChatRequestBody, onEvent: (event: SupportChatStreamEvent) => void): Promise<void> {
+export async function streamChatReply(
+    body: ChatRequestBody & Record<string, unknown>,
+    onEvent: (event: SupportChatStreamEvent) => void,
+    /** The in-app setup assistant posts to its own signed-in route. */
+    endpoint = "/api/marketing/chat",
+): Promise<void> {
     const fallback = (text: string) => {
         onEvent({ type: "delta", text });
         onEvent({ type: "meta", intent: "answer", suggestions: [], actions: [], open: null });
     };
     try {
-        const res = await fetch("/api/marketing/chat", {
+        const res = await fetch(endpoint, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),

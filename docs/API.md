@@ -143,6 +143,9 @@ Auth: Supabase session (`getUser`) + active business context unless noted.
 | `POST` | `/api/nfc/checkout` | NFC card order checkout |
 | `POST` | `/api/milestones/reviews/claim` | Milestone claim |
 | `GET` | `/api/places/autocomplete` | Places autocomplete |
+| `GET` | `/api/places/business-search?q=&country=` | Onboarding: Google Text Search for the owner's business, biased to `country` (ISO code, default US). Returns name, street, city, state, country, phone and website for the logo. Signed in, 3–120 chars, 40 searches per 10 min per user |
+| `GET` | `/api/places/photo?name=` | Onboarding preview: a key-free image URL for a Google place photo (`places/…/photos/…`). Signed in, shares the business-search rate limit |
+| `POST` | `/api/onboarding/assistant` | "Ask Zyene AI" during setup: streams an answer (NDJSON, same protocol as `/api/marketing/chat`) with setup-step context. Signed in; per-account burst and daily limits; mirrored to Slack |
 | `GET` | `/api/health` | Health check |
 
 Exact bodies vary by route — open the corresponding `route.ts` when implementing.

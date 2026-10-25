@@ -1,7 +1,6 @@
 "use client";
 
 import type { UseFormRegister } from "react-hook-form";
-import { Reply } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { StepCategoryFormData } from "@/lib/validations/onboarding";
@@ -16,9 +15,8 @@ export function Step3FormSupportEmail({ register, error, disabled }: {
     disabled?: boolean;
 }) {
     return (
-        <div className="space-y-2 rounded-2xl border border-border/70 bg-card/60 p-4 text-left">
-            <Label htmlFor="support-email" className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                <Reply className="size-4 text-primary" aria-hidden />
+        <div className="space-y-1.5 border-t border-border pt-5 text-left">
+            <Label htmlFor="support-email">
                 Where should customer replies go?
             </Label>
             <Input

@@ -48,6 +48,7 @@ export function OnboardingStepTwoSection({
                         city={business.city ?? ""}
                         address={business.address_line1 ?? ""}
                         state={business.state ?? ""}
+                        country={business.country ?? "US"}
                         phone={business.phone ?? ""}
                         pendingGoogleCode={pendingGoogleCode}
                         onGoogleCodeConsumed={() => setPendingGoogleCode(null)}
@@ -55,8 +56,8 @@ export function OnboardingStepTwoSection({
                         onGoogleConnectionErrorConsumed={() => setGoogleConnectionError(null)}
                         onBusinessUpdate={handleBusinessUpdate}
                         initialConnected={googleConnected}
-                        onNext={async () => {
-                            setGoogleConnected(true);
+                        onNext={async (viaGoogle) => {
+                            if (viaGoogle) setGoogleConnected(true);
                             setCurrentStep(3);
                         }}
                         onSkip={async () => {

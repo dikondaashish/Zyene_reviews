@@ -7,19 +7,19 @@ interface Step4SubscriptionFormFooterProps {
 
 export function Step4SubscriptionFormFooter({ busy, onSkip }: Step4SubscriptionFormFooterProps) {
     return (
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs leading-relaxed text-muted-foreground">
+                Without a plan you get view-only access. AI replies, review requests and smart insights come with any paid plan.
+                Change or upgrade any time in Settings → Billing.
+            </p>
             <button
                 type="button"
                 onClick={onSkip}
                 disabled={busy}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+                className="shrink-0 text-left text-sm font-medium text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50 sm:text-right"
             >
-                Explore free for now - upgrade anytime from Settings
+                Explore free for now
             </button>
-            <p className="text-[11px] text-muted-foreground/50 max-w-xs text-center leading-relaxed">
-                Without a plan: view-only access. AI replies, review requests, and smart insights unlock on any paid
-                plan.
-            </p>
         </div>
     );
 }

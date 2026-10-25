@@ -9,7 +9,10 @@ export async function loadWelcomeTour(
     supabase: SupabaseClient,
     input: { user: User; business: { id: string; name: string; slug: string }; googleConnected: boolean },
 ): Promise<WelcomeTourData> {
-    const rules = await loadReplyRulesSummary(supabase, input.business.id);
+    const [rules, { data: extra }] = await Promise.all([
+        loadReplyRulesSummary(supabase, input.business.id),
+        supabase.from("businesses").select("category, website").eq("id", input.business.id).maybeSingle(),
+    ]);
     const meta = input.user.user_metadata ?? {};
     const fullName = String(meta.first_name || meta.full_name || input.user.email?.split("@")[0] || "there");
     return {
@@ -19,5 +22,7 @@ export async function loadWelcomeTour(
         reviewLink: reviewCaptureBaseUrl(input.business.slug),
         googleConnected: input.googleConnected,
         replyRules: rules.enabled ? summarizeReplyRules(rules.rules) : [],
+        category: (extra as { category?: string | null } | null)?.category ?? null,
+        website: (extra as { website?: string | null } | null)?.website ?? null,
     };
 }

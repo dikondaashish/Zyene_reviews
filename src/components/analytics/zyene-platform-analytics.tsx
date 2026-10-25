@@ -39,6 +39,18 @@ export function ZyenePlatformAnalytics({
         <div className="flex flex-col gap-8 w-full">
             <ZyenePlatformReviewRequestFunnelCard
                 dateRange={dateRange}
+                funnelSteps={aggregates.linkFunnelSteps}
+                totalSent={base.linkVisits.visits}
+                title="Public Link Funnel"
+                subtitle="People who opened your review link or QR code"
+                badge="Link + QR only"
+                denominatorLabel="visits"
+                footnote="Every percentage uses link visits as the denominator. These are not counted as sent requests."
+                gridClassName="lg:grid-cols-4"
+            />
+
+            <ZyenePlatformReviewRequestFunnelCard
+                dateRange={dateRange}
                 funnelSteps={aggregates.funnelSteps}
                 totalSent={base.totalSent}
             />

@@ -1,22 +1,3 @@
-export function Step2ChainIcon() {
-    return (
-        <svg width="28" height="28" viewBox="0 0 64 64" fill="none">
-            <defs>
-                <linearGradient id="chain-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.9" />
-                    <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.6" />
-                </linearGradient>
-            </defs>
-            <path
-                d="M26 38L38 26M22 26L14 34C11.7909 36.2091 11.7909 39.7909 14 42L22 50C24.2091 52.2091 27.7909 52.2091 30 50L34 46M30 18L34 14C36.2091 11.7909 39.7909 11.7909 42 14L50 22C52.2091 24.2091 52.2091 27.7909 50 30L42 38C39.7909 40.2091 36.2091 40.2091 34 38"
-                stroke="url(#chain-grad)"
-                strokeWidth="4"
-                strokeLinecap="round"
-            />
-        </svg>
-    );
-}
-
 export function Step2GoogleIcon() {
     return (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">

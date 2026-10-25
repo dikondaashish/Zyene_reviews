@@ -34,7 +34,7 @@ export function Step4SubscriptionPlanGrid(props: Step4SubscriptionPlanGridProps)
     } = props;
 
     return (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {displayPlans.map((plan) => (
                 <Step4SubscriptionPaidPlanCard
                     key={plan.id}
