@@ -63,6 +63,14 @@
   .premium-header .premium-desktop-nav { margin-left: 4px; }
   .premium-header .mega-trigger { padding-inline: 9px; }
 }
+/* Just above the mobile breakpoint the full nav (760px) overflowed its 728px slot; wider
+ * Linux fonts pushed it past a 1024px viewport. Trim padding so it fits with headroom. */
+@media (min-width: 1024px) and (max-width: 1100px) {
+  .premium-header .premium-desktop-nav { margin-left: 0; }
+  .premium-header .mega-trigger { padding-inline: 6px; }
+  .premium-header .premium-nav-auth > a:not([data-slot="button"]) { padding-inline: 6px; }
+  .premium-header .premium-nav-auth [data-slot="button"] { padding-inline: 12px; }
+}
 @media (prefers-reduced-transparency: reduce) {
   .premium-header.is-scrolled { background: var(--background); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
