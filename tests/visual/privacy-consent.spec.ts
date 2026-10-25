@@ -60,7 +60,7 @@ test("EU: Accept all loads GTM with Consent Mode granted, and the choice sticks 
     await banner(page).getByRole("button", { name: "Accept all" }).click();
     await expect(banner(page)).toBeHidden();
     await expect.poll(() => hits.includes("www.googletagmanager.com")).toBe(true);
-    expect(await consentCookie(page)).toMatch(/^v2\.f1\.a1\.m1\.EU_EEA\.\d+$/);
+    expect(await consentCookie(page)).toMatch(/^v3\.f1\.a1\.m1\.EU_EEA\.\d+$/);
     const consentDefault = await page.evaluate(() =>
         (window as unknown as { dataLayer: unknown[][] }).dataLayer.find((e) => e[0] === "consent")
     );
@@ -73,7 +73,7 @@ test("EU: Reject non-essential keeps trackers off on later pages", async ({ page
     const hits = await watchTrackers(page);
     await visit(page, "/pricing", "EU_EEA");
     await banner(page).getByRole("button", { name: "Reject non-essential" }).click();
-    expect(await consentCookie(page)).toMatch(/^v2\.f0\.a0\.m0\.EU_EEA\./);
+    expect(await consentCookie(page)).toMatch(/^v3\.f0\.a0\.m0\.EU_EEA\./);
     await page.goto("/about");
     await expect(banner(page)).toBeHidden();
     await settle(page);
@@ -124,7 +124,7 @@ test("US: no banner, opt-out defaults load, and Privacy choices is always availa
     await dialog.getByRole("switch", { name: "marketing" }).click();
     await dialog.getByRole("button", { name: "Save my choices" }).click();
     await page.waitForLoadState("load"); // withdrawal reloads the page
-    expect(await consentCookie(page)).toMatch(/^v2\.f1\.a1\.m0\.US\./);
+    expect(await consentCookie(page)).toMatch(/^v3\.f1\.a1\.m0\.US\./);
 });
 
 test.describe("US with Global Privacy Control", () => {
