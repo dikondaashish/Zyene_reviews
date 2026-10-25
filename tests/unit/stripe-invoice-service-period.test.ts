@@ -19,6 +19,15 @@ describe("Stripe renewal service period", () => {
         ("does not grant against a foreign, prorated or non-plan line", async (item) => {
             expect(await invoiceServicePeriodEnd(invoice([item]), "sub_a", "starter")).toBeUndefined();
         });
+    it("finds the plan line among one-off invoice items swept onto the renewal", async () => {
+        // Shape of 5SGMYP6P-0028: ten pending AEO overage items ahead of the plan line.
+        const swept = {
+            parent: { type: "invoice_item_details", invoice_item_details: { invoice_item: "ii_x" }, subscription_item_details: null },
+            pricing: { price_details: { price: "price_aeo_overage" } }, period: { start: 50, end: 50 },
+        };
+        expect(await invoiceServicePeriodEnd(invoice([swept, swept, line()]), "sub_a", "starter")).toBe(200);
+        expect(await invoiceServicePeriodEnd(invoice([swept]), "sub_a", "starter")).toBeUndefined();
+    });
     it("retrieves bounded complete lines when the payload is truncated", async () => {
         const toArray = vi.fn().mockResolvedValue([line()]); m.lines.mockReturnValue({ autoPagingToArray: toArray });
         expect(await invoiceServicePeriodEnd(invoice([], true), "sub_a", "starter")).toBe(200);
