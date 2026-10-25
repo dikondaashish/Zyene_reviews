@@ -1,4 +1,5 @@
 import { JURISDICTION_RULES } from "@/lib/privacy/privacy-regions";
+import { CONSENT_VERSION } from "@/lib/privacy/consent-record";
 import type { ConsentPreferences, ConsentRecord, Jurisdiction, PrivacyState } from "@/lib/privacy/types";
 
 /**
@@ -16,15 +17,21 @@ export function resolvePrivacyState(input: {
     gpc: boolean;
 }): PrivacyState {
     const rule = JURISDICTION_RULES[input.jurisdiction];
-    const base: ConsentPreferences = input.record
-        ? { functional: input.record.functional, analytics: input.record.analytics, marketing: input.record.marketing }
+    const staleRecord = input.record !== null && input.record.version !== CONSENT_VERSION;
+    const record = staleRecord && input.jurisdiction !== "US" ? null : input.record;
+    const base: ConsentPreferences = record
+        ? {
+              functional: record.functional,
+              analytics: record.analytics,
+              marketing: staleRecord ? false : record.marketing,
+          }
         : rule.defaults;
     return {
         jurisdiction: input.jurisdiction,
-        decided: input.record !== null,
+        decided: record !== null,
         granted: { ...base, marketing: base.marketing && !input.gpc },
         gpc: input.gpc,
-        showBanner: input.record === null && rule.showBanner,
+        showBanner: staleRecord || (record === null && rule.showBanner),
     };
 }
 

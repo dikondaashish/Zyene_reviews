@@ -58,15 +58,22 @@ To change a region's behaviour, edit `JURISDICTION_RULES`. Nothing else hard-cod
 | essential | always on, locked | auth/session, OAuth state, consent + jurisdiction cookies, UI preferences, Sentry errors, Stripe redirect, Google Sign-In |
 | functional | off | Cal.com embed on `/demo` (click-to-load), Better Stack status widget |
 | analytics | off | GTM → GA4, CTA dataLayer listener, Sentry Session Replay, first-party marketing events, signup funnel dataLayer events |
-| marketing | off | Meta Pixel (PageView + `StartTrial` after a server-verified Stripe trial), Google Ads via GTM Consent Mode, `zyene_utm` attribution cookie |
+| marketing | off | Meta Pixel (PageView + `StartTrial` after a server-verified Stripe trial), Meta Conversions API (`Subscribe` after a first positive paid subscription invoice), Google Ads via GTM Consent Mode, `zyene_utm` attribution cookie |
 
 ## 5. Storage of the choice
 
-`zyene_consent=v2.f<0|1>.a<0|1>.m<0|1>.<JURISDICTION>.<epoch-ms>`
+`zyene_consent=v3.f<0|1>.a<0|1>.m<0|1>.<JURISDICTION>.<epoch-ms>`
 
 - Domain `.zyenereviews.com` (host-only on localhost and previews), `path=/`, `SameSite=Lax`, `Secure` on https, 180 days. It is not `HttpOnly`, because the browser UI reads it.
 - The cookie holds no identifiers. It is untrusted input: it only decides which trackers start and must never be used for authorization.
-- **Versioning:** bump `CONSENT_VERSION` whenever a category gains a materially different tool. Older records then parse as `null` and opt-in visitors see the banner again. v1 (2026-10-15) had no functional category and is re-asked.
+- **Versioning:** bump `CONSENT_VERSION` whenever a category gains a materially different tool. v2 records are re-prompted for this change: in opt-in regions all optional categories stay off until the visitor chooses again; in the US, prior functional/analytics choices are retained and marketing is held off until a new v3 choice is saved. v1 (2026-10-15) used a different format and remains invalid.
+
+### Server-side Meta paid-subscription event
+
+- Checkout copies the effective marketing choice and valid `_fbp` / `_fbc` values into Stripe subscription metadata. A signed-in organization owner changing that choice syncs it to the active subscription; opt-out clears the stored attribution values.
+- The Stripe invoice webhook sends Meta `Subscribe` only for a positive, paid first subscription invoice or the first paid invoice at the end of a trial. Later renewals and zero-dollar invoices are excluded.
+- The event requires marketing consent and at least one valid Meta cookie. The payload contains the event time, a hashed Stripe invoice event ID, and only `_fbp` / `_fbc` matching data; it omits email, phone, IP address, user-agent, and payment amount. Delivery is best-effort and does not block Stripe billing.
+- `META_CAPI_ACCESS_TOKEN` is server-only. `NEXT_PUBLIC_META_PIXEL_ID` identifies the same Meta dataset used by the browser Pixel.
 - **Legacy migration:** the original localStorage banner (`cookie-consent`, `cookie-preferences`) is converted once and then removed.
 
 ## 6. How scripts are gated
@@ -132,7 +139,7 @@ To change a region's behaviour, edit `JURISDICTION_RULES`. Nothing else hard-cod
 | `zyene_utm` | Zyene | Campaign attribution | Marketing | 1st | landing with UTM params | 30 days | **Yes** |
 | `_ga`, `_ga_<id>` | Google Analytics (via GTM) | Usage analytics | Analytics | 1st (set by GA script) | after GTM loads | up to 2 years | **Yes** |
 | `_gcl_*` | Google Ads (via GTM) | Ad conversion | Marketing | 1st | if an Ads tag fires | 90 days | **Yes** (via Consent Mode in GTM) |
-| `_fbp`, `_fbc` | Meta Pixel | Ad attribution | Marketing | 1st | after Pixel loads | 90 days | **Yes** |
+| `_fbp`, `_fbc` | Meta Pixel / Conversions API | Ad attribution, including first paid subscription | Marketing | 1st | after Pixel loads; sent to Meta only with marketing consent | 90 days | **Yes** |
 | Sentry Replay session storage | Sentry | Replay buffering | Analytics | 1st | after replay is attached | session | **Yes** |
 | Cal.com cookies | Cal.com | Booking widget | Functional | 3rd (iframe) | when the calendar loads | Cal.com-defined | **Yes** (click-to-load on `/demo`) |
 | Better Stack widget | Better Stack | Status announcements | Functional (*unknown storage*) | 3rd | after functional consent | unknown | **Yes** |

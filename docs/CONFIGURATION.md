@@ -122,7 +122,8 @@ Facebook, Yelp, Square, Clover, Sentry, Better Stack heartbeats, Cal.com embed, 
 | Var | Scope | Notes |
 |-----|-------|-------|
 | `NEXT_PUBLIC_GTM_ID` | public | GTM container; defaults to the production container. Loaded only after analytics or marketing consent |
-| `NEXT_PUBLIC_META_PIXEL_ID` | public | Unset = no pixel. Loaded only after marketing consent (and never with GPC). Also sends `StartTrial` once per Stripe trial confirmed on onboarding checkout return |
+| `NEXT_PUBLIC_META_PIXEL_ID` | public | Unset = no pixel. Loaded only after marketing consent (and never with GPC). Sends `StartTrial` after a Stripe-confirmed trial and identifies the dataset for server-side `Subscribe` events |
+| `META_CAPI_ACCESS_TOKEN` | server secret | Optional. Meta Conversions API token. Sends `Subscribe` only after the first positive paid subscription invoice and only with marketing consent plus a valid `_fbp` or `_fbc` cookie |
 | `PRIVACY_REGION_OVERRIDE` | server, dev only | `EU_EEA`, `UK`, `US` or `OTHER`; ignored when `NODE_ENV=production`. Per-page alternative: `?privacy_region=` |
 
 Region comes from Vercel's `x-vercel-ip-country` header (no key needed). See `docs/PRIVACY.md`.

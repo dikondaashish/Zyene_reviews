@@ -9,6 +9,7 @@ import { createRequestLogger } from "@/lib/logger";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { isOrganizationOwnerRole } from "@/lib/organization/organization-permissions";
 import { loadActiveBillingMember } from "@/lib/billing/active-billing-member";
+import { metaConsentMetadataFromRequest } from "@/lib/privacy/meta-attribution-consent";
 
 const checkoutSchema = z
   .object({
@@ -213,7 +214,6 @@ export async function handleBillingCheckout(request: Request) {
 
     const includeIntroTrial = await isEligibleForIntroTrial(stripeCustomerId);
     const trialDays = introTrialDaysForOrganization(org.referred_by_user_id);
-
     const session = await stripe.checkout.sessions.create({
       customer: stripeCustomerId,
       mode: "subscription",
@@ -221,18 +221,10 @@ export async function handleBillingCheckout(request: Request) {
       success_url: successUrl,
       cancel_url: cancelUrl,
       ...(couponId ? { discounts: [{ coupon: couponId }] } : { allow_promotion_codes: true }),
-      ...(includeIntroTrial
-        ? {
-            subscription_data: {
-              trial_period_days: trialDays,
-              trial_settings: {
-                end_behavior: {
-                  missing_payment_method: "cancel",
-                },
-              },
-            },
-          }
-        : {}),
+      subscription_data: {
+        metadata: { organization_id: member.organization_id, ...metaConsentMetadataFromRequest(request) },
+        ...(includeIntroTrial ? { trial_period_days: trialDays, trial_settings: { end_behavior: { missing_payment_method: "cancel" } } } : {}),
+      },
       metadata: {
         organization_id: member.organization_id,
       },

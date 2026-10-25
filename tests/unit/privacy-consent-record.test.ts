@@ -31,7 +31,18 @@ describe("consent record (zyene_consent cookie)", () => {
         });
     });
 
-    it("re-asks on version mismatch, expiry, tampering or unknown regions", () => {
+    it("retains v2 records for a safe one-time policy re-prompt", () => {
+        expect(parseConsent(`v2.f1.a1.m0.US.${NOW}`, NOW)).toEqual({
+            version: 2,
+            region: "US",
+            decidedAt: NOW,
+            functional: true,
+            analytics: true,
+            marketing: false,
+        });
+    });
+
+    it("rejects missing, future-version, expired, tampered or unknown-region records", () => {
         expect(parseConsent(null, NOW)).toBeNull();
         expect(parseConsent("accepted", NOW)).toBeNull();
         expect(parseConsent(`v1.a1.m1.${NOW}`, NOW)).toBeNull(); // pre-v2 format

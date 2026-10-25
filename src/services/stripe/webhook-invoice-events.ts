@@ -9,6 +9,7 @@ import { logger } from "@/lib/logger";
 import { sendEmail } from "@/services/resend/send-email";
 import { paymentFailedEmail } from "@/services/resend/templates/payment-failed-email";
 import { paymentSuccessEmail } from "@/services/resend/templates/payment-success-email";
+import { sendMetaPaidSubscriptionEvent, shouldTrackFirstPaidSubscription } from "@/services/stripe/meta-paid-subscription-event";
 
 import type { WebhookAdminClient } from "./webhook-types";
 
@@ -64,20 +65,73 @@ export async function handleInvoicePaymentSucceeded(
 ) {
     const invoice = event.data.object as Stripe.Invoice;
 
-    // Only for recurring payments - the first one is covered by checkout.session.completed.
-    if (invoice.billing_reason !== "subscription_cycle") return;
+    const isRenewal = invoice.billing_reason === "subscription_cycle";
+    const isNewSubscription = invoice.billing_reason === "subscription_create";
+    if (!isRenewal && !isNewSubscription) return;
 
-    // Resolve both customer and current subscription before any financial write.
+    // Resolve the invoice binding before any financial write.
     const customerId = typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id;
     const invoiceSubscription = invoice.parent?.subscription_details?.subscription;
     if (!customerId || !invoiceSubscription) throw new Error("Invoice billing binding missing");
     const subscriptionId = typeof invoiceSubscription === "string" ? invoiceSubscription : invoiceSubscription.id;
-    const { data: org, error } = await supabase
+    const { data: currentOrg, error } = await supabase
         .from("organizations").select("id, plan")
         .eq("stripe_customer_id", customerId)
         .eq("stripe_subscription_id", subscriptionId).maybeSingle();
     if (error) throw error;
+    let org = currentOrg;
+    let subscriptionPendingBinding = false;
+    let subscription: Stripe.Subscription | null = null;
+
+    if (org || isNewSubscription) {
+        try {
+            const retrieved = await stripe.subscriptions.retrieve(subscriptionId);
+            const retrievedCustomerId = typeof retrieved.customer === "string" ? retrieved.customer : retrieved.customer?.id;
+            if (retrievedCustomerId === customerId) subscription = retrieved;
+            else logger.warn({ invoiceId: invoice.id }, "Meta conversion skipped because Stripe customer binding mismatched");
+        } catch {
+            // Conversion measurement is best effort; it must not block billing writes.
+            logger.warn({ invoiceId: invoice.id }, "Meta conversion could not retrieve the Stripe subscription");
+        }
+    }
+
+    // Stripe can deliver the first paid invoice before checkout.session.completed.
+    // The signed subscription metadata lets us verify that one new subscription
+    // without accepting an older subscription that has since been replaced.
+    if (!org && isNewSubscription && subscription?.metadata.organization_id) {
+        const pendingLookup = await supabase
+            .from("organizations").select("id, plan, stripe_subscription_id")
+            .eq("id", subscription.metadata.organization_id)
+            .eq("stripe_customer_id", customerId).maybeSingle();
+        if (pendingLookup.error) throw pendingLookup.error;
+        if (pendingLookup.data?.stripe_subscription_id === null) {
+            org = pendingLookup.data;
+            subscriptionPendingBinding = true;
+        }
+    }
     if (!org) return;
+
+    const subscriptionLine = subscription && invoice.lines.data.find((line) => {
+        const lineSubscription = line.subscription ?? line.parent?.subscription_item_details?.subscription;
+        return (typeof lineSubscription === "string" ? lineSubscription : lineSubscription?.id) === subscriptionId;
+    });
+    if (subscription && shouldTrackFirstPaidSubscription({
+        invoiceStatus: invoice.status,
+        amountPaid: invoice.amount_paid,
+        billingReason: invoice.billing_reason,
+        trialEnd: subscription.trial_end,
+        servicePeriodStart: subscriptionLine?.period.start ?? null,
+    })) {
+        await sendMetaPaidSubscriptionEvent({
+            invoiceId: invoice.id,
+            eventTime: invoice.status_transitions?.paid_at ?? event.created,
+            metadata: subscription.metadata,
+        });
+    }
+
+    // Initial invoice handling belongs to checkout.session.completed. The fallback
+    // above only exists so the Meta event is not lost when Stripe reorders webhooks.
+    if (!isRenewal || subscriptionPendingBinding) return;
     const { resetAeoCreditsForPlan } = await import("@/services/aeo/billing/renewal-credit-reset");
     await resetAeoCreditsForPlan(supabase, { organizationId: org.id, planId: org.plan,
         customerId, subscriptionId, receiptId: invoice.id,

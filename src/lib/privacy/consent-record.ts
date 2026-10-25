@@ -12,9 +12,9 @@ export const CONSENT_COOKIE_NAME = "zyene_consent";
 /**
  * Bump when categories or the tools inside them change materially; older
  * records then parse as null and the visitor is asked again.
- * v1 (2026-10-15, analytics/marketing only) -> v2 adds functional + region.
+ * v1 (2026-10-15) -> v2 adds functional + region -> v3 adds server-side Meta conversion events.
  */
-export const CONSENT_VERSION = 2;
+export const CONSENT_VERSION = 3;
 /** Re-ask after six months (CNIL guidance; within ICO/EDPB expectations). */
 export const CONSENT_MAX_AGE_DAYS = 180;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -42,16 +42,17 @@ export function serializeConsent(record: ConsentRecord): string {
     ].join(".");
 }
 
-/** Returns null for missing, malformed, other-version or expired records. */
+/** Reads the current record and v2 only so the policy layer can safely re-prompt it. */
 export function parseConsent(raw: string | null | undefined, now = Date.now()): ConsentRecord | null {
     const match = /^v(\d+)\.f([01])\.a([01])\.m([01])\.([A-Z_]+)\.(\d+)$/.exec(raw?.trim() ?? "");
     if (!match) return null;
     const [, version, functional, analytics, marketing, region, decidedAt] = match;
-    if (Number(version) !== CONSENT_VERSION || !isJurisdiction(region)) return null;
+    const parsedVersion = Number(version);
+    if (![2, CONSENT_VERSION].includes(parsedVersion) || !isJurisdiction(region)) return null;
     const at = Number(decidedAt);
     if (at > now + DAY_MS || now - at > CONSENT_MAX_AGE_DAYS * DAY_MS) return null;
     return {
-        version: CONSENT_VERSION,
+        version: parsedVersion,
         region,
         decidedAt: at,
         functional: functional === "1",

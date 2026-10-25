@@ -58,7 +58,7 @@ describe("privacy store (browser)", () => {
         const { jar, reload } = installBrowser({ jurisdiction: "EU_EEA" });
         const { hasConsent, savePrivacyChoice } = await loadStore();
         savePrivacyChoice({ functional: false, analytics: true, marketing: false });
-        expect(jar.get("zyene_consent")).toMatch(/^v2\.f0\.a1\.m0\.EU_EEA\.\d+$/);
+        expect(jar.get("zyene_consent")).toMatch(/^v3\.f0\.a1\.m0\.EU_EEA\.\d+$/);
         expect(hasConsent("analytics")).toBe(true);
         expect(hasConsent("marketing")).toBe(false);
         expect(reload).not.toHaveBeenCalled();
@@ -86,6 +86,7 @@ describe("privacy store (browser)", () => {
         const store = await loadStore();
         expect(store.hasConsent("marketing")).toBe(false);
         expect(store.hasConsent("analytics")).toBe(true);
+        expect(store.privacyRequestHeaders()).toEqual({ "x-zyene-gpc": "1" });
     });
 
     it("honours GPC seen by the server (Sec-GPC) even without the JS property", async () => {
@@ -97,7 +98,7 @@ describe("privacy store (browser)", () => {
         const { jar, storage } = installBrowser({ jurisdiction: "UK", legacy: { "cookie-consent": "declined" } });
         const { getPrivacyState } = await loadStore();
         expect(getPrivacyState()).toMatchObject({ decided: true, showBanner: false });
-        expect(jar.get("zyene_consent")).toMatch(/^v2\.f0\.a0\.m0\.UK\./);
+        expect(jar.get("zyene_consent")).toMatch(/^v3\.f0\.a0\.m0\.UK\./);
         expect(storage.size).toBe(0);
     });
 

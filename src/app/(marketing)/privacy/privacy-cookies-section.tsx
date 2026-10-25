@@ -19,7 +19,7 @@ const COOKIE_TOOLS: { tool: string; purpose: string; category: string }[] = [
     { tool: "Google Analytics via Google Tag Manager", purpose: "Which pages are visited and how people find us (_ga cookies)", category: "Analytics" },
     { tool: "Sentry Session Replay", purpose: "Masked recordings of a sample of sessions and of sessions that hit an error", category: "Analytics" },
     { tool: "Zyene usage events", purpose: "Our own page and sign-up step counts", category: "Analytics" },
-    { tool: "Meta Pixel, Google Ads tags", purpose: "Measure which ads lead to sign-ups (_fbp, _gcl cookies)", category: "Marketing" },
+    { tool: "Meta Pixel, server-side Meta conversion events and Google Ads tags", purpose: "Measure which ads lead to trial starts and first paid subscriptions (_fbp, _fbc, _gcl cookies)", category: "Marketing" },
     { tool: "zyene_utm", purpose: "Remembers the campaign that brought you, for 30 days", category: "Marketing" },
 ];
 

@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { parseBillingCheckoutResponse } from "@/lib/billing/parse-checkout-response";
 import { PLANS } from "@/services/stripe/plans";
+import { privacyRequestHeaders } from "@/lib/privacy/privacy-store";
 
 export function useUpgradeModal(onClose: () => void) {
     const [interval, setInterval] = useState<"month" | "year">("year");
@@ -23,7 +24,7 @@ export function useUpgradeModal(onClose: () => void) {
             const res = await fetch("/api/billing/checkout", {
                 method: "POST",
                 credentials: "include",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", ...privacyRequestHeaders() },
                 body: JSON.stringify({ priceId, source: "billing" }),
             });
             const json = await res.json();
