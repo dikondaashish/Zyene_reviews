@@ -38,10 +38,10 @@ describe("billing invoice history", () => {
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(mocks.membership).toHaveBeenCalledWith("user-owner");
-    expect(mocks.invoices).toHaveBeenCalledWith({ customer: "cus_active", limit: 100 });
+    expect(mocks.invoices).toHaveBeenCalledWith({ customer: "cus_active", limit: 100, expand: ["data.payments"] });
     expect(body.data).toEqual({ organizationId: "org-active", nextCursor: null, invoices: [{
       id: "in_newest", number: "ZYENE-0001", createdAt: "2026-10-01T00:00:00.000Z",
-      amount: "$29.99", status: "paid", isFreeTrial: false, pdfUrl: "https://pay.stripe.com/invoice/example/pdf",
+      amount: "$29.99", status: "paid", isFreeTrial: false, refundStatus: "none", refundedAmount: null, netAmount: null, pdfUrl: "https://pay.stripe.com/invoice/example/pdf",
       hostedUrl: "https://invoice.stripe.com/i/example",
       receiptUrl: "https://invoice.stripe.com/i/example", paymentUrl: null,
     }] });
@@ -123,7 +123,7 @@ describe("billing invoice history", () => {
   it("keeps older invoice pages scoped to the same customer", async () => {
     mocks.invoices.mockResolvedValue({ data: Array.from({ length: 10 }, (_, i) => invoice({ id: `in_older${i}` })), has_more: true });
     const body = await (await handleBillingInvoices(request("?starting_after=in_newest"))).json();
-    expect(mocks.invoices).toHaveBeenCalledWith({ customer: "cus_active", limit: 100, starting_after: "in_newest" });
+    expect(mocks.invoices).toHaveBeenCalledWith({ customer: "cus_active", limit: 100, expand: ["data.payments"], starting_after: "in_newest" });
     expect(body.data.nextCursor).toBe("in_older9");
   });
 
@@ -131,7 +131,7 @@ describe("billing invoice history", () => {
     mocks.invoices.mockResolvedValue({ data: [invoice({ id: "in_older" })], has_more: false });
     const res = await handleBillingInvoices(request("?starting_after=in_newest%3Atrial"));
     expect(res.status).toBe(200);
-    expect(mocks.invoices).toHaveBeenCalledWith({ customer: "cus_active", limit: 100, starting_after: "in_newest" });
+    expect(mocks.invoices).toHaveBeenCalledWith({ customer: "cus_active", limit: 100, expand: ["data.payments"], starting_after: "in_newest" });
   });
 
   it("never exposes an invoice from another Stripe customer", async () => {

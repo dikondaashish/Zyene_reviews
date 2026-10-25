@@ -1,5 +1,6 @@
 import type Stripe from "stripe";
 import { stripe } from "@/services/stripe/client";
+import { refundStatus } from "@/services/stripe/invoice-refunds";
 import { stripeInvoiceUrlSchema, type BillingInvoice } from "@/types/billing-invoices";
 
 const currencyFormatters = new Map<string, Intl.NumberFormat>();
@@ -26,17 +27,22 @@ export async function isFreeTrialInvoice(invoice: Stripe.Invoice, customerId: st
         line.period.end > line.period.start && line.period.end <= end);
 }
 
-export function toBillingInvoice(invoice: Stripe.Invoice, isFreeTrial: boolean): BillingInvoice {
+export function toBillingInvoice(invoice: Stripe.Invoice, isFreeTrial: boolean, amountRefunded = 0): BillingInvoice {
     let formatter = currencyFormatters.get(invoice.currency);
     if (!formatter) {
         formatter = new Intl.NumberFormat("en-US", { style: "currency", currency: invoice.currency });
         currencyFormatters.set(invoice.currency, formatter);
     }
     const fractionDigits = ["isk", "ugx"].includes(invoice.currency) ? 2 : formatter.resolvedOptions().maximumFractionDigits ?? 2;
+    const format = (minorUnits: number) => formatter.format(minorUnits / 10 ** fractionDigits);
     const hostedUrl = safeUrl(invoice.hosted_invoice_url);
+    const refunds = refundStatus(invoice.amount_paid, amountRefunded);
     return {
         id: invoice.id, number: invoice.number, createdAt: new Date(invoice.created * 1000).toISOString(),
-        amount: formatter.format(invoice.total / 10 ** fractionDigits), status: invoice.status ?? "draft", isFreeTrial,
+        amount: format(invoice.total), status: invoice.status ?? "draft", isFreeTrial,
+        refundStatus: refunds,
+        refundedAmount: refunds === "none" ? null : format(Math.min(amountRefunded, invoice.amount_paid)),
+        netAmount: refunds === "none" ? null : format(Math.max(invoice.amount_paid - amountRefunded, 0)),
         pdfUrl: safeUrl(invoice.invoice_pdf), hostedUrl,
         // Stripe's hosted page provides receipt PDFs and handles the live payment state.
         receiptUrl: invoice.status === "paid" && invoice.amount_paid > 0 && !isFreeTrial ? hostedUrl : null,

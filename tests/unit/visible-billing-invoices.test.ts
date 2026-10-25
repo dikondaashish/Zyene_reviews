@@ -1,14 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({ invoices: vi.fn(), subscription: vi.fn() }));
+const mocks = vi.hoisted(() => ({ invoices: vi.fn(), subscription: vi.fn(), charges: vi.fn() }));
 vi.mock("@/services/stripe/client", () => ({ stripe: {
   invoices: { list: mocks.invoices }, subscriptions: { retrieve: mocks.subscription },
+  charges: { list: mocks.charges },
 } }));
 import { loadVisibleBillingInvoices } from "@/services/stripe/visible-invoices";
 
 const invoice = (id: string, total = 2999, overrides = {}) => ({
   id, number: id, customer: "cus_active", status: "paid", created: 1790812800,
-  total, currency: "usd", billing_reason: "manual", parent: null,
+  total, amount_paid: total, currency: "usd", billing_reason: "manual", parent: null,
   lines: { data: [] }, invoice_pdf: null, hosted_invoice_url: null, ...overrides,
 });
 const trial = (id = "in_trial", overrides = {}) => invoice(id, 0, {
@@ -66,7 +67,7 @@ describe("visible billing invoices", () => {
     mocks.subscription.mockResolvedValue({ id: "sub_trial", customer: "cus_active", trial_start: 100, trial_end: 200 });
     expect((await loadVisibleBillingInvoices("cus_active")).invoices[0].isFreeTrial).toBe(true);
     expect(mocks.subscription).toHaveBeenCalledWith("sub_trial");
-    expect(mocks.invoices).toHaveBeenCalledWith({ customer: "cus_active", limit: 100 });
+    expect(mocks.invoices).toHaveBeenCalledWith({ customer: "cus_active", limit: 100, expand: ["data.payments"] });
   });
 
   it("retains the original trial invoice when an upgrade ended the trial early", async () => {
@@ -131,5 +132,48 @@ describe("visible billing invoices", () => {
       subscription: { id: "sub_trial", customer: "cus_foreign", trial_start: 100, trial_end: 200 },
     } } })]));
     return expect(loadVisibleBillingInvoices("cus_active")).rejects.toThrow("customer binding");
+  });
+
+  describe("refunds", () => {
+    const paidBy = (pi: string) => ({ payments: { data: [{ payment: { type: "payment_intent", payment_intent: pi } }] } });
+    const charge = (id: string, pi: string, amount_refunded: number, customer = "cus_active") =>
+      ({ id, payment_intent: pi, amount_refunded, customer });
+    const charges = (data: ReturnType<typeof charge>[]) =>
+      mocks.charges.mockReturnValue({ autoPagingToArray: vi.fn().mockResolvedValue(data) });
+
+    it("shows the partially refunded overcharge with its refunded and net amounts", async () => {
+      mocks.invoices.mockResolvedValue(page([
+        invoice("in_oct", 5499, paidBy("pi_oct")), invoice("in_sep", 2999, { created: 1788134400, ...paidBy("pi_sep") }),
+      ]));
+      charges([charge("ch_oct", "pi_oct", 2500), charge("ch_sep", "pi_sep", 0)]);
+      const [oct, sep] = (await loadVisibleBillingInvoices("cus_active")).invoices;
+      expect(oct).toMatchObject({ amount: "$54.99", status: "paid", refundStatus: "partial",
+        refundedAmount: "$25.00", netAmount: "$29.99" });
+      expect(sep).toMatchObject({ refundStatus: "none", refundedAmount: null, netAmount: null });
+      expect(mocks.charges).toHaveBeenCalledTimes(1);
+      expect(mocks.charges).toHaveBeenCalledWith({ customer: "cus_active", created: { gte: 1788134400 }, limit: 100 });
+    });
+
+    it("marks a fully refunded invoice and keeps its receipt", async () => {
+      mocks.invoices.mockResolvedValue(page([invoice("in_full", 2999, {
+        hosted_invoice_url: "https://invoice.stripe.com/i/x", payments: { data: [{ payment: { type: "charge", charge: "ch_full" } }] },
+      })]));
+      charges([charge("ch_full", "pi_other", 2999)]);
+      expect((await loadVisibleBillingInvoices("cus_active")).invoices[0]).toMatchObject({
+        refundStatus: "full", refundedAmount: "$29.99", netAmount: "$0.00", receiptUrl: "https://invoice.stripe.com/i/x",
+      });
+    });
+
+    it("skips the charge lookup when nothing on the page was paid", async () => {
+      mocks.invoices.mockResolvedValue(page([invoice("in_open", 2999, { status: "open", amount_paid: 0, ...paidBy("pi_open") })]));
+      await loadVisibleBillingInvoices("cus_active");
+      expect(mocks.charges).not.toHaveBeenCalled();
+    });
+
+    it("rejects a refunded charge bound to another customer", () => {
+      mocks.invoices.mockResolvedValue(page([invoice("in_oct", 5499, paidBy("pi_oct"))]));
+      charges([charge("ch_oct", "pi_oct", 2500, "cus_foreign")]);
+      return expect(loadVisibleBillingInvoices("cus_active")).rejects.toThrow("customer binding");
+    });
   });
 });
