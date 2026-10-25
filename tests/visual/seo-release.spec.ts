@@ -23,7 +23,9 @@ test("email signup records a start and verification request, without reporting c
     await expect(page.getByRole("main")).toContainText("bills automatically");
     await page.getByLabel("Full name").fill("Fixture User");
     await page.getByLabel("Email address").fill("fixture@example.com");
+    await page.getByLabel("Mobile number").fill("+1 555 123 4567");
     await page.getByLabel("Password", { exact: true }).fill("ExamplePassword123");
+    await page.getByLabel("Confirm password").fill("ExamplePassword123");
     await page.getByRole("button", { name: "Create account", exact: true }).click();
     await expect(page.getByRole("heading", { name: "Check your inbox" })).toBeVisible();
     const events = await page.evaluate(() => (window as Window & { dataLayer?: { event?: string; method?: string }[] }).dataLayer

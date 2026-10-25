@@ -39,7 +39,7 @@ for (const path of ["/login", "/signup", "/forgot-password"]) {
   });
 }
 
-for (const path of ["/login", "/signup?next=%2Fdashboard", "/forgot-password"]) {
+for (const path of ["/login", "/forgot-password"]) {
   test(`${path} fits desktop and mobile viewports without page scrolling`, async ({ page }) => {
     await page.goto(path, { waitUntil: "domcontentloaded" });
     for (const [width, height] of [[1920, 960], [1512, 982], [1440, 900], [1366, 660], [1280, 720], [1024, 768], [900, 720], [390, 844], [390, 720], [320, 720]]) {
@@ -54,6 +54,25 @@ for (const path of ["/login", "/signup?next=%2Fdashboard", "/forgot-password"]) 
     }
   });
 }
+
+// Signup asks for name, email, mobile, password twice and SMS consent, so it may scroll;
+// it must still never scroll sideways, and the submit button and footer must be reachable.
+test("/signup scrolls only vertically and keeps its submit button reachable", async ({ page }) => {
+  await page.goto("/signup?next=%2Fdashboard", { waitUntil: "domcontentloaded" });
+  for (const [width, height] of [[1920, 960], [1440, 900], [1366, 660], [1024, 768], [390, 844], [320, 720]]) {
+    await page.setViewportSize({ width, height });
+    await page.evaluate(() => document.fonts.ready);
+    await expect(page.locator("h1")).toHaveCount(1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    const submit = page.locator('button[type="submit"]');
+    await submit.scrollIntoViewIfNeeded();
+    await expect(submit).toBeInViewport({ ratio: 1 });
+    await expect(submit).toHaveCSS("color", "rgb(255, 255, 255)");
+    // The footer is the last thing on the page; once scrolled to, nearly all of it must show.
+    await page.getByRole("contentinfo").scrollIntoViewIfNeeded();
+    await expect(page.getByRole("contentinfo")).toBeInViewport({ ratio: 0.9 });
+  }
+});
 
 test("login keeps password controls, invitation context, and recoverable errors", async ({ page }) => {
   // Wait for hydration so the show-password click reaches React's handler.
@@ -70,12 +89,11 @@ test("login keeps password controls, invitation context, and recoverable errors"
   await expect(page.getByRole("button", { name: "Log in", exact: true })).toBeEnabled();
 });
 
-test("signup keeps optional consent off and exposes it only on request", async ({ page }) => {
+test("invited signup makes the mobile number optional and leaves SMS consent unticked", async ({ page }) => {
   await page.goto("/signup?invite=test-invitation", { waitUntil: "domcontentloaded" });
   await expect(page.getByRole("heading", { name: "Join your team" })).toBeVisible();
-  await expect(page.getByLabel("Mobile number")).toBeHidden();
-  await page.locator("summary").click();
-  await expect(page.getByLabel("Mobile number")).toBeVisible();
+  await expect(page.getByLabel("Mobile number (optional)")).toBeVisible();
+  await expect(page.getByLabel("Mobile number (optional)")).not.toHaveAttribute("required");
   await expect(page.locator("#smsReviewAlertsConsent")).not.toBeChecked();
   await expect(page.getByRole("link", { name: "Log in", exact: true })).toHaveAttribute("href", "/login?invite=test-invitation");
 });
