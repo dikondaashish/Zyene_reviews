@@ -64,6 +64,7 @@ Location / operational unit.
 | Address / contact / category / timezone | |
 | Review-request settings | delay, min amount, frequency cap, SMS/email flags |
 | `total_reviews`, `average_rating` | cached metrics |
+| `average_sale_cents` | nullable int; owner's average sale per customer, used only for the dashboard's review-value estimate (NULL = category default in `src/lib/dashboard/review-value.ts`). Editable via `PATCH /api/businesses/[id]` |
 | `status` | e.g. active |
 
 **Invariant:** Almost all product data hangs off `business_id`.

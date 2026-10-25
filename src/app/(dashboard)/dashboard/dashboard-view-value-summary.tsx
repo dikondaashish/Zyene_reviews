@@ -15,8 +15,17 @@ export async function DashboardViewValueSummary({
 }) {
     const supabase = await createClient();
     const period = currentMonthPeriod();
-    const summary = await loadValueSummary(supabase, businessId, organization, period);
-    if (!summary) return null;
+    const loaded = await loadValueSummary(supabase, businessId, organization, period);
+    if (!loaded) return null;
     const monthLabel = period.start.toLocaleString("en-US", { month: "long", timeZone: "UTC" });
-    return <ValueSummaryCard summary={summary} monthLabel={monthLabel} businessName={businessName.trim() || "there"} />;
+    return (
+        <ValueSummaryCard
+            businessId={businessId}
+            businessName={businessName.trim() || "there"}
+            monthLabel={monthLabel}
+            summary={loaded.summary}
+            averageSale={loaded.averageSale}
+            reviewValue={loaded.reviewValue}
+        />
+    );
 }

@@ -74,3 +74,6 @@ test-results/
 # local prospecting / PDF scratch (regenerate via scripts/prospecting/)
 /tmp/
 /output/
+
+# local promo-video projects and renders (~1 GB; keep out of the repo)
+/videos/

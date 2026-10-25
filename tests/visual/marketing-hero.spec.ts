@@ -1,5 +1,8 @@
 import { expect, test } from "./marketing-fixtures";
 
+/** Unrated stars are solid neutral grey; rated ones turn gold. */
+const UNRATED_STAR = "rgb(213, 216, 221)";
+
 const VIEWPORTS = [
   { width: 1920, height: 1080 },
   { width: 1680, height: 945 },
@@ -39,11 +42,24 @@ for (const viewport of VIEWPORTS) {
       borderRadius: viewport.width < 768 ? "24px" : "30px",
       overflow: "hidden",
     });
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-    ).toBe(true);
+    // On overflow, name the elements that stick out so a CI-only failure is diagnosable.
+    const overflow = await page.evaluate(() => {
+      if (document.documentElement.scrollWidth <= innerWidth) return null;
+      const clipped = (el: Element) => {
+        for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
+          if (/hidden|auto|scroll|clip/.test(getComputedStyle(p).overflowX)) return true;
+        }
+        return false;
+      };
+      return {
+        scrollWidth: document.documentElement.scrollWidth,
+        offenders: [...document.querySelectorAll("body *")]
+          .filter((el) => el.getBoundingClientRect().right > innerWidth + 0.5 && !clipped(el))
+          .slice(0, 8)
+          .map((el) => `${el.tagName.toLowerCase()}.${String(el.getAttribute("class") ?? "").split(" ").slice(0, 3).join(".")} right=${el.getBoundingClientRect().right.toFixed(1)}`),
+      };
+    });
+    expect(overflow, JSON.stringify(overflow)).toBeNull();
     const boxes = await page
       .locator(".home-hero h1 span, .hero-phone, .hero-laptop-lid")
       .evaluateAll((elements) =>
@@ -136,9 +152,10 @@ test("reduced motion disables all hero motion and keeps content visible", async 
     "opacity",
     "1",
   );
+  // Stars are always solid: an unrated one is neutral grey, never gold.
   await expect(page.locator(".hero-phone-stars svg").first()).toHaveCSS(
     "fill",
-    "rgba(0, 0, 0, 0)",
+    UNRATED_STAR,
   );
 });
 
@@ -190,12 +207,12 @@ test("phone starts neutral and yields to a customer's chosen rating", async ({
   await page.goto("/");
   const phone = page.locator(".hero-phone");
   const stars = phone.locator(".hero-phone-stars svg");
-  await expect(stars.last()).toHaveCSS("fill", "rgba(0, 0, 0, 0)");
+  await expect(stars.last()).toHaveCSS("fill", UNRATED_STAR);
   await phone
     .getByRole("radio", { name: "2 stars", exact: true })
     .check({ force: true });
   await expect(phone.locator(".is-filled")).toHaveCount(2);
-  await expect(stars.last()).toHaveCSS("fill", "rgba(0, 0, 0, 0)");
+  await expect(stars.last()).toHaveCSS("fill", UNRATED_STAR);
 });
 
 test("the interactive product tour follows How it works under its own heading", async ({ page }) => {

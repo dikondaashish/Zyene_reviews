@@ -85,6 +85,8 @@ export const businessPatchSchema = z
         review_request_quiet_hours_enabled: z.boolean().optional(),
         review_request_quiet_start: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d(:00)?$/).optional(),
         review_request_quiet_end: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d(:00)?$/).optional(),
+        /** Owner's average sale per customer, in cents; null restores the category default. */
+        average_sale_cents: z.number().int().min(1).max(100_000_000).optional().nullable(),
     })
     .strict();
 

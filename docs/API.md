@@ -101,7 +101,7 @@ Auth: Supabase session (`getUser`) + active business context unless noted.
 | `POST` | `/api/team/accept-invite` | Accept invite |
 | `POST` | `/api/team/invites/[id]/resend` | Resend |
 | `PATCH`/`DELETE` | `/api/team/[id]` | Update/remove member |
-| `GET`/`PATCH` | `/api/businesses/[id]` | Business settings |
+| `GET`/`PATCH` | `/api/businesses/[id]` | Business settings (incl. `average_sale_cents`, int cents or `null`, set from the dashboard results card) |
 | `GET` | `/api/businesses/[id]/qr-code` | QR asset |
 | `GET` | `/api/businesses/check-slug` | Slug availability |
 | `POST` | `/api/billing/checkout` | Stripe Checkout |
