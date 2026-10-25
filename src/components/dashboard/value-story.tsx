@@ -1,12 +1,12 @@
-import { PartyPopper } from "lucide-react";
 import type { AverageSale, ReviewValue } from "@/lib/dashboard/review-value";
 import { AverageSaleEditor } from "@/components/dashboard/average-sale-editor";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
-const usd = (n: number, cents = n < 100) =>
+const usd = (n: number, cents = n % 1 !== 0) =>
     n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: cents ? 2 : 0, maximumFractionDigits: cents ? 2 : 0 });
 
-function verdictFor(newReviews: number, monthlyPrice: number | null, value: ReviewValue): string | null {
+/** "12× your $29.99 plan", or null when there is nothing honest to compare. */
+export function paybackLabel(newReviews: number, monthlyPrice: number | null, value: ReviewValue): string | null {
     const multiple = value.returnMultiple;
     if (newReviews === 0 || monthlyPrice === null) return null;
     if (monthlyPrice === 0) return "Free during your trial";
@@ -15,50 +15,35 @@ function verdictFor(newReviews: number, monthlyPrice: number | null, value: Revi
     return `${Math.round(multiple * 100)}% of your plan paid back`;
 }
 
-/**
- * One number that matters (the estimated new business), the maths behind it in a single
- * sentence with the owner's editable average sale, and how many times over the plan paid off.
- */
+/** The maths in one line: reviews × the owner's (editable) average sale ≈ new business. */
 export function ValueStory({
     businessId,
+    monthLabel,
     newReviews,
-    monthlyPrice,
     averageSale,
     reviewValue,
 }: {
     businessId: string;
+    monthLabel: string;
     newReviews: number;
-    monthlyPrice: number | null;
     averageSale: AverageSale;
     reviewValue: ReviewValue;
 }) {
-    const verdict = verdictFor(newReviews, monthlyPrice, reviewValue);
-
+    if (newReviews === 0) {
+        return (
+            <span>
+                Each new review is worth about <AverageSaleEditor businessId={businessId} averageSale={averageSale} /> to you.
+            </span>
+        );
+    }
     return (
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="min-w-0">
-                <p className="text-3xl font-semibold tracking-tight tabular-nums text-success sm:text-4xl">
-                    {newReviews === 0 ? usd(reviewValue.perReviewUsd, reviewValue.perReviewUsd % 1 !== 0) : `≈ ${usd(reviewValue.valueUsd)}`}
-                    <span className="ml-2 text-sm font-medium tracking-normal text-muted-foreground">
-                        {newReviews === 0 ? "per new review" : "in new business"}
-                    </span>
-                </p>
-                <p className="mt-1 flex flex-wrap items-center gap-x-1.5 text-sm text-muted-foreground">
-                    {newReviews === 0 ? "Each review ≈ one customer at your" : (
-                        <>
-                            <span className="font-semibold text-warning-foreground">{fmt(newReviews)} new reviews</span>×
-                        </>
-                    )}
-                    <AverageSaleEditor businessId={businessId} averageSale={averageSale} />
-                    average sale
-                </p>
-            </div>
-            {verdict && (
-                <p className="inline-flex w-fit shrink-0 items-center gap-2 rounded-full bg-success px-3.5 py-1.5 text-sm font-semibold text-success-foreground">
-                    <PartyPopper className="size-4" aria-hidden />
-                    {verdict}
-                </p>
-            )}
-        </div>
+        <span>
+            In {monthLabel}, <span className="font-semibold text-warning-foreground">{fmt(newReviews)} reviews</span> ×{" "}
+            <AverageSaleEditor businessId={businessId} averageSale={averageSale} /> avg sale ≈{" "}
+            <span className="font-semibold text-success" title="Estimate: each new review ≈ 1 new customer at your average sale">
+                {usd(reviewValue.valueUsd)}
+            </span>{" "}
+            in new business.
+        </span>
     );
 }

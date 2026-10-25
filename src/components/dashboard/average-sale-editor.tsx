@@ -53,7 +53,7 @@ export function AverageSaleEditor({ businessId, averageSale }: { businessId: str
     }
 
     return (
-        <form onSubmit={save} className="flex items-center gap-1">
+        <form onSubmit={save} className="inline-flex items-center gap-1 align-middle">
             <span className="text-muted-foreground" aria-hidden>$</span>
             <input
                 autoFocus
