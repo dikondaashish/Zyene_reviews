@@ -48,4 +48,19 @@ describe("invoice download and payment actions", () => {
     it.each(["receiptUrl", "paymentUrl"])("rejects unsafe %s destinations", field => {
         expect(() => invoice({ [field]: "https://stripe.com.evil.example/invoice" })).toThrow();
     });
+
+    it("labels a partial refund with the refunded and net amounts and keeps the receipt", () => {
+        const html = render({ amount: "$54.99", refundStatus: "partial", refundedAmount: "$25.00", netAmount: "$29.99" });
+        expect(html).toContain("Partially refunded");
+        expect(html).toContain("$25.00 refunded · $29.99 net");
+        expect(html).not.toContain(">Paid<");
+        expect(html).toContain("Download receipt");
+    });
+
+    it("labels a full refund as Refunded", () => {
+        const html = render({ refundStatus: "full", refundedAmount: "$29.99", netAmount: "$0.00" });
+        expect(html).toContain(">Refunded<");
+        expect(html).toContain("line-through");
+        expect(html).toContain("Download receipt");
+    });
 });

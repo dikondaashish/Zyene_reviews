@@ -20,7 +20,7 @@ function InvoiceQueryProbe() {
 const page = (status: "open" | "paid"): BillingInvoicesPage => ({
     organizationId: "org-active", nextCursor: null, invoices: [{
         id: "in_example", number: null, amount: "$29.99", createdAt: "2026-10-01T00:00:00.000Z",
-        status, isFreeTrial: false, pdfUrl: null, hostedUrl: null, receiptUrl: null, paymentUrl: null,
+        status, isFreeTrial: false, refundStatus: "none", refundedAmount: null, netAmount: null, pdfUrl: null, hostedUrl: null, receiptUrl: null, paymentUrl: null,
     }],
 });
 

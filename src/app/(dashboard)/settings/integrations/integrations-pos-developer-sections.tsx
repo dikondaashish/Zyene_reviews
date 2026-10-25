@@ -4,6 +4,8 @@ import { ZapierCard } from "@/components/integrations/zapier-card";
 import { CloverCard, type CloverConnectionSummary } from "@/components/integrations/clover-card";
 import { SquareCard, type SquareConnectionSummary } from "@/components/integrations/square-card";
 import { DeveloperApiCard } from "@/components/integrations/developer-api-card";
+import { ZapierEmbedCard } from "@/components/integrations/zapier-embed-card";
+import type { ZapierSignUpPrefill } from "@/components/integrations/zapier-workflow-embed";
 import { WidgetCard } from "@/components/integrations/widget-card";
 import { WidgetUpgradeCard } from "@/components/integrations/widget-upgrade-card";
 import { IntegrationsSectionHeader, IntegrationsStatusBadge } from "./integrations-section-header";
@@ -57,12 +59,18 @@ export function IntegrationsPosAutomationSection({
     );
 }
 
-export function IntegrationsDeveloperApiSection({ data }: { data: OkData }) {
+export function IntegrationsDeveloperApiSection({
+    data,
+    zapierSignUp,
+}: {
+    data: OkData;
+    zapierSignUp: ZapierSignUpPrefill;
+}) {
     return (
         <section className="space-y-5">
             <IntegrationsSectionHeader
-                title="Developer API"
-                description="Build custom integrations with our REST API"
+                title="API Keys & Zapier"
+                description="Build custom integrations with our REST API or connect thousands of apps through Zapier"
                 icon={Code2}
                 badge={data.apiKey ? <IntegrationsStatusBadge count={1} label="key active" /> : undefined}
             />
@@ -73,6 +81,7 @@ export function IntegrationsDeveloperApiSection({ data }: { data: OkData }) {
                     canManage={data.canManageApiKeys}
                 />
             </div>
+            <ZapierEmbedCard signUp={zapierSignUp} />
         </section>
     );
 }

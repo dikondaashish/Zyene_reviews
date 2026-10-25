@@ -36,6 +36,9 @@ export const NEXT_PUBLIC_APP_URL = getAppSiteOrigin(
 );
 export const NEXT_PUBLIC_APP_NAME =
     process.env.NEXT_PUBLIC_APP_NAME || "Zyene Reviews";
+/** Zapier Developer Platform embed client ID. Empty until our Zapier app is published. */
+export const NEXT_PUBLIC_ZAPIER_CLIENT_ID =
+    process.env.NEXT_PUBLIC_ZAPIER_CLIENT_ID ?? "";
 
 // --- Derived helpers ---
 
