@@ -43,18 +43,18 @@ export function AverageSaleEditor({ businessId, averageSale }: { businessId: str
             <button
                 type="button"
                 onClick={() => { setDraft(String(averageSale.usd)); setEditing(true); }}
-                className="group inline-flex items-center gap-1.5 rounded-md text-chart-5 underline decoration-chart-5/40 decoration-dashed underline-offset-4 transition-colors hover:decoration-chart-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                className="group inline-flex items-center gap-1 rounded-md font-semibold text-chart-5 underline decoration-chart-5/40 decoration-dashed underline-offset-4 transition-colors hover:decoration-chart-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 aria-label={`Average sale ${usd(averageSale.usd)}. Edit`}
             >
                 {usd(averageSale.usd)}
-                <Pencil className="size-3.5 opacity-60 transition-opacity group-hover:opacity-100" aria-hidden />
+                <Pencil className="size-3 opacity-60 transition-opacity group-hover:opacity-100" aria-hidden />
             </button>
         );
     }
 
     return (
         <form onSubmit={save} className="flex items-center gap-1">
-            <span className="text-base text-muted-foreground" aria-hidden>$</span>
+            <span className="text-muted-foreground" aria-hidden>$</span>
             <input
                 autoFocus
                 inputMode="decimal"
@@ -63,12 +63,12 @@ export function AverageSaleEditor({ businessId, averageSale }: { businessId: str
                 onKeyDown={(e) => { if (e.key === "Escape") setEditing(false); }}
                 disabled={pending}
                 aria-label="Your average sale per customer, in dollars"
-                className="h-9 w-20 rounded-md border border-input bg-background px-2 text-base font-semibold tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+                className="h-7 w-16 rounded-md border border-input bg-background px-1.5 text-sm font-semibold tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring"
             />
-            <button type="submit" disabled={pending} aria-label="Save average sale" className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
+            <button type="submit" disabled={pending} aria-label="Save average sale" className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
                 <Check className="size-4" aria-hidden />
             </button>
-            <button type="button" onClick={() => setEditing(false)} disabled={pending} aria-label="Cancel" className="flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted">
+            <button type="button" onClick={() => setEditing(false)} disabled={pending} aria-label="Cancel" className="flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted">
                 <X className="size-4" aria-hidden />
             </button>
         </form>
