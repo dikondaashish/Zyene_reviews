@@ -25,7 +25,7 @@ export function DashboardViewBottomRow({
 }: Props) {
     return (
         <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
-            <div className="order-2 min-w-0 flex flex-col self-start overflow-hidden" data-tour-target="tour-recent-reviews">
+            <div className="order-1 min-w-0 flex flex-col self-start overflow-hidden" data-tour-target="tour-recent-reviews">
                 {recentReviews.length > 0 ? (
                     <div className="flex-1 flex flex-col">
                         <DashboardAnimatedReviewCardsLazy
@@ -65,7 +65,7 @@ export function DashboardViewBottomRow({
                 )}
             </div>
 
-            <div className="order-1 min-w-0 overflow-hidden" data-tour-target="tour-needs-attention">
+            <div className="order-2 min-w-0 overflow-hidden" data-tour-target="tour-needs-attention">
                 <NeedsAttention
                     reviews={mapAttentionRows(attentionReviews.filter(isUnhappyUnanswered))}
                     totalCount={unhappyUnansweredCount}

@@ -81,7 +81,9 @@ export function DashboardView(props: DashboardViewProps) {
                 </Suspense>
             )}
 
-            {/* Four blocks: what needs you (above), your reputation, what Zyene did, reviews to answer.
+            <DashboardViewTopRow business={business} />
+
+            {/* Your reputation, what Zyene did, then the latest reviews and the ones to answer.
                 Charts and Google listing detail live on Analytics and Google SEO/AEO. */}
             <DashboardViewStatCards {...props} />
             {!useDemoData && (
@@ -90,7 +92,6 @@ export function DashboardView(props: DashboardViewProps) {
                 </Suspense>
             )}
             <DashboardViewBottomRow {...props} />
-            <DashboardViewTopRow business={business} />
         </div>
     );
 }
