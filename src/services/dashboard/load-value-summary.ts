@@ -4,9 +4,12 @@ import { logger } from "@/lib/logger";
 import { loadReviewRequestMetrics } from "@/lib/metrics/load-review-request-metrics";
 import { REVIEW_RESPONSE_SOURCE_ZYENE, REVIEW_RESPONSE_SOURCE_ZYENE_AUTO } from "@/lib/reviews/response-source";
 import { calculateValueSummary, type ValueSummary } from "@/lib/dashboard/value-summary";
+import { calculateReviewValue, resolveAverageSale, type AverageSale, type ReviewValue } from "@/lib/dashboard/review-value";
 import { loadMonthlyCharge } from "@/services/dashboard/load-monthly-charge";
 
 export type ValueSummaryPeriod = { start: Date; previousStart: Date };
+
+export type LoadedValueSummary = { summary: ValueSummary; averageSale: AverageSale; reviewValue: ReviewValue };
 
 /** Calendar month so far (UTC), and the whole month before it for comparison. */
 export function currentMonthPeriod(now = new Date()): ValueSummaryPeriod {
@@ -21,11 +24,11 @@ export async function loadValueSummary(
     businessId: string,
     org: { id: string; plan?: string | null; plan_status?: string | null } | null,
     period: ValueSummaryPeriod = currentMonthPeriod(),
-): Promise<ValueSummary | null> {
+): Promise<LoadedValueSummary | null> {
     const start = period.start.toISOString();
     const previousStart = period.previousStart.toISOString();
     try {
-        const [requests, newReviews, lastMonthReviews, replies, feedback, monthlyCharge] = await Promise.all([
+        const [requests, newReviews, lastMonthReviews, replies, feedback, monthlyCharge, business] = await Promise.all([
             loadReviewRequestMetrics(supabase, businessId, period.start),
             supabase.from("reviews").select("id", { count: "exact", head: true })
                 .eq("business_id", businessId).eq("is_visible", true).gte("review_date", start),
@@ -39,12 +42,13 @@ export async function loadValueSummary(
             supabase.from("private_feedback").select("id", { count: "exact", head: true })
                 .eq("business_id", businessId).gte("created_at", start),
             org ? loadMonthlyCharge(org.id) : Promise.resolve(undefined),
+            supabase.from("businesses").select("category, average_sale_cents").eq("id", businessId).maybeSingle(),
         ]);
         if (!requests.ok) throw requests.error;
-        const failed = [newReviews, lastMonthReviews, replies, feedback].find((r) => r.error);
+        const failed = [newReviews, lastMonthReviews, replies, feedback, business].find((r) => r.error);
         if (failed?.error) throw failed.error;
 
-        return calculateValueSummary({
+        const summary = calculateValueSummary({
             requests: requests.rows,
             newReviews: newReviews.count ?? 0,
             newReviewsLastMonth: lastMonthReviews.count ?? 0,
@@ -54,6 +58,12 @@ export async function loadValueSummary(
             planStatus: org?.plan_status,
             monthlyCharge,
         });
+        const averageSale = resolveAverageSale(business.data?.average_sale_cents, business.data?.category);
+        return {
+            summary,
+            averageSale,
+            reviewValue: calculateReviewValue(summary.newReviews, averageSale, summary.monthlyPrice),
+        };
     } catch (err) {
         logger.warn({ err, businessId }, "[dashboard] value summary load failed");
         return null;
