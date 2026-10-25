@@ -19,7 +19,7 @@
 |------|--------|-------|
 | POS Square / Clover / Toast | Coming Soon | Placeholder cards; `pos_payment` campaign trigger locked |
 | TripAdvisor | Coming Soon | Placeholder card |
-| Zapier marketplace app | Planned | API key + generic webhooks work today |
+| Zapier marketplace app | Planned | API key + generic webhooks work today. The Integrations page embeds Zapier's Workflow Element once `NEXT_PUBLIC_ZAPIER_CLIENT_ID` is set (needs the app published) |
 | SSO SAML/OIDC | Planned | Enterprise sales language; no app implementation |
 | Stripe Connect marketplace | Not planned as Connect | Billing uses Stripe Subscriptions only |
 | Multi-step drip campaigns | Proposal | Full plan below |

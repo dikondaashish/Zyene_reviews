@@ -17,7 +17,7 @@ Environment and runtime configuration for Zyene Reviews.
 
 `src/config/env.ts` exposes:
 
-- Public: `NEXT_PUBLIC_SUPABASE_*`, `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_ROOT_DOMAIN`, `NEXT_PUBLIC_APP_NAME`
+- Public: `NEXT_PUBLIC_SUPABASE_*`, `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_ROOT_DOMAIN`, `NEXT_PUBLIC_APP_NAME`, `NEXT_PUBLIC_ZAPIER_CLIENT_ID`
 - Derived: `BASE_URL`, `IS_PRODUCTION`, marketing auth URL helpers
 - Server helpers for secrets where centralized
 
@@ -43,6 +43,12 @@ Missing **required** vars accessed via `required()` throw at use/import time wit
 | `NEXT_PUBLIC_ROOT_DOMAIN` | `localhost:3000` | Cookie/domain routing |
 | `NEXT_PUBLIC_APP_NAME` | `Zyene Reviews` | Display name |
 | Review-flow domain vars | collectratings.com | See `.env.example` “Review flow” section |
+
+### Zapier
+
+| Variable | Default | Notes |
+|----------|---------|-------|
+| `NEXT_PUBLIC_ZAPIER_CLIENT_ID` | empty | Embed client ID from the Zapier Developer Platform (app → Embed). When set, `/settings/integrations` embeds Zapier's Workflow Element (`<zapier-workflow>`, loaded from `cdn.zapier.com/packages/partner-sdk/v0/zapier-elements`). Only works once our Zapier app is published (Beta or Public) with public Zap templates, and each app domain is on the app's allowed embed domains. When empty, the card links to the webhook guide at `/settings/integrations/zapier`. |
 
 ### Google / GBP
 

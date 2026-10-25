@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { redirect } from "next/navigation";
+import type { User } from "@supabase/supabase-js";
+import type { ZapierSignUpPrefill } from "@/components/integrations/zapier-workflow-embed";
 import { Plug } from "lucide-react";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { loadIntegrationsPageData } from "./load-integrations-page-data";
@@ -10,6 +12,17 @@ import {
     IntegrationsPosAutomationSection,
     IntegrationsWebsiteElementsSection,
 } from "./integrations-pos-developer-sections";
+
+/** Prefill for Zapier Quick Account Creation; it needs email plus first and last name. */
+function zapierSignUpFromUser(user: User): ZapierSignUpPrefill {
+    const meta = user.user_metadata ?? {};
+    const [first, ...rest] = String(meta.full_name ?? "").trim().split(/\s+/);
+    return {
+        email: user.email ?? null,
+        firstName: meta.first_name || first || null,
+        lastName: meta.last_name || rest.join(" ") || null,
+    };
+}
 
 export default async function IntegrationsPage() {
     const supabase = await createClient();
@@ -50,7 +63,7 @@ export default async function IntegrationsPage() {
                 squareConfigured={data.squareConfigured}
             />
             <hr className="border-border/50" />
-            <IntegrationsDeveloperApiSection data={data} />
+            <IntegrationsDeveloperApiSection data={data} zapierSignUp={zapierSignUpFromUser(user)} />
             <hr className="border-border/50" />
             <IntegrationsWebsiteElementsSection data={data} />
         </div>
