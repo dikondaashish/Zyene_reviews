@@ -1,18 +1,12 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
-import { ArrowRight, HeartHandshake, Link2, MessageSquareReply, ShieldCheck, Sparkles, Star, TrendingUp } from "lucide-react";
+import { ArrowRight, HeartHandshake, Link2, MessageSquareReply, ShieldCheck, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-    HOURLY_RATE_USD,
-    MINUTES_PER_REPLY,
-    MINUTES_PER_REQUEST,
-    valueTier,
-    type ValueSummary,
-    type ValueTier,
-} from "@/lib/dashboard/value-summary";
+import { valueTier, type ValueSummary, type ValueTier } from "@/lib/dashboard/value-summary";
+import { CUSTOMERS_PER_REVIEW, type AverageSale, type ReviewValue } from "@/lib/dashboard/review-value";
+import { ValueStory } from "@/components/dashboard/value-story";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
-const usd = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const COPY: Record<ValueTier, { title: (name: string) => string; body: string }> = {
     strong: {
@@ -29,96 +23,90 @@ const COPY: Record<ValueTier, { title: (name: string) => string; body: string }>
     },
 };
 
-function Chip({ icon: Icon, value, label, tone }: { icon: LucideIcon; value: string; label: string; tone: string }) {
+/** A small coloured pill per win; the colour matches what the win means. */
+function Win({ icon: Icon, value, label, tone }: { icon: LucideIcon; value: number; label: string; tone: string }) {
     return (
-        <li className="flex items-center gap-2 rounded-lg border border-border bg-card/80 px-3 py-2">
-            <span className={cn("flex size-7 shrink-0 items-center justify-center rounded-md", tone)}>
-                <Icon className="size-3.5" aria-hidden />
-            </span>
-            <span className="min-w-0 leading-tight">
-                <span className="block text-base font-semibold tabular-nums text-foreground">{value}</span>
-                <span className="block truncate text-[11px] text-muted-foreground">{label}</span>
-            </span>
+        <li className={cn("inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium", tone)}>
+            <Icon className="size-3.5" aria-hidden />
+            <span className="font-semibold tabular-nums">{fmt(value)}</span>
+            {label}
         </li>
     );
 }
 
 /**
- * A short thank-you with the month's wins, so owners see Zyene is working for them. Results
- * come first; the price follows as "what each win cost", never as a bill.
+ * A thank-you, then the value story (what they paid, what their reviews are worth), then the
+ * month's other wins. Owners should see that Zyene pays for itself before anything else.
  */
-export function ValueSummaryCard({ summary: s, monthLabel, businessName }: { summary: ValueSummary; monthLabel: string; businessName: string }) {
+export function ValueSummaryCard({
+    businessId,
+    businessName,
+    monthLabel,
+    summary: s,
+    averageSale,
+    reviewValue,
+}: {
+    businessId: string;
+    businessName: string;
+    monthLabel: string;
+    summary: ValueSummary;
+    averageSale: AverageSale;
+    reviewValue: ReviewValue;
+}) {
     const tier = valueTier(s);
     const copy = COPY[tier];
-    const chips = [
-        { icon: Link2, value: fmt(s.linkVisits), label: "Link visits", tone: "bg-primary/10 text-primary" },
-        { icon: HeartHandshake, value: fmt(s.sentToGoogle), label: "Sent to Google", tone: "bg-chart-2/15 text-success" },
-        {
-            icon: s.newReviewsChange > 0 ? TrendingUp : Star,
-            value: fmt(s.newReviews),
-            label: s.newReviewsChange > 0 ? `New reviews · +${fmt(s.newReviewsChange)}` : "New reviews",
-            tone: "bg-chart-4/15 text-warning-foreground",
-        },
-        { icon: ShieldCheck, value: fmt(s.unhappyCaught), label: "Caught privately", tone: "bg-primary/10 text-primary" },
-        { icon: MessageSquareReply, value: fmt(s.zyeneReplies), label: "Replies by Zyene", tone: "bg-primary/10 text-primary" },
+    const wins = [
+        { icon: Link2, value: s.linkVisits, label: "link visits", tone: "bg-primary/10 text-primary" },
+        { icon: HeartHandshake, value: s.sentToGoogle, label: "sent to Google", tone: "bg-chart-2/15 text-success" },
+        { icon: ShieldCheck, value: s.unhappyCaught, label: "caught privately", tone: "bg-chart-5/10 text-chart-5" },
+        { icon: MessageSquareReply, value: s.zyeneReplies, label: "replies by Zyene", tone: "bg-chart-4/20 text-warning-foreground" },
     ];
 
     return (
         <section
             aria-labelledby="value-summary-title"
-            className="relative overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-4 sm:p-5"
+            className="overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-chart-4/10"
         >
-            <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:gap-6">
-                <div className="flex min-w-0 flex-1 items-start gap-3">
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
+            <div className="flex flex-col gap-5 p-5 sm:p-6">
+                <div className="flex items-start gap-3">
+                    <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm">
                         <Sparkles className="size-5" aria-hidden />
                     </span>
-                    <div className="min-w-0">
+                    <div className="min-w-0 max-w-3xl">
                         <p className="text-[11px] font-semibold uppercase tracking-wider text-primary">Your {monthLabel} with Zyene</p>
-                        <h2 id="value-summary-title" className="ui-section-title mt-0.5 text-foreground">
-                            {copy.title(businessName)}
-                        </h2>
+                        <h2 id="value-summary-title" className="ui-section-title mt-0.5 text-foreground">{copy.title(businessName)}</h2>
                         <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{copy.body}</p>
                     </div>
                 </div>
+
+                <ValueStory
+                    businessId={businessId}
+                    newReviews={s.newReviews}
+                    monthlyPrice={s.monthlyPrice}
+                    averageSale={averageSale}
+                    reviewValue={reviewValue}
+                />
+
                 {tier !== "quiet" && (
-                    <ul className="grid shrink-0 grid-cols-2 gap-2 sm:grid-cols-3 xl:w-[40rem] xl:grid-cols-5">
-                        {chips.map((chip) => <Chip key={chip.label} {...chip} />)}
+                    <ul className="flex flex-wrap gap-2" aria-label="Other wins this month">
+                        {wins.map((win) => <Win key={win.label} {...win} />)}
                     </ul>
                 )}
             </div>
-            <ValueFooter summary={s} tier={tier} />
+
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-border/70 bg-card/60 px-5 py-3 text-xs sm:px-6">
+                <p className="text-muted-foreground">
+                    Estimate: each new review ≈ {CUSTOMERS_PER_REVIEW} new customer at your average sale
+                    {averageSale.source === "category" ? " (a typical figure for your type of business; tap it to use yours)." : "."}
+                </p>
+                <Link
+                    href={tier === "quiet" ? "/requests" : "/analytics?platform=zyene"}
+                    className="inline-flex shrink-0 items-center gap-1 font-medium text-primary hover:underline"
+                >
+                    {tier === "quiet" ? "Send a review request" : "See your results"}
+                    <ArrowRight className="size-3.5" aria-hidden />
+                </Link>
+            </div>
         </section>
-    );
-}
-
-function ValueFooter({ summary: s, tier }: { summary: ValueSummary; tier: ValueTier }) {
-    const timeNote = `Estimate: ${MINUTES_PER_REPLY} min per reply and ${MINUTES_PER_REQUEST} min per request you'd otherwise do by hand, at $${HOURLY_RATE_USD}/hr.`;
-    // Under an hour reads as "not much", so only mention time once it's worth saying.
-    const showTime = s.hoursSaved >= 1;
-    const value =
-        s.monthlyPrice === 0 && s.sentToGoogle > 0
-            ? "Every win above came free during your trial."
-            : s.costPerGoogleCustomer !== null
-              ? `That's just ${usd(s.costPerGoogleCustomer)} per happy customer sent to Google.`
-              : null;
-
-    return (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-border/60 pt-3 text-xs">
-            <p className="text-muted-foreground">
-                {value && <span className="font-medium text-foreground">{value}</span>}
-                {showTime && (
-                    <span title={timeNote}>{value ? " · " : ""}About {Math.round(s.hoursSaved)} hrs of your time saved</span>
-                )}
-                {!value && !showTime && tier === "quiet" && <span>Your results will show here as customers respond.</span>}
-            </p>
-            <Link
-                href={tier === "quiet" ? "/requests" : "/analytics?platform=zyene"}
-                className="inline-flex shrink-0 items-center gap-1 font-medium text-primary hover:underline"
-            >
-                {tier === "quiet" ? "Send a review request" : "See your results"}
-                <ArrowRight className="size-3.5" aria-hidden />
-            </Link>
-        </div>
     );
 }

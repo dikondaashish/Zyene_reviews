@@ -2344,6 +2344,7 @@ export type Database = {
           auto_reply_min_rating: number
           auto_reply_tone: string
           average_rating: number
+          average_sale_cents: number | null
           brand_color: string | null
           category: string
           city: string | null
@@ -2412,6 +2413,7 @@ export type Database = {
           auto_reply_min_rating?: number
           auto_reply_tone?: string
           average_rating?: number
+          average_sale_cents?: number | null
           brand_color?: string | null
           category?: string
           city?: string | null
@@ -2480,6 +2482,7 @@ export type Database = {
           auto_reply_min_rating?: number
           auto_reply_tone?: string
           average_rating?: number
+          average_sale_cents?: number | null
           brand_color?: string | null
           category?: string
           city?: string | null
