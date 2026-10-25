@@ -87,10 +87,48 @@ describe("Google place-action link SSRF boundary", () => {
         expect(mocks.fetch.mock.calls.length).toBeLessThanOrEqual(4);
     });
 
-    it.each([404, 503])("classifies HTTP %s as broken", async status => {
+    it.each([404, 410, 500, 502, 504])("classifies HTTP %s as broken", async status => {
         mocks.fetch.mockResolvedValue(new Response(null, { status }));
-        mocks.globalFetch.mockResolvedValue(new Response(null, { status }));
         expect(await checkUriLikelyBroken("https://example.com/")).toBe(true);
+        expect(mocks.fetch.mock.calls.map(([, options]) => options.method)).toEqual(["HEAD", "GET"]);
+    });
+
+    it.each([401, 403, 405, 429, 503])("does not flag bot walls or refusals (HTTP %s)", async status => {
+        mocks.fetch.mockResolvedValue(new Response(null, { status }));
+        expect(await checkUriLikelyBroken("https://example.com/")).toBe(false);
+    });
+
+    it("does not flag a Cloudflare challenge on a working store page", async () => {
+        mocks.fetch.mockResolvedValue(new Response(null, {
+            status: 403, headers: { "cf-mitigated": "challenge", server: "cloudflare" },
+        }));
+        expect(await checkUriLikelyBroken(
+            "https://www.doordash.com/store/vindu-indian-restaurant-cumberland-35160307/?utm_campaign=gpa",
+        )).toBe(false);
+    });
+
+    it("confirms a failed HEAD with GET before flagging", async () => {
+        mocks.fetch
+            .mockResolvedValueOnce(new Response(null, { status: 404 }))
+            .mockResolvedValueOnce(new Response(null, { status: 200 }));
+        expect(await checkUriLikelyBroken("https://example.com/")).toBe(false);
+        expect(mocks.fetch).toHaveBeenCalledTimes(2);
+    });
+
+    it("sends browser-like headers", async () => {
+        await checkUriLikelyBroken("https://example.com/");
+        expect(mocks.fetch.mock.calls[0][1].headers).toMatchObject({
+            "User-Agent": expect.stringContaining("Mozilla/5.0"), Accept: expect.stringContaining("text/html"),
+        });
+    });
+
+    it.each([
+        Object.assign(new Error("timed out"), { name: "TimeoutError" }),
+        Object.assign(new Error("fetch failed"), { cause: { code: "ECONNRESET" } }),
+        Object.assign(new Error("fetch failed"), { cause: { code: "UND_ERR_CONNECT_TIMEOUT" } }),
+    ])("does not flag transient transport failure: %s", async error => {
+        mocks.fetch.mockRejectedValue(error);
+        expect(await checkUriLikelyBroken("https://example.com/")).toBe(false);
     });
 
     it("classifies transport failure as broken", async () => {
