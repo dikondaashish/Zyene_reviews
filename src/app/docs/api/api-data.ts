@@ -11,6 +11,13 @@ export function buildEndpoints(apiOrigin: string): Endpoint[] {
     const base = apiOrigin.replace(/\/$/, "");
     return [
         {
+            method: "GET",
+            path: "/api/v1/me",
+            description: "Show which business the API key belongs to. Required scope: review_requests:write.",
+            example: `curl "${base}/api/v1/me" \\
+  -H "X-API-Key: zy_..."`,
+        },
+        {
             method: "POST",
             path: "/api/v1/requests/send",
             description: "Send a review request via SMS or email. Required scope: review_requests:write.",

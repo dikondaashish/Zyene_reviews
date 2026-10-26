@@ -24,6 +24,7 @@ Companion: [AUTHENTICATION.md](./AUTHENTICATION.md), [DATA_MODELS.md](./DATA_MOD
 
 | Method | Path | Scope | Purpose |
 |--------|------|-------|---------|
+| `GET` | `/api/v1/me` | `review_requests:write` | The key's business (`businessId`, `businessName`, `businessSlug`); Zapier auth test + connection label |
 | `POST` | `/api/v1/requests/send` | `review_requests:write` | Send SMS/email/link review request |
 | `GET` | `/api/v1/reviews` | `reviews:read` | Paginated reviews for the key’s business |
 | `GET` | `/api/v1/analytics` | `analytics:read` | Aggregate review/request activity |
