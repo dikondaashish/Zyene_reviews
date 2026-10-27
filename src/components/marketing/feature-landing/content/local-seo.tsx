@@ -34,7 +34,7 @@ export const LOCAL_SEO_CONTENT: FeatureLandingContent = {
       title: "A score that tells you what to do next",
       text: (
         <>
-          We check your description, recent reviews, rating, reply rate, profile activity, photos, posts, services and service area. Failing checks go to the top of a short list, following the same core priorities outlined in our{" "}
+          We check your description, recent reviews, rating, reply rate, profile activity, photos, posts, services and service area. Failing checks go to the top of a short list. For a manual version of this audit, see our{" "}
           <Link href="/resources/local-seo-checklist" className="home-text-link">
             local SEO checklist
           </Link>
