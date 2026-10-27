@@ -26,7 +26,7 @@ export function SuggestCompetitorsDialog({ businessId, onAddCompetitor }: {
             <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>Businesses like yours nearby</DialogTitle>
-                    <DialogDescription>Same Google category, most-reviewed first. Ones you already track are left out.</DialogDescription>
+                    <DialogDescription>Same Google category, closest first. Ones you already track are left out.</DialogDescription>
                 </DialogHeader>
                 <div className="border-t border-border">
                     <CompetitorSuggestionsList state={state} trackingId={trackingId} onTrack={track} onRetry={() => void load(true)} />

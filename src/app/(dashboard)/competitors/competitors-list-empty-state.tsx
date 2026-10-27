@@ -27,7 +27,7 @@ export function CompetitorsListEmptyState({ businessId, onAddCompetitor }: {
             </div>
             <div className="mx-auto mt-6 w-full max-w-2xl">
                 <h3 className="ui-card-title text-foreground">Businesses like yours nearby</h3>
-                <p className="mt-0.5 text-xs text-muted-foreground">Same Google category, most-reviewed first.</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">Same Google category, closest first.</p>
                 <div className="mt-2 border-t border-border">
                     <CompetitorSuggestionsList state={state} trackingId={trackingId} onTrack={track} onRetry={() => void load(true)} limit={3} />
                 </div>

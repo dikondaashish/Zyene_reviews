@@ -10,13 +10,15 @@ import { distanceKm, findComparableCompetitors, type BusinessProfile, type Place
 import type { CompetitorSuggestion } from "@/lib/competitors/competitor-suggestion-types";
 
 /**
- * Nearby businesses like the owner's (same Google category, most-reviewed first) for owners
+ * Nearby businesses like the owner's (same Google category, closest first) for owners
  * who don't know who to track. Built on the chat's comparable-business search, and cached
  * for a day per business so reopening the page costs no Places calls.
  */
 
 const PLACES_BASE = "https://places.googleapis.com/v1/places";
 const PROFILE_FIELDS = "id,displayName,primaryType,types,location,addressComponents";
+/** Every comparable place one Places search returns, so the nearest ones aren't cut for having fewer reviews. */
+const SEARCH_POOL = 20;
 /** Extra candidates so the list still has some left after removing ones already tracked. */
 const CANDIDATE_LIMIT = 8;
 export const SUGGESTIONS_SHOWN = 6;
@@ -49,6 +51,13 @@ export function ownPlaceIdFromUrls(urls: Array<string | null | undefined>): stri
         if (found) return found;
     }
     return null;
+}
+
+/** Closest first; ties and unknown distances fall back to most-reviewed. */
+export function byDistance(a: CompetitorSuggestion, b: CompetitorSuggestion): number {
+    const da = a.distanceMiles ?? Number.POSITIVE_INFINITY;
+    const db = b.distanceMiles ?? Number.POSITIVE_INFINITY;
+    return da === db ? b.reviews - a.reviews : da - db;
 }
 
 export function toSuggestion(owner: BusinessProfile, place: PlaceCandidate): CompetitorSuggestion | null {
@@ -108,7 +117,7 @@ export async function lookupCompetitorSuggestions(input: {
     if (!apiKey) return { status: "unavailable" };
     const nameAndCity = [input.name, input.city].filter(Boolean).join(" ").trim();
     if (!input.placeId && !input.city) return { status: "no_listing" };
-    const cacheKey = `competitor_suggestions_v1:${input.businessId}`;
+    const cacheKey = `competitor_suggestions_v2:${input.businessId}`;
     const key = input.placeId ?? `text:${nameAndCity.toLowerCase()}`;
 
     if (redisReady()) {
@@ -123,8 +132,11 @@ export async function lookupCompetitorSuggestions(input: {
     try {
         const owner = await ownerProfile(apiKey, input.placeId, nameAndCity);
         if (!owner?.id) return { status: "no_listing" };
-        const places = await findComparableCompetitors(apiKey, owner, CANDIDATE_LIMIT);
-        const suggestions = places.map((p) => toSuggestion(owner, p)).filter((s): s is CompetitorSuggestion => s !== null);
+        const places = await findComparableCompetitors(apiKey, owner, SEARCH_POOL);
+        const suggestions = places.map((p) => toSuggestion(owner, p))
+            .filter((s): s is CompetitorSuggestion => s !== null)
+            .sort(byDistance)
+            .slice(0, CANDIDATE_LIMIT);
         if (redisReady()) await redis.set(cacheKey, { key, suggestions }, { ex: CACHE_SECONDS }).catch(() => undefined);
         return { status: "ok", suggestions };
     } catch (err) {

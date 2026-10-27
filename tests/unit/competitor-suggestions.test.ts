@@ -6,7 +6,7 @@ vi.mock("server-only", () => ({}));
 vi.mock("@/lib/http/fetch-with-timeout", () => ({ fetchWithTimeout: fetchMock }));
 vi.mock("@/lib/db/redis", () => ({ redis: redisMock }));
 
-const { lookupCompetitorSuggestions, ownPlaceIdFromUrls, toSuggestion, withoutTracked } = await import("@/lib/competitors/competitor-suggestions");
+const { byDistance, lookupCompetitorSuggestions, ownPlaceIdFromUrls, toSuggestion, withoutTracked } = await import("@/lib/competitors/competitor-suggestions");
 
 const OWN = { id: "ChIJownOwnOwnOwn1", displayName: { text: "Taj Palace" }, primaryType: "indian_restaurant", types: ["indian_restaurant", "restaurant"], location: { latitude: 39.1, longitude: -94.58 } };
 const place = (id: string, name: string, reviews: number, extra: object = {}) => ({
@@ -48,6 +48,14 @@ describe("toSuggestion", () => {
     });
 });
 
+describe("byDistance", () => {
+    it("puts the closest first, then most-reviewed for ties, and unknown distances last", () => {
+        const s = (name: string, distanceMiles: number | null, reviews: number) => ({ ...toSuggestion(OWN, place("ChIJx00000000000", name, reviews))!, distanceMiles });
+        const sorted = [s("Far", 6.9, 182), s("Unknown", null, 999), s("Near", 3.2, 90), s("Tie", 3.2, 126)].sort(byDistance);
+        expect(sorted.map((x) => x.name)).toEqual(["Tie", "Near", "Far", "Unknown"]);
+    });
+});
+
 describe("withoutTracked", () => {
     const list = ["Spice Route", "Curry House", "Taj Palace"].map((name, i) => toSuggestion(OWN, place(`ChIJs${i}0000000000`, name, 100))!);
     it("leaves out businesses already tracked, by place id or by name, and the owner's own", () => {
@@ -65,14 +73,16 @@ describe("withoutTracked", () => {
 describe("lookupCompetitorSuggestions", () => {
     const input = { businessId: "biz", name: "Taj Palace", city: "Kansas City", placeId: OWN.id };
 
-    it("looks up the owner's listing, then nearby places in the same category, most-reviewed first", async () => {
+    it("looks up the owner's listing, then nearby places in the same category, closest first", async () => {
         fetchMock.mockResolvedValueOnce(ok(OWN)).mockResolvedValueOnce(ok({ places: [
-            place("ChIJsmall0000000", "Small Curry", 40), OWN, place("ChIJbig00000000", "Big Curry", 900),
+            place("ChIJsmall0000000", "Small Curry", 40, { location: { latitude: 39.105, longitude: -94.58 } }), OWN,
+            place("ChIJbig00000000", "Big Curry", 900, { location: { latitude: 39.15, longitude: -94.58 } }),
+            place("ChIJmid00000000", "Mid Curry", 300),
             place("ChIJpizza000000", "Pizza Co", 5000, { primaryType: "pizza_restaurant", types: ["pizza_restaurant"] }),
         ] }));
         const result = await lookupCompetitorSuggestions(input);
         expect(result.status).toBe("ok");
-        expect(result.status === "ok" && result.suggestions.map((s) => s.name)).toEqual(["Big Curry", "Small Curry"]);
+        expect(result.status === "ok" && result.suggestions.map((s) => s.name)).toEqual(["Small Curry", "Mid Curry", "Big Curry"]);
         expect(String(fetchMock.mock.calls[0][0])).toContain(`/places/${OWN.id}`);
         expect(JSON.parse(fetchMock.mock.calls[1][1].body).includedTypes).toEqual(["indian_restaurant"]);
     });
@@ -113,6 +123,6 @@ describe("lookupCompetitorSuggestions", () => {
         fetchMock.mockResolvedValueOnce(ok(OWN)).mockResolvedValueOnce(ok({ places: [] }));
         await lookupCompetitorSuggestions(input);
         expect(fetchMock).toHaveBeenCalledTimes(2);
-        expect(redisMock.set).toHaveBeenCalledWith("competitor_suggestions_v1:biz", { key: OWN.id, suggestions: [] }, { ex: 86400 });
+        expect(redisMock.set).toHaveBeenCalledWith("competitor_suggestions_v2:biz", { key: OWN.id, suggestions: [] }, { ex: 86400 });
     });
 });
