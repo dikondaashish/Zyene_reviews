@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   FileText, Gauge, Link2, ListChecks, MapPin, PenLine, Plug, Search, Settings2,
 } from "lucide-react";
@@ -31,7 +32,15 @@ export const LOCAL_SEO_CONTENT: FeatureLandingContent = {
     {
       eyebrow: "Profile health",
       title: "A score that tells you what to do next",
-      text: "We check your description, recent reviews, rating, reply rate, profile activity, photos, posts, services and service area. Failing checks go to the top of a short list.",
+      text: (
+        <>
+          We check your description, recent reviews, rating, reply rate, profile activity, photos, posts, services and service area. Failing checks go to the top of a short list, following the same core priorities outlined in our{" "}
+          <Link href="/resources/local-seo-checklist" className="home-text-link">
+            local SEO checklist
+          </Link>
+          .
+        </>
+      ),
       points: [
         "Up to 11 checks, scored from what Google actually returns",
         "Checks with no data from Google are shown as not scored",

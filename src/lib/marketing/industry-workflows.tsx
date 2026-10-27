@@ -1,11 +1,27 @@
+import type { ReactNode } from "react";
+import Link from "next/link";
+
 /** Planning examples grounded in existing request, inbox and reporting capabilities. */
-export const INDUSTRY_WORKFLOWS: Record<string, { title: string; example: string; steps: string[]; measure: string; links: { label: string; href: string }[] }> = {
+export const INDUSTRY_WORKFLOWS: Record<string, { title: string; example: ReactNode; steps: string[]; measure: string; links: { label: string; href: string }[] }> = {
   "home-services": {
     title: "A follow-up process for HVAC and home-service visits",
-    example: "Example: after a completed repair or maintenance visit, the dispatcher checks contact permission and sends an approved request. Zyene does not connect to field-service software directly; a webhook or your team triggers the request.",
+    example: (
+      <>
+        Example: after a completed repair or maintenance visit, the dispatcher checks contact permission and sends an approved request. Teams looking to audit their profile and location visibility can cross-check our{" "}
+        <Link href="/resources/local-seo-checklist" className="home-text-link">
+          local SEO checklist
+        </Link>
+        . Zyene does not connect to field-service software directly; a webhook or your team triggers the request.
+      </>
+    ),
     steps: ["Use job completion as the team's trigger; verify the customer contact rather than importing every old lead.", "Keep repair, installation and maintenance context in your internal records; avoid exposing home addresses or service details in public replies.", "Review private feedback and unanswered public reviews before the next dispatch cycle.", "Use approved API or webhook triggers only after testing your integration's request mapping."],
     measure: "Compare delivered requests and opt-outs by service type. Track qualified calls and booked work separately; request engagement is not proof of a published review or a lead.",
-    links: [{ label: "HVAC reputation management guide", href: "/blog/hvac-home-services-reputation-management" }, { label: "HVAC leads from Google Maps", href: "/blog/how-to-get-hvac-leads-from-google-maps" }, { label: "Review collection setup", href: "/features/review-collection" }],
+    links: [
+      { label: "HVAC reputation management guide", href: "/blog/hvac-home-services-reputation-management" },
+      { label: "HVAC leads from Google Maps", href: "/blog/how-to-get-hvac-leads-from-google-maps" },
+      { label: "Review collection setup", href: "/features/review-collection" },
+      { label: "Local SEO checklist", href: "/resources/local-seo-checklist" },
+    ],
   },
   hotels: {
     title: "Give hotel feedback a clear owner after checkout",

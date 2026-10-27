@@ -17,6 +17,7 @@ export const googleBusinessProfileOptimizationChecklistPost: BlogPostSource = {
     relatedSlugs: ["how-reviews-impact-local-map-pack-ranking", "why-google-reviews-matter-in-2026"],
     internalLinks: [
         { label: "Free local reputation score checker", href: "/tools/reputation-score-checker" },
+        { label: "Complete local SEO checklist", href: "/resources/local-seo-checklist" },
         { label: "AI visibility audit guide for local businesses", href: "/blog/ai-visibility-audit-local-businesses" },
         { label: "See Zyene Reviews' GBP keyword tracking feature", href: "/features" },
         { label: "Try Zyene Reviews free", href: SIGNUP_URL },
@@ -31,7 +32,7 @@ export const googleBusinessProfileOptimizationChecklistPost: BlogPostSource = {
     body: [
         { type: "summary", text: "Use this checklist to keep your Google Business Profile complete and current: basic information and categories, photos, services and products, attributes, reviews and replies, and questions and answers. Accurate, complete information helps customers and Google understand your business, but no profile change guarantees a Local 3-Pack position." },
         { type: "p", text: "Your Google Business Profile is one of the main places customers find local businesses. Accurate categories, services, hours, photos, and review responses give Google and searchers clearer information, but no profile change guarantees a Local 3-Pack position or a set number of calls." },
-        { type: "p", text: "Use this checklist to review your business profile for missing or outdated information. Revisit it when your hours, services, team, or location change." },
+        { type: "p", text: "Use this checklist to review your business profile for missing or outdated information. Revisit it when your hours, services, team, or location change. To audit your citations, website pages, and schema alongside your profile, pair this with our [local SEO checklist](/resources/local-seo-checklist)." },
         { type: "h2", text: "Section 1: Basic Information (Foundation)" },
         {
             type: "summary",
