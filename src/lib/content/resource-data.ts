@@ -50,6 +50,7 @@ const guide1: ResourceGuide = {
     internalLinks: [
         { label: "Google Review Link Generator", href: "/tools/review-link-generator" },
         { label: "Reputation Score Checker", href: "/tools/reputation-score-checker" },
+        { label: "Local SEO checklist", href: "/resources/local-seo-checklist" },
         { label: "Review collection features", href: "/features/review-collection" },
         { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
         { label: "Free review request templates", href: "/resources/review-request-templates" },
@@ -133,7 +134,7 @@ const guide1: ResourceGuide = {
             "Close gracefully: Invite them to return or thank them for the feedback.",
         ]},
         { type: "h2", id: "reviews-and-ranking", text: "Reviews and Local Search Ranking" },
-        { type: "p", text: "Google says review count and positive ratings can help local ranking. Prominence also reflects links, articles, directories, and how well known a business is offline, so reviews are one input rather than a complete ranking formula." },
+        { type: "p", text: "Google says review count and positive ratings can help local ranking. Prominence also reflects links, articles, directories, and how well known a business is offline, so reviews are one input rather than a complete ranking formula. For step-by-step guidance across citations, on-page factors, and profile settings, consult our [local SEO checklist](/resources/local-seo-checklist)." },
         { type: "h3", text: "Documented Guidance and Responsible Practice" },
         { type: "ul", items: [
             "Review quantity: Google says more reviews can help local ranking; it publishes no universal threshold.",
@@ -293,6 +294,7 @@ const guide3: ResourceGuide = {
     excerpt: "The complete 2026 local SEO checklist. 40+ action items across Google Business Profile, citations, reviews, on-page optimization, and link building - all for local businesses.",
     purpose: "Rank for 'local SEO checklist' and 'local SEO 2026' clusters",
     lastUpdated: "2026-10-11",
+    dateModified: "2026-10-27",
     readMinutes: 16,
     metaTitle: "Local SEO Checklist 2026: 40+ Tasks",
     metaDescription:
@@ -351,6 +353,7 @@ const guide3: ResourceGuide = {
         },
     ],
     tableOfContents: [
+        { anchor: "quick-version", label: "The Quick Version" },
         { anchor: "first-week", label: "Your First Week" },
         { anchor: "google-business-profile", label: "Google Business Profile" },
         { anchor: "nap-citations", label: "NAP Consistency & Citations" },
@@ -362,6 +365,30 @@ const guide3: ResourceGuide = {
         { anchor: "tracking", label: "Tracking Your Results" },
     ],
     body: [
+        {
+            type: "h2",
+            id: "quick-version",
+            text: "Local SEO checklist for small businesses: the quick version",
+        },
+        {
+            type: "p",
+            text: "If you need an immediate action plan, this small business SEO checklist summarizes the essential priorities from the full guide below. Use this local business SEO checklist to review your setup quickly before working through each section in detail:",
+        },
+        {
+            type: "ol",
+            items: [
+                "Audit your starting baseline (Week 1): Record Search Console clicks, impressions, indexed service pages, and current profile enquiry numbers before making changes.",
+                "Verify Google Business Profile basics (Section 1): Confirm eligibility and ownership, select accurate primary and secondary categories, and keep operating hours and phone details correct.",
+                "Refine address and service boundaries (Section 1): Display a physical address only if customers visit an eligible staffed location; configure defined service areas for mobile businesses.",
+                "Standardize NAP citations (Section 2): Ensure business name, public address, and phone number match across your website, Apple Maps, Bing Places, Yelp, Facebook, and industry directories.",
+                "Establish an honest review collection routine (Section 3): Invite genuine customers consistently at an appropriate point after service without offering incentives or filtering reviewers.",
+                "Maintain prompt review responses (Section 3): Set a team target to acknowledge all customer reviews within 48 hours, prioritizing negative feedback within 24 hours with a private service-recovery channel.",
+                "Optimize location and service pages (Section 4): Build dedicated pages for each primary service and physical location with city keywords in title tags, H1s, text contact details, and helpful service copy.",
+                "Earn relevant local links and citations (Section 5): Connect with your local Chamber of Commerce, regional business associations, and local publications for genuine community mentions.",
+                "Check mobile usability and page speed (Section 6): Ensure mobile pages load cleanly with tap-friendly phone links and pass Core Web Vitals thresholds (LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1).",
+                "Implement schema markup and monitor performance (Sections 7 & 8): Add LocalBusiness and FAQ schema, and track weekly progress via Google Business Profile Insights, Search Console, and conversion goals.",
+            ],
+        },
         { type: "h2", id: "first-week", text: "What to prioritize in your first week" },
         { type: "ol", items: ["Day 1: Record Search Console clicks, impressions, and indexed service pages; record profile enquiries.", "Days 2–3: Correct business details, broken pages, and accidental indexing blocks.", "Days 4–5: Test your review link and introduce an honest request process for customers.", "Days 6–7: Improve one important service page, assign the remaining tasks, and record a review date.", "Example: an HVAC owner records AC-repair page clicks and qualified calls, fixes incorrect weekend hours, then improves that page with actual service coverage and appointment details. Keep the baseline, completion date and next review date in the same task record."] },
         { type: "h2", id: "google-business-profile", text: "Section 1: Google Business Profile Optimization" },

@@ -6,7 +6,8 @@ import { RESOURCE_MAP } from "@/lib/content/resource-data";
 
 export function ResourcesGuideGuideHeaderSection({ resource }: { resource: (typeof RESOURCE_MAP)[string] }) {
     const image = resourceImage(resource.slug);
-    const updated = new Date(resource.lastUpdated + "T12:00:00").toLocaleDateString("en-US", { month: "long", year: "numeric" });
+    const updatedDate = resource.dateModified ?? resource.lastUpdated;
+    const updated = new Date(updatedDate + "T12:00:00").toLocaleDateString("en-US", { month: "long", year: "numeric" });
     return (
         <LandingHero
             eyebrow={resource.resourceLabel ?? "Free guide"}

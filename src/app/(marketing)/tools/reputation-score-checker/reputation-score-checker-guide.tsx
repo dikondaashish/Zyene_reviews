@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Gauge, Mail, MapPin, Search } from "lucide-react";
 import { ToolGuide, type ToolGuideContent } from "@/app/(marketing)/tools/tool-guide";
 import { FAQPageJsonLd, type FaqItem } from "@/components/seo/json-ld";
@@ -30,7 +31,13 @@ const CONTENT: ToolGuideContent = {
     about: {
         title: "About the Reputation Score Checker",
         paragraphs: [
-            "The Reputation Score Checker queries public Google Places data to provide an instant snapshot of your Google Business Profile rating and review volume. It is built for local business owners, multi-location operators, and marketing teams who need a quick, unauthenticated baseline of their public Google reputation before planning local SEO or review generation initiatives.",
+            <>
+                The Reputation Score Checker queries public Google Places data to provide an instant snapshot of your Google Business Profile rating and review volume. It is built for local business owners, multi-location operators, and marketing teams who need a quick, unauthenticated baseline of their public Google reputation before working through a{" "}
+                <Link href="/resources/local-seo-checklist" className="mi-inline-link">
+                    local SEO checklist
+                </Link>{" "}
+                or planning review generation initiatives.
+            </>,
             "Public rating and review count are among the first details prospective customers evaluate when searching on Google Maps. Monitoring these metrics helps you assess how your profile appears to local searchers.",
         ],
     },

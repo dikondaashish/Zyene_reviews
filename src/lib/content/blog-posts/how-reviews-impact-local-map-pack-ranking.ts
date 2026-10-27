@@ -15,6 +15,7 @@ export const howReviewsImpactLocalMapPackRankingPost: BlogPostSource = {
     keywords: ["local map pack ranking", "google reviews ranking factor", "how reviews affect local seo", "google 3 pack ranking", "reviews local search ranking"],
     relatedSlugs: ["google-business-profile-optimization-checklist", "how-to-get-50-google-reviews-in-30-days"],
     internalLinks: [
+        { label: "Practical local SEO checklist for businesses", href: "/resources/local-seo-checklist" },
         { label: "Audit your local AI visibility and citation presence", href: "/blog/ai-visibility-audit-local-businesses" },
         { label: "Zyene Reviews GBP keyword tracking", href: "/features" },
         { label: "How to get more reviews fast", href: "/blog/how-to-get-50-google-reviews-in-30-days" },
@@ -41,7 +42,7 @@ export const howReviewsImpactLocalMapPackRankingPost: BlogPostSource = {
             "Proximity: How close your business is to the searcher's location. This is largely outside your control.",
             "Prominence: How well-known and reputable your business is - both online and offline. This is where reviews live.",
         ]},
-        { type: "p", text: "Google says complete business information supports relevance, while prominence can reflect reviews, ratings, links, articles, directories, and offline recognition. No single review tactic guarantees a top-three position." },
+        { type: "p", text: "Google says complete business information supports relevance, while prominence can reflect reviews, ratings, links, articles, directories, and offline recognition. To audit all these signals systematically across your profile, citations, and website, follow our [local SEO checklist](/resources/local-seo-checklist). No single review tactic guarantees a top-three position." },
         { type: "h2", text: "What Google Documents About Reviews" },
         {
             type: "summary",

@@ -62,7 +62,7 @@ export function getCoreSitemap(): MetadataRoute.Sitemap {
         { url: `${BASE_URL}/resources`, changeFrequency: "monthly", priority: 0.8 },
         ...RESOURCE_GUIDES.map((guide) => ({
             url: `${BASE_URL}/resources/${guide.slug}`,
-            lastModified: guide.lastUpdated,
+            lastModified: guide.dateModified ?? guide.lastUpdated,
             changeFrequency: "monthly" as const,
             priority: 0.75,
         })),

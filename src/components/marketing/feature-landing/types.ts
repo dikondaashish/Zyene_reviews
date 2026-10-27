@@ -25,7 +25,7 @@ export type StoryMedia =
 export type StoryRow = {
   eyebrow: string;
   title: string;
-  text: string;
+  text: ReactNode;
   points: string[];
   media: StoryMedia;
 };
