@@ -10,36 +10,31 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
     "how-to-get-50-google-reviews-in-30-days": {
         src: `${BLOG_IMAGE_BASE}/google-review-request-playbook-candid-v2.webp`,
         alt: "Cafe owner sending a follow-up message from a smartphone",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "A timely, personal review request fits naturally into a local business follow-up routine.",
     },
     "why-google-reviews-matter-in-2026": {
         src: `${BLOG_IMAGE_BASE}/why-google-reviews-matter-candid-v2.webp`,
         alt: "Customer checking a smartphone outside a neighborhood bakery",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "Customers often check recent reviews before deciding which local business to visit.",
     },
     "birdeye-pricing-breakdown-2026": {
         src: `${BLOG_IMAGE_BASE}/review-software-pricing-comparison-candid-v2.webp`,
         alt: "Shop owner comparing costs using paperwork, a notebook, and a laptop",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "A practical software comparison starts with locations, limits, and the work your team actually needs.",
     },
     "birdeye-alternatives-for-local-businesses": {
         src: `${BLOG_IMAGE_BASE}/birdeye-alternatives-cost-comparison-candid-v2.webp`,
         alt: "Business manager checking paperwork and software costs beside a laptop",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "Local teams can compare reputation tools by fit and total cost, not headline features alone.",
     },
     "how-to-respond-to-a-1-star-review": {
         src: `${BLOG_IMAGE_BASE}/responding-to-one-star-review-candid-v2.webp`,
         alt: "Takeaway restaurant owner drafting a customer response on a laptop",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "A calm, specific response gives a business a chance to show how it handles a difficult experience.",
     },
     "ai-reply-mistakes-to-avoid": {
@@ -180,6 +175,12 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         alt: "Desktop monitor displaying an AI review response generator dashboard with sentiment tags and one-click Google sync",
         width: 1200, height: 675,
         caption: "AI review response generators draft on-brand replies to Google reviews with human approval control.",
+    },
+    "mastering-dental-reputation-management-for-patient-trust": {
+        src: `${BLOG_IMAGE_BASE}/dental-practice-reputation-candid-v2.webp`,
+        alt: "Dental practice administrator reviewing notes beside a laptop in reception",
+        width: 1672, height: 941,
+        caption: "Proactive dental reputation management turns patient trust and high review volume into sustained practice growth.",
     },
 };
 
