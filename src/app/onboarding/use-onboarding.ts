@@ -24,12 +24,9 @@ export function useOnboarding() {
     const [googleConnectionError, setGoogleConnectionError] = useState<string | null>(null);
     const [showPaymentCancelled, setShowPaymentCancelled] = useState(false);
     const [isStepResolved, setIsStepResolved] = useState(false);
-    const [checkoutVerifying, setCheckoutVerifying] = useState(() => {
-        if (typeof window === "undefined") return false;
-        const p = new URLSearchParams(window.location.search);
-        if (p.get("checkout_success") !== "1") return false;
-        return Boolean(p.get("session_id")) || p.get("plan_switched") === "1";
-    });
+    // Starts false on both server and client; useOnboardingUrlEffects flips it after
+    // mount. Reading window.location here caused a hydration mismatch on checkout return.
+    const [checkoutVerifying, setCheckoutVerifying] = useState(false);
 
     useOnboardingUrlEffects({
         setCurrentStep,

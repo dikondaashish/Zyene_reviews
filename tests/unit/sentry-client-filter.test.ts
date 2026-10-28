@@ -7,6 +7,7 @@ import {
     isCefSharpCrawlerError,
     isDevelopmentHydrationMismatch,
     isInjectedMetaMaskError,
+    isNavigatorLockStealError,
     isStaleServerActionError,
 } from "../../src/lib/monitoring/sentry-client-filter";
 
@@ -153,6 +154,24 @@ describe("Sentry client event filtering", () => {
                     },
                 ],
             },
+        };
+
+        expect(filterClientSentryEvent(event)).toBe(event);
+    });
+    it("drops the Supabase auth lock steal rejection from a second tab", () => {
+        const event: ErrorEvent = {
+            type: undefined,
+            exception: { values: [{ type: "AbortError", value: "Lock broken by another request with the 'steal' option." }] },
+        };
+
+        expect(isNavigatorLockStealError(event)).toBe(true);
+        expect(filterClientSentryEvent(event)).toBeNull();
+    });
+
+    it("keeps other AbortErrors", () => {
+        const event: ErrorEvent = {
+            type: undefined,
+            exception: { values: [{ type: "AbortError", value: "The user aborted a request." }] },
         };
 
         expect(filterClientSentryEvent(event)).toBe(event);
