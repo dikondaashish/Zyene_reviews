@@ -103,29 +103,25 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
     "how-to-respond-to-a-positive-review": {
         src: `${BLOG_IMAGE_BASE}/positive-google-review-response-candid-v2.webp`,
         alt: "Cafe owner writing a customer response on a smartphone",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "A specific thank-you helps turn a positive review into a genuine customer relationship moment.",
     },
     "how-to-get-a-google-review-link": {
         src: "/images/blog/google_review_link-candid-v2.webp",
         alt: "Customer using a smartphone beside a laptop and coffee at a cafe table",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "A direct review link gives customers a straightforward starting point for sharing feedback.",
     },
     "can-you-delete-a-google-review": {
         src: `${BLOG_IMAGE_BASE}/delete-google-review-hero-candid-v2.webp`,
         alt: "Cafe owner reviewing customer feedback on a laptop at the counter",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "Understanding Google's review policies is the first step toward protecting your business reputation.",
     },
     "hvac-home-services-reputation-management": {
         src: `${BLOG_IMAGE_BASE}/hvac-technician-customer-handshake-candid-v2.webp`,
         alt: "Service technician shaking hands with a homeowner after a visit",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "The moment after a successful service call is the best time to earn a genuine customer review.",
     },
     "podium-pricing-vs-zyene-reviews": {
@@ -181,6 +177,12 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         alt: "Dental practice administrator reviewing notes beside a laptop in reception",
         width: 1672, height: 941,
         caption: "Proactive dental reputation management turns patient trust and high review volume into sustained practice growth.",
+    },
+    "how-to-get-more-google-reviews": {
+        src: "/images/blog/nfc_google_review_tap_stand.jpg",
+        alt: "Customer tapping smartphone on an NFC Google review stand at checkout counter",
+        width: 1200, height: 675,
+        caption: "NFC tap stands and automated POS triggers capture customer reviews at peak satisfaction.",
     },
 };
 
