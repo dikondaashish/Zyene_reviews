@@ -32,6 +32,7 @@ import { howToGetGoogleReviewsAutoRepairShopsPost } from "./how-to-get-google-re
 import { bestReviewResponseGeneratorToolsPost } from "./best-review-response-generator-tools";
 import { masteringDentalReputationManagementForPatientTrustPost } from "./mastering-dental-reputation-management-for-patient-trust";
 import { howToGetMoreGoogleReviewsPost } from "./how-to-get-more-google-reviews";
+import { restaurantReviewManagementServiceRecoveryPost } from "./restaurant-review-management-service-recovery";
 
 export const BLOG_POST_SOURCES: BlogPostSource[] = [
     howToGet50GoogleReviewsIn30DaysPost,
@@ -62,4 +63,5 @@ export const BLOG_POST_SOURCES: BlogPostSource[] = [
     bestReviewResponseGeneratorToolsPost,
     masteringDentalReputationManagementForPatientTrustPost,
     howToGetMoreGoogleReviewsPost,
+    restaurantReviewManagementServiceRecoveryPost,
 ];

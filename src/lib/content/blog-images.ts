@@ -40,36 +40,31 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
     "ai-reply-mistakes-to-avoid": {
         src: `${BLOG_IMAGE_BASE}/ai-review-reply-oversight-candid-v2.webp`,
         alt: "Shop owner checking a draft on a laptop beside an order notebook",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "AI can speed up drafting, but a person should check every reply for accuracy and tone.",
     },
     "google-business-profile-optimization-checklist": {
         src: `${BLOG_IMAGE_BASE}/google-business-profile-audit-candid-v2.webp`,
         alt: "Bakery owner checking a printed list beside a laptop in a bread preparation area",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "Accurate hours, services, and contact details make a local listing easier for customers to trust.",
     },
     "how-reviews-impact-local-map-pack-ranking": {
         src: `${BLOG_IMAGE_BASE}/local-map-pack-visibility-candid-v2.webp`,
         alt: "Customer checking a smartphone on a neighborhood shopping street",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "Local search visibility is best evaluated alongside relevance, distance, prominence, and customer experience.",
     },
     "restaurant-owners-guide-to-google-reviews": {
         src: `${BLOG_IMAGE_BASE}/restaurant-review-management-candid-v2.webp`,
         alt: "Restaurant owner listening to a guest at a table during service",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "Restaurants can make review follow-up part of the same rhythm as service recovery and guest care.",
     },
     "dental-practice-reputation-management-2026": {
         src: `${BLOG_IMAGE_BASE}/dental-practice-reputation-candid-v2.webp`,
         alt: "Dental practice administrator reviewing notes beside a laptop in reception",
-        width: 1672,
-        height: 941,
+        width: 1672, height: 941,
         caption: "Healthcare reputation work should pair attentive feedback handling with careful privacy practices.",
     },
     "true-cost-of-bad-online-reputation": {
@@ -183,6 +178,12 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         alt: "Customer tapping smartphone on an NFC Google review stand at checkout counter",
         width: 1200, height: 675,
         caption: "NFC tap stands and automated POS triggers capture customer reviews at peak satisfaction.",
+    },
+    "restaurant-review-management-service-recovery": {
+        src: "/images/blog/restaurant_service_recovery_manager.jpg",
+        alt: "Restaurant general manager reviewing guest feedback and sentiment on a laptop before dinner service",
+        width: 1200, height: 675,
+        caption: "Prompt review monitoring and structured service recovery turn critical diner feedback into loyal return guests.",
     },
 };
 
