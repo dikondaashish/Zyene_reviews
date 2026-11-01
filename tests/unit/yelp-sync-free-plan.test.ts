@@ -85,4 +85,22 @@ describe("syncYelpReviewsForPlatform", () => {
         await expect(syncYelpReviewsForPlatform("p1")).rejects.toThrow("Yelp API error: 500");
         expect(mocks.platformUpdate).toHaveBeenCalledWith(expect.objectContaining({ sync_status: "error_api_call" }));
     });
+
+    it("marks the platform errored without throwing when Yelp rejects the API key", async () => {
+        mocks.getBusiness.mockRejectedValue(new YelpApiError(400, "Bad Request", "TRIAL_EXPIRED"));
+
+        const result = await syncYelpReviewsForPlatform("p1");
+
+        expect(result).toMatchObject({ success: false, total: 0 });
+        expect(mocks.platformUpdate).toHaveBeenCalledWith(expect.objectContaining({ sync_status: "error_api_call" }));
+    });
+});
+
+describe("YelpApiError.isAccountError", () => {
+    it("flags an expired trial or rejected key but not other bad requests", () => {
+        expect(new YelpApiError(400, "Bad Request", "TRIAL_EXPIRED").isAccountError).toBe(true);
+        expect(new YelpApiError(401, "Unauthorized").isAccountError).toBe(true);
+        expect(new YelpApiError(400, "Bad Request", "VALIDATION_ERROR").isAccountError).toBe(false);
+        expect(new YelpApiError(404, "Not Found").isAccountError).toBe(false);
+    });
 });

@@ -49,4 +49,45 @@ describe("runMonthlyNewsletter", () => {
     expect(result).toEqual({ sent: 0, failed: 0, total: 1 });
     expect(mocks.sendEmail).not.toHaveBeenCalled();
   });
+
+  it("sends in batches that stay under Resend's 10 requests per second", async () => {
+    vi.useFakeTimers();
+    try {
+      const people = Array.from({ length: 20 }, (_, i) => ({
+        id: `subscriber-${i}`,
+        email: `s${i}@example.com`,
+      }));
+      const subscribers = {
+        select: vi.fn().mockReturnThis(),
+        is: vi.fn().mockResolvedValue({ data: people, error: null }),
+      };
+      const deliveries = {
+        upsert: vi.fn().mockResolvedValue({ error: null }),
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        neq: vi.fn().mockReturnThis(),
+        update: vi.fn().mockReturnThis(),
+        maybeSingle: vi.fn().mockResolvedValue({
+          data: { id: "delivery", status: "pending", attempt_count: 0 },
+          error: null,
+        }),
+        then: (resolve: (value: { error: null }) => void) => resolve({ error: null }),
+      };
+      mocks.from.mockImplementation((table: string) =>
+        table === "marketing_subscribers" ? subscribers : deliveries,
+      );
+      mocks.sendEmail.mockResolvedValue({ sent: true, id: "email" });
+
+      const run = runMonthlyNewsletter(new Date("2026-11-01T16:00:00.000Z"));
+      await vi.advanceTimersByTimeAsync(0);
+      expect(mocks.sendEmail).toHaveBeenCalledTimes(8);
+      await vi.advanceTimersByTimeAsync(1000);
+      expect(mocks.sendEmail).toHaveBeenCalledTimes(16);
+      await vi.advanceTimersByTimeAsync(1000);
+
+      await expect(run).resolves.toEqual({ sent: 20, failed: 0, total: 20 });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });
