@@ -1,6 +1,7 @@
 import { MarketingHomeHero } from "@/components/marketing/marketing-home/marketing-home-hero";
 import { MarketingHomeIntro } from "@/components/marketing/marketing-home/marketing-home-intro";
 import { MarketingHomeTrustStrip } from "@/components/marketing/marketing-home/marketing-home-trust-strip";
+import { MarketingHomeOverview } from "@/components/marketing/marketing-home/marketing-home-overview";
 import { MarketingHomeHowItWorks } from "@/components/marketing/marketing-home/marketing-home-how-it-works";
 import { MarketingHomeBento } from "@/components/marketing/marketing-home/marketing-home-bento";
 import { MarketingHomePipeline } from "@/components/marketing/marketing-home/marketing-home-pipeline";
@@ -18,6 +19,9 @@ export function MarketingHomeClient() {
         <MarketingHomeHero />
       </div>
       <MarketingHomeTrustStrip />
+      <MarketingScrollReveal intensity="subtle">
+        <MarketingHomeOverview />
+      </MarketingScrollReveal>
       <MarketingScrollReveal intensity="subtle">
         <MarketingHomeHowItWorks />
       </MarketingScrollReveal>

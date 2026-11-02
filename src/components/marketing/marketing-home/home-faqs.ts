@@ -1,5 +1,13 @@
 import { TRIAL_DETAILS } from "@/lib/marketing/trial-copy";
+
+export const WHAT_IS_ZYENE_REVIEWS =
+    "Zyene Reviews is a review management platform built to help local businesses collect, manage, and respond to customer reviews from one simple dashboard. With Zyene, you can automatically send branded text and email review requests, draft or automate AI replies on Google, and route private feedback directly to your team. It gives local businesses an easy, repeatable routine to grow their online reputation.";
+
 export const HOME_FAQS = [
+    {
+        question: "What is Zyene Reviews?",
+        answer: WHAT_IS_ZYENE_REVIEWS,
+    },
     {
         question: "How does the 7-day free trial work?",
         answer: TRIAL_DETAILS,
