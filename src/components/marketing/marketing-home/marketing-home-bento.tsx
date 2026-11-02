@@ -10,13 +10,24 @@ import {
 } from "@/components/marketing/marketing-home/home-bento-visuals";
 import { BentoRequestVisual } from "@/components/marketing/marketing-home/home-bento-request-visual";
 
-type Cell = { key: string; title: string; text: string; href: string; link: string; visual: ReactNode };
+type Cell = { key: string; title: string; text: ReactNode; href: string; link: string; visual: ReactNode };
 
 const CELLS: Cell[] = [
   {
     key: "replies",
     title: "Every Google review answered, even on your busiest day.",
-    text: "Pick the star ratings and a tone. New reviews get a thoughtful reply without you lifting a finger. Turn it off anytime.",
+    text: (
+      <>
+        Pick the star ratings and a tone. New reviews get a thoughtful reply without you lifting a finger — read our{" "}
+        <Link
+          href="/blog/how-to-respond-to-a-positive-review"
+          className="underline underline-offset-2 hover:text-foreground"
+        >
+          guide on how to respond to a positive review
+        </Link>
+        , or turn off automation anytime.
+      </>
+    ),
     href: "/features/automatic-review-replies",
     link: "Automatic replies",
     visual: <BentoReplyVisual />,
