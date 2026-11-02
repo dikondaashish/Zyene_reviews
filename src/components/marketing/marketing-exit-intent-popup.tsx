@@ -1,14 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Sparkles, X } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { leadWizardOwnsExitIntent } from "@/components/marketing/use-home-lead-wizard-triggers";
 import { EXIT_INTENT_SOURCE } from "@/lib/marketing/exit-intent-events";
+import { claimPopupSlot, releasePopupSlot } from "@/lib/marketing/marketing-popup-slot";
 import { trackMarketingEventClient } from "@/lib/marketing/track-marketing-event-client";
 
 const SEEN_KEY = "zyene-exit-intent-popup-seen";
-
 const MIN_ENGAGEMENT_MS = 5_000;
 
 function wasSeenThisSession() {
@@ -42,14 +43,18 @@ export function MarketingExitIntentPopup() {
         }, MIN_ENGAGEMENT_MS);
         const onMouseOut = (event: MouseEvent) => {
             if (!ready || shownRef.current || event.relatedTarget !== null || event.clientY > 0) return;
-            shownRef.current = true;
-            markSeenThisSession();
-            setOpen(true);
-            trackMarketingEventClient("exit_intent_view", {
-                pagePath: pathname,
-                source: EXIT_INTENT_SOURCE,
-                oncePerSession: true,
-            });
+            // Deferred one task so the lead wizard (same exit signal) gets first claim on the popup slot.
+            window.setTimeout(() => {
+                if (shownRef.current || leadWizardOwnsExitIntent(pathname) || !claimPopupSlot("exit_intent")) return;
+                shownRef.current = true;
+                markSeenThisSession();
+                setOpen(true);
+                trackMarketingEventClient("exit_intent_view", {
+                    pagePath: pathname,
+                    source: EXIT_INTENT_SOURCE,
+                    oncePerSession: true,
+                });
+            }, 0);
         };
 
         document.addEventListener("mouseout", onMouseOut);
@@ -81,14 +86,14 @@ export function MarketingExitIntentPopup() {
                 aria-label="Close offer"
                 onClick={() => {
                     trackAction("exit_intent_dismiss");
+                    releasePopupSlot("exit_intent");
                     setOpen(false);
                 }}
             >
                 <X className="size-4" aria-hidden="true" />
             </button>
             <div className="marketing-exit-popup-kicker">
-                <span className="marketing-exit-popup-kicker-mark" aria-hidden="true"><Sparkles className="size-3" /></span>
-                <span>Before you go</span>
+                                <span>Before you go</span>
             </div>
             <h2 id="marketing-exit-popup-title">More reviews. Less busywork.</h2>
             <p id="marketing-exit-popup-description">See how Zyene Reviews brings requests, replies, and reputation insights into one calmer workflow.</p>
