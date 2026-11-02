@@ -17,7 +17,7 @@ export async function generateMetadata({
     const { industry } = await params;
     const data = getLocalizedIndustry("es", industry);
     if (!data) return {};
-    const canonicalUrl = `https://www.zyenereviews.com/es/industries/${industry}`;
+    const canonicalUrl = `https://zyenereviews.com/es/industries/${industry}`;
     return mergeMarketingSocial({
         title: data.metaTitle,
         description: data.metaDescription,

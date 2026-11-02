@@ -44,7 +44,7 @@ const rootMetadataSrc = [rootLayoutPath, path.join(process.cwd(), "src/app/layou
     .filter(existsSync)
     .map((p) => readFileSync(p, "utf8"))
     .join("\n");
-if (rootMetadataSrc && !rootMetadataSrc.includes("www.zyenereviews.com") && !rootMetadataSrc.includes("MARKETING_SITE_ORIGIN")) {
+if (rootMetadataSrc && !rootMetadataSrc.includes("zyenereviews.com") && !rootMetadataSrc.includes("MARKETING_SITE_ORIGIN")) {
     items.push({ id: "p0-domain", severity: "error", area: "phase0", message: "metadataBase not set to canonical www marketing host (§0.3)" });
 }
 

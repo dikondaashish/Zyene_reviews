@@ -281,7 +281,7 @@ describe("sitemap coverage", () => {
             });
             expect(meta.robots).toEqual({ index: false, follow: true });
             expect(meta.alternates?.canonical).toBe(
-                `https://www.zyenereviews.com/es/industries/${p.localizedSlug}`,
+                `https://zyenereviews.com/es/industries/${p.localizedSlug}`,
             );
             expect(meta.alternates?.languages).toBeUndefined();
         }

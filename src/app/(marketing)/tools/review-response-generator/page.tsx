@@ -9,11 +9,11 @@ export const metadata: Metadata = mergeMarketingSocial({
     title: "Free Review Response Template Generator",
     description:
         "Pick a star rating, get a ready-to-edit reply template. Free review response templates for local businesses, with 5 more by email.",
-    alternates: { canonical: "https://www.zyenereviews.com/tools/review-response-generator" },
+    alternates: { canonical: "https://zyenereviews.com/tools/review-response-generator" },
     openGraph: {
         title: "Free Review Response Templates",
         description: "Pick a star rating, get a ready-to-edit reply template.",
-        url: "https://www.zyenereviews.com/tools/review-response-generator",
+        url: "https://zyenereviews.com/tools/review-response-generator",
     },
     twitter: {
         card: "summary_large_image",

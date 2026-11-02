@@ -28,9 +28,9 @@ export default async function IndustryPage(
             <FAQPageJsonLd faqs={content.faqs} />
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://www.zyenereviews.com/" },
-                    { name: "Industries", url: "https://www.zyenereviews.com/industries" },
-                    { name: data.name, url: `https://www.zyenereviews.com/industries/${slug}` },
+                    { name: "Home", url: "https://zyenereviews.com/" },
+                    { name: "Industries", url: "https://zyenereviews.com/industries" },
+                    { name: data.name, url: `https://zyenereviews.com/industries/${slug}` },
                 ]}
             />
             <IndustriesIndustryHeroSection data={data} slug={slug} />

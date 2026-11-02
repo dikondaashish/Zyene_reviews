@@ -4,11 +4,11 @@ import { mergeMarketingSocial } from "@/lib/seo/marketing-page-metadata";
 export const metadata: Metadata = mergeMarketingSocial({
     title: "Blog, Review Management & Local SEO for Local Businesses",
     description: "Practical guides on Google reviews, local SEO, responding to reviews, and reputation management. Written for local business owners who want to grow.",
-    alternates: { canonical: "https://www.zyenereviews.com/blog" },
+    alternates: { canonical: "https://zyenereviews.com/blog" },
     openGraph: {
         title: "Blog, Review Management & Local SEO Tips",
         description: "Practical guides on Google reviews, local SEO, responding to reviews, and reputation management for local business owners.",
-        url: "https://www.zyenereviews.com/blog",
+        url: "https://zyenereviews.com/blog",
         type: "website",
     },
     twitter: {

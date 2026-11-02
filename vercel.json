@@ -2,8 +2,8 @@
   "redirects": [
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "zyenereviews.com" }],
-      "destination": "https://www.zyenereviews.com/:path*",
+      "has": [{ "type": "host", "value": "www.zyenereviews.com" }],
+      "destination": "https://zyenereviews.com/:path*",
       "permanent": true
     }
   ],

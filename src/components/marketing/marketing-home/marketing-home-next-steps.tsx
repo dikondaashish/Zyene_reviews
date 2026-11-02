@@ -19,7 +19,11 @@ export function MarketingHomeNextSteps() {
           <p className="marketing-eyebrow">Pricing</p>
           <h2 id="home-pricing-heading">Priced for local businesses, not enterprise budgets.</h2>
           <p className="home-section-lede">
-            One location or a growing team. No contracts and no cancellation fees.
+            One location or a growing team. No contracts, no cancellation fees — or{" "}
+            <Link href="/compare" className="underline underline-offset-2 hover:text-foreground">
+              see how we compare to Birdeye, Podium and NiceJob
+            </Link>{" "}
+            before you decide.
           </p>
           <div className="home-pricing-links">
             <Link href="/pricing" className="home-text-link">

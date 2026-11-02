@@ -80,11 +80,11 @@ export async function handleRootDomain(
         return ctx.withSessionCookies(NextResponse.redirect(authUrl, 308));
     }
 
-    // Permanent canonical host: apex → www (production only)
-    if (hostname === apexHost && !isLocalhost) {
+    // Permanent canonical host: www → apex (production only)
+    if (hostname === wwwHost && !isLocalhost) {
         const canonical = request.nextUrl.clone();
         canonical.protocol = "https:";
-        canonical.hostname = wwwHost;
+        canonical.hostname = apexHost;
         return ctx.withSessionCookies(NextResponse.redirect(canonical, 308));
     }
 

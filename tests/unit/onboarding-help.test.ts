@@ -9,7 +9,7 @@ describe("onboarding Get help", () => {
         const known = new Set(HELP_ARTICLES.map((a) => `/${a.category}/${a.slug}`));
         for (const step of [1, 2, 3, 4, 5, 6, 7]) {
             const help = onboardingHelpFor(step);
-            const articlePath = help.articleUrl.replace("https://www.zyenereviews.com/help", "");
+            const articlePath = help.articleUrl.replace("https://zyenereviews.com/help", "");
             expect(known.has(articlePath), `step ${step}: ${articlePath}`).toBe(true);
         }
     });

@@ -3,7 +3,7 @@
  * domains (collectratings.com / ratingcollect.com) and not treated as business slugs.
  */
 
-/** Path prefixes served only on the marketing apex (www.zyenereviews.com). */
+/** Path prefixes served only on the marketing apex (zyenereviews.com). */
 export const MARKETING_ROUTE_PREFIXES = [
     "/pricing",
     "/features",
@@ -146,7 +146,7 @@ export function getMarketingSiteOrigin(rootDomain: string): string {
         return `${protocol}://${rootDomain}`;
     }
     const host = rootDomain.split(":")[0]?.replace(/^www\./, "") ?? rootDomain;
-    return `${protocol}://www.${host}`;
+    return `${protocol}://${host}`;
 }
 
 /** Legacy blueprint alias `/customers` → `/case-studies` (marketing host only). */

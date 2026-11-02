@@ -8,8 +8,8 @@ export default function CaseStudiesHubPage() {
         <>
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://www.zyenereviews.com/" },
-                    { name: "Example Workflows", url: "https://www.zyenereviews.com/case-studies" },
+                    { name: "Home", url: "https://zyenereviews.com/" },
+                    { name: "Example Workflows", url: "https://zyenereviews.com/case-studies" },
                 ]}
             />
             <CaseStudiesHeroSection />

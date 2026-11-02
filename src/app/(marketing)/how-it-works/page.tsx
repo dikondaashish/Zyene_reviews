@@ -5,12 +5,12 @@ export const metadata: Metadata = mergeMarketingSocial({
     title: "How Our Review Management Software Works",
     description:
         "Connect your profile, invite fair feedback, respond with AI, and use review and request signals to improve your local reputation in four steps.",
-    alternates: { canonical: "https://www.zyenereviews.com/how-it-works" },
+    alternates: { canonical: "https://zyenereviews.com/how-it-works" },
     openGraph: {
         title: "How Our Review Management Software Works",
         description:
             "Connect, monitor, collect, and improve: four steps to a better review routine and stronger local presence.",
-        url: "https://www.zyenereviews.com/how-it-works",
+        url: "https://zyenereviews.com/how-it-works",
         type: "website",
     },
     twitter: {

@@ -9,7 +9,7 @@ function apexHost(): string {
 
 /**
  * Canonical public marketing origin.
- * Production uses `https://www.zyenereviews.com`; localhost keeps the dev host.
+ * Production uses `https://zyenereviews.com`; localhost keeps the dev host.
  */
 export function getMarketingSiteOrigin(): string {
     const root = NEXT_PUBLIC_ROOT_DOMAIN;
@@ -17,7 +17,7 @@ export function getMarketingSiteOrigin(): string {
     if (root.includes("localhost")) {
         return `${protocol}://${root}`;
     }
-    return `${protocol}://www.${apexHost()}`;
+    return `${protocol}://${apexHost()}`;
 }
 
 export const MARKETING_SITE_ORIGIN = getMarketingSiteOrigin();

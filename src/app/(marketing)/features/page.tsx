@@ -5,12 +5,12 @@ export const metadata: Metadata = mergeMarketingSocial({
     title: "Review Management Features & AI Replies",
     description:
         "Invite fair feedback, manage reviews, reply with AI, and act on local insights in one connected review-management platform.",
-    alternates: { canonical: "https://www.zyenereviews.com/features" },
+    alternates: { canonical: "https://zyenereviews.com/features" },
     openGraph: {
         title: "Review Management Features & AI Replies",
         description:
             "Branded requests, AI-assisted replies, private feedback, competitor context, and local insights in one platform.",
-        url: "https://www.zyenereviews.com/features",
+        url: "https://zyenereviews.com/features",
         type: "website",
     },
     twitter: {

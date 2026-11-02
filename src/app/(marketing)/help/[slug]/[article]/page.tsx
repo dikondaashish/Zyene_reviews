@@ -30,7 +30,7 @@ export async function generateMetadata(
     if (!article || article.category !== category) return {};
     const path = helpArticleNestedPath(article);
     const pageTitle = article.title;
-    const canonicalUrl = `https://www.zyenereviews.com${path}`;
+    const canonicalUrl = `https://zyenereviews.com${path}`;
     return mergeMarketingSocial({
         title: pageTitle,
         description: article.excerpt,

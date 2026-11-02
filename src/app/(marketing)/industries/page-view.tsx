@@ -9,8 +9,8 @@ export default function IndustriesHubPage() {
         <div className="ind-page">
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://www.zyenereviews.com/" },
-                    { name: "Industries", url: "https://www.zyenereviews.com/industries" },
+                    { name: "Home", url: "https://zyenereviews.com/" },
+                    { name: "Industries", url: "https://zyenereviews.com/industries" },
                 ]}
             />
             <IndustriesHeroSection />

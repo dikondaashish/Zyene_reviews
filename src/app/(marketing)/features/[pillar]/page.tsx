@@ -30,11 +30,11 @@ export async function generateMetadata({
     return mergeMarketingSocial({
         title: data.metaTitle,
         description: data.metaDescription,
-        alternates: { canonical: `https://www.zyenereviews.com${path}` },
+        alternates: { canonical: `https://zyenereviews.com${path}` },
         openGraph: {
             title: data.metaTitle,
             description: data.metaDescription,
-            url: `https://www.zyenereviews.com${path}`,
+            url: `https://zyenereviews.com${path}`,
         },
         twitter: {
             card: "summary_large_image",
