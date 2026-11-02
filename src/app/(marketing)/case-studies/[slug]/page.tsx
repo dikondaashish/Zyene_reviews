@@ -17,14 +17,14 @@ export async function generateMetadata(
     return mergeMarketingSocial({
         title,
         description,
-        alternates: { canonical: `https://zyenereviews.com/case-studies/${slug}` },
+        alternates: { canonical: `https://www.zyenereviews.com/case-studies/${slug}` },
         // Illustrative composites, not real customers: keep them out of search results.
         robots: { index: false, follow: true },
         keywords: study.keywords,
         openGraph: {
             title,
             description,
-            url: `https://zyenereviews.com/case-studies/${slug}`,
+            url: `https://www.zyenereviews.com/case-studies/${slug}`,
             type: "article",
         },
         twitter: {

@@ -6,13 +6,13 @@ export const metadata: Metadata = mergeMarketingSocial({
     description:
         "Explore Zyene workflows for restaurants, dental, auto, salons, and more: branded review requests, AI-assisted replies, private feedback, and useful trends.",
     alternates: {
-        canonical: "https://zyenereviews.com/industries",
+        canonical: "https://www.zyenereviews.com/industries",
     },
     openGraph: {
         title: "Review Management for Local Businesses",
         description:
             "Build a review routine for your industry: invite feedback, respond with AI assistance, follow up privately, and learn from trends.",
-        url: "https://zyenereviews.com/industries",
+        url: "https://www.zyenereviews.com/industries",
         type: "website",
     },
     twitter: {

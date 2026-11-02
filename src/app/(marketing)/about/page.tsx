@@ -5,12 +5,12 @@ export const metadata: Metadata = mergeMarketingSocial({
     title: "About Our Review Management Platform",
     description:
         "Zyene Reviews helps local businesses build a review routine: invite feedback, respond with AI assistance, follow up privately, and learn from trends.",
-    alternates: { canonical: "https://zyenereviews.com/about" },
+    alternates: { canonical: "https://www.zyenereviews.com/about" },
     openGraph: {
         title: "About Zyene Reviews",
         description:
             "Zyene Reviews helps local businesses invite feedback fairly, respond with AI assistance, follow up privately, and learn from trends.",
-        url: "https://zyenereviews.com/about",
+        url: "https://www.zyenereviews.com/about",
     },
     twitter: {
         card: "summary_large_image",

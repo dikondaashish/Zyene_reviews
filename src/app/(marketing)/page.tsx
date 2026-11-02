@@ -6,13 +6,13 @@ export const metadata: Metadata = mergeMarketingSocial({
     description:
         "Branded review requests, Google, Facebook, and Yelp feedback, AI replies, and private feedback when customers want to reach you directly. From $29.99/mo.",
     alternates: {
-        canonical: "https://zyenereviews.com/",
+        canonical: "https://www.zyenereviews.com/",
     },
     openGraph: {
         title: "Zyene Reviews: Review Management Software",
         description:
             "Branded review requests, AI-assisted Google replies, competitor context, and local insights for local businesses. From $29.99/mo.",
-        url: "https://zyenereviews.com/",
+        url: "https://www.zyenereviews.com/",
         type: "website",
     },
     twitter: {

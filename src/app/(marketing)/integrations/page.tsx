@@ -5,12 +5,12 @@ export const metadata: Metadata = mergeMarketingSocial({
     title: "Review Platform Integrations",
     description:
         "Sync Google, Facebook, and Yelp reviews. Trigger configurable review requests from your workflow with Zyene’s REST API or generic inbound webhook.",
-    alternates: { canonical: "https://zyenereviews.com/integrations" },
+    alternates: { canonical: "https://www.zyenereviews.com/integrations" },
     openGraph: {
         title: "Review Platform Integrations",
         description:
             "Sync Google, Facebook, and Yelp reviews. Trigger review requests through Zyene’s REST API or generic inbound webhook.",
-        url: "https://zyenereviews.com/integrations",
+        url: "https://www.zyenereviews.com/integrations",
         type: "website",
     },
     twitter: {

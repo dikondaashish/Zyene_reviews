@@ -59,7 +59,7 @@ export function IntegrationsDeveloperSection() {
                                 <span className="text-chart-1">curl</span>{" "}
                                 <span className="text-chart-2">-X POST</span>{" \\\n"}
                                 {"  "}
-                                <span className="text-chart-4">https://zyenereviews.com/api/v1/requests/send</span>{" \\\n"}
+                                <span className="text-chart-4">https://www.zyenereviews.com/api/v1/requests/send</span>{" \\\n"}
                                 {"  "}
                                 <span className="text-chart-2">-H</span>{" "}
                                 <span className="text-primary">&quot;X-API-Key: $API_KEY&quot;</span>{" \\\n"}

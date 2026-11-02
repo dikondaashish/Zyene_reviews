@@ -1,5 +1,5 @@
 /** Help for whichever onboarding step the owner is stuck on. Article paths are `/help/<category>/<slug>`. */
-export const HELP_CENTER_URL = "https://zyenereviews.com/help";
+export const HELP_CENTER_URL = "https://www.zyenereviews.com/help";
 export const SUPPORT_EMAIL = "support@zyenereviews.com";
 
 type StepHelp = { stepName: string; article: { title: string; path: string } };

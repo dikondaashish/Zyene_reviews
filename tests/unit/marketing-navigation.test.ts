@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { getMarketingNavigationTarget, isMarketingNavigationClick } from "@/lib/marketing/navigation";
 
-const current = "https://zyenereviews.com/?utm_source=test";
+const current = "https://www.zyenereviews.com/?utm_source=test";
 
 describe("marketing navigation clicks", () => {
   const click = { defaultPrevented: false, button: 0, metaKey: false, ctrlKey: false, shiftKey: false, altKey: false };

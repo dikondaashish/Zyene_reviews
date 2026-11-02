@@ -15,12 +15,12 @@ export async function generateMetadata(
     return mergeMarketingSocial({
         title: post.metaTitle,
         description: post.metaDescription,
-        alternates: { canonical: `https://zyenereviews.com/blog/${slug}` },
+        alternates: { canonical: `https://www.zyenereviews.com/blog/${slug}` },
         keywords: post.keywords,
         openGraph: {
             title: post.metaTitle,
             description: post.metaDescription,
-            url: `https://zyenereviews.com/blog/${slug}`,
+            url: `https://www.zyenereviews.com/blog/${slug}`,
             type: "article",
             publishedTime: post.publishedAt,
             modifiedTime: post.dateModified ?? post.publishedAt,

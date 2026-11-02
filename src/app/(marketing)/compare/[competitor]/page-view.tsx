@@ -19,7 +19,7 @@ export default async function CompetitorPage(
     const data = COMPETITOR_MAP[slug];
     if (!data) notFound();
 
-    const pageUrl = `https://zyenereviews.com/compare/${slug}`;
+    const pageUrl = `https://www.zyenereviews.com/compare/${slug}`;
 
     return (
         <>
@@ -28,8 +28,8 @@ export default async function CompetitorPage(
             <FAQPageJsonLd faqs={data.faqs} />
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Compare", url: "https://zyenereviews.com/compare" },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Compare", url: "https://www.zyenereviews.com/compare" },
                     { name: `Zyene Reviews vs ${data.name}`, url: pageUrl },
                 ]}
             />

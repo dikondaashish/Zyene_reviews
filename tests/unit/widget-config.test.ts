@@ -25,8 +25,8 @@ describe("configurable review widgets", () => {
     });
     it("uses the canonical host so redirects cannot break resize origin checks", () => {
         const config = parseWidgetConfig(null);
-        expect(new URL(buildConfiguredEmbed("demo", config, "zyenereviews.com").url).origin).toBe("https://zyenereviews.com");
-        expect(new URL(buildConfiguredEmbed("demo", config, "www.zyenereviews.com").url).origin).toBe("https://zyenereviews.com");
+        expect(new URL(buildConfiguredEmbed("demo", config, "zyenereviews.com").url).origin).toBe("https://www.zyenereviews.com");
+        expect(new URL(buildConfiguredEmbed("demo", config, "www.zyenereviews.com").url).origin).toBe("https://www.zyenereviews.com");
         expect(new URL(buildConfiguredEmbed("demo", config, "localhost:3100").url).origin).toBe("http://localhost:3100");
     });
     it("rejects CSS injection and bounds expensive rendering options", () => {

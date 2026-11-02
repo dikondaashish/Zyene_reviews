@@ -6,12 +6,12 @@ export const metadata: Metadata = mergeMarketingSocial({
     title: "Review Management Pricing: Plans From $29.99",
     description:
         "Zyene Reviews plans starting at $29.99/mo. No annual contracts. No hidden fees. 7-day free trial on every plan. Compare Starter, Professional, and Enterprise.",
-    alternates: { canonical: "https://zyenereviews.com/pricing" },
+    alternates: { canonical: "https://www.zyenereviews.com/pricing" },
     openGraph: {
         title: "Review Management Pricing: Plans From $29.99",
         description:
             "Plans starting at $29.99/mo. No annual contracts. 7-day free trial. Compare Starter, Professional, and Enterprise.",
-        url: "https://zyenereviews.com/pricing",
+        url: "https://www.zyenereviews.com/pricing",
         type: "website",
     },
     twitter: {

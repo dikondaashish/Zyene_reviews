@@ -18,8 +18,8 @@ export default function FreeToolsHubPage() {
         <>
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Free Tools", url: "https://zyenereviews.com/tools" },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Free Tools", url: "https://www.zyenereviews.com/tools" },
                 ]}
             />
             <LandingHero image={{ src: "/marketing/home/cafe-conversation.webp", alt: "A barista talking with a customer at work" }} eyebrow="Free tools for local business" title="A useful next step. On us." description="Create a Google review link, check your reputation, or find the words for your next reply. No signup needed to try." />

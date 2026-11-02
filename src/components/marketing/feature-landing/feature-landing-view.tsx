@@ -13,7 +13,7 @@ import type { FeatureLandingContent } from "@/components/marketing/feature-landi
 import { BreadcrumbJsonLd, HowToJsonLd } from "@/components/seo/json-ld";
 import type { FeaturePillarPage } from "@/lib/growth/feature-pillars";
 
-const BASE = "https://zyenereviews.com";
+const BASE = "https://www.zyenereviews.com";
 
 export function FeatureLandingView({ pillar, content }: { pillar: FeaturePillarPage; content: FeatureLandingContent }) {
   const { hero, flow } = content;

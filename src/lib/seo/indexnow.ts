@@ -2,13 +2,13 @@ import { fetchWithTimeout } from "@/lib/http/fetch-with-timeout";
 import { logger } from "@/lib/logger";
 
 const INDEXNOW_KEY = "b72e9354a8674d819712a48dc7b06b52";
-const HOST = "zyenereviews.com";
+const HOST = "www.zyenereviews.com";
 const KEY_LOCATION = `https://${HOST}/${INDEXNOW_KEY}.txt`;
 const INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow";
 
 /**
  * Pings the IndexNow API to notify search engines of new or updated content.
- * @param urls Array of absolute URLs to index (e.g. ["https://zyenereviews.com/blog/new-post"])
+ * @param urls Array of absolute URLs to index (e.g. ["https://www.zyenereviews.com/blog/new-post"])
  * @returns boolean indicating success
  */
 export async function pingIndexNow(urls: string[]): Promise<boolean> {

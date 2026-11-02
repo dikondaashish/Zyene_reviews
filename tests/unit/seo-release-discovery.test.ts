@@ -19,7 +19,7 @@ describe("organic discovery", () => {
         for (const page of LOCALIZED_INDUSTRY_PAGES) {
             const alternates = industryAlternates(page.industrySlug);
             expect(alternates.languages, page.industrySlug).toBeUndefined();
-            expect(alternates.canonical).toBe(`https://zyenereviews.com/industries/${page.industrySlug}`);
+            expect(alternates.canonical).toBe(`https://www.zyenereviews.com/industries/${page.industrySlug}`);
         }
     });
 });

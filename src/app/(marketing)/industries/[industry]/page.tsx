@@ -21,7 +21,7 @@ export async function generateMetadata(
         openGraph: {
             title: data.metaTitle,
             description: data.metaDescription,
-            url: `https://zyenereviews.com/industries/${slug}`,
+            url: `https://www.zyenereviews.com/industries/${slug}`,
             type: "website",
         },
         twitter: {

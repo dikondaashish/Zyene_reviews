@@ -27,7 +27,7 @@ export function HelpArticleView({
         .filter((a) => a.slug !== article.slug)
         .slice(0, 4);
 
-    const canonicalUrl = `https://zyenereviews.com${canonicalPath}`;
+    const canonicalUrl = `https://www.zyenereviews.com${canonicalPath}`;
     const faqItems = extractFaqItemsFromHelpBody(article.body);
 
     return (
@@ -39,13 +39,13 @@ export function HelpArticleView({
                     headline: article.title,
                     description: article.excerpt,
                     section: catInfo.label,
-                    isPartOf: { name: "Zyene Reviews Help Center", url: "https://zyenereviews.com/help" },
+                    isPartOf: { name: "Zyene Reviews Help Center", url: "https://www.zyenereviews.com/help" },
                     readMinutes: article.readMinutes,
                 }}
                 breadcrumbs={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Help Center", url: "https://zyenereviews.com/help" },
-                    { name: catInfo.label, url: `https://zyenereviews.com${categoryPath}` },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Help Center", url: "https://www.zyenereviews.com/help" },
+                    { name: catInfo.label, url: `https://www.zyenereviews.com${categoryPath}` },
                     { name: article.title, url: canonicalUrl },
                 ]}
             />

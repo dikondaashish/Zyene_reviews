@@ -8,7 +8,7 @@ export function HeaderHelpButton() {
         <Tooltip>
             <TooltipTrigger asChild>
                 <a
-                    href="https://zyenereviews.com/help"
+                    href="https://www.zyenereviews.com/help"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Help (opens in a new tab)"

@@ -18,12 +18,12 @@ export const metadata: Metadata = mergeMarketingSocial({
         follow: true,
     },
     alternates: {
-        canonical: "https://zyenereviews.com/es/industries",
+        canonical: "https://www.zyenereviews.com/es/industries",
     },
     openGraph: {
         title: "Industrias",
         description: "Gestión de reseñas para restaurantes, clínicas, talleres y más, en español.",
-        url: "https://zyenereviews.com/es/industries",
+        url: "https://www.zyenereviews.com/es/industries",
     },
     twitter: {
         card: "summary_large_image",
@@ -39,8 +39,8 @@ export default function EsIndustriesHubPage() {
         <div className="ind-page" lang="es">
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Industrias (ES)", url: "https://zyenereviews.com/es/industries" },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Industrias (ES)", url: "https://www.zyenereviews.com/es/industries" },
                 ]}
             />
             <IndustryHero

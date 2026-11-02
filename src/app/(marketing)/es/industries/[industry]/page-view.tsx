@@ -20,9 +20,9 @@ export default async function EsIndustryPage({
         <div className="ind-page" lang="es">
             <BreadcrumbJsonLd
                 items={[
-                    { name: "Home", url: "https://zyenereviews.com/" },
-                    { name: "Industrias", url: "https://zyenereviews.com/es/industries" },
-                    { name: data.name, url: `https://zyenereviews.com/es/industries/${localizedSlug}` },
+                    { name: "Home", url: "https://www.zyenereviews.com/" },
+                    { name: "Industrias", url: "https://www.zyenereviews.com/es/industries" },
+                    { name: data.name, url: `https://www.zyenereviews.com/es/industries/${localizedSlug}` },
                 ]}
             />
             <IndustryHero

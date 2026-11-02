@@ -79,7 +79,7 @@ for (const path of ["/features/ai-replies", "/features/review-collection", "/fea
     test(`${path} has usable mobile and desktop content`, async ({ page }) => {
         await page.goto(path);
         await expect(page.locator("h1")).toHaveCount(1);
-        await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://zyenereviews.com${path}`);
+        await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://www.zyenereviews.com${path}`);
         for (const width of [1440, 390, 320]) {
             await page.setViewportSize({ width, height: 900 });
             expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);

@@ -5,7 +5,7 @@ import { BlogAuthorByline } from "@/components/marketing/blog-author-byline";
 import { PopularResourcesBlock } from "@/components/marketing/popular-resources-block";
 import { BLOG_POSTS, BLOG_POST_MAP, PILLAR_LABELS } from "@/lib/content/blog-data";
 
-const SITE_URL = "https://zyenereviews.com";
+const SITE_URL = "https://www.zyenereviews.com";
 
 function getRelatedPosts(slug: string) {
     const current = BLOG_POST_MAP[slug];

@@ -5,11 +5,11 @@ export const metadata: Metadata = mergeMarketingSocial({
     title: "White-Label Review Management for Agencies",
     description:
         "Build a more consistent reputation service with branded review request flows and white-label review widgets for Enterprise client accounts.",
-    alternates: { canonical: "https://zyenereviews.com/agencies" },
+    alternates: { canonical: "https://www.zyenereviews.com/agencies" },
     openGraph: {
         title: "Review Management for Agencies",
         description: "Branded review request flows and white-label review widgets for agencies serving local businesses.",
-        url: "https://zyenereviews.com/agencies",
+        url: "https://www.zyenereviews.com/agencies",
     },
     twitter: {
         card: "summary_large_image",

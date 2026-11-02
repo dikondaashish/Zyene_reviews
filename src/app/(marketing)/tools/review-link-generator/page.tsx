@@ -9,11 +9,11 @@ export const metadata: Metadata = mergeMarketingSocial({
     title: "Free Google Review Link Generator",
     description:
         "Find your business and create a direct review link with our free Google review link generator. Share it by text, email or QR code.",
-    alternates: { canonical: "https://zyenereviews.com/tools/review-link-generator" },
+    alternates: { canonical: "https://www.zyenereviews.com/tools/review-link-generator" },
     openGraph: {
         title: "Free Google Review Link Generator",
         description: "Generate a direct Google review link for your business, free, no signup required.",
-        url: "https://zyenereviews.com/tools/review-link-generator",
+        url: "https://www.zyenereviews.com/tools/review-link-generator",
     },
     twitter: {
         card: "summary_large_image",

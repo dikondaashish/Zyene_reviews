@@ -8,8 +8,8 @@ export default function SecurityPage() {
         <>
             <BreadcrumbJsonLd
                             items={[
-                                { name: "Home", url: "https://zyenereviews.com/" },
-                                { name: "Security", url: "https://zyenereviews.com/security" },
+                                { name: "Home", url: "https://www.zyenereviews.com/" },
+                                { name: "Security", url: "https://www.zyenereviews.com/security" },
                             ]}
                         />
             <SecurityHeroSection />
