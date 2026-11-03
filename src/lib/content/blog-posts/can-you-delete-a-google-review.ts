@@ -38,6 +38,7 @@ export const canYouDeleteAGoogleReviewPost: BlogPostSource = {
         { label: "Negative Feedback Shield", href: "/features/review-collection" },
         { label: "Fake Google Reviews Guide", href: "/blog/how-to-handle-fake-google-reviews" },
         { label: "Responding to 1-Star Reviews", href: "/blog/how-to-respond-to-a-1-star-review" },
+        { label: "How to Respond to Positive Reviews", href: "/blog/how-to-respond-to-a-positive-review" },
         { label: "Google Review Link Guide", href: "/blog/how-to-get-a-google-review-link" },
         { label: "Review Management Platform", href: "/features" },
         { label: "Local SEO & Map Pack Impact", href: "/blog/how-reviews-impact-local-map-pack-ranking" },
@@ -249,7 +250,7 @@ export const canYouDeleteAGoogleReviewPost: BlogPostSource = {
         },
         {
             type: "tip",
-            text: "For detailed response templates by industry—including privacy-conscious healthcare examples—see our guide to responding to 1-star reviews.",
+            text: "For detailed response templates by industry—including privacy-conscious healthcare examples—see our guide to responding to 1-star reviews. For 5-star customer feedback, read our guide on [how to respond to positive reviews](/blog/how-to-respond-to-a-positive-review).",
         },
         {
             type: "image",

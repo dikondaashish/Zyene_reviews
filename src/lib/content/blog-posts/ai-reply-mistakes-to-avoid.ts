@@ -12,8 +12,9 @@ export const aiReplyMistakesToAvoidPost: BlogPostSource = {
     metaTitle: "5 AI Reply Mistakes to Avoid for Google Reviews",
     metaDescription: "Using AI to respond to reviews? Avoid these 5 common mistakes that make AI replies backfire. Learn how to use AI reply tools correctly for Google reviews.",
     keywords: ["ai reply mistakes", "ai review responses", "ai google review reply", "how to respond to reviews with ai", "review response ai tips"],
-    relatedSlugs: ["how-to-respond-to-a-1-star-review", "why-google-reviews-matter-in-2026"],
+    relatedSlugs: ["how-to-respond-to-a-1-star-review", "why-google-reviews-matter-in-2026", "how-to-respond-to-a-positive-review"],
     internalLinks: [
+        { label: "15 positive review response templates", href: "/blog/how-to-respond-to-a-positive-review" },
         { label: "Draft review responses with our free generator", href: "/tools/review-response-generator" },
         { label: "Try Zyene Reviews' AI reply feature", href: "/features/ai-replies" },
         { label: "How to respond to a 1-star review on Google", href: "/blog/how-to-respond-to-a-1-star-review" },
@@ -49,6 +50,7 @@ export const aiReplyMistakesToAvoidPost: BlogPostSource = {
             "✓ 'Great to hear about the tacos, Maria - our kitchen team will love this.'",
             "✓ 'Thanks, James! The Friday night crowd does move fast, so glad we could still take care of you.'",
         ]},
+        { type: "tip", text: "For examples of distinct, personalized openers, see our [positive review response examples](/blog/how-to-respond-to-a-positive-review)." },
         { type: "h2", text: "Mistake 3: Ignoring 3-Star Reviews" },
         {
             type: "summary",

@@ -54,6 +54,7 @@ const CONTENT: ToolGuideContent = {
         { href: "/resources/negative-review-templates", label: "20+ Negative Review Response Templates (Google Reviews)", note: "Ready-to-use scripts for service, billing, and delay complaints." },
         { href: "/blog/how-to-respond-to-a-1-star-review", label: "How to Respond to a 1-Star Review (5 Real Templates)", note: "A practical 5-step framework for handling negative customer feedback." },
         { href: "/blog/ai-reply-mistakes-to-avoid", label: "5 AI Reply Mistakes to Avoid When Responding to Reviews", note: "Guidelines for editing and personalizing automated review drafts." },
+        { href: "/blog/how-to-respond-to-a-positive-review", label: "How to Respond to Positive Reviews (15 Examples)", note: "Proven templates and best practices for replying to 5-star Google feedback." },
     ],
 };
 

@@ -54,6 +54,7 @@ const guide1: ResourceGuide = {
         { label: "Review collection features", href: "/features/review-collection" },
         { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
         { label: "Free review request templates", href: "/resources/review-request-templates" },
+        { label: "How to respond to positive reviews", href: "/blog/how-to-respond-to-a-positive-review" },
         { label: "Compare review platforms", href: "/compare" },
         { label: "Zyene Reviews pricing", href: "/pricing" },
         { label: "Start 7-day free trial", href: SIGNUP_URL },
@@ -125,6 +126,7 @@ const guide1: ResourceGuide = {
             "Naturally mention your services or location when relevant: 'We're so glad the deep cleaning went well - see you at our Austin office next time!'",
             "Vary your opening phrases. Never use the same opener in consecutive responses.",
         ]},
+        { type: "p", text: "For copy-and-paste templates across common scenarios, see our guide on [how to respond to positive reviews](/blog/how-to-respond-to-a-positive-review)." },
         { type: "h3", text: "The Framework for Negative Review Responses" },
         { type: "ol", items: [
             "Acknowledge: Recognize the customer's experience without getting defensive.",

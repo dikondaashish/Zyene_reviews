@@ -12,8 +12,9 @@ export const howToRespondToA1StarReviewPost: BlogPostSource = {
     metaTitle: "Respond to a 1-Star Review (5 Templates)",
     metaDescription: "How to respond to a 1-star review: a 5-step framework and 5 ready-to-use templates that move unhappy customers to private support.",
     keywords: ["how to respond to a 1 star review", "respond to negative review", "bad google review response", "1 star review template", "negative review response"],
-    relatedSlugs: ["ai-reply-mistakes-to-avoid", "why-google-reviews-matter-in-2026"],
+    relatedSlugs: ["ai-reply-mistakes-to-avoid", "why-google-reviews-matter-in-2026", "how-to-respond-to-a-positive-review"],
     internalLinks: [
+        { label: "15 positive review response templates", href: "/blog/how-to-respond-to-a-positive-review" },
         { label: "Free review response templates", href: "/tools/review-response-generator" },
         { label: "See how Zyene Reviews' AI replies work", href: "/features/ai-replies" },
         { label: "20+ negative review response templates", href: "/resources/negative-review-templates" },
@@ -29,7 +30,7 @@ export const howToRespondToA1StarReviewPost: BlogPostSource = {
     body: [
         { type: "summary", text: "Reply to a 1-star review within a day or two using five moves: acknowledge the experience, apologize for it, own any real mistake briefly, offer a private way to resolve it, and close professionally. Never argue facts in public. The reply is written for future customers as much as for the reviewer." },
         { type: "p", text: "A 1-star review lands in your inbox and your stomach drops. Your first instinct might be to ignore it, argue with it, or delete your account entirely. All of these are the wrong move." },
-        { type: "p", text: "Here's the counterintuitive truth: a well-handled 1-star review with a thoughtful response can be more valuable to your reputation than five 5-star reviews with no response. Potential customers read 1-star reviews specifically to see how you handle adversity." },
+        { type: "p", text: "Here's the counterintuitive truth: a well-handled 1-star review with a thoughtful response can be more valuable to your reputation than five 5-star reviews with no response. Potential customers read 1-star reviews specifically to see how you handle adversity. When happy customers leave praise, check out our guide on [how to respond to positive reviews](/blog/how-to-respond-to-a-positive-review) to keep that momentum going." },
         { type: "h2", text: "Why Your Response Matters More Than the Review" },
         {
             type: "summary",
