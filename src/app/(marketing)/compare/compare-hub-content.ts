@@ -80,4 +80,14 @@ export const COMPARE_HUB_FAQS: FaqItem[] = [
         answer:
             "Prosperly positions its review workflow for law firms and insurance agencies, with published automated follow-ups, a customer-referral program, and Ultimate-tier surveys, onboarding, and account management. Zyene Reviews is a broader local-business review platform with Google, Facebook, and Yelp sync, AI replies, competitor tracking, GBP insights, widgets, and API access. Compare both workflows and current pricing before choosing.",
     },
+    {
+        question: "How do NiceJob and Birdeye differ for local businesses?",
+        answer:
+            "NiceJob is a published-pricing reputation marketing tool starting at $75/mo (Starter) or $125/mo (Pro) designed for home-service contractors on Jobber or Housecall Pro. Birdeye is an enterprise customer experience suite sold by custom quote (third parties report ~$299 to $449/mo per location) that bundles reviews with directory listings sync across Apple, Bing, and Yelp, webchat, and surveys.",
+    },
+    {
+        question: "How does Podium compare with NiceJob for local business messaging?",
+        answer:
+            "Podium is an all-in-one conversational messaging platform that unifies two-way SMS, website chat, VoIP business phones, and text payments, sending review requests during customer conversations. NiceJob uses SMS and email primarily for automated post-job review request sequences and social sharing, and its published plans do not list phone systems, webchat, or payment processing.",
+    },
 ];
