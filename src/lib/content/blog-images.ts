@@ -152,6 +152,11 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         alt: "Restaurant general manager reviewing guest feedback and sentiment on a laptop before dinner service",
         width: 1200, height: 675, caption: "Prompt review monitoring and structured service recovery turn critical diner feedback into loyal return guests.",
     },
+    "how-do-you-remove-google-reviews": {
+        src: "/images/blog/google_review_management_tool_appeal.jpg",
+        alt: "Desktop monitor displaying Google Review Management Tool dashboard with appeal status tracking",
+        width: 1200, height: 675, caption: "Google's official Review Management Tool allows owners to track report status and submit secondary appeals.",
+    },
     "ranking-higher-on-google-maps-local-seo-playbook": {
         src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`,
         alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity",
