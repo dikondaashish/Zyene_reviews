@@ -13,12 +13,12 @@ export async function generateMetadata(
     const post = BLOG_POST_MAP[slug];
     if (!post) return {};
     return mergeMarketingSocial({
-        title: post.metaTitle,
+        title: post.seoTitle ?? post.metaTitle,
         description: post.metaDescription,
         alternates: { canonical: `https://www.zyenereviews.com/blog/${slug}` },
         keywords: post.keywords,
         openGraph: {
-            title: post.metaTitle,
+            title: post.seoTitle ?? post.metaTitle,
             description: post.metaDescription,
             url: `https://www.zyenereviews.com/blog/${slug}`,
             type: "article",
@@ -28,7 +28,7 @@ export async function generateMetadata(
         },
         twitter: {
             card: "summary_large_image",
-            title: post.metaTitle,
+            title: post.seoTitle ?? post.metaTitle,
             description: post.metaDescription,
         },
     }, { ownShareImage: true });

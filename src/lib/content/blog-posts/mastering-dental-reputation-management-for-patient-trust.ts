@@ -11,7 +11,8 @@ export const masteringDentalReputationManagementForPatientTrustPost: BlogPostSou
     publishedAt: "2026-10-27",
     dateModified: "2026-10-27",
     author: { name: "Zyene Reviews Team", role: "Editorial" },
-    metaTitle: "Mastering Dental Reputation Management for Patient Trust",
+    metaTitle: "Dental Patient Trust: HIPAA-Safe Review Replies & Costs",
+    seoTitle: "Dental Patient Trust: HIPAA-Safe Review Replies & Costs",
     metaDescription:
         "Transform dental patient feedback into trust and local 3-Pack rank. Learn POS/NFC automation, HIPAA-compliant AI replies, and the 50-40-30 rule.",
     keywords: [

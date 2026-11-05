@@ -74,6 +74,8 @@ export interface BlogPost {
     readMinutes: number;
     author: BlogAuthor;
     metaTitle: string;
+    /** Optional SEO title override for <title>, og:title, and twitter:title. Falls back to metaTitle / title. */
+    seoTitle?: string;
     metaDescription: string;
     keywords: string[];
     relatedSlugs: string[];
