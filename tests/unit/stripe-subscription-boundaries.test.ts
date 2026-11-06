@@ -148,6 +148,19 @@ describe("Stripe billing projection boundaries", () => {
             client)).rejects.toThrow("referral credit failed");
         expect(m.email).not.toHaveBeenCalled(); expect(m.onboarding).not.toHaveBeenCalled();
     });
+    it("acknowledges subscription events for a customer no organization owns", async () => {
+        const { client, rpc } = db();
+        rpc.mockResolvedValue({ data: null, error: { code: "P0001", message: "Subscription organization not found" } });
+        await expect(handleSubscriptionDeleted(event({ id: "sub_x", customer: "cus_unbound" }), client)).resolves.toBeUndefined();
+        await expect(handleSubscriptionUpdated(event({ id: "sub_x" }), client)).resolves.toBeUndefined();
+        expect(m.email).not.toHaveBeenCalled(); expect(m.customer).not.toHaveBeenCalled();
+    });
+    it("still fails checkout when the bound organization does not match", async () => {
+        const { client, rpc } = db();
+        rpc.mockResolvedValue({ data: null, error: { code: "P0001", message: "Subscription organization not found" } });
+        await expect(handleCheckoutSessionCompleted(event({ id: "cs_a", customer: "cus_a", subscription: "sub_a",
+            metadata: { organization_id: "org_a" } }), client)).rejects.toMatchObject({ message: "Subscription organization not found" });
+    });
     it("keeps trial-conversion referral failures retryable", async () => {
         const { client } = db(); m.referral.mockRejectedValue(new Error("referral credit failed"));
         const converted = event({ id: "sub_a" });

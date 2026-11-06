@@ -3,7 +3,7 @@ import { inngest } from "../client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
 import { isExpectedGoogleSyncSetupError } from "@/services/google/sync-service/expected-setup-errors";
-import { isGoogleSyncConflictError } from "@/services/google/sync-lock-utils";
+import { isGoogleSyncConflictError, isGoogleSyncCooldownError } from "@/services/google/sync-lock-utils";
 import { syncYelpReviewsForPlatform } from "@/services/yelp/sync-service";
 import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service";
 import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
@@ -18,10 +18,11 @@ import { pingReviewSyncHeartbeat } from "@/lib/monitoring/review-sync-heartbeat"
 const PUBSUB_GOOGLE_LOCK_RETRY_DELAY = "30s";
 const PUBSUB_GOOGLE_LOCK_MAX_ATTEMPTS = 3;
 
+/** Another worker is syncing, or just finished: skip now; pub/sub runs retry after a wait. */
 function isGoogleLockConflictSkip(value: unknown): boolean {
     if (typeof value !== "object" || value === null) return false;
     const o = value as { skipped?: boolean; reason?: string };
-    return o.skipped === true && o.reason === "sync_lock_conflict";
+    return o.skipped === true && (o.reason === "sync_lock_conflict" || o.reason === "sync_cooldown");
 }
 
 export const syncPlatformWorker = inngest.createFunction(
@@ -57,12 +58,13 @@ export const syncPlatformWorker = inngest.createFunction(
           await pingReviewSyncHeartbeat(true);
           return result;
         } catch (error) {
-          if (platformType === "google" && isGoogleSyncConflictError(error)) {
-            logger.error(`[Worker] Sync skipped (lock held elsewhere) for google platform ${platformId}` +
-                (attempt < pubsubGoogleLockRetry ? ` - will retry after ${PUBSUB_GOOGLE_LOCK_RETRY_DELAY}` : "")
-            );
+          // Expected overlap with another sync (lock held, or one finished moments ago): not a failure.
+          if (platformType === "google" && (isGoogleSyncConflictError(error) || isGoogleSyncCooldownError(error))) {
+            const reason = isGoogleSyncConflictError(error) ? "sync_lock_conflict" as const : "sync_cooldown" as const;
+            logger.info({ platformId, reason, attempt, willRetry: attempt < pubsubGoogleLockRetry },
+                "[Worker] Google sync skipped: another sync is running or just finished");
             await pingReviewSyncHeartbeat(true);
-            return { skipped: true, reason: "sync_lock_conflict" as const, attempt };
+            return { skipped: true, reason, attempt };
           }
           const message = error instanceof Error ? error.message : String(error);
           if (platformType === "google" && isExpectedGoogleSyncSetupError(message)) {
@@ -81,13 +83,14 @@ export const syncPlatformWorker = inngest.createFunction(
         return lastResult;
       }
       if (attempt >= pubsubGoogleLockRetry) {
-        const lastAttempt =
+        const last =
             typeof lastResult === "object" && lastResult !== null
-                ? (lastResult as { attempt?: number }).attempt
+                ? (lastResult as { attempt?: number; reason?: string })
                 : undefined;
+        const lastAttempt = last?.attempt;
         return {
           skipped: true,
-          reason: "sync_lock_conflict" as const,
+          reason: last?.reason === "sync_cooldown" ? "sync_cooldown" as const : "sync_lock_conflict" as const,
           exhaustedPubsubRetries: true,
           attempts: pubsubGoogleLockRetry,
           attempt: lastAttempt,

@@ -2,11 +2,34 @@ import { fetchWithTimeout } from "@/lib/http/fetch-with-timeout";
 import { logger } from "@/lib/logger";
 const YELP_BASE_URL = "https://api.yelp.com/v3";
 
+/** Yelp error codes meaning our API key itself is unusable (expired trial, revoked or missing token). */
+const ACCOUNT_ERROR_CODES = new Set([
+    "TRIAL_EXPIRED",
+    "TOKEN_INVALID",
+    "TOKEN_MISSING",
+    "UNAUTHORIZED_ACCESS_TOKEN",
+    "AUTHORIZATION_ERROR",
+]);
+
 /** A non-2xx Yelp response; `status` lets callers tell plan limits (404) from outages. */
 export class YelpApiError extends Error {
-    constructor(readonly status: number, statusText: string) {
-        super(`Yelp API error: ${status} ${statusText}`);
+    constructor(readonly status: number, statusText: string, readonly code?: string) {
+        super(`Yelp API error: ${status} ${statusText}${code ? ` (${code})` : ""}`);
         this.name = "YelpApiError";
+    }
+
+    /** The key is rejected for every request: retrying cannot help until the Yelp account is fixed. */
+    get isAccountError(): boolean {
+        return this.status === 401 || this.status === 403 || (!!this.code && ACCOUNT_ERROR_CODES.has(this.code));
+    }
+}
+
+function parseYelpErrorCode(body: string): string | undefined {
+    try {
+        const code = (JSON.parse(body) as { error?: { code?: unknown } }).error?.code;
+        return typeof code === "string" ? code : undefined;
+    } catch {
+        return undefined;
     }
 }
 
@@ -44,12 +67,16 @@ export async function yelpFetch<T>(options: YelpRequestOptions): Promise<T> {
 
     if (!response.ok) {
         const errorBody = await response.text();
+        const error = new YelpApiError(response.status, response.statusText, parseYelpErrorCode(errorBody));
         if (options.expectedStatuses?.includes(response.status)) {
             logger.info({ status: response.status, path: options.path }, "[Yelp API] expected non-2xx response");
+        } else if (error.isAccountError) {
+            // The sync reports this once per platform; logging every request here would duplicate it.
+            logger.warn({ status: response.status, code: error.code, path: options.path }, "[Yelp API] API key rejected");
         } else {
             logger.error(`[Yelp API] ${response.status}: ${errorBody}`);
         }
-        throw new YelpApiError(response.status, response.statusText);
+        throw error;
     }
 
     return response.json() as Promise<T>;

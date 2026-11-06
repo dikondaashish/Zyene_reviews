@@ -15,6 +15,9 @@ const BROWSER_NETWORK_FETCH_PATTERN =
 const HYDRATION_MISMATCH_PATTERN =
     /Hydration failed because the server rendered HTML didn't match the client/i;
 
+/** Web Locks API wording when another tab takes the Supabase auth lock with `steal`. */
+const NAVIGATOR_LOCK_STEAL_PATTERN = /^Lock broken by another request with the 'steal' option\.?$/;
+
 function isMetaMaskMessage(message: string | undefined): boolean {
     if (!message) return false;
 
@@ -112,9 +115,25 @@ export function isDevelopmentHydrationMismatch(event: ErrorEvent): boolean {
     );
 }
 
+/**
+ * Supabase auth refreshes the session under a Web Lock; when a second tab steals
+ * it, the first tab's pending lock rejects with this AbortError. The stealing tab
+ * completes the refresh, so nothing is lost and the user sees nothing.
+ */
+export function isNavigatorLockStealError(event: ErrorEvent): boolean {
+    const exceptions = event.exception?.values ?? [];
+    return exceptions.some(
+        (exception) =>
+            exception.type === "AbortError" &&
+            typeof exception.value === "string" &&
+            NAVIGATOR_LOCK_STEAL_PATTERN.test(exception.value.trim())
+    );
+}
+
 export function filterClientSentryEvent(event: ErrorEvent): ErrorEvent | null {
     const isNoise =
         isInjectedMetaMaskError(event) ||
+        isNavigatorLockStealError(event) ||
         isCefSharpCrawlerError(event) ||
         isStaleServerActionError(event) ||
         isBrowserNetworkFetchError(event) ||
