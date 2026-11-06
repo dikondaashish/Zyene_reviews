@@ -45,7 +45,15 @@ export const NEXT_PUBLIC_ZAPIER_CLIENT_ID =
 export const IS_PRODUCTION = process.env.NODE_ENV === "production";
 export const ROOT_DOMAIN = NEXT_PUBLIC_ROOT_DOMAIN;
 export const PROTOCOL = ROOT_DOMAIN.includes("localhost") ? "http" : "https";
-export const BASE_URL = `${PROTOCOL}://${ROOT_DOMAIN}`;
+const isLocalhost =
+    ROOT_DOMAIN.includes("localhost") || ROOT_DOMAIN.includes("127.0.0.1");
+const apexHost = ROOT_DOMAIN.replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .split(":")[0];
+
+export const BASE_URL = isLocalhost
+    ? `${PROTOCOL}://${ROOT_DOMAIN}`
+    : `${PROTOCOL}://www.${apexHost}`;
 
 /** True when marketing auth links should use same-origin /login and /signup. */
 function shouldUseLocalMarketingAuthPaths(): boolean {
