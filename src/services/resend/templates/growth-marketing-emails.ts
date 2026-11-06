@@ -22,14 +22,14 @@ export function marketingNurtureEmail({
             body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Thanks for subscribing. If you want one place to start, read our <strong>review request template pack</strong> and <strong>local SEO checklist</strong> - both are free on the site.</p>
 <p style="font-size:16px;line-height:1.6;color:#52525b;">You're receiving this at <strong>${escapeHtml(email)}</strong> because you joined our marketing list.</p>`,
             cta: "Open the template pack",
-            url: "https://zyenereviews.com/resources/review-request-templates",
+            url: "https://www.zyenereviews.com/resources/review-request-templates",
         },
         marketing_nurture_day2_shield: {
             subject: "Follow up when a customer gives a low rating",
             body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">When a customer gives a low rating through a Zyene review page, <strong>Negative Feedback Shield</strong> gives them a private form to describe the problem and alerts your team. Use it for follow-up, without review gating or suppressing honest public feedback.</p>
-<p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="https://zyenereviews.com/blog/negative-feedback-shield" style="color:${EMAIL_BRAND.link};">Read how Shield works →</a></p>`,
+<p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="https://www.zyenereviews.com/blog/negative-feedback-shield" style="color:${EMAIL_BRAND.link};">Read how Shield works →</a></p>`,
             cta: "See review collection",
-            url: "https://zyenereviews.com/features/review-collection",
+            url: "https://www.zyenereviews.com/features/review-collection",
         },
         marketing_nurture_day5_trial: {
             subject: "Automate review requests in one inbox",
@@ -63,7 +63,7 @@ export function newsletterWelcomeEmail(params: {
             bodyHtml: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Thanks for subscribing (<strong>${escapeHtml(email)}</strong>). Once a month you'll get product updates, Google review tips, and new case studies for local business owners.</p>
 `,
             ctaLabel: "Read the blog",
-            ctaUrl: "https://zyenereviews.com/blog",
+            ctaUrl: "https://www.zyenereviews.com/blog",
         }),
     };
 }
@@ -89,7 +89,7 @@ export function monthlyNewsletterEmail(params: {
 <p style="font-size:16px;line-height:1.6;color:#52525b;"><a href="${escapeHtml(caseStudyLink)}" style="color:${EMAIL_BRAND.link};">${escapeHtml(caseStudyTitle)} →</a></p>
 `,
             ctaLabel: "Start your free trial",
-            ctaUrl: "https://zyenereviews.com/pricing",
+            ctaUrl: "https://www.zyenereviews.com/pricing",
         }),
     };
 }

@@ -54,7 +54,7 @@ export function trialNurtureEmail({ userName, dashboardUrl, stepKey, unsubscribe
         },
         trial_day6_case_study: {
             subject: "Day 6: How local businesses grow customer reviews",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">See how automated SMS requests and private feedback routing help local businesses collect authentic customer feedback in our <a href="https://zyenereviews.com/case-studies/sunrise-dental-austin" style="color:${EMAIL_BRAND.link};">illustrative case study</a> (this is an illustrative example; individual results vary).</p>`,
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">See how automated SMS requests and private feedback routing help local businesses collect authentic customer feedback in our <a href="https://www.zyenereviews.com/case-studies/sunrise-dental-austin" style="color:${EMAIL_BRAND.link};">illustrative case study</a> (this is an illustrative example; individual results vary).</p>`,
             cta: "Go to dashboard",
         },
         trial_day7_upgrade: {
@@ -90,7 +90,7 @@ export function onboardingDripEmail({
         },
         convert_case_study: {
             subject: "How Wolfpack BBQ added 64 five-star reviews in 60 days",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Post-checkout SMS made review collection automatic. <a href="https://zyenereviews.com/case-studies/wolfpack-bbq-charlotte" style="color:${EMAIL_BRAND.link};">Read their story →</a></p>`,
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">Post-checkout SMS made review collection automatic. <a href="https://www.zyenereviews.com/case-studies/wolfpack-bbq-charlotte" style="color:${EMAIL_BRAND.link};">Read their story →</a></p>`,
             cta: "Send your next campaign",
         },
         convert_pricing_reminder: {
@@ -100,7 +100,7 @@ export function onboardingDripEmail({
         },
         convert_last_chance_offer: {
             subject: "Review your plan before your next billing cycle",
-            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">You're on a paid plan - keep your review automation, AI replies, and competitor tracking active. <a href="https://zyenereviews.com/pricing" style="color:${EMAIL_BRAND.link};">Review plan options →</a> or reply if you need help before your next billing cycle.</p>`,
+            body: `<p style="font-size:16px;line-height:1.6;color:#52525b;">You're on a paid plan - keep your review automation, AI replies, and competitor tracking active. <a href="https://www.zyenereviews.com/pricing" style="color:${EMAIL_BRAND.link};">Review plan options →</a> or reply if you need help before your next billing cycle.</p>`,
             cta: "Manage billing",
         },
     };

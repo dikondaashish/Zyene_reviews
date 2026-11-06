@@ -50,7 +50,7 @@ export function AccessError({ type, businessName }: AccessErrorProps) {
 
                 <footer className="flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground">
                     <span>Powered by</span>
-                    <ZyeneReviewsLogoLink href="https://zyenereviews.com" size={20} wordmarkClassName="text-sm" className="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring" />
+                    <ZyeneReviewsLogoLink href="https://www.zyenereviews.com" size={20} wordmarkClassName="text-sm" className="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring" />
                 </footer>
             </div>
         </main>

@@ -1,7 +1,7 @@
 import { EMAIL_BRAND } from "@/lib/email/email-brand";
 import { growthEmailLayout } from "@/services/resend/templates/growth-emails";
 
-const PACK_URL = "https://zyenereviews.com/resources/review-request-templates";
+const PACK_URL = "https://www.zyenereviews.com/resources/review-request-templates";
 
 export function reviewRequestTemplatePackEmail({
     unsubscribeUrl,
