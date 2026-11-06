@@ -157,6 +157,11 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         alt: "Desktop monitor displaying Google Review Management Tool dashboard with appeal status tracking",
         width: 1200, height: 675, caption: "Google's official Review Management Tool allows owners to track report status and submit secondary appeals.",
     },
+    "how-to-delete-yelp-reviews": {
+        src: "/images/blog/reporting_yelp_review_dashboard.jpg",
+        alt: "Business owner reporting a policy-violating review through Yelp for Business moderation dashboard",
+        width: 1200, height: 675, caption: "Reporting a review in the Yelp for Business dashboard flags the content for manual moderator review.",
+    },
     "ranking-higher-on-google-maps-local-seo-playbook": {
         src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`,
         alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity",

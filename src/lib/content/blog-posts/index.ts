@@ -35,6 +35,7 @@ import { howToGetMoreGoogleReviewsPost } from "./how-to-get-more-google-reviews"
 import { restaurantReviewManagementServiceRecoveryPost } from "./restaurant-review-management-service-recovery";
 import { rankingHigherOnGoogleMapsLocalSeoPlaybookPost } from "./ranking-higher-on-google-maps-local-seo-playbook";
 import { howDoYouRemoveGoogleReviewsPost } from "./how-do-you-remove-google-reviews";
+import { howToDeleteYelpReviewsPost } from "./how-to-delete-yelp-reviews";
 
 export const BLOG_POST_SOURCES: BlogPostSource[] = [
     howToGet50GoogleReviewsIn30DaysPost,
@@ -68,4 +69,5 @@ export const BLOG_POST_SOURCES: BlogPostSource[] = [
     restaurantReviewManagementServiceRecoveryPost,
     rankingHigherOnGoogleMapsLocalSeoPlaybookPost,
     howDoYouRemoveGoogleReviewsPost,
+    howToDeleteYelpReviewsPost,
 ];
