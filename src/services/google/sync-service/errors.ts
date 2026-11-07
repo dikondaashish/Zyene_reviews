@@ -31,3 +31,14 @@ export class GooglePlatformNotFoundError extends GooglePlatformAccessError {
         this.name = "GooglePlatformNotFoundError";
     }
 }
+
+/** Google's token endpoint is down (5xx/429); retrying later normally succeeds. */
+export class GoogleTokenRefreshUnavailableError extends Error {
+    constructor(options?: { cause?: unknown }) {
+        super("Failed to refresh Google token. Please try again later.");
+        this.name = "GoogleTokenRefreshUnavailableError";
+        if (options?.cause !== undefined) {
+            Object.defineProperty(this, "cause", { value: options.cause, enumerable: false });
+        }
+    }
+}

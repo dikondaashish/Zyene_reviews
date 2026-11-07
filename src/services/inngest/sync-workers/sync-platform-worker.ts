@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { syncGoogleReviewsForPlatform } from "@/services/google/sync-service";
 import { isExpectedGoogleSyncSetupError } from "@/services/google/sync-service/expected-setup-errors";
 import { isGoogleSyncConflictError, isGoogleSyncCooldownError } from "@/services/google/sync-lock-utils";
+import { GoogleTokenRefreshUnavailableError } from "@/services/google/sync-service/errors";
 import { syncYelpReviewsForPlatform } from "@/services/yelp/sync-service";
 import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service";
 import { syncGooglePerformanceForPlatform } from "@/services/google/performance-sync";
@@ -72,6 +73,9 @@ export const syncPlatformWorker = inngest.createFunction(
               { err: error, platformType, platformId },
               "[Worker] Sync blocked by Google account setup",
             );
+          } else if (error instanceof GoogleTokenRefreshUnavailableError) {
+            // Retried by Inngest; the Sentry middleware reports it only if every attempt fails.
+            logger.warn({ platformType, platformId }, "[Worker] Google token endpoint unavailable; will retry");
           } else {
             logger.error({ err: error, platformType, platformId }, "[Worker] Sync failed");
           }
