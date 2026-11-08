@@ -49,7 +49,10 @@ describe("public SEO integrity", () => {
             expect(entries.find((entry) => entry.url.endsWith(`/blog/${post.slug}`))?.lastModified)
                 .toBe(post.dateModified ?? post.publishedAt);
         }
-        expect(entries.find((entry) => entry.url.endsWith("/pricing"))?.lastModified).toBeUndefined();
+        // Static pages get a git-derived content date (pnpm seo:lastmod), never the build time.
+        const pricing = entries.find((entry) => entry.url.endsWith("/pricing"))?.lastModified;
+        expect(pricing).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        expect(String(pricing) < new Date().toISOString().slice(0, 10)).toBe(true);
     });
 
     it("leaves share images to a route's own opengraph-image when it has one", () => {

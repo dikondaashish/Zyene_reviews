@@ -1,4 +1,5 @@
 import { DocNavbar } from "@/components/docs/doc-navbar";
+import { DocRelatedLinks } from "@/components/docs/doc-related-links";
 import { DocSidebar } from "@/components/docs/doc-sidebar";
 import { WebSiteJsonLd } from "@/components/seo/json-ld-website";
 
@@ -11,6 +12,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
                 <DocSidebar />
                 <div className="flex-1 min-w-0">
                     {children}
+                    <DocRelatedLinks />
                 </div>
             </div>
         </div>

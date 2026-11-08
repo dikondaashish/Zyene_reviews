@@ -19,11 +19,25 @@ import { INDUSTRY_SLUGS } from "@/lib/industries/industry-data";
 import { COMPETITOR_SLUGS } from "@/lib/comparisons/competitor-data";
 import { DOC_NAV_GROUPS } from "@/lib/docs/doc-nav";
 import { MARKETING_SITE_ORIGIN } from "@/lib/seo/marketing-site-url";
+import { getContentLastmod } from "@/lib/seo/content-lastmod";
 
 const BASE_URL = MARKETING_SITE_ORIGIN;
 
+type SitemapEntry = MetadataRoute.Sitemap[number];
+
+/** Fills <lastmod> from git-derived content dates when the entry has none. */
+function withLastmod(entry: SitemapEntry): SitemapEntry {
+    if (entry.lastModified) return entry;
+    const lastModified = getContentLastmod(new URL(entry.url).pathname);
+    return lastModified ? { ...entry, lastModified } : entry;
+}
+
+function withLastmods(entries: MetadataRoute.Sitemap): MetadataRoute.Sitemap {
+    return entries.map(withLastmod);
+}
+
 export function getCoreSitemap(): MetadataRoute.Sitemap {
-    return [
+    return withLastmods([
         { url: `${BASE_URL}/`, changeFrequency: "weekly", priority: 1.0 },
         { url: `${BASE_URL}/pricing`, changeFrequency: "weekly", priority: 0.95 },
         { url: `${BASE_URL}/small-business`, changeFrequency: "monthly", priority: 0.85 },
@@ -79,7 +93,7 @@ export function getCoreSitemap(): MetadataRoute.Sitemap {
         { url: `${BASE_URL}/terms`, changeFrequency: "yearly", priority: 0.4 },
         { url: `${BASE_URL}/data-retention`, changeFrequency: "yearly", priority: 0.3 },
         { url: `${BASE_URL}/sms-consent`, changeFrequency: "yearly", priority: 0.5 },
-    ];
+    ]);
 }
 
 export function getSupportSitemap(): MetadataRoute.Sitemap {
@@ -87,7 +101,7 @@ export function getSupportSitemap(): MetadataRoute.Sitemap {
         (item) => item.href !== "/docs",
     );
 
-    return [
+    return withLastmods([
         { url: `${BASE_URL}/help`, changeFrequency: "monthly", priority: 0.7 },
         ...HELP_CATEGORY_SLUGS.map((cat) => ({
             url: `${BASE_URL}/help/${cat}`,
@@ -105,7 +119,7 @@ export function getSupportSitemap(): MetadataRoute.Sitemap {
             changeFrequency: "monthly" as const,
             priority: 0.65,
         })),
-    ];
+    ]);
 }
 
 export type SitemapSection = "core" | "support";

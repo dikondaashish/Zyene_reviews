@@ -7,6 +7,7 @@ import {
     helpArticleNestedPath,
     type HelpArticle,
 } from "@/lib/content/help-data";
+import { HELP_RELATED_LINKS } from "@/lib/content/help-related-links";
 import { ContentRenderer } from "@/components/marketing/content-renderer";
 import { LandingHero } from "@/components/marketing/landing-hero";
 import { MarketingClosingBand } from "@/components/marketing/marketing-closing-band";
@@ -26,6 +27,8 @@ export function HelpArticleView({
     const relatedArticles = HELP_BY_CATEGORY[article.category]
         .filter((a) => a.slug !== article.slug)
         .slice(0, 4);
+
+    const productLinks = HELP_RELATED_LINKS[article.category];
 
     const canonicalUrl = `https://www.zyenereviews.com${canonicalPath}`;
     const faqItems = extractFaqItemsFromHelpBody(article.body);
@@ -88,6 +91,16 @@ export function HelpArticleView({
                                 </ul>
                             </nav>
                         )}
+                        <nav aria-labelledby="help-product-heading">
+                            <h2 id="help-product-heading">Related product pages</h2>
+                            <ul className="mi-read-links">
+                                {productLinks.map((link) => (
+                                    <li key={link.href}>
+                                        <Link href={link.href}>{link.label}</Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </nav>
                         <div>
                             <h2>New to Zyene?</h2>
                             <p>Start with a 7-day free trial.</p>

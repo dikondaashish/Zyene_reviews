@@ -1,64 +1,60 @@
 import Link from "next/link";
 import { MarketingLayoutFooterLinkColumn } from "./marketing-layout-footer-link-column";
 
+interface FooterLink {
+    href: string;
+    label: string;
+}
+
+const PRODUCT_LINKS: FooterLink[] = [
+    { href: "/features", label: "Features" },
+    { href: "/features/qr-code-reviews", label: "Review QR Codes" },
+    { href: "/features/nfc-review-stands", label: "NFC Review Stands" },
+    { href: "/features/ai-replies", label: "AI Review Replies" },
+    { href: "/features/review-monitoring", label: "Review Monitoring" },
+    { href: "/features/review-widgets", label: "Review Widgets" },
+    { href: "/features/local-seo", label: "Local SEO" },
+    { href: "/features/ai-visibility", label: "AI Visibility" },
+    { href: "/features/competitor-tracking", label: "Competitor Tracking" },
+    { href: "/features/multi-location", label: "Multi-Location" },
+    { href: "/pricing", label: "Pricing" },
+    { href: "/how-it-works", label: "How It Works" },
+    { href: "/integrations", label: "Integrations" },
+    { href: "/docs", label: "Docs" },
+    { href: "/docs/api", label: "API" },
+];
+
+const SOLUTION_LINKS: FooterLink[] = [
+    { href: "/small-business", label: "Small Business" },
+    { href: "/industries", label: "By Industry" },
+    { href: "/industries/restaurants", label: "Restaurants" },
+    { href: "/industries/dental", label: "Dental" },
+    { href: "/industries/auto-repair", label: "Auto Repair" },
+    { href: "/industries/salons", label: "Salons & Spas" },
+    { href: "/industries/home-services", label: "Home Services" },
+    { href: "/industries/hvac", label: "HVAC" },
+    { href: "/industries/plumbing", label: "Plumbing" },
+    { href: "/industries/electricians", label: "Electricians" },
+    { href: "/industries/hotels", label: "Hotels" },
+    { href: "/industries/medical", label: "Medical" },
+    { href: "/industries/fitness", label: "Fitness & Gyms" },
+    { href: "/compare", label: "Compare Tools" },
+];
+
+function FooterLinks({ links }: { links: FooterLink[] }) {
+    return links.map((link) => (
+        <li key={link.href}>
+            <Link href={link.href} className="hover:text-primary transition-colors">
+                {link.label}
+            </Link>
+        </li>
+    ));
+}
+
 export function MarketingLayoutFooterProductColumn() {
     return (
         <MarketingLayoutFooterLinkColumn title="Product">
-            <li>
-                <Link href="/features" className="hover:text-primary transition-colors">
-                    Features
-                </Link>
-            </li>
-            <li>
-                <Link href="/features/qr-code-reviews" className="hover:text-primary transition-colors">
-                    Review QR Codes
-                </Link>
-            </li>
-            <li>
-                <Link href="/features/nfc-review-stands" className="hover:text-primary transition-colors">
-                    NFC Review Stands
-                </Link>
-            </li>
-            <li>
-                <Link href="/features/ai-replies" className="hover:text-primary transition-colors">
-                    AI Review Replies
-                </Link>
-            </li>
-            <li>
-                <Link href="/features/review-widgets" className="hover:text-primary transition-colors">
-                    Review Widgets
-                </Link>
-            </li>
-            <li>
-                <Link href="/features/ai-visibility" className="hover:text-primary transition-colors">
-                    AI Visibility
-                </Link>
-            </li>
-            <li>
-                <Link href="/pricing" className="hover:text-primary transition-colors">
-                    Pricing
-                </Link>
-            </li>
-            <li>
-                <Link href="/how-it-works" className="hover:text-primary transition-colors">
-                    How It Works
-                </Link>
-            </li>
-            <li>
-                <Link href="/integrations" className="hover:text-primary transition-colors">
-                    Integrations
-                </Link>
-            </li>
-            <li>
-                <Link href="/docs" className="hover:text-primary transition-colors">
-                    Docs
-                </Link>
-            </li>
-            <li>
-                <Link href="/docs/api" className="hover:text-primary transition-colors">
-                    API
-                </Link>
-            </li>
+            <FooterLinks links={PRODUCT_LINKS} />
         </MarketingLayoutFooterLinkColumn>
     );
 }
@@ -66,76 +62,7 @@ export function MarketingLayoutFooterProductColumn() {
 export function MarketingLayoutFooterSolutionsColumn() {
     return (
         <MarketingLayoutFooterLinkColumn title="Solutions">
-            <li>
-                <Link href="/small-business" className="hover:text-primary transition-colors">
-                    Small Business
-                </Link>
-            </li>
-            <li>
-                <Link href="/industries" className="hover:text-primary transition-colors">
-                    By Industry
-                </Link>
-            </li>
-            <li>
-                <Link href="/industries/restaurants" className="hover:text-primary transition-colors">
-                    Restaurants
-                </Link>
-            </li>
-            <li>
-                <Link href="/industries/dental" className="hover:text-primary transition-colors">
-                    Dental
-                </Link>
-            </li>
-            <li>
-                <Link href="/industries/auto-repair" className="hover:text-primary transition-colors">
-                    Auto Repair
-                </Link>
-            </li>
-            <li>
-                <Link href="/industries/salons" className="hover:text-primary transition-colors">
-                    Salons & Spas
-                </Link>
-            </li>
-            <li>
-                <Link href="/industries/home-services" className="hover:text-primary transition-colors">
-                    Home Services
-                </Link>
-            </li>
-            <li>
-                <Link href="/industries/hvac" className="hover:text-primary transition-colors">
-                    HVAC
-                </Link>
-            </li>
-            <li>
-                <Link href="/industries/plumbing" className="hover:text-primary transition-colors">
-                    Plumbing
-                </Link>
-            </li>
-            <li>
-                <Link href="/industries/electricians" className="hover:text-primary transition-colors">
-                    Electricians
-                </Link>
-            </li>
-            <li>
-                <Link href="/industries/hotels" className="hover:text-primary transition-colors">
-                    Hotels
-                </Link>
-            </li>
-            <li>
-                <Link href="/industries/medical" className="hover:text-primary transition-colors">
-                    Medical
-                </Link>
-            </li>
-            <li>
-                <Link href="/industries/fitness" className="hover:text-primary transition-colors">
-                    Fitness & Gyms
-                </Link>
-            </li>
-            <li>
-                <Link href="/compare" className="hover:text-primary transition-colors">
-                    Compare Tools
-                </Link>
-            </li>
+            <FooterLinks links={SOLUTION_LINKS} />
         </MarketingLayoutFooterLinkColumn>
     );
 }
