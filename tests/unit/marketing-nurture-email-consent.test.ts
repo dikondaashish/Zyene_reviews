@@ -19,19 +19,23 @@ const execute = () => run({ event: { data: { email: "customer@example.test" } },
 beforeEach(() => { vi.clearAllMocks(); mocks.send.mockResolvedValue({ sent: true }); });
 describe("marketing nurture recipient controls", () => {
     it("includes the actual subscriber's unsubscribe link in every step", async () => {
-        mocks.lookup.mockResolvedValue({ data: { id: "synthetic-id", unsubscribed_at: null }, error: null });
+        mocks.lookup.mockResolvedValue({ data: { id: "synthetic-id", unsubscribed_at: null, confirmed_at: "2026-10-01" }, error: null });
         await execute();
         expect(mocks.send).toHaveBeenCalledTimes(3);
         for (const [message] of mocks.send.mock.calls) expect(message.html).toContain("/newsletter/unsubscribe?id=synthetic-id");
     });
-    it.each([null, { id: "synthetic-id", unsubscribed_at: "2026-10-10" }])("skips removed or unsubscribed leads", async data => {
+    it.each([
+        null,
+        { id: "synthetic-id", unsubscribed_at: "2026-10-10", confirmed_at: "2026-10-01" },
+        { id: "synthetic-id", unsubscribed_at: null, confirmed_at: null },
+    ])("skips removed, unsubscribed or unconfirmed leads", async data => {
         mocks.lookup.mockResolvedValue({ data, error: null });
         await execute();
         expect(mocks.send).not.toHaveBeenCalled();
     });
     it("checks consent again after each delay", async () => {
-        mocks.lookup.mockResolvedValueOnce({ data: { id: "synthetic-id", unsubscribed_at: null }, error: null })
-            .mockResolvedValue({ data: { id: "synthetic-id", unsubscribed_at: "2026-10-10" }, error: null });
+        mocks.lookup.mockResolvedValueOnce({ data: { id: "synthetic-id", unsubscribed_at: null, confirmed_at: "2026-10-01" }, error: null })
+            .mockResolvedValue({ data: { id: "synthetic-id", unsubscribed_at: "2026-10-10", confirmed_at: "2026-10-01" }, error: null });
         await execute();
         expect(mocks.send).toHaveBeenCalledTimes(1);
     });

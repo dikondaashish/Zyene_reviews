@@ -24,7 +24,7 @@ export function NewsletterSignup({
     className = "",
     submitLabel = "Subscribe",
     subscribedLabel = "Subscribed",
-    successMessage = "You're subscribed. Check your inbox for a confirmation.",
+    successMessage = "Almost done. Check your inbox and confirm your email to subscribe.",
     idleFooter = "No spam. Unsubscribe anytime.",
     placeholder = "your@email.com",
     onSubscribeResult,
@@ -40,6 +40,7 @@ export function NewsletterSignup({
     onSubscribeResult?: (result: { newLead: boolean }) => void;
 }) {
     const [email, setEmail] = useState("");
+    const [website, setWebsite] = useState("");
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
     const [message, setMessage] = useState("");
     const submittingRef = useRef(false);
@@ -56,7 +57,7 @@ export function NewsletterSignup({
             const res = await fetch("/api/marketing/newsletter/subscribe", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: email.trim(), source, ...readUtmCookie() }),
+                body: JSON.stringify({ email: email.trim(), source, website, ...readUtmCookie() }),
             });
             if (!res.ok) {
                 const data = await res.json().catch(() => ({}));
@@ -79,7 +80,18 @@ export function NewsletterSignup({
 
     return (
         <div className={className}>
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <form onSubmit={handleSubmit} className="relative flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                {/* Honeypot: off-screen and skipped by keyboard and screen readers, so only bots fill it. */}
+                <input
+                    name="website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    className="absolute -left-[9999px] size-px opacity-0"
+                />
                 <input
                     name="email"
                     type="email"

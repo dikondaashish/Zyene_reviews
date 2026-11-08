@@ -45,7 +45,9 @@ export async function runMonthlyNewsletter(now = new Date()) {
   const { data, error } = await admin
     .from("marketing_subscribers")
     .select("id, email")
-    .is("unsubscribed_at", null);
+    .is("unsubscribed_at", null)
+    // Double opt-in: pending public-form sign-ups get nothing until confirmed.
+    .not("confirmed_at" as never, "is", null);
 
   if (error) throw new Error("Unable to load newsletter subscribers");
   const subscribers = (data ?? []) as Subscriber[];

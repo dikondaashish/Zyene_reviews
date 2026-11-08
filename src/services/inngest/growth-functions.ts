@@ -125,10 +125,13 @@ export const marketingNurtureWorker = inngest.createFunction(
             }
 
             await step.run(`send-${nurtureStep.key}`, async () => {
-                const { data: subscriber, error } = await createAdminClient().from("marketing_subscribers")
-                    .select("id, unsubscribed_at").eq("email", email.toLowerCase()).maybeSingle();
+                const { data: subscriber, error } = (await createAdminClient().from("marketing_subscribers")
+                    .select("id, unsubscribed_at, confirmed_at" as "id").eq("email", email.toLowerCase()).maybeSingle()) as unknown as {
+                    data: { id: string; unsubscribed_at: string | null; confirmed_at: string | null } | null;
+                    error: unknown;
+                };
                 if (error) throw new Error("Unable to check marketing subscription");
-                if (!subscriber || subscriber.unsubscribed_at) return;
+                if (!subscriber || subscriber.unsubscribed_at || !subscriber.confirmed_at) return;
                 const unsubscribeUrl = `${marketingCanonicalUrl("/newsletter/unsubscribe")}?id=${subscriber.id}`;
                 const { subject, html } = marketingNurtureEmail({
                     email,

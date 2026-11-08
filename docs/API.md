@@ -254,7 +254,7 @@ Unauthenticated or lightly rate-limited:
 | `/api/marketing/chat/demo-book` | `POST {sessionId, start, timeZone, name, email}` → books via Cal.com, saves lead, opens Slack thread; BotID + 3/h per IP |
 | `/api/marketing/chat/feedback` | `POST {sessionId, messageId, rating: 1 \| -1}` → 👍/👎 on a stored reply (own conversation only) |
 | `/api/marketing/chat/agent-messages` | `GET ?sessionId&since` → team (Slack) replies since a time, for reconnect catch-up |
-| `/api/marketing/newsletter/subscribe`, `unsubscribe` | Newsletter |
+| `/api/marketing/newsletter/subscribe`, `confirm`, `unsubscribe` | Newsletter (double opt-in: subscribe is BotID + honeypot + rate limited and only emails a confirmation link; `confirm` is a POST from the button on `/newsletter/confirm`) |
 | `/api/marketing/agency-waitlist` | Agency waitlist |
 | `/api/marketing/book-lead` | Free-guide lead wizard capture: `email`, optional `industry`/`goal` ids, `trigger`, `pagePath` (returns download URL) |
 | `/api/marketing/events/track` | Allowlisted funnel events (template pack, local SEO checklist, exit intent, `lead_wizard_*`) |

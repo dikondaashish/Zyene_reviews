@@ -22,7 +22,8 @@ describe("runMonthlyNewsletter", () => {
   it("does not resend an edition already accepted for a subscriber", async () => {
     const subscribers = {
       select: vi.fn().mockReturnThis(),
-      is: vi
+      is: vi.fn().mockReturnThis(),
+      not: vi
         .fn()
         .mockResolvedValue({
           data: [{ id: "subscriber-1", email: "one@example.com" }],
@@ -59,7 +60,8 @@ describe("runMonthlyNewsletter", () => {
       }));
       const subscribers = {
         select: vi.fn().mockReturnThis(),
-        is: vi.fn().mockResolvedValue({ data: people, error: null }),
+        is: vi.fn().mockReturnThis(),
+        not: vi.fn().mockResolvedValue({ data: people, error: null }),
       };
       const deliveries = {
         upsert: vi.fn().mockResolvedValue({ error: null }),
