@@ -134,7 +134,16 @@ export async function syncYelpReviewsForPlatform(
             reviewsUnavailable,
         };
     } catch (error: unknown) {
-        logger.error({ err: error }, `[Yelp Sync] Error for platform ${platformId}:`);
+        const accountError = error instanceof YelpApiError && error.isAccountError;
+        if (accountError) {
+            // Expired trial or revoked key: every retry fails the same way until the Yelp account is fixed.
+            logger.error(
+                { platformId, status: error.status, code: error.code },
+                "[Yelp Sync] Yelp rejected the API key; renew the Yelp API plan or replace YELP_API_KEY",
+            );
+        } else {
+            logger.error({ err: error }, `[Yelp Sync] Error for platform ${platformId}:`);
+        }
         await admin
             .from("review_platforms")
             .update({
@@ -142,6 +151,9 @@ export async function syncYelpReviewsForPlatform(
                 updated_at: new Date().toISOString(),
             })
             .eq("id", platformId);
+        if (accountError) {
+            return { success: false, total: 0, analyzed: 0, alerts: 0, reviewsUnavailable: false };
+        }
         throw error;
     }
 }

@@ -2,13 +2,18 @@
 
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { isGoogleOAuthConfigured, refreshGoogleToken } from "@/services/google/business-profile";
+import {
+    GoogleTokenRefreshError,
+    isGoogleOAuthConfigured,
+    refreshGoogleToken,
+} from "@/services/google/business-profile";
 import { TOKEN_EXPIRY_BUFFER_MS } from "@/services/google/constants";
 import type { GooglePlatformWithTokens } from "@/types/google-sync";
 import type { AdminClient } from "./helpers";
 import {
     GooglePlatformLookupError,
     GooglePlatformNotFoundError,
+    GoogleTokenRefreshUnavailableError,
 } from "./errors";
 
 export async function getValidGoogleToken(
@@ -129,6 +134,12 @@ async function refreshPlatformAccessToken(
             },
         };
     } catch (error: unknown) {
+        // Google's own outage (still failing after the in-call retry): the token is fine, so leave
+        // sync_status alone and let the job retry. Inngest reports it if every retry fails.
+        if (error instanceof GoogleTokenRefreshError && error.isTransient) {
+            logger.warn({ platformId, status: error.status }, "[Token] Google token endpoint unavailable");
+            throw new GoogleTokenRefreshUnavailableError({ cause: error });
+        }
         logger.error({ err: error }, `[Token] Refresh failed:`);
 
         const errorMsg = error instanceof Error ? error.message : String(error);

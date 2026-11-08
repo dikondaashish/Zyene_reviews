@@ -20,7 +20,7 @@ export {
     isGoogleUnauthorizedError,
 } from "./business-profile-core";
 
-export { isGoogleOAuthConfigured, refreshGoogleToken } from "./business-profile-token";
+export { GoogleTokenRefreshError, isGoogleOAuthConfigured, refreshGoogleToken } from "./business-profile-token";
 
 export {
     FULL_LOCATION_READ_MASK,

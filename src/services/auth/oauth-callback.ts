@@ -10,6 +10,9 @@ import { resolveOAuthInviteParam } from "./oauth-invite";
 import { getAppSiteOrigin } from "@/lib/routing/platform-routes";
 import { consumeAddBusinessOAuth } from "./add-business-oauth-cookie";
 import { canAddBusinessToOrganization } from "./add-business-authorization";
+import { logger } from "@/lib/logger";
+
+const PKCE_VERIFIER_MISSING_PATTERN = /PKCE code verifier not found/i;
 
 export async function handleOAuthCallback(request: Request) {
     try {
@@ -55,9 +58,15 @@ export async function handleOAuthCallback(request: Request) {
                 typeof errMessage === "string"
                     ? errMessage.replace(/external code[^:]*:\s*[^\\s]+/i, "external code: <redacted>")
                     : "No user returned from exchangeCodeForSession";
-            Sentry.captureException(new Error(safeMessage), {
-                tags: { route: "auth-callback", step: "exchangeCodeForSession" },
-            });
+            // Sign-in finished in another browser or after cookies were cleared: the user
+            // just starts again, so it is not a defect worth an alert.
+            if (PKCE_VERIFIER_MISSING_PATTERN.test(safeMessage)) {
+                logger.warn({ step: "exchangeCodeForSession" }, "OAuth callback without PKCE verifier");
+            } else {
+                Sentry.captureException(new Error(safeMessage), {
+                    tags: { route: "auth-callback", step: "exchangeCodeForSession" },
+                });
+            }
             return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
         }
 

@@ -15,6 +15,26 @@ type Delivery = {
 };
 type DeliveryDb = SupabaseClient;
 
+/** Resend allows 10 requests per second per team; stay under it with one batch per second. */
+const SEND_BATCH_SIZE = 8;
+const SEND_BATCH_INTERVAL_MS = 1000;
+
+const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Runs `deliver` over `items` in rate-limited batches instead of all at once. */
+async function inRateLimitedBatches<T, R>(
+  items: T[],
+  deliver: (item: T) => Promise<R>,
+): Promise<R[]> {
+  const results: R[] = [];
+  for (let start = 0; start < items.length; start += SEND_BATCH_SIZE) {
+    if (start > 0) await pause(SEND_BATCH_INTERVAL_MS);
+    const batch = items.slice(start, start + SEND_BATCH_SIZE);
+    results.push(...(await Promise.all(batch.map(deliver))));
+  }
+  return results;
+}
+
 /**
  * Sends one edition at most once per subscriber. The durable delivery row and
  * Resend idempotency key cover a process crash between provider acceptance and
@@ -40,18 +60,16 @@ export async function runMonthlyNewsletter(now = new Date()) {
   const caseStudyLink = marketingCanonicalUrl(
     `/case-studies/${edition.caseStudySlug}`,
   );
-  const outcomes = await Promise.all(
-    subscribers.map((subscriber) =>
-      deliverMonthlyNewsletter(admin, subscriber, {
-        editionKey,
-        monthLabel,
-        productUpdate: edition.productUpdate,
-        tipTitle: edition.tipTitle,
-        tipBody: edition.tipBody,
-        caseStudyLink,
-        caseStudyTitle: edition.caseStudyTitle,
-      }),
-    ),
+  const outcomes = await inRateLimitedBatches(subscribers, (subscriber) =>
+    deliverMonthlyNewsletter(admin, subscriber, {
+      editionKey,
+      monthLabel,
+      productUpdate: edition.productUpdate,
+      tipTitle: edition.tipTitle,
+      tipBody: edition.tipBody,
+      caseStudyLink,
+      caseStudyTitle: edition.caseStudyTitle,
+    }),
   );
 
   const sent = outcomes.filter((outcome) => outcome === "sent").length;
