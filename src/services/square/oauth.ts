@@ -8,12 +8,6 @@ import {
     SQUARE_OAUTH_SCOPES,
 } from "@/services/square/config";
 
-export type SquareOAuthState = {
-    businessId: string;
-    userId: string;
-    nonce: string;
-};
-
 export type SquareTokenResponse = {
     access_token: string;
     refresh_token?: string;
@@ -22,19 +16,8 @@ export type SquareTokenResponse = {
     token_type?: string;
 };
 
-export function encodeSquareOAuthState(state: SquareOAuthState): string {
-    return Buffer.from(JSON.stringify(state)).toString("base64url");
-}
-
-export function decodeSquareOAuthState(raw: string): SquareOAuthState {
-    const parsed = JSON.parse(Buffer.from(raw, "base64url").toString("utf-8")) as SquareOAuthState;
-    if (!parsed?.businessId || !parsed?.userId) {
-        throw new Error("Invalid Square OAuth state");
-    }
-    return parsed;
-}
-
-export function buildSquareAuthorizeUrl(state: SquareOAuthState): string {
+/** `nonce` is the opaque state the provider echoes back; see `@/lib/auth/pos-oauth-state`. */
+export function buildSquareAuthorizeUrl(nonce: string): string {
     const appId = getSquareApplicationId();
     if (!appId) throw new Error("SQUARE_APPLICATION_ID is not configured");
 
@@ -44,7 +27,7 @@ export function buildSquareAuthorizeUrl(state: SquareOAuthState): string {
     const params = new URLSearchParams({
         client_id: appId,
         scope: SQUARE_OAUTH_SCOPES.join(" "),
-        state: encodeSquareOAuthState(state),
+        state: nonce,
     });
 
     if (getSquareEnvironment() === "production") {
