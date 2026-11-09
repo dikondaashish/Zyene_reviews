@@ -1,9 +1,9 @@
 import { emailHtmlToText } from "@/lib/email/html-to-text";
 import { EMAIL_BRAND } from "@/lib/email/email-brand";
+import { reviewRequestFromLine } from "@/lib/email/review-request-from-line";
 import { logger } from "@/lib/logger";
 import { resend } from "@/services/resend/client";
 import { streamFrom, type EmailStream } from "@/services/resend/email-streams";
-import { formatFromAddress } from "@/lib/email/from-header";
 
 interface SendEmailProps {
     to: string | string[];
@@ -56,17 +56,7 @@ function getDefaultFrom(): string {
  *     → "Zyene Reviews <hello@zyenereviews.com>" (or whatever RESEND_FROM is)
  */
 export function buildFromLine(input: { senderName?: string | null; businessName?: string | null }): string {
-    const fallback = getDefaultFrom();
-    const sender = (input.senderName || "").trim();
-    const biz = (input.businessName || "").trim();
-    const display = sender || biz;
-    if (!display) return fallback;
-    const match = fallback.match(/<([^>]+)>/);
-    const mailbox = match ? match[1] : null;
-    if (!mailbox) return fallback;
-    // Sanitize display name (no quotes/angle brackets), then quote it if it has RFC 5322 specials.
-    const safeName = display.replace(/["<>]/g, "").slice(0, 78);
-    return formatFromAddress(safeName, mailbox);
+    return reviewRequestFromLine({ kind: "primary", from: getDefaultFrom() }, input.businessName, input.senderName);
 }
 
 export async function sendEmail({ to, subject, html, text, from, stream, replyTo, headers, unsubscribeUrl, attachments, idempotencyKey }: SendEmailProps) {

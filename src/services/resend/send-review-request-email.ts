@@ -2,17 +2,11 @@ import { logger } from "@/lib/logger";
 import { emailHtmlToText } from "@/lib/email/html-to-text";
 import { REVIEW_REQUEST_EMAIL_HEADERS } from "@/lib/email/review-request-signals";
 import { resendCollectratings } from "./collectratings-client";
+import { reviewRequestFromLine, type ReviewRequestSender } from "@/lib/email/review-request-from-line";
 import { buildFromLine, sendEmail } from "./send-email";
-import { formatFromAddress } from "@/lib/email/from-header";
+import { streamFrom } from "./email-streams";
 
 const DEFAULT_COLLECT_FROM = "CollectRatings <hello@send.collectratings.com>";
-
-/** "Willow Hair Studio" → "willow-hair-studio" (falls back to "hello"). */
-export function mailboxLocalPart(businessName?: string | null): string {
-    const local = (businessName || "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
-        .replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 64).replace(/-+$/, "");
-    return local || "hello";
-}
 
 /**
  * We deliver on the business's behalf, so the sender reads as the business:
@@ -20,14 +14,16 @@ export function mailboxLocalPart(businessName?: string | null): string {
  * the business name when no sender is set. The domain comes from RESEND_COLLECTRATINGS_FROM.
  */
 export function collectratingsFromLine(businessName?: string | null, senderName?: string | null): string {
-    const fallback = process.env.RESEND_COLLECTRATINGS_FROM?.trim() || DEFAULT_COLLECT_FROM;
-    const clean = (value?: string | null) => (value || "").replace(/["<>\r\n]/g, "").trim();
-    const biz = clean(businessName);
-    const sender = clean(senderName);
-    const domain = fallback.match(/<[^@>]+@([^>]+)>/)?.[1];
-    if (!biz || !domain) return fallback;
-    const display = (sender ? `${sender} at ${biz}` : biz).slice(0, 78);
-    return formatFromAddress(display, `${mailboxLocalPart(biz)}@${domain}`);
+    const from = process.env.RESEND_COLLECTRATINGS_FROM?.trim() || DEFAULT_COLLECT_FROM;
+    return reviewRequestFromLine({ kind: "collect", from }, businessName, senderName);
+}
+
+/** The account and From line review requests go out on right now (for the settings preview). */
+export function reviewRequestSender(): ReviewRequestSender {
+    if (process.env.RESEND_COLLECTRATINGS_API_KEY?.trim() && resendCollectratings) {
+        return { kind: "collect", from: process.env.RESEND_COLLECTRATINGS_FROM?.trim() || DEFAULT_COLLECT_FROM };
+    }
+    return { kind: "primary", from: streamFrom("notifications") };
 }
 
 type SendReviewRequestEmailProps = {
