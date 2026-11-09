@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { PastDueBillingAlert } from "@/components/billing/past-due-billing-alert";
+import { apiErrorMessage } from "@/lib/api/api-envelope";
+import { parsePortalResponse } from "@/lib/billing/parse-portal-response";
 
 export interface PastDuePaymentBannerProps {
     planStatus: string | null | undefined;
@@ -35,11 +37,9 @@ export function PastDuePaymentBanner({
         setLoadingPortal(true);
         try {
             const res = await fetch("/api/billing/portal", { method: "POST", credentials: "include" });
-            const data = (await res.json()) as { error?: string; url?: string };
-            if (!res.ok) {
-                throw new Error(typeof data.error === "string" ? data.error : "Failed to open billing portal");
-            }
-            if (data.url) window.location.href = data.url;
+            const data: unknown = await res.json();
+            if (!res.ok) throw new Error(apiErrorMessage(data, "Failed to open billing portal"));
+            window.location.href = parsePortalResponse(data);
         } catch (error: unknown) {
             toast.error(error instanceof Error ? error.message : "Failed to open billing portal");
         } finally {

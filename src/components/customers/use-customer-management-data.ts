@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import type { Customer } from "@/components/customers/customer-table";
@@ -81,9 +81,16 @@ export function useCustomerManagementData(businessId: string, initialCustomers: 
         [businessId, search, tagFilter, loadStats]
     );
 
+    // `initialCustomers` is the server snapshot from page load. Once the user has
+    // searched or filtered, bulk deletes, tags and edits only refetch, so that
+    // snapshot is stale: clearing the filter must refetch, not restore it.
+    const hasFilteredRef = useRef(false);
     useEffect(() => {
         if (search || tagFilter) {
+            hasFilteredRef.current = true;
             void fetchCustomers();
+        } else if (hasFilteredRef.current) {
+            void fetchCustomers({ silent: true });
         } else {
             setCustomers(initialCustomers);
         }

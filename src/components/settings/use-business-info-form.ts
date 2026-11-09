@@ -8,6 +8,7 @@ import { toast } from "sonner";
 
 import type { BusinessSettingsRecord } from "@/types/components";
 import { businessFormSchema, type BusinessFormValues } from "./business-info-form-schema";
+import { apiErrorMessage } from "@/lib/api/api-envelope";
 
 export function useBusinessInfoForm(business: BusinessSettingsRecord) {
     const router = useRouter();
@@ -43,8 +44,8 @@ export function useBusinessInfoForm(business: BusinessSettingsRecord) {
             });
 
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Failed to update business info");
+                const body: unknown = await response.json().catch(() => null);
+                throw new Error(apiErrorMessage(body, "Failed to update business info"));
             }
 
             toast.success("Business information updated");

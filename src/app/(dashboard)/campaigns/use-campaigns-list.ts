@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { toastCampaignStatusError } from "@/components/campaigns/campaign-status-error-toast";
 import type { Campaign } from "./campaigns-list-types";
 
 export function useCampaignsList() {
@@ -36,20 +37,7 @@ export function useCampaignsList() {
                 toast.success(newStatus === "paused" ? "Campaign paused" : campaign.status === "draft" ? "Campaign started" : "Campaign resumed");
                 fetchCampaigns();
             } else {
-                const errorData = await res.json();
-                if (errorData.code === "EMAIL_NOT_VERIFIED") {
-                    toast.error("Email verification required", {
-                        description: "You must verify your email before activating campaigns.",
-                        action: {
-                            label: "Resend Email",
-                            onClick: () => {
-                                /* No-op: resend is handled by the banner flow. */
-                            },
-                        },
-                    });
-                } else {
-                    toast.error(errorData.error || "Failed to update campaign");
-                }
+                toastCampaignStatusError(await res.json().catch(() => null));
             }
         } catch {
             toast.error("Failed to update campaign");

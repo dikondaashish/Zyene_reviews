@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -12,11 +13,17 @@ type ImportState = ReturnType<typeof useGradualImport>;
 export function CampaignGradualImportUpload({ state, campaignActive }: { state: ImportState; campaignActive: boolean }) {
     const { fileName, preview, summary } = state;
     const problems = preview.filter((r) => r.status !== "pending").slice(0, 8);
+    // Clear must empty the native input too, or re-picking the same CSV fires no change event.
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const clear = () => {
+        state.reset();
+        if (fileInputRef.current) fileInputRef.current.value = "";
+    };
     return (
         <div className="space-y-4">
             <div className="space-y-2">
                 <Label htmlFor="gradual-import-file">CSV file</Label>
-                <Input id="gradual-import-file" type="file" accept=".csv,text/csv"
+                <Input ref={fileInputRef} id="gradual-import-file" type="file" accept=".csv,text/csv"
                     onChange={(e) => { const f = e.target.files?.[0]; if (f) state.parseFile(f); }} />
                 <p className="text-xs text-muted-foreground">Columns: name, phone and/or email. Up to 5,000 rows.</p>
             </div>
@@ -53,7 +60,7 @@ export function CampaignGradualImportUpload({ state, campaignActive }: { state: 
                     {!campaignActive && <p className="text-xs text-warning-foreground">Enrollment starts when this campaign is active.</p>}
                     <div className="flex gap-2">
                         <Button onClick={state.submit} disabled={!state.consent || summary.valid === 0 || state.submitting}>Start gradual import</Button>
-                        <Button variant="ghost" onClick={state.reset}>Clear</Button>
+                        <Button variant="ghost" onClick={clear}>Clear</Button>
                     </div>
                 </div>
             )}

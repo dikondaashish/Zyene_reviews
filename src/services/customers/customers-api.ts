@@ -13,7 +13,8 @@ import { patchCustomerRecord } from "@/services/customers/patch-customer-record"
 const createCustomerSchema = z.object({
     businessId: z.string().uuid(),
     firstName: z.string().max(100).optional(),
-    lastName: z.string().max(100).optional(),
+    /** One-word names have no last name; `null` is treated as missing. */
+    lastName: z.string().max(100).nullish().transform((v) => v ?? undefined),
     email: z.string().email().max(255).optional(),
     phone: z.string().max(30).optional(),
     /** Clients sometimes send `null`; treat as missing (empty array). */
@@ -33,9 +34,10 @@ const patchCustomerSchema = z.object({
     id: z.string().uuid(),
     businessId: z.string().uuid(),
     firstName: z.string().max(100).optional(),
-    lastName: z.string().max(100).optional(),
+    /** `null` clears the last name, e.g. renaming "John Smith" to "John". */
+    lastName: z.string().max(100).nullable().optional(),
     first_name: z.string().max(100).optional(),
-    last_name: z.string().max(100).optional(),
+    last_name: z.string().max(100).nullable().optional(),
     email: z.string().email().max(255).optional(),
     phone: z.string().max(30).optional(),
     tags: z.array(z.string().max(50)).optional(),

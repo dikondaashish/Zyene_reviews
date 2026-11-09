@@ -24,13 +24,16 @@ export async function fetchCampaignDetail(
     }
 }
 
-export async function patchCampaignStatus(campaignId: string, newStatus: string) {
+export async function patchCampaignStatus(
+    campaignId: string, newStatus: string,
+): Promise<{ ok: true } | { ok: false; body: { error?: string; code?: string } | null }> {
     const res = await fetch(`/api/campaigns/${campaignId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
     });
-    return res.ok;
+    if (res.ok) return { ok: true };
+    return { ok: false, body: await res.json().catch(() => null) };
 }
 
 export async function sendCampaignContacts(campaignId: string, contacts: { name?: string; phone?: string; email?: string }[]) {

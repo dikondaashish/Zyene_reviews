@@ -35,7 +35,7 @@ export function useAddCustomerModal({
         try {
             const nameParts = values.fullName.trim().split(/\s+/);
             const firstName = nameParts[0];
-            const lastName = nameParts.slice(1).join(" ") || null;
+            const lastName = nameParts.slice(1).join(" ") || undefined;
 
             const response = await fetch("/api/customers", {
                 method: "POST",
