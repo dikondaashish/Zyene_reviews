@@ -1,8 +1,9 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
 import { Step2Form } from "@/components/onboarding/step2-form";
 import type { OnboardingBusiness } from "./onboarding-types";
+import { OnboardingLoadError } from "./onboarding-loading-states";
+import { WORKSPACE_MISSING_MESSAGE } from "./load-onboarding-workspace";
 import type { GoogleOAuthAuthorization } from "@/types/components";
 
 type OnboardingStepTwoSectionProps = {
@@ -31,11 +32,9 @@ export function OnboardingStepTwoSection({
     handleBusinessUpdate,
 }: OnboardingStepTwoSectionProps) {
     if (!business) {
-        return (
-            <div className="flex items-center justify-center py-16">
-                <Loader2 className="animate-spin text-primary size-8" />
-            </div>
-        );
+        // The page only renders once the business has loaded, so a missing one is a real
+        // problem (not a pending load): say so and offer a way out instead of spinning.
+        return <OnboardingLoadError message={WORKSPACE_MISSING_MESSAGE} />;
     }
 
     return (

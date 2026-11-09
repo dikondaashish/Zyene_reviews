@@ -5,10 +5,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useGoogleSyncRemoteState } from "@/hooks/use-google-sync-remote-state";
 import { useGoogleCardForceSyncVisibility, useGoogleCardRunningRefresh } from "@/components/integrations/use-google-integration-card-effects";
-import {
-    startGoogleOAuthConnect,
-    startGoogleSearchConsoleConnect,
-} from "@/components/integrations/google-card-oauth-connect";
+import { startGoogleOAuthConnect, startGoogleSearchConsoleConnect } from "@/components/integrations/google-card-oauth-connect";
+import { useGoogleOAuthResultToast } from "@/components/integrations/use-google-oauth-result-toast";
 import { postGoogleReviewSync } from "@/components/integrations/google-card-sync-api";
 import type { GoogleCardProps } from "@/components/integrations/google-card-types";
 import { useGoogleCardLocationPicker } from "@/components/integrations/use-google-card-location-picker";
@@ -64,6 +62,7 @@ export function useGoogleIntegrationCard({
     }, []);
 
     useGoogleCardForceSyncVisibility(isSyncBusy, isStalled, setShowForceSync);
+    useGoogleOAuthResultToast();
 
     const isConnected = !!platform;
     const isError = googleAuthNeedsReconnect(platform?.sync_status);
