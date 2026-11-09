@@ -111,7 +111,8 @@ export function useBrandingLogoCrop({
             }
             toast.success("Logo removed");
             router.refresh();
-        } catch {
+        } catch (error: unknown) {
+            toast.error(error instanceof Error && error.message ? error.message : "Failed to remove logo. Please try again.");
         }
     };
 

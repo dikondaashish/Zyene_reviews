@@ -4,6 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { LodgingPatches } from "@/services/google/lodging-merge";
 import type { GoogleLodgingJson } from "@/components/settings/google-lodging-types";
+import { apiData, apiErrorMessage } from "@/lib/api/api-envelope";
+
+type LodgingPayload = { available?: boolean; lodging?: GoogleLodgingJson | null; healthScore?: number };
 
 export function useGoogleLodgingPanel(businessId: string) {
     const [loading, setLoading] = useState(true);
@@ -19,8 +22,9 @@ export function useGoogleLodgingPanel(businessId: string) {
         setLoading(true);
         try {
             const res = await fetch(`/api/google/lodging?businessId=${encodeURIComponent(businessId)}`);
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || "Failed to load");
+            const body: unknown = await res.json();
+            if (!res.ok) throw new Error(apiErrorMessage(body, "Failed to load"));
+            const data = apiData<LodgingPayload>(body) ?? {};
             if (!data.available) {
                 setAvailable(false);
                 setLodging(null);
@@ -28,7 +32,7 @@ export function useGoogleLodgingPanel(businessId: string) {
                 return;
             }
             setAvailable(true);
-            setLodging(data.lodging);
+            setLodging(data.lodging ?? null);
             setHealthScore(data.healthScore ?? 0);
             setTabsVersion((x) => x + 1);
         } catch (e: unknown) {
@@ -51,10 +55,12 @@ export function useGoogleLodgingPanel(businessId: string) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ businessId, patches }),
             });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || "Save failed");
+            const body: unknown = await res.json();
+            if (!res.ok) throw new Error(apiErrorMessage(body, "Save failed"));
+            const data = apiData<LodgingPayload>(body);
+            if (!data?.lodging) throw new Error("Google did not return the updated lodging details");
             toast.success("Lodging updated on Google");
-            setLodging((data.lodging as GoogleLodgingJson) || null);
+            setLodging(data.lodging);
             if (typeof data.healthScore === "number") setHealthScore(data.healthScore);
             setTabsVersion((x) => x + 1);
         } catch (e: unknown) {

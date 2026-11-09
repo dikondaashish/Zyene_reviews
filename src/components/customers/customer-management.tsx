@@ -9,6 +9,7 @@ import { CustomerManagementFilterToolbar } from "@/components/customers/customer
 import { CustomerManagementListRegion } from "@/components/customers/customer-management-list-region";
 import { CustomerManagementDialogs } from "@/components/customers/customer-management-dialogs";
 import { BulkActionBar } from "@/components/customers/bulk-action-bar";
+import { BulkAddTagDialog } from "@/components/customers/bulk-add-tag-dialog";
 
 interface CustomerManagementProps {
     businessId: string;
@@ -19,6 +20,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
     const cm = useCustomerManagement(businessId, initialCustomers);
     // Bumped by the bulk bar's Clear so the table unticks its checkboxes too, not just the parent list.
     const [clearSignal, setClearSignal] = useState(0);
+    const [addTagOpen, setAddTagOpen] = useState(false);
 
     return (
         <div className="min-w-0 animate-in fade-in overflow-x-hidden duration-500">
@@ -51,7 +53,7 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                     }}
                     onDelete={() => cm.setBulkDeleteOpen(true)}
                     onSendRequests={cm.onBulkSendCampaign}
-                    onAddTag={() => void cm.handleBulkAction("tag", { tags: ["VIP"], mode: "add" })}
+                    onAddTag={() => setAddTagOpen(true)}
                     sendRequestsBlocked={cm.bulkSendBlocked}
                     sendRequestsBlockedReason="Selected contacts are opted out of review requests."
                 />
@@ -79,6 +81,14 @@ export function CustomerManagement({ businessId, initialCustomers }: CustomerMan
                 onSelectionChange={cm.setSelectedIds}
                 onCustomersMerged={cm.handleCustomersMerged}
                 clearSelectionSignal={clearSignal}
+            />
+
+            <BulkAddTagDialog
+                open={addTagOpen}
+                onOpenChange={setAddTagOpen}
+                selectedCount={cm.selectedIds.length}
+                existingTags={cm.allTagsForFilter}
+                onConfirm={(tags) => void cm.handleBulkAction("tag", { tags, mode: "add" })}
             />
 
             <CustomerManagementDialogs
