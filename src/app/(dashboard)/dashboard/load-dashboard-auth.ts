@@ -15,6 +15,7 @@ import type {
     BusinessExtended,
     ReviewPlatformRow,
 } from "./types";
+import { shouldUseDashboardDemoData } from "./dashboard-demo-mode";
 
 export type DashboardAuthContext = {
     supabase: Awaited<ReturnType<typeof createClient>>;
@@ -78,16 +79,21 @@ export async function loadDashboardAuth(): Promise<DashboardAuthContext> {
         ? await getGoogleQaUnavailableForActiveBusiness(business.id)
         : false;
 
-    const useDemoData = !isGoogleConnected;
-
-    const showUnansweredQaCard =
-        (isGoogleConnected || useDemoData) && (!isGoogleConnected || !googleQaUnavailable);
-
     let visibleReviewRollup: VisibleReviewRollup | null = null;
-    if (business.id && !useDemoData) {
+    if (business.id) {
         const rollupMap = await fetchVisibleReviewRollupsByBusinessIds(supabase, [business.id]);
         visibleReviewRollup = rollupMap.get(business.id) ?? null;
     }
+    // Real data for any business with a platform (Google in any state, Yelp, Facebook) or reviews.
+    const useDemoData = shouldUseDashboardDemoData({
+        businessId: business.id,
+        reviewPlatforms: business.review_platforms,
+        totalReviews: business.total_reviews,
+        visibleReviewRollup,
+    });
+
+    const showUnansweredQaCard =
+        (isGoogleConnected || useDemoData) && (!isGoogleConnected || !googleQaUnavailable);
 
     return {
         supabase,

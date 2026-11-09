@@ -4,10 +4,14 @@ import { getMonthlyNewsletterEdition } from "@/lib/campaign-content/monthly-news
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { logger } from "@/lib/logger";
 import { marketingCanonicalUrl } from "@/lib/seo/marketing-site-url";
+import {
+  loadActiveNewsletterSubscribers,
+  type NewsletterSubscriber,
+} from "@/services/cron/newsletter-subscribers";
 import { sendEmail } from "@/services/resend/send-email";
 import { monthlyNewsletterEmail } from "@/services/resend/templates/growth-marketing-emails";
 
-type Subscriber = { id: string; email: string };
+type Subscriber = NewsletterSubscriber;
 type Delivery = {
   id: string;
   status: "pending" | "sending" | "sent" | "failed";
@@ -42,15 +46,7 @@ async function inRateLimitedBatches<T, R>(
  */
 export async function runMonthlyNewsletter(now = new Date()) {
   const admin = createAdminClient();
-  const { data, error } = await admin
-    .from("marketing_subscribers")
-    .select("id, email")
-    .is("unsubscribed_at", null)
-    // Double opt-in: pending public-form sign-ups get nothing until confirmed.
-    .not("confirmed_at" as never, "is", null);
-
-  if (error) throw new Error("Unable to load newsletter subscribers");
-  const subscribers = (data ?? []) as Subscriber[];
+  const subscribers = await loadActiveNewsletterSubscribers(admin);
   if (subscribers.length === 0) return { sent: 0, failed: 0, total: 0 };
 
   const editionKey = now.toISOString().slice(0, 7);

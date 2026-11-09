@@ -1,9 +1,9 @@
 import { logger } from "@/lib/logger";
 import {
-    fetchCompetitorMetricsFromGoogle,
     fetchCompetitorPlaceEnrichment,
     competitorEnrichmentToSnapshotMetadata,
 } from "@/services/competitors/external-metrics";
+import { fetchCompetitorMetricsOutcome } from "@/services/competitors/live-metrics-outcome";
 import { sameUtcDay } from "./competitor-watch-helpers";
 import type { CompetitorWatchScanState } from "./competitor-watch-types";
 
@@ -16,6 +16,25 @@ export type CompetitorWatchRowInput = {
     google_url?: string | null;
 };
 
+/**
+ * Competitors whose live Google Places read failed (or no key is configured) in a scan.
+ * A healthy "no match" is not counted: Google answered, there is just no listing.
+ * Kept beside the scan state rather than in it so the shared state type stays as-is.
+ * A scan with unavailable rows must not be logged as "success": the page would show
+ * "Updated from Google" while it is really showing stored numbers.
+ */
+const placesUnavailableByScan = new WeakMap<CompetitorWatchScanState, Set<string>>();
+
+export function placesUnavailableCompetitorIds(state: CompetitorWatchScanState): string[] {
+    return [...(placesUnavailableByScan.get(state) ?? [])];
+}
+
+function markPlacesUnavailable(state: CompetitorWatchScanState, competitorId: string): void {
+    const ids = placesUnavailableByScan.get(state) ?? new Set<string>();
+    ids.add(competitorId);
+    placesUnavailableByScan.set(state, ids);
+}
+
 export async function syncCompetitorWatchRowMetrics(
     state: CompetitorWatchScanState,
     competitor: CompetitorWatchRowInput,
@@ -24,10 +43,12 @@ export async function syncCompetitorWatchRowMetrics(
     let currRating = Number(competitor.average_rating || 0);
     let currReviews = Number(competitor.total_reviews || 0);
 
-    const liveMetrics = await fetchCompetitorMetricsFromGoogle({
+    const outcome = await fetchCompetitorMetricsOutcome({
         name: competitor.name,
         googleUrl: competitor.google_url ?? null,
     });
+    if (outcome.kind === "unavailable") markPlacesUnavailable(state, competitor.id);
+    const liveMetrics = outcome.kind === "ok" ? outcome.metrics : null;
     if (liveMetrics) {
         currRating = Number(liveMetrics.averageRating || 0);
         currReviews = Number(liveMetrics.totalReviews || 0);

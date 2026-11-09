@@ -1,93 +1,64 @@
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 import { pingCompetitorWatchHeartbeat } from "@/lib/monitoring/competitor-watch-heartbeat";
-import { finalizeCompetitorWatchRun } from "./competitor-watch-finish";
-import { loadCompetitorWatchScanContext } from "./competitor-watch-load";
-import { processCompetitorWatchRow } from "./competitor-watch-process-row";
+import { inngest } from "@/services/inngest/client";
+import { COMPETITOR_WATCH_BUSINESS_EVENT } from "./competitor-watch-business";
 
-export async function executeCompetitorWatchCron(_request: Request) {
+/** Inngest accepts batches, but keep each send request well under its payload limit. */
+const SEND_CHUNK = 500;
+
+/**
+ * Daily Competitor Watch fan-out. Scanning every competitor of every tenant in this
+ * one request used to time out once there were a few hundred competitors, losing the
+ * whole day for everyone. Now each business is its own Inngest run that writes its
+ * results as soon as it finishes; this request only lists businesses and dispatches.
+ *
+ * Event ids are `cron:competitor-watch:<day>:<businessId>`, so a rerun of the same
+ * day (cron retry, manual trigger) is deduplicated by Inngest and never scans or
+ * emails a business twice.
+ *
+ * Success heartbeats come from the per-business worker once a scan really finishes;
+ * accepting events proves nothing, so this request only pings failure (or success when
+ * there is nothing to scan).
+ */
+export async function executeCompetitorWatchCron(occurrenceKey: string): Promise<Response> {
     const admin = createAdminClient();
-    const now = new Date();
-    const runStartedAt = now.toISOString();
-    const runId = crypto.randomUUID();
-    let lockAcquired = false;
-    let processedBusinessIds: string[] = [];
-
     try {
-        const { data: lockResult, error: lockErr } = await admin.rpc("acquire_competitor_watch_lock");
-        if (lockErr) {
-            logger.error({ err: lockErr }, "[cron/competitor-watch] lock acquire failed:");
+        const { data: rows, error } = await fetchAllReviewRowsPaginated<{ business_id: string }>(1000, (from, to) =>
+            admin
+                .from("competitors")
+                .select("business_id")
+                .order("id", { ascending: true })
+                .range(from, to),
+        );
+        if (error) {
+            logger.error({ err: error }, "[cron/competitor-watch] competitors fetch failed:");
             await pingCompetitorWatchHeartbeat(false);
-            return NextResponse.json({ error: "Lock acquisition failed" }, { status: 500 });
+            return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
         }
-        if (!lockResult) {
-            return NextResponse.json(
-                { success: true, skipped: true, reason: "already_running" },
-                { status: 200 },
+
+        const businessIds = Array.from(new Set(rows.map((r) => r.business_id).filter(Boolean)));
+        if (businessIds.length === 0) {
+            await pingCompetitorWatchHeartbeat(true);
+            return NextResponse.json({ success: true, dispatched: 0, message: "No competitors to process" });
+        }
+
+        for (let i = 0; i < businessIds.length; i += SEND_CHUNK) {
+            await inngest.send(
+                businessIds.slice(i, i + SEND_CHUNK).map((businessId) => ({
+                    id: `cron:competitor-watch:${occurrenceKey}:${businessId}`,
+                    name: COMPETITOR_WATCH_BUSINESS_EVENT,
+                    data: { businessId, occurrenceKey },
+                })),
             );
         }
-        lockAcquired = true;
 
-        const loaded = await loadCompetitorWatchScanContext(admin, now);
-        if (loaded.kind === "error" || loaded.kind === "empty") {
-            return loaded.response;
-        }
-
-        const { competitors, scanState } = loaded;
-        processedBusinessIds = loaded.processedBusinessIds;
-
-        for (const competitor of competitors) {
-            await processCompetitorWatchRow(scanState, competitor);
-        }
-
-        return finalizeCompetitorWatchRun({
-            admin,
-            now,
-            runId,
-            runStartedAt,
-            competitors,
-            processedBusinessIds,
-            snapshotsToInsert: scanState.snapshotsToInsert,
-            eventsToInsert: scanState.eventsToInsert,
-            appEventsToInsert: scanState.appEventsToInsert,
-            alertEmailQueue: scanState.alertEmailQueue,
-            insightInputByCompetitor: scanState.insightInputByCompetitor,
-            businessExternalUpdates: scanState.businessExternalUpdates,
-            externalUpdates: scanState.externalUpdates,
-        });
+        return NextResponse.json({ success: true, dispatched: businessIds.length });
     } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : "Internal server error";
-        logger.error({ err: error }, "[cron/competitor-watch] unexpected error:");
-        if (processedBusinessIds.length > 0) {
-            const failureRows = processedBusinessIds.map((businessId) => ({
-                run_id: runId,
-                business_id: businessId,
-                status: "failed",
-                scanned: 0,
-                external_updates: 0,
-                snapshots_created: 0,
-                events_created: 0,
-                insights_created: 0,
-                error_message: message.slice(0, 500),
-                started_at: runStartedAt,
-                finished_at: new Date().toISOString(),
-            }));
-            const { error: failInsertErr } = await admin.from("competitor_watch_runs").insert(
-                failureRows,
-            );
-            if (failInsertErr) {
-                logger.error({ err: failInsertErr }, "[cron/competitor-watch] failure run log insert failed:");
-            }
-        }
+        logger.error({ err: error }, "[cron/competitor-watch] fan-out failed:");
         await pingCompetitorWatchHeartbeat(false);
-        return NextResponse.json({ error: message }, { status: 500 });
-    } finally {
-        if (lockAcquired) {
-            const { error: unlockErr } = await admin.rpc("release_competitor_watch_lock");
-            if (unlockErr) {
-                logger.error({ err: unlockErr }, "[cron/competitor-watch] lock release failed:");
-            }
-        }
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

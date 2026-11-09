@@ -1,12 +1,8 @@
-import { logger } from "@/lib/logger";
-import { NextResponse } from "next/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { pingCompetitorWatchHeartbeat } from "@/lib/monitoring/competitor-watch-heartbeat";
+import { fetchAllReviewRowsPaginated } from "@/lib/reviews/fetch-reviews-paginated";
 import { DEFAULT_RATING_ALERT_DELTA, DEFAULT_REVIEW_SPIKE_THRESHOLD } from "./competitor-watch-helpers";
+import { loadCompetitorSnapshotHistory } from "./competitor-watch-snapshots";
 import type { CompetitorWatchScanState } from "./competitor-watch-types";
-
-/** About two weeks of daily snapshots: enough to find the other side of a flip-flopping count. */
-const RECENT_SNAPSHOTS_FOR_ALERTS = 14;
 
 export type CompetitorRow = {
     id: string;
@@ -18,151 +14,67 @@ export type CompetitorRow = {
 };
 
 export type CompetitorWatchLoadResult =
-    | { kind: "error"; response: NextResponse }
-    | { kind: "empty"; response: NextResponse }
-    | {
-          kind: "ready";
-          competitors: CompetitorRow[];
-          processedBusinessIds: string[];
-          scanState: CompetitorWatchScanState;
-      };
+    | { kind: "empty" }
+    | { kind: "ready"; competitors: CompetitorRow[]; scanState: CompetitorWatchScanState };
 
+/**
+ * Everything one business's Competitor Watch scan needs. Scoped to a single business
+ * (one Inngest run each), so no read spans every tenant. Throws on a read error so the
+ * Inngest step retries instead of scanning against a missing baseline.
+ */
 export async function loadCompetitorWatchScanContext(
     admin: SupabaseClient,
     now: Date,
+    businessId: string,
 ): Promise<CompetitorWatchLoadResult> {
-    const { data: competitors, error: competitorsErr } = await admin
-        .from("competitors")
-        .select("id, business_id, name, google_url, average_rating, total_reviews")
-        .order("created_at", { ascending: false });
+    const { data: competitors, error: competitorsErr } = await fetchAllReviewRowsPaginated<CompetitorRow>(
+        1000,
+        (from, to) =>
+            admin
+                .from("competitors")
+                .select("id, business_id, name, google_url, average_rating, total_reviews")
+                .eq("business_id", businessId)
+                .order("created_at", { ascending: false })
+                .order("id", { ascending: true })
+                .range(from, to),
+    );
+    if (competitorsErr) throw new Error(`competitors fetch failed: ${competitorsErr.message}`);
+    if (competitors.length === 0) return { kind: "empty" };
 
-    if (competitorsErr) {
-        logger.error({ err: competitorsErr }, "[cron/competitor-watch] competitors fetch failed:");
-        await pingCompetitorWatchHeartbeat(false);
-        return {
-            kind: "error",
-            response: NextResponse.json({ error: competitorsErr.message }, { status: 500 }),
-        };
-    }
-
-    if (!competitors || competitors.length === 0) {
-        await pingCompetitorWatchHeartbeat(true);
-        return {
-            kind: "empty",
-            response: NextResponse.json({
-                success: true,
-                runId: crypto.randomUUID(),
-                scanned: 0,
-                externalUpdates: 0,
-                snapshotsCreated: 0,
-                eventsCreated: 0,
-                insightsCreated: 0,
-                message: "No competitors to process",
-            }),
-        };
-    }
-
-    const processedBusinessIds = Array.from(new Set(competitors.map((c) => c.business_id)));
-
-    const { data: watchSettingsRows } = await admin
+    const { data: settingsRow, error: settingsErr } = await admin
         .from("competitor_watch_settings")
         .select("business_id, rating_alert_delta, review_spike_threshold, email_alerts_enabled")
-        .in("business_id", processedBusinessIds);
-    const settingsByBusiness = new Map<
-        string,
-        { rating_alert_delta: number; review_spike_threshold: number; email_alerts_enabled: boolean }
-    >();
-    const alertEmailQueue: Array<{
-        businessId: string;
-        title: string;
-        summary: string;
-        eventType: string;
-    }> = [];
-    for (const row of (watchSettingsRows || []) as Array<{
-        business_id: string;
-        rating_alert_delta: number;
-        review_spike_threshold: number;
-        email_alerts_enabled?: boolean | null;
-    }>) {
-        settingsByBusiness.set(row.business_id, {
+        .eq("business_id", businessId)
+        .maybeSingle();
+    if (settingsErr) throw new Error(`competitor watch settings fetch failed: ${settingsErr.message}`);
+
+    const settingsByBusiness: CompetitorWatchScanState["settingsByBusiness"] = new Map();
+    if (settingsRow) {
+        const row = settingsRow as {
+            rating_alert_delta: number | null;
+            review_spike_threshold: number | null;
+            email_alerts_enabled?: boolean | null;
+        };
+        settingsByBusiness.set(businessId, {
             rating_alert_delta: Number(row.rating_alert_delta ?? DEFAULT_RATING_ALERT_DELTA),
             review_spike_threshold: Number(row.review_spike_threshold ?? DEFAULT_REVIEW_SPIKE_THRESHOLD),
             email_alerts_enabled: row.email_alerts_enabled !== false,
         });
     }
 
-    const { data: businessOrgRows } = await admin
+    const { data: businessRow } = await admin
         .from("businesses")
         .select("id, organization_id")
-        .in("id", processedBusinessIds);
+        .eq("id", businessId)
+        .maybeSingle();
     const orgByBusiness = new Map<string, string>();
-    for (const row of businessOrgRows || []) {
-        if (row.organization_id) orgByBusiness.set(row.id, row.organization_id);
-    }
+    const orgId = (businessRow as { organization_id?: string | null } | null)?.organization_id;
+    if (orgId) orgByBusiness.set(businessId, orgId);
 
-    const competitorIds = competitors.map((c) => c.id);
-    const { data: existingSnapshots, error: snapshotsErr } = await admin
-        .from("competitor_snapshots")
-        .select("id, competitor_id, captured_at, average_rating, total_reviews, metadata")
-        .in("competitor_id", competitorIds)
-        .order("captured_at", { ascending: false });
-
-    if (snapshotsErr) {
-        logger.error({ err: snapshotsErr }, "[cron/competitor-watch] snapshots fetch failed:");
-        await pingCompetitorWatchHeartbeat(false);
-        return {
-            kind: "error",
-            response: NextResponse.json({ error: snapshotsErr.message }, { status: 500 }),
-        };
-    }
-
-    const latestByCompetitor = new Map<
-        string,
-        CompetitorWatchScanState["latestByCompetitor"] extends Map<string, infer V> ? V : never
-    >();
-    const recentByCompetitor: CompetitorWatchScanState["recentByCompetitor"] = new Map();
-    for (const row of (existingSnapshots || []) as Array<{
-        id: string;
-        competitor_id: string;
-        captured_at: string;
-        average_rating: number;
-        total_reviews: number;
-        metadata: Record<string, unknown> | null;
-    }>) {
-        const recent = recentByCompetitor.get(row.competitor_id) ?? [];
-        if (recent.length < RECENT_SNAPSHOTS_FOR_ALERTS) {
-            recent.push({ average_rating: row.average_rating, total_reviews: row.total_reviews });
-            recentByCompetitor.set(row.competitor_id, recent);
-        }
-        if (!latestByCompetitor.has(row.competitor_id)) {
-            const placeId = row.metadata?.provider_place_id;
-            latestByCompetitor.set(row.competitor_id, {
-                id: row.id,
-                competitor_id: row.competitor_id,
-                captured_at: row.captured_at,
-                average_rating: row.average_rating,
-                total_reviews: row.total_reviews,
-                provider_place_id: typeof placeId === "string" ? placeId : null,
-            });
-        }
-    }
-
-    const snapshotsToInsert: CompetitorWatchScanState["snapshotsToInsert"] = [];
-    const eventsToInsert: CompetitorWatchScanState["eventsToInsert"] = [];
-    const appEventsToInsert: CompetitorWatchScanState["appEventsToInsert"] = [];
-    const insightInputByCompetitor = new Map<
-        string,
-        {
-            competitorName: string;
-            businessId: string;
-            ratingNow: number;
-            reviewsNow: number;
-            ratingDelta: number;
-            reviewsDelta: number;
-            events: Array<{ title: string; summary?: string | null; delta?: number | null }>;
-        }
-    >();
-    const businessExternalUpdates = new Map<string, number>();
+    const { latestByCompetitor, recentByCompetitor } = await loadCompetitorSnapshotHistory(
+        admin,
+        competitors.map((c) => c.id),
+    );
 
     const scanState: CompetitorWatchScanState = {
         admin,
@@ -171,19 +83,14 @@ export async function loadCompetitorWatchScanContext(
         orgByBusiness,
         latestByCompetitor,
         recentByCompetitor,
-        snapshotsToInsert,
-        eventsToInsert,
-        appEventsToInsert,
-        alertEmailQueue,
-        insightInputByCompetitor,
-        businessExternalUpdates,
+        snapshotsToInsert: [],
+        eventsToInsert: [],
+        appEventsToInsert: [],
+        alertEmailQueue: [],
+        insightInputByCompetitor: new Map(),
+        businessExternalUpdates: new Map(),
         externalUpdates: 0,
     };
 
-    return {
-        kind: "ready",
-        competitors: competitors as CompetitorRow[],
-        processedBusinessIds,
-        scanState,
-    };
+    return { kind: "ready", competitors, scanState };
 }

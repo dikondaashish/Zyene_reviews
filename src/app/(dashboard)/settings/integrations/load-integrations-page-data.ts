@@ -95,6 +95,7 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
                 .from("clover_connections")
                 .select("merchant_id, environment, connected_at")
                 .eq("business_id", business.id)
+                .is("disconnected_at", null)
                 .maybeSingle(),
             supabase
                 .from("square_connections")

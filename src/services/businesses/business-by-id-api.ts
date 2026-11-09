@@ -12,6 +12,9 @@ import {
     resolveUniqueSlug,
 } from "./business-patch-guards";
 
+/** Org roles that may archive a business; mirrors add-business authorization and businesses_update RLS. */
+const BUSINESS_DELETE_ROLES = ["owner", "admin", "manager", "ORG_OWNER", "ORG_ADMIN", "ORG_MANAGER"];
+
 /** The business list is cached per user in Redis; drop it after any mutation. */
 async function invalidateBusinessCache(userId: string): Promise<void> {
     try {
@@ -92,11 +95,13 @@ export async function deleteBusiness(
         const { supabase, user } = await requireUser();
         const { id } = await params;
 
-        // Verify user belongs to org that owns this business.
+        // Only an active org owner/admin/manager of the org that owns this business may archive it.
         const { data: membership, error: membError } = await supabase
             .from("organization_members")
             .select("organization_id, organizations!inner(businesses!inner(id))")
             .eq("user_id", user.id)
+            .eq("status", "active")
+            .in("role", BUSINESS_DELETE_ROLES)
             .eq("organizations.businesses.id", id)
             .maybeSingle();
 
@@ -125,16 +130,24 @@ export async function deleteBusiness(
             });
         }
 
-        const { error: archiveErr } = await supabase
+        const { data: archived, error: archiveErr } = await supabase
             .from("businesses")
             .update({ status: "archived", updated_at: new Date().toISOString() })
-            .eq("id", id);
+            .eq("id", id)
+            .select("id");
 
         if (archiveErr) {
             throw new ApiRouteError("Failed to delete business", {
                 status: 500,
                 code: "BUSINESS_ARCHIVE_FAILED",
                 details: archiveErr.message,
+            });
+        }
+        // RLS silently matches zero rows when the user cannot manage this business.
+        if (!archived || archived.length === 0) {
+            throw new ApiRouteError("Only owners, admins and managers can delete this business", {
+                status: 403,
+                code: "BUSINESS_DELETE_FORBIDDEN",
             });
         }
 

@@ -3,6 +3,7 @@ import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { STEP3_CATEGORIES } from "@/components/onboarding/step3-form-categories";
+import { slugToGenerateForBusiness } from "@/services/onboarding/onboarding-business-slug";
 
 const INDUSTRY_TILES = new Set<string>(STEP3_CATEGORIES.map((c) => c.value));
 
@@ -18,10 +19,8 @@ export async function updateBusinessAndLocation(
     if (!user) {
       return { success: false, error: "You are not authenticated." };
     }
-    const slug = data.businessName
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
+    // Only replaces a missing or signup-placeholder slug; a custom review link from step 3 is kept.
+    const slug = await slugToGenerateForBusiness(supabase, businessId, data.businessName);
     const businessUpdate = {
       name: data.businessName,
       address_line1: data.address || null,
@@ -51,7 +50,7 @@ export async function updateBusinessAndLocation(
       return { success: false, error: "Failed to update business." };
     }
     revalidatePath("/onboarding");
-    // The review link comes from the name, so the next step can show (and let them change) it.
+    // The saved review link, so the next step can show (and let them change) it.
     return { success: true, slug: (saved?.[0]?.slug as string | undefined) ?? null };
   } catch (error: unknown) {
     logger.error({ err: error }, "updateBusinessAndLocation:");
