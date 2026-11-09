@@ -1,72 +1,84 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Clock, AlertTriangle } from "lucide-react";
-import { formatDistanceToNow, isPast, parseISO } from "date-fns";
-import { useRouter } from "next/navigation";
-import type { TrialOrganizationSummary } from "@/types/components";
+import { formatDistanceToNow } from "date-fns";
+import { getTrialBannerState } from "@/lib/billing/trial-banner-state";
 
-export function TrialBanner({ organization }: { organization: TrialOrganizationSummary | null }) {
-    const router = useRouter();
-    const [isVisible, setIsVisible] = useState(true);
-    const [mounted, setMounted] = useState(false);
+export interface TrialBannerProps {
+    /** organizations.plan_status - the banner only renders for "trialing". */
+    planStatus?: string | null;
+    /** organizations.trial_ends_at (ISO), written by billing sync while trialing. */
+    trialEndsAt?: string | null;
+    /** Display name of the plan being trialed, e.g. "Starter". */
+    planName?: string | null;
+    /** Only org owners can open /settings/billing; others get informational copy, no link. */
+    canManageBilling: boolean;
+}
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+const noopSubscribe = () => () => {};
 
-    if (!organization || organization.plan !== "free" || !organization.trial_ends_at) {
-        return null;
-    }
+export function TrialBanner({ planStatus, trialEndsAt, planName, canManageBilling }: TrialBannerProps) {
+    // false during SSR/hydration so the relative time never causes a hydration mismatch.
+    const mounted = useSyncExternalStore(noopSubscribe, () => true, () => false);
 
-    const trialEndsAt = parseISO(organization.trial_ends_at);
-    const expired = isPast(trialEndsAt);
-    const timeLeft = formatDistanceToNow(trialEndsAt);
+    const state = getTrialBannerState({ planStatus, trialEndsAt });
+    if (!state) return null;
 
-    if (!isVisible) return null;
+    const ended = state.phase === "ended";
+    const urgent = ended || state.phase === "ending_soon";
+    const trialLabel = planName ? `${planName} trial` : "trial";
+    const timeLeft = mounted ? formatDistanceToNow(state.trialEndsAt) : "...";
+    const nextStep = canManageBilling
+        ? ended
+            ? "Check your billing details to keep your plan active."
+            : "Review your plan and payment details in billing."
+        : "Your organization owner manages billing.";
 
     return (
-        <div className={`
-            w-full border-b px-4 py-2.5 flex items-center justify-between gap-4
-            ${expired 
-                ? "bg-destructive/10 border-destructive/20" 
-                : "bg-primary/10 border-primary/20"}
-        `}>
+        <div
+            className={`w-full border-b px-4 py-2.5 flex items-center justify-between gap-4 ${
+                urgent ? "bg-destructive/10 border-destructive/20" : "bg-primary/10 border-primary/20"
+            }`}
+        >
             <div className="flex items-center gap-3">
-                <div className={`
-                    p-1.5 rounded-lg
-                    ${expired 
-                        ? "bg-destructive/15 text-destructive" 
-                        : "bg-primary/15 text-primary"}
-                `}>
-                    {expired ? <AlertTriangle className="size-4" /> : <Clock className="size-4" />}
+                <div
+                    className={`p-1.5 rounded-lg ${
+                        urgent ? "bg-destructive/15 text-destructive" : "bg-primary/15 text-primary"
+                    }`}
+                >
+                    {urgent ? <AlertTriangle className="size-4" /> : <Clock className="size-4" />}
                 </div>
-                <div className="text-sm font-medium">
-                    {expired ? (
-                        <span className="text-foreground">
-                            Your trial has <span className="font-bold text-destructive">expired</span>. Upgrade now to continue using premium features.
-                        </span>
+                <p className="text-sm font-medium text-foreground">
+                    {ended ? (
+                        <>Your {trialLabel} has ended. {nextStep}</>
                     ) : (
-                        <span className="text-foreground">
-                            You have <span className="font-bold text-primary">{!mounted ? "..." : timeLeft}</span> left on your trial.
-                        </span>
+                        <>
+                            Your {trialLabel} ends in{" "}
+                            <span className={`font-bold ${urgent ? "text-destructive" : "text-primary"}`}>
+                                {timeLeft}
+                            </span>
+                            . {nextStep}
+                        </>
                     )}
-                </div>
+                </p>
             </div>
 
-            <div className="flex items-center gap-2">
-                <Button 
-                    size="sm" 
-                    onClick={() => router.push("/settings/billing")}
-                    className={expired 
-                        ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground border-none h-8 px-4"
-                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border h-8 px-4"
+            {canManageBilling && (
+                <Button
+                    asChild
+                    size="sm"
+                    className={
+                        urgent
+                            ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground border-none h-8 px-4"
+                            : "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border h-8 px-4"
                     }
                 >
-                    Upgrade
+                    <Link href="/settings/billing">Manage billing</Link>
                 </Button>
-            </div>
+            )}
         </div>
     );
 }

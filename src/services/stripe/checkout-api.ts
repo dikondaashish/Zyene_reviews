@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/db/supabase/server";
 import { stripe } from "@/services/stripe/client";
-import { getPlanByPriceId, isPaidPlanTierDowngrade, isPaidPlanTierUpgrade, PLANS } from "@/services/stripe/plans";
+import { PLANS } from "@/services/stripe/plans";
+import { switchExistingSubscriptionPlan } from "@/services/stripe/checkout-plan-switch";
 import { isEligibleForIntroTrial } from "@/lib/stripe/checkout-trial-eligibility";
 import { introTrialDaysForOrganization } from "@/lib/growth/referral";
 import * as Sentry from "@sentry/nextjs";
@@ -135,66 +136,21 @@ export async function handleBillingCheckout(request: Request) {
     const onboardingCancelUrl = `${dashboardUrl}/onboarding?checkout_canceled=1`;
 
     // ── Guard: If already subscribed, update plan instead of creating a new subscription ──
+    // A new Checkout is only safe once Stripe confirms the old subscription is gone;
+    // otherwise paying it would leave the org with two live subscriptions.
     if (org.stripe_subscription_id) {
-      try {
-        const existingSub = await stripe.subscriptions.retrieve(org.stripe_subscription_id);
-
-        // Only update if the subscription is still active/trialing
-        if (["active", "trialing", "past_due"].includes(existingSub.status)) {
-          const currentItem = existingSub.items.data[0];
-          if (!currentItem) {
-            return apiError("Subscription has no billable items.", {
-              status: 400,
-              details: requestId,
-            });
-          }
-          const currentPriceId = currentItem.price?.id;
-          const currentPlan = currentPriceId ? getPlanByPriceId(currentPriceId) : null;
-          const targetPlan = getPlanByPriceId(priceId);
-
-          const endTrialForTierUpgrade =
-            existingSub.status === "trialing" &&
-            currentPlan &&
-            targetPlan &&
-            isPaidPlanTierUpgrade(currentPlan.id, targetPlan.id);
-
-          const tierDowngrade = currentPlan && targetPlan && isPaidPlanTierDowngrade(currentPlan.id, targetPlan.id);
-
-          await stripe.subscriptions.update(org.stripe_subscription_id, {
-            items: [
-              {
-                id: currentItem.id,
-                price: priceId,
-              },
-            ],
-            // Downgrades: no immediate proration credit - change applies per Stripe schedule (standard SaaS).
-            proration_behavior: tierDowngrade ? "none" : "create_prorations",
-            ...(endTrialForTierUpgrade ? { trial_end: "now" } : {}),
-          });
-
-          const switchedReturnUrl =
-            source === "onboarding"
-              ? `${dashboardUrl}/onboarding?checkout_success=1&plan_switched=1`
-              : billingSuccessUrl;
-          logger.info(
-            {
-              userId: user.id,
-              organizationId: member.organization_id,
-              switched: true,
-            },
-            "Stripe subscription switched in-place",
-          );
-
-          return apiOk({
-            url: switchedReturnUrl,
-            switched: true,
-            requestId,
-          });
-        }
-      } catch (subError: unknown) {
-        // If subscription retrieval fails (deleted, etc.), fall through to new checkout
-        const message = subError instanceof Error ? subError.message : String(subError);
-        logger.warn({ message }, "Could not update existing subscription, creating new checkout");
+      const outcome = await switchExistingSubscriptionPlan(org.stripe_subscription_id, priceId, logger);
+      if (outcome.kind === "failed") {
+        return apiError(outcome.message, { status: outcome.status, code: outcome.code, details: requestId });
+      }
+      if (outcome.kind === "switched") {
+        const switchedReturnUrl =
+          source === "onboarding" ? `${dashboardUrl}/onboarding?checkout_success=1&plan_switched=1` : billingSuccessUrl;
+        logger.info(
+          { userId: user.id, organizationId: member.organization_id, switched: true },
+          "Stripe subscription switched in-place",
+        );
+        return apiOk({ url: switchedReturnUrl, switched: true, requestId });
       }
     }
 

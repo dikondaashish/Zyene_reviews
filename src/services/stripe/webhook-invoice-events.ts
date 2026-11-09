@@ -3,7 +3,7 @@ import type Stripe from "stripe";
 import { stripe } from "@/services/stripe/client";
 import { stripeSubscriptionToOrganizationUpdate } from "@/services/stripe/organization-billing-sync";
 import { applySubscriptionProjection } from "@/services/stripe/subscription-projection";
-import { invoiceServicePeriodEnd } from "@/services/stripe/invoice-service-period";
+import { grantRenewalCredit } from "@/services/stripe/renewal-credit-grant";
 
 import { logger } from "@/lib/logger";
 import { sendEmail } from "@/services/resend/send-email";
@@ -132,10 +132,8 @@ export async function handleInvoicePaymentSucceeded(
     // Initial invoice handling belongs to checkout.session.completed. The fallback
     // above only exists so the Meta event is not lost when Stripe reorders webhooks.
     if (!isRenewal || subscriptionPendingBinding) return;
-    const { resetAeoCreditsForPlan } = await import("@/services/aeo/billing/renewal-credit-reset");
-    await resetAeoCreditsForPlan(supabase, { organizationId: org.id, planId: org.plan,
-        customerId, subscriptionId, receiptId: invoice.id,
-        periodEnd: await invoiceServicePeriodEnd(invoice, subscriptionId, org.plan) });
+    await grantRenewalCredit(supabase, { organizationId: org.id, planId: org.plan,
+        customerId, subscriptionId, invoice });
 
     try {
         if (invoice.customer_email) {

@@ -15,6 +15,7 @@ import { DashboardLayoutClient } from "@/components/dashboard/dashboard-layout-c
 import { getGoogleQaSidebarNavVisible } from "@/lib/auth/business-context";
 import { VerificationBanner } from "@/components/dashboard/verification-banner";
 import { TrialBanner } from "@/components/dashboard/trial-banner";
+import { PLAN_MAP } from "@/services/stripe/plans";
 import { PastDuePaymentBanner } from "@/components/dashboard/past-due-payment-banner";
 import { ErrorBoundary } from "@/components/errors/error-boundary";
 import { getGoogleConnectionStatus } from "@/lib/google/is-google-connected";
@@ -22,6 +23,8 @@ import { GoogleConnectBanner } from "@/components/dashboard/google-connect-banne
 import { getSettingsAccessContext } from "@/lib/auth/settings-access-context";
 import { SentryTenantContext } from "@/components/monitoring/sentry-tenant-context";
 import { setSentryTenantContext } from "@/lib/monitoring/set-sentry-tenant-context";
+
+const asString = (v: unknown): string | null => (typeof v === "string" ? v : null);
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, activeContext, access: settingsAccess } = await getSettingsAccessContext();
@@ -50,8 +53,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const hideGoogleQaNav = !(await getGoogleQaSidebarNavVisible(activeBusinessId));
   const sidebarOpen = (await cookies()).get("sidebar_state")?.value === "true";
 
-  const stripeCustomerId =
-    typeof organization?.stripe_customer_id === "string" ? organization.stripe_customer_id : null;
+  const stripeCustomerId = asString(organization?.stripe_customer_id);
 
   const headerContent = (
     <DashboardHeaderControls
@@ -75,7 +77,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <AppSidebar hideGoogleQaNav={hideGoogleQaNav} settingsAccess={settingsAccess} />
       <SidebarInset className="bg-canvas">
         <VerificationBanner user={user} />
-        <TrialBanner organization={organization} />
+        <TrialBanner planStatus={organization?.plan_status} trialEndsAt={asString(organization?.trial_ends_at)}
+          planName={PLAN_MAP[asString(organization?.plan) ?? ""]?.name} canManageBilling={settingsAccess.billing} />
         <PastDuePaymentBanner
           planStatus={organization?.plan_status}
           stripeCustomerId={stripeCustomerId}

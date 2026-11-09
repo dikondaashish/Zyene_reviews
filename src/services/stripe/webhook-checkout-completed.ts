@@ -7,6 +7,8 @@ import { stripe } from "@/services/stripe/client";
 import { getPlanByPriceId } from "@/services/stripe/plans";
 import { stripeSubscriptionToOrganizationUpdate } from "@/services/stripe/organization-billing-sync";
 import { applySubscriptionProjection } from "@/services/stripe/subscription-projection";
+import { isTerminalSubscriptionStatus } from "@/services/stripe/subscription-status";
+import { existingSubscriptionStillLive, settleOtherCustomerSubscriptions } from "@/services/stripe/webhook-duplicate-subscription";
 import { sendEmail } from "@/services/resend/send-email";
 import { subscriptionSuccessEmail } from "@/services/resend/templates/subscription-success-email";
 
@@ -94,19 +96,16 @@ export async function handleCheckoutSessionCompleted(
 
     if (!customerId || existingOrg.stripe_customer_id !== customerId) throw new Error("Checkout customer mismatch");
     if (existingOrg.stripe_subscription_id && existingOrg.stripe_subscription_id !== subscriptionId) {
-        try {
-            const current = await stripe.subscriptions.retrieve(existingOrg.stripe_subscription_id);
-            if (!["canceled", "unpaid", "incomplete_expired"].includes(current.status)) return;
-        } catch (error) {
-            if (!(typeof error === "object" && error && "code" in error && error.code === "resource_missing")) throw error;
-        }
+        const keepExisting = await existingSubscriptionStillLive({ organizationId, customerId, sessionId: session.id,
+            existingSubscriptionId: existingOrg.stripe_subscription_id, checkoutSubscriptionId: subscriptionId });
+        if (keepExisting) return;
     }
 
     const observedAt = new Date().toISOString();
     const subscription = await stripe.subscriptions.retrieve(subscriptionId);
     const subscriptionCustomer = typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
     if (subscriptionCustomer !== customerId) throw new Error("Subscription customer mismatch");
-    if (["canceled", "unpaid", "incomplete_expired"].includes(subscription.status)) return;
+    if (isTerminalSubscriptionStatus(subscription.status)) return;
     const priceId = subscription.items.data[0]?.price?.id;
 
     if (!priceId) {
@@ -135,6 +134,9 @@ export async function handleCheckoutSessionCompleted(
         const { processReferralConversionReward } = await import("@/lib/growth/referral-rewards");
         await processReferralConversionReward(organizationId);
     }
+    // After the paid entitlements, so a stuck Stripe cleanup never withholds them.
+    await settleOtherCustomerSubscriptions({ organizationId, customerId, sessionId: session.id,
+        keepSubscriptionId: subscriptionId });
 
     try {
         const customerEmail = session.customer_details?.email;
