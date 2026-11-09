@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type Stripe from "stripe";
@@ -14,6 +15,26 @@ function isStripeResourceMissing(e: unknown): boolean {
         "code" in e &&
         (e as { code?: string }).code === "resource_missing"
     );
+}
+
+/**
+ * An entitled subscription on a price outside the plan catalog (dashboard-made enterprise
+ * price, rotated price). Granting a guessed plan is wrong and throwing makes Stripe retry
+ * every event for this customer for days, so record only the status fields and let
+ * apply_stripe_subscription_projection keep the organization's current plan and limits.
+ */
+function unrecognizedPriceProjection(
+    subscription: Stripe.Subscription,
+    priceId: string | undefined,
+    base: StripeOrganizationUpdatePayload,
+): StripeOrganizationUpdatePayload & Record<string, unknown> {
+    const customerId = typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
+    const context = { customerId, subscriptionId: subscription.id, priceId: priceId ?? null, status: subscription.status };
+    logger.error(context, "Unrecognized Stripe subscription price; plan and limits left unchanged");
+    Sentry.captureMessage("Unrecognized Stripe subscription price", { level: "error",
+        tags: { area: "stripe-billing-projection" }, extra: context });
+    return { plan_status: base.plan_status, stripe_subscription_id: base.stripe_subscription_id,
+        trial_ends_at: base.trial_ends_at, preserve_entitlements: true };
 }
 
 /** Maps a live Stripe subscription to organizations row fields (matches customer.subscription.updated semantics). */
@@ -42,7 +63,7 @@ export function stripeSubscriptionToOrganizationUpdate(
 
     if (["active", "trialing", "past_due"].includes(planStatus)) {
         const plan = priceId ? getPlanByPriceId(priceId) : null;
-        if (!plan) throw new Error("Unrecognized Stripe subscription price");
+        if (!plan) return unrecognizedPriceProjection(subscription, priceId, updateData);
         updateData.plan = plan.id;
         Object.assign(updateData, planLimitsToOrganizationColumns(plan.limits));
     }

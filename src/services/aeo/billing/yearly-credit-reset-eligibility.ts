@@ -2,14 +2,19 @@
  * E-9.1 - is a yearly-plan org due for its monthly credit refresh today?
  *
  * Yearly subscribers get exactly one Stripe renewal event a year, so there is
- * no webhook to hang a monthly reset on. The anchor is whichever calendar day
- * the org's balance was LAST reset on - set once at checkout, then
- * self-perpetuating: every successful reset moves cycle_reset_at to today,
- * which preserves the same day-of-month for the check a month from now. No
- * new column, no Stripe API call in the daily loop.
+ * no webhook to hang a monthly reset on. The anchor is the UTC day-of-month of
+ * cycle_reset_at - set at checkout, then self-perpetuating. No new column, no
+ * Stripe API call in the daily loop.
  *
- * All dates are read in UTC, matching `cycle_reset_at::date` in
- * aeo_reset_credit_grant - a Postgres session under Supabase defaults to UTC,
+ * cycle_reset_at is the latest FULL occurrence of the anchor day, not simply
+ * "the last reset". An ordinary reset moves it to today (same day-of-month).
+ * A reset on a short month's stand-in day (a 31st anchor firing on Feb 28 or
+ * Apr 30) leaves it untouched, so the anchor is still the 31st next month
+ * instead of drifting to the 28th/30th forever. aeo_reset_credit_grant
+ * (migration 20261108120100) enforces this; `cycleResetAtAfterReset` below is
+ * the same rule in TypeScript so the round trip is unit-tested.
+ *
+ * All dates are read in UTC, matching the UTC dates in aeo_reset_credit_grant,
  * so this and the SQL guard agree on what "today" and "the 15th" mean.
  */
 
@@ -24,6 +29,10 @@ function isSameUTCDate(a: Date, b: Date): boolean {
         a.getUTCMonth() === b.getUTCMonth() &&
         a.getUTCDate() === b.getUTCDate()
     );
+}
+
+function isEarlierUTCMonth(a: Date, b: Date): boolean {
+    return a.getUTCFullYear() * 12 + a.getUTCMonth() < b.getUTCFullYear() * 12 + b.getUTCMonth();
 }
 
 export function isDueForMonthlyReset(cycleResetAt: Date, today: Date): boolean {
@@ -42,4 +51,21 @@ export function isDueForMonthlyReset(cycleResetAt: Date, today: Date): boolean {
     const effectiveAnchorDay = Math.min(anchorDay, daysThisMonth);
 
     return today.getUTCDate() === effectiveAnchorDay;
+}
+
+/**
+ * The cycle_reset_at aeo_reset_credit_grant stores after a reset at `resetAt`
+ * (null previous = no balance row yet). Keeps `previous` when this reset is a
+ * short month's stand-in for its anchor day; otherwise re-anchors to `resetAt`.
+ */
+export function cycleResetAtAfterReset(previous: Date | null, resetAt: Date): Date {
+    if (!previous) return resetAt;
+
+    const daysThisMonth = daysInUTCMonth(resetAt.getUTCFullYear(), resetAt.getUTCMonth());
+    const isShortMonthStandIn =
+        isEarlierUTCMonth(previous, resetAt) &&
+        resetAt.getUTCDate() === daysThisMonth &&
+        previous.getUTCDate() > daysThisMonth;
+
+    return isShortMonthStandIn ? previous : resetAt;
 }
