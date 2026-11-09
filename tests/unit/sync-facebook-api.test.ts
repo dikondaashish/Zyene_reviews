@@ -5,6 +5,11 @@ const mocks = vi.hoisted(() => ({
     getFacebookPlatformForUser: vi.fn(),
     syncFacebookReviewsForPlatform: vi.fn(),
     syncRateLimit: { limit: vi.fn() },
+    canManage: vi.fn(),
+}));
+
+vi.mock("@/lib/auth/manage-business-integration", () => ({
+    canManageBusinessIntegration: (...args: unknown[]) => mocks.canManage(...args),
 }));
 
 vi.mock("@/app/api/_shared/auth", () => ({
@@ -30,8 +35,9 @@ describe("handleFacebookSyncPost", () => {
         vi.clearAllMocks();
         mocks.requireUser.mockResolvedValue({ supabase: {}, user: { id: "user-1" } });
         mocks.syncRateLimit.limit.mockResolvedValue({ success: true });
+        mocks.canManage.mockResolvedValue(true);
         mocks.getFacebookPlatformForUser.mockResolvedValue({
-            businessId: "business-1",
+            businessId: "22222222-2222-4222-8222-222222222222",
             platform: { id: "platform-1", platform: "facebook", sync_status: "active", last_synced_at: null },
         });
         mocks.syncFacebookReviewsForPlatform.mockResolvedValue({
@@ -46,17 +52,37 @@ describe("handleFacebookSyncPost", () => {
         const response = await handleFacebookSyncPost(
             new Request("http://localhost/api/sync/facebook", {
                 method: "POST",
-                body: JSON.stringify({ businessId: "business-1" }),
+                body: JSON.stringify({ businessId: "22222222-2222-4222-8222-222222222222" }),
             }),
         );
         const body = await response.json();
 
-        expect(mocks.getFacebookPlatformForUser).toHaveBeenCalledWith({}, "business-1");
+        expect(mocks.getFacebookPlatformForUser).toHaveBeenCalledWith({}, "22222222-2222-4222-8222-222222222222");
         expect(mocks.syncFacebookReviewsForPlatform).toHaveBeenCalledWith("platform-1");
         expect(response.status).toBe(200);
         expect(body).toEqual({
             success: true,
             data: { success: true, total: 3, analyzed: 3, alerts: 0 },
         });
+    });
+
+    it("refuses a manual sync from someone who cannot manage the business (viewer)", async () => {
+        mocks.canManage.mockResolvedValue(false);
+        const response = await handleFacebookSyncPost(
+            new Request("http://localhost/api/sync/facebook", {
+                method: "POST",
+                body: JSON.stringify({ businessId: "22222222-2222-4222-8222-222222222222" }),
+            }),
+        );
+        expect(response.status).toBe(404);
+        expect(mocks.syncFacebookReviewsForPlatform).not.toHaveBeenCalled();
+    });
+
+    it("rejects a malformed businessId before any lookup", async () => {
+        const response = await handleFacebookSyncPost(
+            new Request("http://localhost/api/sync/facebook", { method: "POST", body: JSON.stringify({ businessId: "nope" }) }),
+        );
+        expect(response.status).toBe(400);
+        expect(mocks.getFacebookPlatformForUser).not.toHaveBeenCalled();
     });
 });

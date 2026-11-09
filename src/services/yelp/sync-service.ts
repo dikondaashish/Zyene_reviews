@@ -5,6 +5,7 @@ import { YelpApiError } from "./client";
 import { YELP_REVIEWS_UNAVAILABLE_KEY } from "./sync-state";
 import { analyzeReview } from "@/domains/ai/services/ai-analysis-service";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
+import { invalidateDashboardStatsCache } from "@/lib/dashboard/invalidate-dashboard-stats-cache";
 
 export interface YelpSyncResult {
     success: boolean;
@@ -79,7 +80,8 @@ export async function syncYelpReviewsForPlatform(
                     rating: review.rating,
                     text: review.content,
                     review_date: review.publishedAt,
-                    response_status: "pending" as const,
+                    // response_status defaults to 'pending' on insert; omitting it here keeps an
+                    // owner's "Ignored"/"Responded" choice across syncs (same as Facebook).
                 };
 
                 const { data: upserted, error: upsertError } = await admin
@@ -125,6 +127,7 @@ export async function syncYelpReviewsForPlatform(
                 sync_state: { ...previousState, [YELP_REVIEWS_UNAVAILABLE_KEY]: reviewsUnavailable },
             })
             .eq("id", platformId);
+        await invalidateDashboardStatsCache(platform.business_id);
 
         return {
             success: true,

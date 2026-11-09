@@ -9,3 +9,16 @@ export function isGoogleSyncCooldownError(error: unknown): boolean {
     const e = error as { code?: string; message?: string };
     return e?.code === "RATE_LIMIT" && String(e?.message || "").includes("Please wait before syncing again");
 }
+
+/**
+ * A lock a worker is still renewing: `running` with `locked_until` ahead of now.
+ * A stuck lock (worker died) lets `locked_until` lapse, which is what Force Sync is for.
+ */
+export function isLiveSyncLock(
+    lock: { sync_status?: string | null; locked_until?: string | null } | null | undefined,
+    now: number = Date.now(),
+): boolean {
+    if (lock?.sync_status !== "running" || !lock.locked_until) return false;
+    const until = Date.parse(lock.locked_until);
+    return Number.isFinite(until) && until > now;
+}

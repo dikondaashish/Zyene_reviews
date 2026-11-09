@@ -4,6 +4,7 @@ import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
 import { AI_ANALYSIS_BATCH_SIZE } from "@/services/google/constants";
+import { invalidateDashboardStatsCache } from "@/lib/dashboard/invalidate-dashboard-stats-cache";
 
 /**
  * Step 3: Finalize sync (Update stats, clear lock).
@@ -52,6 +53,8 @@ export async function finalizeGoogleSync(
     } catch (e) {
         logger.error({ err: e }, "[Sync] Finalize failed for business summary update:");
     }
+    // New reviews and reply states change the dashboard's attention list and counts.
+    await invalidateDashboardStatsCache(businessId);
 }
 
 /**
