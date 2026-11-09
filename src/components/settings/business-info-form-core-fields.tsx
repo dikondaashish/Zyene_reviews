@@ -40,8 +40,8 @@ export function BusinessInfoFormCoreFields({ form }: { form: UseFormReturn<Busin
                             <Input placeholder="e.g. Sam" {...field} value={field.value ?? ""} />
                         </FormControl>
                         <FormDescription>
-                            The first name shown as the email sender (e.g. <em>Sam &lt;hello@zyenereviews.com&gt;</em>)
-                            and used to sign off the message. Leave empty to send as your business name. A real
+                            The first name shown as the email sender (e.g. <em>Sam at Your Business</em>) and used
+                            to sign off the message. Leave empty to send as your business name. A real
                             first name dramatically improves Gmail Primary placement.
                         </FormDescription>
                         <FormMessage />

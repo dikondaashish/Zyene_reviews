@@ -1,8 +1,9 @@
 import { BusinessInfoForm } from "@/components/settings/business-info-form";
+import type { ReviewRequestSender } from "@/lib/email/review-request-from-line";
 
 type Business = Parameters<typeof BusinessInfoForm>[0]["business"];
 
-export function BusinessInformationDetailsSection({ business }: { business: Business }) {
+export function BusinessInformationDetailsSection({ business, sender }: { business: Business; sender: ReviewRequestSender }) {
     return (
         <div className="rounded-lg border border-border bg-card">
             <div className="border-b px-6 py-4">
@@ -12,7 +13,7 @@ export function BusinessInformationDetailsSection({ business }: { business: Busi
                 </p>
             </div>
             <div className="px-6 py-5">
-                <BusinessInfoForm key={business.id} business={business} />
+                <BusinessInfoForm key={business.id} business={business} sender={sender} />
             </div>
         </div>
     );

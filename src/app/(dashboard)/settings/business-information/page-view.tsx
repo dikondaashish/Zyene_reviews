@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { BusinessContextEmptyState } from "@/components/dashboard/business-context-empty-state";
 import { DashboardFetchError } from "@/components/dashboard/dashboard-fetch-error";
 import { Building2 } from "lucide-react";
+import { reviewRequestSender } from "@/services/resend/send-review-request-email";
 import { loadBusinessInformationPageData } from "./load-business-information-page-data";
 import { BusinessInformationPageHeader } from "./business-information-page-header";
 import { BusinessInformationDetailsSection } from "./business-information-details-section";
@@ -50,7 +51,7 @@ export default async function BusinessInformationPage() {
     return (
         <div className="space-y-8">
             <BusinessInformationPageHeader />
-            <BusinessInformationDetailsSection business={business} />
+            <BusinessInformationDetailsSection business={business} sender={reviewRequestSender()} />
             {isGoogleConnected && <BusinessInformationGoogleListingSection businessId={business.id} />}
             {isGoogleConnected && isLodgingBusiness && (
                 <BusinessInformationGoogleLodgingSection businessId={business.id} />
