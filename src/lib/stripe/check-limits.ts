@@ -151,6 +151,9 @@ export async function checkLimit(
                 "customer_phone.not.is.null,customer_email.not.is.null,customer_name.not.is.null,campaign_id.not.is.null"
             );
             query = query.neq("status", "skipped");
+            // A request that failed before anything went out (bad number, provider outage,
+            // a dispatch error) used no allowance; one that failed after sending still counts.
+            query = query.or("status.neq.failed,sent_at.not.is.null");
 
             if (limitType === "email_requests") {
                 query = query.in("channel", ["email", "both"]);

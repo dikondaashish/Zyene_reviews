@@ -19,9 +19,11 @@ export const createCampaignSchema = z.object({
 export const campaignSendSchema = z.object({
     contacts: z.array(
         z.object({
-            name: z.string().optional(),
-            phone: z.string().optional(),
-            email: z.string().email().optional(),
+            name: z.string().max(200).optional(),
+            // Validated per contact by normalizeCampaignContacts: one bad row is skipped
+            // and counted, instead of rejecting the whole batch.
+            phone: z.string().max(40).optional(),
+            email: z.string().max(320).optional(),
         })
     ).min(1).max(500).optional(),
     customerIds: z.array(z.uuid()).min(1).max(500).optional(),

@@ -24,14 +24,20 @@ export async function sendSMS(
     try {
         const admin = createAdminClient();
 
-        // Check Opt-out
-        const { data: optOut } = await admin
+        // Last-line opt-out check. `.single()` errored (and was ignored) when a number had
+        // two opt-out rows, so the opt-out was skipped; any match counts, and an unreadable
+        // opt-out list blocks the send rather than risk texting someone who said STOP.
+        const { data: optOuts, error: optOutError } = await admin
             .from("sms_opt_outs")
             .select("phone_number")
             .eq("phone_number", to)
-            .single();
+            .limit(1);
 
-        if (optOut) {
+        if (optOutError) {
+            logger.error({ err: optOutError }, "Twilio opt-out check failed; not sending");
+            return { sent: false, error: "Could not verify SMS opt-out status" };
+        }
+        if (optOuts && optOuts.length > 0) {
             return { sent: false, error: "Recipient opted out" };
         }
 

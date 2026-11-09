@@ -12,6 +12,7 @@ import {
     type SendOutboundReviewRequestInput,
     type SendOutboundReviewRequestResult,
 } from "./send-outbound-types";
+import { failRequestAfterDispatchError } from "@/lib/review-requests/fail-request-on-dispatch-error";
 export type { OutboundChannel, OutboundTriggerSource, SendOutboundReviewRequestInput, SendOutboundReviewRequestResult } from "./send-outbound-types";
 
 export async function sendOutboundReviewRequest(
@@ -76,19 +77,25 @@ export async function sendOutboundReviewRequest(
         typeof b.email === "string" && isValidEmail(b.email.trim()) ? b.email.trim() : undefined;
     const subject = reviewRequestSubject(businessName, false, displayName);
 
-    const dispatched = await dispatchOutboundReviewChannels(admin, {
-        requestId,
-        businessId: b.id,
-        channel,
-        phoneNorm,
-        emailNorm,
-        displayName,
-        businessName,
-        senderName,
-        businessEmail,
-        reviewLink,
-        subject,
-    });
+    let dispatched: Awaited<ReturnType<typeof dispatchOutboundReviewChannels>>;
+    try {
+        dispatched = await dispatchOutboundReviewChannels(admin, {
+            requestId,
+            businessId: b.id,
+            channel,
+            phoneNorm,
+            emailNorm,
+            displayName,
+            businessName,
+            senderName,
+            businessEmail,
+            reviewLink,
+            subject,
+        });
+    } catch (error: unknown) {
+        await failRequestAfterDispatchError(admin, requestId, b.id, error);
+        return fail(500, channel, "The review request could not be sent. Please try again.", requestId, reviewLink);
+    }
     const { sendStatus, errorMessage, resendEmailId, bumpLegs, smsLegStatus, emailLegStatus } = dispatched;
 
     if (sendStatus === "deferred" && dispatched.deferUntil) {
