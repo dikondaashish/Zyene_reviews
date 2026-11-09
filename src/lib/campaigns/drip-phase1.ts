@@ -63,10 +63,19 @@ export function dueBeforeIso(delayHours = DRIP_STEP_DELAY_HOURS, now = new Date(
     return new Date(now.getTime() - delayHours * 60 * 60 * 1000).toISOString();
 }
 
-/** True when a reminder is so late that sending it now would surprise the customer. */
+/**
+ * True when a reminder is so late that sending it now would surprise the customer
+ * (e.g. a campaign resumed long after its reminders were due).
+ *
+ * Lateness is measured from the later of the current due time and the default
+ * 7-day gap. The delay is read live, so shortening it ("7 days" → "1 day", which the
+ * settings say applies to reminders not yet sent) would otherwise make pending
+ * reminders look days overdue and expire them unsent.
+ */
 export function isStaleReminder(previousSentAt: string | null, delayHours: number, now = new Date()): boolean {
     if (!previousSentAt) return true;
-    const dueAt = new Date(previousSentAt).getTime() + delayHours * 3_600_000;
+    const effectiveDelayHours = Math.max(delayHours, DRIP_STEP_DELAY_HOURS);
+    const dueAt = new Date(previousSentAt).getTime() + effectiveDelayHours * 3_600_000;
     return now.getTime() - dueAt > DRIP_STALE_AFTER_HOURS * 3_600_000;
 }
 

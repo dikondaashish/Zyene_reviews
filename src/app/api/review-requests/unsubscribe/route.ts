@@ -22,8 +22,11 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
     try {
         const url = new URL(request.url);
-        const form = await request.formData();
-        const oneClick = form.get("List-Unsubscribe") === "One-Click";
+        // Some mail providers send the RFC 8058 one-click POST with an empty or non-form
+        // body; formData() then throws and the unsubscribe was lost as a 500. The signed
+        // ref/sig in the URL is what authorizes it, so treat such a POST as one-click.
+        const form = await request.formData().catch(() => null);
+        const oneClick = !form || form.get("List-Unsubscribe") === "One-Click";
         const ref = oneClick ? url.searchParams.get("ref") : form.get("ref");
         const sig = oneClick ? url.searchParams.get("sig") : form.get("sig");
         const target = await resolveUnsubscribeTarget(ref, sig);

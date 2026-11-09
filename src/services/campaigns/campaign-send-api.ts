@@ -7,6 +7,7 @@ import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { campaignSendSchema } from "@/services/campaigns/campaigns-schema";
 import { loadCampaignAudience } from "@/services/campaigns/campaign-audience";
 import { checkCampaignAudienceQuota } from "@/services/campaigns/campaign-send-quota";
+import { campaignContactEventIds, normalizeCampaignContacts } from "@/services/campaigns/campaign-contacts";
 import { z } from "zod";
 
 export async function handleCampaignSend(request: Request, campaignId: string) {
@@ -54,23 +55,28 @@ export async function handleCampaignSend(request: Request, campaignId: string) {
             return apiError("Campaign is not active. Activate it first.", { status: 400 });
         }
 
-        const contacts = parsed.data.customerIds
+        const audience = parsed.data.customerIds
             ? await loadCampaignAudience(supabase, campaign.business_id, parsed.data.customerIds, campaign.channel)
             : parsed.data.contacts!;
+        const requested = parsed.data.customerIds ? new Set(parsed.data.customerIds).size : audience.length;
+        const { usable: contacts } = normalizeCampaignContacts(audience, campaign.channel);
         if (contacts.length === 0)
             return apiError(
-                "No selected customers can receive this campaign. Check their contact details and opt-out status.",
+                campaign.channel === "email"
+                    ? "None of these contacts has a valid email address for this email campaign."
+                    : "No selected customers can receive this campaign. Check their contact details and opt-out status.",
                 { status: 400 },
             );
-        const skippedCount = parsed.data.customerIds ? new Set(parsed.data.customerIds).size - contacts.length : 0;
+        const skippedCount = requested - contacts.length;
         if (!(await checkCampaignAudienceQuota(supabase, campaign.business_id, campaign.channel, contacts))) {
             return apiError("This audience exceeds the remaining monthly channel allowance.", { status: 403 });
         }
         const admin = createAdminClient();
         const { inngest } = await import("@/services/inngest/client");
 
-        const eventsToEnqueue = contacts.map((contact) => ({
-            ...("customerId" in contact ? { id: `campaign:${campaignId}:customer:${contact.customerId}` } : {}),
+        const eventIds = await campaignContactEventIds(admin, campaignId, contacts);
+        const eventsToEnqueue = contacts.map((contact, i) => ({
+            id: eventIds[i],
             name: "campaign/send.contact" as const,
             data: {
                 campaignId,
