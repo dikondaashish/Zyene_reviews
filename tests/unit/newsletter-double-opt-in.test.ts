@@ -5,7 +5,7 @@ const mocks = vi.hoisted(() => ({
     findByToken: vi.fn(),
     insertPending: vi.fn(),
     resetToPending: vi.fn(),
-    markResent: vi.fn(),
+    claimResend: vi.fn(),
     confirmByToken: vi.fn(),
     sendEmail: vi.fn(),
     nurture: vi.fn(),
@@ -22,7 +22,7 @@ vi.mock("@/lib/marketing/newsletter-subscriber-store", () => ({
     findSubscriberByToken: mocks.findByToken,
     insertPendingSubscriber: mocks.insertPending,
     resetSubscriberToPending: mocks.resetToPending,
-    markConfirmationResent: mocks.markResent,
+    claimConfirmationResend: mocks.claimResend,
     confirmSubscriberByToken: mocks.confirmByToken,
 }));
 
@@ -43,6 +43,7 @@ function row(overrides: Record<string, unknown> = {}) {
         unsubscribed_at: null,
         confirmed_at: null,
         confirmation_token: TOKEN,
+        confirmation_sent_at: new Date().toISOString(),
         ...overrides,
     };
 }
@@ -79,14 +80,31 @@ describe("public newsletter sign-up (double opt-in)", () => {
     });
 
     it("sends at most one confirmation a day to a pending address", async () => {
-        mocks.findByEmail.mockResolvedValue(row({ subscribed_at: hoursAgo(2) }));
+        mocks.findByEmail.mockResolvedValue(row({ confirmation_sent_at: hoursAgo(2) }));
         await processNewsletterSubscribe({ email: "owner@example.com" });
+        expect(mocks.claimResend).not.toHaveBeenCalled();
         expect(mocks.sendEmail).not.toHaveBeenCalled();
 
-        mocks.findByEmail.mockResolvedValue(row({ subscribed_at: hoursAgo(25) }));
+        mocks.findByEmail.mockResolvedValue(row({ confirmation_sent_at: hoursAgo(25) }));
+        mocks.claimResend.mockResolvedValue(row());
         await processNewsletterSubscribe({ email: "owner@example.com" });
-        expect(mocks.markResent).toHaveBeenCalledWith({}, "sub-1");
+        expect(mocks.claimResend).toHaveBeenCalledWith({}, "sub-1", expect.any(String));
         expect(mocks.sendEmail).toHaveBeenCalledTimes(1);
+    });
+
+    it("still sends a confirmation when another lead form just refreshed the row", async () => {
+        // A demo or free-tool form stored the address minutes ago, but no confirmation was ever sent.
+        mocks.findByEmail.mockResolvedValue(row({ subscribed_at: hoursAgo(0.1), confirmation_sent_at: null }));
+        mocks.claimResend.mockResolvedValue(row());
+        await processNewsletterSubscribe({ email: "owner@example.com" });
+        expect(mocks.sendEmail).toHaveBeenCalledTimes(1);
+    });
+
+    it("sends nothing when a concurrent request already claimed the resend", async () => {
+        mocks.findByEmail.mockResolvedValue(row({ confirmation_sent_at: null }));
+        mocks.claimResend.mockResolvedValue(null);
+        await processNewsletterSubscribe({ email: "owner@example.com" });
+        expect(mocks.sendEmail).not.toHaveBeenCalled();
     });
 
     it("makes an unsubscribed address confirm again instead of reactivating it", async () => {

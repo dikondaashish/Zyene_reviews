@@ -7,7 +7,8 @@
 -- rows receive marketing mail.
 ALTER TABLE public.marketing_subscribers
   ADD COLUMN IF NOT EXISTS confirmed_at timestamptz,
-  ADD COLUMN IF NOT EXISTS confirmation_token uuid NOT NULL DEFAULT gen_random_uuid();
+  ADD COLUMN IF NOT EXISTS confirmation_token uuid NOT NULL DEFAULT gen_random_uuid(),
+  ADD COLUMN IF NOT EXISTS confirmation_sent_at timestamptz;
 
 CREATE UNIQUE INDEX IF NOT EXISTS marketing_subscribers_confirmation_token_key
   ON public.marketing_subscribers (confirmation_token);
@@ -22,3 +23,5 @@ COMMENT ON COLUMN public.marketing_subscribers.confirmed_at IS
   'When the address owner confirmed the subscription. NULL = pending; no marketing mail is sent.';
 COMMENT ON COLUMN public.marketing_subscribers.confirmation_token IS
   'Opaque token in the confirmation email link. Rotated whenever a sign-up returns to pending.';
+COMMENT ON COLUMN public.marketing_subscribers.confirmation_sent_at IS
+  'When the last confirmation email was sent; limits resends to one a day. Other lead forms update subscribed_at, so it cannot be used for this.';

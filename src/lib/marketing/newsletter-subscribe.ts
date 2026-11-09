@@ -6,7 +6,7 @@ import { recordNewsletterSourceEvent } from "@/lib/marketing/newsletter-source-e
 import {
     findSubscriberByEmail,
     insertPendingSubscriber,
-    markConfirmationResent,
+    claimConfirmationResend,
     resetSubscriberToPending,
     type SubscriberRow,
     type SubscriberSignup,
@@ -50,7 +50,7 @@ async function sendConfirmationRequest(subscriber: SubscriberRow): Promise<void>
         to: subscriber.email,
         subject,
         html,
-        idempotencyKey: `newsletter-confirm/${subscriber.confirmation_token}/${subscriber.subscribed_at}`,
+        idempotencyKey: `newsletter-confirm/${subscriber.confirmation_token}/${subscriber.confirmation_sent_at ?? subscriber.subscribed_at}`,
     });
     if (!result.sent) logger.error({ subscriberId: subscriber.id }, "[newsletter] confirmation email failed");
 }
@@ -74,11 +74,12 @@ async function pendingSubscriberFor(signup: SubscriberSignup): Promise<PendingOu
     }
     if (existing.confirmed_at) return { row: null, newLead: false };
 
-    const lastRequest = Date.parse(existing.subscribed_at);
-    if (Date.now() - lastRequest < CONFIRMATION_RESEND_INTERVAL_MS) return { row: null, newLead: false };
-    await markConfirmationResent(admin, existing.id);
-    const refreshed = await findSubscriberByEmail(admin, signup.email);
-    return { row: refreshed, newLead: false };
+    // Throttle on the last confirmation email, not subscribed_at: demo and free-tool forms
+    // refresh subscribed_at, which would otherwise swallow a real newsletter sign-up.
+    const lastSent = existing.confirmation_sent_at ? Date.parse(existing.confirmation_sent_at) : 0;
+    if (Date.now() - lastSent < CONFIRMATION_RESEND_INTERVAL_MS) return { row: null, newLead: false };
+    const cutoff = new Date(Date.now() - CONFIRMATION_RESEND_INTERVAL_MS).toISOString();
+    return { row: await claimConfirmationResend(admin, existing.id, cutoff), newLead: false };
 }
 
 /**

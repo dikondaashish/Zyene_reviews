@@ -194,7 +194,7 @@ Pending team invites (email, role, token, expiry) — see audit/schema fix migra
 
 | Table | Role |
 |-------|------|
-| `marketing_subscribers`, `growth_email_runs` | Newsletter / growth mail. Marketing mail goes only to rows with `confirmed_at` set and `unsubscribed_at` null; `confirmation_token` is the double opt-in link token |
+| `marketing_subscribers`, `growth_email_runs` | Newsletter / growth mail. Marketing mail goes only to rows with `confirmed_at` set and `unsubscribed_at` null; `confirmation_token` is the double opt-in link token; `confirmation_sent_at` limits confirmation resends to one a day |
 | `referral_conversions` | Referral rewards |
 | `nfc_orders` | NFC card orders |
 | `square_connections`, `square_payment_events` | Square sandbox |

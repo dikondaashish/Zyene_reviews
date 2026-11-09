@@ -16,6 +16,7 @@ export type SubscriberRow = {
     unsubscribed_at: string | null;
     confirmed_at: string | null;
     confirmation_token: string;
+    confirmation_sent_at: string | null;
 };
 
 export type SubscriberSignup = {
@@ -30,7 +31,7 @@ type Db = SupabaseClient;
 type RowResult = { data: SubscriberRow | null; error: { code?: string; message?: string } | null };
 
 const COLUMNS =
-    "id, email, source, utm_source, utm_medium, utm_campaign, subscribed_at, unsubscribed_at, confirmed_at, confirmation_token";
+    "id, email, source, utm_source, utm_medium, utm_campaign, subscribed_at, unsubscribed_at, confirmed_at, confirmation_token, confirmation_sent_at";
 
 const table = (db: Db) => db.from("marketing_subscribers");
 
@@ -52,7 +53,7 @@ export async function findSubscriberByToken(db: Db, token: string): Promise<Subs
 /** New pending sign-up; returns null when another request created the row first. */
 export async function insertPendingSubscriber(db: Db, signup: SubscriberSignup): Promise<SubscriberRow | null> {
     const result = (await table(db)
-        .insert({ ...signup, confirmed_at: null } as never)
+        .insert({ ...signup, confirmed_at: null, confirmation_sent_at: new Date().toISOString() } as never)
         .select(COLUMNS)
         .single()) as unknown as RowResult;
     if (result.error?.code === "23505") return null;
@@ -68,6 +69,7 @@ export async function resetSubscriberToPending(db: Db, id: string, signup: Subsc
             confirmed_at: null,
             confirmation_token: crypto.randomUUID(),
             subscribed_at: new Date().toISOString(),
+            confirmation_sent_at: new Date().toISOString(),
         } as never)
         .eq("id", id)
         .select(COLUMNS)
@@ -77,10 +79,20 @@ export async function resetSubscriberToPending(db: Db, id: string, signup: Subsc
     return row;
 }
 
-/** Records that a confirmation email was just requested again for a pending sign-up. */
-export async function markConfirmationResent(db: Db, id: string): Promise<void> {
-    const { error } = await table(db).update({ subscribed_at: new Date().toISOString() }).eq("id", id);
-    if (error) throw new Error("Unable to update newsletter subscriber");
+/**
+ * Claims the right to send another confirmation email to a pending sign-up when none
+ * was sent since `cutoff`. Only one concurrent caller gets the row back.
+ */
+export async function claimConfirmationResend(db: Db, id: string, cutoff: string): Promise<SubscriberRow | null> {
+    const result = (await table(db)
+        .update({ confirmation_sent_at: new Date().toISOString() } as never)
+        .eq("id", id)
+        .is("confirmed_at" as never, null)
+        .is("unsubscribed_at", null)
+        .or(`confirmation_sent_at.is.null,confirmation_sent_at.lt."${cutoff}"`)
+        .select(COLUMNS)
+        .maybeSingle()) as unknown as RowResult;
+    return unwrap(result, "update");
 }
 
 /** Confirms a pending, still-subscribed sign-up. Only one concurrent caller gets the row back. */
