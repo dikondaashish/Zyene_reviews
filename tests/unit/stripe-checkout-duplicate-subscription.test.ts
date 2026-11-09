@@ -2,8 +2,12 @@ import type Stripe from "stripe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { WebhookAdminClient } from "@/services/stripe/webhook-types";
 
-const m = vi.hoisted(() => ({ retrieve: vi.fn(), list: vi.fn(), cancel: vi.fn(), captureMessage: vi.fn(), error: vi.fn(), reset: vi.fn() }));
-vi.mock("@/services/stripe/client", () => ({ stripe: { subscriptions: { retrieve: m.retrieve, list: m.list, cancel: m.cancel } } }));
+const m = vi.hoisted(() => ({ retrieve: vi.fn(), list: vi.fn(), cancel: vi.fn(), captureMessage: vi.fn(), error: vi.fn(), reset: vi.fn(),
+    invoiceList: vi.fn(), voidInvoice: vi.fn() }));
+vi.mock("@/services/stripe/client", () => ({ stripe: {
+    subscriptions: { retrieve: m.retrieve, list: m.list, cancel: m.cancel },
+    invoices: { list: m.invoiceList, voidInvoice: m.voidInvoice },
+} }));
 vi.mock("@/services/stripe/plans", () => ({
     getPlanByPriceId: (priceId: string) => priceId === "price_offcatalog" ? null : ({ id: "starter_monthly", name: "Starter", limits: { maxLocations: 1, teamMembers: 5,
         smartRepliesPerMonth: 10, emailRequestsPerMonth: 20, smsRequestsPerMonth: 30, linkRequestsPerMonth: 40 } }),
@@ -37,11 +41,14 @@ function statuses(map: Record<string, string>) {
 beforeEach(() => {
     vi.resetAllMocks();
     m.list.mockResolvedValue({ data: [] });
+    m.invoiceList.mockResolvedValue({ data: [] });
+    m.voidInvoice.mockResolvedValue({});
 });
-type Other = [id: string, status: string, opts?: { org?: string; price?: string }];
+type Other = [id: string, status: string, opts?: { org?: string; price?: string; comment?: string }];
 function others(list: Other[]) {
     m.list.mockResolvedValue({ data: list.map(([id, status, opts]) => ({
         id, status, metadata: opts?.org ? { organization_id: opts.org } : {},
+        cancellation_details: opts?.comment ? { comment: opts.comment } : null,
         items: { data: [{ price: { id: opts?.price ?? "price_known" } }] },
     })) });
 }
@@ -154,5 +161,54 @@ describe("after binding the checkout subscription", () => {
         m.cancel.mockRejectedValue(Object.assign(new Error("No such subscription"), { code: "resource_missing" }));
         const { client } = db();
         await expect(handleCheckoutSessionCompleted(checkout, client)).resolves.toBeUndefined();
+    });
+
+    it("voids the replaced subscription's open invoices, only after it is cancelled", async () => {
+        statuses({ sub_old: "canceled", sub_new: "active", sub_unpaid: "unpaid" });
+        others([["sub_unpaid", "unpaid"]]);
+        m.invoiceList.mockResolvedValue({ data: [{ id: "in_dunning" }, { id: "in_older" }] });
+        const { client } = db();
+        await handleCheckoutSessionCompleted(checkout, client);
+        expect(m.invoiceList).toHaveBeenCalledWith(expect.objectContaining({ subscription: "sub_unpaid", status: "open" }));
+        expect(m.voidInvoice.mock.calls.map((c) => c[0])).toEqual(["in_dunning", "in_older"]);
+        // Voiding first could revive the subscription to active; cancel must come first.
+        expect(m.cancel.mock.invocationCallOrder[0]).toBeLessThan(m.voidInvoice.mock.invocationCallOrder[0]);
+    });
+
+    it("finishes voiding on a retry after the cancel already landed", async () => {
+        statuses({ sub_old: "canceled", sub_new: "active" });
+        others([["sub_unpaid", "canceled", { comment: "Replaced by sub_new at checkout cs_dup" }]]);
+        m.invoiceList.mockResolvedValue({ data: [{ id: "in_dunning" }] });
+        const { client } = db();
+        await handleCheckoutSessionCompleted(checkout, client);
+        expect(m.cancel).not.toHaveBeenCalled();
+        expect(m.voidInvoice).toHaveBeenCalledWith("in_dunning");
+    });
+
+    it("never voids invoices of a subscription it did not cancel", async () => {
+        statuses({ sub_old: "canceled", sub_new: "active" });
+        others([["sub_history", "canceled"], ["sub_user_canceled", "canceled", { comment: "Too expensive" }]]);
+        const { client } = db();
+        await handleCheckoutSessionCompleted(checkout, client);
+        expect(m.invoiceList).not.toHaveBeenCalled();
+        expect(m.voidInvoice).not.toHaveBeenCalled();
+    });
+
+    it("does not void when the subscription was paid just before the cancel", async () => {
+        statuses({ sub_old: "canceled", sub_new: "active", sub_unpaid: "active" });
+        others([["sub_unpaid", "unpaid"]]);
+        const { client } = db();
+        await handleCheckoutSessionCompleted(checkout, client);
+        expect(m.cancel).not.toHaveBeenCalled();
+        expect(m.invoiceList).not.toHaveBeenCalled();
+    });
+
+    it("retries the webhook when voiding fails", async () => {
+        statuses({ sub_old: "canceled", sub_new: "active", sub_unpaid: "unpaid" });
+        others([["sub_unpaid", "unpaid"]]);
+        m.invoiceList.mockResolvedValue({ data: [{ id: "in_dunning" }] });
+        m.voidInvoice.mockRejectedValue(Object.assign(new Error("Stripe 500"), { type: "StripeAPIError" }));
+        const { client } = db();
+        await expect(handleCheckoutSessionCompleted(checkout, client)).rejects.toThrow("Stripe 500");
     });
 });

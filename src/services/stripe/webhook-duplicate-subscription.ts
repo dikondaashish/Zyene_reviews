@@ -82,7 +82,12 @@ export async function settleOtherCustomerSubscriptions(check: {
   for (const sub of others.data) {
     if (sub.id === check.keepSubscriptionId || !belongsToOrgPlan(sub, check.organizationId)) continue;
     if (sub.status === "unpaid") {
-      await cancelIfStillUnpaid(sub.id, check);
+      await replaceUnpaidSubscription(sub.id, check);
+      continue;
+    }
+    // A retry after the cancel landed but voiding failed: finish voiding what we cancelled.
+    if (sub.status === "canceled" && sub.cancellation_details?.comment === replacedComment(check)) {
+      await voidOpenInvoices(sub.id);
       continue;
     }
     if (LIVE_STATUSES.has(sub.status)) {
@@ -97,16 +102,37 @@ export async function settleOtherCustomerSubscriptions(check: {
   }
 }
 
-/** Re-reads the status right before cancelling, so a subscription paid a moment ago is kept. */
-async function cancelIfStillUnpaid(subscriptionId: string, check: { keepSubscriptionId: string; sessionId: string }) {
+function replacedComment(check: { keepSubscriptionId: string; sessionId: string }): string {
+  return `Replaced by ${check.keepSubscriptionId} at checkout ${check.sessionId}`;
+}
+
+/**
+ * Re-reads the status right before acting, so a subscription paid a moment ago is kept.
+ * Cancels FIRST, then voids its open invoices: cancelling only stops automatic
+ * collection, so the old dunning invoice stayed payable for a subscription that no longer
+ * exists. Voiding before cancelling is unsafe: voiding a delinquent subscription's latest
+ * invoice can move it back to `active` (Stripe docs), and it would then keep billing.
+ * A canceled subscription is terminal, so voiding afterwards cannot revive it.
+ */
+async function replaceUnpaidSubscription(subscriptionId: string, check: { keepSubscriptionId: string; sessionId: string }) {
   try {
     const current = await stripe.subscriptions.retrieve(subscriptionId);
     if (current.status !== "unpaid") return;
-    await stripe.subscriptions.cancel(subscriptionId, {
-      cancellation_details: { comment: `Replaced by ${check.keepSubscriptionId} at checkout ${check.sessionId}` },
-    });
+    await stripe.subscriptions.cancel(subscriptionId, { cancellation_details: { comment: replacedComment(check) } });
     logger.info({ ...check, canceledSubscriptionId: subscriptionId }, "Canceled unpaid subscription replaced at checkout");
   } catch (error: unknown) {
     if (!isStripeResourceMissing(error)) throw error;
+    return;
+  }
+  await voidOpenInvoices(subscriptionId);
+}
+
+/** Voids every open invoice of a subscription we just cancelled (the owner chose to write the old debt off). */
+async function voidOpenInvoices(subscriptionId: string): Promise<void> {
+  const open = await stripe.invoices.list({ subscription: subscriptionId, status: "open", limit: 100 });
+  for (const invoice of open.data) {
+    if (!invoice.id) continue;
+    await stripe.invoices.voidInvoice(invoice.id);
+    logger.info({ subscriptionId, invoiceId: invoice.id }, "Voided open invoice of a replaced unpaid subscription");
   }
 }
