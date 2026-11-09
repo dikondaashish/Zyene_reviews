@@ -56,7 +56,8 @@ describe("drip tenant binding and send-time allowance", () => {
             smsTemplate: "Reminder {review_link}", emailTemplate: "Reminder {review_link}", isFollowUp: true, step: 2 }));
     });
     it("is not due yet when the configured reminder delay has not passed (worker cutoff) and expires very late reminders", async () => {
-        liveRequest = { ...request, sent_at: hoursAgo(48 + 80) }; // more than 72h past due
+        // More than 72h past due, counting the due time from at least the default 7-day gap.
+        liveRequest = { ...request, sent_at: hoursAgo(168 + 80) };
         await sendDripStep(args());
         expect(mocks.terminate).toHaveBeenCalledWith(expect.anything(), "request-a", "expired");
         expect(mocks.send).not.toHaveBeenCalled();

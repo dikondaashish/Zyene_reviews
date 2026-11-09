@@ -29,6 +29,14 @@ describe("isEligibleForRecurringSync", () => {
         expect(isEligibleForRecurringSync(status)).toBe(false);
     });
 
+    it("retries a transient Yelp/Facebook API failure instead of dropping the platform", () => {
+        expect(isEligibleForRecurringSync("error_api_call")).toBe(true);
+    });
+
+    it.each(["error_token_expired", "error_token_revoked"])("still excludes %s (needs a reconnect)", (status) => {
+        expect(isEligibleForRecurringSync(status)).toBe(false);
+    });
+
     it("excludes unknown statuses — allowlist, not denylist", () => {
         // A denylist would let a future status silently start spending Google API quota.
         expect(isEligibleForRecurringSync("paused")).toBe(false);

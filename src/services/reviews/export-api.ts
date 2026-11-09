@@ -61,31 +61,12 @@ export async function handleReviewsExport(request: Request) {
         const name = business.name || "business";
         filename = `${name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_private_feedback.csv`;
     } else {
-        const { data: reviews } = await supabase
-            .from("reviews")
-            .select(`
-                id,
-                rating,
-                content:text,
-                author_name,
-                sentiment,
-                published_at:review_date,
-                created_at,
-                response_status,
-                review_platforms (
-                    platform
-                )
-            `)
-            .eq("business_id", business.id)
-            .eq("is_visible", true)
-            .order("review_date", { ascending: false });
-
-        const publicRows = (reviews || []) as PublicReviewExportRow[];
+        const publicRows = await loadAllPublicReviewsForExport(supabase, business.id);
         const formatted = publicRows.map((reviewRow) => ({
             "Date": new Date(reviewRow.published_at || reviewRow.created_at).toLocaleString(),
             "Rating": reviewRow.rating,
             "Author": reviewRow.author_name || "Anonymous",
-            "Platform": reviewRow.review_platforms?.platform || "Direct",
+            "Platform": reviewRow.platform || reviewRow.review_platforms?.platform || "Direct",
             "Content": reviewRow.content || "",
             "Sentiment": reviewRow.sentiment || "",
             "Response Status": reviewRow.response_status || "pending"
@@ -103,4 +84,41 @@ export async function handleReviewsExport(request: Request) {
             "Content-Disposition": `attachment; filename="${filename}"`
         }
     });
+}
+
+const EXPORT_PAGE_SIZE = 1000;
+
+/** Every visible review, newest first, read in pages so exports are not cut at the API row cap. */
+async function loadAllPublicReviewsForExport(
+    supabase: Awaited<ReturnType<typeof createClient>>,
+    businessId: string,
+): Promise<PublicReviewExportRow[]> {
+    const rows: PublicReviewExportRow[] = [];
+    for (let from = 0; ; from += EXPORT_PAGE_SIZE) {
+        const { data, error } = await supabase
+            .from("reviews")
+            .select(`
+                id,
+                rating,
+                content:text,
+                author_name,
+                sentiment,
+                published_at:review_date,
+                created_at,
+                response_status,
+                platform,
+                review_platforms (
+                    platform
+                )
+            `)
+            .eq("business_id", businessId)
+            .eq("is_visible", true)
+            .order("review_date", { ascending: false })
+            .order("id", { ascending: true })
+            .range(from, from + EXPORT_PAGE_SIZE - 1);
+        if (error) throw error;
+        const page = (data ?? []) as PublicReviewExportRow[];
+        rows.push(...page);
+        if (page.length < EXPORT_PAGE_SIZE) return rows;
+    }
 }

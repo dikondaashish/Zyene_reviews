@@ -3,6 +3,7 @@ import { emailHtmlToText } from "@/lib/email/html-to-text";
 import { REVIEW_REQUEST_EMAIL_HEADERS } from "@/lib/email/review-request-signals";
 import { resendCollectratings } from "./collectratings-client";
 import { buildFromLine, sendEmail } from "./send-email";
+import { formatFromAddress } from "@/lib/email/from-header";
 
 const DEFAULT_COLLECT_FROM = "CollectRatings <hello@send.collectratings.com>";
 
@@ -26,7 +27,7 @@ export function collectratingsFromLine(businessName?: string | null, senderName?
     const domain = fallback.match(/<[^@>]+@([^>]+)>/)?.[1];
     if (!biz || !domain) return fallback;
     const display = (sender ? `${sender} at ${biz}` : biz).slice(0, 78);
-    return `${display} <${mailboxLocalPart(biz)}@${domain}>`;
+    return formatFromAddress(display, `${mailboxLocalPart(biz)}@${domain}`);
 }
 
 type SendReviewRequestEmailProps = {

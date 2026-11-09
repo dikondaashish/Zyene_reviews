@@ -6,9 +6,9 @@ export type CustomerPatch = {
   id: string;
   businessId: string;
   firstName?: string;
-  lastName?: string;
+  lastName?: string | null;
   first_name?: string;
-  last_name?: string;
+  last_name?: string | null;
   email?: string;
   phone?: string;
   tags?: string[];
@@ -19,7 +19,7 @@ export type CustomerPatch = {
 export async function patchCustomerRecord(supabase: SupabaseClient, patch: CustomerPatch) {
   const updates: {
     first_name?: string;
-    last_name?: string;
+    last_name?: string | null;
     email?: string;
     phone?: string;
     tags?: string[];
@@ -46,7 +46,7 @@ export async function patchCustomerRecord(supabase: SupabaseClient, patch: Custo
       businessId: patch.businessId,
       customerId: patch.id,
       firstName: patch.firstName ?? patch.first_name,
-      lastName: patch.lastName ?? patch.last_name,
+      lastName: patch.lastName ?? patch.last_name ?? undefined,
       email: patch.email,
       phone: patch.phone,
       tags: patch.tags,

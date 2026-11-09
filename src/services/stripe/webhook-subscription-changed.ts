@@ -5,6 +5,7 @@ import { logger } from "@/lib/logger";
 import { stripe } from "@/services/stripe/client";
 import { stripeSubscriptionToOrganizationUpdate } from "@/services/stripe/organization-billing-sync";
 import { applySubscriptionProjection, canceledBillingProjection } from "@/services/stripe/subscription-projection";
+import { grantRecoveredCycleCredit, isRecoveryToEntitled } from "@/services/stripe/recovered-cycle-credit-grant";
 import { sendEmail } from "@/services/resend/send-email";
 import { subscriptionCanceledEmail } from "@/services/resend/templates/subscription-canceled-email";
 
@@ -49,6 +50,13 @@ export async function handleSubscriptionUpdated(
 
     const updatedOrgId = await applySubscriptionProjection(supabase, customerId, subscription.id,
         stripeSubscriptionToOrganizationUpdate(subscription), { observedAt });
+    // A smart-retry recovery can land after invoice.payment_succeeded, whose
+    // grant was refused while the org was still past_due. Re-attempt it here,
+    // even when a newer snapshot (e.g. billing-page reconcile) made this
+    // projection stale: nothing else re-grants once this event is processed.
+    if (isRecoveryToEntitled(previousAttributes?.status, subscription.status)) {
+        await grantRecoveredCycleCredit(supabase, { customerId, subscription });
+    }
     if (!updatedOrgId) return;
 
     const convertedFromTrial =

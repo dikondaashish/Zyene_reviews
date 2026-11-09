@@ -12,6 +12,8 @@ import {
     type SubscriberSignup,
 } from "@/lib/marketing/newsletter-subscriber-store";
 import { marketingCanonicalUrl } from "@/lib/seo/marketing-site-url";
+import { LOCAL_SEO_CHECKLIST_SOURCE } from "@/lib/marketing/local-seo-checklist-events";
+import { TEMPLATE_PACK_SOURCE } from "@/lib/marketing/template-pack-events";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -25,6 +27,10 @@ export type NewsletterSubscribeInput = {
     utm_medium?: string;
     utm_campaign?: string;
 };
+
+/** Lead-magnet downloads are not a newsletter opt-in; they never bring back an unsubscribed address. */
+const LEAD_MAGNET_SOURCES = new Set<string>([TEMPLATE_PACK_SOURCE, LOCAL_SEO_CHECKLIST_SOURCE]);
+const UNSUBSCRIBED_LEAD_MAGNET_MESSAGE = "This address unsubscribed from our emails. The guide is on this page.";
 
 export type NewsletterSubscribeResult =
     | { ok: true; newLead: boolean; message?: string }
@@ -50,13 +56,18 @@ async function sendConfirmationRequest(subscriber: SubscriberRow): Promise<void>
 }
 
 /** Which subscriber row (if any) should get a confirmation email for this sign-up. */
-async function pendingSubscriberFor(signup: SubscriberSignup): Promise<{ row: SubscriberRow | null; newLead: boolean }> {
+type PendingOutcome = { row: SubscriberRow | null; newLead: boolean; unsubscribedLeadMagnet?: boolean };
+
+async function pendingSubscriberFor(signup: SubscriberSignup): Promise<PendingOutcome> {
     const admin = createAdminClient();
     const existing = await findSubscriberByEmail(admin, signup.email);
 
     if (!existing) {
         const created = await insertPendingSubscriber(admin, signup);
         return { row: created, newLead: created !== null };
+    }
+    if (existing.unsubscribed_at && LEAD_MAGNET_SOURCES.has(signup.source)) {
+        return { row: null, newLead: false, unsubscribedLeadMagnet: true };
     }
     if (existing.unsubscribed_at) {
         return { row: await resetSubscriberToPending(admin, existing.id, signup), newLead: true };
@@ -88,7 +99,7 @@ export async function processNewsletterSubscribe(body: NewsletterSubscribeInput)
         utm_campaign: body.utm_campaign ?? null,
     };
 
-    let pending: { row: SubscriberRow | null; newLead: boolean };
+    let pending: PendingOutcome;
     try {
         pending = await pendingSubscriberFor(signup);
     } catch (err) {
@@ -106,5 +117,8 @@ export async function processNewsletterSubscribe(body: NewsletterSubscribeInput)
         }
     }
 
+    if (pending.unsubscribedLeadMagnet) {
+        return { ok: true, newLead: false, message: UNSUBSCRIBED_LEAD_MAGNET_MESSAGE };
+    }
     return { ok: true, newLead: pending.newLead };
 }

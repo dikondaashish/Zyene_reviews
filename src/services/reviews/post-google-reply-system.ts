@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { REVIEW_RESPONSE_SOURCE_ZYENE, REVIEW_RESPONSE_SOURCE_ZYENE_AUTO } from "@/lib/reviews/response-source";
 import { postGoogleReviewReply } from "@/services/reviews/reply-review-access";
+import { invalidateDashboardStatsCache } from "@/lib/dashboard/invalidate-dashboard-stats-cache";
 
 /**
  * Post a reply to Google and mark the review as responded (auto rules, templates, or an
@@ -57,5 +58,6 @@ export async function postGoogleReplySystem(
         .eq("id", review.id);
 
     if (updateError) throw updateError;
+    await invalidateDashboardStatsCache(review.business_id);
     return true;
 }

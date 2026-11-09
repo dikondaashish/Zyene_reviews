@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createClient } from "@/lib/db/supabase/client";
 import type { AppUserSummary, OrganizationSettingsRecord } from "@/types/components";
+import { apiErrorMessage } from "@/lib/api/api-envelope";
 
 export function useGeneralSettingsForm(
     user: AppUserSummary,
@@ -38,8 +39,8 @@ export function useGeneralSettingsForm(
                 });
 
                 if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.message || "Failed to update profile");
+                    const body: unknown = await response.json().catch(() => null);
+                    throw new Error(apiErrorMessage(body, "Failed to update profile"));
                 }
             }
 

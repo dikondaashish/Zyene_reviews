@@ -5,6 +5,7 @@ import { createClient } from "@/lib/db/supabase/server";
 import { revalidatePath } from "next/cache";
 import { stepPlanSchema, type StepPlanFormData } from "@/lib/validations/onboarding";
 import { stripe } from "@/services/stripe/client";
+import { loadActiveBillingMember } from "@/lib/billing/active-billing-member";
 
 export async function savePlanSelection(
   organizationId: string,
@@ -98,27 +99,15 @@ export async function finalizeOnboardingStripeCheckout(params: {
       return { success: false, error: "You are not authenticated." };
     }
 
-    const { data: member } = await supabase
-      .from("organization_members")
-      .select("organization_id")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (!member?.organization_id) {
-      return { success: false, error: "No organization found." };
-    }
-
-    const orgId = member.organization_id as string;
     let trialEventId: string | undefined;
 
     if (params.planSwitchedOnly) {
-      const { data: org } = await supabase
-        .from("organizations")
-        .select("stripe_subscription_id")
-        .eq("id", orgId)
-        .single();
-
-      if (!org?.stripe_subscription_id) {
+      // Same org the in-place plan switch was made for: the one selected in the app header.
+      const active = await loadActiveBillingMember(user.id);
+      if (active.kind !== "ok" || !active.member) {
+        return { success: false, error: "No organization found." };
+      }
+      if (!active.member.organizations?.stripe_subscription_id) {
         return { success: false, error: "Subscription not found yet. Please refresh." };
       }
     } else if (params.sessionId) {
@@ -130,7 +119,19 @@ export async function finalizeOnboardingStripeCheckout(params: {
         return { success: false, error: "Checkout is not complete." };
       }
 
-      if (session.metadata?.organization_id !== orgId) {
+      // The session names its org; the caller must be an active member of that org.
+      const orgId = session.metadata?.organization_id;
+      const { data: member } = orgId
+        ? await supabase
+            .from("organization_members")
+            .select("organization_id")
+            .eq("organization_id", orgId)
+            .eq("user_id", user.id)
+            .eq("status", "active")
+            .maybeSingle()
+        : { data: null };
+
+      if (!member?.organization_id) {
         return { success: false, error: "This checkout does not belong to your organization." };
       }
 

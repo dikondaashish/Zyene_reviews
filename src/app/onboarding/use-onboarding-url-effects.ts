@@ -54,6 +54,12 @@ export function useOnboardingUrlEffects({
         const cleanUrl = () =>
             window.history.replaceState({}, document.title, window.location.pathname);
 
+        // Set just before redirecting to Stripe Checkout. Clear it on every return so a
+        // successful checkout is never shown as cancelled; without any checkout params
+        // (e.g. browser Back from Stripe) it means the payment was abandoned.
+        const paymentPending = sessionStorage.getItem("zyene_payment_pending") === "true";
+        sessionStorage.removeItem("zyene_payment_pending");
+
         if (canceled === "1") {
             setShowPaymentCancelled(true);
             setCurrentStep(4);
@@ -62,7 +68,10 @@ export function useOnboardingUrlEffects({
             return;
         }
 
-        if (checkoutSuccess !== "1") return;
+        if (checkoutSuccess !== "1") {
+            if (paymentPending) setShowPaymentCancelled(true);
+            return;
+        }
 
         if (sessionId) {
             setCheckoutVerifying(true);
@@ -105,15 +114,6 @@ export function useOnboardingUrlEffects({
 
         cleanUrl();
     }, [setCurrentStep, setIsStepResolved, setShowPaymentCancelled, setCheckoutVerifying]);
-
-    useEffect(() => {
-        if (typeof window === "undefined") return;
-        const pending = sessionStorage.getItem("zyene_payment_pending");
-        if (pending === "true") {
-            setShowPaymentCancelled(true);
-            sessionStorage.removeItem("zyene_payment_pending");
-        }
-    }, [setShowPaymentCancelled]);
 
     useEffect(() => {
         if (typeof window === "undefined") return;

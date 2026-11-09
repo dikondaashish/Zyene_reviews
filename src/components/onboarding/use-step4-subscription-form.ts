@@ -19,9 +19,15 @@ export function useStep4SubscriptionForm(organizationId: string, externalIsLoadi
 
     useEffect(() => {
         let cancelled = false;
-        void getCheckoutTrialEligibilityForOrganization(organizationId).then((r) => {
-            if (!cancelled) setCheckoutOffersTrial(r.eligible);
-        });
+        getCheckoutTrialEligibilityForOrganization(organizationId)
+            .then((r) => {
+                if (!cancelled) setCheckoutOffersTrial(r.eligible);
+            })
+            .catch(() => {
+                // Unknown eligibility: don't promise a trial, but keep the plans usable.
+                // Checkout decides the trial server-side either way.
+                if (!cancelled) setCheckoutOffersTrial(false);
+            });
         return () => {
             cancelled = true;
         };

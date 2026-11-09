@@ -128,6 +128,7 @@ To change a region's behaviour, edit `JURISDICTION_RULES`. Nothing else hard-cod
 | `sb-<project>-auth-token` (+ chunks) | Supabase via `@supabase/ssr` | Auth session | Essential | 1st (`.zyenereviews.com`) | sign-in / refresh in proxy | per Supabase session | No |
 | Facebook connect state, `FB_CONNECT_COOKIE` | Zyene | OAuth CSRF / selection nonce | Essential | 1st | Facebook connect flow | short-lived | No |
 | add-business OAuth cookie | Zyene | Google OAuth state for adding a business | Essential | 1st | add-business flow | short-lived | No |
+| `square_oauth_state`, `clover_oauth_state` | Zyene | Signed OAuth CSRF state binding the connect attempt to the user and business | Essential | 1st | Square / Clover connect flow | 10 min, cleared at callback | No |
 | growth dashboard cookie | Zyene | Internal dashboard auth | Essential | 1st | internal login | per config | No |
 | `zyene_consent` | Zyene | Stores the choice | Essential | 1st | on choice | 180 days | No (is the record) |
 | `zyene_jurisdiction` | Zyene | Region group + GPC flag | Essential | 1st | proxy, page requests | 24 h | No |

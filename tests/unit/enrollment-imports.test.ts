@@ -57,6 +57,20 @@ describe("daily enrollment runner", () => {
         expect(db.tables.enrollment_import_rows.filter((r) => r.status === "enrolled")).toHaveLength(2);
     });
 
+    it("puts claimed rows back to pending when the hand-off to the job queue fails", async () => {
+        seed();
+        mocks.send.mockRejectedValueOnce(new Error("Inngest unavailable"));
+        await expect(runEnrollmentImports(db.client)).rejects.toThrow("Inngest unavailable");
+        expect(db.tables.enrollment_import_rows.filter((r) => r.status === "enrolled")).toHaveLength(0);
+        expect(db.tables.enrollment_import_rows.find((r) => r.id === "row-0")).toMatchObject({ status: "pending", processed_at: null });
+
+        // The next run retries the same rows with the same event ids.
+        mocks.send.mockResolvedValue({ ids: [] });
+        await runEnrollmentImports(db.client);
+        expect(mocks.send.mock.calls.at(-1)?.[0].map((e: { id: string }) => e.id))
+            .toEqual(["import:imp-1:row:row-0", "import:imp-1:row:row-1"]);
+    });
+
     it("counts what was already enrolled today and never enrolls a row twice on overlapping runs", async () => {
         seed("active", 3, 5, 2);
         await runEnrollmentImports(db.client);

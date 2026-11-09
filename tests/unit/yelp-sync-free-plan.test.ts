@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/logger", () => ({ logger: { error: vi.fn() } }));
 vi.mock("@/domains/ai/services/ai-analysis-service", () => ({ analyzeReview: vi.fn() }));
 vi.mock("@/lib/notifications/review-alert", () => ({ sendReviewAlert: vi.fn() }));
+vi.mock("@/lib/dashboard/invalidate-dashboard-stats-cache", () => ({ invalidateDashboardStatsCache: vi.fn() }));
 vi.mock("@/services/yelp/adapter", () => ({ getBusiness: mocks.getBusiness, getReviews: mocks.getReviews }));
 vi.mock("@/lib/db/supabase/admin", () => ({
     createAdminClient: () => ({

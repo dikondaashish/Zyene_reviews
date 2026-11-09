@@ -75,6 +75,10 @@ export async function loadReviewsPageList(
     else if (sort === "oldest") query = query.order("review_date", { ascending: true });
     else if (sort === "lowest") query = query.order("rating", { ascending: true });
     else if (sort === "highest") query = query.order("rating", { ascending: false });
+    // Many reviews share a rating or date; without a unique tie-breaker Postgres may
+    // order ties differently per page, so pages repeat and skip rows.
+    if (sort === "lowest" || sort === "highest") query = query.order("review_date", { ascending: false });
+    query = query.order("id", { ascending: true });
 
     const { data, count: totalCount, error } = await query.range(from, to);
     if (error) {
