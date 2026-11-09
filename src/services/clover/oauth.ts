@@ -8,12 +8,6 @@ import {
     getCloverOAuthRedirectUri,
 } from "@/services/clover/config";
 
-export type CloverOAuthState = {
-    businessId: string;
-    userId: string;
-    nonce: string;
-};
-
 export type CloverTokenResponse = {
     access_token: string;
     refresh_token?: string;
@@ -22,19 +16,8 @@ export type CloverTokenResponse = {
     merchant_id?: string;
 };
 
-export function encodeCloverOAuthState(state: CloverOAuthState): string {
-    return Buffer.from(JSON.stringify(state)).toString("base64url");
-}
-
-export function decodeCloverOAuthState(raw: string): CloverOAuthState {
-    const parsed = JSON.parse(Buffer.from(raw, "base64url").toString("utf-8")) as CloverOAuthState;
-    if (!parsed?.businessId || !parsed?.userId) {
-        throw new Error("Invalid Clover OAuth state");
-    }
-    return parsed;
-}
-
-export function buildCloverAuthorizeUrl(state: CloverOAuthState): string {
+/** `nonce` is the opaque state the provider echoes back; see `@/lib/auth/pos-oauth-state`. */
+export function buildCloverAuthorizeUrl(nonce: string): string {
     const appId = getCloverAppId();
     if (!appId) throw new Error("CLOVER_APP_ID is not configured");
 
@@ -42,7 +25,7 @@ export function buildCloverAuthorizeUrl(state: CloverOAuthState): string {
         client_id: appId,
         response_type: "code",
         redirect_uri: getCloverOAuthRedirectUri(),
-        state: encodeCloverOAuthState(state),
+        state: nonce,
     });
 
     return `${getCloverAuthorizeBaseUrl()}/oauth/v2/authorize?${params.toString()}`;
