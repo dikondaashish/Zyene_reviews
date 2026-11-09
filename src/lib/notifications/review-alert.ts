@@ -13,6 +13,14 @@ import type {
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.zyenereviews.com";
 
+/**
+ * Synced reviews (Google, Yelp, Facebook) alert only when they need attention:
+ * urgent per AI analysis, or 1-2 stars. Everything else is in the weekly summary.
+ */
+export function isAlertWorthyReview(rating: number | null | undefined, urgency: number | null | undefined): boolean {
+    return (urgency ?? 0) >= 7 || (rating != null && rating <= 2);
+}
+
 export async function sendReviewAlert(review: ReviewAlertPayload) {
     // Logic: Urgency >= 7 OR Rating <= 2 -> SMS + Email
     const urgency = review.urgency_score || 0;

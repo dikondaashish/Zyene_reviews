@@ -857,7 +857,7 @@ Create `/security`:
 > All engineering deliverables verified:
 > - `/partners` page with referral program, commission tiers, and partnership types — `src/lib/campaign-content/partnerships-data.ts`
 > - Newsletter infrastructure: subscribe/unsubscribe API routes, monthly newsletter cron, content templates — `src/app/api/marketing/newsletter/`, `src/app/api/cron/monthly-newsletter/`, `src/lib/campaign-content/monthly-newsletter-content.ts`
-> - Trial nurture email sequence: 6 automated emails over 7 days via Inngest + Resend — `src/lib/campaign-content/email-sequences-data.ts`, `src/services/inngest/growth-functions.ts`
+> - Trial nurture email sequence: 2 automated emails (day 2, day 7) via Inngest + Resend, stopped once the customer pays (cut from 6 on 2026-11-09) — `src/lib/campaign-content/email-sequences-data.ts`, `src/services/inngest/growth-functions.ts`
 > - Newsletter signup component on marketing pages — `src/components/marketing/newsletter-signup.tsx`
 > - Google Ads, Meta retargeting, and Zapier marketplace listing are operational tasks in `docs/GROWTH_OPERATIONS.md`
 
@@ -894,8 +894,8 @@ Create `/security`:
 
 | Sequence | Trigger | Content |
 |----------|---------|---------|
-| **Trial nurture** (7 emails over 7 days) | Signup | Day 1: Welcome + connect Google. Day 2: Send first request. Day 3: AI replies. Day 5: Competitor tracking. Day 7: Upgrade reminder. |
-| **Onboarding drip** (post-trial convert) | Trial ends | Benefits recap, case study, pricing reminder, last-chance offer |
+| **Trial nurture** (welcome + 2 emails) | Signup | Day 1: Welcome + connect Google. Day 2: Send first request. Day 7: Review your plan. Stops once the customer pays. |
+| ~~Onboarding drip~~ | Removed 2026-11-09 | Paying customers get the plan welcome email and receipts only. |
 | **Monthly newsletter** | Subscribed | Product updates, tips, industry insights, case studies |
 | **Win-back** | Canceled | "We miss you" + new features since they left |
 

@@ -19,7 +19,7 @@ vi.mock("@sentry/nextjs", () => ({ captureMessage: m.captureMessage, captureExce
 vi.mock("@/services/resend/send-email", () => ({ sendEmail: vi.fn() }));
 vi.mock("@/services/aeo/billing/renewal-credit-reset", () => ({ resetAeoCreditsForPlan: m.reset }));
 vi.mock("@/services/nfc/fulfill-checkout", () => ({ fulfillNfcCheckout: vi.fn() }));
-vi.mock("@/lib/growth/schedule-growth-emails", () => ({ scheduleOnboardingDrip: vi.fn(), scheduleTrialNurture: vi.fn() }));
+vi.mock("@/lib/growth/schedule-growth-emails", () => ({ scheduleTrialNurture: vi.fn() }));
 vi.mock("@/lib/growth/referral-rewards", () => ({ processReferralConversionReward: vi.fn() }));
 
 import { handleCheckoutSessionCompleted } from "@/services/stripe/webhook-checkout-completed";

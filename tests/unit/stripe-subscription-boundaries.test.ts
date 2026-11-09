@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { WebhookAdminClient } from "@/services/stripe/webhook-types";
 
 const m = vi.hoisted(() => ({ retrieve: vi.fn(), customer: vi.fn(), email: vi.fn(), reset: vi.fn(), plan: vi.fn(),
-    onboarding: vi.fn(), trial: vi.fn(), referral: vi.fn(), metaConversion: vi.fn(), shouldTrackMeta: vi.fn() }));
+    trial: vi.fn(), referral: vi.fn(), metaConversion: vi.fn(), shouldTrackMeta: vi.fn() }));
 vi.mock("@/services/stripe/client", () => ({ stripe: {
     subscriptions: { retrieve: m.retrieve, list: async () => ({ data: [] }) }, customers: { retrieve: m.customer },
 } }));
@@ -19,7 +19,7 @@ vi.mock("@/services/stripe/plans", () => ({
 vi.mock("@/services/resend/send-email", () => ({ sendEmail: m.email }));
 vi.mock("@/services/aeo/billing/renewal-credit-reset", () => ({ resetAeoCreditsForPlan: m.reset }));
 vi.mock("@/services/nfc/fulfill-checkout", () => ({ fulfillNfcCheckout: vi.fn() }));
-vi.mock("@/lib/growth/schedule-growth-emails", () => ({ scheduleOnboardingDrip: m.onboarding, scheduleTrialNurture: m.trial }));
+vi.mock("@/lib/growth/schedule-growth-emails", () => ({ scheduleTrialNurture: m.trial }));
 vi.mock("@/lib/growth/referral-rewards", () => ({ processReferralConversionReward: m.referral }));
 vi.mock("@sentry/nextjs", () => ({ captureMessage: vi.fn(), captureException: vi.fn() }));
 
@@ -134,12 +134,11 @@ describe("Stripe billing projection boundaries", () => {
         const checkout = event({ id: "cs_a", customer: "cus_a", subscription: "sub_a", metadata: { organization_id: "org_a" },
             customer_details: { email: "fixture@example.test", name: "Fixture" } });
         await expect(handleCheckoutSessionCompleted(checkout, client)).rejects.toThrow("credit write failed");
-        expect(m.email).not.toHaveBeenCalled(); expect(m.onboarding).not.toHaveBeenCalled();
+        expect(m.email).not.toHaveBeenCalled();
         await handleCheckoutSessionCompleted(checkout, client);
         expect(m.reset).toHaveBeenCalledTimes(2);
         expect(m.reset.mock.calls[1][1]).toMatchObject({ receiptId: "checkout:cs_a", subscriptionId: "sub_a" });
         expect(m.email).toHaveBeenCalledWith(expect.objectContaining({ idempotencyKey: "stripe-checkout:cs_a" }));
-        expect(m.onboarding).toHaveBeenCalledTimes(1);
         expect(m.referral).toHaveBeenCalledWith("org_a");
     });
     it("keeps checkout referral failures retryable before any welcome notification", async () => {
@@ -147,7 +146,7 @@ describe("Stripe billing projection boundaries", () => {
         await expect(handleCheckoutSessionCompleted(event({ id: "cs_a", customer: "cus_a", subscription: "sub_a",
             metadata: { organization_id: "org_a" }, customer_details: { email: "fixture@example.test" } }),
             client)).rejects.toThrow("referral credit failed");
-        expect(m.email).not.toHaveBeenCalled(); expect(m.onboarding).not.toHaveBeenCalled();
+        expect(m.email).not.toHaveBeenCalled();
     });
     it("acknowledges subscription events for a customer no organization owns", async () => {
         const { client, rpc } = db();
@@ -167,6 +166,6 @@ describe("Stripe billing projection boundaries", () => {
         const converted = event({ id: "sub_a" });
         converted.data.previous_attributes = { status: "trialing" };
         await expect(handleSubscriptionUpdated(converted, client)).rejects.toThrow("referral credit failed");
-        expect(m.customer).not.toHaveBeenCalled(); expect(m.onboarding).not.toHaveBeenCalled();
+        expect(m.customer).not.toHaveBeenCalled();
     });
 });

@@ -2,7 +2,6 @@ import { z } from "zod";
 
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { scheduleMarketingNurture } from "@/lib/growth/schedule-growth-emails";
 import { recordNewsletterSourceEvent } from "@/lib/marketing/newsletter-source-events";
 import {
     confirmSubscriberByToken,
@@ -10,7 +9,6 @@ import {
     type SubscriberRow,
 } from "@/lib/marketing/newsletter-subscriber-store";
 import { TEMPLATE_PACK_SOURCE } from "@/lib/marketing/template-pack-events";
-import { isTemplatePackQaSubscriber } from "@/lib/marketing/template-pack-qa-filters";
 import { marketingCanonicalUrl } from "@/lib/seo/marketing-site-url";
 import { sendEmail } from "@/services/resend/send-email";
 import { newsletterWelcomeEmail } from "@/services/resend/templates/growth-marketing-emails";
@@ -38,16 +36,8 @@ async function deliverConfirmedSignup(subscriber: SubscriberRow): Promise<void> 
         logger.error({ err, subscriberId: subscriber.id }, "[newsletter] welcome email failed");
     }
 
+    // The welcome (or the template pack) plus the monthly issue is all a subscriber gets.
     await recordNewsletterSourceEvent(subscriber.source, "subscribe_success", subscriber);
-
-    const isQa = isTemplatePackQaSubscriber(subscriber.email, subscriber.utm_source, subscriber.utm_medium);
-    if (subscriber.source !== TEMPLATE_PACK_SOURCE && !isQa) {
-        try {
-            await scheduleMarketingNurture({ email: subscriber.email });
-        } catch (err) {
-            logger.error({ err, subscriberId: subscriber.id }, "[newsletter] marketing nurture schedule failed");
-        }
-    }
 }
 
 /**

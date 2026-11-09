@@ -4,7 +4,7 @@ import { getReviews, getBusiness, type NormalizedYelpReview } from "./adapter";
 import { YelpApiError } from "./client";
 import { YELP_REVIEWS_UNAVAILABLE_KEY } from "./sync-state";
 import { analyzeReview } from "@/domains/ai/services/ai-analysis-service";
-import { sendReviewAlert } from "@/lib/notifications/review-alert";
+import { isAlertWorthyReview, sendReviewAlert } from "@/lib/notifications/review-alert";
 import { invalidateDashboardStatsCache } from "@/lib/dashboard/invalidate-dashboard-stats-cache";
 
 export interface YelpSyncResult {
@@ -102,6 +102,9 @@ export async function syncYelpReviewsForPlatform(
 
                 if (upserted && !upserted.sentiment && upserted.text) {
                     const analysisResult = await analyzeReview(upserted);
+                    if (!isAlertWorthyReview(upserted.rating, analysisResult?.urgency)) {
+                        return { analyzed: true, alerted: false };
+                    }
                     await sendReviewAlert({ ...upserted, ...(analysisResult || {}) });
                     return { analyzed: true, alerted: true };
                 }

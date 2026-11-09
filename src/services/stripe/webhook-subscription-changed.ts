@@ -65,19 +65,7 @@ export async function handleSubscriptionUpdated(
 
     const { processReferralConversionReward } = await import("@/lib/growth/referral-rewards");
     await processReferralConversionReward(updatedOrgId);
-    try {
-        const customer = await retrieveCustomerWithEmail(customerId);
-        if (customer) {
-            const { scheduleOnboardingDrip } = await import("@/lib/growth/schedule-growth-emails");
-            await scheduleOnboardingDrip({
-                email: customer.email,
-                userName: customer.name || "there",
-                organizationId: updatedOrgId,
-            });
-        }
-    } catch (dripErr) {
-        logger.error({ err: dripErr }, "Error scheduling onboarding drip:");
-    }
+    // No post-trial drip: the trial tips stop by themselves once the plan is active.
 }
 
 export async function handleSubscriptionDeleted(

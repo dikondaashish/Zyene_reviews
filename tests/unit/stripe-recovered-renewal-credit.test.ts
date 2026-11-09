@@ -19,7 +19,7 @@ vi.mock("@/services/stripe/meta-paid-subscription-event", () => ({
     sendMetaPaidSubscriptionEvent: vi.fn(), shouldTrackFirstPaidSubscription: () => false }));
 vi.mock("@/services/resend/send-email", () => ({ sendEmail: m.email }));
 vi.mock("@/lib/growth/referral-rewards", () => ({ processReferralConversionReward: vi.fn() }));
-vi.mock("@/lib/growth/schedule-growth-emails", () => ({ scheduleOnboardingDrip: vi.fn() }));
+vi.mock("@/lib/growth/schedule-growth-emails", () => ({ scheduleTrialNurture: vi.fn() }));
 vi.mock("@sentry/nextjs", () => ({ captureMessage: vi.fn(), captureException: vi.fn() }));
 
 import { handleSubscriptionUpdated } from "@/services/stripe/webhook-subscription-changed";

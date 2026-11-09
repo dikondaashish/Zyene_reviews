@@ -2,7 +2,8 @@ import { logger } from "@/lib/logger";
 import { inngest } from "@/services/inngest/client";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 
-export type GrowthSequenceKey = "trial_nurture" | "onboarding_drip" | "winback" | "marketing_nurture";
+/** Retired sequences (onboarding_drip, marketing_nurture) may still exist as old rows. */
+export type GrowthSequenceKey = "trial_nurture" | "winback";
 
 async function registerSequenceRun(
     sequenceKey: GrowthSequenceKey,
@@ -11,12 +12,10 @@ async function registerSequenceRun(
     userId?: string | null
 ): Promise<boolean> {
     const admin = createAdminClient();
-    if (sequenceKey !== "marketing_nurture") {
-        const preference = await admin.from("growth_email_runs").select("id")
-            .eq("recipient_email", email.toLowerCase()).eq("status", "canceled")
-            .in("sequence_key", ["trial_nurture", "onboarding_drip", "winback"]).limit(1);
-        if (preference.error || preference.data?.length) return false;
-    }
+    const preference = await admin.from("growth_email_runs").select("id")
+        .eq("recipient_email", email.toLowerCase()).eq("status", "canceled")
+        .in("sequence_key", ["trial_nurture", "onboarding_drip", "winback"]).limit(1);
+    if (preference.error || preference.data?.length) return false;
     const { error } = await admin.from("growth_email_runs").insert({
         sequence_key: sequenceKey,
         recipient_email: email.toLowerCase(),
@@ -54,37 +53,6 @@ export async function scheduleTrialNurture(params: {
             organizationId: params.organizationId,
             dashboardUrl: `${appUrl}/dashboard`,
         },
-    });
-}
-
-export async function scheduleOnboardingDrip(params: {
-    email: string;
-    userName: string;
-    organizationId: string;
-}): Promise<void> {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "https://app.zyenereviews.com";
-    const ok = await registerSequenceRun("onboarding_drip", params.email, params.organizationId);
-    if (!ok) return;
-
-    await inngest.send({
-        name: "growth/onboarding-drip.start",
-        data: {
-            email: params.email,
-            userName: params.userName,
-            organizationId: params.organizationId,
-            dashboardUrl: `${appUrl}/dashboard`,
-            billingUrl: `${appUrl}/settings/billing`,
-        },
-    });
-}
-
-export async function scheduleMarketingNurture(params: { email: string }): Promise<void> {
-    const ok = await registerSequenceRun("marketing_nurture", params.email);
-    if (!ok) return;
-
-    await inngest.send({
-        name: "growth/marketing-nurture.start",
-        data: { email: params.email },
     });
 }
 

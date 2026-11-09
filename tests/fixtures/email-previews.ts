@@ -10,8 +10,8 @@ import { weeklyDigestEmail } from "@/services/resend/templates/weekly-digest-ema
 import { aeoAlertDigestEmail } from "@/services/resend/templates/aeo-alert-digest-email";
 import { competitorAlertEmail } from "@/services/resend/templates/competitor-alert-email";
 import { reviewRequestEmail } from "@/services/resend/templates/review-request-email";
-import { trialNurtureEmail, onboardingDripEmail, winbackFollowUpEmail } from "@/services/resend/templates/growth-emails";
-import { marketingNurtureEmail, newsletterWelcomeEmail, monthlyNewsletterEmail } from "@/services/resend/templates/growth-marketing-emails";
+import { trialNurtureEmail, winbackFollowUpEmail } from "@/services/resend/templates/growth-emails";
+import { newsletterWelcomeEmail, monthlyNewsletterEmail } from "@/services/resend/templates/growth-marketing-emails";
 import { bookLeadEmail } from "@/services/resend/templates/book-lead-email";
 import { reviewRequestTemplatePackEmail } from "@/services/resend/templates/review-request-templates-pack-email";
 import { formNotificationEmail, formReceiptEmail } from "@/services/resend/templates/form-emails";
@@ -19,7 +19,7 @@ import { referralRewardEmailHtml, reputationScoreEmailHtml, reviewLinkEmailHtml,
 import { supabaseAuthEmailTemplates } from "@/lib/email/supabase-auth-templates";
 import { renderAeoReportHtml } from "@/services/aeo/reporting/report-html";
 import { CAMPAIGN_TEMPLATES } from "@/lib/campaigns/templates";
-import { TRIAL_NURTURE_STEPS, ONBOARDING_DRIP_STEPS, MARKETING_NURTURE_STEPS } from "@/lib/campaign-content/email-sequences-data";
+import { TRIAL_NURTURE_STEPS } from "@/lib/campaign-content/email-sequences-data";
 import { MONTHLY_NEWSLETTER_EDITIONS } from "@/lib/campaign-content/monthly-newsletter-content";
 
 export interface EmailPreview { id: string; html: string; subject?: string; authSource?: string }
@@ -62,11 +62,8 @@ export function emailPreviews(): EmailPreview[] {
         { id: "review-request-custom-text", html: reviewRequestEmail({ ...request, template: "Hi {customer_name},\nYour feedback helps {business_name}.\n{review_link}\nThank you!" }) },
         { id: "review-request-custom-html", html: reviewRequestEmail({ ...request, template: '<p>Hello {customer_name},</p><p><a href="{review_link}">Share feedback with {business_name}</a></p>' }) },
         ...CAMPAIGN_TEMPLATES.map(campaign => ({ id: `campaign-${campaign.id}`, html: reviewRequestEmail({ ...request, template: campaign.defaultValues.email_template }) })),
-        { id: "trial-day1", ...trialNurtureEmail({ userName, dashboardUrl, unsubscribeUrl, stepKey: "trial_day1_connect_google" }) },
         ...TRIAL_NURTURE_STEPS.map(step => ({ id: step.key, ...trialNurtureEmail({ userName, dashboardUrl, unsubscribeUrl, stepKey: step.key }) })),
-        ...ONBOARDING_DRIP_STEPS.map(step => ({ id: step.key, ...onboardingDripEmail({ userName, dashboardUrl, unsubscribeUrl, stepKey: step.key }) })),
         { id: "winback", ...winbackFollowUpEmail({ userName, unsubscribeUrl, rejoinUrl: dashboardUrl }) },
-        ...MARKETING_NURTURE_STEPS.map(step => ({ id: step.key, ...marketingNurtureEmail({ email: "customer@example.test", stepKey: step.key, unsubscribeUrl }) })),
         { id: "newsletter-welcome", ...newsletterWelcomeEmail({ email: "customer@example.test", unsubscribeUrl }) },
         ...MONTHLY_NEWSLETTER_EDITIONS.map((edition, i) => ({ id: `monthly-newsletter-${i + 1}`, ...monthlyNewsletterEmail({ ...edition, monthLabel: "October 2026", caseStudyLink: `https://zyenereviews.com/case-studies/${edition.caseStudySlug}`, unsubscribeUrl }) })),
         { id: "book-guide", ...bookLeadEmail({ downloadUrl: "https://zyenereviews.com/resources" }) },

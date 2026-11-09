@@ -69,16 +69,15 @@ Checks:
 1. Resend dashboard → Logs after QA subscribe.
 2. Template pack: subject/body from `reviewRequestTemplatePackEmail`.
 3. Checklist: `newsletterWelcomeEmail` (not pack).
-4. Nurture emails: only for non–template-pack, non-QA leads (`marketing_nurture_*` subjects in `growth-emails.ts`).
+4. No follow-up nurture emails: the marketing nurture sequence was removed on 2026-11-09.
 
 ---
 
 ## Inngest verification
 
-1. Run Inngest dev server with app (`pnpm dev`).
-2. After checklist QA subscribe (non-QA UTM): event `growth/marketing-nurture.start`.
-3. After template pack or QA UTM subscribe: **no** nurture event.
-4. Function: `growth-marketing-nurture` in Inngest UI.
+No Inngest functions run for newsletter or lead-magnet sign-ups. The `growth-marketing-nurture`
+function was removed on 2026-11-09; confirmed subscribers get the welcome email (or the
+template pack) and then only the monthly newsletter.
 
 ---
 

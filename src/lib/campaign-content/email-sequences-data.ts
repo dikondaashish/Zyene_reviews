@@ -12,8 +12,10 @@ export interface GrowthEmailStep {
 }
 
 /**
- * Trial nurture: 6 emails on days 2-7 (blueprint).
- * Day 1 (welcome + connect Google) is sent immediately on signup via welcome-email.ts.
+ * Trial nurture: 2 emails (day 2 and day 7). Day 1 (welcome + connect Google) is sent
+ * on signup via welcome-email.ts. Stops as soon as the organization is on a paid plan.
+ * There is deliberately no post-purchase drip or newsletter nurture: the plan welcome,
+ * receipts and the monthly newsletter cover those people without extra mail.
  */
 export const TRIAL_NURTURE_STEPS: GrowthEmailStep[] = [
     {
@@ -24,99 +26,11 @@ export const TRIAL_NURTURE_STEPS: GrowthEmailStep[] = [
         preview: "SMS, email, or link - pick what fits your customers.",
     },
     {
-        key: "trial_day3_ai_replies",
-        dayOffset: 3,
-        delayHours: 48,
-        subject: "Day 3: Reply to reviews in one click with AI",
-        preview: "Professional responses in your brand voice - you stay in control.",
-    },
-    {
-        key: "trial_day4_feedback_shield",
-        dayOffset: 4,
-        delayHours: 72,
-        subject: "Day 4: Follow up on customer feedback",
-        preview: "Give low ratings a private feedback path and alert your team.",
-    },
-    {
-        key: "trial_day5_competitors",
-        dayOffset: 5,
-        delayHours: 96,
-        subject: "Day 5: See how you stack up against competitors",
-        preview: "Track nearby businesses and close the review gap.",
-    },
-    {
-        key: "trial_day6_case_study",
-        dayOffset: 6,
-        delayHours: 120,
-        subject: "Day 6: How local businesses grow customer reviews",
-        preview: "An illustrative case study on collecting customer feedback.",
-    },
-    {
         key: "trial_day7_upgrade",
         dayOffset: 7,
         delayHours: 168,
         subject: "Day 7: Review your plan and next steps",
         preview: "Plans from $29.99/mo. No annual contract.",
-    },
-];
-
-/** Post-trial conversion drip */
-export const ONBOARDING_DRIP_STEPS: GrowthEmailStep[] = [
-    {
-        key: "convert_benefits_recap",
-        dayOffset: 0,
-        delayHours: 2,
-        subject: "Your plan is active: explore your features",
-        preview: "Explore the features and usage limits included in your plan.",
-    },
-    {
-        key: "convert_case_study",
-        dayOffset: 3,
-        delayHours: 72,
-        subject: "How Wolfpack BBQ added 64 five-star reviews in 60 days",
-        preview: "A playbook you can copy this week.",
-    },
-    {
-        key: "convert_pricing_reminder",
-        dayOffset: 7,
-        delayHours: 168,
-        subject: "Getting the most from your Zyene plan",
-        preview: "Tips to hit your monthly limits efficiently.",
-    },
-    {
-        key: "convert_last_chance_offer",
-        dayOffset: 14,
-        delayHours: 336,
-        subject: "Review your plan before your next billing cycle",
-        preview: "Stay on paid - keep AI replies, competitor tracking, and review automation.",
-    },
-];
-
-/**
- * Marketing nurture for newsletter / checklist leads (not trial users).
- * Day 0 ≈ guide link, day 2 Shield, day 5 trial CTA. Only scheduled for new leads.
- */
-export const MARKETING_NURTURE_STEPS: GrowthEmailStep[] = [
-    {
-        key: "marketing_nurture_day0_guide",
-        dayOffset: 0,
-        delayHours: 4,
-        subject: "Start here: our best guide for more Google reviews",
-        preview: "Free resources on review requests, local SEO, and fair outreach.",
-    },
-    {
-        key: "marketing_nurture_day2_shield",
-        dayOffset: 2,
-        delayHours: 48,
-        subject: "Follow up when a customer gives a low rating",
-        preview: "How Negative Feedback Shield fits compliant review workflows.",
-    },
-    {
-        key: "marketing_nurture_day5_trial",
-        dayOffset: 5,
-        delayHours: 120,
-        subject: "Automate review requests in one inbox",
-        preview: "7-day free trial - plans from $29.99/mo, no annual contract.",
     },
 ];
 

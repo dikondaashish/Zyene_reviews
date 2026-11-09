@@ -8,14 +8,12 @@ const mocks = vi.hoisted(() => ({
     claimResend: vi.fn(),
     confirmByToken: vi.fn(),
     sendEmail: vi.fn(),
-    nurture: vi.fn(),
     sourceEvent: vi.fn(),
 }));
 
 vi.mock("@/lib/db/supabase/admin", () => ({ createAdminClient: () => ({}) }));
 vi.mock("@/lib/logger", () => ({ logger: { error: vi.fn(), warn: vi.fn() } }));
 vi.mock("@/services/resend/send-email", () => ({ sendEmail: mocks.sendEmail }));
-vi.mock("@/lib/growth/schedule-growth-emails", () => ({ scheduleMarketingNurture: mocks.nurture }));
 vi.mock("@/lib/marketing/newsletter-source-events", () => ({ recordNewsletterSourceEvent: mocks.sourceEvent }));
 vi.mock("@/lib/marketing/newsletter-subscriber-store", () => ({
     findSubscriberByEmail: mocks.findByEmail,
@@ -69,7 +67,6 @@ describe("public newsletter sign-up (double opt-in)", () => {
         expect(mail.stream).toBe("forms");
         expect(mail.subject).toBe("Confirm your email for Zyene Reviews");
         expect(mail.html).toContain(`/newsletter/confirm?token=${TOKEN}`);
-        expect(mocks.nurture).not.toHaveBeenCalled();
     });
 
     it("sends nothing to an address that is already confirmed", async () => {
@@ -126,20 +123,19 @@ describe("public newsletter sign-up (double opt-in)", () => {
 });
 
 describe("confirming a newsletter sign-up", () => {
-    it("sends the welcome email and starts nurture once confirmed", async () => {
+    it("sends only the welcome email once confirmed", async () => {
         mocks.confirmByToken.mockResolvedValue(row({ confirmed_at: new Date().toISOString() }));
 
         expect(await confirmNewsletterSubscription(TOKEN)).toBe("confirmed");
         expect(mocks.sendEmail.mock.calls[0][0]).toMatchObject({ stream: "marketing", to: "owner@example.com" });
-        expect(mocks.nurture).toHaveBeenCalledWith({ email: "owner@example.com" });
+        expect(mocks.sendEmail).toHaveBeenCalledTimes(1);
         expect(mocks.sourceEvent).toHaveBeenCalledWith("newsletter", "subscribe_success", expect.anything());
     });
 
-    it("sends the template pack (and no nurture) for template-pack sign-ups", async () => {
+    it("sends the template pack for template-pack sign-ups", async () => {
         mocks.confirmByToken.mockResolvedValue(row({ source: "review_request_templates" }));
         await confirmNewsletterSubscription(TOKEN);
         expect(mocks.sendEmail.mock.calls[0][0].subject).toBe("Your Review Request Template Pack");
-        expect(mocks.nurture).not.toHaveBeenCalled();
     });
 
     it("does not resend anything when the link is used twice", async () => {
