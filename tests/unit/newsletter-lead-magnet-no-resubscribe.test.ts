@@ -2,12 +2,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createFakeDb, type FakeDb } from "./helpers/fake-supabase";
 
 let db: FakeDb;
-const m = vi.hoisted(() => ({ send: vi.fn(), nurture: vi.fn() }));
+const m = vi.hoisted(() => ({ send: vi.fn() }));
 vi.mock("@/lib/db/supabase/admin", () => ({ createAdminClient: () => db.client }));
 vi.mock("@/lib/logger", () => ({ logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn() } }));
 vi.mock("@/lib/marketing/record-marketing-event", () => ({ recordMarketingEvent: vi.fn() }));
 vi.mock("@/services/resend/send-email", () => ({ sendEmail: m.send }));
-vi.mock("@/lib/growth/schedule-growth-emails", () => ({ scheduleMarketingNurture: m.nurture }));
 
 import { processNewsletterSubscribe } from "@/lib/marketing/newsletter-subscribe";
 import { TEMPLATE_PACK_SOURCE } from "@/lib/marketing/template-pack-events";
@@ -27,7 +26,6 @@ describe("lead-magnet forms on the newsletter endpoint", () => {
         expect(result).toMatchObject({ ok: true, newLead: false });
         expect(db.tables.marketing_subscribers[0].unsubscribed_at).toBe(GONE);
         expect(m.send).not.toHaveBeenCalled();
-        expect(m.nurture).not.toHaveBeenCalled();
     });
 
     it("the explicit newsletter sign-up still re-subscribes on request", async () => {

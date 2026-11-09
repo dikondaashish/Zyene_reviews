@@ -34,19 +34,8 @@ async function runPostCheckoutGrowth(
         } catch (nurtureErr) {
             logger.error({ err: nurtureErr }, "Error scheduling trial nurture:");
         }
-        return;
     }
-
-    if (subscription.status === "active") {
-        try {
-            if (email) {
-                const { scheduleOnboardingDrip } = await import("@/lib/growth/schedule-growth-emails");
-                await scheduleOnboardingDrip({ email, userName, organizationId });
-            }
-        } catch (dripErr) {
-            logger.error({ err: dripErr }, "Error scheduling onboarding drip (direct paid)");
-        }
-    }
+    // Paid checkouts get the plan welcome email only; there is no post-purchase drip.
 }
 
 export async function handleCheckoutSessionCompleted(

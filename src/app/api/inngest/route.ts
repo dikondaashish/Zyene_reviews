@@ -15,9 +15,7 @@ import {
 } from "@/services/inngest/sync-worker";
 import {
     trialNurtureWorker,
-    onboardingDripWorker,
     winbackWorker,
-    marketingNurtureWorker,
 } from "@/services/inngest/growth-functions";
 import { aeoRunPlanner } from "@/services/inngest/aeo/aeo-run-planner";
 import { aeoPromptEnrollmentWorker } from "@/services/inngest/aeo/aeo-prompt-enrollment-worker";
@@ -68,9 +66,7 @@ export const { GET, POST, PUT } = serve({
         googleSeoAeoHeatmapWorker,
         googleSeoAeoSyncWorker,
         trialNurtureWorker,
-        onboardingDripWorker,
         winbackWorker,
-        marketingNurtureWorker,
         // E-7 sampling. Both refuse to run unless AEO_LIVE_SAMPLING is exactly
         // "true", so registering them here does not by itself enable spending.
         aeoRunPlanner,

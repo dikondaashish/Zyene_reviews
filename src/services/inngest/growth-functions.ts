@@ -1,18 +1,7 @@
 import { inngest } from "@/services/inngest/client";
-import { marketingCanonicalUrl } from "@/lib/seo/marketing-site-url";
 import { sendEmail } from "@/services/resend/send-email";
-import {
-    trialNurtureEmail,
-    onboardingDripEmail,
-    winbackFollowUpEmail,
-} from "@/services/resend/templates/growth-emails";
-import { marketingNurtureEmail } from "@/services/resend/templates/growth-marketing-emails";
-import {
-    TRIAL_NURTURE_STEPS,
-    ONBOARDING_DRIP_STEPS,
-    WINBACK_STEPS,
-    MARKETING_NURTURE_STEPS,
-} from "@/lib/campaign-content/email-sequences-data";
+import { trialNurtureEmail, winbackFollowUpEmail } from "@/services/resend/templates/growth-emails";
+import { TRIAL_NURTURE_STEPS, WINBACK_STEPS } from "@/lib/campaign-content/email-sequences-data";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { activeGrowthEmailPreferences } from "@/lib/growth/growth-email-preferences";
 
@@ -30,7 +19,16 @@ async function markSequenceCompleted(sequenceKey: string, email: string, organiz
     await q;
 }
 
-/** Trial nurture (days 2-7) - one email per step; day-1 welcome is sent on signup */
+/** Trial tips have nothing to say to a customer who already pays. */
+async function organizationIsPaying(organizationId?: string): Promise<boolean> {
+    if (!organizationId) return false;
+    const { data, error } = await createAdminClient().from("organizations")
+        .select("plan_status").eq("id", organizationId).maybeSingle();
+    if (error) throw new Error("Unable to check organization plan");
+    return data?.plan_status === "active";
+}
+
+/** Trial nurture (day 2 and day 7); the day-1 welcome is sent on signup. Stops once they pay. */
 export const trialNurtureWorker = inngest.createFunction(
     { id: "growth-trial-nurture", name: "Growth Trial Nurture" },
     { event: "growth/trial-nurture.start" },
@@ -48,9 +46,10 @@ export const trialNurtureWorker = inngest.createFunction(
                 await step.sleep(`wait-${nurtureStep.key}`, `${waitHours}h`);
             }
 
-            await step.run(`send-${nurtureStep.key}`, async () => {
+            const sent = await step.run(`send-${nurtureStep.key}`, async () => {
+                if (await organizationIsPaying(organizationId)) return "paying" as const;
                 const preferences = await activeGrowthEmailPreferences("trial_nurture", email, organizationId);
-                if (!preferences) return;
+                if (!preferences) return "skipped" as const;
                 const { subject, html } = trialNurtureEmail({
                     userName,
                     dashboardUrl,
@@ -58,94 +57,13 @@ export const trialNurtureWorker = inngest.createFunction(
                     unsubscribeUrl: preferences.unsubscribeUrl,
                 });
                 await sendEmail({ stream: "marketing", to: email, subject, html, unsubscribeUrl: preferences.unsubscribeUrl });
+                return "sent" as const;
             });
+            if (sent === "paying") break;
         }
 
         await step.run("complete-sequence", async () => {
             await markSequenceCompleted("trial_nurture", email, organizationId);
-        });
-    }
-);
-
-export const onboardingDripWorker = inngest.createFunction(
-    { id: "growth-onboarding-drip", name: "Growth Onboarding Drip" },
-    { event: "growth/onboarding-drip.start" },
-    async ({ event, step }) => {
-        const { email, userName, dashboardUrl, billingUrl, organizationId } = event.data;
-
-        for (let i = 0; i < ONBOARDING_DRIP_STEPS.length; i++) {
-            const dripStep = ONBOARDING_DRIP_STEPS[i];
-            const waitHours =
-                i === 0
-                    ? dripStep.delayHours
-                    : dripStep.delayHours - ONBOARDING_DRIP_STEPS[i - 1].delayHours;
-
-            if (waitHours > 0) {
-                await step.sleep(`wait-${dripStep.key}`, `${waitHours}h`);
-            }
-
-            await step.run(`send-${dripStep.key}`, async () => {
-                const preferences = await activeGrowthEmailPreferences("onboarding_drip", email, organizationId);
-                if (!preferences) return;
-                const url = /billing|pricing/.test(dripStep.key)
-                    ? billingUrl
-                    : dashboardUrl;
-                const { subject, html } = onboardingDripEmail({
-                    userName,
-                    dashboardUrl: url,
-                    stepKey: dripStep.key,
-                    unsubscribeUrl: preferences.unsubscribeUrl,
-                });
-                await sendEmail({ stream: "marketing", to: email, subject, html, unsubscribeUrl: preferences.unsubscribeUrl });
-            });
-        }
-
-        await step.run("complete-sequence", async () => {
-            await markSequenceCompleted("onboarding_drip", email, organizationId);
-        });
-    }
-);
-
-/** Newsletter / checklist leads - 3-email nurture (excludes template pack immediate pack email) */
-export const marketingNurtureWorker = inngest.createFunction(
-    { id: "growth-marketing-nurture", name: "Growth Marketing Nurture" },
-    { event: "growth/marketing-nurture.start" },
-    async ({ event, step }) => {
-        const { email } = event.data;
-
-        for (let i = 0; i < MARKETING_NURTURE_STEPS.length; i++) {
-            const nurtureStep = MARKETING_NURTURE_STEPS[i];
-            const waitHours =
-                i === 0
-                    ? nurtureStep.delayHours
-                    : nurtureStep.delayHours - MARKETING_NURTURE_STEPS[i - 1].delayHours;
-
-            if (waitHours > 0) {
-                await step.sleep(`wait-${nurtureStep.key}`, `${waitHours}h`);
-            }
-
-            await step.run(`send-${nurtureStep.key}`, async () => {
-                const { data: subscriber, error } = (await createAdminClient().from("marketing_subscribers")
-                    .select("id, unsubscribed_at, confirmed_at" as "id").eq("email", email.toLowerCase()).maybeSingle()) as unknown as {
-                    data: { id: string; unsubscribed_at: string | null; confirmed_at: string | null } | null;
-                    error: unknown;
-                };
-                if (error) throw new Error("Unable to check marketing subscription");
-                if (!subscriber || subscriber.unsubscribed_at || !subscriber.confirmed_at) return;
-                const unsubscribeUrl = `${marketingCanonicalUrl("/newsletter/unsubscribe")}?id=${subscriber.id}`;
-                const { subject, html } = marketingNurtureEmail({
-                    email,
-                    stepKey: nurtureStep.key,
-                    unsubscribeUrl,
-                });
-                await sendEmail({ stream: "marketing", to: email, subject, html,
-                    unsubscribeUrl: `${marketingCanonicalUrl("/api/marketing/newsletter/unsubscribe")}?id=${subscriber.id}`,
-                });
-            });
-        }
-
-        await step.run("complete-sequence", async () => {
-            await markSequenceCompleted("marketing_nurture", email);
         });
     }
 );

@@ -4,7 +4,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
 import { generateContentWithFallback } from "@/domains/ai/adapters/vertex-adapter";
 import { BATCH_REVIEWS_PROMPT } from "@/domains/ai/prompts";
-import { sendReviewAlert } from "@/lib/notifications/review-alert";
+import { isAlertWorthyReview, sendReviewAlert } from "@/lib/notifications/review-alert";
 import { batchAnalysisSchema } from "@/domains/ai/schemas/response-schemas";
 import {
     syncGoogleReviewsForPlatform,
@@ -142,11 +142,9 @@ export const processReviewAnalysisBatch = inngest.createFunction(
                         logger.error({ err: updateError }, `[Batch Analysis] Update failed for ${reviewRowId}:`);
                     }
 
-                    if (result.urgency !== undefined && result.urgency >= 7) {
-                        const reviewObj = reviews.find((r: { id: string }) => r.id === reviewRowId);
-                        if (reviewObj) {
-                            await sendReviewAlert({ ...reviewObj, ...result });
-                        }
+                    const reviewObj = reviews.find((r: { id: string; rating?: number | null }) => r.id === reviewRowId);
+                    if (reviewObj && isAlertWorthyReview(reviewObj.rating, result.urgency)) {
+                        await sendReviewAlert({ ...reviewObj, ...result });
                     }
                 })
             );

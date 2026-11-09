@@ -3,7 +3,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getReviews, getPageDetails } from "./adapter";
 import { upsertOlderFacebookReviews } from "./upsert-older-reviews";
 import { analyzeReview } from "@/domains/ai/services/ai-analysis-service";
-import { sendReviewAlert } from "@/lib/notifications/review-alert";
+import { isAlertWorthyReview, sendReviewAlert } from "@/lib/notifications/review-alert";
 import { invalidateDashboardStatsCache } from "@/lib/dashboard/invalidate-dashboard-stats-cache";
 
 export interface FacebookSyncResult {
@@ -117,6 +117,9 @@ export async function syncFacebookReviewsForPlatform(
 
                 if (upserted && !upserted.sentiment && upserted.text) {
                     const analysisResult = await analyzeReview(upserted);
+                    if (!isAlertWorthyReview(upserted.rating, analysisResult?.urgency)) {
+                        return { analyzed: true, alerted: false };
+                    }
                     await sendReviewAlert({ ...upserted, ...(analysisResult || {}) });
                     return { analyzed: true, alerted: true };
                 }
