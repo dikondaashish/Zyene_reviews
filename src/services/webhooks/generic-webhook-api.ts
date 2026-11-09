@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { logger } from "@/lib/logger";
 import { sendOutboundReviewRequest } from "@/lib/review-requests/send-outbound";
+import { outboundSendResponse } from "@/services/review-requests/api/outbound-send-response";
 import { authenticateGenericWebhookKey } from "./generic-webhook-auth";
 import { withGenericWebhookCors, genericWebhookOptionsResponse } from "./generic-webhook-cors";
 import { parseGenericWebhookBody } from "./generic-webhook-body";
@@ -90,25 +91,5 @@ export async function handleGenericWebhookPost(req: NextRequest) {
         triggerSource: "zapier",
     });
 
-    if (!result.success) {
-        return withGenericWebhookCors(
-            NextResponse.json(
-                { success: false, error: result.errorMessage },
-                { status: result.code },
-            ),
-        );
-    }
-
-    return withGenericWebhookCors(
-        NextResponse.json({
-            success: true,
-            data: {
-                requestId: result.requestId,
-                status: result.status,
-                channel: result.channel,
-                reviewLink: result.reviewLink,
-                warning: result.errorMessage,
-            },
-        }),
-    );
+    return withGenericWebhookCors(outboundSendResponse(result));
 }

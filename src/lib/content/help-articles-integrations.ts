@@ -63,7 +63,7 @@ export const int2: HelpArticle = {
                 ["delay_minutes", "Optional", "Overrides your Delay setting for this call. Use 0 to send right away."],
             ],
         }},
-        { type: "tip", text: "Zyene waits the Delay (minutes) from Settings → Business information → Review Request Settings before sending, so the customer hears from you after the visit rather than at the till. Map the sale total to amount and Zyene also skips sales below your Min Transaction setting. Contacts asked within your frequency cap, or who opted out, are still skipped when the delayed send runs." },
+        { type: "tip", text: "Zyene waits the Delay (minutes) from Settings → Business information → Review Request Settings before sending, so the customer hears from you after the visit rather than at the till. Map the sale total to amount and Zyene also skips sales below your Min Transaction setting. Contacts asked within your frequency cap, or who opted out, are skipped. Zyene answers a skip with status \"skipped\" (not an error), so your Zap run still succeeds and Zapier does not send error alerts." },
     ],
 };
 

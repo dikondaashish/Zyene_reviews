@@ -9,6 +9,7 @@ import { deferReviewRequest, quietHoursReason } from "@/lib/review-requests/defe
 import {
     fail,
     isValidEmail,
+    skip,
     type SendOutboundReviewRequestInput,
     type SendOutboundReviewRequestResult,
 } from "./send-outbound-types";
@@ -143,7 +144,8 @@ export async function sendOutboundReviewRequest(
         return fail(500, channel, errorMessage ?? "Send failed.", requestId, reviewLink);
     }
     if (sendStatus === "skipped") {
-        return fail(400, channel, errorMessage ?? "Not eligible to receive review requests.", requestId, reviewLink);
+        // Re-checked at send time (state changed since prepare, or another attempt holds the claim).
+        return skip(channel, errorMessage ?? "Not eligible to receive review requests.", requestId, reviewLink);
     }
 
     return {
