@@ -5,6 +5,7 @@ import { ApiRouteError, toApiError } from "@/app/api/_shared/errors";
 import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { z } from "zod";
+import { invalidateDashboardStatsCache } from "@/lib/dashboard/invalidate-dashboard-stats-cache";
 
 const bulkUpdateSchema = z.object({
     ids: z.array(z.string().uuid()).min(1).max(500),
@@ -26,8 +27,8 @@ export async function POST(request: NextRequest) {
 
         const { ids, businessId, status } = parsed.data;
 
-        // 1. Verify Access
-        const hasAccess = await userCanAccessBusiness(supabase, user.id, businessId);
+        // 1. Verify Access (write: viewers may read reviews but not change their status)
+        const hasAccess = await userCanAccessBusiness(supabase, user.id, businessId, true);
         if (!hasAccess) {
             throw new ApiRouteError("Access denied", { status: 403, code: "FORBIDDEN" });
         }
@@ -47,6 +48,7 @@ export async function POST(request: NextRequest) {
             });
         }
 
+        await invalidateDashboardStatsCache(businessId);
         return apiOk({ success: true, count });
     } catch (error: unknown) {
         logger.error({ err: error }, "Bulk Review Update Error:");

@@ -75,6 +75,8 @@ export interface PublicReviewExportRow {
     content?: string | null;
     sentiment?: string | null;
     response_status?: string | null;
+    /** The review's own platform; kept when the integration is disconnected. */
+    platform?: string | null;
     review_platforms?: {
         platform?: string | null;
     } | null;
