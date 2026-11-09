@@ -162,6 +162,11 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         alt: "Business owner reporting a policy-violating review through Yelp for Business moderation dashboard",
         width: 1200, height: 675, caption: "Reporting a review in the Yelp for Business dashboard flags the content for manual moderator review.",
     },
+    "best-local-seo-dental-practices": {
+        src: "/images/blog/dental_local_seo_reception_checkin.jpg",
+        alt: "Dental clinic front desk administrator using modern computer and NFC Google review stand at reception",
+        width: 1200, height: 675, caption: "Reception NFC stands and automated checkout triggers capture patient feedback at peak clinical relief.",
+    },
     "ranking-higher-on-google-maps-local-seo-playbook": {
         src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`,
         alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity",
