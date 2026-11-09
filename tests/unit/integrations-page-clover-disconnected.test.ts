@@ -33,6 +33,7 @@ function cloverRow(disconnectedAt: string | null) {
         environment: "production",
         connected_at: "2026-10-01T00:00:00.000Z",
         disconnected_at: disconnectedAt,
+        auto_send_enabled: true,
     };
 }
 
@@ -57,11 +58,13 @@ describe("loadIntegrationsPageData clover connection", () => {
             merchantId: "M1",
             environment: "production",
             connectedAt: "2026-10-01T00:00:00.000Z",
+            autoSendEnabled: true,
+            lastEvent: null,
         });
     });
 
     it("ignores disconnected Square rows too (parity)", async () => {
-        db.tables.square_connections = [{ ...cloverRow("2026-11-01T00:00:00.000Z"), auto_send_enabled: true }];
+        db.tables.square_connections = [cloverRow("2026-11-01T00:00:00.000Z")];
         const data = await loadIntegrationsPageData();
         if (data.kind !== "ok") throw new Error("expected ok");
         expect(data.squareConnection).toBeNull();

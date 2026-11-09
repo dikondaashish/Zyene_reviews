@@ -41,7 +41,9 @@ export async function storeCloverConnection(args: {
         connected_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         last_error: null,
-        auto_send_enabled: false,
+        // auto_send_enabled is deliberately omitted: new rows default to false,
+        // and reconnects (e.g. reopening the app from the Clover App Market)
+        // keep the merchant's choice. Disconnects already force it off.
         disconnected_at: null,
     };
 

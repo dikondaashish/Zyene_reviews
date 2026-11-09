@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { createClient } from "@/lib/db/supabase/server";
 import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
+import { getActiveBusinessId } from "@/lib/auth/business-context";
 import { buildCloverAuthorizeUrl } from "@/services/clover/oauth";
 import { isCloverConfigured, getCloverAppSecret } from "@/services/clover/config";
-import { z } from "zod";
+import { cloverLoginRedirectPath } from "@/services/clover/launch";
 import {
     createPosOAuthState, POS_OAUTH_STATE_MAX_AGE_S, posOAuthCookieOptions, posOAuthStateCookieName,
 } from "@/lib/auth/pos-oauth-state";
@@ -11,6 +13,8 @@ import {
 /**
  * GET /api/integrations/clover/connect?businessId=
  * Starts Clover OAuth (sandbox or production per CLOVER_ENV).
+ * businessId is optional: App Market launches land here without one and use
+ * the signed-in user's active business.
  */
 export async function GET(request: Request) {
     if (!isCloverConfigured()) {
@@ -20,19 +24,34 @@ export async function GET(request: Request) {
         );
     }
 
+    const rawBusinessId = new URL(request.url).searchParams.get("businessId");
+    const parsed = rawBusinessId ? z.uuid().safeParse(rawBusinessId) : null;
+    if (parsed && !parsed.success) {
+        return NextResponse.json({ error: "Invalid businessId" }, { status: 400 });
+    }
+    const requestedBusinessId = parsed?.data ?? null;
+
     const supabase = await createClient();
     const {
         data: { user },
     } = await supabase.auth.getUser();
     if (!user) {
-        return NextResponse.redirect(new URL("/login", request.url));
+        return NextResponse.redirect(
+            new URL(cloverLoginRedirectPath(requestedBusinessId), request.url),
+        );
     }
 
-    const parsedBusinessId = z.uuid().safeParse(new URL(request.url).searchParams.get("businessId"));
-    if (!parsedBusinessId.success) {
-        return NextResponse.json({ error: "businessId is required" }, { status: 400 });
+    let businessId = requestedBusinessId;
+    if (!businessId) {
+        try {
+            businessId = (await getActiveBusinessId()).businessId;
+        } catch {
+            businessId = null;
+        }
     }
-    const businessId = parsedBusinessId.data;
+    if (!businessId) {
+        return NextResponse.redirect(new URL("/onboarding", request.url));
+    }
 
     const allowed = await canManageBusinessIntegration(supabase, user.id, businessId);
     if (!allowed) {
