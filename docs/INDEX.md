@@ -46,6 +46,7 @@ consumers before retirement. Dated evidence is not proof of current deployment.
 - `docs/GROWTH_BLUEPRINT.md` - phased product growth plan (Phases 0–8).
 - `docs/GROWTH_OPERATIONS.md` - weekly KPI rhythm and `/growth` dashboard ops.
 - `docs/GEO_WIN_PLAYBOOK.md` - GEO + omni-channel win plan (Phases 0–8, stacks on growth blueprint).
+- `docs/growth/metamuse-search-console-playbook.md` - Search Console daily/weekly agent prompt, indexing snapshot, and `pnpm seo:lastmod` workflow.
 - `docs/GEO_BASELINE_AUDIT.md` - GEO/SEO baseline placeholders (GSC, AI citations, IndexNow).
 - `docs/GEO_ON_PAGE_AUDIT.md` - Priority URL on-page SEO audit table.
 - `docs/GEO_WEEKLY_REPORT_TEMPLATE.md` - Weekly GEO tracking template.
