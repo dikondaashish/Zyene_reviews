@@ -6,7 +6,7 @@ export type NewsletterSubscriber = { id: string; email: string };
 export const NEWSLETTER_SUBSCRIBER_PAGE_SIZE = 1000;
 
 /**
- * Loads every active (not unsubscribed) newsletter subscriber, paging with a
+ * Loads every active (confirmed, not unsubscribed) newsletter subscriber, paging with a
  * stable `id` order so no subscriber past the first 1000 rows is skipped.
  */
 export async function loadActiveNewsletterSubscribers(
@@ -19,6 +19,8 @@ export async function loadActiveNewsletterSubscribers(
       .from("marketing_subscribers")
       .select("id, email")
       .is("unsubscribed_at", null)
+      // Double opt-in: pending public-form sign-ups get nothing until confirmed.
+      .not("confirmed_at" as never, "is", null)
       .order("id", { ascending: true })
       .range(from, from + pageSize - 1);
 

@@ -32,7 +32,8 @@ function leadCopy(slug: string): {
                 "We'll send a link to this page so you can work through all 40+ local SEO items. No PDF yet - the full checklist lives on this page.",
             source: "local_seo_checklist",
             submitLabel: "Email me the checklist",
-            successMessage: "Check your inbox for the checklist link. You can also use the checklist on this page now.",
+            successMessage:
+                "Check your inbox and confirm your email to get the checklist link. You can also use the checklist on this page now.",
             compliance: CHECKLIST_COMPLIANCE_ITEMS,
             footerNote: "The full checklist stays on this page for search and AI crawlers - no login required.",
         };
@@ -45,7 +46,7 @@ function leadCopy(slug: string): {
         source: "review_request_templates",
         submitLabel: "Send me the 20 templates",
         successMessage:
-            "Check your email for the template pack link. The full web version is also available on this page.",
+            "Check your inbox and confirm your email to get the template pack link. The full web version is also available on this page.",
         compliance: REVIEW_COMPLIANCE_ITEMS,
         footerNote:
             "Preview templates stay on this page for search and AI crawlers - no login required to read or copy them here.",

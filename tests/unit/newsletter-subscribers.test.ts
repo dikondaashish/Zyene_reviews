@@ -8,11 +8,15 @@ function fakeAdmin(total: number) {
     id: `sub-${String(i).padStart(5, "0")}`,
     email: `s${i}@example.com`,
   }));
-  const calls = { order: vi.fn(), range: vi.fn(), is: vi.fn() };
+  const calls = { order: vi.fn(), range: vi.fn(), is: vi.fn(), not: vi.fn() };
   const builder = {
     select: () => builder,
     is: (...args: unknown[]) => {
       calls.is(...args);
+      return builder;
+    },
+    not: (...args: unknown[]) => {
+      calls.not(...args);
       return builder;
     },
     order: (...args: unknown[]) => {
@@ -38,6 +42,7 @@ describe("loadActiveNewsletterSubscribers", () => {
     expect(subscribers).toHaveLength(2345);
     expect(new Set(subscribers.map((s) => s.id)).size).toBe(2345);
     expect(calls.is).toHaveBeenCalledWith("unsubscribed_at", null);
+    expect(calls.not).toHaveBeenCalledWith("confirmed_at", "is", null);
     expect(calls.order).toHaveBeenCalledWith("id", { ascending: true });
     expect(calls.range.mock.calls).toEqual([
       [0, 999],
@@ -57,6 +62,7 @@ describe("loadActiveNewsletterSubscribers", () => {
     const builder = {
       select: () => builder,
       is: () => builder,
+      not: () => builder,
       order: () => builder,
       range: async () => ({ data: null, error: { message: "boom" } }),
     };

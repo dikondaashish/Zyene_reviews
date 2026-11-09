@@ -23,6 +23,7 @@ describe("runMonthlyNewsletter", () => {
     const subscribers = {
       select: vi.fn().mockReturnThis(),
       is: vi.fn().mockReturnThis(),
+      not: vi.fn().mockReturnThis(),
       order: vi.fn().mockReturnThis(),
       range: vi.fn().mockResolvedValue({
         data: [{ id: "subscriber-1", email: "one@example.com" }],
@@ -60,6 +61,7 @@ describe("runMonthlyNewsletter", () => {
       const subscribers = {
         select: vi.fn().mockReturnThis(),
         is: vi.fn().mockReturnThis(),
+        not: vi.fn().mockReturnThis(),
         order: vi.fn().mockReturnThis(),
         range: vi.fn().mockResolvedValue({ data: people, error: null }),
       };
@@ -101,6 +103,7 @@ describe("runMonthlyNewsletter", () => {
     const subscribers = {
       select: vi.fn().mockReturnThis(),
       is: vi.fn().mockReturnThis(),
+      not: vi.fn().mockReturnThis(),
       order: vi.fn().mockReturnThis(),
       range: vi
         .fn()
