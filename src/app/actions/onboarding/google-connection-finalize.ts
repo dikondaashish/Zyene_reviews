@@ -6,6 +6,7 @@ import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/db/supabase/server";
 import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import { parseGoogleLocationResourceIds } from "@/services/google/business-profile";
+import { slugToGenerateForBusiness } from "@/services/onboarding/onboarding-business-slug";
 
 import { enqueueGooglePostConnectSync } from "./types";
 import { mapGoogleCategory } from "./google-category-map";
@@ -80,10 +81,8 @@ export async function finalizeVerifiedGoogleConnection(
 
         // Update business record
         const displayName = ("title" in loc && loc.title) || loc.businessName || "";
-        const slug = displayName
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/^-+|-+$/g, "");
+        // Reconnecting Google must not replace a review link the owner already set.
+        const slug = await slugToGenerateForBusiness(supabase, businessId, displayName);
 
         const businessUpdate = {
             name: displayName || undefined,

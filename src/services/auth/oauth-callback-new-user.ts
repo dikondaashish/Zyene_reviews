@@ -1,7 +1,6 @@
 import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
-import { nanoid } from "nanoid";
 import { acceptBusinessInvitationAdmin } from "@/lib/auth/accept-business-invitation";
 import type { Json } from "@/lib/db/supabase/database.types";
 import {
@@ -13,6 +12,7 @@ import {
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { User } from "@supabase/supabase-js";
 import { sendOAuthNewUserMessages } from "./oauth-new-user-messaging";
+import { provisionDefaultWorkspace, workspaceSlug } from "./default-workspace";
 
 export async function runOAuthNewUserSignup(params: {
     admin: SupabaseClient;
@@ -29,7 +29,7 @@ export async function runOAuthNewUserSignup(params: {
         data.user.email?.split("@")[0] ||
         "User";
     const email = data.user.email!;
-    const slug = `${fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${nanoid(6)}`;
+    const slug = workspaceSlug(fullName);
     const signupPhone = signUpPhoneFromUserMetadata(data.user);
     const smsReviewAlertsConsent = smsReviewAlertsConsentFromUserMetadata(data.user);
 
@@ -69,54 +69,23 @@ export async function runOAuthNewUserSignup(params: {
         }
     }
 
-    const { data: org, error: orgError } = await admin
-        .from("organizations")
-        .insert({
-            name: `${fullName}'s Org`,
-            slug: slug,
-            type: "business",
-            referred_by_user_id: referredByUserId,
-        })
-        .select()
-        .single();
+    const workspace = await provisionDefaultWorkspace(admin, {
+        userId: data.user.id,
+        fullName,
+        referredByUserId,
+        slug,
+    });
 
-    if (orgError) {
-        logger.error({ err: orgError }, "Failed to create organization:");
-        Sentry.captureException(orgError, { tags: { route: "auth-callback", step: "create_organization" } });
+    if (!workspace.ok) {
+        logger.error({ err: workspace.error, step: workspace.step }, "Failed to set up new account workspace:");
+        Sentry.captureException(workspace.error, { tags: { route: "auth-callback", step: workspace.step } });
+        // The workspace rows were rolled back, but the users row stays: memberships reference
+        // it, and an email user's next sign-in skips this callback, so onboarding finishes setup
+        // (completeOnboardingWorkspaceSetup) on their next visit instead.
         return NextResponse.redirect(`${origin}/login?error=setup_failed`);
     }
-
-    const { data: newBusiness, error: newBizError } = await admin
-        .from("businesses")
-        .insert({
-            organization_id: org.id,
-            name: `${fullName}'s Business`,
-            slug: org.slug,
-            country: "US",
-            timezone: "UTC",
-            category: "uncategorized",
-            status: "active",
-        })
-        .select("id")
-        .single();
-
-    if (newBizError || !newBusiness) {
-        logger.error({ err: newBizError }, "Failed to create default business:");
-        Sentry.captureException(newBizError ?? new Error("missing business id"), {
-            tags: { route: "auth-callback", step: "create_business" },
-        });
-        return NextResponse.redirect(`${origin}/login?error=setup_failed`);
-    }
-
-    await admin.from("business_members").upsert(
-        {
-            business_id: newBusiness.id,
-            user_id: data.user.id,
-            role: "owner",
-            status: "active",
-        },
-        { onConflict: "business_id,user_id" }
-    );
+    const org = { id: workspace.organizationId };
+    const newBusiness = { id: workspace.businessId };
 
     if (signupPhone) {
         const { error: prefErr } = await admin.from("notification_preferences").upsert(
@@ -142,13 +111,6 @@ export async function runOAuthNewUserSignup(params: {
             });
         }
     }
-
-    await admin.from("organization_members").insert({
-        organization_id: org.id,
-        user_id: data.user.id,
-        role: "ORG_OWNER",
-        status: "active",
-    });
 
     if (referredByUserId) {
         const { error: referralPendingErr } = await admin.from("referral_conversions").insert({
