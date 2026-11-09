@@ -16,7 +16,6 @@ import type {
 import { inngestSentryMiddleware } from "./sentry-middleware";
 import type { PosDelayedSendData } from "@/services/review-requests/pos-delayed-send";
 
-
 type CampaignSendEvent = {
     data: {
         campaignId: string;
@@ -188,6 +187,7 @@ type Events = {
     "aeo/report.requested": AeoReportRequestedEvent;
     "aeo/phase3.refresh.requested": AeoPhase3RefreshRequestedEvent;
     "cron/aeo-alert-digest.business": AeoAlertDigestEvent;
+    "cron/competitor-watch.business": { data: { businessId: string; occurrenceKey: string } };
 };
 
 // Create a client to send and receive events

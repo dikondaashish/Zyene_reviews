@@ -22,7 +22,7 @@ beforeEach(() => {
     vi.resetAllMocks();
     vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://app.example.test");
     mocks.access.mockImplementation(async (_client, userId: string) => userId === "owner");
-    mocks.email.mockResolvedValue({ success: true }); mocks.sms.mockResolvedValue({ success: true });
+    mocks.email.mockResolvedValue({ sent: true }); mocks.sms.mockResolvedValue({ success: true });
     mocks.admin.mockReturnValue({ from: (table: string) => {
         let head = false;
         const query = {

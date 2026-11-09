@@ -13,7 +13,11 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { loadAffordableTests } from "@/services/aeo/billing/aeo-balance";
 import { isLiveSamplingEnabled } from "@/lib/features/aeo-surfaces";
 import { logger } from "@/lib/logger";
-import { deliverOutboundEvent } from "@/services/aeo/integrations/deliver-outbound-event";
+import {
+    announceRunCompletion,
+    releaseUnitAndFinalize,
+    type CompletionSteps,
+} from "@/services/inngest/aeo/aeo-run-completion";
 
 /**
  * E-7 child: one (prompt x engine x attempt).
@@ -43,30 +47,43 @@ export const aeoDispatchWorker = inngest.createFunction(
         // (runId, promptId, engineId, attempt) and a completed call step is
         // memoized rather than re-executed.
         retries: 3,
+        // Retries exhausted: the unit will never store a sample, so release it
+        // or the run waits on it forever. A no-op if the sample was stored.
+        onFailure: async ({ event, step }) => {
+            await releaseUnitAndFinalize(completionSteps(step), event.data.event.data, "dispatch_failed");
+        },
     },
     { event: "aeo/dispatch.requested" },
     async ({ event, step }) => {
-        if (!isLiveSamplingEnabled()) {
-            return { skipped: "live_sampling_disabled" as const };
-        }
-
-        // After the gate, never before: registering an adapter is what makes an
-        // engine reachable, and there is no reason to do it in a process that
-        // has just declined to sample.
-        registerAeoAdapters();
-
+        const steps = completionSteps(step);
         const data = event.data;
         const engineId = data.engineId as AnswerEngineId;
 
-        // Re-checked here, not just in the planner. Events can be replayed by
-        // hand, and an engine can be stood down mid-run; a child must never call
-        // an engine the registry would currently withhold.
-        const { runnable } = engineRegistry.resolveRunnable([engineId]);
-        const adapter = runnable[0];
-        if (!adapter) {
-            logger.warn({ engineId, runId: data.runId }, "AEO dispatch refused: engine not runnable");
-            return { skipped: "engine_not_runnable" as const, engineId };
+        // The gate is memoized: env and registry state can differ between the
+        // invocations Inngest replays, and a unit released here must never go
+        // on to sample on a later replay (it would count twice).
+        const gate = await step.run("check-dispatch-gate", async () => {
+            if (!isLiveSamplingEnabled()) return "live_sampling_disabled" as const;
+            // After the gate, never before: registering an adapter is what makes
+            // an engine reachable.
+            registerAeoAdapters();
+            // Re-checked here, not just in the planner: an engine can be stood
+            // down mid-run, and a child must never call one the registry withholds.
+            return engineRegistry.resolveRunnable([engineId]).runnable[0] ? null : "engine_not_runnable" as const;
+        });
+        if (gate) {
+            if (gate === "engine_not_runnable") {
+                logger.warn({ engineId, runId: data.runId }, "AEO dispatch refused: engine not runnable");
+            }
+            await releaseUnitAndFinalize(steps, data, gate);
+            return gate === "engine_not_runnable" ? { skipped: gate, engineId } : { skipped: gate };
         }
+
+        registerAeoAdapters();
+        const adapter = engineRegistry.resolveRunnable([engineId]).runnable[0];
+        // Runnable when the gate ran, not on this replay: retry rather than
+        // release, so the memoized decision stays the only one.
+        if (!adapter) throw new Error(`AEO engine ${engineId} became unrunnable after the dispatch gate`);
 
         const stores = getAeoStores();
 
@@ -77,6 +94,7 @@ export const aeoDispatchWorker = inngest.createFunction(
         );
         if (affordableTests === 0) {
             logger.info({ runId: data.runId, organizationId: data.organizationId }, "AEO dispatch paused: balance empty");
+            await releaseUnitAndFinalize(steps, data, "insufficient_balance");
             return { skipped: "insufficient_balance" as const };
         }
 
@@ -95,7 +113,7 @@ export const aeoDispatchWorker = inngest.createFunction(
                 requestedUnits: data.requestedUnits,
             },
             {
-                step: <T,>(id: string, fn: () => Promise<T>) => step.run(id, fn) as Promise<T>,
+                step: steps.run,
                 adapter,
                 reservations: stores.reservations,
                 samples: stores.samples,
@@ -103,6 +121,9 @@ export const aeoDispatchWorker = inngest.createFunction(
                 billing: stores.billing,
             }
         );
+
+        // Quota deferred: no sample now or later for this unit.
+        if (outcome.kind === "deferred") await releaseUnitAndFinalize(steps, data, "deferred");
 
         if (outcome.kind === "sampled" && outcome.duplicateRisk) {
             // The unavoidable case: a crash inside the call step after the request
@@ -154,32 +175,20 @@ export const aeoDispatchWorker = inngest.createFunction(
             );
         }
 
-        if (outcome.kind === "sampled") {
-            const completion = await step.run("deliver-run-completed-webhooks", async () => {
-                const admin = createAdminClient();
-                const runResult = await admin.from("aeo_runs" as never)
-                    .select("id, status, completed_at, completed_samples, expected_samples" as never)
-                    .eq("id" as never, data.runId).maybeSingle();
-                const run = runResult.data as unknown as { id: string; status: string; completed_at: string | null;
-                    completed_samples: number; expected_samples: number } | null;
-                if (!run?.completed_at || !["success", "partial", "failed"].includes(run.status)) {
-                    return { completed: false, delivered: 0, failed: 0 };
-                }
-                const delivery = await deliverOutboundEvent(admin, {
-                    organizationId: data.organizationId, businessId: data.businessId,
-                    event: "aeo.run.completed", sourceId: run.id,
-                    data: { id: run.id, status: run.status, completedAt: run.completed_at,
-                        completedSamples: run.completed_samples, expectedSamples: run.expected_samples },
-                });
-                return { completed: true, ...delivery };
-            });
-            if (completion.completed) {
-                await step.sendEvent("queue-phase3-refresh", { name: "aeo/phase3.refresh.requested", data: {
-                    businessId: data.businessId, organizationId: data.organizationId, trigger: "run_completed" as const,
-                } });
-            }
-        }
+        if (outcome.kind === "sampled") await announceRunCompletion(steps, data);
 
         return outcome;
     }
 );
+
+type InngestSteps = {
+    run: (id: string, fn: () => Promise<unknown>) => Promise<unknown>;
+    sendEvent: CompletionSteps["sendEvent"];
+};
+
+function completionSteps(step: InngestSteps): CompletionSteps {
+    return {
+        run: <T,>(id: string, fn: () => Promise<T>) => step.run(id, fn) as Promise<T>,
+        sendEvent: (id, event) => step.sendEvent(id, event),
+    };
+}

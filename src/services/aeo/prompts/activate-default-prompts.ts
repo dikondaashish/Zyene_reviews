@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/lib/db/supabase/database.types";
+import { isUntouchedSuggestion } from "./prompt-enrollment-history";
 import { promptDedupeKey, type PromptSuggestion } from "./suggest-prompts";
 
 type Admin = SupabaseClient<Database>;
@@ -14,6 +15,8 @@ export type DefaultPromptActivation = {
  * Activates a bounded, deterministic selection after suggestion storage.
  * A second active-prompt check and the database trigger protect a customer's
  * existing choices if they edit their library while this worker is running.
+ * Only untouched suggestion rows (never toggled, so updated_at still equals
+ * created_at) are eligible: a prompt the owner paused is never switched back on.
  */
 export async function activateDefaultPrompts(
     db: Admin,
@@ -24,7 +27,7 @@ export async function activateDefaultPrompts(
 
     const { data: prompts, error } = await db
         .from("aeo_prompts")
-        .select("id, prompt_text, is_active")
+        .select("id, prompt_text, is_active, source, created_at, updated_at")
         .eq("business_id", businessId);
 
     if (error) throw new Error(`default prompt read failed: ${error.message}`);
@@ -37,7 +40,7 @@ export async function activateDefaultPrompts(
 
     for (const suggestion of defaults) {
         const prompt = promptByKey.get(promptDedupeKey(suggestion.promptText));
-        if (!prompt || prompt.is_active) continue;
+        if (!prompt || prompt.is_active || !isUntouchedSuggestion(prompt)) continue;
 
         const { error: updateError } = await db
             .from("aeo_prompts")

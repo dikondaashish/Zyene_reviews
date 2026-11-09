@@ -30,6 +30,7 @@ import { aeoAlertDigestWorker } from "@/services/inngest/aeo/aeo-alert-digest-wo
 import { aeoPageDiagnosticWorker } from "@/services/inngest/aeo/aeo-page-diagnostic-worker";
 import { aeoReportWorker } from "@/services/inngest/aeo/aeo-report-worker";
 import { aeoPhase3RefreshWorker } from "@/services/inngest/aeo/aeo-phase3-refresh-worker";
+import { competitorWatchBusinessWorker } from "@/services/inngest/competitor-watch-worker";
 /**
  * Inngest registers the callback URL it will use to invoke functions. On Vercel,
  * inferred host can be *.vercel.app while users browse app.example.com; deployment
@@ -60,6 +61,7 @@ export const { GET, POST, PUT } = serve({
         syncGoogleReviews,
         syncPlatformWorker,
         weeklyDigestWorker,
+        competitorWatchBusinessWorker,
         followUpWorker,
         syncGooglePerformanceWorker,
         googleSeoAeoAiVisibilityWorker,
