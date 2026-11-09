@@ -6,8 +6,11 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { inngest } from "@/services/inngest/client";
 import { pingWeeklyDigestHeartbeat } from "@/lib/monitoring/weekly-digest-heartbeat";
 import { runCronJob } from "@/lib/cron/run-cron-job";
+import { listRecentReviewBusinessIds } from "@/lib/digest/recent-review-business-ids";
 
 const DIGEST_LOOKBACK_MS = 7 * 24 * 60 * 60 * 1000;
+/** Keeps each Inngest send request well under its payload limit. */
+const SEND_BATCH_SIZE = 500;
 /**
  * Weekly digest fan-out. Schedule externally (e.g. cron-jobs.org): every Monday 09:00
  * in your chosen timezone, GET with Authorization: Bearer CRON_SECRET.
@@ -26,45 +29,20 @@ export async function GET(request: Request) {
         const weekAgo = new Date(now.getTime() - DIGEST_LOOKBACK_MS);
 
         try {
-            const { data: recentReviews, error: reviewError } = await admin
-                .from("reviews")
-                .select(
-                    `
-                id,
-                rating,
-                text,
-                author_name,
-                sentiment,
-                created_at,
-                business_id,
-                businesses (
-                    id,
-                    name,
-                    organization_id,
-                    slug
-                )
-            `,
-                )
-                .gte("created_at", weekAgo.toISOString())
-                .order("created_at", { ascending: false });
+            // Paginated: a single query is capped at 1000 rows by PostgREST, which
+            // silently dropped every business outside the newest 1000 reviews.
+            const businessIds = await listRecentReviewBusinessIds(admin, weekAgo, now);
 
-            if (reviewError) {
-                await pingWeeklyDigestHeartbeat(false);
-                return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-            }
-
-            if (!recentReviews || recentReviews.length === 0) {
+            if (businessIds.length === 0) {
                 await pingWeeklyDigestHeartbeat(true);
                 return NextResponse.json({
                     message: "No new reviews in the digest window",
                 });
             }
 
-            const businessIds = Array.from(new Set(recentReviews.map((r) => r.business_id)));
-
-            if (businessIds.length > 0) {
+            for (let i = 0; i < businessIds.length; i += SEND_BATCH_SIZE) {
                 await inngest.send(
-                    businessIds.map((id) => ({
+                    businessIds.slice(i, i + SEND_BATCH_SIZE).map((id) => ({
                         id: `cron:weekly-digest:${occurrenceKey}:${id}`,
                         name: "cron/weekly-digest.business",
                         data: { businessId: id },

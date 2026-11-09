@@ -1,3 +1,4 @@
+import { NonRetriableError } from "inngest";
 import { appEmailUrl } from "@/lib/email/app-email-url";
 import { logger } from "@/lib/logger";
 import { inngest } from "@/services/inngest/client";
@@ -16,6 +17,8 @@ import { sendEmail } from "@/services/resend/send-email";
 import { sendReviewRequest } from "@/lib/notifications/review-request";
 import { pingReviewSyncHeartbeat } from "@/lib/monitoring/review-sync-heartbeat";
 
+/** Exact error text sendEmail returns when RESEND_API_KEY is unset. */
+const MISSING_RESEND_KEY_ERROR = "RESEND_API_KEY is not set on the server";
 const PUBSUB_GOOGLE_LOCK_RETRY_DELAY = "30s";
 const PUBSUB_GOOGLE_LOCK_MAX_ATTEMPTS = 3;
 
@@ -123,15 +126,31 @@ export const weeklyDigestWorker = inngest.createFunction(
     // burst of parallel sends is also the shape that trips Resend's rate limit.
     // Step ids key on user id, not email - they surface in the Inngest UI.
     for (const recipient of digest.recipients) {
-      await step.run(`send-digest-${recipient.userId}`, async () => {
-        // A cached build step is not proof of current recipient access.
-        if (!(await userCanAccessBusiness(admin, recipient.userId, businessId))) return;
-        return sendEmail({
-          to: recipient.email,
-          subject: `Weekly review summary for ${digest.businessName}`,
-          html: digest.emailHtml
+      try {
+        await step.run(`send-digest-${recipient.userId}`, async () => {
+          // A cached build step is not proof of current recipient access.
+          if (!(await userCanAccessBusiness(admin, recipient.userId, businessId))) return;
+          const result = await sendEmail({
+            to: recipient.email,
+            subject: `Weekly review summary for ${digest.businessName}`,
+            html: digest.emailHtml,
+            // Same key on a retry, so Resend de-dupes a send it already accepted.
+            idempotencyKey: event.id ? `weekly-digest/${event.id}/${recipient.userId}` : undefined
+          });
+          if (result.sent === true) return result;
+          const message = `Weekly digest send failed: ${result.error ?? "unknown error"}`;
+          // A missing API key will not fix itself between retries.
+          if (result.error === MISSING_RESEND_KEY_ERROR) throw new NonRetriableError(message);
+          // sendEmail reports failures (429, provider error) as { sent: false }
+          // rather than throwing; throw so Inngest retries just this recipient.
+          throw new Error(message);
         });
-      });
+      } catch (err) {
+        // Retries are exhausted (or the failure is permanent, e.g. a rejected
+        // address). Log and move on so one bad recipient does not stop the
+        // digest for everyone sorted after them.
+        logger.error({ err, businessId, userId: recipient.userId }, "[weekly-digest] recipient send failed");
+      }
     }
   }
 );

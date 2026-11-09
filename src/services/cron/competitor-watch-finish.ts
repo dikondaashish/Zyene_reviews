@@ -1,103 +1,71 @@
 import { logger } from "@/lib/logger";
-import { NextResponse } from "next/server";
-import { pingCompetitorWatchHeartbeat } from "@/lib/monitoring/competitor-watch-heartbeat";
 import { generateCompetitorInsight } from "@/domains/ai/services/generate-competitor-insight";
-import { sendCompetitorAlertEmail } from "@/lib/notifications/send-competitor-alert-email";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export async function finalizeCompetitorWatchRun(params: {
-    admin: SupabaseClient;
-    now: Date;
-    runId: string;
-    runStartedAt: string;
-    competitors: Array<{ id: string; business_id: string; name: string }>;
-    processedBusinessIds: string[];
-    snapshotsToInsert: Array<Record<string, unknown>>;
-    eventsToInsert: Array<Record<string, unknown>>;
-    appEventsToInsert: Array<Record<string, unknown>>;
-    alertEmailQueue: Array<{ businessId: string; title: string; summary: string; eventType: string }>;
-    insightInputByCompetitor: Map<
-        string,
-        {
-            competitorName: string;
-            businessId: string;
-            ratingNow: number;
-            reviewsNow: number;
-            ratingDelta: number;
-            reviewsDelta: number;
-            events: Array<{ title: string; summary?: string | null; delta?: number | null }>;
-        }
-    >;
-    businessExternalUpdates: Map<string, number>;
-    externalUpdates: number;
-}): Promise<NextResponse> {
-    const { admin, now, runId, runStartedAt, competitors, processedBusinessIds } = params;
-    const {
-        snapshotsToInsert,
-        eventsToInsert,
-        appEventsToInsert,
-        alertEmailQueue,
-        insightInputByCompetitor,
-        businessExternalUpdates,
-        externalUpdates,
-    } = params;
+export type CompetitorInsightInput = {
+    competitorName: string;
+    businessId: string;
+    ratingNow: number;
+    reviewsNow: number;
+    ratingDelta: number;
+    reviewsDelta: number;
+    events: Array<{ title: string; summary?: string | null; delta?: number | null }>;
+};
 
-    if (snapshotsToInsert.length > 0) {
-        const { error: insertSnapshotsErr } = await admin.from("competitor_snapshots").insert(
-            snapshotsToInsert,
-        );
-        if (insertSnapshotsErr) {
-            logger.error({ err: insertSnapshotsErr }, "[cron/competitor-watch] snapshots insert failed:");
-            await pingCompetitorWatchHeartbeat(false);
-            return NextResponse.json({ error: insertSnapshotsErr.message }, { status: 500 });
-        }
+export type CompetitorWatchRunStatus = "success" | "partial" | "failed";
+
+/**
+ * "success" only when every competitor was read live from Google. When Places is down
+ * or has no key, the scan only has stored numbers, so the page must not say "Updated
+ * from Google": all-unavailable is "failed" (shows the failure banner), some is "partial".
+ */
+export function competitorWatchRunStatus(scanned: number, placesUnavailable: number): CompetitorWatchRunStatus {
+    if (scanned > 0 && placesUnavailable >= scanned) return "failed";
+    if (placesUnavailable > 0) return "partial";
+    return "success";
+}
+
+export type CompetitorWatchRow = Record<string, unknown>;
+
+/**
+ * Change events first, in their own Inngest step: each insert is one statement, so a
+ * failure writes nothing and the retry (with the memoised scan) loses no event. Writing
+ * the snapshot first used to make a retry see "already captured today" and drop the
+ * day's events and alerts. Throws so the step retries.
+ */
+export async function recordCompetitorWatchEvents(
+    admin: SupabaseClient,
+    events: CompetitorWatchRow[],
+    appEvents: CompetitorWatchRow[],
+): Promise<number> {
+    if (events.length > 0) {
+        const { error } = await admin.from("competitor_events").insert(events);
+        if (error) throw new Error(`competitor events insert failed: ${error.message}`);
     }
-
-    if (eventsToInsert.length > 0) {
-        const { error: insertEventsErr } = await admin.from("competitor_events").insert(
-            eventsToInsert,
-        );
-        if (insertEventsErr) {
-            logger.error({ err: insertEventsErr }, "[cron/competitor-watch] events insert failed:");
-            await pingCompetitorWatchHeartbeat(false);
-            return NextResponse.json({ error: insertEventsErr.message }, { status: 500 });
-        }
+    if (appEvents.length > 0) {
+        const { error } = await admin.from("events").insert(appEvents);
+        if (error) logger.error({ err: error }, "[competitor-watch] app events insert failed:");
     }
+    return events.length;
+}
 
-    await Promise.all(
-        alertEmailQueue.map(async (payload) => {
-            try {
-                await sendCompetitorAlertEmail(payload);
-            } catch (e) {
-                logger.error({ err: e }, "[cron/competitor-watch] competitor alert email failed:");
-            }
-        })
-    );
+/** Snapshots last, in their own step, after events are stored. Throws so the step retries. */
+export async function recordCompetitorWatchSnapshots(admin: SupabaseClient, snapshots: CompetitorWatchRow[]): Promise<number> {
+    if (snapshots.length === 0) return 0;
+    const { error } = await admin.from("competitor_snapshots").insert(snapshots);
+    if (error) throw new Error(`competitor snapshots insert failed: ${error.message}`);
+    return snapshots.length;
+}
 
-    if (appEventsToInsert.length > 0) {
-        const { error: insertAppEventsErr } = await admin.from("events").insert(appEventsToInsert);
-        if (insertAppEventsErr) {
-            logger.error({ err: insertAppEventsErr }, "[cron/competitor-watch] app events insert failed:");
-        }
-    }
-
-    const insightRowsToInsert: Array<{
-        competitor_id: string;
-        business_id: string;
-        range_key: string;
-        summary: string;
-        priority: string;
-        confidence: number;
-        why_it_matters: string;
-        owner_suggestion: string;
-        actions: Array<{ title: string; impact: string; effort: string; priority: string }>;
-        recommendations: string[];
-        model: string;
-        created_at: string;
-    }> = [];
-
-    const insightResults = await Promise.all(
-        [...insightInputByCompetitor.entries()].map(async ([competitorId, input]) => {
+/** AI write-ups for meaningful moves. Best effort: a failed insight never fails the scan. */
+export async function storeCompetitorInsights(
+    admin: SupabaseClient,
+    now: Date,
+    inputs: Array<[string, CompetitorInsightInput]>,
+): Promise<number> {
+    if (inputs.length === 0) return 0;
+    const results = await Promise.all(
+        inputs.map(async ([competitorId, input]) => {
             const insight = await generateCompetitorInsight({
                 competitorName: input.competitorName,
                 ratingNow: input.ratingNow,
@@ -121,72 +89,34 @@ export async function finalizeCompetitorWatchRun(params: {
                 model: process.env.GOOGLE_AI_LITE_MODEL?.trim() || "gemini-3.1-flash-lite-preview",
                 created_at: now.toISOString(),
             };
-        })
+        }),
     );
-    insightRowsToInsert.push(
-        ...insightResults.filter((row): row is NonNullable<typeof row> => row !== null)
-    );
-
-    if (insightRowsToInsert.length > 0) {
-        const { error: insertInsightsErr } = await admin.from("competitor_insights").insert(
-            insightRowsToInsert,
-        );
-        if (insertInsightsErr) {
-            logger.error({ err: insertInsightsErr }, "[cron/competitor-watch] insights insert failed:");
-        }
+    const rows = results.filter((row): row is NonNullable<typeof row> => row !== null);
+    if (rows.length === 0) return 0;
+    const { error } = await admin.from("competitor_insights").insert(rows);
+    if (error) {
+        logger.error({ err: error }, "[competitor-watch] insights insert failed:");
+        return 0;
     }
+    return rows.length;
+}
 
-    const scannedByBusiness = new Map<string, number>();
-    for (const c of competitors) {
-        scannedByBusiness.set(c.business_id, (scannedByBusiness.get(c.business_id) ?? 0) + 1);
-    }
+export type CompetitorWatchRunRow = {
+    run_id: string;
+    business_id: string;
+    status: CompetitorWatchRunStatus;
+    scanned: number;
+    external_updates: number;
+    snapshots_created: number;
+    events_created: number;
+    insights_created: number;
+    error_message: string | null;
+    started_at: string;
+    finished_at: string;
+};
 
-    const snapshotsByBusiness = new Map<string, number>();
-    for (const s of snapshotsToInsert) {
-        snapshotsByBusiness.set(s.business_id as string, (snapshotsByBusiness.get(s.business_id as string) ?? 0) + 1);
-    }
-
-    const eventsByBusiness = new Map<string, number>();
-    for (const e of eventsToInsert) {
-        eventsByBusiness.set(e.business_id as string, (eventsByBusiness.get(e.business_id as string) ?? 0) + 1);
-    }
-
-    const insightsByBusiness = new Map<string, number>();
-    for (const i of insightRowsToInsert) {
-        insightsByBusiness.set(i.business_id, (insightsByBusiness.get(i.business_id) ?? 0) + 1);
-    }
-
-    const finishedAt = new Date().toISOString();
-    const runRows = processedBusinessIds.map((businessId) => ({
-        run_id: runId,
-        business_id: businessId,
-        status: "success",
-        scanned: scannedByBusiness.get(businessId) ?? 0,
-        external_updates: businessExternalUpdates.get(businessId) ?? 0,
-        snapshots_created: snapshotsByBusiness.get(businessId) ?? 0,
-        events_created: eventsByBusiness.get(businessId) ?? 0,
-        insights_created: insightsByBusiness.get(businessId) ?? 0,
-        error_message: null,
-        started_at: runStartedAt,
-        finished_at: finishedAt,
-    }));
-
-    if (runRows.length > 0) {
-        const { error: insertRunsErr } = await admin.from("competitor_watch_runs").insert(runRows);
-        if (insertRunsErr) {
-            logger.error({ err: insertRunsErr }, "[cron/competitor-watch] run log insert failed:");
-        }
-    }
-
-    await pingCompetitorWatchHeartbeat(true);
-
-    return NextResponse.json({
-        success: true,
-        runId,
-        scanned: competitors.length,
-        externalUpdates,
-        snapshotsCreated: snapshotsToInsert.length,
-        eventsCreated: eventsToInsert.length,
-        insightsCreated: insightRowsToInsert.length,
-    });
+/** The "Last sync" line on the Competitors page reads the newest of these rows. */
+export async function insertCompetitorWatchRunRow(admin: SupabaseClient, row: CompetitorWatchRunRow): Promise<void> {
+    const { error } = await admin.from("competitor_watch_runs").insert(row);
+    if (error) logger.error({ err: error, businessId: row.business_id }, "[competitor-watch] run log insert failed:");
 }

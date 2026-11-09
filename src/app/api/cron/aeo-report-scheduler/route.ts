@@ -1,33 +1,32 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { logger } from "@/lib/logger";
 import { inngest } from "@/services/inngest/client";
 import { runCronJob } from "@/lib/cron/run-cron-job";
+import { loadDueReportScheduleIds } from "@/services/aeo/reporting/load-due-report-schedules";
 
 export const maxDuration = 60;
 
+const SEND_CHUNK = 200;
+
 export async function GET(request: Request) {
     return runCronJob(request, { name: "aeo-report-scheduler", cadence: "daily" }, async ({ occurrenceKey }) => {
-        const result = (await createAdminClient()
-            .from("aeo_report_schedules" as never)
-            .select("id" as never)
-            .eq("enabled" as never, true as never)
-            .lte("next_send_at" as never, new Date().toISOString() as never)
-            .order("next_send_at" as never, { ascending: true })
-            .limit(100)) as unknown as {
-            data: { id: string }[] | null;
-            error: { message: string } | null;
-        };
-        if (result.error) return NextResponse.json({ error: "Unable to load due reports" }, { status: 500 });
-        const rows = result.data ?? [];
-        if (rows.length) {
+        let ids: string[];
+        try {
+            ids = await loadDueReportScheduleIds(createAdminClient());
+        } catch (error) {
+            logger.error({ err: error }, "[aeo-report-scheduler] due schedule load failed");
+            return NextResponse.json({ error: "Unable to load due reports" }, { status: 500 });
+        }
+        for (let start = 0; start < ids.length; start += SEND_CHUNK) {
             await inngest.send(
-                rows.map((row) => ({
-                    id: `cron:aeo-report-scheduler:${occurrenceKey}:${row.id}`,
+                ids.slice(start, start + SEND_CHUNK).map((id) => ({
+                    id: `cron:aeo-report-scheduler:${occurrenceKey}:${id}`,
                     name: "aeo/report.requested" as const,
-                    data: { scheduleId: row.id },
+                    data: { scheduleId: id },
                 })),
             );
         }
-        return NextResponse.json({ queued: rows.length });
+        return NextResponse.json({ queued: ids.length });
     });
 }
