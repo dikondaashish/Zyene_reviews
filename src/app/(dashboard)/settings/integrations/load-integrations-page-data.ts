@@ -7,6 +7,7 @@ import { fetchVisibleReviewRollupsByBusinessIds } from "@/lib/reviews/visible-re
 import { isCloverConfigured } from "@/services/clover/config";
 import { isSquareConfigured } from "@/services/square/config";
 import type { CloverConnectionSummary } from "@/components/integrations/clover-card";
+import { loadPosConnections } from "@/app/(dashboard)/settings/integrations/load-pos-connections";
 import type { SquareConnectionSummary } from "@/components/integrations/square-card";
 import type { PublicApiKey } from "@/lib/api-keys/credentials";
 import { canManageApiKeys } from "@/lib/api-keys/scopes";
@@ -88,28 +89,10 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
 
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    const [visibleRollupMap, cloverResult, squareResult, squareLastEventResult, apiKey, member] =
+    const [visibleRollupMap, pos, apiKey, member] =
         await Promise.all([
             fetchVisibleReviewRollupsByBusinessIds(supabase, [business.id]),
-            supabase
-                .from("clover_connections")
-                .select("merchant_id, environment, connected_at")
-                .eq("business_id", business.id)
-                .is("disconnected_at", null)
-                .maybeSingle(),
-            supabase
-                .from("square_connections")
-                .select("merchant_id, environment, connected_at, auto_send_enabled")
-                .eq("business_id", business.id)
-                .is("disconnected_at", null)
-                .maybeSingle(),
-            supabase
-                .from("square_payment_events")
-                .select("status, customer_email, created_at")
-                .eq("business_id", business.id)
-                .order("created_at", { ascending: false })
-                .limit(1)
-                .maybeSingle(),
+            loadPosConnections(supabase, business.id),
             loadActiveApiKeySummary(supabase, business.id, "review_requests:write"),
             supabase
                 .from("business_members")
@@ -122,33 +105,6 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
     const yelpReviewsUnavailable = await loadYelpReviewsUnavailable(yelpPlatform?.id);
     const visibleRollup = visibleRollupMap.get(business.id);
     const totalReviews = visibleRollup?.totalVisible ?? 0;
-
-    const cloverRow = cloverResult.data;
-    const cloverConnection: CloverConnectionSummary = cloverRow
-        ? {
-              merchantId: cloverRow.merchant_id,
-              environment: cloverRow.environment,
-              connectedAt: cloverRow.connected_at,
-          }
-        : null;
-
-    const squareRow = squareResult.data;
-    const lastEventRow = squareLastEventResult.data;
-    const squareConnection: SquareConnectionSummary = squareRow
-        ? {
-              merchantId: squareRow.merchant_id,
-              environment: squareRow.environment,
-              connectedAt: squareRow.connected_at,
-              autoSendEnabled: squareRow.auto_send_enabled,
-              lastEvent: lastEventRow
-                  ? {
-                        status: lastEventRow.status,
-                        customerEmail: lastEventRow.customer_email,
-                        createdAt: lastEventRow.created_at,
-                    }
-                  : null,
-          }
-        : null;
 
     return {
         kind: "ok",
@@ -168,9 +124,9 @@ export async function loadIntegrationsPageData(): Promise<IntegrationsPageData> 
         canUsePublicWidget,
         totalReviews,
         visibleRollup,
-        cloverConnection,
+        cloverConnection: pos.clover,
         cloverConfigured: isCloverConfigured(),
-        squareConnection,
+        squareConnection: pos.square,
         squareConfigured: isSquareConfigured(),
     };
 }

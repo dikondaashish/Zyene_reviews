@@ -10,6 +10,7 @@ import {
     posOAuthCookieOptions, posOAuthStateCookieName, verifyPosOAuthState,
 } from "@/lib/auth/pos-oauth-state";
 import { storeCloverConnection } from "@/services/clover/store-connection";
+import { CLOVER_CONNECT_PATH, classifyCloverCallback } from "@/services/clover/launch";
 
 function redirect(query: string) {
     const base = getAppIntegrationsUrl();
@@ -27,12 +28,17 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const code = searchParams.get("code");
     const stateParam = searchParams.get("state");
-    const error = searchParams.get("error");
     const merchantIdParam = searchParams.get("merchant_id");
 
-    if (error) {
-        logger.warn({ error }, "[clover] OAuth denied");
+    const kind = classifyCloverCallback(searchParams);
+    if (kind === "error") {
+        logger.warn({ error: searchParams.get("error") }, "[clover] OAuth denied");
         return redirect("?clover_error=denied");
+    }
+    if (kind === "app_market_launch") {
+        // Installed/opened from the Clover App Market: no state of ours to trust.
+        logger.info({ merchantId: merchantIdParam }, "[clover] App Market launch - restarting OAuth");
+        return NextResponse.redirect(new URL(CLOVER_CONNECT_PATH, request.url));
     }
     if (!code || !stateParam) {
         return redirect("?clover_error=missing_params");

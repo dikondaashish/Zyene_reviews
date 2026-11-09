@@ -33,7 +33,7 @@ Status tags: **Planned** | **Coming Soon** | **Partially Implemented**.
 ### Campaign `pos_payment` trigger — Coming Soon / Partially Implemented
 
 - **Intent:** Auto-send a review request after a POS payment (Square / Clover / Toast).
-- **Today:** Square OAuth + webhooks + auto-send (Integrations UI toggle) are live in sandbox; Clover has OAuth/webhook spike; Toast is placeholder. Campaign builder still locks `pos_payment` (`available: false`).
+- **Today:** Square OAuth + webhooks + auto-send (Integrations UI toggle) are live in sandbox; Clover has OAuth + webhooks + auto-send (Integrations UI toggle/disconnect, App Market launch restarts OAuth via `/api/integrations/clover/connect`); Toast is placeholder. Campaign builder still locks `pos_payment` (`available: false`).
 - **Missing:** Square production App Marketplace polish, Clover/Toast parity, unlock campaign `pos_payment` trigger.
 - **Spec detail:** `docs/ROADMAP.md` (POS row + related drip/POS phases).
 
