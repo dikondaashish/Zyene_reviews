@@ -4,6 +4,7 @@ import { recordMarketingEvent } from "@/lib/marketing/record-marketing-event";
 import { marketingCanonicalUrl } from "@/lib/seo/marketing-site-url";
 import { sendEmail } from "@/services/resend/send-email";
 import { bookLeadEmail } from "@/services/resend/templates/book-lead-email";
+import { recordLeadSubscriber } from "@/lib/marketing/record-lead-subscriber";
 
 export const BOOK_LEAD_SOURCE = "homepage_book_wizard";
 export const BOOK_LEAD_PAGE_PATH = "/";
@@ -32,18 +33,13 @@ export async function captureBookLead(input: BookLeadInput): Promise<BookLeadRes
 
     try {
         const admin = createAdminClient();
-        const { error } = await admin.from("marketing_subscribers").upsert(
-            {
-                email,
-                source: BOOK_LEAD_SOURCE,
-                utm_source: "homepage",
-                utm_medium: "lead_magnet",
-                utm_campaign: "book_wizard",
-                subscribed_at: new Date().toISOString(),
-                unsubscribed_at: null,
-            },
-            { onConflict: "email" }
-        );
+        const { error } = await recordLeadSubscriber(admin, {
+            email,
+            source: BOOK_LEAD_SOURCE,
+            utm_source: "homepage",
+            utm_medium: "lead_magnet",
+            utm_campaign: "book_wizard",
+        });
 
         if (error) {
             logger.error({ err: error }, "[book-lead] subscriber upsert failed");

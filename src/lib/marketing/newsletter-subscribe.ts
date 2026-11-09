@@ -75,6 +75,14 @@ export async function processNewsletterSubscribe(
         .eq("email", email)
         .maybeSingle();
 
+    if (existing?.unsubscribed_at && (isTemplatePack || isLocalSeoChecklist)) {
+        // A lead-magnet download is not a newsletter opt-in, and anyone can type any
+        // address: never re-subscribe an unsubscribed address from these forms.
+        if (isTemplatePack) await trackTemplatePack(body, "template_pack_submit");
+        if (isLocalSeoChecklist) await trackLocalSeoChecklist(body, "local_seo_checklist_submit");
+        return { ok: true, newLead: false, message: "This address unsubscribed from our emails. The guide is on this page." };
+    }
+
     if (existing?.unsubscribed_at) {
         const { error: reactivateErr } = await admin
             .from("marketing_subscribers")

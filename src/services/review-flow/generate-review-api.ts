@@ -15,7 +15,7 @@ import {
     ensureCompleteReviewText,
     isCompleteReviewText,
 } from "@/lib/review-flow/ensure-complete-review";
-import { buildTagsPromptFragment, tagsForAi } from "@/lib/review-flow/tags-for-ai";
+import { buildTagsPromptFragment, fallbackHighlights, tagsForAi } from "@/lib/review-flow/tags-for-ai";
 
 import { checkAiReviewDraftQuota, PLAN_REQUIRED } from "./generate-review-quota";
 import {
@@ -23,6 +23,8 @@ import {
     buildStaffClause,
     loadRecentReviewsContext,
 } from "./generate-review-prompt";
+import { ratingGoesToGoogle } from "./google-rating-threshold";
+import { fallbackReviewText } from "@/lib/review-flow/rating-tone";
 
 const requestSchema = z.object({
     /** When set, last reviews are loaded only for this request's business (server-resolved). Never trust client businessId for DB reads. */
@@ -31,7 +33,9 @@ const requestSchema = z.object({
     token: z.string().min(1),
     businessName: z.string().min(1).max(200),
     businessCategory: z.string().min(1).max(120),
-    rating: z.number().int().min(4).max(5),
+    // Any star rating the business sends to Google (min_stars_for_google is 1-5);
+    // checked against the business's own threshold below.
+    rating: z.number().int().min(1).max(5),
     selectedTags: z.array(z.string().min(1).max(200)).min(1).max(20),
     selectedStaff: z.array(z.string().max(120)).max(50).optional(),
 });
@@ -91,6 +95,15 @@ export async function handleGenerateReviewFlow(request: Request) {
         const resolvedBusinessId = context.resolvedBusinessId;
         if (!resolvedBusinessId || businessId !== resolvedBusinessId) {
             return NextResponse.json(PLAN_REQUIRED, { status: 403 });
+        }
+
+        // Before any AI budget is spent: only ratings this business sends to Google get a draft.
+        const goesToGoogle = await ratingGoesToGoogle(supabase, resolvedBusinessId, rating);
+        if (goesToGoogle === null) {
+            return NextResponse.json({ error: "AI drafts are temporarily unavailable." }, { status: 503 });
+        }
+        if (!goesToGoogle) {
+            return NextResponse.json({ error: "This rating is not posted to Google." }, { status: 400 });
         }
 
         try {
@@ -155,7 +168,7 @@ export async function handleGenerateReviewFlow(request: Request) {
             logger.error(`[AI FALLBACK] AI failed. Using Smart Template for ${businessName}.`);
 
             const fallbackText = ensureCompleteReviewText(
-                `Had a wonderful time at ${businessName}. The ${selectedTags.slice(0, 2).join(" and ").toLowerCase()} was fantastic. Highly recommend ${businessName}.`,
+                fallbackReviewText(businessName, fallbackHighlights(selectedTags), rating),
                 businessName
             );
             await persistDraft(supabase, reviewRequestId, fallbackText, rating);

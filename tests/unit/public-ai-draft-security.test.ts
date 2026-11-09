@@ -3,8 +3,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
     ipLimit: vi.fn(), businessLimit: vi.fn(), requestLimit: vi.fn(),
     context: vi.fn(), quota: vi.fn(), generate: vi.fn(), admin: vi.fn(),
-    verify: vi.fn(),
+    verify: vi.fn(), threshold: vi.fn(), persist: vi.fn(),
 }));
+
+vi.mock("@/services/review-flow/google-rating-threshold", () => ({ ratingGoesToGoogle: mocks.threshold }));
 
 vi.mock("@/lib/review-requests/tracking-token", () => ({ verifyReviewTracking: mocks.verify }));
 
@@ -57,6 +59,7 @@ describe("public AI draft security", () => {
         mocks.generate.mockResolvedValue("A complete review for Example.");
         mocks.admin.mockReturnValue({});
         mocks.verify.mockReturnValue(true);
+        mocks.threshold.mockResolvedValue(true);
     });
 
     it("rejects a forged or nonexistent request ID before model spend", async () => {
@@ -102,5 +105,34 @@ describe("public AI draft security", () => {
         const response = await handleGenerateReviewFlow(draftRequest({ reviewRequestId: undefined }));
         expect(response.status).toBe(400);
         expect(mocks.generate).not.toHaveBeenCalled();
+    });
+
+    it("drafts a 3-star review for a business that sends 3 stars and up to Google", async () => {
+        mocks.admin.mockReturnValue({ from: () => ({ update: () => ({ eq: () => ({ select: () => ({
+            maybeSingle: async () => ({ data: { id: REQUEST_ID }, error: null }) }) }) }) }) });
+        const response = await handleGenerateReviewFlow(draftRequest({ rating: 3 }));
+        expect(response.status).toBe(200);
+        expect(mocks.threshold).toHaveBeenCalledWith(expect.anything(), BUSINESS_ID, 3);
+        expect(mocks.generate).toHaveBeenCalled();
+    });
+
+    it("refuses a rating below the business's own threshold before any AI budget is used", async () => {
+        mocks.threshold.mockResolvedValue(false);
+        const response = await handleGenerateReviewFlow(draftRequest({ rating: 2 }));
+        expect(response.status).toBe(400);
+        expect(mocks.businessLimit).not.toHaveBeenCalled();
+        expect(mocks.generate).not.toHaveBeenCalled();
+    });
+
+    it("fails closed when the threshold cannot be read", async () => {
+        mocks.threshold.mockResolvedValue(null);
+        const response = await handleGenerateReviewFlow(draftRequest({ rating: 3 }));
+        expect(response.status).toBe(503);
+        expect(mocks.generate).not.toHaveBeenCalled();
+    });
+
+    it("still rejects ratings outside 1-5", async () => {
+        expect((await handleGenerateReviewFlow(draftRequest({ rating: 0 }))).status).toBe(400);
+        expect((await handleGenerateReviewFlow(draftRequest({ rating: 6 }))).status).toBe(400);
     });
 });
