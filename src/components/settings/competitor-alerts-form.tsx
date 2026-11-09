@@ -40,6 +40,8 @@ export function CompetitorAlertsForm({
             } else {
                 toast.error(res.error || "Could not save settings.");
             }
+        } catch {
+            toast.error("Could not save settings. Check your connection and try again.");
         } finally {
             setSaving(false);
         }

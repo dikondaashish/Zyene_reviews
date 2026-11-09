@@ -5,6 +5,10 @@ import { requireUser } from "@/app/api/_shared/auth";
 import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { syncFacebookReviewsForPlatform } from "@/services/facebook/sync-service";
 import { getFacebookPlatformForUser } from "@/services/facebook/sync-facebook-platform";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
+import { z } from "zod";
+
+const syncBodySchema = z.object({ businessId: z.string().uuid().optional() });
 
 export async function handleFacebookSyncPost(request: Request) {
     try {
@@ -18,15 +22,16 @@ export async function handleFacebookSyncPost(request: Request) {
             });
         }
 
-        let businessId: string | undefined;
-        try {
-            const body = (await request.json()) as { businessId?: string };
-            businessId = body.businessId;
-        } catch {
-            /* no body */
+        const parsed = syncBodySchema.safeParse(await request.json().catch(() => ({})));
+        if (!parsed.success) {
+            throw new ApiRouteError("Invalid businessId", { status: 400, code: "INVALID_BUSINESS_ID" });
         }
 
-        const { platform } = await getFacebookPlatformForUser(supabase, businessId);
+        const { businessId, platform } = await getFacebookPlatformForUser(supabase, parsed.data.businessId);
+        // Same gate as Yelp and Google: a manual sync is a managed action, not a viewer one.
+        if (!(await canManageBusinessIntegration(supabase, user.id, businessId))) {
+            throw new ApiRouteError("Business not found", { status: 404, code: "BUSINESS_NOT_FOUND" });
+        }
         const result = await syncFacebookReviewsForPlatform(platform.id);
 
         return apiOk(result);

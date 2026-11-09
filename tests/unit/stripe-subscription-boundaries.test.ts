@@ -5,7 +5,7 @@ import type { WebhookAdminClient } from "@/services/stripe/webhook-types";
 const m = vi.hoisted(() => ({ retrieve: vi.fn(), customer: vi.fn(), email: vi.fn(), reset: vi.fn(), plan: vi.fn(),
     onboarding: vi.fn(), trial: vi.fn(), referral: vi.fn(), metaConversion: vi.fn(), shouldTrackMeta: vi.fn() }));
 vi.mock("@/services/stripe/client", () => ({ stripe: {
-    subscriptions: { retrieve: m.retrieve }, customers: { retrieve: m.customer },
+    subscriptions: { retrieve: m.retrieve, list: async () => ({ data: [] }) }, customers: { retrieve: m.customer },
 } }));
 vi.mock("@/services/stripe/meta-paid-subscription-event", () => ({
     sendMetaPaidSubscriptionEvent: m.metaConversion,
@@ -62,9 +62,10 @@ describe("Stripe billing projection boundaries", () => {
         expect(projection.plan).toBe("free"); expect(projection.plan_status).not.toBe("active");
         expect(projection.max_ai_replies_per_month).toBe(0);
     });
-    it("rejects unknown paid prices instead of silently granting Starter", () => {
+    it("does not grant a plan for unknown paid prices (keeps current entitlements)", () => {
         m.plan.mockReturnValue(null);
-        expect(() => stripeSubscriptionToOrganizationUpdate(subscription())).toThrow("Unrecognized");
+        const projection = stripeSubscriptionToOrganizationUpdate(subscription());
+        expect(projection).not.toHaveProperty("plan"); expect(projection.preserve_entitlements).toBe(true);
     });
     it("uses live Stripe state instead of an outdated event payload", async () => {
         const { client, rpc } = db(); m.retrieve.mockResolvedValue(subscription("past_due"));

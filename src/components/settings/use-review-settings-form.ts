@@ -8,6 +8,7 @@ import { toast } from "sonner";
 
 import type { BusinessSettingsRecord } from "@/types/components";
 import { reviewSettingsSchema, type ReviewSettingsValues } from "./review-settings-form-schema";
+import { apiErrorMessage } from "@/lib/api/api-envelope";
 
 export function useReviewSettingsForm(business: BusinessSettingsRecord) {
     const router = useRouter();
@@ -42,8 +43,8 @@ export function useReviewSettingsForm(business: BusinessSettingsRecord) {
             });
 
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Failed to update review settings");
+                const body: unknown = await response.json().catch(() => null);
+                throw new Error(apiErrorMessage(body, "Failed to update review settings"));
             }
 
             toast.success("Review settings updated");

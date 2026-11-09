@@ -1,8 +1,10 @@
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getReviews, getPageDetails } from "./adapter";
+import { upsertOlderFacebookReviews } from "./upsert-older-reviews";
 import { analyzeReview } from "@/domains/ai/services/ai-analysis-service";
 import { sendReviewAlert } from "@/lib/notifications/review-alert";
+import { invalidateDashboardStatsCache } from "@/lib/dashboard/invalidate-dashboard-stats-cache";
 
 export interface FacebookSyncResult {
     success: boolean;
@@ -75,7 +77,10 @@ export async function syncFacebookReviewsForPlatform(
 
     try {
         // 2. Fetch reviews from Facebook
-        const fbReviews = await getReviews(pageId, pageAccessToken);
+        const { recent: fbReviews, older: olderFbReviews, truncated } = await getReviews(pageId, pageAccessToken);
+        if (truncated) {
+            logger.warn({ platformId }, "[Facebook Sync] Stopped at the page limit; oldest ratings not imported");
+        }
         let analyzedCount = 0;
         let alertsCount = 0;
 
@@ -122,8 +127,12 @@ export async function syncFacebookReviewsForPlatform(
         analyzedCount = syncOutcomes.filter((o) => o.analyzed).length;
         alertsCount = syncOutcomes.filter((o) => o.alerted).length;
 
+        // 4. Older pages: store only. No analysis or alert, so importing a page's
+        // history never emails the owner about months-old reviews.
+        await upsertOlderFacebookReviews(admin, platform, olderFbReviews);
+
         // 5. Update platform stats with live page data
-        let liveRatingCount = fbReviews.length;
+        let liveRatingCount = fbReviews.length + olderFbReviews.length;
         let liveRating = 0;
 
         try {
@@ -155,10 +164,11 @@ export async function syncFacebookReviewsForPlatform(
                 sync_status: "active",
             })
             .eq("id", platformId);
+        await invalidateDashboardStatsCache(platform.business_id);
 
         return {
             success: true,
-            total: fbReviews.length,
+            total: fbReviews.length + olderFbReviews.length,
             analyzed: analyzedCount,
             alerts: alertsCount,
         };

@@ -9,9 +9,10 @@ import {
   type AutoReplyBusinessSettings,
 } from "@/services/reviews/auto-reply-eligibility";
 import {
-  isZyeneOriginatedReplySource,
-  REVIEW_RESPONSE_SOURCE_GOOGLE,
-} from "@/lib/reviews/response-source";
+  EXISTING_REPLY_STATE_COLUMNS,
+  resolveSyncedReplyState,
+  type ExistingReplyState,
+} from "./synced-reply-state";
 import {
   googleAttributeChips,
   googlePlaceContext,
@@ -34,7 +35,7 @@ export async function processGoogleReview(
     review: GoogleReview,
     autoReplySettings?: AutoReplyBusinessSettings | null,
     opts?: {
-        existing?: { content_hash?: string | null; response_source?: string | null; response_text?: string | null } | null;
+        existing?: (ExistingReplyState & { content_hash?: string | null }) | null;
         contentHash?: string;
         googleUpdateTime?: string;
     }
@@ -47,21 +48,13 @@ export async function processGoogleReview(
             ? { data: opts.existing }
             : await admin
                   .from("reviews")
-                  .select("content_hash, response_source, response_text")
+                  .select(EXISTING_REPLY_STATE_COLUMNS)
                   .eq("business_id", platform.business_id)
                   .eq("platform", "google")
                   .eq("external_id", review.reviewId)
                   .maybeSingle();
 
-    const googleReplyText = review.reviewReply?.comment ?? "";
-    let responseSource: string | null = null;
-    if (review.reviewReply) {
-        const preserveZyene =
-            !!existing &&
-            isZyeneOriginatedReplySource(existing.response_source) &&
-            sameReviewReplyText(existing.response_text, googleReplyText);
-        responseSource = preserveZyene ? existing.response_source! : REVIEW_RESPONSE_SOURCE_GOOGLE;
-    }
+    const replyState = resolveSyncedReplyState(review.reviewReply, existing, sameReviewReplyText);
 
     const resolvedContentHash = opts?.contentHash ?? computeReviewHash(review);
     const reviewData = {
@@ -76,10 +69,7 @@ export async function processGoogleReview(
         review_date: review.createTime,
         google_update_time: opts?.googleUpdateTime ?? review.updateTime,
         content_hash: resolvedContentHash,
-        response_status: review.reviewReply ? "responded" : "pending",
-        response_text: review.reviewReply?.comment || null,
-        responded_at: review.reviewReply?.updateTime || null,
-        response_source: responseSource,
+        ...replyState,
         review_photo_urls: googleReviewPhotoUrls(review),
         google_attribute_chips: googleAttributeChips(review),
         google_place_context: googlePlaceContext(review),
@@ -126,7 +116,10 @@ export async function processGoogleReview(
             needsAnalysis = true;
         }
 
+        // Only a review still waiting for a reply may be auto-answered: not one the
+        // owner ignored, nor one Zyene replied to that Google hasn't listed yet.
         if (
+            replyState.response_status === "pending" &&
             reviewQualifiesForAutoReplyEnqueue(review, numericRating, autoReplySettings, upserted?.id)
         ) {
             try {

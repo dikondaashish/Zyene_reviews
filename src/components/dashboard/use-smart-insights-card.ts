@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import type { SmartInsightsData, SmartInsightsSuggestion } from "./smart-insights-card-types";
 import { themesForSuggestionExamples } from "./smart-insights-card-themes-for-suggestion";
 import { positiveMentionPct } from "@/lib/dashboard/dashboard-visuals";
-
+import { useDismissedSuggestions } from "./use-dismissed-suggestions";
 export function useSmartInsightsCard(businessName?: string) {
     const [data, setData] = useState<SmartInsightsData | null>(null);
     const [loading, setLoading] = useState(true);
@@ -13,21 +13,8 @@ export function useSmartInsightsCard(businessName?: string) {
     const [activeTab, setActiveTab] = useState<"themes" | "suggestions">("themes");
     const [selectedThemeIndex, setSelectedThemeIndex] = useState(0);
     const [expandedSuggestion, setExpandedSuggestion] = useState<number | null>(0);
-    const [dismissedIndices, setDismissedIndices] = useState<Set<number>>(new Set());
     const [examplesOpen, setExamplesOpen] = useState(false);
     const [examplesSuggestion, setExamplesSuggestion] = useState<SmartInsightsSuggestion | null>(null);
-
-    const handleDismiss = (e: React.MouseEvent, index: number) => {
-        e.stopPropagation();
-        setDismissedIndices((prev) => {
-            const next = new Set(prev);
-            next.add(index);
-            return next;
-        });
-        toast.success("Suggestion dismissed", {
-            description: "We'll use this feedback to improve your future insights.",
-        });
-    };
 
     const handleTakeAction = (e: React.MouseEvent, title: string) => {
         e.stopPropagation();
@@ -45,6 +32,8 @@ export function useSmartInsightsCard(businessName?: string) {
         setExamplesSuggestion(suggestion);
         setExamplesOpen(true);
     };
+
+    const { dismissedIndices, handleDismiss } = useDismissedSuggestions(data?.suggestions);
 
     const exampleThemes = useMemo(() => {
         if (!examplesSuggestion || !data?.themes) return [];

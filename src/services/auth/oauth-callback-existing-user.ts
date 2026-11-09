@@ -2,6 +2,7 @@ import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { acceptBusinessInvitationAdmin } from "@/lib/auth/accept-business-invitation";
+import { canManageBusinessIntegration } from "@/lib/auth/manage-business-integration";
 import {
     reattachOrphanedGoogleReviews,
     refreshGoogleReviewRollupsFromDb,
@@ -41,28 +42,32 @@ export async function runOAuthExistingUserLogin(params: {
 
     // Prefer explicit business id from the OAuth redirect (biz=...).
     // Fallback to the first business in the user’s org membership.
+    // The redirect is built client-side, so `biz` is untrusted: whichever business
+    // we land on, the user must be allowed to manage its integrations (owner,
+    // admin or manager, active membership) before we write tokens with the
+    // service role. An unauthorized `biz` never falls back to another business.
     let businessId: string | null = null;
     if (biz) {
-        const { data: bizRow, error: bizErr } = await admin
-            .from("businesses")
-            .select(`id, organizations!inner(organization_members!inner(user_id))`)
-            .eq("id", biz)
-            .eq("organizations.organization_members.user_id", data.user.id)
-            .single();
-        if (!bizErr && bizRow?.id) {
-            businessId = bizRow.id;
-        }
-    }
-
-    if (!businessId) {
+        businessId = biz;
+    } else {
         const { data: memberData } = await admin
             .from("organization_members")
             .select(`organizations ( businesses (id) )`)
             .eq("user_id", data.user.id)
+            .eq("status", "active")
+            .limit(1)
             .maybeSingle();
 
         businessId =
             (memberData as unknown as AuthMemberOrgContext)?.organizations?.businesses?.[0]?.id ?? null;
+    }
+
+    if (businessId && !(await canManageBusinessIntegration(admin, data.user.id, businessId))) {
+        logger.warn(
+            { businessId, userId: data.user.id, explicit: Boolean(biz) },
+            "[Auth Callback] Google token write skipped: user cannot manage this business's integrations"
+        );
+        businessId = null;
     }
 
     if (businessId) {

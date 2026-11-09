@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { fetchCampaignDetail, patchCampaignStatus } from "./campaign-detail-api";
+import { toastCampaignStatusError } from "@/components/campaigns/campaign-status-error-toast";
 import { buildCampaignFunnelStages } from "./campaign-detail-funnel-utils";
 import type { Campaign, ReviewRequest } from "./campaign-detail-types";
 import { importCampaignCsvContacts, sendCampaignToContacts } from "./use-campaign-detail-send";
@@ -48,10 +49,13 @@ export function useCampaignDetail(campaignId: string) {
         if (!campaign) return;
         const newStatus = campaign.status === "active" ? "paused" : "active";
         try {
-            if (await patchCampaignStatus(campaign.id, newStatus)) {
-                toast.success(`Campaign ${newStatus === "active" ? "activated" : "paused"}`);
-                loadCampaign();
+            const result = await patchCampaignStatus(campaign.id, newStatus);
+            if (!result.ok) {
+                toastCampaignStatusError(result.body);
+                return;
             }
+            toast.success(`Campaign ${newStatus === "active" ? "activated" : "paused"}`);
+            loadCampaign();
         } catch {
             toast.error("Failed to update campaign");
         }
