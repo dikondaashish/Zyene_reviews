@@ -9,7 +9,13 @@ import { nextAllowedSendTime, quietHoursFromBusiness } from "@/lib/review-reques
  * messages that were queued earlier.
  */
 export type GuardChannel = "sms" | "email";
-export type BlockedChannel = { channel: GuardChannel; reason: string };
+/**
+ * "customer": this contact is not eligible right now (frequency cap, opt-out, STOP, unsubscribe,
+ * test contact). That is the guard working as designed, so API/Zapier callers report it as a skip.
+ * "setup": the business or the request itself must change (channel off, no contact, no business).
+ */
+export type BlockKind = "customer" | "setup";
+export type BlockedChannel = { channel: GuardChannel; reason: string; kind: BlockKind };
 
 export type SendGuardBusiness = {
     id: string;
@@ -66,8 +72,8 @@ export async function checkReviewRequestSend(admin: SupabaseClient, input: SendG
         .select(SEND_GUARD_BUSINESS_SELECT).eq("id", input.businessId).maybeSingle();
     if (error) throw error;
     const blocked: BlockedChannel[] = [];
-    const block = (channel: GuardChannel, reason: string) => {
-        if (!blocked.some((b) => b.channel === channel)) blocked.push({ channel, reason });
+    const block = (channel: GuardChannel, reason: string, kind: BlockKind = "setup") => {
+        if (!blocked.some((b) => b.channel === channel)) blocked.push({ channel, reason, kind });
     };
     const channels = [...new Set(input.channels)];
     if (!business) {
@@ -89,13 +95,13 @@ export async function checkReviewRequestSend(admin: SupabaseClient, input: SendG
         const { data: stop, error: stopError } = await admin.from("sms_opt_outs")
             .select("phone_number").in("phone_number", variants).limit(1);
         if (stopError) throw stopError;
-        if (stop?.length) block("sms", "Customer replied STOP to SMS");
+        if (stop?.length) block("sms", "Customer replied STOP to SMS", "customer");
     }
     if (channels.includes("email") && input.email) {
         const { data: unsub, error: unsubError } = await admin.from("review_request_email_unsubscribes")
             .select("id").eq("business_id", biz.id).eq("email", normalizeCustomerEmail(input.email)).maybeSingle();
         if (unsubError) throw unsubError;
-        if (unsub) block("email", "Customer unsubscribed from review request emails");
+        if (unsub) block("email", "Customer unsubscribed from review request emails", "customer");
     }
 
     const customers = await customerFlags(admin, biz.id, input.phone, input.email);
@@ -103,16 +109,21 @@ export async function checkReviewRequestSend(admin: SupabaseClient, input: SendG
     const lastSent = customers.map((c) => c.last_request_sent_at).filter(Boolean)
         .map((v) => new Date(v as string).getTime()).sort((a, b) => b - a)[0];
     for (const channel of channels) {
-        if (customers.some((c) => c.is_opted_out)) block(channel, "Customer opted out of review requests");
-        if (customers.some((c) => c.tags?.includes("zyene:test"))) block(channel, "Test contact");
+        if (customers.some((c) => c.is_opted_out)) block(channel, "Customer opted out of review requests", "customer");
+        if (customers.some((c) => c.tags?.includes("zyene:test"))) block(channel, "Test contact", "customer");
         if (input.frequencyCap === "apply" && capDays > 0 && lastSent && now.getTime() - lastSent < capDays * DAY_MS) {
-            block(channel, `Already asked within the last ${capDays} days`);
+            block(channel, `Already asked within the last ${capDays} days`, "customer");
         }
     }
 
     const allowed = channels.filter((c) => !blocked.some((b) => b.channel === c));
     const deferUntil = allowed.length ? nextAllowedSendTime(now, quietHoursFromBusiness(biz)) : null;
     return { allowed, blocked, deferUntil, business: biz };
+}
+
+/** True when nothing was blocked for a setup reason: every blocked channel is a per-contact skip. */
+export function isCustomerSkip(blocked: BlockedChannel[]): boolean {
+    return blocked.length > 0 && blocked.every((b) => b.kind === "customer");
 }
 
 /** Human-readable summary for review_requests.error_message when nothing could be sent. */

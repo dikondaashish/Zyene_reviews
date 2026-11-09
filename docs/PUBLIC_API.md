@@ -76,7 +76,7 @@ await sendOutboundReviewRequest({
 });
 ```
 
-Shared by dashboard, cron, and `/api/v1/requests/send`. Prefer this over calling Twilio/Resend directly from routes.
+Shared by dashboard, cron, and `/api/v1/requests/send`. Prefer this over calling Twilio/Resend directly from routes. A failed result with `skipped: true` means the send guard skipped an ineligible contact (frequency cap, opt-out, STOP, unsubscribe, test contact); HTTP callers should render it with `outboundSendResponse` (`@/services/review-requests/api/outbound-send-response`), which answers `200 status: "skipped"` instead of a `4xx`.
 
 ---
 

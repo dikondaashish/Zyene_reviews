@@ -1,11 +1,12 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
 import { checkLimit } from "@/lib/stripe/check-limits";
-import { blockedReason, checkReviewRequestSend } from "@/lib/review-requests/send-guard";
+import { blockedReason, checkReviewRequestSend, isCustomerSkip } from "@/lib/review-requests/send-guard";
 import { channelsFor } from "@/lib/review-requests/dispatch-review-request";
 import {
     fail,
     isValidEmail,
     normalizePhone,
+    skip,
     type OutboundChannel,
     type OutboundTriggerSource,
     type SendOutboundReviewRequestInput,
@@ -127,7 +128,8 @@ export async function prepareOutboundReviewRequest(
         frequencyCap: "apply",
     });
     if (channel !== "link" && guard.allowed.length === 0) {
-        return fail(400, channel, blockedReason(guard.blocked));
+        const reason = blockedReason(guard.blocked);
+        return isCustomerSkip(guard.blocked) ? skip(channel, reason) : fail(400, channel, reason);
     }
 
     return {

@@ -45,7 +45,8 @@ Companion: [AUTHENTICATION.md](./AUTHENTICATION.md), [DATA_MODELS.md](./DATA_MOD
 | `channel` | `"sms" \| "email" \| "link" \| "both"` | default `sms` |
 
 **Success `200`:** `{ success: true, data: { requestId, status, channel, reviewLink, warning? } }`  
-**Errors:** `400` invalid body; `401` bad/missing key; `403` missing scope; provider/business errors via `result.code` from send helper.
+**Skipped `200`:** `{ success: true, data: { requestId: null, status: "skipped", channel, reason: "not_eligible", message } }` when the contact is not eligible right now (asked within the frequency cap, opted out, replied STOP, unsubscribed, or tagged as a test contact). Nothing is sent. This is a normal outcome for repeat customers, so it is not an HTTP error: Zapier counts any `4xx` as a failed Zap run, sends "Possible error on your Zap" alerts and can turn the Zap off. `/api/webhooks/generic` answers the same way.  
+**Errors:** `400` invalid body or setup problem (e.g. the SMS/Email channel is turned off in settings, missing phone/email, no profile slug); `401` bad/missing key; `403` missing scope; provider/business errors via `result.code` from send helper.
 
 ### `GET /api/v1/reviews`
 
@@ -203,7 +204,7 @@ Errors: OAuth denials redirect with error query params; token exchange failures 
 
 **POS / Zapier send timing.** Square `payment.created` / `payment.updated` and `/api/webhooks/generic` (channels `sms`, `email`, `both`) apply the business settings from Settings → Business information → Review Request Settings:
 
-- `review_request_min_amount_cents`: Square payments whose `total_money` (or `amount_money`) is below the minimum are recorded as `skipped_guard` ("Below minimum transaction amount") and never sent. The generic webhook only applies the minimum when the body includes `amount_cents` (integer cents) or `amount` / `total` (dollars); it then returns `200 { success: true, data: { status: "skipped", reason: "below_minimum_amount" } }`. A sale without an amount is never skipped. `0` = no minimum.
+- `review_request_min_amount_cents`: Square payments whose `total_money` (or `amount_money`) is below the minimum are recorded as `skipped_guard` ("Below minimum transaction amount") and never sent. The generic webhook only applies the minimum when the body includes `amount_cents` (integer cents) or `amount` / `total` (dollars); it then returns `200 { success: true, data: { status: "skipped", reason: "below_minimum_amount" } }`. A contact that is not eligible (frequency cap, opt-out, STOP, unsubscribe, test contact) returns `200 { success: true, data: { status: "skipped", reason: "not_eligible", message } }`, never a `4xx`. A sale without an amount is never skipped. `0` = no minimum.
 - `review_request_delay_minutes` (default 120, max 10080): when > 0 the send is deferred via the Inngest event `review-request/pos.delayed-send` (`step.sleepUntil`), so nothing goes out at payment time. Square rows stay `sending` while they wait. The generic webhook returns `202 { success: true, data: { status: "scheduled", sendAt, delayMinutes, channel } }` without a `requestId`. Send `delay_minutes: 0` in the body to send immediately (the old synchronous response). `0` in Settings = send immediately.
 - The delayed job re-checks everything when it runs: auto-send toggle and connection (Square), 30-day frequency cap, opt-outs, plan limits. It sends through `sendOutboundReviewRequest`.
 - `channel: "link"` is never delayed or skipped.

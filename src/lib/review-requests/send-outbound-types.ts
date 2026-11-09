@@ -42,6 +42,12 @@ export type SendOutboundReviewRequestResult =
           errorMessage: string;
           /** HTTP-style code so callers can map: 400/403/404/500. */
           code: 400 | 403 | 404 | 500;
+          /**
+           * True when nothing was sent because this contact is not eligible right now (frequency
+           * cap, opt-out, STOP, unsubscribe, test contact). Not an error: the API and webhook
+           * answer 200 `status: "skipped"` so Zapier does not count it as a failed run.
+           */
+          skipped?: boolean;
       };
 
 export function normalizePhone(raw: string | null | undefined): string | null {
@@ -72,4 +78,14 @@ export function fail(
         errorMessage: message,
         code,
     };
+}
+
+/** A guard skip: `code` stays 400 for internal callers (POS records it as skipped_guard). */
+export function skip(
+    channel: OutboundChannel,
+    message: string,
+    requestId: string | null = null,
+    reviewLink: string | null = null,
+): SendOutboundReviewRequestResult {
+    return { success: false, requestId, status: "failed", channel, reviewLink, errorMessage: message, code: 400, skipped: true };
 }

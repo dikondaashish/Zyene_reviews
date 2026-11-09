@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { authenticateApiKey, corsPreflight, withCors } from "@/app/api/v1/_lib/auth";
 import { sendOutboundReviewRequest } from "@/lib/review-requests/send-outbound";
+import { outboundSendResponse } from "@/services/review-requests/api/outbound-send-response";
 
 const bodySchema = z.object({
     customerName: z.string().max(200).optional().or(z.literal("")),
@@ -42,26 +43,5 @@ export async function POST(req: NextRequest) {
         triggerSource: "zapier",
     });
 
-    if (!result.success) {
-        return withCors(
-            NextResponse.json(
-                { success: false, error: result.errorMessage },
-                { status: result.code },
-            ),
-        );
-    }
-
-    return withCors(
-        NextResponse.json({
-            success: true,
-            data: {
-                requestId: result.requestId,
-                status: result.status,
-                channel: result.channel,
-                reviewLink: result.reviewLink,
-                /** Set when one leg of `both` failed but the request is still considered sent. */
-                warning: result.errorMessage,
-            },
-        }),
-    );
+    return withCors(outboundSendResponse(result));
 }
