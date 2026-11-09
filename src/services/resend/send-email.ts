@@ -3,6 +3,7 @@ import { EMAIL_BRAND } from "@/lib/email/email-brand";
 import { logger } from "@/lib/logger";
 import { resend } from "@/services/resend/client";
 import { streamFrom, type EmailStream } from "@/services/resend/email-streams";
+import { formatFromAddress } from "@/lib/email/from-header";
 
 interface SendEmailProps {
     to: string | string[];
@@ -63,9 +64,9 @@ export function buildFromLine(input: { senderName?: string | null; businessName?
     const match = fallback.match(/<([^>]+)>/);
     const mailbox = match ? match[1] : null;
     if (!mailbox) return fallback;
-    // Sanitize display name (no quotes/angle brackets to avoid breaking the header).
+    // Sanitize display name (no quotes/angle brackets), then quote it if it has RFC 5322 specials.
     const safeName = display.replace(/["<>]/g, "").slice(0, 78);
-    return `${safeName} <${mailbox}>`;
+    return formatFromAddress(safeName, mailbox);
 }
 
 export async function sendEmail({ to, subject, html, text, from, stream, replyTo, headers, unsubscribeUrl, attachments, idempotencyKey }: SendEmailProps) {

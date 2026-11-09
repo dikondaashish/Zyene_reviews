@@ -1,5 +1,10 @@
 import { createAdminClient } from "@/lib/db/supabase/admin";
-import { FREE_LIMITS, hasActiveOrTrialingStatus, planProductTier } from "@/services/stripe/plans";
+import {
+    FREE_LIMITS,
+    hasActiveOrTrialingStatus,
+    planAllowsAutoCommenter,
+    planProductTier,
+} from "@/services/stripe/plans";
 
 interface LimitCheckResult {
     allowed: boolean;
@@ -56,7 +61,9 @@ export async function checkLimit(
     if (countError || businessCountRaw === null) return DENIED;
 
     const businessCount = businessCountRaw ?? 0;
-    const subscriptionIsActive = hasActiveOrTrialingStatus(org.plan_status ?? null);
+    // New orgs default to plan='none' + plan_status='active'; only a recognised paid plan unlocks DB caps.
+    const subscriptionIsActive =
+        planAllowsAutoCommenter(org.plan) && hasActiveOrTrialingStatus(org.plan_status ?? null);
     const maxBiz = subscriptionIsActive ? (org.max_businesses ?? 1) : FREE_LIMITS.maxLocations;
     const mult = perLocationMultiplier(org.plan, businessCount, maxBiz);
 
@@ -151,6 +158,9 @@ export async function checkLimit(
                 "customer_phone.not.is.null,customer_email.not.is.null,customer_name.not.is.null,campaign_id.not.is.null"
             );
             query = query.neq("status", "skipped");
+            // A request that failed before anything went out (bad number, provider outage,
+            // a dispatch error) used no allowance; one that failed after sending still counts.
+            query = query.or("status.neq.failed,sent_at.not.is.null");
 
             if (limitType === "email_requests") {
                 query = query.in("channel", ["email", "both"]);

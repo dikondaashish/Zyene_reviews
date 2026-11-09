@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import type { Customer } from "@/components/customers/customer-table";
 import { buildCustomerExportCsv, fetchAllCustomersForExport } from "@/components/customers/customer-management-export";
 import { useCustomerManagementBulkAndCampaign } from "@/components/customers/use-customer-management-bulk-campaign";
+import { singleRequestSuccessMessage, type SingleRequestResult } from "@/components/customers/single-request-result";
 
 type FetchOpts = { silent?: boolean };
 
@@ -78,9 +79,9 @@ export function useCustomerManagementActions(params: {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ ids: [customer.id], businessId, action: "request" }),
                 });
-                const json = await response.json();
-                if (!response.ok || json.sent !== 1) throw new Error(json.error || "The request was not sent. Check contact eligibility and try again.");
-                toast.success("Review request sent!");
+                const json = (await response.json()) as SingleRequestResult;
+                if (!response.ok) throw new Error(json.error || "Failed to send request");
+                toast.success(singleRequestSuccessMessage(json, customer.id));
                 await fetchCustomers({ silent: true });
             } catch (e) {
                 toast.error(e instanceof Error ? e.message : "Failed to send request");

@@ -1,3 +1,5 @@
+import { overallExperienceSentence, ratingToneInstruction } from "@/lib/review-flow/rating-tone";
+
 export const EVERYTHING_TAG = "👍 Everything";
 export const CUSTOM_TAG_PREFIX = "custom:";
 
@@ -60,7 +62,10 @@ export function buildTagsPromptFragment(
     rating: number
 ): string {
     if (parsed.mode === "everything") {
-        return `The customer gave ${rating} stars and loved everything about their experience (all aspects of the visit).`;
+        // "Loved everything" only fits a high rating; a 3-star "everything" means liked it all, with reservations.
+        return rating >= 4
+            ? `The customer gave ${rating} stars and loved everything about their experience (all aspects of the visit).`
+            : `The customer gave ${rating} stars and liked most aspects of the visit.${ratingToneInstruction(rating)}`;
     }
 
     const { presets, custom } = capTagsForPrompt(parsed.presets, parsed.custom);
@@ -75,8 +80,15 @@ export function buildTagsPromptFragment(
         parts.push(`They also highlighted: ${presets.join(", ")}.`);
     }
     if (custom.length === 0 && presets.length === 0) {
-        parts.push("They had a positive experience overall.");
+        parts.push(overallExperienceSentence(rating));
     }
 
-    return parts.join(" ");
+    return parts.join(" ") + ratingToneInstruction(rating);
+}
+
+/** What the customer picked, as plain words for the fallback ("Everything" -> "overall experience"). */
+export function fallbackHighlights(selectedTags: string[]): string[] {
+    const parsed = tagsForAi(selectedTags);
+    if (parsed.mode === "everything") return ["overall experience"];
+    return [...parsed.custom, ...parsed.presets];
 }

@@ -76,7 +76,7 @@ export function UpgradeModalPlanCards({
                                 {loadingPlan === plan.stripePriceId ? (
                                     <Loader2 className="mr-2 animate-spin size-4" />
                                 ) : null}
-                                Start 7-day free trial
+                                Upgrade to {plan.name}
                             </Button>
                         </PricingCard.Header>
                         <PricingCard.Body className="space-y-3 p-2">

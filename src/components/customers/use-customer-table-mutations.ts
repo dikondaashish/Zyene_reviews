@@ -23,6 +23,10 @@ export function useCustomerTableMutations(
                 return;
             }
             const { first_name, last_name } = parseFullName(trimmed);
+            if (!first_name) {
+                toast.error("Name can't be empty");
+                return;
+            }
             try {
                 const res = await fetch("/api/customers", {
                     method: "PATCH",

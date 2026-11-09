@@ -7,6 +7,7 @@ import { reviewRequestSubject } from "@/lib/email/review-request-subject";
 import { signedReviewLink } from "@/lib/review-requests/tracking-token";
 import { deferReviewRequest, quietHoursReason } from "@/lib/review-requests/defer-request";
 import type { SendRequestPrepared } from "./send-request-execute-prepare";
+import { failRequestAfterDispatchError } from "@/lib/review-requests/fail-request-on-dispatch-error";
 
 export async function executeImmediateSendReviewRequest(prepared: SendRequestPrepared) {
     const { supabase, admindClient, businessId, phoneNorm, emailNorm, channel, displayName, business, customerName } =
@@ -50,7 +51,9 @@ export async function executeImmediateSendReviewRequest(prepared: SendRequestPre
             : undefined;
     const subject = reviewRequestSubject(businessName, false, displayName);
 
-    const dispatched = await dispatchDashboardReviewChannels(admindClient, {
+    let dispatched: Awaited<ReturnType<typeof dispatchDashboardReviewChannels>>;
+    try {
+        dispatched = await dispatchDashboardReviewChannels(admindClient, {
             requestId,
             businessId,
             channel,
@@ -63,6 +66,11 @@ export async function executeImmediateSendReviewRequest(prepared: SendRequestPre
             reviewLink,
             subject,
         });
+    } catch (error: unknown) {
+        await failRequestAfterDispatchError(admindClient, requestId, businessId, error);
+        Sentry.captureException(error, { tags: { route: "requests-send", step: "dispatch" } });
+        return apiError("The review request could not be sent. Please try again.", { status: 500 });
+    }
     const { sendStatus, errorMessage, resendEmailId, bumpLegs, smsLegStatus, emailLegStatus } = dispatched;
 
     if (sendStatus === "deferred" && dispatched.deferUntil) {

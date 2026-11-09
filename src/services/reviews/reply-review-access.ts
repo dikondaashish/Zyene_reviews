@@ -62,6 +62,14 @@ export async function resolveGoogleReplyContext(platformId: string) {
     const locationId = platform.google_location_id ?? platform.external_id;
     if (!locationId) throw new Error("Platform location ID missing");
 
+    // Use the account the location was linked under (what sync uses). Guessing from
+    // listAccounts picked the wrong one for users who manage several accounts, so
+    // replies 404'd while sync worked. The guess remains only for legacy rows.
+    const storedAccountId = platform.google_account_id?.replace(/^accounts\//, "").trim();
+    if (storedAccountId) {
+        return { accessToken: accessToken!, accountId: storedAccountId, locationId };
+    }
+
     const accounts = await listAccounts(accessToken!);
     const account = accounts.find((a) => a.type === "ORGANIZATION") || accounts[0];
     if (!account) throw new Error("No Google Business Account found");

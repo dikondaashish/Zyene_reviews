@@ -13,6 +13,7 @@ import { apiError, apiOk } from "@/app/api/_shared/responses";
 import { mapGoogleSyncError } from "@/lib/api/google-sync-errors";
 import { getGooglePlatformForUser, type GooglePlatformRow } from "@/services/google/sync-google-platform";
 import { parseGoogleSyncInput, readGoogleSyncBody } from "@/services/google/sync-google-input";
+import { isLiveSyncLock } from "@/services/google/sync-lock-utils";
 
 function mapSyncRouteError(error: unknown) {
     const mapped = mapGoogleSyncError(error);
@@ -116,6 +117,19 @@ export async function handleGoogleSyncPost(request: Request) {
         }
 
         if (force) {
+            // Force exists to clear a stuck lock. A lock still being renewed belongs to a
+            // live worker; clearing it would run two syncs over the same platform.
+            const { data: lock } = await admin
+                .from("review_platforms")
+                .select("sync_status, locked_until")
+                .eq("id", platform.id)
+                .maybeSingle();
+            if (isLiveSyncLock(lock)) {
+                throw new ApiRouteError(
+                    "A sync is still running and making progress. Please wait for it to finish.",
+                    { status: 423, code: "SYNC_IN_PROGRESS" },
+                );
+            }
             await admin
                 .from("review_platforms")
                 .update({

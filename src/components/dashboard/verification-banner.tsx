@@ -3,13 +3,8 @@
 import { Mail, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/db/supabase/client";
-import { toast } from "sonner";
 import type { AppUserSummary } from "@/types/components";
-import {
-    isSupabaseEmailSendRateLimited,
-    toastAuthEmailRateLimit,
-} from "@/lib/auth/supabase-email-rate-limit";
+import { resendVerificationEmail } from "@/lib/auth/resend-verification-email";
 
 export function VerificationBanner({ user }: { user: AppUserSummary }) {
     const [isDismissed, setIsDismissed] = useState(false);
@@ -20,27 +15,8 @@ export function VerificationBanner({ user }: { user: AppUserSummary }) {
     const resendVerification = async () => {
         if (isResending) return;
         setIsResending(true);
-        const supabase = createClient();
-        if (!user.email) {
-            toast.error("User email not found");
-            setIsResending(false);
-            return;
-        }
-
         try {
-            const { error } = await supabase.auth.resend({
-                type: "signup",
-                email: user.email,
-                options: { emailRedirectTo: `${window.location.origin}/api/auth/callback` },
-            });
-            if (error) {
-                if (isSupabaseEmailSendRateLimited(error)) toastAuthEmailRateLimit(toast);
-                else toast.error(error.message || "Failed to resend verification email");
-            } else {
-                toast.success("Verification email sent!");
-            }
-        } catch {
-            toast.error("Failed to resend verification email");
+            await resendVerificationEmail(user.email);
         } finally {
             setIsResending(false);
         }

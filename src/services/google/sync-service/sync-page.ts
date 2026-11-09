@@ -10,6 +10,7 @@ import { publishGoogleReviewSyncProgress } from "./review-lifecycle";
 import { listReviewsWithOrderByFallback, syncStateManagerFromContext } from "./list-reviews";
 import { processGoogleReview } from "./process-review";
 import type { GoogleSyncContext } from "./types";
+import { EXISTING_REPLY_STATE_COLUMNS } from "./synced-reply-state";
 
 /**
  * Step 2: Fetch and process a SINGLE page of reviews.
@@ -106,7 +107,7 @@ export async function syncGoogleReviewsPage(
 
         const { data: existing } = await admin
             .from("reviews")
-            .select("content_hash, response_source, response_text")
+            .select(EXISTING_REPLY_STATE_COLUMNS)
             .eq("business_id", context.platform.business_id)
             .eq("platform", "google")
             .eq("external_id", review.reviewId)

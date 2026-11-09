@@ -32,6 +32,15 @@ function makeUpdateChain(result: { error: unknown }) {
     };
 }
 
+/** The current row: still on its signup placeholder, so finalize may generate a slug. */
+function makeReadChain() {
+    return {
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        maybeSingle: vi.fn().mockResolvedValue({ data: { name: "Jane's Business", slug: "jane-abc123" }, error: null }),
+    };
+}
+
 const location = {
     name: "locations/1545892228786783204",
     title: "Joe's Pizza",
@@ -66,7 +75,7 @@ describe("finalizeVerifiedGoogleConnection slug handling", () => {
         });
         const retry = makeUpdateChain({ error: null });
         m.client.mockResolvedValue({
-            from: vi.fn().mockReturnValueOnce(collision).mockReturnValueOnce(retry),
+            from: vi.fn().mockReturnValueOnce(makeReadChain()).mockReturnValueOnce(collision).mockReturnValueOnce(retry),
             auth: { getUser: async () => ({ data: { user: { id: "u", email: "u@example.test" } } }) },
         });
 
@@ -89,7 +98,7 @@ describe("finalizeVerifiedGoogleConnection slug handling", () => {
     it("still fails the connection on a non-collision database error", async () => {
         const chain = makeUpdateChain({ error: { code: "42501", message: "RLS violation" } });
         m.client.mockResolvedValue({
-            from: vi.fn().mockReturnValue(chain),
+            from: vi.fn().mockReturnValueOnce(makeReadChain()).mockReturnValue(chain),
             auth: { getUser: async () => ({ data: { user: { id: "u", email: "u@example.test" } } }) },
         });
 
@@ -101,7 +110,7 @@ describe("finalizeVerifiedGoogleConnection slug handling", () => {
     it("updates the slug when it is available", async () => {
         const chain = makeUpdateChain({ error: null });
         m.client.mockResolvedValue({
-            from: vi.fn().mockReturnValue(chain),
+            from: vi.fn().mockReturnValueOnce(makeReadChain()).mockReturnValue(chain),
             auth: { getUser: async () => ({ data: { user: { id: "u", email: "u@example.test" } } }) },
         });
 

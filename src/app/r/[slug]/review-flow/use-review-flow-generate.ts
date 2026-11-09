@@ -2,8 +2,9 @@
 
 import { useCallback } from "react";
 import { ensureCompleteReviewText } from "@/lib/review-flow/ensure-complete-review";
-import { buildTagsSelected } from "@/lib/review-flow/tags-for-ai";
+import { buildTagsSelected, fallbackHighlights } from "@/lib/review-flow/tags-for-ai";
 import type { FlowStep } from "./types";
+import { DEFAULT_MIN_STARS_FOR_GOOGLE, fallbackReviewText } from "@/lib/review-flow/rating-tone";
 
 export function useReviewFlowGenerate(options: {
     isPreview: boolean;
@@ -39,9 +40,9 @@ export function useReviewFlowGenerate(options: {
 
         if (isPreview) {
             setTimeout(() => {
-                setReviewText(
-                    `[PREVIEW] Great experience at ${businessName}! Really loved the ${selectedTags[0] || "service"}.`
-                );
+                // Same rating-aware text customers would see if drafting fell back, so the editor preview is honest.
+                const highlights = fallbackHighlights(buildTagsSelected(selectedTags, addedCustomTags));
+                setReviewText(`[PREVIEW] ${fallbackReviewText(businessName, highlights, rating ?? DEFAULT_MIN_STARS_FOR_GOOGLE)}`);
                 setStep("review");
             }, 1500);
             return;
@@ -71,14 +72,10 @@ export function useReviewFlowGenerate(options: {
 
             setReviewText(ensureCompleteReviewText(data.reviewText ?? "", businessName));
             setStep("review");
-        } catch (error) {
-            const firstTag = selectedTags[0]?.replace(/^[^\s]+\s/, "") || "experience";
-            setReviewText(
-                ensureCompleteReviewText(
-                    `Great experience at ${businessName}! Really loved the ${firstTag.toLowerCase()}. Would definitely come back.`,
-                    businessName
-                )
-            );
+        } catch {
+            // Same rating-aware template as the server's fallback, so a 3-star review never reads as gushing.
+            const highlights = fallbackHighlights(buildTagsSelected(selectedTags, addedCustomTags));
+            setReviewText(ensureCompleteReviewText(fallbackReviewText(businessName, highlights, rating ?? DEFAULT_MIN_STARS_FOR_GOOGLE), businessName));
             setStep("review");
         }
     }, [

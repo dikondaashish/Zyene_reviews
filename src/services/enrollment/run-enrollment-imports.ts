@@ -56,7 +56,18 @@ export async function runEnrollmentImports(admin: SupabaseClient, now = new Date
                 });
             }
             if (events.length) {
-                await inngest.send(events);
+                try {
+                    await inngest.send(events);
+                } catch (error: unknown) {
+                    // Rows were claimed as "enrolled" before the hand-off. Put them back so the next
+                    // run retries them; their event ids are fixed per row, so a partial send that
+                    // did reach Inngest is deduplicated, not sent twice.
+                    await admin.from("enrollment_import_rows")
+                        .update({ status: "pending", processed_at: null })
+                        .in("id", events.map((e) => e.data.importRowId))
+                        .eq("status", "enrolled").is("review_request_id", null);
+                    throw error;
+                }
                 summary.enrolled += events.length;
             }
         }

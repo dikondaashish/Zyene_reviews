@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+import { apiData, apiErrorMessage } from "@/lib/api/api-envelope";
+
 import { DEMO_QUESTIONS } from "./questions-page-client-demo-questions";
 import type { GbpQuestionRow, QuestionsPageClientProps } from "./questions-page-client-types";
 
@@ -51,8 +53,9 @@ export function useQuestionsPageClient({ questions, isDemo }: QuestionsPageClien
                 setShowUpgradeModal(true);
                 return;
             }
-            if (!res.ok) throw new Error(data.error || "Suggestion failed");
-            const text = typeof data.answer === "string" ? data.answer : "";
+            if (!res.ok) throw new Error(apiErrorMessage(data, "Suggestion failed"));
+            const text = apiData<{ answer?: unknown }>(data)?.answer;
+            if (typeof text !== "string" || !text.trim()) throw new Error("No suggestion was returned. Please try again.");
             setAnswerText(text);
             toast.success("Suggestion added - review before posting.");
         } catch (e: unknown) {

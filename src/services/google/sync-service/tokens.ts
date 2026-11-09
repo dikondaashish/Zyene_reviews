@@ -115,15 +115,22 @@ async function refreshPlatformAccessToken(
 
         const newExpiry = new Date(Date.now() + tokens.expires_in * 1000);
 
+        const updatedAt = new Date().toISOString();
         await admin
             .from("review_platforms")
             .update({
                 access_token: encAccess,
                 token_expires_at: newExpiry.toISOString(),
-                sync_status: "active",
-                updated_at: new Date().toISOString(),
+                updated_at: updatedAt,
             })
             .eq("id", platformId);
+        // Clear earlier token errors, but never a held sync lock (`running`): flipping it
+        // mid-sync let a second worker acquire the same platform.
+        await admin
+            .from("review_platforms")
+            .update({ sync_status: "active", updated_at: updatedAt })
+            .eq("id", platformId)
+            .neq("sync_status", "running");
 
         return {
             accessToken,

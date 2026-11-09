@@ -166,12 +166,19 @@ Exact bodies vary by route — open the corresponding `route.ts` when implementi
 
 | Flow | Connect | Callback / confirm |
 |------|---------|-------------------|
+| Google (Settings > Integrations reconnect, `?purpose=search_console`) | `/api/integrations/google/connect?businessId=` | `callback` (server-side code exchange; never touches the Supabase session; if a location is already connected and the consenting Google account cannot see it, nothing is saved and it redirects with `?google_error=account_mismatch`) |
 | Facebook | `/api/integrations/facebook/connect` | `callback`, `confirm`, `pages` |
 | Yelp | `/api/integrations/yelp/connect` | `confirm` |
 | Square | `/api/integrations/square/connect` | `callback` |
 | Clover | `/api/integrations/clover/connect` | `callback` |
 
 Errors: OAuth denials redirect with error query params; token exchange failures return 4xx/5xx JSON or error pages depending on route.
+
+> **Deploy prerequisite (Google reconnect), do this before the release goes live.** The Settings > Integrations Google flow sends `redirect_uri=${NEXT_PUBLIC_APP_URL}/api/integrations/google/callback`. That exact URI must be listed under **Authorized redirect URIs** on the Google Cloud OAuth client whose ID is `NEXT_PUBLIC_GOOGLE_CLIENT_ID`, for each environment (production, staging/preview hosts, and `http://localhost:3000` for local dev). The earlier flow used Supabase's registered callback, so this URI is new. If the code ships first, every Google reconnect and Search Console connect fails at Google with `redirect_uri_mismatch`. Checklist for the release PR:
+>
+> 1. Add the URI(s) in Google Cloud Console > APIs & Services > Credentials > OAuth client.
+> 2. Wait for the change to apply (it can take a few minutes), then deploy.
+> 3. Smoke-test: Settings > Integrations > Google > Reconnect should return to `/settings/integrations?google=connected`.
 
 ---
 

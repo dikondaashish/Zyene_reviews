@@ -2,6 +2,15 @@ import { toast } from "sonner";
 import { sendCampaignContacts, toastCampaignSendResult } from "./campaign-detail-api";
 import type { Campaign } from "./campaign-detail-types";
 
+/**
+ * One contact per line: a line with "@" is an email, anything else a phone. Email-only
+ * campaigns used to receive phone-only contacts here and silently drop every one.
+ */
+export function parseBulkContactLines(text: string): { phone?: string; email?: string }[] {
+    return text.split("\n").map((line) => line.trim()).filter(Boolean)
+        .map((line) => (line.includes("@") ? { email: line } : { phone: line }));
+}
+
 export async function sendCampaignToContacts(params: {
     campaign: Campaign;
     addMode: "single" | "bulk";
@@ -23,12 +32,11 @@ export async function sendCampaignToContacts(params: {
         }
         contacts = [{ name: contactName || undefined, phone: contactPhone || undefined, email: contactEmail || undefined }];
     } else {
-        const lines = bulkPhones.split("\n").filter((l) => l.trim());
-        if (lines.length === 0) {
-            toast.error("Enter at least one phone number");
+        contacts = parseBulkContactLines(bulkPhones);
+        if (contacts.length === 0) {
+            toast.error(campaign.channel === "email" ? "Enter at least one email address" : "Enter at least one phone number or email");
             return;
         }
-        contacts = lines.map((phone) => ({ phone: phone.trim() }));
     }
 
     setSending(true);

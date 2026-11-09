@@ -1,5 +1,7 @@
 import { graphFetch } from "./client";
 
+export { getReviews, MAX_FACEBOOK_REVIEW_PAGES } from "./reviews-fetch";
+
 // ── Facebook API response types ──
 
 interface FacebookPage {
@@ -15,7 +17,7 @@ interface FacebookPagesResponse {
     paging?: { cursors: { before: string; after: string }; next?: string };
 }
 
-interface FacebookReview {
+export interface FacebookReview {
     created_time: string; // ISO 8601
     reviewer: {
         id: string;
@@ -29,7 +31,7 @@ interface FacebookReview {
     };
 }
 
-interface FacebookReviewsResponse {
+export interface FacebookReviewsResponse {
     data: FacebookReview[];
     paging?: { cursors: { before: string; after: string }; next?: string };
 }
@@ -83,47 +85,6 @@ export async function getPages(
  * - recommendation_type = "negative" → rating 1
  * - Legacy star ratings (1-5) are used if available
  */
-export async function getReviews(
-    pageId: string,
-    pageAccessToken: string
-): Promise<NormalizedFacebookReview[]> {
-    const data = await graphFetch<FacebookReviewsResponse>({
-        path: `/${pageId}/ratings`,
-        params: {
-            access_token: pageAccessToken,
-            fields:
-                "created_time,reviewer,recommendation_type,review_text,rating,open_graph_story",
-            limit: "50",
-        },
-    });
-
-    return data.data.map((review) => {
-        // Determine rating: use legacy star rating if available,
-        // otherwise map recommendation_type
-        let rating = 3; // Default neutral
-        if (review.rating) {
-            rating = review.rating;
-        } else if (review.recommendation_type === "positive") {
-            rating = 5;
-        } else if (review.recommendation_type === "negative") {
-            rating = 1;
-        }
-
-        // Use open_graph_story ID as external_id, fallback to reviewer+timestamp
-        const externalId =
-            review.open_graph_story?.id ||
-            `${review.reviewer.id}_${review.created_time}`;
-
-        return {
-            externalId,
-            authorName: review.reviewer.name,
-            rating,
-            content: review.review_text || "",
-            publishedAt: new Date(review.created_time).toISOString(),
-        };
-    });
-}
-
 /**
  * Reply to a Facebook review by posting a comment on it.
  */

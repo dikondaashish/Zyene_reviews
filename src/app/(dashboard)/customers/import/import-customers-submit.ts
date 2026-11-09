@@ -2,6 +2,35 @@ import { toast } from "sonner";
 import type { RequiredField } from "./import-customers-constants";
 import type { ImportStep } from "./use-import-customers";
 
+type ImportRow = { first_name?: string; last_name?: string; email?: string; phone?: string };
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/**
+ * One CSV row as the import API expects it: only mapped, non-empty, trimmed fields
+ * (the schema rejects `null` and blank emails). A malformed email is dropped so the
+ * row can still import by phone; a row with neither is skipped.
+ */
+export function buildImportRow(
+    row: Record<string, string>,
+    mapping: Record<RequiredField, string>,
+): ImportRow | null {
+    const read = (field: RequiredField, max: number) => {
+        const column = mapping[field];
+        const value = column ? (row[column] ?? "").trim() : "";
+        return value ? value.slice(0, max) : undefined;
+    };
+    const email = read("email", 255);
+    const customer: ImportRow = {
+        first_name: read("first_name", 100),
+        last_name: read("last_name", 100),
+        email: email && EMAIL_PATTERN.test(email) ? email : undefined,
+        phone: read("phone", 30),
+    };
+    if (!customer.email && !customer.phone) return null;
+    return Object.fromEntries(Object.entries(customer).filter(([, v]) => v !== undefined)) as ImportRow;
+}
+
 export async function submitCustomerImport(params: {
     csvData: Record<string, string>[];
     mapping: Record<RequiredField, string>;
@@ -20,23 +49,15 @@ export async function submitCustomerImport(params: {
     setStep("importing");
 
     try {
-        const payload = csvData.reduce<
-            Array<{
-                first_name: string | null;
-                last_name: string | null;
-                email: string | null;
-                phone: string | null;
-            }>
-        >((acc, row) => {
-            const customer = {
-                first_name: mapping.first_name ? row[mapping.first_name] : null,
-                last_name: mapping.last_name ? row[mapping.last_name] : null,
-                email: mapping.email ? row[mapping.email] : null,
-                phone: mapping.phone ? row[mapping.phone] : null,
-            };
-            if (customer.email || customer.phone) acc.push(customer);
+        const payload = csvData.reduce<ImportRow[]>((acc, row) => {
+            const customer = buildImportRow(row, mapping);
+            if (customer) acc.push(customer);
             return acc;
         }, []);
+
+        if (payload.length === 0) {
+            throw new Error("No rows have a valid email or phone number.");
+        }
 
         const res = await fetch("/api/customers/import", {
             method: "POST",
@@ -44,19 +65,20 @@ export async function submitCustomerImport(params: {
             body: JSON.stringify({ customers: payload }),
         });
 
-        const data = await res.json();
+        const data = (await res.json()) as { error?: string; imported?: number };
 
         if (!res.ok) {
             throw new Error(data.error || "Failed to import customers");
         }
 
+        const imported = typeof data.imported === "number" ? data.imported : 0;
         setImportResults({
-            total: payload.length,
-            success: data.successCount,
-            failed: payload.length - data.successCount,
+            total: csvData.length,
+            success: imported,
+            failed: csvData.length - imported,
         });
         setStep("success");
-        toast.success(`Successfully imported ${data.successCount} customers!`);
+        toast.success(`Successfully imported ${imported} customers!`);
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "An unexpected error occurred";
         toast.error(message);

@@ -4,6 +4,7 @@ import { type NextRequest } from "next/server";
 import { userCanAccessBusiness } from "@/lib/db/supabase/verify-business-access";
 import { apiOk, apiError } from "@/app/api/_shared/responses";
 import { z } from "zod";
+import { invalidateDashboardStatsCache } from "@/lib/dashboard/invalidate-dashboard-stats-cache";
 
 const updateStatusSchema = z.object({
     status: z.enum(["pending", "responded", "ignored"]),
@@ -39,8 +40,8 @@ export async function PATCH(
             return apiError("Review not found", { status: 404 });
         }
 
-        // 2. Verify Access
-        const hasAccess = await userCanAccessBusiness(supabase, user.id, review.business_id);
+        // 2. Verify Access (write: viewers may read reviews but not change their status)
+        const hasAccess = await userCanAccessBusiness(supabase, user.id, review.business_id, true);
         if (!hasAccess) {
             return apiError("Access denied", { status: 403 });
         }
@@ -55,6 +56,7 @@ export async function PATCH(
 
         if (updateError) throw updateError;
 
+        await invalidateDashboardStatsCache(review.business_id);
         return apiOk(data);
     } catch (error: unknown) {
         logger.error({ err: error }, "Review PATCH Error:");
