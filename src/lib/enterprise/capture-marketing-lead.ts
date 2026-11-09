@@ -1,5 +1,6 @@
 import { logger } from "@/lib/logger";
 import { createAdminClient } from "@/lib/db/supabase/admin";
+import { recordLeadSubscriber } from "@/lib/marketing/record-lead-subscriber";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -14,18 +15,13 @@ export async function captureMarketingLead(params: {
     }
 
     const admin = createAdminClient();
-    const { error } = await admin.from("marketing_subscribers").upsert(
-        {
-            email,
-            source: params.source,
-            utm_source: "enterprise",
-            utm_medium: params.source,
-            utm_campaign: "phase8",
-            subscribed_at: new Date().toISOString(),
-            unsubscribed_at: null,
-        },
-        { onConflict: "email" }
-    );
+    const { error } = await recordLeadSubscriber(admin, {
+        email,
+        source: params.source,
+        utm_source: "enterprise",
+        utm_medium: params.source,
+        utm_campaign: "phase8",
+    });
 
     if (error) {
         logger.error({ err: error }, "[capture-marketing-lead]");

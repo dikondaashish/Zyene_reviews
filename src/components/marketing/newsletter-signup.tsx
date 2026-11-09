@@ -66,7 +66,8 @@ export function NewsletterSignup({
             }
             const data = await res.json().catch(() => ({}));
             setStatus("success");
-            setMessage(successMessage);
+            // When nothing was sent (e.g. the address unsubscribed), say so instead of "check your inbox".
+            setMessage(!data.newLead && typeof data.message === "string" ? data.message : successMessage);
             setEmail("");
             onSubscribeResult?.({ newLead: Boolean(data.newLead) });
         } catch {
