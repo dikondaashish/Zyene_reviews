@@ -15,6 +15,7 @@ const PRODUCT_LINKS: FooterLink[] = [
     { href: "/features/review-widgets", label: "Review Widgets" },
     { href: "/features/local-seo", label: "Local SEO" },
     { href: "/features/ai-visibility", label: "AI Visibility" },
+    { href: "/features/customer-crm", label: "Customer CRM" },
     { href: "/features/competitor-tracking", label: "Competitor Tracking" },
     { href: "/features/multi-location", label: "Multi-Location" },
     { href: "/pricing", label: "Pricing" },

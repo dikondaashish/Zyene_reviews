@@ -16,6 +16,7 @@ export const trueCostOfBadOnlineReputationPost: BlogPostSource = {
     relatedSlugs: ["why-google-reviews-matter-in-2026", "how-to-respond-to-a-1-star-review", "birdeye-pricing-breakdown-2026"],
     internalLinks: [
         { label: "See how Zyene Reviews protects your reputation", href: "/features" },
+        { label: "AI review insights and sentiment analysis", href: "/features/smart-insights" },
         { label: "Negative Feedback Shield workflow", href: "/features/review-collection" },
         { label: "Enterprise review tool pricing (Birdeye vs Zyene Reviews)", href: "/blog/birdeye-pricing-breakdown-2026" },
         { label: "Try Zyene Reviews free for 7 days", href: SIGNUP_URL },
@@ -58,7 +59,7 @@ export const trueCostOfBadOnlineReputationPost: BlogPostSource = {
             text: "An unresolved complaint can remain visible to future customers. Respond with useful context and address the underlying issue; do not assume new reviews erase its impact.",
         },
         { type: "p", text: "There is no reliable universal number of positive reviews that cancels out a negative one. Customers consider the content, recency, context, and your response." },
-        { type: "p", text: "Treat an unanswered complaint as an opportunity to clarify what happened and improve the service. Review visibility and customer reactions vary, so avoid assigning a fixed financial cost to one review." },
+        { type: "p", text: "Treat an unanswered complaint as an opportunity to clarify what happened and improve the service. Surfacing patterns through [AI review insights](/features/smart-insights) helps you address recurring issues before they impact more customers." },
         { type: "h2", text: "Calculating Your Reputation Risk" },
         {
             type: "summary",

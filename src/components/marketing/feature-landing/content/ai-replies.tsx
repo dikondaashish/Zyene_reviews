@@ -31,7 +31,7 @@ export const AI_REPLIES_CONTENT: FeatureLandingContent = {
     {
       eyebrow: "Edit, then post",
       title: "You stay in charge of every word",
-      text: "An AI suggestion is a starting point. Read it, add the detail only you know, and post it when it sounds right. If something changes later, you can edit or delete the reply from the review card.",
+      text: "An AI suggestion is a starting point. Read it, add the detail only you know, and post it when it sounds right. To keep a steady flow of feedback arriving to reply to, run automated [review request campaigns](/features/review-campaigns). If something changes later, you can edit or delete the reply from the review card.",
       points: [
         "Drafts use the star rating, the review text and your business details",
         "4 and 5 star reviews with little or no text get a varied thank-you, not the same line every time",
@@ -100,5 +100,5 @@ export const AI_REPLIES_CONTENT: FeatureLandingContent = {
     { question: "Which tones can I choose?", answer: "Professional, Friendly and Concise. Professional is polished and courteous, Friendly is warm and conversational, and Concise keeps it to two or three sentences." },
     { question: "Is there a free review response tool?", answer: "Yes. Our free tool at zyenereviews.com/tools/review-response-generator gives you ready-to-edit reply templates by star rating. Inside Zyene, AI drafts read the actual review, use your business details and post to Google in one click." },
   ],
-  related: ["automatic-review-replies", "review-monitoring", "smart-insights"],
+  related: ["automatic-review-replies", "review-campaigns", "smart-insights"],
 };

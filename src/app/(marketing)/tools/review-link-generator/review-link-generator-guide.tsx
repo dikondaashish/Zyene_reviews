@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Copy, Mail, MapPin, Search } from "lucide-react";
 import { ToolGuide, type ToolGuideContent } from "@/app/(marketing)/tools/tool-guide";
 import { FAQPageJsonLd, type FaqItem } from "@/components/seo/json-ld";
@@ -31,7 +32,7 @@ const CONTENT: ToolGuideContent = {
         title: "About the Google Review Link Generator",
         paragraphs: [
             "The Google Review Link Generator is a free utility that looks up your official Google Place ID using Google Places data and formats a direct review submission URL. It is designed for local business owners, healthcare practices, contractors, retail operators, and service professionals who need a reliable link to share with customers via text message, email invoices, or printed QR codes.",
-            "Instead of asking customers to open Google Maps, search for your business name, and locate the review button, a direct URL opens the rating dialog in one click on both desktop and mobile browsers.",
+            <>Instead of asking customers to open Google Maps, search for your business name, and locate the review button, a direct URL opens the rating dialog in one click on both desktop and mobile browsers. Once reviews roll in, you can display them on your website using customizable <Link href="/features/review-widgets" className="mi-inline-link">Google review widgets</Link>.</>,
         ],
     },
     steps: {
@@ -52,6 +53,7 @@ const CONTENT: ToolGuideContent = {
     },
     faqs: FAQS,
     related: [
+        { href: "/features/review-widgets", label: "Google Review Widgets", note: "Showcase customer feedback in carousels, badges, and review walls." },
         { href: "/blog/how-to-get-a-google-review-link", label: "How to Get a Google Review Link (Step-by-Step Guide)", note: "Manual Place ID lookup and link testing methods." },
         { href: "/resources/review-request-templates", label: "Free Review Request Template Pack (SMS + Email)", note: "Ready-to-use message scripts for local businesses." },
         { href: "/blog/how-to-get-50-google-reviews-in-30-days", label: "How to Get 50 Google Reviews in 30 Days", note: "Timing and customer outreach strategies." },

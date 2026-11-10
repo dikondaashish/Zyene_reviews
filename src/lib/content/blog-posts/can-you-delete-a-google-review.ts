@@ -32,14 +32,18 @@ export const canYouDeleteAGoogleReviewPost: BlogPostSource = {
         "how-to-handle-fake-google-reviews",
         "how-to-respond-to-a-1-star-review",
         "how-to-get-a-google-review-link",
+        "how-to-create-a-google-review-qr-code",
+        "how-to-delete-yelp-reviews",
         "true-cost-of-bad-online-reputation",
     ],
     internalLinks: [
         { label: "Negative Feedback Shield", href: "/features/review-collection" },
+        { label: "Google Review QR Codes Guide", href: "/blog/how-to-create-a-google-review-qr-code" },
         { label: "Fake Google Reviews Guide", href: "/blog/how-to-handle-fake-google-reviews" },
         { label: "Responding to 1-Star Reviews", href: "/blog/how-to-respond-to-a-1-star-review" },
         { label: "How to Respond to Positive Reviews", href: "/blog/how-to-respond-to-a-positive-review" },
         { label: "Google Review Link Guide", href: "/blog/how-to-get-a-google-review-link" },
+        { label: "How to Delete Yelp Reviews", href: "/blog/how-to-delete-yelp-reviews" },
         { label: "Review Management Platform", href: "/features" },
         { label: "Local SEO & Map Pack Impact", href: "/blog/how-reviews-impact-local-map-pack-ranking" },
     ],
@@ -282,7 +286,7 @@ export const canYouDeleteAGoogleReviewPost: BlogPostSource = {
         },
         {
             type: "p",
-            text: "Zyene Reviews helps local businesses collect customer feedback through automated SMS and email follow-ups, offer an optional private resolution channel alongside the public review link, and monitor new reviews across Google, Facebook, and industry directories in real time.",
+            text: "Zyene Reviews helps local businesses collect customer feedback through automated SMS and email follow-ups, printable [Google review QR codes](/blog/how-to-create-a-google-review-qr-code) for in-store checkout, offer an optional private resolution channel alongside the public review link, and monitor new reviews across Google, Facebook, and industry directories in real time.",
         },
         {
             type: "cta",

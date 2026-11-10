@@ -26,11 +26,13 @@ export const howToEmbedGoogleReviewsOnWebsitePost: BlogPostSource = {
         "why-google-reviews-matter-in-2026",
         "how-to-get-a-google-review-link",
         "how-to-create-a-google-review-qr-code",
+        "how-to-respond-to-a-positive-review",
     ],
     internalLinks: [
         { label: "Embed Review Widgets Guide", href: "/help/integrations/embedding-review-widgets" },
         { label: "Google Review Link Guide", href: "/blog/how-to-get-a-google-review-link" },
         { label: "Review Collection Features", href: "/features/review-collection" },
+        { label: "Positive review response examples", href: "/blog/how-to-respond-to-a-positive-review" },
     ],
     faqs: [
         {
@@ -137,7 +139,7 @@ export const howToEmbedGoogleReviewsOnWebsitePost: BlogPostSource = {
         },
         {
             type: "p",
-            text: "Stop leaving your hard-earned Google reviews buried on Google Maps. Zyene Reviews gives you customizable carousels, badges, and review grids that embed on your website in seconds, update automatically, and turn visitors into paying customers."
+            text: "Stop leaving your hard-earned Google reviews buried on Google Maps. Zyene Reviews gives you customizable carousels, badges, and review grids that embed on your website in seconds, update automatically, and turn visitors into paying customers. When customers leave glowing feedback on your site, follow our [positive review response examples](/blog/how-to-respond-to-a-positive-review) to acknowledge their support."
         },
         {
             type: "cta",

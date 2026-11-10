@@ -18,7 +18,7 @@ export const SMART_INSIGHTS_CONTENT: FeatureLandingContent = {
   },
   flow: {
     title: "From a pile of reviews to a short list of next steps",
-    intro: "There is nothing to set up. Once you have a few reviews with text, the card appears on your dashboard.",
+    intro: "There is nothing to set up. Once you have a few reviews with text, the card appears on your dashboard. Need more feedback? Use our [review request templates](/resources/review-request-templates) to start outreach.",
     steps: [
       { icon: RefreshCw, title: "Reviews sync in", text: "Reviews from your connected platforms are collected for your business.", sample: "Google · Facebook · Yelp" },
       { icon: BookOpenText, title: "AI reads them", text: "It reads up to your 200 most recent reviews that have text. You need at least 5.", sample: "5+ reviews with text" },

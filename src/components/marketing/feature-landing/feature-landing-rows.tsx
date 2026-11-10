@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Check } from "lucide-react";
 import type { StoryMedia, StoryRow } from "@/components/marketing/feature-landing/types";
+import { renderInlineContent } from "@/components/marketing/render-inline-content";
 
 function RowMedia({ media }: { media: StoryMedia }) {
   if (media.kind === "visual") {
@@ -35,7 +36,7 @@ export function FeatureLandingRows({ rows }: { rows: StoryRow[] }) {
             <div className="fl-row-copy">
               <p className="marketing-eyebrow">{row.eyebrow}</p>
               <h2>{row.title}</h2>
-              <p>{row.text}</p>
+              <p>{typeof row.text === "string" ? renderInlineContent(row.text) : row.text}</p>
               <ul>
                 {row.points.map((point) => (
                   <li key={point}>

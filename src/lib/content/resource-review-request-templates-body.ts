@@ -142,7 +142,7 @@ export const REVIEW_REQUEST_TEMPLATES_BODY: ContentSection[] = [
         "Draft replies with AI assistance - you approve before posting",
         "See campaign status without manual spreadsheet tracking",
     ]},
-    { type: "p", text: "Learn how Shield organizes private feedback on /blog/negative-feedback-shield. Compare platforms on /compare; public plans on /pricing." },
+    { type: "p", text: "Learn how Shield organizes private feedback on [Negative Feedback Shield](/blog/negative-feedback-shield). Uncover recurring customer praise and operational themes with [AI review insights and themes](/features/smart-insights). Compare platforms on [platform comparisons](/compare); view public plans on [pricing](/pricing)." },
     { type: "h2", text: "Manual vs Spreadsheet vs Zyene Reviews" },
     {
         type: "table",

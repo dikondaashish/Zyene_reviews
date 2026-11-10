@@ -30,6 +30,8 @@ export const howToGetAGoogleReviewLinkPost: BlogPostSource = {
         { label: "Google Reviews Guide", href: "/resources/google-reviews-guide" },
         { label: "Free review link generator", href: "/tools/review-link-generator" },
         { label: "Review request templates", href: "/resources/review-request-templates" },
+        { label: "Automated review request campaigns", href: "/features/review-campaigns" },
+        { label: "Embeddable Google review widgets", href: "/features/review-widgets" },
         { label: "Review management for agencies", href: "/agencies" },
         { label: "Google: get more reviews and a QR code", href: "https://support.google.com/business/answer/3474122" },
         { label: "Google: prohibited review practices", href: "https://support.google.com/contributionpolicy/answer/7400114" },
@@ -136,7 +138,7 @@ export const howToGetAGoogleReviewLinkPost: BlogPostSource = {
         { type: "h2", text: "Make review requests part of your routine" },
         {
             type: "p",
-            text: "Zyene Reviews helps businesses and agencies organize review requests by SMS, email, and QR code, monitor feedback, and prepare replies. Start with a tested link and a consistent, honest request process before adding automation.",
+            text: "Zyene Reviews helps businesses and agencies organize [review request campaigns](/features/review-campaigns) by SMS, email, and QR code, showcase feedback with [Google review widgets](/features/review-widgets), and prepare replies. Start with a tested link and a consistent, honest request process before adding automation.",
         },
         { type: "cta", ctaLabel: "Explore review collection with Zyene Reviews", ctaHref: "/features/review-collection" },
         {

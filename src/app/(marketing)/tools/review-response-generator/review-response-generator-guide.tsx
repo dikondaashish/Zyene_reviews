@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Copy, Star, Store } from "lucide-react";
 import { ToolGuide, type ToolGuideContent } from "@/app/(marketing)/tools/tool-guide";
 import { FAQPageJsonLd, type FaqItem } from "@/components/seo/json-ld";
@@ -31,7 +32,7 @@ const CONTENT: ToolGuideContent = {
         title: "About the Review Response Templates tool",
         paragraphs: [
             <>The Review Response Templates tool is a free utility that picks a structured, professional reply template based on your business name and the customer&apos;s star rating (from 1 to 5 stars). It is designed for local business owners, office managers, customer support teams, and agency staff who want a proven response framework without starting from a blank page for every Google review.</>,
-            "A clear, well-phrased reply shows prospective customers on Google Maps that you are responsive and take service quality seriously.",
+            <>A clear, well-phrased reply shows prospective customers on Google Maps that you are responsive and take service quality seriously. To evaluate software options for drafting replies at scale, check our guide to the <Link href="/blog/best-review-response-generator-tools" className="mi-inline-link">best review response generator tools</Link>.</>,
         ],
     },
     steps: {
@@ -51,6 +52,7 @@ const CONTENT: ToolGuideContent = {
     },
     faqs: FAQS,
     related: [
+        { href: "/blog/best-review-response-generator-tools", label: "Best Review Response Generator Tools (2026)", note: "Compare top AI tools and free response generators." },
         { href: "/resources/negative-review-templates", label: "20+ Negative Review Response Templates (Google Reviews)", note: "Ready-to-use scripts for service, billing, and delay complaints." },
         { href: "/blog/how-to-respond-to-a-1-star-review", label: "How to Respond to a 1-Star Review (5 Real Templates)", note: "A practical 5-step framework for handling negative customer feedback." },
         { href: "/blog/ai-reply-mistakes-to-avoid", label: "5 AI Reply Mistakes to Avoid When Responding to Reviews", note: "Guidelines for editing and personalizing automated review drafts." },

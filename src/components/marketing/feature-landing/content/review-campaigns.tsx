@@ -31,7 +31,7 @@ export const REVIEW_CAMPAIGNS_CONTENT: FeatureLandingContent = {
     {
       eyebrow: "After the job is done",
       title: "Follow up with everyone you served this week",
-      text: "Select the customers you saw, choose Appointment Follow-up and set a delay. Each person gets a message with their own name and your review link.",
+      text: "Select the customers you saw, choose Appointment Follow-up and set a delay. Each person gets a message with their own name and your review link. When new reviews roll in, use our [AI review response generator](/features/ai-replies) to draft on-brand replies in seconds.",
       points: [
         "SMS, email or both for each campaign",
         "Opted-out customers and anyone asked in the last 30 days are skipped",
@@ -98,5 +98,5 @@ export const REVIEW_CAMPAIGNS_CONTENT: FeatureLandingContent = {
     { question: "How many customers can I add to a campaign?", answer: "Up to 500 when you launch from selected customers. You can add more later on the campaign page, one at a time or by pasting phone numbers." },
     { question: "Will customers who opted out get campaign messages?", answer: "No. Opted-out customers are left out when you select them, and opt-outs and your re-ask window are checked again before each message is sent." },
   ],
-  related: ["review-requests", "customer-crm", "review-collection"],
+  related: ["review-requests", "ai-replies", "review-collection"],
 };

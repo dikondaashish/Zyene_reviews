@@ -15,6 +15,8 @@ export const birdeyePricingBreakdown2026Post: BlogPostSource = {
   internalLinks: [
     { label: "Zyene Reviews vs Birdeye", href: "/compare/birdeye" },
     { label: "Birdeye alternatives for local businesses", href: "/blog/birdeye-alternatives-for-local-businesses" },
+    { label: "Embeddable Google review widgets", href: "/features/review-widgets" },
+    { label: "Automated review request software", href: "/features/review-requests" },
     { label: "AI replies and automatic publishing", href: "/features/ai-replies" },
     { label: "Zyene plans and trial terms", href: "/pricing" },
   ],
@@ -26,7 +28,7 @@ export const birdeyePricingBreakdown2026Post: BlogPostSource = {
     { type: "summary", text: "Birdeye does not publish its prices. Third-party pricing trackers and user reports put it at roughly $299 to $449 per location per month as of October 2026. These figures are not from Birdeye, so confirm with its sales team. Zyene publishes monthly and annual plans. Compare the total cost of the review, messaging, listing and automation work your business needs. Pricing last reviewed: October 2026." },
     { type: "h2", text: "What Birdeye's public pricing page establishes" },
     { type: "p", text: "The pricing form asks about your business and location count. Its broader platform includes reviews, listings, messaging and customer experience products. A historical price from another article does not establish what your offer costs today." },
-    { type: "p", text: "Birdeye may suit a team consolidating several products across locations. Zyene may suit an owner wanting a review-focused inbox, request campaigns, AI reply tools and Google Business Profile insights with published allowances. Evaluate required integrations and controls before choosing." },
+    { type: "p", text: "Birdeye may suit a team consolidating several products across locations. Zyene may suit an owner wanting a review-focused inbox, automated [review request software](/features/review-requests), customizable [Google review widgets](/features/review-widgets), AI reply tools and Google Business Profile insights with published allowances. Evaluate required integrations and controls before choosing." },
     VENDOR_COMPARISON_TABLE,
     ...VENDOR_QUOTE_CHECKLIST,
     { type: "h2", text: "A cost worksheet you can fill in" },

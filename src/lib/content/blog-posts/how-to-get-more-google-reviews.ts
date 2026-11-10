@@ -28,11 +28,13 @@ export const howToGetMoreGoogleReviewsPost: BlogPostSource = {
         "how-to-get-50-google-reviews-in-30-days",
         "why-google-reviews-matter-in-2026",
         "how-to-create-a-google-review-qr-code",
+        "how-to-get-google-reviews-auto-repair-shops",
     ],
     internalLinks: [
         { label: "Connecting Google Business Profile", href: "/help/getting-started/connecting-google-business-profile" },
         { label: "Review Request Templates (SMS & Email)", href: "/resources/review-request-templates" },
         { label: "5 AI Reply Mistakes to Avoid", href: "/blog/ai-reply-mistakes-to-avoid" },
+        { label: "Google Reviews for Auto Repair Shops", href: "/blog/how-to-get-google-reviews-auto-repair-shops" },
     ],
     faqs: [
         {
@@ -63,7 +65,7 @@ export const howToGetMoreGoogleReviewsPost: BlogPostSource = {
         },
         {
             type: "p",
-            text: "For most local businesses in 2026, the gap between a delighted customer and a published Google review is pure friction. If leaving feedback requires a patron to manually search for your business on Google Maps and navigate multiple menus, they simply will not do it. Winning in the Local Map Pack requires shifting from passive verbal requests to automated checkout triggers and physical on-site touchpoints.",
+            text: "For most local businesses in 2026, the gap between a delighted customer and a published Google review is pure friction. If leaving feedback requires a patron to manually search for your business on Google Maps and navigate multiple menus, they simply will not do it. Whether you are running a clinic or implementing [Google reviews for auto repair shops](/blog/how-to-get-google-reviews-auto-repair-shops), winning in the Local Map Pack requires shifting from passive verbal requests to automated checkout triggers and physical on-site touchpoints.",
         },
         {
             type: "h2",

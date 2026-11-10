@@ -22,7 +22,7 @@ export const COMPARE_HUB_BUYER_GUIDES: { title: string; body: string; pick?: str
     },
     {
         title: "Review-focused buyer",
-        body: "Your KPI is Google rating, response rate, and review velocity - not inbox payments. Prioritize monitoring, AI-assisted replies, review requests, and optional private feedback capture.",
+        body: "Your KPI is Google rating, response rate, and review velocity - not inbox payments. Prioritize review monitoring, our AI review response generator, review collection software, and optional private feedback capture.",
         pick: "Zyene Reviews; our Negative Feedback Shield guide on the blog explains how the optional private feedback channel works.",
     },
     {
@@ -43,6 +43,8 @@ export const COMPARE_HUB_RESOURCE_LINKS: { label: string; href: string }[] = [
     { label: "Zyene vs NiceJob", href: "/compare/nicejob" },
     { label: "Zyene vs GatherUp", href: "/compare/gatherup" },
     { label: "Zyene vs Prosperly", href: "/compare/prosperly" },
+    { label: "Review collection software", href: "/features/review-collection" },
+    { label: "AI review response generator", href: "/features/ai-replies" },
     { label: "Birdeye pricing breakdown (2026)", href: "/blog/birdeye-pricing-breakdown-2026" },
     { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
     { label: "Zyene Reviews pricing", href: "/pricing" },

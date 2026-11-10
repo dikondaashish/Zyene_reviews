@@ -72,7 +72,7 @@ export default function FreeToolsHubPage() {
                             ))}
                         </ul>
                         <p className="mi-table-note">
-                            When you are ready to automate review collection after customer visits, monitor incoming feedback across platforms in one inbox, and use AI reply workflows, Zyene Reviews provides connected plans starting at $29.99/mo with a 7-day free trial.
+                            Ready to scale beyond standalone tools? Run automated <Link href="/features/review-campaigns" className="mi-inline-link">review request campaigns</Link> by SMS and email, and uncover customer sentiment with <Link href="/features/smart-insights" className="mi-inline-link">AI review insights</Link>—from $29.99/mo with a 7-day free trial.
                         </p>
                     </div>
                 </div>

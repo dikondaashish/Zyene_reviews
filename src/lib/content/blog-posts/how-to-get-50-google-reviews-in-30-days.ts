@@ -15,7 +15,8 @@ export const howToGet50GoogleReviewsIn30DaysPost: BlogPostSource = {
     keywords: ["how to get more google reviews", "get 50 google reviews", "google review strategy", "review request strategy"],
     relatedSlugs: ["why-google-reviews-matter-in-2026", "how-reviews-impact-local-map-pack-ranking", "birdeye-pricing-breakdown-2026"],
     internalLinks: [
-        { label: "See how Zyene Reviews automates review requests", href: "/features" },
+        { label: "Automated review request software", href: "/features/review-requests" },
+        { label: "AI review insights and sentiment analysis", href: "/features/smart-insights" },
         { label: "Compare review software pricing (Birdeye vs Zyene Reviews)", href: "/blog/birdeye-pricing-breakdown-2026" },
         { label: "Try Zyene Reviews free for 7 days", href: SIGNUP_URL },
     ],
@@ -115,7 +116,7 @@ export const howToGet50GoogleReviewsIn30DaysPost: BlogPostSource = {
             text: "Manual texting fails when staff get busy; automation sends review requests at the right moment every time. Tools like Zyene Reviews connect via Zapier, POS, or API so each completed job or checkout triggers SMS or email without someone remembering to ask.",
         },
         { type: "p", text: "The businesses that consistently grow their review count are the ones who have automated the ask. Manually texting every customer doesn't scale, and you'll stop doing it when things get busy." },
-        { type: "p", text: "Tools like Zyene Reviews connect to your workflow (via Zapier, Square, or direct API) and send review requests automatically at the right moment - without any manual effort. You set it up once and it works every day, for every customer." },
+        { type: "p", text: "Dedicated [review request software](/features/review-requests) like Zyene Reviews connects to your workflow (via Zapier, Square, or direct API) and sends review requests automatically at the right moment - without any manual effort. You set it up once and it works every day, for every customer." },
         { type: "cta", ctaLabel: "See how Zyene Reviews automates review requests →", ctaHref: "/features" },
         { type: "h2", text: "What to Expect" },
         {
@@ -123,6 +124,6 @@ export const howToGet50GoogleReviewsIn30DaysPost: BlogPostSource = {
             text: "Use your current monthly review count as the baseline. After fifty total reviews, keep asking consistently so new customers see recent experiences rather than a profile built from one backfill campaign.",
         },
         { type: "p", text: "Your first-month result depends on daily customer volume, the share of customers you can contact, and your actual conversion rate. Record those three numbers before you start so you can compare the new process with your baseline." },
-        { type: "p", text: "Once you cross 50 reviews, keep the same request process running. Google says review count and positive ratings can help local ranking, but it does not publish a fixed monthly target or guarantee a ranking result." },
+        { type: "p", text: "Once you cross 50 reviews, keep the same request process running. Use [AI review insights](/features/smart-insights) to spot recurring customer themes and areas to improve. Google says review count and positive ratings can help local ranking, but it does not publish a fixed monthly target or guarantee a ranking result." },
     ],
 };

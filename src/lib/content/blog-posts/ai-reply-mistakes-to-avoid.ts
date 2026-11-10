@@ -12,12 +12,14 @@ export const aiReplyMistakesToAvoidPost: BlogPostSource = {
     metaTitle: "5 AI Reply Mistakes to Avoid for Google Reviews",
     metaDescription: "Using AI to respond to reviews? Avoid these 5 common mistakes that make AI replies backfire. Learn how to use AI reply tools correctly for Google reviews.",
     keywords: ["ai reply mistakes", "ai review responses", "ai google review reply", "how to respond to reviews with ai", "review response ai tips"],
-    relatedSlugs: ["how-to-respond-to-a-1-star-review", "why-google-reviews-matter-in-2026", "how-to-respond-to-a-positive-review"],
+    relatedSlugs: ["how-to-respond-to-a-1-star-review", "restaurant-review-management-service-recovery", "why-are-my-google-reviews-not-showing-up"],
     internalLinks: [
         { label: "15 positive review response templates", href: "/blog/how-to-respond-to-a-positive-review" },
         { label: "Draft review responses with our free generator", href: "/tools/review-response-generator" },
         { label: "Try Zyene Reviews' AI reply feature", href: "/features/ai-replies" },
         { label: "How to respond to a 1-star review on Google", href: "/blog/how-to-respond-to-a-1-star-review" },
+        { label: "Why are my Google reviews not showing up?", href: "/blog/why-are-my-google-reviews-not-showing-up" },
+        { label: "Restaurant review management and service recovery", href: "/blog/restaurant-review-management-service-recovery" },
         { label: "20+ negative review response templates", href: "/resources/negative-review-templates" },
     ],
     faqs: [
@@ -64,7 +66,7 @@ export const aiReplyMistakesToAvoidPost: BlogPostSource = {
             text: "Models slip into corporate deflection - while we strive for excellence. Read negative drafts aloud; if you sound like you're protecting your reputation instead of their experience, rewrite.",
         },
         { type: "p", text: "AI models, when prompted with a negative review, sometimes generate responses that subtly dispute the reviewer's characterization. 'While we always strive for excellence...' or 'Our team works hard to ensure...' can read as deflection rather than accountability." },
-        { type: "p", text: "Before publishing any AI-generated response to a negative review, read it from the perspective of a potential customer who is reading it to see how you handle criticism. Does it sound defensive? Does it focus more on your reputation than the customer's experience? If yes, edit it." },
+        { type: "p", text: "Before publishing any AI-generated response to a negative review, read it from the perspective of a potential customer who is reading it to see how you handle criticism. For high-touch dining environments, see our guide on [restaurant review management](/blog/restaurant-review-management-service-recovery) for service recovery tactics. Does it sound defensive? Does it focus more on your reputation than the customer's experience? If yes, edit it." },
         { type: "h2", text: "Mistake 5: Not Using Responses to Mention Key Services" },
         {
             type: "summary",
@@ -72,7 +74,7 @@ export const aiReplyMistakesToAvoidPost: BlogPostSource = {
         },
         { type: "p", text: "Google's algorithm for local search reads and indexes the content of your review responses. This means your responses are an opportunity to naturally mention your services, location, and specialties in a way that improves your keyword relevance." },
         { type: "p", text: "A response like 'We're so glad you enjoyed the deep cleaning at our Seattle dental practice - our hygiene team will be thrilled to hear this!' is better for both the reviewer and for local SEO than 'Thanks for the 5 stars!'" },
-        { type: "warning", text: "Don't stuff keywords into review responses. Natural mentions of your services and location are beneficial. 'Dentist Seattle deep cleaning affordable family dental' in a response will look like spam and could have the opposite effect." },
+        { type: "warning", text: "Don't stuff keywords into review responses. Natural mentions of your services and location are beneficial. Over-optimizing responses can trigger spam filters, much like the algorithmic filters responsible for [Google reviews not showing up](/blog/why-are-my-google-reviews-not-showing-up)." },
         { type: "h2", text: "How to Use AI Replies Correctly" },
         {
             type: "summary",

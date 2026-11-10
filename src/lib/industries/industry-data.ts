@@ -165,7 +165,7 @@ export const INDUSTRIES: IndustryData[] = [
             },
         ],
         solutions: [
-            { title: "Build trust before the first call", description: "Proactively grow your 5-star review count so new customers find a shop they feel confident about before they've even called." },
+            { title: "Build trust before the first call", description: "Proactively grow your 5-star review count using our proven methods for [Google reviews for auto repair shops](/blog/how-to-get-google-reviews-auto-repair-shops) so new customers feel confident before calling." },
             { title: "AI replies that sound like a real shop owner", description: "Keep up with feedback while your team works on the next vehicle. Automatically reply to eligible new Google reviews in your chosen tone, or edit an AI draft for a specific customer concern." },
             { title: "Follow up on estimate disputes", description: "When a customer is upset about their bill, the Negative Feedback Shield gives them a private way to explain the problem and alerts your team to follow up." },
             { title: "See how you compare to the shop down the street", description: "Track the shops you compete with. Compare star rating and review volume over time, and get an alert when a competitor's rating jumps or reviews spike." },

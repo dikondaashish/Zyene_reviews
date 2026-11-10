@@ -91,12 +91,12 @@ export const REVIEW_WIDGETS_CONTENT: FeatureLandingContent = {
   },
   note: "Widgets are available on paid plans, including trials. They show reviews synced into Zyene, so a new review appears after your next sync. Design changes need the new code pasted in place of the old. The iframe version uses a fixed height and cannot float.",
   faqs: [
-    { question: "How do I add Google reviews to my website?", answer: "In Zyene, open Integrations → Website Elements, pick a template, adjust it, and copy the installation code. Paste it into a Custom HTML block on your website. If your site blocks scripts, use the iframe version instead." },
+    { question: "How do I add Google reviews to my website?", answer: "In Zyene, open Integrations → Website Elements, pick a template, adjust it, and copy the installation code. Paste it into a Custom HTML block on your website. For platform-specific setup on WordPress, Squarespace, and Webflow, read our guide on [how to embed Google reviews on your website](/blog/how-to-embed-google-reviews-on-website)." },
     { question: "Does the widget update when I get new reviews?", answer: "Yes. The widget loads your synced reviews each time the page opens, so new reviews appear without touching your site. If you change the design, copy the new code and replace the old one." },
     { question: "Can I choose which reviews appear?", answer: "Yes. Choose Google only or all synced sources, set a minimum star rating from 1 to 5, sort by newest, highest or oldest, show only reviews with text, and hide reviews containing words or names you list." },
     { question: "Does it work on any website builder?", answer: "It works anywhere you can add custom HTML. The script version adjusts to mobile and desktop. The iframe version is for platforms that block scripts and uses a fixed height." },
     { question: "Can I remove Zyene branding from the widget?", answer: "Yes. The Hide Branding setting in Settings → Public Profile → Branding hides the Zyene footer on your review page and your widgets." },
-    { question: "Which plans include review widgets?", answer: "Widgets are included on Starter, Professional and Enterprise while your subscription is active or in its trial." },
+    { question: "Which plans include review widgets?", answer: "Widgets are included on Starter, Professional and Enterprise while your subscription is active or in its trial. Unlike legacy suites where embedding tools require costly add-ons—see our breakdown of [Birdeye pricing](/blog/birdeye-pricing-breakdown-2026)—all Zyene plans include customizable widgets." },
   ],
   related: ["review-monitoring", "review-page", "local-seo"],
 };

@@ -29,6 +29,7 @@ export const hvacHomeServicesReputationManagementPost: BlogPostSource = {
     relatedSlugs: [
         "how-to-get-50-google-reviews-in-30-days",
         "how-to-respond-to-a-1-star-review",
+        "how-to-get-hvac-leads-from-google-maps",
         "restaurant-owners-guide-to-google-reviews",
         "true-cost-of-bad-online-reputation",
     ],
@@ -39,6 +40,7 @@ export const hvacHomeServicesReputationManagementPost: BlogPostSource = {
         { label: "Negative Feedback Shield", href: "/blog/negative-feedback-shield" },
         { label: "Google Review Link Guide", href: "/blog/how-to-get-a-google-review-link" },
         { label: "GBP Optimization Checklist", href: "/blog/google-business-profile-optimization-checklist" },
+        { label: "How to Get HVAC Leads from Google Maps", href: "/blog/how-to-get-hvac-leads-from-google-maps" },
         { label: "Review Management Features", href: "/features" },
     ],
     faqs: [

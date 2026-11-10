@@ -34,9 +34,14 @@ export function IndustriesSharedBenefitsStripSection() {
                     <p className="home-section-lede">
                         The moment you ask changes by industry. The routine that follows it does not.
                     </p>
-                    <Link href="/how-it-works" className="home-text-link ind-routine-link">
+                    <div className="flex flex-col gap-2">
+                        <Link href="/how-it-works" className="home-text-link ind-routine-link">
                         How it works <ArrowRight size={14} aria-hidden="true" />
-                    </Link>
+                        </Link>
+                        <Link href="/tools/review-response-generator" className="home-text-link ind-routine-link">
+                            Free review response generator <ArrowRight size={14} aria-hidden="true" />
+                        </Link>
+                    </div>
                 </div>
                 <ul className="ind-steps">
                     {BENEFITS.map((item) => (

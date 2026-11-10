@@ -97,7 +97,7 @@ export const MULTI_LOCATION_CONTENT: FeatureLandingContent = {
     { question: "Does each location get its own review link and QR code?", answer: "Yes. Every location has its own review page at collectratings.com, its own QR code and its own settings, so reviews go to the right Google profile." },
     { question: "Can I give a manager access to only one location?", answer: "Yes. Roles are set per business. Invite someone to a location as an admin, manager, member or viewer, and they work with that location." },
     { question: "Can my locations use different Google accounts?", answer: "Yes. When you add a business, you can connect a different Google account from the one you signed up with and pick which location to add." },
-    { question: "Can I see all locations in one view?", answer: "The Businesses page lists every location with its rating, review count, pending reviews and Google connection status. Detailed dashboards and reports are per location." },
+    { question: "Can I see all locations in one view?", answer: "The Businesses page lists every location with its rating, review count, pending reviews and Google connection status. Detailed dashboards and reports are per location, with [AI review insights](/features/smart-insights) to spot trends across branches." },
   ],
-  related: ["review-requests", "review-page", "analytics"],
+  related: ["review-requests", "smart-insights", "review-page"],
 };

@@ -31,7 +31,7 @@ export const REVIEW_REQUESTS_CONTENT: FeatureLandingContent = {
     {
       eyebrow: "Right after the appointment",
       title: "Send it before they reach the car",
-      text: "The best time to ask is while the experience is fresh. Pick the customer, check the message, and the request is on its way in a few taps.",
+      text: "The best time to ask is while the experience is fresh. Pick the customer, check the message, and the request is on its way in a few taps. Looking to build momentum? Read our proven blueprint on [how to get more Google reviews](/blog/how-to-get-50-google-reviews-in-30-days) in 30 days.",
       points: [
         "Search saved customers as you type; their number and email fill in",
         "New customers work too: just type a name, number or email",
@@ -87,7 +87,7 @@ export const REVIEW_REQUESTS_CONTENT: FeatureLandingContent = {
       { icon: Eye, title: "Message preview", text: "The SMS, the email and your remaining allowance, before you confirm." },
       { icon: ShieldCheck, title: "Re-ask guard", text: "Customers asked recently are skipped. Change the 30-day default in your review settings." },
       { icon: Ban, title: "Opt-outs respected", text: "Numbers that reply STOP and contacts you mark as opted out are not sent requests." },
-      { icon: Users, title: "Works with your list", text: "Send from a customer’s profile, or select many customers and continue in the campaign builder." },
+      { icon: Users, title: "Customer CRM", text: "Organize contacts, tags, and request histories with our built-in [customer CRM](/features/customer-crm)." },
     ],
   },
   note: "SMS and email requests count against your plan’s monthly allowance: 500 of each on Starter, 700 of each per location on Professional, unlimited on Enterprise. Zyene tracks clicks and completed requests on your review page; it cannot confirm that Google published a review.",

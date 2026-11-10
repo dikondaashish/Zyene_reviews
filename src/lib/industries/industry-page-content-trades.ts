@@ -119,9 +119,11 @@ export const TRADES_PAGE_CONTENT: Record<string, IndustryPageContent> = {
             link: TRIGGER_LINK,
             replacesSolution: 0,
         },
-        relatedPillars: ["review-collection", "competitor-tracking", "review-widgets"],
+        relatedPillars: ["review-campaigns", "smart-insights", "review-collection"],
         faqs: [
             { question: "Does Zyene connect to my electrical contractor software?", answer: NO_FSM },
+            { question: "Can I run bulk outreach to past electrical clients?", answer: "Yes. You can launch automated [review request campaigns](/features/review-campaigns) via SMS and email with scheduled follow-ups." },
+            { question: "How can I identify trends in customer feedback?", answer: "Zyene uses [AI review insights](/features/smart-insights) to automatically detect recurring praise or complaints about pricing, timeliness, and technician conduct." },
             { question: "Can I show reviews on my website?", answer: "Yes. Embeddable review widgets are included on paid plans and update as new reviews arrive." },
             { question: "How should I reply when a quote changed mid-job?", answer: "Thank the customer, explain in general terms that hidden conditions can change scope, and invite them to call. Use a reviewed draft for these replies." },
         ],

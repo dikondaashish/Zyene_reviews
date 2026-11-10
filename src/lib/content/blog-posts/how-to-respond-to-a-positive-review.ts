@@ -23,12 +23,14 @@ export const howToRespondToAPositiveReviewPost: BlogPostSource = {
     relatedSlugs: [
         "how-to-respond-to-a-1-star-review",
         "ai-reply-mistakes-to-avoid",
+        "best-review-response-generator-tools",
         "why-google-reviews-matter-in-2026",
     ],
     internalLinks: [
         { label: "AI Review Replies", href: "/features/ai-replies" },
         { label: "Automatic Review Replies", href: "/features/automatic-review-replies" },
         { label: "Review Response Generator", href: "/tools/review-response-generator" },
+        { label: "Best Review Response Generator Tools", href: "/blog/best-review-response-generator-tools" },
         { label: "Google Reviews Guide", href: "/resources/google-reviews-guide" },
     ],
     faqs: [

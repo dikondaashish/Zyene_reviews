@@ -38,7 +38,13 @@ const CONTENT: ToolGuideContent = {
                 </Link>{" "}
                 or planning review generation initiatives.
             </>,
-            "Public rating and review count are among the first details prospective customers evaluate when searching on Google Maps. Monitoring these metrics helps you assess how your profile appears to local searchers.",
+            <>
+                Public rating and review count are among the first details prospective customers evaluate when searching on Google Maps. If you need to craft replies to existing feedback right now, use our free{" "}
+                <Link href="/tools/review-response-generator" className="mi-inline-link">
+                    review response generator
+                </Link>{" "}
+                to craft thoughtful responses.
+            </>,
         ],
     },
     steps: {

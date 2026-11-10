@@ -3,6 +3,7 @@ import { ArrowRight, Info, Plus } from "lucide-react";
 import { FAQPageJsonLd } from "@/components/seo/json-ld";
 import { FEATURE_PILLAR_MAP } from "@/lib/growth/feature-pillars";
 import type { FeatureLandingContent } from "@/components/marketing/feature-landing/types";
+import { renderInlineContent } from "@/components/marketing/render-inline-content";
 
 type BentoProps = { capabilities: FeatureLandingContent["capabilities"]; facts?: FeatureLandingContent["facts"] };
 
@@ -61,7 +62,7 @@ export function FeatureLandingFaq({ faqs, note }: { faqs: FeatureLandingContent[
                 {faq.question}
                 <Plus size={16} aria-hidden="true" />
               </summary>
-              <p>{faq.answer}</p>
+              <p>{renderInlineContent(faq.answer)}</p>
             </details>
           ))}
         </div>

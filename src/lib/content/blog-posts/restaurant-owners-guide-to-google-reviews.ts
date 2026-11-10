@@ -13,9 +13,10 @@ export const restaurantOwnersGuideToGoogleReviewsPost: BlogPostSource = {
     metaTitle: "Restaurant Owner's Guide to Google Reviews 2026",
     metaDescription: "The complete Google review guide for restaurant owners. How to get more reviews, respond to complaints, protect your rating, and track competitors in 2026.",
     keywords: ["restaurant google reviews", "restaurant review management", "how to get more restaurant reviews", "restaurant reputation management 2026"],
-    relatedSlugs: ["how-to-get-50-google-reviews-in-30-days", "how-to-respond-to-a-1-star-review", "birdeye-pricing-breakdown-2026"],
+    relatedSlugs: ["how-to-get-50-google-reviews-in-30-days", "how-to-respond-to-a-1-star-review", "true-cost-of-bad-online-reputation"],
     internalLinks: [
         { label: "Zyene Reviews for Restaurants", href: "/industries/restaurants" },
+        { label: "The true cost of a bad online reputation", href: "/blog/true-cost-of-bad-online-reputation" },
         { label: "Review tool pricing comparison (Birdeye vs Zyene Reviews)", href: "/blog/birdeye-pricing-breakdown-2026" },
         { label: "Start your free trial", href: SIGNUP_URL },
     ],
@@ -36,7 +37,7 @@ export const restaurantOwnersGuideToGoogleReviewsPost: BlogPostSource = {
             text: "Diners choose in seconds from map results - star average, review count, and the latest comments matter more than your menu PDF. Thin profiles lose covers to competitors who look busier and more trusted online.",
         },
         { type: "p", text: "For restaurants, the decision cycle is short and high-frequency. Someone is hungry, they search 'Italian restaurant near me', they see 3-5 options, and they make a decision in 30 seconds based almost entirely on star rating, review count, and the first 2-3 reviews they read." },
-        { type: "p", text: "A restaurant with 200 reviews and a 4.5-star average will nearly always outperform a restaurant with 20 reviews and a 4.8-star average in both click-through rate and foot traffic - even though the latter has a higher rating." },
+        { type: "p", text: "A restaurant with 200 reviews and a 4.5-star average will nearly always outperform a restaurant with 20 reviews and a 4.8-star average in both click-through rate and foot traffic - even though the latter has a higher rating. When star ratings slide below 4.0, the financial fallout compounds quickly. Learn how lost covers and higher ad spend add up in our analysis of the [cost of a bad online reputation](/blog/true-cost-of-bad-online-reputation)." },
         { type: "h2", text: "The 5 Moments to Ask for a Review" },
         {
             type: "summary",

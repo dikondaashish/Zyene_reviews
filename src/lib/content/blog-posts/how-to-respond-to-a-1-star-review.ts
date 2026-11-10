@@ -17,6 +17,7 @@ export const howToRespondToA1StarReviewPost: BlogPostSource = {
         { label: "15 positive review response templates", href: "/blog/how-to-respond-to-a-positive-review" },
         { label: "Free review response templates", href: "/tools/review-response-generator" },
         { label: "See how Zyene Reviews' AI replies work", href: "/features/ai-replies" },
+        { label: "Google review page with AI drafts", href: "/features/review-page" },
         { label: "20+ negative review response templates", href: "/resources/negative-review-templates" },
         { label: "5 AI review reply mistakes to avoid", href: "/blog/ai-reply-mistakes-to-avoid" },
     ],
@@ -30,7 +31,7 @@ export const howToRespondToA1StarReviewPost: BlogPostSource = {
     body: [
         { type: "summary", text: "Reply to a 1-star review within a day or two using five moves: acknowledge the experience, apologize for it, own any real mistake briefly, offer a private way to resolve it, and close professionally. Never argue facts in public. The reply is written for future customers as much as for the reviewer." },
         { type: "p", text: "A 1-star review lands in your inbox and your stomach drops. Your first instinct might be to ignore it, argue with it, or delete your account entirely. All of these are the wrong move." },
-        { type: "p", text: "Here's the counterintuitive truth: a well-handled 1-star review with a thoughtful response can be more valuable to your reputation than five 5-star reviews with no response. Potential customers read 1-star reviews specifically to see how you handle adversity. When happy customers leave praise, check out our guide on [how to respond to positive reviews](/blog/how-to-respond-to-a-positive-review) to keep that momentum going." },
+        { type: "p", text: "Here's the counterintuitive truth: a well-handled 1-star review with a thoughtful response can be more valuable to your reputation than five 5-star reviews with no response. Potential customers read 1-star reviews specifically to see how you handle adversity. To catch friction before it escalates, route feedback through a [Google review page with AI drafts](/features/review-page) and private service recovery. When happy customers leave praise, check out our guide on [how to respond to positive reviews](/blog/how-to-respond-to-a-positive-review) to keep that momentum going." },
         { type: "h2", text: "Why Your Response Matters More Than the Review" },
         {
             type: "summary",

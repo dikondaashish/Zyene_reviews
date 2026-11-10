@@ -1,4 +1,5 @@
 import type { FeatureLandingContent } from "@/components/marketing/feature-landing/types";
+import { renderInlineContent } from "@/components/marketing/render-inline-content";
 
 type Flow = FeatureLandingContent["flow"];
 
@@ -9,7 +10,7 @@ export function FeatureLandingFlow({ flow }: { flow: Flow }) {
       <div className="marketing-container fl-flow-grid">
         <div className="fl-flow-head">
           <h2 id="fl-flow-heading">{flow.title}</h2>
-          <p>{flow.intro}</p>
+          <p>{renderInlineContent(flow.intro)}</p>
         </div>
         <div>
           <ol className="fl-flow-steps">

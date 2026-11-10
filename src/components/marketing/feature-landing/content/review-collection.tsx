@@ -37,7 +37,7 @@ export const REVIEW_COLLECTION_CONTENT: FeatureLandingContent = {
     {
       eyebrow: "Every way to ask",
       title: "Many ways in, one page behind them",
-      text: "Put a QR code on the table, an NFC stand by the register, or send a text after the appointment. Each one opens the same review page, so customers get the same experience every time.",
+      text: "Put a QR code on the table, an NFC stand by the register, or send a text after the appointment. Each one opens the same review page, so customers get the same experience every time. When those requests convert into 5-star feedback, refer to our [positive review response examples](/blog/how-to-respond-to-a-positive-review) to reply warmly.",
       points: [
         "Review QR codes and NFC review stands for in-person visits",
         "SMS and email requests, one at a time or as a campaign with day-7 and day-14 reminders",

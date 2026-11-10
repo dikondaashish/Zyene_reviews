@@ -62,7 +62,7 @@ export const REVIEW_PAGE_CONTENT: FeatureLandingContent = {
     {
       eyebrow: "Service recovery",
       title: "Hear about a bad day directly",
-      text: "When a rating falls below your threshold, the customer sees an optional private form alongside the link to post on Google. Your team gets the message and can make it right.",
+      text: "When a rating falls below your threshold, the customer sees an optional private form alongside the link to post on Google. Your team gets the message and can make it right. If public negative feedback does arrive, follow our framework on [how to respond to a 1-star review](/blog/how-to-respond-to-a-1-star-review).",
       points: ["Ask for email or phone as hidden, optional or required", "Show an optional apology offer", "Private feedback lands in its own tab in Reviews"],
       media: { kind: "visual", node: <ReviewPagePrivateVisual />, label: "Private feedback form shown after a low rating" },
     },

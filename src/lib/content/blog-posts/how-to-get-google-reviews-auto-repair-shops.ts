@@ -24,11 +24,14 @@ export const howToGetGoogleReviewsAutoRepairShopsPost: BlogPostSource = {
     ],
     relatedSlugs: [
         "why-google-reviews-matter-in-2026",
+        "how-to-get-more-google-reviews",
         "how-to-get-a-google-review-link",
         "how-to-create-a-google-review-qr-code",
     ],
     internalLinks: [
         { label: "Auto Repair Review Management", href: "/industries/auto-repair" },
+        { label: "SMS & Email Review Requests", href: "/features/review-requests" },
+        { label: "How to Get More Google Reviews", href: "/blog/how-to-get-more-google-reviews" },
         { label: "Review Request Text Templates", href: "/blog/how-to-ask-customers-for-reviews-sms-email-templates" },
         { label: "Google Review Link Guide", href: "/blog/how-to-get-a-google-review-link" },
     ],
@@ -69,7 +72,7 @@ export const howToGetGoogleReviewsAutoRepairShopsPost: BlogPostSource = {
         },
         {
             type: "p",
-            text: "Timing your review request is critical. Asking before vehicle pickup feels premature, while waiting two days results in low response rates. The highest converting window is 30 to 60 minutes after invoice payment, when the customer is driving home and feeling the immediate relief of a quiet, smooth ride."
+            text: "Timing your review request is critical. For broader cross-industry strategies, consult our operational guide on [how to get more Google reviews](/blog/how-to-get-more-google-reviews). Asking before vehicle pickup feels premature, while waiting two days results in low response rates. The highest converting window is 30 to 60 minutes after invoice payment, when the customer is driving home and feeling the immediate relief of a quiet, smooth ride."
         },
         {
             type: "h2",
@@ -77,7 +80,7 @@ export const howToGetGoogleReviewsAutoRepairShopsPost: BlogPostSource = {
         },
         {
             type: "p",
-            text: "Text messages boast a 98% open rate. Use these compliant, field-tested review request scripts:"
+            text: "Text messages boast a 98% open rate. Setting up automated [SMS and email review requests](/features/review-requests) eliminates manual friction. Use these compliant, field-tested review request scripts:"
         },
         {
             type: "quote",
@@ -139,7 +142,7 @@ export const howToGetGoogleReviewsAutoRepairShopsPost: BlogPostSource = {
         },
         {
             type: "p",
-            text: "Auto repair shops frequently face negative feedback rooted in invoice misunderstandings or diagnostic charges. Never argue warranty terms publicly. Instead, use the 3-step de-escalation rule:"
+            text: "Auto repair shops frequently face negative feedback rooted in invoice misunderstandings or diagnostic charges. Never argue warranty terms publicly or fall into common [AI review reply mistakes](/blog/ai-reply-mistakes-to-avoid). Instead, use the 3-step de-escalation rule:"
         },
         {
             type: "ol",

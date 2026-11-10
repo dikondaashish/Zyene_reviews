@@ -24,11 +24,16 @@ export const howToCreateAGoogleReviewQrCodePost: BlogPostSource = {
     ],
     relatedSlugs: [
         "how-to-get-a-google-review-link",
+        "can-you-delete-a-google-review",
         "how-to-ask-customers-for-reviews-sms-email-templates",
+        "how-to-embed-google-reviews-on-website",
         "negative-feedback-shield",
     ],
     internalLinks: [
         { label: "Google Review Link Guide", href: "/blog/how-to-get-a-google-review-link" },
+        { label: "Removing Google Reviews Guide", href: "/blog/can-you-delete-a-google-review" },
+        { label: "AI Review Insights", href: "/features/smart-insights" },
+        { label: "Embed Google Reviews on Website", href: "/blog/how-to-embed-google-reviews-on-website" },
         { label: "Google Review Link Generator", href: "/tools/review-link-generator" },
         { label: "Review Collection Features", href: "/features/review-collection" },
         { label: "Negative Feedback Shield Guide", href: "/blog/negative-feedback-shield" },
@@ -164,7 +169,7 @@ export const howToCreateAGoogleReviewQrCodePost: BlogPostSource = {
         },
         {
             type: "p",
-            text: "Printing a raw Google link on your counter carries a hidden danger: an irritated customer who had a bad experience can scan your sign and immediately post a permanent 1-star complaint on Google Maps. Zyene Reviews' smart QR codes solve this with an intelligent sentiment filter: happy customers go to Google in 1 tap, while unhappy customers submit private feedback directly to your inbox so you can resolve issues before they hurt your reputation."
+            text: "Printing a raw Google link on your counter carries a hidden danger: an irritated customer who had a bad experience can scan your sign and immediately post a permanent 1-star complaint on Google Maps (learn what options exist for [removing Google reviews](/blog/can-you-delete-a-google-review) if policy violations occur). Zyene Reviews' smart QR codes solve this with an intelligent sentiment filter: happy customers go to Google in 1 tap, while unhappy customers submit private feedback directly to your inbox so you can resolve issues before they hurt your reputation. Over time, evaluate customer trends using [AI review insights](/features/smart-insights) to spot operational themes."
         },
         {
             type: "cta",
