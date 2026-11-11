@@ -167,6 +167,11 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         alt: "Dental clinic front desk administrator using modern computer and NFC Google review stand at reception",
         width: 1200, height: 675, caption: "Reception NFC stands and automated checkout triggers capture patient feedback at peak clinical relief.",
     },
+    "electrician-reputation-management-local-seo": {
+        src: "/images/blog/electrician_service_van_panel_review_nfc.jpg",
+        alt: "Professional electrician attaching an NFC tap-to-review QR code sticker onto a modern residential electrical panel",
+        width: 1200, height: 675, caption: "Panel-mounted NFC stickers capture homeowner appreciation at the moment of peak relief.",
+    },
     "ranking-higher-on-google-maps-local-seo-playbook": {
         src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`,
         alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity",

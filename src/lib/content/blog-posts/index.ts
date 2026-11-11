@@ -37,6 +37,7 @@ import { rankingHigherOnGoogleMapsLocalSeoPlaybookPost } from "./ranking-higher-
 import { howDoYouRemoveGoogleReviewsPost } from "./how-do-you-remove-google-reviews";
 import { howToDeleteYelpReviewsPost } from "./how-to-delete-yelp-reviews";
 import { bestLocalSeoDentalPracticesPost } from "./best-local-seo-dental-practices";
+import { electricianReputationManagementLocalSeoPost } from "./electrician-reputation-management-local-seo";
 
 export const BLOG_POST_SOURCES: BlogPostSource[] = [
     howToGet50GoogleReviewsIn30DaysPost,
@@ -72,4 +73,5 @@ export const BLOG_POST_SOURCES: BlogPostSource[] = [
     howDoYouRemoveGoogleReviewsPost,
     howToDeleteYelpReviewsPost,
     bestLocalSeoDentalPracticesPost,
+    electricianReputationManagementLocalSeoPost,
 ];
