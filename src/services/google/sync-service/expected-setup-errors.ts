@@ -7,6 +7,7 @@ export function isExpectedGoogleSyncSetupError(message: string): boolean {
         message.includes("No Locations found") ||
         message.includes("No Google Accounts found") ||
         message.includes("No Google Business Profile locations found") ||
-        message.includes("No Google Business Profile found")
+        message.includes("No Google Business Profile found") ||
+        message.includes("GOOGLE_LOCATION_NOT_FOUND")
     );
 }

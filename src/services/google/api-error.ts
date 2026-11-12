@@ -134,7 +134,8 @@ export function isGoogleConfigurationError(error: unknown): error is GoogleServi
 
 /**
  * Conditions owned by the customer's Google account, not by our code: the
- * listing is unverified, or the connected account no longer manages it.
+ * listing is unverified, the connected account no longer manages it, or Google
+ * no longer has the location (404 NOT_FOUND: deleted, or moved to another account).
  *
  * These recur on every sync cycle until the merchant acts, so paging on them
  * buries real faults. Callers log them and surface the message to the customer
@@ -143,7 +144,10 @@ export function isGoogleConfigurationError(error: unknown): error is GoogleServi
 export function isGoogleAccountStateError(error: unknown): error is GoogleServiceError {
     return (
         isGoogleServiceError(error) &&
-        ["permission_denied", "unverified_location"].includes(error.kind)
+        (["permission_denied", "unverified_location"].includes(error.kind) ||
+            // Only Google's own JSON NOT_FOUND means the entity is gone; a bare/HTML 404
+            // (e.g. a retired endpoint) is still our fault and stays actionable.
+            (error.kind === "not_found" && error.googleStatus === "NOT_FOUND"))
     );
 }
 

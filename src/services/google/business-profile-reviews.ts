@@ -29,6 +29,18 @@ function forbiddenReviewsError(errorBody: string): Error {
     return err;
 }
 
+/** Prefix matched by {@link isExpectedGoogleSyncSetupError} so retries/Sentry skip it. */
+export const GOOGLE_LOCATION_NOT_FOUND = "GOOGLE_LOCATION_NOT_FOUND";
+
+function locationNotFoundError(): Error {
+    const err = createGoogleApiError(
+        `${GOOGLE_LOCATION_NOT_FOUND}: Google no longer finds this Business Profile location for the connected account. Reconnect Google and select the location again.`
+    );
+    err.code = GOOGLE_LOCATION_NOT_FOUND;
+    err.statusCode = 404;
+    return err;
+}
+
 export async function listReviews(
     accessToken: string,
     accountId: string,
@@ -48,6 +60,12 @@ export async function listReviews(
 
     if (!response.ok) {
         const errorBody = await response.text();
+        // 404 = Google no longer has this location for the connected account (deleted or
+        // moved). The merchant must reconnect/reselect; it is not a fault in our code.
+        if (response.status === 404) {
+            logger.warn({ accountId, locationId }, "[Google API] List Reviews: location not found (404)");
+            throw locationNotFoundError();
+        }
         logger.error(`[Google API] List Reviews Error (${response.status}): ${errorBody}`);
 
         if (response.status === 429) {
