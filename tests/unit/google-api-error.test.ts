@@ -142,6 +142,20 @@ describe("Google account-state errors (customer action, not our fault)", () => {
         expect(isGoogleActionableFault(error)).toBe(true);
     });
 
+    it("treats Google's JSON NOT_FOUND for a removed location as account state", () => {
+        const error = createGoogleServiceError(
+            "Business Profile Performance API",
+            404,
+            JSON.stringify({
+                error: { code: 404, message: "Requested entity was not found.", status: "NOT_FOUND" },
+            }),
+        );
+
+        expect(error.kind).toBe("not_found");
+        expect(isGoogleAccountStateError(error)).toBe(true);
+        expect(isGoogleActionableFault(error)).toBe(false);
+    });
+
     it("keeps a disabled API classified as configuration, not account state", () => {
         const error = createGoogleServiceError(
             "My Business Place Actions API",
