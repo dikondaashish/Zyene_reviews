@@ -172,6 +172,11 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         alt: "Professional electrician attaching an NFC tap-to-review QR code sticker onto a modern residential electrical panel",
         width: 1200, height: 675, caption: "Panel-mounted NFC stickers capture homeowner appreciation at the moment of peak relief.",
     },
+    "best-local-seo-tools-small-business": {
+        src: "/images/blog/small_business_local_seo_tools_dashboard.jpg",
+        alt: "Small business owner analyzing local SEO software dashboard with geo-grid ranking heatmap and review velocity metrics",
+        width: 1200, height: 675, caption: "Modern local SEO software provides neighborhood-level ranking visualization and automated review tracking.",
+    },
     "ranking-higher-on-google-maps-local-seo-playbook": {
         src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`,
         alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity",
