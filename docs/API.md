@@ -253,7 +253,7 @@ Unauthenticated or lightly rate-limited:
 
 | Path | Purpose |
 |------|---------|
-| `/api/marketing/contact` | Contact form: notifies `contact@`, sends the visitor a receipt. 5/10 min per IP (shared public-form limit); honeypot (`website`) and min time-to-submit (`elapsedMs` ≥ 3 s) dropped silently with a fake `200`; missing `elapsedMs` → `400`; receipt capped at 1/day per address |
+| `/api/marketing/contact` | Contact form: notifies `contact@`, sends the visitor a receipt. BotID (`403`); 5/10 min per IP (shared public-form limit); honeypot (`website`) and min time-to-submit (`elapsedMs` ≥ 3 s) dropped silently with a fake `200`; missing `elapsedMs` → `400`; receipt capped at 1/day per address |
 | `/api/marketing/demo-request` | Demo inbound |
 | `/api/marketing/chat` | Website chat (Natalie). Streams NDJSON (`delta`… then `meta` / `human` / `replace` / `error`; see `src/lib/support-chat/stream-protocol.ts`). Answers grounded in site content (in-memory BM25 over help, blog, features, compare, industries); injection screen, sentence-level output guard, per-IP/session limits. Pauses while a team member is live in Slack |
 | `/api/marketing/chat/lead` | Website chat lead capture (name, email, phone, business type + transcript): Resend email, `support_chat_leads` row, Slack thread; BotID + honeypot + 3/h per IP |

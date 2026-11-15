@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { checkBotId } from "botid/server";
 import { z } from "zod";
 
 import { logger } from "@/lib/logger";
@@ -40,6 +41,14 @@ async function mayReceiveReceipt(email: string): Promise<boolean> {
 }
 
 export async function handleContactPost(request: Request) {
+    // Invisible Vercel BotID check; the client half is registered in
+    // instrumentation-client.ts. Catches browser-driven bots that fill the form
+    // slowly enough to pass the honeypot and timing checks below.
+    const verification = await checkBotId();
+    if (verification.isBot) {
+        return NextResponse.json({ error: "Unable to send message. Please try again." }, { status: 403 });
+    }
+
     // Unauthenticated and it sends two real emails, one of them to an address the
     // caller supplies - without a limit that is a spam relay on our sending domain.
     // Fails CLOSED: if the limiter is unreachable we would rather drop a contact
