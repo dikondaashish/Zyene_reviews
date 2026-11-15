@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +23,12 @@ export function ContactForm() {
     const [done, setDone] = useState(false);
     const [error, setError] = useState("");
     const [subject, setSubject] = useState<string>(SUBJECTS[0].value);
+    // When the form became usable. The server drops anything submitted faster than a person can type.
+    const shownAt = useRef(0);
+
+    useEffect(() => {
+        shownAt.current = Date.now();
+    }, []);
 
     async function submit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -41,6 +47,8 @@ export function ContactForm() {
                     email: fd.get("email"),
                     subject: subject || fd.get("subject"),
                     message: fd.get("message"),
+                    website: fd.get("website") ?? "",
+                    elapsedMs: Date.now() - shownAt.current,
                 }),
             });
             const json = await res.json();
@@ -70,7 +78,10 @@ export function ContactForm() {
                     variant="outline"
                     size="sm"
                     className="mt-4"
-                    onClick={() => setDone(false)}
+                    onClick={() => {
+                        shownAt.current = Date.now();
+                        setDone(false);
+                    }}
                 >
                     Send another message
                 </Button>
@@ -79,7 +90,17 @@ export function ContactForm() {
     }
 
     return (
-        <form onSubmit={submit} className="space-y-4">
+        <form onSubmit={submit} className="relative space-y-4">
+            {/* Honeypot: off-screen and skipped by keyboard and screen readers, so only bots fill it. */}
+            <input
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                defaultValue=""
+                className="absolute -left-[9999px] size-px opacity-0"
+            />
             <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <label htmlFor="contact-name" className="text-sm font-medium text-foreground">
