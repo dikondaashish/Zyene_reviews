@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { logger } from "@/lib/logger";
-import { clientIpFrom, publicFormRateLimit } from "@/lib/auth/rate-limit";
+import { clientIpFrom, contactReceiptRateLimit, publicFormRateLimit } from "@/lib/auth/rate-limit";
+import { formBotSignalFields, formBotVerdict } from "@/lib/security/form-bot-signals";
 import { formNotificationEmail, formReceiptEmail } from "@/services/resend/templates/form-emails";
 import { sendEmail } from "@/services/resend/send-email";
 
@@ -20,7 +21,23 @@ const contactSchema = z.object({
     email: z.string().trim().email("A valid email is required").max(320),
     subject: z.enum(SUBJECT_OPTIONS),
     message: z.string().trim().min(10, "Message must be at least 10 characters").max(5000),
+    ...formBotSignalFields,
 });
+
+/**
+ * The receipt goes to an address nobody has verified, so anyone can aim it at a
+ * stranger. One per address per day keeps a real visitor's confirmation while
+ * making the form useless for mail-bombing. Fails closed (no receipt): the team
+ * notification already went out, so nothing is lost but a courtesy email.
+ */
+async function mayReceiveReceipt(email: string): Promise<boolean> {
+    try {
+        return (await contactReceiptRateLimit.limit(email.toLowerCase())).success;
+    } catch (err) {
+        logger.error({ err }, "[contact] receipt limit check failed");
+        return false;
+    }
+}
 
 export async function handleContactPost(request: Request) {
     // Unauthenticated and it sends two real emails, one of them to an address the
@@ -56,6 +73,21 @@ export async function handleContactPost(request: Request) {
     }
     const { name, email, subject, message } = parsed.data;
 
+    // Bot checks run before any send, so a rejected submission triggers neither
+    // the team notification nor the receipt to the address it supplied.
+    const verdict = formBotVerdict(parsed.data);
+    if (verdict === "no_timing") {
+        return NextResponse.json(
+            { error: "Please refresh the page and try again." },
+            { status: 400 }
+        );
+    }
+    if (verdict !== "human") {
+        // Look successful so the bot moves on instead of adapting.
+        logger.info({ verdict, ip: clientIpFrom(request) }, "[contact] dropped automated submission");
+        return NextResponse.json({ ok: true });
+    }
+
     try {
         await sendEmail({
             stream: "forms",
@@ -65,12 +97,14 @@ export async function handleContactPost(request: Request) {
             replyTo: email,
         });
 
-        await sendEmail({
-            stream: "forms",
-            to: email,
-            subject: "We received your message - Zyene Reviews",
-            html: formReceiptEmail("contact", name, subject),
-        });
+        if (await mayReceiveReceipt(email)) {
+            await sendEmail({
+                stream: "forms",
+                to: email,
+                subject: "We received your message - Zyene Reviews",
+                html: formReceiptEmail("contact", name, subject),
+            });
+        }
     } catch (err) {
         logger.error({ err }, "[contact] email failed:");
         return NextResponse.json({ error: "Unable to send message. Please try again." }, { status: 500 });

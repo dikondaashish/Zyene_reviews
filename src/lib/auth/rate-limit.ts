@@ -116,6 +116,15 @@ export const publicFormRateLimit = new Ratelimit({
     prefix: '@upstash/ratelimit/public-form',
 });
 
+// Contact-form receipts, keyed by the recipient address rather than the sender's
+// IP: the address is unverified, so this caps how often the form can be made to
+// email any one person no matter how many IPs the caller rotates through.
+export const contactReceiptRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(1, '1 d'),
+    prefix: '@upstash/ratelimit/contact-receipt',
+});
+
 export const publicNewsletterRateLimit = new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(5, '10 m'),
