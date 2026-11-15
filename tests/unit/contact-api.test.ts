@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
+    checkBotId: vi.fn(),
     formLimit: vi.fn(),
     receiptLimit: vi.fn(),
     sendEmail: vi.fn(),
 }));
 
+vi.mock("botid/server", () => ({ checkBotId: mocks.checkBotId }));
 vi.mock("@/lib/auth/rate-limit", () => ({
     publicFormRateLimit: { limit: mocks.formLimit },
     contactReceiptRateLimit: { limit: mocks.receiptLimit },
@@ -35,6 +37,7 @@ const post = (body: unknown) =>
 describe("POST /api/marketing/contact", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mocks.checkBotId.mockResolvedValue({ isBot: false });
         mocks.formLimit.mockResolvedValue({ success: true });
         mocks.receiptLimit.mockResolvedValue({ success: true });
         mocks.sendEmail.mockResolvedValue({ success: true });
@@ -53,6 +56,14 @@ describe("POST /api/marketing/contact", () => {
             to: "dana@example.com",
             subject: "We received your message - Zyene Reviews",
         }));
+    });
+
+    it("blocks requests the bot check flags, before the rate limiter or any send", async () => {
+        mocks.checkBotId.mockResolvedValue({ isBot: true });
+        const res = await post(human);
+        expect(res.status).toBe(403);
+        expect(mocks.formLimit).not.toHaveBeenCalled();
+        expect(mocks.sendEmail).not.toHaveBeenCalled();
     });
 
     it("pretends to succeed but sends nothing when the honeypot is filled", async () => {

@@ -23,6 +23,7 @@ initBotId({
         { path: "/api/marketing/chat/lead", method: "POST" },
         { path: "/api/marketing/chat/demo-book", method: "POST" },
         { path: "/api/marketing/newsletter/subscribe", method: "POST" },
+        { path: "/api/marketing/contact", method: "POST" },
     ],
 });
 
