@@ -1,3 +1,4 @@
+import { createGoogleServiceError } from "./api-error";
 import { fetchWithRetry } from "./business-profile";
 import { requireGoogleLocationId } from "./location-id";
 
@@ -109,7 +110,7 @@ export async function getGoogleLocation(
 
     if (!response.ok) {
         const body = await response.text();
-        throw new Error(`Business Information GET ${response.status}: ${body}`);
+        throw createGoogleServiceError("My Business Business Information API", response.status, body);
     }
 
     return response.json() as Promise<GoogleLocationFull>;

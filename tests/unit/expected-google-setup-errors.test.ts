@@ -6,6 +6,9 @@ describe("isExpectedGoogleSyncSetupError", () => {
     it("matches empty GBP account/location setup gaps", () => {
         expect(isExpectedGoogleSyncSetupError("No Locations found")).toBe(true);
         expect(isExpectedGoogleSyncSetupError("No Google Accounts found")).toBe(true);
+        expect(
+            isExpectedGoogleSyncSetupError("GOOGLE_LOCATION_NOT_FOUND: Google no longer finds this location")
+        ).toBe(true);
     });
 
     it("does not match unrelated sync failures", () => {

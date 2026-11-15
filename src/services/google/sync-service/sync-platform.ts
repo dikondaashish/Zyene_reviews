@@ -14,6 +14,7 @@ import {
   PAGINATION_DELAY_MS,
 } from "@/services/google/constants";
 import { clearForceFullSyncFlag, syncStateObject } from "./helpers";
+import { isExpectedGoogleSyncSetupError } from "./expected-setup-errors";
 import { hideGoogleReviewsRemovedFromSource } from "./review-lifecycle";
 import { extendSyncLockTtl } from "./locks";
 import { syncStateManagerFromContext } from "./list-reviews";
@@ -153,7 +154,11 @@ export async function syncGoogleReviewsForPlatform(platformId: string): Promise<
             alerts: 0
         };
     } catch (error) {
-        logger.error({ err: error }, "[Sync] Error in compatibility wrapper:");
+        if (isExpectedGoogleSyncSetupError(error instanceof Error ? error.message : String(error))) {
+            logger.warn({ err: error, platformId }, "[Sync] Blocked by Google account setup");
+        } else {
+            logger.error({ err: error }, "[Sync] Error in compatibility wrapper:");
+        }
         if (usingIncremental) {
             try {
                 const message = error instanceof Error ? error.message : String(error);

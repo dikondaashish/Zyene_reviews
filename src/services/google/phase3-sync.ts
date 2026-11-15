@@ -3,7 +3,7 @@ import { createAdminClient } from "@/lib/db/supabase/admin";
 import { getValidGoogleToken, GooglePlatformAccessError } from "./sync-service";
 import { getGoogleLocation } from "./listing-information";
 import { computeProfileHealth } from "./profile-health";
-import * as Sentry from "@sentry/nextjs";
+import { reportGoogleSyncFailure } from "./sync-failure-report";
 
 export interface Phase3SyncResult {
     success: boolean;
@@ -54,8 +54,7 @@ export async function syncGoogleListingProfileForPlatform(platformId: string): P
             // reporting them as application exceptions creates false alarms.
             logger.warn({ code: e.code }, "[Phase3] Google connection unavailable");
         } else {
-            logger.error({ err: msg }, "[Phase3] Listing / profile health sync failed:");
-            Sentry.captureException(e);
+            reportGoogleSyncFailure("[Phase3] Listing / profile health", e);
         }
         return { success: false, error: msg };
     }
