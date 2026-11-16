@@ -177,6 +177,11 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         alt: "Small business owner analyzing local SEO software dashboard with geo-grid ranking heatmap and review velocity metrics",
         width: 1200, height: 675, caption: "Modern local SEO software provides neighborhood-level ranking visualization and automated review tracking.",
     },
+    "ai-visibility-audit-multi-location-services": {
+        src: "/images/blog/multi_location_ai_visibility_audit_dashboard.jpg",
+        alt: "Marketing analyst examining enterprise AI visibility audit dashboard tracking LLM mention equity across multi-location service branches",
+        width: 1200, height: 675, caption: "Centralized AI visibility dashboards track regional mention rates and sentiment across major LLMs.",
+    },
     "ranking-higher-on-google-maps-local-seo-playbook": {
         src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`,
         alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity",

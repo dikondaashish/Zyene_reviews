@@ -39,6 +39,7 @@ import { howToDeleteYelpReviewsPost } from "./how-to-delete-yelp-reviews";
 import { bestLocalSeoDentalPracticesPost } from "./best-local-seo-dental-practices";
 import { electricianReputationManagementLocalSeoPost } from "./electrician-reputation-management-local-seo";
 import { bestLocalSeoToolsSmallBusinessPost } from "./best-local-seo-tools-small-business";
+import { aiVisibilityAuditMultiLocationServicesPost } from "./ai-visibility-audit-multi-location-services";
 
 export const BLOG_POST_SOURCES: BlogPostSource[] = [
     howToGet50GoogleReviewsIn30DaysPost,
@@ -76,4 +77,5 @@ export const BLOG_POST_SOURCES: BlogPostSource[] = [
     bestLocalSeoDentalPracticesPost,
     electricianReputationManagementLocalSeoPost,
     bestLocalSeoToolsSmallBusinessPost,
+    aiVisibilityAuditMultiLocationServicesPost,
 ];
