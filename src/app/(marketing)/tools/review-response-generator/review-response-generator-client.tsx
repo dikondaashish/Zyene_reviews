@@ -65,7 +65,7 @@ export function ReviewResponseGeneratorClient() {
 
     return (
         <FreeToolShell
-            title="Review Response Templates"
+            title="Free Review Response Generator"
             lede="Pick a star rating, get a ready-to-edit reply template. Edit it for the customer’s specific feedback, then copy it. Email is optional."
             whyTitle="Respond professionally to every review"
             why={<>

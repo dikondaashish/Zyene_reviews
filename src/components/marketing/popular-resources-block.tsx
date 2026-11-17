@@ -39,7 +39,7 @@ export const POPULAR_RESOURCES = [
     },
     {
         href: "/tools/review-response-generator",
-        title: "Free Review Response Templates",
+        title: "Free Review Response Generator",
         description: "Pick a star rating, get a ready-to-edit reply template.",
     },
     {
