@@ -40,6 +40,7 @@ import { bestLocalSeoDentalPracticesPost } from "./best-local-seo-dental-practic
 import { electricianReputationManagementLocalSeoPost } from "./electrician-reputation-management-local-seo";
 import { bestLocalSeoToolsSmallBusinessPost } from "./best-local-seo-tools-small-business";
 import { aiVisibilityAuditMultiLocationServicesPost } from "./ai-visibility-audit-multi-location-services";
+import { bestNiceJobAlternativesPost } from "./best-nicejob-alternatives";
 
 export const BLOG_POST_SOURCES: BlogPostSource[] = [
     howToGet50GoogleReviewsIn30DaysPost,
@@ -78,4 +79,5 @@ export const BLOG_POST_SOURCES: BlogPostSource[] = [
     electricianReputationManagementLocalSeoPost,
     bestLocalSeoToolsSmallBusinessPost,
     aiVisibilityAuditMultiLocationServicesPost,
+    bestNiceJobAlternativesPost,
 ];

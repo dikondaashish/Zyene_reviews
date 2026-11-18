@@ -158,33 +158,31 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         width: 1200, height: 675, caption: "Google's official Review Management Tool allows owners to track report status and submit secondary appeals.",
     },
     "how-to-delete-yelp-reviews": {
-        src: "/images/blog/reporting_yelp_review_dashboard.jpg",
-        alt: "Business owner reporting a policy-violating review through Yelp for Business moderation dashboard",
+        src: "/images/blog/reporting_yelp_review_dashboard.jpg", alt: "Business owner reporting a policy-violating review through Yelp for Business moderation dashboard",
         width: 1200, height: 675, caption: "Reporting a review in the Yelp for Business dashboard flags the content for manual moderator review.",
     },
     "best-local-seo-dental-practices": {
-        src: "/images/blog/dental_local_seo_reception_checkin.jpg",
-        alt: "Dental clinic front desk administrator using modern computer and NFC Google review stand at reception",
+        src: "/images/blog/dental_local_seo_reception_checkin.jpg", alt: "Dental clinic front desk administrator using modern computer and NFC Google review stand at reception",
         width: 1200, height: 675, caption: "Reception NFC stands and automated checkout triggers capture patient feedback at peak clinical relief.",
     },
     "electrician-reputation-management-local-seo": {
-        src: "/images/blog/electrician_service_van_panel_review_nfc.jpg",
-        alt: "Professional electrician attaching an NFC tap-to-review QR code sticker onto a modern residential electrical panel",
+        src: "/images/blog/electrician_service_van_panel_review_nfc.jpg", alt: "Professional electrician attaching an NFC tap-to-review QR code sticker onto a modern residential electrical panel",
         width: 1200, height: 675, caption: "Panel-mounted NFC stickers capture homeowner appreciation at the moment of peak relief.",
     },
     "best-local-seo-tools-small-business": {
-        src: "/images/blog/small_business_local_seo_tools_dashboard.jpg",
-        alt: "Small business owner analyzing local SEO software dashboard with geo-grid ranking heatmap and review velocity metrics",
+        src: "/images/blog/small_business_local_seo_tools_dashboard.jpg", alt: "Small business owner analyzing local SEO software dashboard with geo-grid ranking heatmap and review velocity metrics",
         width: 1200, height: 675, caption: "Modern local SEO software provides neighborhood-level ranking visualization and automated review tracking.",
     },
     "ai-visibility-audit-multi-location-services": {
-        src: "/images/blog/multi_location_ai_visibility_audit_dashboard.jpg",
-        alt: "Marketing analyst examining enterprise AI visibility audit dashboard tracking LLM mention equity across multi-location service branches",
+        src: "/images/blog/multi_location_ai_visibility_audit_dashboard.jpg", alt: "Marketing analyst examining enterprise AI visibility audit dashboard tracking LLM mention equity across multi-location service branches",
         width: 1200, height: 675, caption: "Centralized AI visibility dashboards track regional mention rates and sentiment across major LLMs.",
     },
+    "best-nicejob-alternatives": {
+        src: "/images/blog/nicejob_alternative_review_management_software.jpg", alt: "Service business owner reviewing NiceJob alternative reputation software dashboard showing automated review sequences and private recovery tickets",
+        width: 1200, height: 675, caption: "Modern reputation platforms pair review generation with private service recovery channels.",
+    },
     "ranking-higher-on-google-maps-local-seo-playbook": {
-        src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`,
-        alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity",
+        src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`, alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity",
         width: 1672, height: 941, caption: "Securing a top-three Google Map Pack ranking requires balancing proximity, relevance, and automated review prominence.",
     },
 };
@@ -193,7 +191,6 @@ export function getBlogImage(slug: string): ContentImage {
     return BLOG_IMAGES[slug] ?? {
         src: "/images/blog/covers/why-google-reviews-matter-candid-v2.webp",
         alt: "Customer checking a smartphone outside a neighborhood bakery",
-        width: 1672, height: 941,
-        caption: "Customer feedback is part of a local business's day-to-day reputation work.",
+        width: 1672, height: 941, caption: "Customer feedback is part of a local business's day-to-day reputation work.",
     };
 }
