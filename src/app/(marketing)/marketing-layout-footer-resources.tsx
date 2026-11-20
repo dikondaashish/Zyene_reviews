@@ -44,6 +44,14 @@ export function MarketingLayoutFooterResourcesColumn() {
                 </Link>
             </li>
             <li>
+                <Link
+                    href="/blog/how-to-get-more-google-reviews"
+                    className="hover:text-primary transition-colors"
+                >
+                    How to Get Reviews
+                </Link>
+            </li>
+            <li>
                 <Link href="/case-studies" className="hover:text-primary transition-colors">
                     Example Workflows
                 </Link>

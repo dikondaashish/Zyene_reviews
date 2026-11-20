@@ -94,7 +94,7 @@ export const hvacHomeServicesReputationManagementPost: BlogPostSource = {
         },
         {
             type: "p",
-            text: "When a homeowner's furnace fails in January or a pipe bursts at midnight, they do not browse ten websites comparing pricing tiers. They open Google Maps, glance at star ratings, scan the most recent reviews, and call the first business that looks trustworthy. Your online reputation is the decision point between getting that call or losing it to the contractor listed below you.",
+            text: "When a homeowner's furnace fails in January or a pipe bursts at midnight, they do not browse ten websites comparing pricing tiers. They open Google Maps, glance at star ratings, scan the most recent reviews, and call the first business that looks trustworthy. Following a practical [local SEO checklist](/resources/local-seo-checklist) helps verify that your business details and categories are accurate, making your online reputation the decision point between getting that call or losing it to the contractor listed below you.",
         },
         {
             type: "p",
@@ -106,7 +106,7 @@ export const hvacHomeServicesReputationManagementPost: BlogPostSource = {
         },
         {
             type: "p",
-            text: "There is no magic number. What matters most is consistency and recency. A plumbing company with 40 reviews—most from the last three months—will generally outperform a competitor with 200 reviews that stopped accumulating a year ago. Google's algorithm and consumer behavior both favor businesses that are visibly active and currently serving customers.",
+            text: "There is no magic number. What matters most is consistency and recency. A plumbing company with 40 reviews—most from the last three months—will generally outperform a competitor with 200 reviews that stopped accumulating a year ago. Google's algorithm and consumer behavior both favor businesses that are visibly active and currently serving customers (see our [Google Maps local SEO playbook](/blog/ranking-higher-on-google-maps-local-seo-playbook)).",
         },
         {
             type: "table",
@@ -273,7 +273,7 @@ export const hvacHomeServicesReputationManagementPost: BlogPostSource = {
         },
         {
             type: "p",
-            text: "Zyene Reviews helps home service businesses automate this entire workflow: trigger personalized review requests via SMS or email after every completed job, offer every customer an optional private feedback channel alongside the public review link, monitor new reviews across Google and other platforms in real time, and respond quickly with AI-assisted reply drafts that you review before publishing.",
+            text: "Zyene Reviews helps home service businesses automate this entire workflow: trigger personalized review requests via SMS or email after every completed job, offer every customer an optional private feedback channel alongside the public review link, monitor new reviews across Google and other platforms in real time, and respond promptly using AI-assisted [review response generator tools](/blog/best-review-response-generator-tools) where reply drafts are reviewed before posting.",
         },
         {
             type: "cta",

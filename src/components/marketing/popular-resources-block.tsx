@@ -77,6 +77,16 @@ export const POPULAR_RESOURCES = [
         title: "Dental Practice Reputation Management Guide",
         description: "Proven review generation and patient feedback strategies for dental clinics.",
     },
+    {
+        href: "/blog/how-to-get-more-google-reviews",
+        title: "How to Get More Google Reviews",
+        description: "A practical guide to generating steady, genuine customer reviews.",
+    },
+    {
+        href: "/blog/ranking-higher-on-google-maps-local-seo-playbook",
+        title: "Google Maps Local SEO Playbook",
+        description: "Learn how proximity, relevance, and prominence shape local rankings.",
+    },
 ] as const;
 
 export function PopularResourcesBlock({ className = "" }: { className?: string }) {

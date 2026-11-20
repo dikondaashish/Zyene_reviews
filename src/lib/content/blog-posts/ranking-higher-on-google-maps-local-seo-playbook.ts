@@ -151,7 +151,7 @@ export const rankingHigherOnGoogleMapsLocalSeoPlaybookPost: BlogPostSource = {
         },
         {
             type: "p",
-            text: "Dominating local search in 2026 demands automated review velocity, real-time customer recovery, and AI-powered semantic responses. To compare rank trackers, citation management platforms, and review automation, consult our guide to the [best local SEO tools for small businesses](/blog/best-local-seo-tools-small-business). Zyene Reviews provides the end-to-end platform local businesses need to turn Google Maps into their primary inbound customer engine.",
+            text: "Dominating local search in 2026 demands automated review velocity, real-time customer recovery, and AI-powered semantic responses; for trade teams, our [home services reputation management guide](/blog/hvac-home-services-reputation-management) explains how to capture feedback consistently after each call. To compare rank trackers, citation management platforms, and review automation, consult our guide to the [best local SEO tools for small businesses](/blog/best-local-seo-tools-small-business). Zyene Reviews provides the end-to-end platform local businesses need to turn Google Maps into their primary inbound customer engine.",
         },
         {
             type: "cta",

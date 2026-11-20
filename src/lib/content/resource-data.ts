@@ -374,7 +374,7 @@ const guide3: ResourceGuide = {
         },
         {
             type: "p",
-            text: "If you need an immediate action plan, this small business SEO checklist summarizes the essential priorities from the full guide below. Use this local business SEO checklist to review your setup quickly before working through each section in detail:",
+            text: "If you need an immediate action plan, this small business SEO checklist summarizes the essential priorities from the full guide below (see also our [Google Maps local SEO playbook](/blog/ranking-higher-on-google-maps-local-seo-playbook)). Use this local business SEO checklist to review your setup quickly before working through each section in detail:",
         },
         {
             type: "ol",
@@ -383,7 +383,7 @@ const guide3: ResourceGuide = {
                 "Verify Google Business Profile basics (Section 1): Confirm eligibility and ownership, select accurate primary and secondary categories, and keep operating hours and phone details correct.",
                 "Refine address and service boundaries (Section 1): Display a physical address only if customers visit an eligible staffed location; configure defined service areas for mobile businesses.",
                 "Standardize NAP citations (Section 2): Ensure business name, public address, and phone number match across your website, Apple Maps, Bing Places, Yelp, Facebook, and industry directories.",
-                "Establish an honest review collection routine (Section 3): Invite genuine customers consistently at an appropriate point after service without offering incentives or filtering reviewers. See our guide on [dental practice reputation management](/blog/dental-practice-reputation-management-2026) for healthcare-specific workflows.",
+                "Establish an honest review collection routine (Section 3): Invite genuine customers consistently at an appropriate point after service without offering incentives or filtering reviewers; see our operational guide to [get more Google reviews](/blog/how-to-get-more-google-reviews).",
                 "Maintain prompt review responses (Section 3): Set a team target to acknowledge all customer reviews within 48 hours, prioritizing negative feedback within 24 hours with a private recovery channel and clear rules for [handling fake Google reviews](/blog/how-to-handle-fake-google-reviews).",
                 "Optimize location and service pages (Section 4): Build dedicated pages for each primary service and physical location with city keywords in title tags, H1s, text contact details, and helpful service copy.",
                 "Earn relevant local links and citations (Section 5): Connect with your local Chamber of Commerce, regional business associations, and local publications for genuine community mentions.",
