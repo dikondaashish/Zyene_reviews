@@ -41,6 +41,7 @@ import { electricianReputationManagementLocalSeoPost } from "./electrician-reput
 import { bestLocalSeoToolsSmallBusinessPost } from "./best-local-seo-tools-small-business";
 import { aiVisibilityAuditMultiLocationServicesPost } from "./ai-visibility-audit-multi-location-services";
 import { bestNiceJobAlternativesPost } from "./best-nicejob-alternatives";
+import { howToFixSuspendedGoogleBusinessProfilePost } from "./how-to-fix-suspended-google-business-profile";
 
 export const BLOG_POST_SOURCES: BlogPostSource[] = [
     howToGet50GoogleReviewsIn30DaysPost,
@@ -80,4 +81,5 @@ export const BLOG_POST_SOURCES: BlogPostSource[] = [
     bestLocalSeoToolsSmallBusinessPost,
     aiVisibilityAuditMultiLocationServicesPost,
     bestNiceJobAlternativesPost,
+    howToFixSuspendedGoogleBusinessProfilePost,
 ];

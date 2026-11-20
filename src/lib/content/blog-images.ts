@@ -143,18 +143,15 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         width: 1672, height: 941, caption: "Proactive dental reputation management turns patient trust and high review volume into sustained practice growth.",
     },
     "how-to-get-more-google-reviews": {
-        src: "/images/blog/nfc_google_review_tap_stand.jpg",
-        alt: "Customer tapping smartphone on an NFC Google review stand at checkout counter",
+        src: "/images/blog/nfc_google_review_tap_stand.jpg", alt: "Customer tapping smartphone on an NFC Google review stand at checkout counter",
         width: 1200, height: 675, caption: "NFC tap stands and automated POS triggers capture customer reviews at peak satisfaction.",
     },
     "restaurant-review-management-service-recovery": {
-        src: "/images/blog/restaurant_service_recovery_manager.jpg",
-        alt: "Restaurant general manager reviewing guest feedback and sentiment on a laptop before dinner service",
+        src: "/images/blog/restaurant_service_recovery_manager.jpg", alt: "Restaurant general manager reviewing guest feedback and sentiment on a laptop before dinner service",
         width: 1200, height: 675, caption: "Prompt review monitoring and structured service recovery turn critical diner feedback into loyal return guests.",
     },
     "how-do-you-remove-google-reviews": {
-        src: "/images/blog/google_review_management_tool_appeal.jpg",
-        alt: "Desktop monitor displaying Google Review Management Tool dashboard with appeal status tracking",
+        src: "/images/blog/google_review_management_tool_appeal.jpg", alt: "Desktop monitor displaying Google Review Management Tool dashboard with appeal status tracking",
         width: 1200, height: 675, caption: "Google's official Review Management Tool allows owners to track report status and submit secondary appeals.",
     },
     "how-to-delete-yelp-reviews": {
@@ -180,6 +177,10 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
     "best-nicejob-alternatives": {
         src: "/images/blog/nicejob_alternative_review_management_software.jpg", alt: "Service business owner reviewing NiceJob alternative reputation software dashboard showing automated review sequences and private recovery tickets",
         width: 1200, height: 675, caption: "Modern reputation platforms pair review generation with private service recovery channels.",
+    },
+    "how-to-fix-suspended-google-business-profile": {
+        src: "/images/blog/google_business_profile_suspended_dashboard.jpg", alt: "Business owner viewing a suspended Google Business Profile dashboard with red policy alert and appeal submission button",
+        width: 1200, height: 675, caption: "Google Business Profile suspensions require a calm, evidence-based audit before submitting an appeal.",
     },
     "ranking-higher-on-google-maps-local-seo-playbook": {
         src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`, alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity",
