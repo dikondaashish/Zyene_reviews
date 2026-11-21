@@ -128,18 +128,15 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         width: 1200, height: 675, caption: "Live review carousels build immediate buyer trust directly on high-conversion landing pages.",
     },
     "how-to-get-google-reviews-auto-repair-shops": {
-        src: "/images/blog/auto_repair_google_reviews.jpg",
-        alt: "Service advisor handing car keys to a satisfied customer over the counter next to a Google review QR code stand",
+        src: "/images/blog/auto_repair_google_reviews.jpg", alt: "Service advisor handing car keys to a satisfied customer over the counter next to a Google review QR code stand",
         width: 1200, height: 675, caption: "In-person checkout interactions paired with countertop QR stands capture reviews at peak customer relief.",
     },
     "best-review-response-generator-tools": {
-        src: "/images/blog/review_response_generator_dashboard.jpg",
-        alt: "Desktop monitor displaying an AI review response generator dashboard with sentiment tags and one-click Google sync",
+        src: "/images/blog/review_response_generator_dashboard.jpg", alt: "Desktop monitor displaying an AI review response generator dashboard with sentiment tags and one-click Google sync",
         width: 1200, height: 675, caption: "AI review response generators draft on-brand replies to Google reviews with human approval control.",
     },
     "mastering-dental-reputation-management-for-patient-trust": {
-        src: `${BLOG_IMAGE_BASE}/dental-practice-reputation-candid-v2.webp`,
-        alt: "Dental practice administrator reviewing notes beside a laptop in reception",
+        src: `${BLOG_IMAGE_BASE}/dental-practice-reputation-candid-v2.webp`, alt: "Dental practice administrator reviewing notes beside a laptop in reception",
         width: 1672, height: 941, caption: "Proactive dental reputation management turns patient trust and high review volume into sustained practice growth.",
     },
     "how-to-get-more-google-reviews": {
@@ -181,6 +178,10 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
     "how-to-fix-suspended-google-business-profile": {
         src: "/images/blog/google_business_profile_suspended_dashboard.jpg", alt: "Business owner viewing a suspended Google Business Profile dashboard with red policy alert and appeal submission button",
         width: 1200, height: 675, caption: "Google Business Profile suspensions require a calm, evidence-based audit before submitting an appeal.",
+    },
+    "how-do-you-reply-to-a-google-review": {
+        src: "/images/blog/replying_to_google_review_laptop_dashboard.jpg", alt: "Storefront business owner typing an owner response to a customer review in Google Business Profile manager on a laptop",
+        width: 1200, height: 675, caption: "Replying directly through your Google Business Profile dashboard demonstrates attentive customer care.",
     },
     "ranking-higher-on-google-maps-local-seo-playbook": {
         src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`, alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity",

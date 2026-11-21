@@ -42,6 +42,7 @@ import { bestLocalSeoToolsSmallBusinessPost } from "./best-local-seo-tools-small
 import { aiVisibilityAuditMultiLocationServicesPost } from "./ai-visibility-audit-multi-location-services";
 import { bestNiceJobAlternativesPost } from "./best-nicejob-alternatives";
 import { howToFixSuspendedGoogleBusinessProfilePost } from "./how-to-fix-suspended-google-business-profile";
+import { howDoYouReplyToAGoogleReviewPost } from "./how-do-you-reply-to-a-google-review";
 
 export const BLOG_POST_SOURCES: BlogPostSource[] = [
     howToGet50GoogleReviewsIn30DaysPost,
@@ -82,4 +83,5 @@ export const BLOG_POST_SOURCES: BlogPostSource[] = [
     aiVisibilityAuditMultiLocationServicesPost,
     bestNiceJobAlternativesPost,
     howToFixSuspendedGoogleBusinessProfilePost,
+    howDoYouReplyToAGoogleReviewPost,
 ];
