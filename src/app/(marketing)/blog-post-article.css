@@ -148,3 +148,13 @@
   .blog-post-nav-next { justify-items:start; text-align:left; }
   .blog-post-nav-next strong { justify-content:flex-start; }
 }
+.blog-author-links { display:flex; flex-wrap:wrap; justify-content:center; gap:8px 18px; margin:18px 0 0; padding:0; list-style:none; font-size:14px; }
+.blog-author-links a { color:var(--foreground); text-decoration:underline; text-underline-offset:4px; }
+.blog-author-posts { width:min(100% - 2 * var(--mk-gutter),720px); margin-inline:auto; padding:clamp(40px,6vw,64px) 0 clamp(72px,9vw,120px); }
+.marketing-site .blog-author-posts h2 { margin:0 0 8px; font-size:22px; letter-spacing:-.02em; }
+.blog-author-posts ul { margin:0; padding:0; list-style:none; }
+.blog-author-posts li { display:grid; gap:6px; padding:22px 0; border-bottom:1px solid var(--border); }
+.blog-author-posts li > a { color:var(--foreground); font-size:18px; font-weight:600; line-height:1.35; letter-spacing:-.015em; }
+.blog-author-posts li > a:hover { text-decoration:underline; text-underline-offset:3px; }
+.blog-author-posts p { margin:0; color:var(--muted-foreground); font-size:15px; line-height:1.6; }
+.blog-author-posts small { color:var(--muted-foreground); font-size:13px; }

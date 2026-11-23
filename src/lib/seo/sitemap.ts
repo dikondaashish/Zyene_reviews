@@ -7,6 +7,7 @@
  */
 import type { MetadataRoute } from "next";
 import { BLOG_POSTS } from "@/lib/content/blog-data";
+import { BLOG_AUTHOR_PAGES } from "@/lib/content/blog-author-directory";
 import { RESOURCE_GUIDES } from "@/lib/content/resource-data";
 import {
     HELP_ARTICLE_MAP,
@@ -86,6 +87,12 @@ export function getCoreSitemap(): MetadataRoute.Sitemap {
             lastModified: post.dateModified ?? post.publishedAt,
             changeFrequency: "monthly" as const,
             priority: 0.75,
+        })),
+        ...BLOG_AUTHOR_PAGES.map((page) => ({
+            url: `${BASE_URL}/blog/author/${page.slug}`,
+            lastModified: page.lastModified,
+            changeFrequency: "monthly" as const,
+            priority: 0.4,
         })),
         // Case studies are illustrative composites (robots noindex), so they stay out of the sitemap.
         { url: `${BASE_URL}/security`, changeFrequency: "yearly", priority: 0.55 },

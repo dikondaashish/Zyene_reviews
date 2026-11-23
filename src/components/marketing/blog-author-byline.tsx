@@ -1,22 +1,27 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { BlogAuthor } from "@/lib/content/blog-types";
-import { resolveBlogAuthor, blogAuthorInitials } from "@/lib/content/blog-authors";
+import { resolveBlogAuthor, blogAuthorInitials, blogAuthorPath } from "@/lib/content/blog-authors";
 import { cn } from "@/lib/utils";
 
 export function BlogAuthorByline({
     author,
     size = "sm",
     showRole = true,
+    linkToProfile = false,
     className,
 }: {
     author: BlogAuthor;
     size?: "sm" | "md";
     showRole?: boolean;
+    /** Link the name to the author's page (named authors only). */
+    linkToProfile?: boolean;
     className?: string;
 }) {
     const resolved = resolveBlogAuthor(author);
     const initials = blogAuthorInitials(resolved.name);
     const avatarSize = size === "md" ? 40 : 28;
+    const profilePath = linkToProfile ? blogAuthorPath(resolved) : null;
     const textClass = size === "md" ? "text-sm" : "text-xs";
 
     return (
@@ -42,7 +47,11 @@ export function BlogAuthorByline({
                 </span>
             )}
             <div className={cn("min-w-0 text-left", textClass)}>
-                <p className="font-medium text-foreground truncate">{resolved.name}</p>
+                <p className="font-medium text-foreground truncate">
+                    {profilePath ? (
+                        <Link href={profilePath} rel="author" className="underline-offset-4 hover:underline">{resolved.name}</Link>
+                    ) : resolved.name}
+                </p>
                 {showRole && resolved.role ? (
                     <p className="text-muted-foreground truncate">{resolved.role}</p>
                 ) : null}

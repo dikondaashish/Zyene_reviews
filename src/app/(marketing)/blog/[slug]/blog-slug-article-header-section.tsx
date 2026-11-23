@@ -24,7 +24,7 @@ export function BlogSlugArticleHeaderSection({ post }: { post: BlogPost }) {
                 <h1>{post.title}</h1>
                 <p className="blog-article-dek" data-geo-summary="">{post.excerpt}</p>
                 <div className="blog-article-meta">
-                    <BlogAuthorByline author={post.author} size="md" showRole={false} className="blog-article-author" />
+                    <BlogAuthorByline author={post.author} size="md" showRole={false} linkToProfile className="blog-article-author" />
                     <span className="blog-article-meta-sep" aria-hidden="true" />
                     <time dateTime={post.publishedAt}>{formatBlogPublishedDate(post.publishedAt, "long")}</time>
                     {updatedAt ? (
