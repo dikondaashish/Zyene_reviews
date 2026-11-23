@@ -43,6 +43,7 @@ import { aiVisibilityAuditMultiLocationServicesPost } from "./ai-visibility-audi
 import { bestNiceJobAlternativesPost } from "./best-nicejob-alternatives";
 import { howToFixSuspendedGoogleBusinessProfilePost } from "./how-to-fix-suspended-google-business-profile";
 import { howDoYouReplyToAGoogleReviewPost } from "./how-do-you-reply-to-a-google-review";
+import { googleBusinessProfileVerificationGuidePost } from "./google-business-profile-verification-guide";
 
 export const BLOG_POST_SOURCES: BlogPostSource[] = [
     howToGet50GoogleReviewsIn30DaysPost,
@@ -84,4 +85,5 @@ export const BLOG_POST_SOURCES: BlogPostSource[] = [
     bestNiceJobAlternativesPost,
     howToFixSuspendedGoogleBusinessProfilePost,
     howDoYouReplyToAGoogleReviewPost,
+    googleBusinessProfileVerificationGuidePost,
 ];

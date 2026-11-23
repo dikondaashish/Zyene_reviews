@@ -98,33 +98,27 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         width: 1672, height: 941, caption: "The moment after a successful service call is the best time to earn a genuine customer review.",
     },
     "podium-pricing-vs-zyene-reviews": {
-        src: `${BLOG_IMAGE_BASE}/podium-pricing-comparison-desk-candid-v2.webp`,
-        alt: "Business owner checking an invoice with a calculator beside a laptop",
+        src: `${BLOG_IMAGE_BASE}/podium-pricing-comparison-desk-candid-v2.webp`, alt: "Business owner checking an invoice with a calculator beside a laptop",
         width: 1672, height: 941, caption: "Compare software costs with the work and limits your business needs.",
     },
     "why-are-my-google-reviews-not-showing-up": {
-        src: `${BLOG_IMAGE_BASE}/missing-google-reviews-laptop-candid-v2.webp`,
-        alt: "Business owner checking customer feedback on a laptop",
+        src: `${BLOG_IMAGE_BASE}/missing-google-reviews-laptop-candid-v2.webp`, alt: "Business owner checking customer feedback on a laptop",
         width: 1672, height: 941, caption: "Check review visibility carefully before deciding what needs follow-up.",
     },
     "how-to-ask-customers-for-reviews-sms-email-templates": {
-        src: `${BLOG_IMAGE_BASE}/how-to-ask-for-reviews-hero-candid-v2.webp`,
-        alt: "Bakery owner using a smartphone behind the counter",
+        src: `${BLOG_IMAGE_BASE}/how-to-ask-for-reviews-hero-candid-v2.webp`, alt: "Bakery owner using a smartphone behind the counter",
         width: 1672, height: 941, caption: "A short, respectful follow-up can make sharing feedback part of the customer experience.",
     },
     "how-to-get-hvac-leads-from-google-maps": {
-        src: `${BLOG_IMAGE_BASE}/hvac-google-maps-leads-hero-candid-v2.webp`,
-        alt: "Contractor and dispatcher reviewing work together on a laptop in a service office",
+        src: `${BLOG_IMAGE_BASE}/hvac-google-maps-leads-hero-candid-v2.webp`, alt: "Contractor and dispatcher reviewing work together on a laptop in a service office",
         width: 1672, height: 941, caption: "Keep business details, customer feedback, and local visibility on the team's regular checklist.",
     },
     "how-to-create-a-google-review-qr-code": {
-        src: "/images/blog/google_review_qr_code.jpg",
-        alt: "Clear acrylic countertop stand displaying a Google review QR code with five gold stars at a clinic reception desk",
+        src: "/images/blog/google_review_qr_code.jpg", alt: "Clear acrylic countertop stand displaying a Google review QR code with five gold stars at a clinic reception desk",
         width: 800, height: 600, caption: "Countertop acrylic QR stands capture feedback at checkout while customer delight is highest.",
     },
     "how-to-embed-google-reviews-on-website": {
-        src: "/images/blog/embed_google_reviews.jpg",
-        alt: "MacBook Pro displaying a modern website with an embedded five-star Google customer review carousel widget",
+        src: "/images/blog/embed_google_reviews.jpg", alt: "MacBook Pro displaying a modern website with an embedded five-star Google customer review carousel widget",
         width: 1200, height: 675, caption: "Live review carousels build immediate buyer trust directly on high-conversion landing pages.",
     },
     "how-to-get-google-reviews-auto-repair-shops": {
@@ -182,6 +176,10 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
     "how-do-you-reply-to-a-google-review": {
         src: "/images/blog/replying_to_google_review_laptop_dashboard.jpg", alt: "Storefront business owner typing an owner response to a customer review in Google Business Profile manager on a laptop",
         width: 1200, height: 675, caption: "Replying directly through your Google Business Profile dashboard demonstrates attentive customer care.",
+    },
+    "google-business-profile-verification-guide": {
+        src: "/images/blog/google_business_profile_verification_dashboard.jpg", alt: "Laptop screen displaying Google Business Profile verification methods dashboard with video recording highlighted",
+        width: 1200, height: 675, caption: "Google dynamically assigns verification options based on industry risk score and physical footprint.",
     },
     "ranking-higher-on-google-maps-local-seo-playbook": {
         src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`, alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity",
