@@ -35,6 +35,7 @@ export const howToGetMoreGoogleReviewsPost: BlogPostSource = {
         { label: "Review Request Templates (SMS & Email)", href: "/resources/review-request-templates" },
         { label: "5 AI Reply Mistakes to Avoid", href: "/blog/ai-reply-mistakes-to-avoid" },
         { label: "Google Reviews for Auto Repair Shops", href: "/blog/how-to-get-google-reviews-auto-repair-shops" },
+        { label: "How to Embed Google Reviews on Your Website", href: "/blog/how-to-embed-google-reviews-on-website" },
     ],
     faqs: [
         {

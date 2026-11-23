@@ -17,6 +17,7 @@ export const whyGoogleReviewsMatterIn2026Post: BlogPostSource = {
         { label: "Learn about Zyene Reviews' review monitoring", href: "/features" },
         { label: "Compare review tool pricing (Birdeye vs Zyene Reviews)", href: "/blog/birdeye-pricing-breakdown-2026" },
         { label: "See industry-specific strategies", href: "/industries" },
+        { label: "Embed Google reviews on your website", href: "/blog/how-to-embed-google-reviews-on-website" },
     ],
     faqs: [
         {

@@ -35,6 +35,9 @@ export const hvacHomeServicesReputationManagementPost: BlogPostSource = {
     ],
     internalLinks: [
         { label: "HVAC Reputation Management Software", href: "/industries/hvac" },
+        { label: "Plumber Review Management Software", href: "/industries/plumbing" },
+        { label: "Electrician Reputation Management Software", href: "/industries/electricians" },
+        { label: "Electrician Reputation Management and Local SEO Guide", href: "/blog/electrician-reputation-management-local-seo" },
         { label: "Get 50 Google Reviews in 30 Days", href: "/blog/how-to-get-50-google-reviews-in-30-days" },
         { label: "Responding to 1-Star Reviews", href: "/blog/how-to-respond-to-a-1-star-review" },
         { label: "Negative Feedback Shield", href: "/blog/negative-feedback-shield" },

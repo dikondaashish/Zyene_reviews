@@ -11,9 +11,9 @@ export const bestLocalSeoToolsSmallBusinessPost: BlogPostSource = {
     publishedAt: "2026-11-13",
     dateModified: "2026-11-13",
     author: { name: "Maya Lin", role: "Small Business SEO & Local Search Strategist" },
-    metaTitle: "Best Local SEO Tools for Small Businesses in 2026",
+    metaTitle: "Best Local SEO Software & Tools for Small Business (2026)",
     metaDescription:
-        "Discover the best local SEO tools for small businesses in 2026. Compare grid rank trackers, citation cleanup, review automation, and AI local search tools.",
+        "Compare the best local SEO software and tools for small businesses in 2026: grid rank trackers, citation cleanup, review automation, and AI search tools.",
     keywords: [
         "best local seo tools for small businesses",
         "local seo software 2026",

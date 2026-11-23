@@ -18,6 +18,7 @@ export const googleBusinessProfileOptimizationChecklistPost: BlogPostSource = {
     internalLinks: [
         { label: "Free local reputation score checker", href: "/tools/reputation-score-checker" },
         { label: "Complete local SEO checklist", href: "/resources/local-seo-checklist" },
+        { label: "Best local SEO software and tools for small businesses", href: "/blog/best-local-seo-tools-small-business" },
         { label: "AI visibility audit guide for local businesses", href: "/blog/ai-visibility-audit-local-businesses" },
         { label: "See Zyene Reviews' GBP keyword tracking feature", href: "/features" },
         { label: "Try Zyene Reviews free", href: SIGNUP_URL },

@@ -78,7 +78,7 @@ export const DOCS_PAGE_SEO: Record<DocsPath, DocsPageSeo> = {
     },
     "/docs/changelog": {
         title: "Product Changelog & API Release Notes",
-        description: "Zyene Reviews changelog: new features, improvements, API changes, and bug fixes listed by release month.",
+        description: "Zyene Reviews changelog: new review management features, improvements, API changes, and bug fixes, listed by release month.",
         socialTitle: "Zyene Reviews Changelog",
     },
 };

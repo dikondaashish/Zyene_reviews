@@ -32,7 +32,7 @@ export const camp2: HelpArticle = {
     slug: "sms-vs-email-campaigns",
     category: "campaigns",
     title: "SMS vs. Email Campaigns: Which Should You Use?",
-    excerpt: "Comparing SMS and email review requests - response rates, best use cases, and when to use both together.",
+    excerpt: "Is SMS or email better for review requests? Compare speed, cost, and best use cases for each channel, and see when sending both works best.",
     readMinutes: 3,
     body: [
         { type: "p", text: "Both SMS and email are effective channels for review requests, but they have different strengths depending on your business type and customer relationship." },

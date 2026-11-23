@@ -69,7 +69,7 @@ export const an2: HelpArticle = {
 
 export const an3: HelpArticle = {
     slug: "generating-pdf-reports", category: "analytics", title: "Exporting Analytics Reports",
-    excerpt: "Export analytics as CSV or download a PDF report for the selected date range.", readMinutes: 2,
+    excerpt: "Export review analytics as a CSV or download a PDF report for any date range, then share review counts, response coverage, and request results.", readMinutes: 2,
     body: [
         { type: "p", text: "Analytics offers a CSV export and a Download PDF Report button for the selected reporting range." },
         { type: "h2", text: "Export a CSV" },
