@@ -37,7 +37,7 @@ export const rev2: HelpArticle = {
     slug: "using-ai-replies",
     category: "reviews",
     title: "Using AI Reply Suggestions",
-    excerpt: "Generate a business reply, choose your tone, edit the draft, and publish it to Google from your review inbox.",
+    excerpt: "Generate an AI reply to any review, choose a Professional, Friendly, or Concise tone, edit the draft, and publish it to Google from your inbox.",
     readMinutes: 3,
     body: [
         { type: "p", text: "AI reply suggestions help you write a response while keeping individual publishing decisions with your team. Automatic Google replies are a separate, optional mode." },

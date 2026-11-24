@@ -31,7 +31,7 @@ export const int2: HelpArticle = {
     slug: "setting-up-zapier",
     category: "integrations",
     title: "Setting Up the Zapier Integration",
-    excerpt: "How to use Zapier's generic webhook to trigger Zyene review requests from a POS, booking system, or CRM.",
+    excerpt: "Use Zapier's generic webhook to trigger Zyene review requests from your POS, booking system, or CRM, with setup steps, field mapping, and testing.",
     readMinutes: 5,
     body: [
         { type: "p", text: "Use Zapier's generic webhook to send a Zyene review request after an event in another app. The workflow can start with a sale, booking, or completed service, then map the customer's name and contact details before sending the request." },

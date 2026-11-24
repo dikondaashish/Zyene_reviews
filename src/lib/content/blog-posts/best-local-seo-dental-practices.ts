@@ -34,6 +34,7 @@ export const bestLocalSeoDentalPracticesPost: BlogPostSource = {
         { label: "Podium Pricing vs Zyene Reviews", href: "/blog/podium-pricing-vs-zyene-reviews" },
         { label: "Dental Patient Trust Guide", href: "/blog/mastering-dental-reputation-management-for-patient-trust" },
         { label: "Free Review Link Generator", href: "/tools/review-link-generator" },
+        { label: "Best Local SEO Software and Tools", href: "/blog/best-local-seo-tools-small-business" },
     ],
     faqs: [
         {

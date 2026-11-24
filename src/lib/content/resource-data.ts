@@ -318,6 +318,7 @@ const guide3: ResourceGuide = {
     internalLinks: [
         { label: "Reputation Score Checker", href: "/tools/reputation-score-checker" },
         { label: "AI Visibility Audit Guide", href: "/blog/ai-visibility-audit-local-businesses" },
+        { label: "Best local SEO software and tools", href: "/blog/best-local-seo-tools-small-business" },
         { label: "Review management for agencies", href: "/agencies" },
         { label: "Google Reviews guide", href: "/resources/google-reviews-guide" },
         { label: "Review request templates", href: "/resources/review-request-templates" },

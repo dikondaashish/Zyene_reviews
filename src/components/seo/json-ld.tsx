@@ -16,6 +16,7 @@ export { FAQPageJsonLd } from "./json-ld-faq-page";
 export { BreadcrumbJsonLd } from "./json-ld-breadcrumb";
 export { ProductJsonLd } from "./json-ld-product";
 export { ArticleJsonLd } from "./json-ld-article";
+export { ProfilePageJsonLd } from "./json-ld-profile-page";
 export { WebPageJsonLd } from "./json-ld-web-page";
 export { FreeToolJsonLd } from "./json-ld-free-tool";
 export { TechArticleJsonLd } from "./json-ld-tech-article";

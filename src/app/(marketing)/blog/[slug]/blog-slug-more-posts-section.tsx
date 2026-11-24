@@ -54,7 +54,7 @@ export function BlogSlugMorePostsSection({ slug }: { slug: string }) {
                         </div>
                     </section>
 
-                    {current ? <section className="blog-written-by" aria-labelledby="blog-written-heading"><h2 id="blog-written-heading">Written by</h2><BlogAuthorByline author={current.author} size="md" /></section> : null}
+                    {current ? <section className="blog-written-by" aria-labelledby="blog-written-heading"><h2 id="blog-written-heading">Written by</h2><BlogAuthorByline author={current.author} size="md" linkToProfile /></section> : null}
 
                     <section className="blog-next-steps" data-reveal aria-labelledby="blog-next-heading">
                         <p className="blog-article-eyebrow">Make the next visit count</p>

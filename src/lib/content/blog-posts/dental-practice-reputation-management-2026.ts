@@ -10,7 +10,7 @@ export const dentalPracticeReputationManagement2026Post: BlogPostSource = {
     publishedAt: "2026-05-12",
     dateModified: "2026-10-11",
     author: { name: "Zyene Reviews Team", role: "Editorial" },
-    metaTitle: "Dental Practice Reputation Management Guide 2026",
+    metaTitle: "Dental Reputation Management: 2026 Practice Guide",
     metaDescription:
         "Dental reputation management: review requests, feedback follow-up, and public reply examples to discuss with your privacy team.",
     keywords: ["dental practice reputation management", "dentist google reviews", "dental reviews management 2026", "dentist reputation management strategy"],

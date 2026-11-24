@@ -8,6 +8,7 @@ import { FEATURE_PILLAR_SLUGS } from "../../src/lib/growth/feature-pillars";
 import { FREE_TOOLS } from "../../src/lib/free-tools/free-tools-data";
 import { RESOURCE_GUIDES } from "../../src/lib/content/resource-data";
 import { BLOG_POSTS } from "../../src/lib/content/blog-data";
+import { BLOG_AUTHOR_PAGES } from "../../src/lib/content/blog-author-directory";
 import { CASE_STUDY_SLUGS } from "../../src/lib/social-proof/case-study-data";
 import {
     HELP_ARTICLE_MAP,
@@ -90,6 +91,15 @@ function routeExists(pathname: string): boolean {
         const docSubSegments = segments.slice(1);
         const docsPath = path.join(process.cwd(), "src/app/docs", ...docSubSegments, "page.tsx");
         if (fs.existsSync(docsPath)) return true;
+    }
+
+    if (segments[0] === "blog" && segments[1] === "author" && segments.length === 3) {
+        return (
+            BLOG_AUTHOR_PAGES.some((page) => page.slug === segments[2]) &&
+            fs.existsSync(
+                path.join(process.cwd(), "src/app/(marketing)/blog/author/[slug]/page.tsx"),
+            )
+        );
     }
 
     if (segments[0] === "compare" && segments.length === 2) {

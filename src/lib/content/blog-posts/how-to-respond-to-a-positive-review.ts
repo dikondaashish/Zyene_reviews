@@ -12,7 +12,7 @@ export const howToRespondToAPositiveReviewPost: BlogPostSource = {
     author: { name: "Karthik", role: "Founder" },
     metaTitle: "Positive Review Responses (15 Examples)",
     metaDescription:
-        "15 copy-and-paste replies to positive Google reviews, plus tips on tone, timing and what to avoid.",
+        "15 copy-and-paste replies to positive Google reviews, sorted by situation, plus tips on tone, timing, and what to avoid in a public reply.",
     keywords: [
         "how to respond to positive reviews",
         "how to respond to a good review on google",
