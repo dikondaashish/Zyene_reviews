@@ -78,23 +78,19 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         width: 1672, height: 941, caption: "An AI visibility audit checks whether assistants can find and describe a local business accurately.",
     },
     "how-to-respond-to-a-positive-review": {
-        src: `${BLOG_IMAGE_BASE}/positive-google-review-response-candid-v2.webp`,
-        alt: "Cafe owner writing a customer response on a smartphone",
+        src: `${BLOG_IMAGE_BASE}/positive-google-review-response-candid-v2.webp`, alt: "Cafe owner writing a customer response on a smartphone",
         width: 1672, height: 941, caption: "A specific thank-you helps turn a positive review into a genuine customer relationship moment.",
     },
     "how-to-get-a-google-review-link": {
-        src: "/images/blog/google_review_link-candid-v2.webp",
-        alt: "Customer using a smartphone beside a laptop and coffee at a cafe table",
+        src: "/images/blog/google_review_link-candid-v2.webp", alt: "Customer using a smartphone beside a laptop and coffee at a cafe table",
         width: 1672, height: 941, caption: "A direct review link gives customers a straightforward starting point for sharing feedback.",
     },
     "can-you-delete-a-google-review": {
-        src: `${BLOG_IMAGE_BASE}/delete-google-review-hero-candid-v2.webp`,
-        alt: "Cafe owner reviewing customer feedback on a laptop at the counter",
+        src: `${BLOG_IMAGE_BASE}/delete-google-review-hero-candid-v2.webp`, alt: "Cafe owner reviewing customer feedback on a laptop at the counter",
         width: 1672, height: 941, caption: "Understanding Google's review policies is the first step toward protecting your business reputation.",
     },
     "hvac-home-services-reputation-management": {
-        src: `${BLOG_IMAGE_BASE}/hvac-technician-customer-handshake-candid-v2.webp`,
-        alt: "Service technician shaking hands with a homeowner after a visit",
+        src: `${BLOG_IMAGE_BASE}/hvac-technician-customer-handshake-candid-v2.webp`, alt: "Service technician shaking hands with a homeowner after a visit",
         width: 1672, height: 941, caption: "The moment after a successful service call is the best time to earn a genuine customer review.",
     },
     "podium-pricing-vs-zyene-reviews": {
@@ -180,6 +176,10 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
     "google-business-profile-verification-guide": {
         src: "/images/blog/google_business_profile_verification_dashboard.jpg", alt: "Laptop screen displaying Google Business Profile verification methods dashboard with video recording highlighted",
         width: 1200, height: 675, caption: "Google dynamically assigns verification options based on industry risk score and physical footprint.",
+    },
+    "auto-repair-shop-seo-playbook": {
+        src: "/images/blog/auto_repair_google_reviews.jpg", alt: "Service advisor handing car keys to satisfied customer over counter next to Google review QR code stand",
+        width: 1200, height: 675, caption: "In-person checkout interactions paired with countertop QR and NFC stands capture reviews at peak satisfaction.",
     },
     "ranking-higher-on-google-maps-local-seo-playbook": {
         src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`, alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity",
