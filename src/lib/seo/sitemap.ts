@@ -18,6 +18,7 @@ import { FREE_TOOLS } from "@/lib/free-tools/free-tools-data";
 import { FEATURE_PILLAR_SLUGS } from "@/lib/growth/feature-pillars";
 import { INDUSTRY_SLUGS } from "@/lib/industries/industry-data";
 import { COMPETITOR_SLUGS } from "@/lib/comparisons/competitor-data";
+import { CASE_STUDY_SLUGS } from "@/lib/social-proof/case-study-data";
 import { DOC_NAV_GROUPS } from "@/lib/docs/doc-nav";
 import { MARKETING_SITE_ORIGIN } from "@/lib/seo/marketing-site-url";
 import { getContentLastmod } from "@/lib/seo/content-lastmod";
@@ -94,7 +95,12 @@ export function getCoreSitemap(): MetadataRoute.Sitemap {
             changeFrequency: "monthly" as const,
             priority: 0.4,
         })),
-        // Case studies are illustrative composites (robots noindex), so they stay out of the sitemap.
+        { url: `${BASE_URL}/case-studies`, changeFrequency: "monthly", priority: 0.7 },
+        ...CASE_STUDY_SLUGS.map((slug) => ({
+            url: `${BASE_URL}/case-studies/${slug}`,
+            changeFrequency: "monthly" as const,
+            priority: 0.65,
+        })),
         { url: `${BASE_URL}/security`, changeFrequency: "yearly", priority: 0.55 },
         { url: `${BASE_URL}/privacy`, changeFrequency: "yearly", priority: 0.4 },
         { url: `${BASE_URL}/terms`, changeFrequency: "yearly", priority: 0.4 },

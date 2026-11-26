@@ -53,6 +53,7 @@ for (const route of staticMarketingRoutes()) {
 
 // Dynamic sections: one date per data source, keyed by URL prefix.
 const PREFIXES = {
+    "/case-studies/": ["src/lib/social-proof/case-study-data.ts", `${MARKETING}/case-studies/[slug]`],
     "/compare/": ["src/lib/comparisons", `${MARKETING}/compare/[competitor]`],
     "/industries/": ["src/lib/industries/industry-data.ts", `${MARKETING}/industries/[industry]`],
     "/tools/": ["src/lib/free-tools", `${MARKETING}/tools`],
