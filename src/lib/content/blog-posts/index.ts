@@ -46,6 +46,7 @@ import { howDoYouReplyToAGoogleReviewPost } from "./how-do-you-reply-to-a-google
 import { googleBusinessProfileVerificationGuidePost } from "./google-business-profile-verification-guide";
 import { autoRepairShopSeoPlaybookPost } from "./auto-repair-shop-seo-playbook";
 import { isSmsOrEmailBetterForReviewRequestsPost } from "./is-sms-or-email-better-for-review-requests";
+import { bestGoogleReviewManagementToolsPost } from "./best-google-review-management-tools";
 
 export const BLOG_POST_SOURCES: BlogPostSource[] = [
     howToGet50GoogleReviewsIn30DaysPost,
@@ -90,4 +91,5 @@ export const BLOG_POST_SOURCES: BlogPostSource[] = [
     googleBusinessProfileVerificationGuidePost,
     autoRepairShopSeoPlaybookPost,
     isSmsOrEmailBetterForReviewRequestsPost,
+    bestGoogleReviewManagementToolsPost,
 ];

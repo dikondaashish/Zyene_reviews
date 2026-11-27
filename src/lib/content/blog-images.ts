@@ -173,22 +173,11 @@ export const BLOG_IMAGES: Record<string, ContentImage> = {
         src: "/images/blog/replying_to_google_review_laptop_dashboard.jpg", alt: "Storefront business owner typing an owner response to a customer review in Google Business Profile manager on a laptop",
         width: 1200, height: 675, caption: "Replying directly through your Google Business Profile dashboard demonstrates attentive customer care.",
     },
-    "google-business-profile-verification-guide": {
-        src: "/images/blog/google_business_profile_verification_dashboard.jpg", alt: "Laptop screen displaying Google Business Profile verification methods dashboard with video recording highlighted",
-        width: 1200, height: 675, caption: "Google dynamically assigns verification options based on industry risk score and physical footprint.",
-    },
-    "auto-repair-shop-seo-playbook": {
-        src: "/images/blog/auto_repair_google_reviews.jpg", alt: "Service advisor handing car keys to satisfied customer over counter next to Google review QR code stand",
-        width: 1200, height: 675, caption: "In-person checkout interactions paired with countertop QR and NFC stands capture reviews at peak satisfaction.",
-    },
-    "is-sms-or-email-better-for-review-requests": {
-        src: "/images/blog/sms_vs_email_review_requests.jpg", alt: "Small business desk comparing an SMS review request on a smartphone against an email review request on a laptop",
-        width: 1200, height: 675, caption: "SMS reaches customers immediately on mobile, while email provides space for branded context and longer B2B follow-ups.",
-    },
-    "ranking-higher-on-google-maps-local-seo-playbook": {
-        src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`, alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity",
-        width: 1672, height: 941, caption: "Securing a top-three Google Map Pack ranking requires balancing proximity, relevance, and automated review prominence.",
-    },
+    "google-business-profile-verification-guide": { src: "/images/blog/google_business_profile_verification_dashboard.jpg", alt: "Laptop screen displaying Google Business Profile verification methods dashboard with video recording highlighted", width: 1200, height: 675, caption: "Google dynamically assigns verification options based on industry risk score and physical footprint." },
+    "auto-repair-shop-seo-playbook": { src: "/images/blog/auto_repair_google_reviews.jpg", alt: "Service advisor handing car keys to satisfied customer over counter next to Google review QR code stand", width: 1200, height: 675, caption: "In-person checkout interactions paired with countertop QR and NFC stands capture reviews at peak satisfaction." },
+    "is-sms-or-email-better-for-review-requests": { src: "/images/blog/sms_vs_email_review_requests.jpg", alt: "Small business desk comparing an SMS review request on a smartphone against an email review request on a laptop", width: 1200, height: 675, caption: "SMS reaches customers immediately on mobile, while email provides space for branded context and longer B2B follow-ups." },
+    "best-google-review-management-tools": { src: "/images/blog/google_review_management_tools_2026.jpg", alt: "Business manager comparing Google review management tools and AI reply dashboards on a laptop", width: 1200, height: 675, caption: "Modern Google review management platforms unify SMS requests, AI reply drafting, and Map Pack analytics in one inbox." },
+    "ranking-higher-on-google-maps-local-seo-playbook": { src: `${BLOG_IMAGE_BASE}/reputation-dashboard-local-business-candid-v2.webp`, alt: "Local business owner tracking Google Maps rankings, proximity radius, and review velocity", width: 1672, height: 941, caption: "Securing a top-three Google Map Pack ranking requires balancing proximity, relevance, and automated review prominence." },
 };
 
 export function getBlogImage(slug: string): ContentImage {
