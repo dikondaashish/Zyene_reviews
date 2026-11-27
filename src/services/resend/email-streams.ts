@@ -15,7 +15,7 @@ const STREAMS: Record<EmailStream, { env: string; fallback: string }> = {
     notifications: { env: "RESEND_FROM", fallback: "Zyene Reviews <notifications@zyenereviews.com>" },
     account: { env: "RESEND_ACCOUNT_FROM", fallback: "Zyene Reviews <account@zyenereviews.com>" },
     billing: { env: "RESEND_BILLING_FROM", fallback: "Zyene Reviews Billing <billing@zyenereviews.com>" },
-    marketing: { env: "RESEND_MARKETING_FROM", fallback: "Ashish from Zyene <ashish@zyenereviews.com>" },
+    marketing: { env: "RESEND_MARKETING_FROM", fallback: "Karthik from Zyene <karthik@zyenereviews.com>" },
     forms: { env: "RESEND_FORMS_FROM", fallback: "Zyene Forms <forms@zyenereviews.com>" },
 };
 

@@ -76,8 +76,8 @@ describe("Resend provider-side replay protection", () => {
         const [billing, marketing, forms] = fetchMock.mock.calls.map((call) => JSON.parse(String(call[1].body)));
         expect(billing.from).toBe("Zyene Reviews Billing <billing@zyenereviews.com>");
         expect(billing.reply_to).toEqual(["support@zyenereviews.com"]);
-        expect(marketing.from).toBe("Ashish from Zyene <ashish@zyenereviews.com>");
-        expect(marketing.reply_to).toEqual(["ashish@zyenereviews.com"]);
+        expect(marketing.from).toBe("Karthik from Zyene <karthik@zyenereviews.com>");
+        expect(marketing.reply_to).toEqual(["karthik@zyenereviews.com"]);
         expect(forms.from).toBe("Zyene Forms <forms@zyenereviews.com>");
     });
     it("delivers generated plain text with action URLs through the real SDK", async () => {
