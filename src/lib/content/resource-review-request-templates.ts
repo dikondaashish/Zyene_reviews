@@ -14,7 +14,7 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
     purpose: "Lead magnet + rank for review request template keywords",
     lastUpdated: "2026-05-25",
     readMinutes: 14,
-    metaTitle: "20 Review Request Templates (SMS & Email)",
+    metaTitle: "20+ Review Request Templates (SMS & Email)",
     metaDescription:
         "Free review request templates: SMS, email, restaurant, dental, HVAC, reminders, and compliant outreach - plus how Zyene Reviews automates campaigns.",
     keywords: [
@@ -29,6 +29,9 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
         "This pack gives local owners 20+ short SMS and email scripts for honest Google review requests - plus reminders, thank-yous, and private feedback follow-ups. Use it to start outreach today; automate campaigns and alerts with Zyene Reviews when manual copy-paste stops scaling.",
     internalLinks: [
         { label: "Google Review Link Generator", href: "/tools/review-link-generator" },
+        { label: "How to Get a Google Review Link", href: "/blog/how-to-get-a-google-review-link" },
+        { label: "SMS vs Email Review Requests", href: "/blog/is-sms-or-email-better-for-review-requests" },
+        { label: "How to Respond to Positive Reviews", href: "/blog/how-to-respond-to-a-positive-review" },
         { label: "Review collection features", href: "/features/review-collection" },
         { label: "Negative Feedback Shield guide", href: "/blog/negative-feedback-shield" },
         { label: "Compare review platforms", href: "/compare" },
@@ -60,6 +63,16 @@ export const reviewRequestTemplatesGuide: ResourceGuide = {
             question: "Which template should a restaurant or dental practice use?",
             answer:
                 "Restaurants: template 10 (dining). Dental: templates 5 and 11 (appointment tone). Home services: template 13. All industries can start with templates 1 (SMS) and 6 (email), then personalize. See /compare if you are evaluating software to send at scale.",
+        },
+        {
+            question: "Do I need customer opt-in before sending SMS review requests?",
+            answer:
+                "Messaging consent rules vary by region and carrier, so check the local rules that apply to your business before sending automated or bulk texts. As a practical baseline, only text customers who expect messages from you and include a clear opt-out option such as 'Reply STOP to opt out.'",
+        },
+        {
+            question: "Should I send a thank-you message after a customer leaves a review?",
+            answer:
+                "Yes. A brief, genuine thank-you acknowledges the customer's time and reinforces trust. You can reply publicly on Google and, when appropriate, send a short follow-up note like the thank-you templates in this guide.",
         },
     ],
     tableOfContents: [

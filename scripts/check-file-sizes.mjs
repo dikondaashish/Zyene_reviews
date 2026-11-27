@@ -47,6 +47,14 @@ const BASELINE = {
   // ── Static content datasets ────────────────────────────────────────────────
   // Marketing copy, not logic. Blog posts live one per file in
   // src/lib/content/blog-posts/; only the two long-form guides exceed 200.
+  "src/lib/content/blog-posts/best-local-seo-tools-small-business.ts": {
+    max: 280,
+    why: "content dataset — expanded local SEO software comparison guide",
+  },
+  "src/lib/content/blog-posts/best-review-response-generator-tools.ts": {
+    max: 307,
+    why: "content dataset — expanded AI review response software comparison guide",
+  },
   "src/lib/content/blog-posts/can-you-delete-a-google-review.ts": {
     max: 323,
     why: "content dataset — comprehensive SEO guide with long-tail Q&A sections",
@@ -55,13 +63,29 @@ const BASELINE = {
     max: 299,
     why: "content dataset — industry-specific guide with trade-specific sections",
   },
+  "src/lib/content/blog-posts/how-to-embed-google-reviews-on-website.ts": {
+    max: 305,
+    why: "content dataset — expanded SEO guide on embedding Google reviews",
+  },
+  "src/lib/content/blog-posts/how-to-get-a-google-review-link.ts": {
+    max: 220,
+    why: "content dataset — expanded Google review link and QR code guide",
+  },
   "src/lib/content/resource-data.ts": {
     max: 516,
     why: "content dataset — expanded SEO metadata for the local SEO checklist guide",
   },
+  "src/lib/content/resource-review-request-templates-body.ts": {
+    max: 239,
+    why: "content dataset — expanded SMS/email review request template pack",
+  },
   "src/lib/industries/industry-data.ts": {
     max: 579,
     why: "content dataset — grew with hvac/plumbing/electricians verticals (SEO-driven expansion)",
+  },
+  "src/lib/industries/industry-page-content-trades.ts": {
+    max: 275,
+    why: "content dataset — expanded plumbing and HVAC trade pages",
   },
   "src/lib/growth/kpi-definitions.ts": { max: 225, why: "content dataset" },
   "src/lib/growth/implementation-matrix.ts": {

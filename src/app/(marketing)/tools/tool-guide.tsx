@@ -9,13 +9,14 @@ export interface ToolGuideContent {
     about: { title: string; paragraphs: ReactNode[] };
     steps: { title: string; items: { icon: LucideIcon; label: string; text: ReactNode }[] };
     tips: { title: string; paragraphs: ReactNode[] };
+    extraSections?: ReactNode;
     faqs: FaqItem[];
     related: { href: string; label: string; note: string }[];
 }
 
 /** Shared layout for the guide below each free tool: about, steps, tips, FAQ and related reading. */
 export function ToolGuide({ content }: { content: ToolGuideContent }) {
-    const { slug, about, steps, tips, faqs, related } = content;
+    const { slug, about, steps, tips, extraSections, faqs, related } = content;
     return (
         <>
             <section className="marketing-section" aria-labelledby={`${slug}-about-heading`}>
@@ -61,6 +62,8 @@ export function ToolGuide({ content }: { content: ToolGuideContent }) {
                     </div>
                 </div>
             </section>
+
+            {extraSections}
 
             <MarketingFaqSection faqs={faqs} headingId={`${slug}-faq-heading`} />
 

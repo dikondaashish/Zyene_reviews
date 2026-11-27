@@ -49,10 +49,10 @@ describe("Target guides update requirements", () => {
         expect(guide.faqs?.length).toBeGreaterThan(0);
     });
 
-    it("sets dateModified to October 2026 on how-to-get-a-google-review-link post", () => {
+    it("sets dateModified to November 2026 on how-to-get-a-google-review-link post", () => {
         const post = BLOG_POST_MAP["how-to-get-a-google-review-link"];
         expect(post).toBeDefined();
-        expect(post.dateModified).toBe("2026-10-15");
+        expect(post.dateModified).toBe("2026-11-27");
 
         // Boxed callout below intro
         const freeToolsCallout = post.body.find(

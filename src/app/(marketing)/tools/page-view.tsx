@@ -4,6 +4,7 @@ import { FREE_TOOLS } from "@/lib/free-tools/free-tools-data";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { LandingHero } from "@/components/marketing/landing-hero";
 import { MarketingClosingBand } from "@/components/marketing/marketing-closing-band";
+import { ToolsHubSections } from "./tools-hub-sections";
 
 const ICONS = { link: Link2, chart: BarChart3, message: MessageSquare };
 
@@ -77,6 +78,8 @@ export default function FreeToolsHubPage() {
                     </div>
                 </div>
             </section>
+
+            <ToolsHubSections />
 
             <MarketingClosingBand
                 title="Want automation behind these tools?"

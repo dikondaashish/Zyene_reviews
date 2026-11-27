@@ -28,6 +28,16 @@ export interface IndustryPageContent {
     /** 2-3 feature pages; rendered as links here and as "Popular in your industry" on each feature page. */
     relatedPillars: FeaturePillarSlug[];
     faqs: FaqItem[];
+    /** Optional deep-dive sections rendered below the workflow section. */
+    editorialSections?: Array<{
+        id: string;
+        eyebrow?: string;
+        heading: string;
+        intro?: string;
+        items?: string[];
+        quotes?: Array<{ label: string; text: string }>;
+        links?: Array<{ label: string; href: string }>;
+    }>;
 }
 
 export const INDUSTRY_PAGE_CONTENT: Record<string, IndustryPageContent> = {

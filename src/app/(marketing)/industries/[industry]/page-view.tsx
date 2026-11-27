@@ -12,6 +12,7 @@ import { IndustriesIndustryRelatedFeaturesSection } from "./industries-industry-
 import { IndustriesIndustryPricingReminderSection } from "./industries-industry-pricing-reminder-section";
 import { IndustriesIndustryFinalCtaSection } from "./industries-industry-final-cta-section";
 import { IndustriesHomeServicesTradesSection } from "./industries-home-services-trades-section";
+import { IndustriesIndustryEditorialSection } from "./industries-industry-editorial-section";
 
 export default async function IndustryPage(
     { params }: { params: Promise<{ industry: string }> }
@@ -39,6 +40,9 @@ export default async function IndustryPage(
             {slug === "home-services" ? <IndustriesHomeServicesTradesSection /> : null}
             <IndustriesIndustryUseCaseSection data={data} content={content} />
             <IndustryWorkflowSection slug={slug} />
+            {content.editorialSections?.length ? (
+                <IndustriesIndustryEditorialSection sections={content.editorialSections} />
+            ) : null}
             <IndustriesIndustryRelatedFeaturesSection data={data} content={content} />
             <MarketingFaqSection faqs={content.faqs} headingId="ind-faq-heading" title={content.headings.faq} />
             <IndustriesIndustryPricingReminderSection heading={content.headings.pricing} />

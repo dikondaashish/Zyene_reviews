@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Copy, Star, Store } from "lucide-react";
 import { ToolGuide, type ToolGuideContent } from "@/app/(marketing)/tools/tool-guide";
 import { FAQPageJsonLd, type FaqItem } from "@/components/seo/json-ld";
+import { ReviewResponseExamples } from "./review-response-examples";
 
 const FAQS: FaqItem[] = [
     {
@@ -22,7 +23,15 @@ const FAQS: FaqItem[] = [
     },
     {
         question: "Can I use the exact same response template for every customer?",
-        answer: "No. Using identical copy on multiple reviews signals to customers that responses are automated. Always adapt the template by inserting unique details from the customer's specific feedback.",
+        answer: "No. Using identical copy on multiple reviews signals to customers that responses are automated. Always adapt the template by inserting unique details from the customer's specific feedback and review your draft before posting.",
+    },
+    {
+        question: "Do I have to paste the customer's review text into this tool?",
+        answer: "No. This free generator only takes your chosen star rating and business name to return an editable template—you personalize the details yourself before copying.",
+    },
+    {
+        question: "Where can I find templates for asking customers to leave a review?",
+        answer: "Visit our free Review Request Templates pack (/resources/review-request-templates) for SMS, email, and industry-specific outreach scripts.",
     },
 ];
 
@@ -50,9 +59,11 @@ const CONTENT: ToolGuideContent = {
             "Aim for roughly 50 to 150 words per public response. Avoid debating facts or negotiating financial settlements in public comments; instead, direct sensitive discussions to a private phone number or email address.",
         ],
     },
+    extraSections: <ReviewResponseExamples />,
     faqs: FAQS,
     related: [
-        { href: "/blog/best-review-response-generator-tools", label: "Best Review Response Generator Tools (2026)", note: "Compare top AI tools and free response generators." },
+        { href: "/blog/best-review-response-generator-tools", label: "Best AI Review Response Software (2026)", note: "Compare top AI tools and approval workflows." },
+        { href: "/resources/review-request-templates", label: "20+ Review Request Templates (SMS & Email)", note: "Copy-paste outreach scripts to collect more Google reviews." },
         { href: "/resources/negative-review-templates", label: "20+ Negative Review Response Templates (Google Reviews)", note: "Ready-to-use scripts for service, billing, and delay complaints." },
         { href: "/blog/how-to-respond-to-a-1-star-review", label: "How to Respond to a 1-Star Review (5 Real Templates)", note: "A practical 5-step framework for handling negative customer feedback." },
         { href: "/blog/ai-reply-mistakes-to-avoid", label: "5 AI Reply Mistakes to Avoid When Responding to Reviews", note: "Guidelines for editing and personalizing automated review drafts." },
